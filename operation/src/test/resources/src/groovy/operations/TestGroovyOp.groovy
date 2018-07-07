@@ -10,28 +10,27 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport
 import javax.inject.Inject
 import java.sql.Date
 
-class TestGroovyOp extends TestOperationSupport implements Operation
-{
-    @Inject private UserAwareMeta userAwareMeta
+class TestGroovyOp extends TestOperationSupport implements Operation {
+    @Inject
+    private UserAwareMeta userAwareMeta
 
     DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception
-    {
-        if(!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
+    Object getParameters(Map<String, Object> presetValues) throws Exception {
+        if (!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
 
         dps << [
-                name         : "name",
-                DISPLAY_NAME : "Имя",
-                value        : "Test"
+                name        : "name",
+                DISPLAY_NAME: "Имя",
+                value       : "Test"
         ]
 
         dps << [
-                name         : "beginDate",
-                DISPLAY_NAME : "Дата начала",
-                TYPE         : Date,
-                value        : "2017-07-01"
+                name        : "beginDate",
+                DISPLAY_NAME: "Дата начала",
+                TYPE        : Date,
+                value       : "2017-07-01"
         ]
 
         dps << [
@@ -47,7 +46,7 @@ class TestGroovyOp extends TestOperationSupport implements Operation
                 DISPLAY_NAME           : "Множественный выбор",
                 MULTIPLE_SELECTION_LIST: true,
                 TAG_LIST_ATTR          : [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                value                  : ["vacation","sick"] as String[]
+                value                  : ["vacation", "sick"] as String[]
         ]
 
         //@Deprecated
@@ -91,8 +90,7 @@ class TestGroovyOp extends TestOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters) throws Exception
-    {
+    void invoke(Object parameters) throws Exception {
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
     }
 

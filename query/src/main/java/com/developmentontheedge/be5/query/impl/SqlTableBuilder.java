@@ -36,7 +36,7 @@ public class SqlTableBuilder
     private final CellFormatter cellFormatter;
 
     public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
-                    UserAwareMeta userAwareMeta)
+                           UserAwareMeta userAwareMeta)
     {
         this.query = query;
         this.parameters = parameters;
@@ -50,13 +50,13 @@ public class SqlTableBuilder
 
     public SqlTableBuilder offset(int offset)
     {
-        this.queryExecutor.offset( offset );
+        this.queryExecutor.offset(offset);
         return this;
     }
 
     public SqlTableBuilder limit(int limit)
     {
-        this.queryExecutor.limit( limit );
+        this.queryExecutor.limit(limit);
         return this;
     }
 
@@ -68,7 +68,7 @@ public class SqlTableBuilder
 
     public SqlTableBuilder selectable(boolean selectable)
     {
-        queryExecutor.selectable( selectable );
+        queryExecutor.selectable(selectable);
         return this;
     }
 //
@@ -88,18 +88,17 @@ public class SqlTableBuilder
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), columns, rows );
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.execute(), columns, rows);
 
         boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
         filterWithRoles(columns, rows);
 
         Long totalNumberOfRows;
-        if(queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
+        if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
         {
-            totalNumberOfRows = (long)rows.size();
-        }
-        else
+            totalNumberOfRows = (long) rows.size();
+        } else
         {
             totalNumberOfRows = queryService.build(query, parameters).count();
         }
@@ -117,30 +116,32 @@ public class SqlTableBuilder
     }
 
     /*
-    * com.developmentontheedge.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
-    * */
-    void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows){
-        if(rows.size() == 0)return;
+     * com.developmentontheedge.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
+     * */
+    void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows)
+    {
+        if (rows.size() == 0) return;
         List<String> currRoles = userInfo.getCurrentRoles();
 
         List<CellModel> firstLine = rows.get(0).getCells();
-        for (int i = firstLine.size()-1; i >= 0; i--) {
+        for (int i = firstLine.size() - 1; i >= 0; i--)
+        {
             Map<String, String> columnRoles = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_ROLES);
 
-            if( columnRoles == null )
+            if (columnRoles == null)
             {
                 continue;
             }
 
             String roles = columnRoles.get("name");
-            List<String> roleList = Arrays.asList( roles.split( "," ) );
+            List<String> roleList = Arrays.asList(roles.split(","));
             List<String> forbiddenRoles = roleList.stream().filter(x -> x.startsWith("!")).collect(Collectors.toList());
 
-            roleList.removeAll( forbiddenRoles );
+            roleList.removeAll(forbiddenRoles);
 
             boolean hasAccess = false;
 
-            if(roleList.stream().anyMatch(currRoles::contains))
+            if (roleList.stream().anyMatch(currRoles::contains))
             {
                 hasAccess = true;
             }
@@ -150,9 +151,10 @@ public class SqlTableBuilder
                 hasAccess = true;
             }
 
-            if( !hasAccess )
+            if (!hasAccess)
             {
-                for (RowModel rowModel : rows) {
+                for (RowModel rowModel : rows)
+                {
                     rowModel.getCells().remove(i);
                 }
                 columns.remove(i);
@@ -162,12 +164,12 @@ public class SqlTableBuilder
 
     private boolean addAggregateRowIfNeeded(List<RowModel> rows)
     {
-        if(rows.size() == 0 || rows.get(0).getCells().stream()
-                .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))return false;
+        if (rows.size() == 0 || rows.get(0).getCells().stream()
+                .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE))) return false;
 
         List<RowModel> aggregateRow = new ArrayList<>();
 
-        collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow );
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow);
 
         List<CellModel> firstLine = aggregateRow.get(0).getCells();
         double[] resD = new double[firstLine.size()];
@@ -177,16 +179,20 @@ public class SqlTableBuilder
             for (int i = 0; i < firstLine.size(); i++)
             {
                 Map<String, String> aggregate = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_AGGREGATE);
-                if(aggregate != null) {
+                if (aggregate != null)
+                {
                     Double add;
-                    if (row.getCells().get(i).content instanceof List) {
-                        add = Double.parseDouble((String)((List) ((List) row.getCells().get(i).content).get(0)).get(0) );
-                    } else {
-                        add = (double)row.getCells().get(i).content;//todo test aggregate
-                    }
-                    if("Number".equals(aggregate.get("type")))
+                    if (row.getCells().get(i).content instanceof List)
                     {
-                        switch (aggregate.get("function")) {
+                        add = Double.parseDouble((String) ((List) ((List) row.getCells().get(i).content).get(0)).get(0));
+                    } else
+                    {
+                        add = (double) row.getCells().get(i).content;//todo test aggregate
+                    }
+                    if ("Number".equals(aggregate.get("type")))
+                    {
+                        switch (aggregate.get("function"))
+                        {
                             case "COUNT":
                                 resD[i]++;
                                 break;
@@ -197,8 +203,7 @@ public class SqlTableBuilder
                             default:
                                 throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                         }
-                    }
-                    else
+                    } else
                     {
                         throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                     }
@@ -208,11 +213,12 @@ public class SqlTableBuilder
         for (int i = 0; i < firstLine.size(); i++)
         {
             Map<String, String> aggregate = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_AGGREGATE);
-            if(aggregate != null)
+            if (aggregate != null)
             {
-                if("Number".equals(aggregate.get("type")))
+                if ("Number".equals(aggregate.get("type")))
                 {
-                    switch (aggregate.get("function")) {
+                    switch (aggregate.get("function"))
+                    {
                         case "SUM":
                         case "COUNT":
                             break;
@@ -222,8 +228,7 @@ public class SqlTableBuilder
                         default:
                             throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                     }
-                }
-                else
+                } else
                 {
                     throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                 }
@@ -238,12 +243,11 @@ public class SqlTableBuilder
             if (aggregate != null)
             {
                 content = resD[i];
-                options.put("css", Collections.singletonMap("class", aggregate.getOrDefault("cssClass","")));
+                options.put("css", Collections.singletonMap("class", aggregate.getOrDefault("cssClass", "")));
                 options.put("format", Collections.singletonMap("mask", aggregate.getOrDefault("format", "")));
-            }
-            else
+            } else
             {
-                if(i==0)
+                if (i == 0)
                 {
                     content = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
                             "total");
@@ -259,8 +263,10 @@ public class SqlTableBuilder
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
                                        List<RowModel> rows)
     {
-        for (DynamicPropertySet properties : list) {
-            if (columns.isEmpty()) {
+        for (DynamicPropertySet properties : list)
+        {
+            if (columns.isEmpty())
+            {
                 columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns());
             }
             rows.add(generateRow(entityName, queryName, properties));
@@ -272,10 +278,10 @@ public class SqlTableBuilder
         PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
-        List<CellModel> processedCells = processCells( cells ); // only visible cells
+        List<CellModel> processedCells = processCells(cells); // only visible cells
         String id = queryExecutor.getSelectable() ? transformer.getRowId() : null;
 
-        return new RowModel( id, processedCells );
+        return new RowModel(id, processedCells);
     }
 
     private void addRowClass(List<RawCellModel> cells)
@@ -284,13 +290,13 @@ public class SqlTableBuilder
                 .filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS) && x.content != null)
                 .map(x -> x.content).findFirst();
 
-        if(addClassName.isPresent())
+        if (addClassName.isPresent())
         {
-            for (RawCellModel cell: cells)
+            for (RawCellModel cell : cells)
             {
-                if(cell.options.get("grouping") != null)continue;
+                if (cell.options.get("grouping") != null) continue;
                 Map<String, String> css = cell.options.putIfAbsent("css", new HashMap<>());
-                if(css == null) css = cell.options.get("css");
+                if (css == null) css = cell.options.get("css");
 
                 String className = css.getOrDefault("class", "");
                 css.put("class", className + " " + addClassName.get());
@@ -300,8 +306,9 @@ public class SqlTableBuilder
 
     /**
      * Processes each cell's content and selects only visible cells.
+     *
      * @param cells raw cells
-     * columns.size() == cells.size()
+     *              columns.size() == cells.size()
      */
     private List<CellModel> processCells(List<RawCellModel> cells)
     {

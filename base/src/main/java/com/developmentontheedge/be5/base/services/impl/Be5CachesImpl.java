@@ -40,7 +40,7 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     @Override
     public void registerCache(String name, Cache cache)
     {
-        if(caches.containsKey(name))throw Be5Exception.internal("caches containsKey: " + name);
+        if (caches.containsKey(name)) throw Be5Exception.internal("caches containsKey: " + name);
         caches.put(name, cache);
     }
 
@@ -70,17 +70,16 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     @Override
     public void clearAll()
     {
-        caches.forEach((k,v) -> v.invalidateAll());
+        caches.forEach((k, v) -> v.invalidateAll());
     }
 
     @Override
     public int getCacheSize(String name)
     {
-        if(config != null)
+        if (config != null)
         {
             return config.cacheSizes.getOrDefault(name, config.cacheSizes.getOrDefault("defaultSize", 1000));
-        }
-        else
+        } else
         {
             return 1000;
         }

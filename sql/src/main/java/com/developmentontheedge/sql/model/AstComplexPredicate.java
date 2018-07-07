@@ -6,21 +6,21 @@ public class AstComplexPredicate extends SimpleNode implements Squasheable
 {
     public AstComplexPredicate(int id)
     {
-        super( id );
+        super(id);
     }
 
     @Override
     public void jjtSetParent(Node n)
     {
-        super.jjtSetParent( n );
-        if(n != null && jjtGetNumChildren() == 2)
+        super.jjtSetParent(n);
+        if (n != null && jjtGetNumChildren() == 2)
         {
-            SimpleNode left = child( 0 );
-            SimpleNode right = child( 1 );
+            SimpleNode left = child(0);
+            SimpleNode right = child(1);
             left.remove();
-            right.addChild( left );
-            right.moveToFront( left );
-            right.inheritFrom( this );
+            right.addChild(left);
+            right.moveToFront(left);
+            right.inheritFrom(this);
             this.specialPrefix = null;
         }
     }

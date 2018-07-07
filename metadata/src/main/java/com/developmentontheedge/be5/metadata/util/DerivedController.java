@@ -25,9 +25,11 @@ public class DerivedController implements ProcessController
     @Override
     public void setOperationName(String name)
     {
-        if (operation != null) {
+        if (operation != null)
+        {
             primary.setOperationName(operation + ": " + name);
-        } else {
+        } else
+        {
             primary.setOperationName(name);
         }
     }

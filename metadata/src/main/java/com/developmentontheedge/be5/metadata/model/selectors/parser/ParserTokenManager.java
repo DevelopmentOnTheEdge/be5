@@ -28,7 +28,8 @@ public class ParserTokenManager implements ParserConstants
 
     private final int jjStopStringLiteralDfa_0(int pos, long active0)
     {
-        switch (pos) {
+        switch (pos)
+        {
             default:
                 return -1;
         }
@@ -48,7 +49,8 @@ public class ParserTokenManager implements ParserConstants
 
     private int jjMoveStringLiteralDfa0_0()
     {
-        switch (curChar) {
+        switch (curChar)
+        {
             case 35:
                 return jjStopAtPos(0, 17);
             case 41:
@@ -68,13 +70,16 @@ public class ParserTokenManager implements ParserConstants
 
     private int jjMoveStringLiteralDfa1_0(long active0)
     {
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(0, active0);
             return 1;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 109:
                 return jjMoveStringLiteralDfa2_0(active0, 0x400000L);
             case 110:
@@ -89,13 +94,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(0, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(1, active0);
             return 2;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 97:
                 return jjMoveStringLiteralDfa3_0(active0, 0x400000L);
             case 111:
@@ -110,13 +118,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(1, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(2, active0);
             return 3;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 116:
                 return jjMoveStringLiteralDfa4_0(active0, 0x600000L);
             default:
@@ -129,13 +140,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(2, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(3, active0);
             return 4;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 40:
                 if ((active0 & 0x200000L) != 0L)
                     return jjStopAtPos(4, 21);
@@ -152,13 +166,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(3, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(4, active0);
             return 5;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 104:
                 return jjMoveStringLiteralDfa6_0(active0, 0x400000L);
             default:
@@ -171,13 +188,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(4, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(5, active0);
             return 6;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 101:
                 return jjMoveStringLiteralDfa7_0(active0, 0x400000L);
             default:
@@ -190,13 +210,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(5, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(6, active0);
             return 7;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 115:
                 return jjMoveStringLiteralDfa8_0(active0, 0x400000L);
             default:
@@ -209,13 +232,16 @@ public class ParserTokenManager implements ParserConstants
     {
         if (((active0 &= old0)) == 0L)
             return jjStartNfa_0(6, old0);
-        try {
+        try
+        {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e) {
+        } catch (java.io.IOException e)
+        {
             jjStopStringLiteralDfa_0(7, active0);
             return 8;
         }
-        switch (curChar) {
+        switch (curChar)
+        {
             case 40:
                 if ((active0 & 0x400000L) != 0L)
                     return jjStopAtPos(8, 22);
@@ -240,35 +266,47 @@ public class ParserTokenManager implements ParserConstants
         int i = 1;
         jjstateSet[0] = startState;
         int kind = 0x7fffffff;
-        for (; ; ) {
+        for (; ; )
+        {
             if (++jjround == 0x7fffffff)
                 ReInitRounds();
-            if (curChar < 64) {
+            if (curChar < 64)
+            {
                 long l = 1L << curChar;
-                do {
-                    switch (jjstateSet[--i]) {
+                do
+                {
+                    switch (jjstateSet[--i])
+                    {
                         case 0:
-                            if ((0x100003600L & l) != 0L) {
+                            if ((0x100003600L & l) != 0L)
+                            {
                                 if (kind > 1)
                                     kind = 1;
                                 {
                                     jjCheckNAddStates(0, 2);
                                 }
-                            } else if (curChar == 44) {
+                            } else if (curChar == 44)
+                            {
                                 if (kind > 15)
                                     kind = 15;
-                            } else if (curChar == 61) {
+                            } else if (curChar == 61)
+                            {
                                 if (kind > 14)
                                     kind = 14;
-                            } else if (curChar == 42) {
+                            } else if (curChar == 42)
+                            {
                                 jjCheckNAdd(54);
-                            } else if (curChar == 36) {
+                            } else if (curChar == 36)
+                            {
                                 jjCheckNAdd(54);
-                            } else if (curChar == 39) {
+                            } else if (curChar == 39)
+                            {
                                 jjCheckNAddStates(3, 5);
-                            } else if (curChar == 34) {
+                            } else if (curChar == 34)
+                            {
                                 jjCheckNAddStates(6, 8);
-                            } else if (curChar == 45) {
+                            } else if (curChar == 45)
+                            {
                                 jjAddStates(9, 10);
                             }
                             break;
@@ -355,7 +393,8 @@ public class ParserTokenManager implements ParserConstants
                         break;
                         case 12:
                         case 21:
-                            if (curChar == 13) {
+                            if (curChar == 13)
+                            {
                                 jjCheckNAdd(11);
                             }
                             break;
@@ -423,12 +462,14 @@ public class ParserTokenManager implements ParserConstants
                         }
                         break;
                         case 22:
-                            if (curChar == 34) {
+                            if (curChar == 34)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 23:
-                            if ((0xfffffffbffffcbffL & l) != 0L) {
+                            if ((0xfffffffbffffcbffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
@@ -437,68 +478,81 @@ public class ParserTokenManager implements ParserConstants
                                 kind = 13;
                             break;
                         case 26:
-                            if ((0x3400L & l) != 0L) {
+                            if ((0x3400L & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 27:
-                            if (curChar == 10) {
+                            if (curChar == 10)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 28:
                         case 36:
-                            if (curChar == 13) {
+                            if (curChar == 13)
+                            {
                                 jjCheckNAdd(27);
                             }
                             break;
                         case 29:
-                            if ((0xfc00ffffffffcbffL & l) != 0L) {
+                            if ((0xfc00ffffffffcbffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 30:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(69, 74);
                             }
                             break;
                         case 31:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(75, 80);
                             }
                             break;
                         case 32:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(81, 86);
                             }
                             break;
                         case 33:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(87, 92);
                             }
                             break;
                         case 34:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(93, 98);
                             }
                             break;
                         case 35:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(99, 103);
                             }
                             break;
                         case 37:
-                            if ((0x100003600L & l) != 0L) {
+                            if ((0x100003600L & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 38:
-                            if (curChar == 39) {
+                            if (curChar == 39)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 39:
-                            if ((0xffffff7fffffcbffL & l) != 0L) {
+                            if ((0xffffff7fffffcbffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
@@ -507,58 +561,69 @@ public class ParserTokenManager implements ParserConstants
                                 kind = 13;
                             break;
                         case 42:
-                            if ((0x3400L & l) != 0L) {
+                            if ((0x3400L & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 43:
-                            if (curChar == 10) {
+                            if (curChar == 10)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 44:
                         case 52:
-                            if (curChar == 13) {
+                            if (curChar == 13)
+                            {
                                 jjCheckNAdd(43);
                             }
                             break;
                         case 45:
-                            if ((0xfc00ffffffffcbffL & l) != 0L) {
+                            if ((0xfc00ffffffffcbffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 46:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(104, 109);
                             }
                             break;
                         case 47:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(110, 115);
                             }
                             break;
                         case 48:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(116, 121);
                             }
                             break;
                         case 49:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(122, 127);
                             }
                             break;
                         case 50:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(128, 133);
                             }
                             break;
                         case 51:
-                            if ((0x3ff000000000000L & l) != 0L) {
+                            if ((0x3ff000000000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(134, 138);
                             }
                             break;
                         case 53:
-                            if ((0x100003600L & l) != 0L) {
+                            if ((0x100003600L & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
@@ -567,12 +632,14 @@ public class ParserTokenManager implements ParserConstants
                                 kind = 14;
                             break;
                         case 56:
-                            if (curChar == 36) {
+                            if (curChar == 36)
+                            {
                                 jjCheckNAdd(54);
                             }
                             break;
                         case 57:
-                            if (curChar == 42) {
+                            if (curChar == 42)
+                            {
                                 jjCheckNAdd(54);
                             }
                             break;
@@ -603,7 +670,8 @@ public class ParserTokenManager implements ParserConstants
                         }
                         break;
                         case 62:
-                            if ((0x100003600L & l) != 0L) {
+                            if ((0x100003600L & l) != 0L)
+                            {
                                 jjCheckNAddTwoStates(62, 59);
                             }
                             break;
@@ -611,18 +679,23 @@ public class ParserTokenManager implements ParserConstants
                             break;
                     }
                 } while (i != startsAt);
-            } else if (curChar < 128) {
+            } else if (curChar < 128)
+            {
                 long l = 1L << (curChar & 077);
-                do {
-                    switch (jjstateSet[--i]) {
+                do
+                {
+                    switch (jjstateSet[--i])
+                    {
                         case 0:
-                            if ((0x7fffffe87fffffeL & l) != 0L) {
+                            if ((0x7fffffe87fffffeL & l) != 0L)
+                            {
                                 if (kind > 12)
                                     kind = 12;
                                 {
                                     jjCheckNAddTwoStates(2, 3);
                                 }
-                            } else if (curChar == 92) {
+                            } else if (curChar == 92)
+                            {
                                 jjCheckNAddTwoStates(4, 15);
                             } else if (curChar == 94)
                                 jjstateSet[jjnewStateCnt++] = 54;
@@ -638,7 +711,8 @@ public class ParserTokenManager implements ParserConstants
                         }
                         break;
                         case 3:
-                            if (curChar == 92) {
+                            if (curChar == 92)
+                            {
                                 jjCheckNAddTwoStates(4, 5);
                             }
                             break;
@@ -706,7 +780,8 @@ public class ParserTokenManager implements ParserConstants
                         }
                         break;
                         case 14:
-                            if (curChar == 92) {
+                            if (curChar == 92)
+                            {
                                 jjCheckNAddTwoStates(4, 15);
                             }
                             break;
@@ -765,92 +840,110 @@ public class ParserTokenManager implements ParserConstants
                         }
                         break;
                         case 23:
-                            if ((0xffffffffefffffffL & l) != 0L) {
+                            if ((0xffffffffefffffffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 25:
-                            if (curChar == 92) {
+                            if (curChar == 92)
+                            {
                                 jjAddStates(139, 142);
                             }
                             break;
                         case 29:
-                            if ((0xffffff81ffffffffL & l) != 0L) {
+                            if ((0xffffff81ffffffffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 30:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(69, 74);
                             }
                             break;
                         case 31:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(75, 80);
                             }
                             break;
                         case 32:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(81, 86);
                             }
                             break;
                         case 33:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(87, 92);
                             }
                             break;
                         case 34:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(93, 98);
                             }
                             break;
                         case 35:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(99, 103);
                             }
                             break;
                         case 39:
-                            if ((0xffffffffefffffffL & l) != 0L) {
+                            if ((0xffffffffefffffffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 41:
-                            if (curChar == 92) {
+                            if (curChar == 92)
+                            {
                                 jjAddStates(143, 146);
                             }
                             break;
                         case 45:
-                            if ((0xffffff81ffffffffL & l) != 0L) {
+                            if ((0xffffff81ffffffffL & l) != 0L)
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
                         case 46:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(104, 109);
                             }
                             break;
                         case 47:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(110, 115);
                             }
                             break;
                         case 48:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(116, 121);
                             }
                             break;
                         case 49:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(122, 127);
                             }
                             break;
                         case 50:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(128, 133);
                             }
                             break;
                         case 51:
-                            if ((0x7e00000000L & l) != 0L) {
+                            if ((0x7e00000000L & l) != 0L)
+                            {
                                 jjCheckNAddStates(134, 138);
                             }
                             break;
@@ -862,14 +955,17 @@ public class ParserTokenManager implements ParserConstants
                             break;
                     }
                 } while (i != startsAt);
-            } else {
+            } else
+            {
                 int hiByte = (curChar >> 8);
                 int i1 = hiByte >> 6;
                 long l1 = 1L << (hiByte & 077);
                 int i2 = (curChar & 0xff) >> 6;
                 long l2 = 1L << (curChar & 077);
-                do {
-                    switch (jjstateSet[--i]) {
+                do
+                {
+                    switch (jjstateSet[--i])
+                    {
                         case 0:
                         case 1:
                         case 2:
@@ -884,13 +980,15 @@ public class ParserTokenManager implements ParserConstants
                         break;
                         case 23:
                         case 29:
-                            if (jjCanMove_0(hiByte, i1, i2, l1, l2)) {
+                            if (jjCanMove_0(hiByte, i1, i2, l1, l2))
+                            {
                                 jjCheckNAddStates(6, 8);
                             }
                             break;
                         case 39:
                         case 45:
-                            if (jjCanMove_0(hiByte, i1, i2, l1, l2)) {
+                            if (jjCanMove_0(hiByte, i1, i2, l1, l2))
+                            {
                                 jjCheckNAddStates(3, 5);
                             }
                             break;
@@ -900,7 +998,8 @@ public class ParserTokenManager implements ParserConstants
                     }
                 } while (i != startsAt);
             }
-            if (kind != 0x7fffffff) {
+            if (kind != 0x7fffffff)
+            {
                 jjmatchedKind = kind;
                 jjmatchedPos = curPos;
                 kind = 0x7fffffff;
@@ -908,9 +1007,11 @@ public class ParserTokenManager implements ParserConstants
             ++curPos;
             if ((i = jjnewStateCnt) == (startsAt = 63 - (jjnewStateCnt = startsAt)))
                 return curPos;
-            try {
+            try
+            {
                 curChar = input_stream.readChar();
-            } catch (java.io.IOException e) {
+            } catch (java.io.IOException e)
+            {
                 return curPos;
             }
         }
@@ -931,7 +1032,8 @@ public class ParserTokenManager implements ParserConstants
 
     private static final boolean jjCanMove_0(int hiByte, int i1, int i2, long l1, long l2)
     {
-        switch (hiByte) {
+        switch (hiByte)
+        {
             case 0:
                 return ((jjbitVec2[i2] & l2) != 0L);
             default:
@@ -989,10 +1091,13 @@ public class ParserTokenManager implements ParserConstants
         int curPos = 0;
 
         EOFLoop:
-        for (; ; ) {
-            try {
+        for (; ; )
+        {
+            try
+            {
                 curChar = input_stream.BeginToken();
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 jjmatchedKind = 0;
                 jjmatchedPos = -1;
                 matchedToken = jjFillToken();
@@ -1005,7 +1110,8 @@ public class ParserTokenManager implements ParserConstants
             jjmatchedKind = 0x7fffffff;
             jjmatchedPos = 0;
             curPos = jjMoveStringLiteralDfa0_0();
-            if (jjmatchedKind != 0x7fffffff) {
+            if (jjmatchedKind != 0x7fffffff)
+            {
                 if (jjmatchedPos + 1 < curPos)
                     input_stream.backup(curPos - jjmatchedPos - 1);
                 matchedToken = jjFillToken();
@@ -1016,19 +1122,23 @@ public class ParserTokenManager implements ParserConstants
             int error_column = input_stream.getEndColumn();
             String error_after = null;
             boolean EOFSeen = false;
-            try {
+            try
+            {
                 input_stream.readChar();
                 input_stream.backup(1);
-            } catch (java.io.IOException e1) {
+            } catch (java.io.IOException e1)
+            {
                 EOFSeen = true;
                 error_after = curPos <= 1 ? "" : input_stream.GetImage();
-                if (curChar == '\n' || curChar == '\r') {
+                if (curChar == '\n' || curChar == '\r')
+                {
                     error_line++;
                     error_column = 0;
                 } else
                     error_column++;
             }
-            if (!EOFSeen) {
+            if (!EOFSeen)
+            {
                 input_stream.backup(1);
                 error_after = curPos <= 1 ? "" : input_stream.GetImage();
             }
@@ -1038,7 +1148,8 @@ public class ParserTokenManager implements ParserConstants
 
     void TokenLexicalActions(Token matchedToken)
     {
-        switch (jjmatchedKind) {
+        switch (jjmatchedKind)
+        {
             case 12:
                 image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
                 matchedToken.image = SelectorUtils.unescape(image.toString());
@@ -1058,7 +1169,8 @@ public class ParserTokenManager implements ParserConstants
 
     private void jjCheckNAdd(int state)
     {
-        if (jjrounds[state] != jjround) {
+        if (jjrounds[state] != jjround)
+        {
             jjstateSet[jjnewStateCnt++] = state;
             jjrounds[state] = jjround;
         }
@@ -1066,7 +1178,8 @@ public class ParserTokenManager implements ParserConstants
 
     private void jjAddStates(int start, int end)
     {
-        do {
+        do
+        {
             jjstateSet[jjnewStateCnt++] = jjnextStates[start];
         } while (start++ != end);
     }
@@ -1079,7 +1192,8 @@ public class ParserTokenManager implements ParserConstants
 
     private void jjCheckNAddStates(int start, int end)
     {
-        do {
+        do
+        {
             jjCheckNAdd(jjnextStates[start]);
         } while (start++ != end);
     }

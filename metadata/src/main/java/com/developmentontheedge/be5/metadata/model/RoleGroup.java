@@ -57,7 +57,8 @@ public class RoleGroup extends BeModelElementSupport
     public List<ProjectElementException> getErrors()
     {
         Set<String> missingRoles = roles.getMissingEntries();
-        if (!(missingRoles.isEmpty())) {
+        if (!(missingRoles.isEmpty()))
+        {
             return Collections
                     .singletonList(new ProjectElementException(this, "Group contains unknown roles/subgroups: " + missingRoles));
         }

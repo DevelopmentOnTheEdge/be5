@@ -18,24 +18,26 @@ public class TestTransactionService
 
     public void testMethod()
     {
-        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1","pass1");
+        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1", "pass1");
 
-        if(1 == 1){
+        if (1 == 1)
+        {
             throw new RuntimeException();
         }
 
-        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2","pass2");
+        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2", "pass2");
     }
 
     @Transactional
     public void testMethodWithTransactional()
     {
-        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1","pass1");
+        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1", "pass1");
 
-        if(1 == 1){
+        if (1 == 1)
+        {
             throw new RuntimeException();
         }
 
-        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2","pass2");
+        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2", "pass2");
     }
 }

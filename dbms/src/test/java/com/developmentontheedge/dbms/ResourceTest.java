@@ -9,6 +9,6 @@ public class ResourceTest
     @Test
     public void testPropertiesExists()
     {
-        assertNotNull( SqlExecutor.getDefaultPropertiesFile() );
+        assertNotNull(SqlExecutor.getDefaultPropertiesFile());
     }
 }

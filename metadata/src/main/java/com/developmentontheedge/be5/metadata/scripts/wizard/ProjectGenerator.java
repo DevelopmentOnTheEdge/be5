@@ -223,7 +223,8 @@ public class ProjectGenerator
 
     private void setLanguages(final Project project)
     {
-        for (final String language : parameters.getLanguages()) {
+        for (final String language : parameters.getLanguages())
+        {
             final Localizations localizations = project.getApplication().getLocalizations();
             final LanguageLocalizations languageLocalizations = new LanguageLocalizations(language, localizations);
             DataElementUtils.saveQuiet(languageLocalizations);
@@ -246,7 +247,8 @@ public class ProjectGenerator
             modules = Iterables.toArray(ms, String.class);
         }
 
-        for (final String module : modules) {
+        for (final String module : modules)
+        {
             final Module newModule = new Module(module, project.getModules());
             DataElementUtils.saveQuiet(newModule);
         }

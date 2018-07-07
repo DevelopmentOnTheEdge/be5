@@ -5,10 +5,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 
-@Mojo( name = "sync")
+@Mojo(name = "sync")
 public class AppSyncMojo extends Be5Mojo
 {
-    @Parameter (property = "BE5_FORCE_UPDATE")
+    @Parameter(property = "BE5_FORCE_UPDATE")
     private boolean forceUpdate = false;
 //
 //    @Parameter (property = "BE5_UPDATE_CLONES")

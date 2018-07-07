@@ -53,7 +53,8 @@ public class ParseResult
         ParseResult other = (ParseResult) obj;
         if ((error != null && error != NO_ERROR) || (other.error != null && error != NO_ERROR))
             return false;
-        if (result == null) {
+        if (result == null)
+        {
             if (other.result != null)
                 return false;
         } else if (!result.equals(other.result))

@@ -14,7 +14,8 @@ import static com.developmentontheedge.be5.server.FrontendActions.updateParentDo
 
 public class FilterOperation extends OperationSupport
 {
-    @Inject private FilterHelper filterHelper;
+    @Inject
+    private FilterHelper filterHelper;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception

@@ -61,7 +61,7 @@ public class DpsUtilsTest
         dps.add(new DynamicPropertyBuilder("value", String.class).get());
         dps.add(new DynamicPropertyBuilder("test", String.class).get());
 
-        DpsUtils.setValues(dps, ImmutableMap.of("value", "1","test", "2"));
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "1", "test", "2"));
 
         assertEquals("1", dps.getValue("value"));
         assertEquals("2", dps.getValue("test"));

@@ -110,8 +110,7 @@ public class ResponseImpl implements Response
         try
         {
             rawWrapper.getRawResponse().sendRedirect(location);
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
             throw new RuntimeException("Response error", e);
         }

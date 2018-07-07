@@ -18,17 +18,19 @@ public class TestProjectProvider implements ProjectProvider
     @Inject
     public TestProjectProvider()
     {
-        try {
+        try
+        {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
             initProfile(project);
-        } catch (ProjectLoadException e) {
+        } catch (ProjectLoadException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
     private static void initProfile(Project project)
     {
-        if(project.getConnectionProfile() == null ||
+        if (project.getConnectionProfile() == null ||
                 !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
         {
             ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);

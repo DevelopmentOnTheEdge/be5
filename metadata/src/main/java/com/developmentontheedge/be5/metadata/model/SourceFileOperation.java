@@ -41,7 +41,8 @@ public abstract class SourceFileOperation extends Operation
     @Override
     public String getCode()
     {
-        if (customizedProperties != null && customizedProperties.contains("code")) {
+        if (customizedProperties != null && customizedProperties.contains("code"))
+        {
             SourceFile file = getSourceFile();
             return file == null ? "" : file.getSource();
         }
@@ -68,16 +69,20 @@ public abstract class SourceFileOperation extends Operation
         if (getCode().equals(code))
             return;
         SourceFile file = getSourceFile();
-        if (file == null) {
+        if (file == null)
+        {
             String newFileName = SourceFile.extractFileNameFromCode(code);
-            if (newFileName != null) {
+            if (newFileName != null)
+            {
                 fileName = newFileName;
             }
             file = getSourceFile();
         }
-        if (file == null) {
+        if (file == null)
+        {
             this.file = getProject().getApplication().addSourceFile(getFileNameSpace(), fileName, code);
-        } else {
+        } else
+        {
             file.setSource(code);
         }
         internalCustomizeProperty("code");

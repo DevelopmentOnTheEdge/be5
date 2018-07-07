@@ -40,34 +40,44 @@ public class AppDb extends ScriptSupport<AppDb>
     {
         init();
 
-        try {
+        try
+        {
             ps = createPrintStream((moduleName == null ? be5Project.getName() : moduleName) + "_db.sql");
 
             sql = new BeSqlExecutor(connector, ps);
 
-            if (moduleName != null) {
+            if (moduleName != null)
+            {
                 Module module = be5Project.getModule(moduleName);
-                if (module == null) {
+                if (module == null)
+                {
                     throw new ScriptException("Module '" + moduleName + "' not found!");
                 }
                 createDb(module);
-            } else {
-                for (Module module : be5Project.getModules()) {
+            } else
+            {
+                for (Module module : be5Project.getModules())
+                {
                     if (ModuleLoader2.containsModule(module.getName()))
                         createDb(module);
                 }
                 createDb(be5Project.getApplication());
             }
             logger.info("Created tables: " + createdTables + ", created views: " + createdViews);
-        } catch (ScriptException e) {
+        } catch (ScriptException e)
+        {
             throw e;
-        } catch (ProjectElementException | FreemarkerSqlException e) {
+        } catch (ProjectElementException | FreemarkerSqlException e)
+        {
             throw new ScriptException("Setup db error", e);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
             throw new ScriptException("Setup db error", e);
-        } finally {
-            if (ps != null) {
+        } finally
+        {
+            if (ps != null)
+            {
                 ps.close();
             }
         }
@@ -86,33 +96,43 @@ public class AppDb extends ScriptSupport<AppDb>
     private void execute(final Module module) throws ProjectElementException
     {
         boolean started = false;
-        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements()) {
+        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements())
+        {
             DdlElement scheme = entity.getScheme();
-            if (scheme instanceof TableDef) {
-                if (scheme.withoutDbScheme()) {
-                    if (!started) {
+            if (scheme instanceof TableDef)
+            {
+                if (scheme.withoutDbScheme())
+                {
+                    if (!started)
+                    {
                         logger.setOperationName("[A] " + module.getCompletePath());
                         started = true;
                     }
                     processDdl(scheme);
                     createdTables++;
-                } else {
+                } else
+                {
                     logger.setOperationName("Skip table with schema: " + scheme.getEntityName());
                 }
             }
         }
         // Define views after tables as there might be dependencies
-        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements()) {
+        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements())
+        {
             DdlElement scheme = entity.getScheme();
-            if (scheme instanceof ViewDef) {
-                if (scheme.withoutDbScheme()) {
-                    if (!started) {
+            if (scheme instanceof ViewDef)
+            {
+                if (scheme.withoutDbScheme())
+                {
+                    if (!started)
+                    {
                         logger.setOperationName("[A] " + module.getCompletePath());
                         started = true;
                     }
                     processDdl(scheme);
                     createdViews++;
-                } else {
+                } else
+                {
                     logger.setOperationName("Skip table with schema: " + scheme.getEntityName());
                 }
             }
@@ -121,10 +141,12 @@ public class AppDb extends ScriptSupport<AppDb>
 
     private void processDdl(final DdlElement tableDef) throws ProjectElementException
     {
-        try {
+        try
+        {
             final String generatedQuery = tableDef.getDdl();
             sql.executeMultiple(generatedQuery);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new ProjectElementException(tableDef, e);
         }
     }

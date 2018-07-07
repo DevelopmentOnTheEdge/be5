@@ -37,8 +37,7 @@ public class AppToolsTest extends TestUtils
         try
         {
             return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        }
-        catch (UnsupportedEncodingException e)
+        } catch (UnsupportedEncodingException e)
         {
             throw new RuntimeException(e);
         }

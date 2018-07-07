@@ -8,23 +8,23 @@ public class AstOrderingElement extends SimpleNode
 {
     private Token dir;
     private Token nulls;
-    
+
     public AstOrderingElement(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstOrderingElement(SimpleNode child)
     {
-        this( SqlParserTreeConstants.JJTORDERINGELEMENT );
-        addChild( child );
+        this(SqlParserTreeConstants.JJTORDERINGELEMENT);
+        addChild(child);
     }
 
     public void setDirectionToken(Token dir)
     {
         this.dir = dir;
     }
-    
+
     public void setNullsToken(Token nulls)
     {
         this.nulls = nulls;
@@ -33,13 +33,13 @@ public class AstOrderingElement extends SimpleNode
     @Override
     public String getNodeSuffix()
     {
-        return StreamEx.of( dir, nulls ).nonNull().map( n -> n.image ).joining( " " );
+        return StreamEx.of(dir, nulls).nonNull().map(n -> n.image).joining(" ");
     }
 
     public Token getDirectionToken()
     {
         return dir;
     }
-    
+
 }
 /* JavaCC - OriginalChecksum=3995feca982220edb7dbb2247041ce39 (do not edit this line) */

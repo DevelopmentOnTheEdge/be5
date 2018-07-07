@@ -34,7 +34,8 @@ public class ClassSelector extends CustomEditorSupport
 
     protected void editButtonAction()
     {
-        if (classSelector != null) {
+        if (classSelector != null)
+        {
             classSelector.selectClass((BeModelElement) getBean(), getDescriptor().getDisplayName(), textField.getText(),
                     new PlatformClassSelectorCallback()
                     {

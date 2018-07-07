@@ -28,7 +28,8 @@ public class OracleTypeManager extends DefaultTypeManager
     {
         StringBuilder sb = new StringBuilder();
         String addend = "";
-        if (!oldColumn.isCanBeNull()) {
+        if (!oldColumn.isCanBeNull())
+        {
             if (newColumn.isCanBeNull())
                 addend = " NULL";
             newColumn = (ColumnDef) newColumn.clone(newColumn.getOrigin(), newColumn.getName());
@@ -52,7 +53,8 @@ public class OracleTypeManager extends DefaultTypeManager
     @Override
     public void correctType(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case "TIMESTAMP(6)":
                 type.setTypeName(SqlColumnType.TYPE_TIMESTAMP);
                 break;
@@ -63,13 +65,17 @@ public class OracleTypeManager extends DefaultTypeManager
                 type.setTypeName(SqlColumnType.TYPE_BIGTEXT);
                 break;
             case "NUMBER":
-                if (type.getPrecision() > 0) {
+                if (type.getPrecision() > 0)
+                {
                     type.setTypeName(SqlColumnType.TYPE_DECIMAL);
-                } else if (type.getSize() > 10) {
+                } else if (type.getSize() > 10)
+                {
                     type.setTypeName(SqlColumnType.TYPE_BIGINT);
-                } else if (type.getSize() > 5) {
+                } else if (type.getSize() > 5)
+                {
                     type.setTypeName(SqlColumnType.TYPE_INT);
-                } else {
+                } else
+                {
                     type.setTypeName(SqlColumnType.TYPE_SMALLINT);
                 }
                 break;
@@ -80,7 +86,8 @@ public class OracleTypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case SqlColumnType.TYPE_SMALLINT:
                 return "NUMBER(5)";
             case SqlColumnType.TYPE_INT:
@@ -103,7 +110,8 @@ public class OracleTypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
-                for (String enumValue : type.getEnumValues()) {
+                for (String enumValue : type.getEnumValues())
+                {
                     maxLen = Math.max(maxLen, enumValue.length());
                 }
                 return "VARCHAR2(" + (maxLen + 1) + " CHAR)";
@@ -162,7 +170,8 @@ public class OracleTypeManager extends DefaultTypeManager
         if (defaultValue == null)
             return "";
         ColumnFunction function = new ColumnFunction(defaultValue);
-        if (ColumnFunction.TRANSFORM_GENERIC.equals(function.getTransform())) {
+        if (ColumnFunction.TRANSFORM_GENERIC.equals(function.getTransform()))
+        {
             return "CREATE OR REPLACE TRIGGER " + getTriggerName(column) +
                     "\nBEFORE INSERT OR UPDATE OF " + normalizeIdentifier(function.getColumnName()) + " ON " + normalizeIdentifier(column.getEntity().getName()) +
                     "\nFOR EACH ROW" +
@@ -179,7 +188,8 @@ public class OracleTypeManager extends DefaultTypeManager
         int maxTriggerNameLength = 30;
         String postfix = "_trigger";
         String name = column.getEntity().getName() + "_" + column.getName();
-        if (maxTriggerNameLength < (name.length() + postfix.length())) {
+        if (maxTriggerNameLength < (name.length() + postfix.length()))
+        {
             name = column.getEntity().getName().substring(0, 1) + Integer.toHexString(column.getEntity().getName().hashCode()) + "_"
                     + column.getName().substring(0, 1) + Integer.toHexString(column.getName().hashCode());
         }
@@ -193,7 +203,8 @@ public class OracleTypeManager extends DefaultTypeManager
         if (defaultValue == null)
             return "";
         ColumnFunction function = new ColumnFunction(defaultValue);
-        if (ColumnFunction.TRANSFORM_GENERIC.equals(function.getTransform())) {
+        if (ColumnFunction.TRANSFORM_GENERIC.equals(function.getTransform()))
+        {
             return "DROP TRIGGER " + getTriggerName(column) + ";\n";
         }
         return "";

@@ -31,11 +31,14 @@ public class Projects
     {
         final List<String> values = new ArrayList<>();
 
-        for (final Module module : project.allModules()) {
+        for (final Module module : project.allModules())
+        {
             final Localizations localizations = module.getLocalizations();
-            for (final LanguageLocalizations languageLocalizations : localizations) {
+            for (final LanguageLocalizations languageLocalizations : localizations)
+            {
                 final EntityLocalizations entityLocalizations = languageLocalizations.get(entity);
-                if (entityLocalizations != null) {
+                if (entityLocalizations != null)
+                {
                     final Set<LocalizationRow> rows = entityLocalizations.getRawRows();
                     for (final LocalizationRow row : rows)
                         if (key == null || row.getKey().equals(key) && row.getTopic().equals(topic))
@@ -49,7 +52,8 @@ public class Projects
 
     public static FreemarkerScript searchFreemarkerScript(final Project project, final Path path)
     {
-        for (final Module module : project.allModules()) {
+        for (final Module module : project.allModules())
+        {
             final FreemarkerCatalog scripts = module.getFreemarkerScripts();
             final FreemarkerScript script = Projects.searchIn(scripts, path);
 
@@ -76,12 +80,15 @@ public class Projects
         if (scripts == null)
             return null;
 
-        for (FreemarkerScriptOrCatalog scriptOrCatalog : scripts) {
-            if (scriptOrCatalog instanceof FreemarkerScript) {
+        for (FreemarkerScriptOrCatalog scriptOrCatalog : scripts)
+        {
+            if (scriptOrCatalog instanceof FreemarkerScript)
+            {
                 FreemarkerScript freemarkerScript = (FreemarkerScript) scriptOrCatalog;
                 if (freemarkerScript.getLinkedFile() != null && freemarkerScript.getLinkedFile().equals(path))
                     return freemarkerScript;
-            } else {
+            } else
+            {
                 FreemarkerScript freemarkerScript = searchIn((FreemarkerCatalog) scriptOrCatalog, path);
                 if (freemarkerScript != null)
                     return freemarkerScript;

@@ -22,7 +22,7 @@ final public class DatabaseModel implements EntityAccess
 {
     static
     {
-        GroovyRegister.registerMetaClass( DatabaseModelImplMetaClass.class, DatabaseModel.class );
+        GroovyRegister.registerMetaClass(DatabaseModelImplMetaClass.class, DatabaseModel.class);
     }
 
     private final DbService sqlService;
@@ -41,17 +41,17 @@ final public class DatabaseModel implements EntityAccess
     }
 
     @Override
-    public <T> EntityModel<T> getEntity( String entityName )
+    public <T> EntityModel<T> getEntity(String entityName)
     {
         Objects.requireNonNull(entityName);
         Entity entity = meta.getEntity(entityName);
 
-        if (entity == null)throw Be5Exception.unknownEntity(entityName);
+        if (entity == null) throw Be5Exception.unknownEntity(entityName);
 
         return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, meta, entity);
     }
 
-    public <T> EntityModel<T> getAt( String entityName )
+    public <T> EntityModel<T> getAt(String entityName)
     {
         return getEntity(entityName);
     }

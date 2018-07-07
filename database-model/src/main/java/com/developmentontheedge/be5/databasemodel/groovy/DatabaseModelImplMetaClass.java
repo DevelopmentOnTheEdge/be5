@@ -6,14 +6,14 @@ import groovy.lang.DelegatingMetaClass;
 
 public class DatabaseModelImplMetaClass extends DelegatingMetaClass
 {
-    public DatabaseModelImplMetaClass(Class<DatabaseModel> theClass )
+    public DatabaseModelImplMetaClass(Class<DatabaseModel> theClass)
     {
-        super( theClass );
+        super(theClass);
     }
 
     @Override
-    public Object getProperty( Object object, String property ) 
+    public Object getProperty(Object object, String property)
     {
-        return ( (DatabaseModel)object ).getEntity( property );
+        return ((DatabaseModel) object).getEntity(property);
     }
 }

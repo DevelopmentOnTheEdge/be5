@@ -8,20 +8,22 @@ public class AstNumericConstant extends SimpleNode
 {
     public AstNumericConstant(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstNumericConstant(Number value)
     {
-        this( SqlParserTreeConstants.JJTNUMERICCONSTANT );
-        setValue( value );
+        this(SqlParserTreeConstants.JJTNUMERICCONSTANT);
+        setValue(value);
     }
 
     private Number value;
+
     public Number getValue()
     {
         return value;
     }
+
     public void setValue(Number val)
     {
         value = val;
@@ -42,17 +44,17 @@ public class AstNumericConstant extends SimpleNode
     @Override
     public boolean equals(Object obj)
     {
-        if( this == obj )
+        if (this == obj)
             return true;
-        if( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        final AstNumericConstant other = (AstNumericConstant)obj;
-        return Objects.equals( value, other.value );
+        final AstNumericConstant other = (AstNumericConstant) obj;
+        return Objects.equals(value, other.value);
     }
 
     public static AstNumericConstant of(Number number)
     {
-        return new AstNumericConstant( number );
+        return new AstNumericConstant(number);
     }
 }
 /* JavaCC - OriginalChecksum=322e3c529344c3c1ff002a508b8373af (do not edit this line) */

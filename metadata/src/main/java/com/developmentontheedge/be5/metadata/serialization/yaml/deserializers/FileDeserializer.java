@@ -19,18 +19,22 @@ abstract class FileDeserializer extends BaseDeserializer
     private FileDeserializer(LoadContext loadContext, final String content, final Path path) throws ReadException
     {
         super(loadContext, path);
-        if (content == null) {
+        if (content == null)
+        {
             this.content = null;
             return;
         }
 
-        try {
+        try
+        {
             this.content = new Yaml().compose(new StringReader(content));
-        } catch (MarkedYAMLException e) {
+        } catch (MarkedYAMLException e)
+        {
             throw new ReadException(
                     new Exception((e.getProblemMark().getLine() + 1) + ":" + (e.getProblemMark().getColumn() + 1) + ": "
                             + e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
-        } catch (YAMLException e) {
+        } catch (YAMLException e)
+        {
             throw new ReadException(new Exception(e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
         }
     }
@@ -53,7 +57,8 @@ abstract class FileDeserializer extends BaseDeserializer
 
     public void deserialize() throws ReadException
     {
-        if (content != null) {
+        if (content != null)
+        {
             doDeserialize(Serialization.derepresent(content));
         }
     }

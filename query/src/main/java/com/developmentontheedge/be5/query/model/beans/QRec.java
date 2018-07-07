@@ -20,16 +20,15 @@ public class QRec extends DynamicPropertySetSupport
 {
     static
     {
-        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
+        GroovyRegister.registerMetaClass(DynamicPropertySetMetaClass.class, QRec.class);
     }
 
     public static QRec fromList(List<DynamicPropertySet> dpsList)
     {
-        if(dpsList.size() == 0)
+        if (dpsList.size() == 0)
         {
             return null;
-        }
-        else
+        } else
         {
             QRec qRec = new QRec();
             for (DynamicProperty property : dpsList.get(0))

@@ -7,7 +7,8 @@ public class ModelValidationUtils
 {
     public static void checkValueInSet(BeModelElement source, String property, Object value, Object[] set) throws ProjectElementException
     {
-        for (Object element : set) {
+        for (Object element : set)
+        {
             if (element.equals(value))
                 return;
         }

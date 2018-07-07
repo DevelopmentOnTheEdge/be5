@@ -24,9 +24,12 @@ public class SqlServerTypeManager extends DefaultTypeManager
         String prefix = "ALTER TABLE " + normalizeIdentifier(tableName) + " ALTER COLUMN " + normalizeIdentifier(columnName) + " ";
         StringBuilder sb = new StringBuilder();
         StringBuilder endSb = new StringBuilder();
-        for (IndexDef index : oldColumn.getTable().getIndices().getAvailableElements()) {
-            for (IndexColumnDef indexColumn : index.getAvailableElements()) {
-                if (indexColumn.getName().equals(oldColumn.getName())) {
+        for (IndexDef index : oldColumn.getTable().getIndices().getAvailableElements())
+        {
+            for (IndexColumnDef indexColumn : index.getAvailableElements())
+            {
+                if (indexColumn.getName().equals(oldColumn.getName()))
+                {
                     sb.append(index.getDropDdl());
                     endSb.append(index.getCreateDdl());
                     break;
@@ -34,23 +37,29 @@ public class SqlServerTypeManager extends DefaultTypeManager
             }
         }
         if (column.isCanBeNull() && (!oldColumn.isCanBeNull()
-                || (!column.getType().toString().equals(oldColumn.getType().toString())))) {
+                || (!column.getType().toString().equals(oldColumn.getType().toString()))))
+        {
             sb.append(prefix).append(getTypeClause(column.getType())).append(" NULL;");
         }
         if (!column.isCanBeNull() && (oldColumn.isCanBeNull()
-                || (!column.getType().toString().equals(oldColumn.getType().toString())))) {
-            if (oldColumn.isCanBeNull() && !Strings2.isNullOrEmpty(column.getDefaultValue())) {
+                || (!column.getType().toString().equals(oldColumn.getType().toString()))))
+        {
+            if (oldColumn.isCanBeNull() && !Strings2.isNullOrEmpty(column.getDefaultValue()))
+            {
                 sb.append("UPDATE ").append(normalizeIdentifier(tableName)).append(" SET ")
                         .append(normalizeIdentifier(columnName)).append('=').append(column.getDefaultValue()).append(" WHERE ")
                         .append(normalizeIdentifier(columnName)).append(" IS NULL;");
             }
             sb.append(prefix).append(getTypeClause(column.getType())).append(" NOT NULL;");
         }
-        if (!Strings2.nullToEmpty(column.getDefaultValue()).equals(Strings2.nullToEmpty(oldColumn.getDefaultValue()))) {
-            if (!Strings2.isNullOrEmpty(oldColumn.getDefaultValue())) {
+        if (!Strings2.nullToEmpty(column.getDefaultValue()).equals(Strings2.nullToEmpty(oldColumn.getDefaultValue())))
+        {
+            if (!Strings2.isNullOrEmpty(oldColumn.getDefaultValue()))
+            {
                 sb.append(getDropDefaultStatements(tableName, columnName));
             }
-            if (!Strings2.isNullOrEmpty(column.getDefaultValue())) {
+            if (!Strings2.isNullOrEmpty(column.getDefaultValue()))
+            {
                 sb.append("ALTER TABLE ").append(normalizeIdentifier(tableName)).append(" ADD CONSTRAINT df_")
                         .append(tableName).append('_').append(columnName).append(" DEFAULT ")
                         .append(column.getDefaultValue()).append(" FOR ").append(normalizeIdentifier(columnName)).append(';');
@@ -82,10 +91,12 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(ColumnDef column)
     {
-        if (column.getDefaultValue() != null) {
+        if (column.getDefaultValue() != null)
+        {
             String defaultValue = getDefaultValue(column);
             ColumnFunction function = new ColumnFunction(defaultValue);
-            if (function.isTransformed()) {
+            if (function.isTransformed())
+            {
                 return "";
             }
         }
@@ -95,7 +106,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public void correctType(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case "image":
                 type.setTypeName(SqlColumnType.TYPE_BLOB);
                 break;
@@ -152,7 +164,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case SqlColumnType.TYPE_TIMESTAMP:
                 return "DATETIME";
             case SqlColumnType.TYPE_UBIGINT:
@@ -168,7 +181,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
-                for (String enumValue : type.getEnumValues()) {
+                for (String enumValue : type.getEnumValues())
+                {
                     maxLen = Math.max(maxLen, enumValue.length());
                 }
                 return "VARCHAR(" + (maxLen) + ")";

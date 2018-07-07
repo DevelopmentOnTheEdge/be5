@@ -11,8 +11,10 @@ import javax.inject.Inject;
 
 public class Logout extends GOperationSupport
 {
-    @Inject protected UserHelper userHelper;
-    @Inject protected LoginService loginService;
+    @Inject
+    protected UserHelper userHelper;
+    @Inject
+    protected LoginService loginService;
 
     @Override
     public void invoke(Object parameters) throws Exception

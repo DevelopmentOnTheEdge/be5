@@ -188,12 +188,14 @@ public class QuerySettings extends BeModelElementSupport
     {
         if (autoRefresh != other.autoRefresh)
             return false;
-        if (beautifier == null) {
+        if (beautifier == null)
+        {
             if (other.beautifier != null)
                 return false;
         } else if (!beautifier.equals(other.beautifier))
             return false;
-        if (colorSchemeID == null) {
+        if (colorSchemeID == null)
+        {
             if (other.colorSchemeID != null)
                 return false;
         } else if (!colorSchemeID.equals(other.colorSchemeID))

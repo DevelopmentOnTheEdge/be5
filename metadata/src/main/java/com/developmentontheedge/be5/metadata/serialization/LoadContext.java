@@ -26,7 +26,8 @@ public class LoadContext
      */
     public void check()
     {
-        if (!warnings.isEmpty()) {
+        if (!warnings.isEmpty())
+        {
             throw new IllegalStateException("There are " + warnings.size() + " errors:\n" + StreamEx.of(warnings).joining("\n"));
         }
     }

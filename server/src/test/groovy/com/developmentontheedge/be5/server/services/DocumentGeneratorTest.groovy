@@ -18,22 +18,22 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
 @TypeChecked
-class DocumentGeneratorTest extends TestTableQueryDBTest
-{
-    @Inject private Meta meta
-    @Inject private DocumentGenerator documentGenerator
-    @Inject private OperationExecutor operationExecutor
+class DocumentGeneratorTest extends TestTableQueryDBTest {
+    @Inject
+    private Meta meta
+    @Inject
+    private DocumentGenerator documentGenerator
+    @Inject
+    private OperationExecutor operationExecutor
 
     @Before
-    void setUp()
-    {
+    void setUp() {
         initGuest()
         ServerTestResponse.newMock()
     }
 
     @Test
-    void getTablePresentation()
-    {
+    void getTablePresentation() {
         TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "All records"), new HashMap<>())
 
@@ -44,12 +44,11 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         assertEquals("[{'cells':[" +
                 "{'content':'tableModelTest','options':{}}," +
                 "{'content':'1','options':{}}" +
-            "]}]",  oneQuotes(jsonb.toJson(table.getRows())))
+                "]}]", oneQuotes(jsonb.toJson(table.getRows())))
     }
 
     @Test
-    void testLinkQuick()
-    {
+    void testLinkQuick() {
         TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "LinkQuick"), new HashMap<>())
 
@@ -58,14 +57,13 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         assertEquals("{'cells':[{" +
                 "'content':'tableModelTest'," +
                 "'options':{" +
-                    "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," +
-                    "'quick':{'visible':'true'}" +
+                "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," +
+                "'quick':{'visible':'true'}" +
                 "}}]}", oneQuotes(jsonb.toJson(table.getRows().get(0))))
     }
 
     @Test
-    void testTableWithFilter()
-    {
+    void testTableWithFilter() {
         initUserWithRoles("SystemDeveloper")
 
         def query = meta.getQuery("testtable", "TableWithFilter")
@@ -75,48 +73,46 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         assertEquals("{" +
                 "'data':{'attributes':{'category':'testtable','categoryNavigation':[],'columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'offset':0,'operations':[],'orderColumn':-1,'orderDir':'asc','page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +
                 "'included':[" +
-                    "{'attributes':{" +
-                        "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
-                        "'entity':'testtable'," +
-                        "'layout':{}," +
-                        "'operation':'FilterByParamsInQueryOperation','operationParams':{}," +
-                        "'operationResult':{'status':'generate'}," +
-                        "'query':'TableWithFilter'," +
-                        "'selectedRows':''," +
-                        "'title':'FilterByParamsInQueryOperation'" +
-                    "}," +
-                    "'id':'topForm'," +
-                    "'links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'}," +
-                    "'type':'form'}" +
+                "{'attributes':{" +
+                "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
+                "'entity':'testtable'," +
+                "'layout':{}," +
+                "'operation':'FilterByParamsInQueryOperation','operationParams':{}," +
+                "'operationResult':{'status':'generate'}," +
+                "'query':'TableWithFilter'," +
+                "'selectedRows':''," +
+                "'title':'FilterByParamsInQueryOperation'" +
+                "}," +
+                "'id':'topForm'," +
+                "'links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'}," +
+                "'type':'form'}" +
                 "]" +
                 "}", oneQuotes(jsonb.toJson(document)))
     }
 
     @Test
-    void testNullInSubQuery()
-    {
+    void testNullInSubQuery() {
         db.update("DELETE FROM testtableAdmin")
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11)
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null)
 
         TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtableAdmin", "Test null in subQuery"), new HashMap<>())
 
         assertEquals("[" +
                 "{'cells':[" +
-                    "{'content':'tableModelTest','options':{}}," +
-                    "{'content':11,'options':{}}," +
-                    "{'content':'<div class=\\'inner-sql-row\\'>tableModelTest</div>','options':{}}]}," +
+                "{'content':'tableModelTest','options':{}}," +
+                "{'content':11,'options':{}}," +
+                "{'content':'<div class=\\'inner-sql-row\\'>tableModelTest</div>','options':{}}]}," +
                 "{'cells':[" +
-                    "{'content':'tableModelTest','options':{}}," +
-                    "{'options':{}}," +
-                    "{'content':'','options':{}}" +
+                "{'content':'tableModelTest','options':{}}," +
+                "{'options':{}}," +
+                "{'content':'','options':{}}" +
                 "]}]", oneQuotes(jsonb.toJson(table.getRows())))
     }
 
     @Test
-    void getQueryJsonApiForUser()
-    {
+    void getQueryJsonApiForUser() {
         JsonApiModel queryJsonApiForUser = documentGenerator.
                 queryJsonApiFor("testtable", "All records", Collections.emptyMap());
 
@@ -125,8 +121,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    void accessDenied()
-    {
+    void accessDenied() {
         JsonApiModel queryJsonApiForUser = documentGenerator.
                 queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
 
@@ -136,8 +131,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    void accessAllowed()
-    {
+    void accessAllowed() {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
         JsonApiModel queryJsonApiForUser = documentGenerator.
@@ -148,8 +142,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    void error()
-    {
+    void error() {
         JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtable", "Query with error", Collections.emptyMap());
 
         assertEquals(null, queryJsonApiForUser.getData());

@@ -15,7 +15,8 @@ public class H2TypeManager extends DefaultTypeManager
     @Override
     public void correctType(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case "bigserial":
             case "int8":
                 type.setTypeName(SqlColumnType.TYPE_BIGINT);
@@ -28,9 +29,11 @@ public class H2TypeManager extends DefaultTypeManager
                 type.setTypeName(SqlColumnType.TYPE_SMALLINT);
                 break;
             case "numeric":
-                if (type.getPrecision() != 0) {
+                if (type.getPrecision() != 0)
+                {
                     type.setTypeName(SqlColumnType.TYPE_DECIMAL);
-                } else {
+                } else
+                {
                     if (type.getSize() > 7)
                         type.setTypeName(SqlColumnType.TYPE_BIGINT);
                     else
@@ -52,7 +55,8 @@ public class H2TypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case SqlColumnType.TYPE_DATETIME:
                 return "TIMESTAMP";
             case SqlColumnType.TYPE_UBIGINT:
@@ -69,7 +73,8 @@ public class H2TypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
-                for (String enumValue : type.getEnumValues()) {
+                for (String enumValue : type.getEnumValues())
+                {
                     maxLen = Math.max(maxLen, enumValue.length());
                 }
                 return "VARCHAR(" + (maxLen) + ")";
@@ -134,7 +139,8 @@ public class H2TypeManager extends DefaultTypeManager
     @Override
     public String getAddColumnStatements(ColumnDef column)
     {
-        if (column.isAutoIncrement() && column.isPrimaryKey() && column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY)) {
+        if (column.isAutoIncrement() && column.isPrimaryKey() && column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY))
+        {
             String seq = getSequenceName(column.getEntity().getName(), column.getName());
             return "DROP SEQUENCE IF EXISTS " + seq + ";\nCREATE SEQUENCE " + seq + ";\nALTER TABLE "
                     + normalizeIdentifier(column.getTable().getEntityName()) + " ADD COLUMN " + normalizeIdentifier(column.getName())
@@ -146,11 +152,13 @@ public class H2TypeManager extends DefaultTypeManager
     @Override
     public void addCanBeNullAndAndConstraintClause(ColumnDef column, StringBuilder sb)
     {
-        if (!column.isCanBeNull()) {
+        if (!column.isCanBeNull())
+        {
             sb.append(' ').append("NOT NULL");
         }
         String constraint = getConstraintClause(column);
-        if (!constraint.isEmpty()) {
+        if (!constraint.isEmpty())
+        {
             sb.append(' ').append(constraint);
         }
     }

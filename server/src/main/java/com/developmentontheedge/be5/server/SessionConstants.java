@@ -22,7 +22,7 @@ public interface SessionConstants
 //    String CAPTCHA_KEY = "simpleCaptcha";
 
     String QUERY_BUILDER_HISTORY = "query-builder-history";
- 
+
 //    String INIT_CONNECT_STRING = "connectString";
 //    String INIT_CONNECT_CHARSET = "dbConnectionCharset";
 //    String INIT_RESPONSE_CHARSET = "outputCharset";

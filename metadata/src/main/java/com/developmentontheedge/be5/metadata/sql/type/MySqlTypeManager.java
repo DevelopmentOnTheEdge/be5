@@ -40,10 +40,12 @@ public class MySqlTypeManager extends DefaultTypeManager
     @Override
     public void correctType(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case "DOUBLE":
                 type.setTypeName(SqlColumnType.TYPE_DECIMAL);
-                if (type.getSize() == 22 && type.getPrecision() == 0) {
+                if (type.getSize() == 22 && type.getPrecision() == 0)
+                {
                     type.setPrecision(10);
                 }
                 break;
@@ -57,18 +59,21 @@ public class MySqlTypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case SqlColumnType.TYPE_BIGTEXT:
                 return "TEXT";
             case SqlColumnType.TYPE_BLOB:
                 return "MEDIUMBLOB";
             case SqlColumnType.TYPE_DECIMAL:
-                if (type.getSize() == 22 && type.getPrecision() == 10) {
+                if (type.getSize() == 22 && type.getPrecision() == 10)
+                {
                     return "DOUBLE";
                 }
                 return super.getTypeClause(type);
             case SqlColumnType.TYPE_VARCHAR:
-                if (type.getSize() > 255) {
+                if (type.getSize() > 255)
+                {
                     return "TEXT";
                 }
                 return super.getTypeClause(type);

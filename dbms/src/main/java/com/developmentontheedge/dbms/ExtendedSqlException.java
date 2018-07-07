@@ -6,7 +6,7 @@ public class ExtendedSqlException extends Exception
     private static final long serialVersionUID = 1L;
     private final String connectionString;
     private final String query;
-    
+
     public ExtendedSqlException(String connectString, String query, Exception cause)
     {
         super(cause);
@@ -22,6 +22,6 @@ public class ExtendedSqlException extends Exception
     @Override
     public String getMessage()
     {
-        return "SQL Error: "+getCause().getMessage()+"\nConnection: "+connectionString+"\nQuery: "+query;
+        return "SQL Error: " + getCause().getMessage() + "\nConnection: " + connectionString + "\nQuery: " + query;
     }
 }

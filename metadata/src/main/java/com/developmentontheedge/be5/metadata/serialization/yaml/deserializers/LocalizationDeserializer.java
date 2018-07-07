@@ -32,7 +32,8 @@ class LocalizationDeserializer extends FileDeserializer
         final Map<String, Object> localizationContent = asMap(asMap(serializedRoot).get(lang));
         final List<Object> serializedEntitiesLocalization = asList(localizationContent.get(TAG_ENTITIES));
 
-        for (Object serializedEntityLocalization : serializedEntitiesLocalization) {
+        for (Object serializedEntityLocalization : serializedEntitiesLocalization)
+        {
             readEntityLocalization(asMap(serializedEntityLocalization));
         }
 
@@ -48,7 +49,8 @@ class LocalizationDeserializer extends FileDeserializer
 
     private void readEntityLocalization(Map<String, Object> serializedEntityLocalization) throws ReadException
     {
-        if (serializedEntityLocalization.size() != 1) {
+        if (serializedEntityLocalization.size() != 1)
+        {
             loadContext.addWarning(new ReadException(path, "Each entity localization should have only one key that reperesents an entity name"));
             return;
         }
@@ -61,10 +63,13 @@ class LocalizationDeserializer extends FileDeserializer
 
     private void readBlocks(final String entityName, final List<Object> serializedBlocks)
     {
-        for (final Object serializedBlock : serializedBlocks) {
-            try {
+        for (final Object serializedBlock : serializedBlocks)
+        {
+            try
+            {
                 readBlock(entityName, asMap(serializedBlock));
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(target));
             }
         }
@@ -75,14 +80,16 @@ class LocalizationDeserializer extends FileDeserializer
         final List<String> topics = asStrList(serializedBlock.get(ATTR_LOCALIZATION_TOPICS));
         final List<Object> serializedEntries = asList(serializedBlock.get(TAG_LOCALIZATION_ENTRIES));
 
-        for (Object serializedEntry : serializedEntries) {
+        for (Object serializedEntry : serializedEntries)
+        {
             readEntry(entityName, topics, asMap(serializedEntry));
         }
     }
 
     private void readEntry(String entityName, List<String> topics, Map<String, Object> serializedEntry) throws ReadException
     {
-        if (serializedEntry.size() != 1) {
+        if (serializedEntry.size() != 1)
+        {
             loadContext.addWarning(new ReadException(path, "Each localization entry should have only one key"));
             return;
         }
@@ -90,7 +97,8 @@ class LocalizationDeserializer extends FileDeserializer
         final String name = serializedEntry.keySet().iterator().next();
         final String value = asStr(serializedEntry.get(name));
 
-        if (!target.addLocalization(entityName, topics, name, value)) {
+        if (!target.addLocalization(entityName, topics, name, value))
+        {
             loadContext.addWarning(new ReadException(target.get(entityName), path, "Duplicate localization: topics = " + topics + "; name = " + name));
         }
     }

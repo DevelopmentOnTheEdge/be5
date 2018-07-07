@@ -20,12 +20,14 @@ public class Be4BuiltIns
         protected TemplateModel _eval(Environment env) throws TemplateException
         {
             Object projectObj = env.__getitem__("project");
-            if (!(projectObj instanceof Project)) {
+            if (!(projectObj instanceof Project))
+            {
                 throw new TemplateModelException("Unable to access project");
             }
             Project project = (Project) projectObj;
             Rdbms system = project.getDatabaseSystem();
-            if (system == null) {
+            if (system == null)
+            {
                 throw new TemplateModelException("Project database system is not defined");
             }
             String str = target.evalAndCoerceToString(env);

@@ -61,15 +61,18 @@ public class ProjectElementException extends Exception implements Formattable
     @Override
     public String getMessage()
     {
-        if (isNoError()) {
+        if (isNoError())
+        {
             return "ok";
         }
         StringBuilder sb = new StringBuilder();
         sb.append(path);
-        if (property != null) {
+        if (property != null)
+        {
             sb.append(": ").append(property);
         }
-        if (row != 0) {
+        if (row != 0)
+        {
             sb.append('[').append(row).append(',').append(column).append(']');
         }
         sb.append(": ").append(getBaseMessage());
@@ -103,7 +106,8 @@ public class ProjectElementException extends Exception implements Formattable
     @PropertyName("Message")
     public String getBaseMessage()
     {
-        if (isNoError()) {
+        if (isNoError())
+        {
             return "ok";
         }
         String baseMessage = String.valueOf(getCause().getMessage()).replaceFirst("\\s+at .+\\[line \\d+, column \\d+\\]", "");
@@ -129,14 +133,16 @@ public class ProjectElementException extends Exception implements Formattable
     @Override
     public String format()
     {
-        try {
+        try
+        {
             final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             final PrintStream out = new PrintStream(bytes, true, StandardCharsets.UTF_8.name());
             format(out);
             final String string = bytes.toString(StandardCharsets.UTF_8.name());
 
             return string;
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e)
+        {
             throw new AssertionError("", e);
         }
     }
@@ -145,12 +151,15 @@ public class ProjectElementException extends Exception implements Formattable
     {
         ProjectElementException error = this;
         String prefix = "";
-        while (true) {
+        while (true)
+        {
             String id = prefix + error.getPath();
-            if (error.getProperty() != null) {
+            if (error.getProperty() != null)
+            {
                 id += ":" + error.getProperty();
             }
-            if (error.getRow() > 0) {
+            if (error.getRow() > 0)
+            {
                 id += " [" + error.getRow() + "," + error.getColumn() + "]";
             }
             out.println(id);
@@ -158,7 +167,8 @@ public class ProjectElementException extends Exception implements Formattable
             if (prefix.isEmpty())
                 prefix = " ";
             prefix = "-" + prefix;
-            if (!(cause instanceof ProjectElementException)) {
+            if (!(cause instanceof ProjectElementException))
+            {
                 out.println(prefix + cause.getMessage());
                 out.println();
                 break;

@@ -23,33 +23,34 @@ public class HashUrl
 
     public HashUrl(String action, String... params)
     {
-        this.components = StreamEx.of(params).prepend( action ).peek( Objects::requireNonNull ).toArray( String[]::new );
+        this.components = StreamEx.of(params).prepend(action).peek(Objects::requireNonNull).toArray(String[]::new);
         this.keyValues = EMPTY;
     }
 
     public HashUrl positional(String value)
     {
-        Objects.requireNonNull( value, "Null positional parameter supplied" );
-        return new HashUrl(StreamEx.of(components).append(value).toArray( String[]::new ), keyValues);
+        Objects.requireNonNull(value, "Null positional parameter supplied");
+        return new HashUrl(StreamEx.of(components).append(value).toArray(String[]::new), keyValues);
     }
 
     public HashUrl positional(String[] values)
     {
-        return new HashUrl(StreamEx.of(components).append(values).peek( Objects::requireNonNull ).toArray( String[]::new ), keyValues);
+        return new HashUrl(StreamEx.of(components).append(values).peek(Objects::requireNonNull).toArray(String[]::new), keyValues);
     }
 
     public HashUrl named(String key, String value)
     {
-        Objects.requireNonNull( value, "Null key supplied" );
-        Objects.requireNonNull( value, () -> "Null value supplied for key "+key );
-        return new HashUrl(components, StreamEx.of( keyValues ).append( key, value ).toArray( String[]::new ));
+        Objects.requireNonNull(value, "Null key supplied");
+        Objects.requireNonNull(value, () -> "Null value supplied for key " + key);
+        return new HashUrl(components, StreamEx.of(keyValues).append(key, value).toArray(String[]::new));
     }
 
-    public HashUrl named(Map<String, ?> args) {
-        if(args == null)
+    public HashUrl named(Map<String, ?> args)
+    {
+        if (args == null)
             return this;
-        return new HashUrl(components, EntryStream.of(args).flatMap( entry -> Stream.of(entry.getKey(), entry.getValue()) ).
-                peek(Objects::requireNonNull).prepend( keyValues ).toArray( String[]::new ) );
+        return new HashUrl(components, EntryStream.of(args).flatMap(entry -> Stream.of(entry.getKey(), entry.getValue())).
+                peek(Objects::requireNonNull).prepend(keyValues).toArray(String[]::new));
     }
 
     public HashUrl optional(String key, String value)
@@ -61,9 +62,9 @@ public class HashUrl
 
     private void appendEncoded(StringBuilder out, String str)
     {
-        for(char c : str.toCharArray())
+        for (char c : str.toCharArray())
         {
-            switch(c)
+            switch (c)
             {
                 case '#':
                     out.append("%23");
@@ -87,18 +88,18 @@ public class HashUrl
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        for(String component : components)
+        for (String component : components)
         {
-            if(sb.length() > 0)
+            if (sb.length() > 0)
                 sb.append('/');
             appendEncoded(sb, component);
         }
-        for(int i=0; i<keyValues.length; i+=2)
+        for (int i = 0; i < keyValues.length; i += 2)
         {
             sb.append('/');
             appendEncoded(sb, keyValues[i]);
             sb.append('=');
-            appendEncoded(sb, keyValues[i+1]);
+            appendEncoded(sb, keyValues[i + 1]);
         }
         return sb.toString();
     }

@@ -35,10 +35,13 @@ class FormsDeserializer extends FileDeserializer
 
     private void readForms(final Map<String, Object> serializedForms)
     {
-        for (Map.Entry<String, Object> serializedForm : serializedForms.entrySet()) {
-            try {
+        for (Map.Entry<String, Object> serializedForm : serializedForms.entrySet())
+        {
+            try
+            {
                 readForm(serializedForm);
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(target));
             }
         }
@@ -53,12 +56,16 @@ class FormsDeserializer extends FileDeserializer
         DataElementUtils.saveQuiet(form);
         final Path file = form.getLinkedFile();
 
-        if (file == null) {
+        if (file == null)
+        {
             loadContext.addWarning(new ReadException(form, path, "File cannot be resolved for module " + form.getModuleName()));
-        } else {
-            try {
+        } else
+        {
+            try
+            {
                 form.load();
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(form));
             }
         }

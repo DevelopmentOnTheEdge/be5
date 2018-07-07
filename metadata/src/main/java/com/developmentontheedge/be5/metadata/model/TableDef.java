@@ -71,8 +71,10 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
     public List<IndexDef> getIndicesUsingColumn(String columnName)
     {
         List<IndexDef> result = new ArrayList<>();
-        for (IndexDef index : getIndices().getAvailableElements()) {
-            if (index.getCaseInsensitive(columnName) != null) {
+        for (IndexDef index : getIndices().getAvailableElements())
+        {
+            if (index.getCaseInsensitive(columnName) != null)
+            {
                 result.add(index);
             }
         }
@@ -103,7 +105,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
 
     public ColumnDef getAutoincrementColumn()
     {
-        for (ColumnDef column : getColumns().getAvailableElements()) {
+        for (ColumnDef column : getColumns().getAvailableElements())
+        {
             if (column.isAutoIncrement())
                 return column;
         }
@@ -143,7 +146,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         ColumnDef newColumn = (ColumnDef) oldColumn.clone(oldColumn.getOrigin(), newName);
         // Update oldNames
         Set<String> oldNames = new LinkedHashSet<>(Arrays.asList(newColumn.getOldNames()));
-        for (Iterator<String> it = oldNames.iterator(); it.hasNext(); ) {
+        for (Iterator<String> it = oldNames.iterator(); it.hasNext(); )
+        {
             String previousOldName = it.next();
             if (previousOldName.equalsIgnoreCase(newName))
                 it.remove();
@@ -155,10 +159,13 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         replaceColumnInIndices(oldColumn, newColumn);
         Project project = getProject();
         String currentEntity = getEntityName();
-        for (String entityName : project.getEntityNames()) {
-            for (TableReference reference : project.getEntity(entityName).getAllReferences()) {
+        for (String entityName : project.getEntityNames())
+        {
+            for (TableReference reference : project.getEntity(entityName).getAllReferences())
+            {
                 if (currentEntity.equalsIgnoreCase(reference.getTableTo())
-                        && oldColumn.getName().equalsIgnoreCase(reference.getColumnsTo())) {
+                        && oldColumn.getName().equalsIgnoreCase(reference.getColumnsTo()))
+                {
                     reference.setColumnsTo(newColumn.getName());
                 }
             }
@@ -175,24 +182,28 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         DbmsTypeManager typeManager = dbms.getTypeManager();
         sb.append(typeManager.getCreateTableClause(getEntityName()) + " (\n");
         StringBuilder triggers = new StringBuilder();
-        for (ColumnDef column : getColumns().getAvailableElements()) {
+        for (ColumnDef column : getColumns().getAvailableElements())
+        {
             sb.append(typeManager.getColumnDefinitionClause(column));
             sb.append(",\n");
             triggers.append(typeManager.getColumnTriggerDefinition(column));
         }
-        if (getColumnsCount() > 0) {
+        if (getColumnsCount() > 0)
+        {
             sb.delete(sb.length() - 2, sb.length());
         }
         sb.append(");\n");
         ColumnDef autoincrementColumn = getAutoincrementColumn();
-        if (autoincrementColumn != null) {
+        if (autoincrementColumn != null)
+        {
             String value = getStartId();
             if (value != null)
                 sb.append(typeManager.getStartingIncrementDefinition(getEntityName(), autoincrementColumn.getName(), Long.parseLong(value)));
         }
         sb.append(triggers);
         List<String> indexDdls = new ArrayList<>();
-        for (IndexDef index : getIndices().getAvailableElements()) {
+        for (IndexDef index : getIndices().getAvailableElements())
+        {
             if (!typeManager.isFunctionalIndexSupported() && index.isFunctional())
                 continue;
             if (dbms == Rdbms.DB2 && index.getName().length() > Rdbms.DB2_INDEX_LENGTH)
@@ -218,10 +229,12 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         if (columnsDiff == null) // no columns match
             return getDdl();
         String indicesDiff = getIndicesDiff(def, dbms, typeManager);
-        if (columnsDiff.isEmpty()) {
+        if (columnsDiff.isEmpty())
+        {
             return indicesDiff;
         }
-        if (getModule().getName().equals(getProject().getProjectOrigin()) && sql != null && sql.isEmpty(getEntityName())) {
+        if (getModule().getName().equals(getProject().getProjectOrigin()) && sql != null && sql.isEmpty(getEntityName()))
+        {
             return def.getDropDdl() + getCreateDdl();
         }
         return columnsDiff + indicesDiff;
@@ -230,7 +243,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
     @Override
     public String getDangerousDiffStatements(DdlElement other, SqlExecutor sql) throws ExtendedSqlException
     {
-        if (other == null || (sql != null && sql.isEmpty(getEntityName()))) {
+        if (other == null || (sql != null && sql.isEmpty(getEntityName())))
+        {
             return "";
         }
         if (!(other instanceof TableDef))
@@ -248,14 +262,16 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         StringBuilder sb = new StringBuilder();
         Map<String, IndexDef> oldIndexNames = new HashMap<>();
         Map<String, IndexDef> preservedIndices = new HashMap<>();
-        for (IndexDef oldIndex : def.getIndices().getAvailableElements()) {
+        for (IndexDef oldIndex : def.getIndices().getAvailableElements())
+        {
             if (!typeManager.isFunctionalIndexSupported() && oldIndex.isFunctional())
                 continue;
             if (dbms == Rdbms.DB2 && oldIndex.getName().length() > Rdbms.DB2_INDEX_LENGTH)
                 continue;
             oldIndexNames.put(typeManager.normalizeIdentifier(oldIndex.getName()), oldIndex);
         }
-        for (IndexDef index : getIndices().getAvailableElements()) {
+        for (IndexDef index : getIndices().getAvailableElements())
+        {
             if (!typeManager.isFunctionalIndexSupported() && index.isFunctional())
                 continue;
             if (!index.isValidIndex())
@@ -265,10 +281,12 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             String normalizedName = typeManager.normalizeIdentifier(index.getName());
             preservedIndices.put(normalizedName, oldIndexNames.remove(normalizedName));
         }
-        for (IndexDef index : oldIndexNames.values()) {
+        for (IndexDef index : oldIndexNames.values())
+        {
             sb.append(index.getDropDdl());
         }
-        for (IndexDef index : getIndices().getAvailableElements()) {
+        for (IndexDef index : getIndices().getAvailableElements())
+        {
             String indexName = typeManager.normalizeIdentifier(index.getName());
             if (!preservedIndices.containsKey(indexName))
                 continue;
@@ -285,30 +303,37 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         Map<String, ColumnDef> preservedColumns = new HashMap<>();
         Map<String, ColumnDef> knownOldNames = new HashMap<>();
         boolean hasOldColumn = false;
-        for (ColumnDef oldColumn : def.getColumns().getAvailableElements()) {
+        for (ColumnDef oldColumn : def.getColumns().getAvailableElements())
+        {
             oldColumnNames.put(typeManager.normalizeIdentifier(oldColumn.getName()), oldColumn);
         }
-        for (ColumnDef newColumn : getColumns().getAvailableElements()) {
+        for (ColumnDef newColumn : getColumns().getAvailableElements())
+        {
             String newName = newColumn.getName();
             String normalizedName = typeManager.normalizeIdentifier(newName);
             ColumnDef oldColumn = oldColumnNames.remove(normalizedName);
             if (oldColumn != null)
                 hasOldColumn = true;
             preservedColumns.put(normalizedName, oldColumn);
-            for (String oldName : newColumn.getOldNames()) {
+            for (String oldName : newColumn.getOldNames())
+            {
                 knownOldNames.put(typeManager.normalizeIdentifier(oldName), newColumn);
             }
         }
         if (!hasOldColumn && !oldColumnNames.isEmpty())
             return null;
-        for (ColumnDef oldColumn : oldColumnNames.values()) {
+        for (ColumnDef oldColumn : oldColumnNames.values())
+        {
             String normalizedName = typeManager.normalizeIdentifier(oldColumn.getName());
             ColumnDef renamedColumn = knownOldNames.get(normalizedName);
-            if (renamedColumn != null) {
+            if (renamedColumn != null)
+            {
                 String normalizedNewName = typeManager.normalizeIdentifier(renamedColumn.getName());
                 ColumnDef currentlyMappedColumn = preservedColumns.get(normalizedNewName);
-                if (currentlyMappedColumn == null) {
-                    if (!dangerousOnly) {
+                if (currentlyMappedColumn == null)
+                {
+                    if (!dangerousOnly)
+                    {
                         sb.append(typeManager.getDropTriggerDefinition(oldColumn));
                         sb.append(typeManager.getRenameColumnStatements(oldColumn, renamedColumn.getName()));
                         sb.append(typeManager.getColumnTriggerDefinition(renamedColumn));
@@ -321,35 +346,41 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             }
             addDropColumnStatements(typeManager, oldColumn, sb, dangerousOnly);
         }
-        for (ColumnDef column : getColumns().getAvailableElements()) {
+        for (ColumnDef column : getColumns().getAvailableElements())
+        {
             String columnName = typeManager.normalizeIdentifier(column.getName());
             String columnDef = typeManager.getColumnDefinitionClause(column);
             ColumnDef oldColumn = preservedColumns.get(columnName);
-            if (oldColumn != null) {
+            if (oldColumn != null)
+            {
                 ColumnDef oldColumnNewName = column.getName().equals(oldColumn.getName()) ? oldColumn : (ColumnDef) oldColumn.clone(
                         oldColumn.getOrigin(), column.getName());
                 String oldColumnDef = typeManager.getColumnDefinitionClause(oldColumnNewName);
                 String oldTriggers = typeManager.getColumnTriggerDefinition(oldColumnNewName);
                 String newTriggers = typeManager.getColumnTriggerDefinition(column);
-                if (!oldTriggers.equals(newTriggers)) {
+                if (!oldTriggers.equals(newTriggers))
+                {
                     sb.append(typeManager.getDropTriggerDefinition(oldColumnNewName));
                     sb.append(typeManager.getColumnTriggerDefinition(column));
                 }
                 if (oldColumnDef.equals(columnDef))
                     continue;
-                if (getProject().getDebugStream() != null) {
+                if (getProject().getDebugStream() != null)
+                {
                     getProject().getDebugStream().println("Table " + getEntityName() + ": column " + column.getName() + " differs in DDL");
                     getProject().getDebugStream().println("- old: " + oldColumnDef);
                     getProject().getDebugStream().println("- new: " + columnDef);
                 }
-                if (isSafeTypeUpdate(oldColumn, column, typeManager, sql) && oldColumn.isPrimaryKey() == column.isPrimaryKey() && oldColumn.isAutoIncrement() == column.isAutoIncrement()) {
+                if (isSafeTypeUpdate(oldColumn, column, typeManager, sql) && oldColumn.isPrimaryKey() == column.isPrimaryKey() && oldColumn.isAutoIncrement() == column.isAutoIncrement())
+                {
                     if (!dangerousOnly)
                         sb.append(typeManager.getAlterColumnStatements(column, oldColumnNewName));
                     continue;
                 }
                 addDropColumnStatements(typeManager, oldColumnNewName, sb, dangerousOnly);
             }
-            if (column.getDefaultValue() == null && !column.isCanBeNull() && !column.isAutoIncrement()) {
+            if (column.getDefaultValue() == null && !column.isCanBeNull() && !column.isAutoIncrement())
+            {
                 ColumnDef columnWithDefault = (ColumnDef) column.clone(column.getOrigin(), column.getName());
                 if (column.getType().doesSupportGeneratedKey())
                     columnWithDefault.setDefaultValue("0");
@@ -358,11 +389,14 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                 else
                     columnWithDefault.setDefaultValue("''");
                 sb.append(typeManager.getAddColumnStatements(columnWithDefault));
-                if (!dangerousOnly) {
+                if (!dangerousOnly)
+                {
                     sb.append(typeManager.getAlterColumnStatements(column, columnWithDefault));
                 }
-            } else {
-                if (!dangerousOnly) {
+            } else
+            {
+                if (!dangerousOnly)
+                {
                     sb.append(typeManager.getAddColumnStatements(column));
                     sb.append(typeManager.getColumnTriggerDefinition(column));
                 }
@@ -375,9 +409,12 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
 
     private void replaceColumnInIndices(ColumnDef oldColumn, ColumnDef newColumn)
     {
-        for (IndexDef oldIndex : getIndices()) {
-            for (IndexColumnDef col : oldIndex) {
-                if (col.getName().equalsIgnoreCase(oldColumn.getName())) {
+        for (IndexDef oldIndex : getIndices())
+        {
+            for (IndexColumnDef col : oldIndex)
+            {
+                if (col.getName().equalsIgnoreCase(oldColumn.getName()))
+                {
                     oldIndex.replace(col, col.clone(oldIndex, newColumn.getName()));
                 }
             }
@@ -386,11 +423,14 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
 
     private void addDropColumnStatements(DbmsTypeManager typeManager, ColumnDef oldColumn, StringBuilder sb, boolean dangerousOnly)
     {
-        if (!dangerousOnly) {
+        if (!dangerousOnly)
+        {
             sb.append(typeManager.getDropTriggerDefinition(oldColumn));
         }
-        for (IndexDef index : oldColumn.getTable().getIndicesUsingColumn(oldColumn.getName())) {
-            if (!dangerousOnly) {
+        for (IndexDef index : oldColumn.getTable().getIndicesUsingColumn(oldColumn.getName()))
+        {
+            if (!dangerousOnly)
+            {
                 sb.append(typeManager.getDropIndexClause(index.getName(), oldColumn.getEntity().getName())).append(";\n");
             }
             DataElementUtils.remove(index);
@@ -406,7 +446,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return true;
 
         // Enlarging VARCHAR column
-        if (oldType.getTypeName().equals(TYPE_VARCHAR) && type.getTypeName().equals(TYPE_VARCHAR)) {
+        if (oldType.getTypeName().equals(TYPE_VARCHAR) && type.getTypeName().equals(TYPE_VARCHAR))
+        {
             if (type.getSize() >= oldType.getSize())
                 return true;
             return sql != null && !sql.hasResult("sql.select.longer", typeManager.normalizeIdentifier(getEntityName()),
@@ -414,14 +455,16 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
 
         // Enlarging DECIMAL column
-        if (oldType.getTypeName().equals(TYPE_DECIMAL) && type.getTypeName().equals(TYPE_DECIMAL)) {
+        if (oldType.getTypeName().equals(TYPE_DECIMAL) && type.getTypeName().equals(TYPE_DECIMAL))
+        {
             if (type.getSize() >= oldType.getSize() && type.getPrecision() >= oldType.getPrecision())
                 return true;
 
         }
         // Adding new variants for ENUM column
         if ((oldType.getTypeName().equals(TYPE_ENUM) || oldType.getTypeName().equals(TYPE_BOOL) || oldType.getTypeName().equals(TYPE_VARCHAR)) &&
-                (type.getTypeName().equals(TYPE_ENUM) || type.getTypeName().equals(TYPE_BOOL))) {
+                (type.getTypeName().equals(TYPE_ENUM) || type.getTypeName().equals(TYPE_BOOL)))
+        {
             List<String> newValues = Arrays.asList(type.getEnumValues());
             if (!oldType.getTypeName().equals(TYPE_VARCHAR) && newValues.containsAll(Arrays.asList(oldType.getEnumValues())))
                 return true;
@@ -431,9 +474,11 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
 
         // Changing ENUM to varchar
         if ((oldType.getTypeName().equals(TYPE_ENUM) || oldType.getTypeName().equals(TYPE_BOOL))
-                && type.getTypeName().equals(TYPE_VARCHAR)) {
+                && type.getTypeName().equals(TYPE_VARCHAR))
+        {
             int len = 0;
-            for (String value : oldType.getEnumValues()) {
+            for (String value : oldType.getEnumValues())
+            {
                 len = Math.max(len, value.length());
             }
             if (type.getSize() >= len)
@@ -443,7 +488,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
 
         // Changing ENUM to char
-        if (oldType.getTypeName().equals(TYPE_ENUM) && type.getTypeName().equals(TYPE_CHAR)) {
+        if (oldType.getTypeName().equals(TYPE_ENUM) && type.getTypeName().equals(TYPE_CHAR))
+        {
             return StreamEx.of(oldType.getEnumValues()).map(String::length).distinct().collect(MoreCollectors.onlyOne())
                     .filter(len -> type.getSize() == len).isPresent();
         }
@@ -454,19 +500,25 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> errors = super.getErrors();
-        if (isFromApplication() && getColumnsCount() == 0) {
+        if (isFromApplication() && getColumnsCount() == 0)
+        {
             errors.add(new ProjectElementException(this, "Table must have at least one column"));
         }
         String startValue = null;
-        try {
+        try
+        {
             startValue = getStartId();
-        } catch (Exception e1) {
+        } catch (Exception e1)
+        {
             errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Unable to calculate start value"));
         }
-        if (startValue != null) {
-            try {
+        if (startValue != null)
+        {
+            try
+            {
                 Long.parseLong(startValue);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException e)
+            {
                 errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Invalid start id value (must be number): "
                         + startValue));
             }
@@ -528,10 +580,12 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         other.setStartIdVariable(null);
         String otherDdl = other.getDdl();
         other.setStartIdVariable(otherVar);
-        try {
+        try
+        {
             if (!ddl.equals(otherDdl) && !getDiffDdl(other, null).isEmpty())
                 return debugEquals("ddl: old = " + otherDdl.replaceAll("\n", System.lineSeparator()));
-        } catch (ExtendedSqlException e) {
+        } catch (ExtendedSqlException e)
+        {
             throw new InternalError("Unexpected " + e);
         }
         return true;
@@ -551,35 +605,47 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         ArrayList<ProjectElementException> warnings = new ArrayList<>();
         Rdbms rdbms = getProject().getDatabaseSystem();
         DbmsTypeManager typeManager = rdbms.getTypeManager();
-        if (!typeManager.isFunctionalIndexSupported()) {
-            for (IndexDef index : getIndices().getAvailableElements()) {
-                if (index.isFunctional()) {
+        if (!typeManager.isFunctionalIndexSupported())
+        {
+            for (IndexDef index : getIndices().getAvailableElements())
+            {
+                if (index.isFunctional())
+                {
                     warnings.add(new ProjectElementException(index, "Functional indices are not supported by " + rdbms));
                 }
             }
         }
-        if (rdbms == Rdbms.DB2) {
-            for (IndexDef index : getIndices().getAvailableElements()) {
-                if (index.getName().length() > Rdbms.DB2_INDEX_LENGTH) {
+        if (rdbms == Rdbms.DB2)
+        {
+            for (IndexDef index : getIndices().getAvailableElements())
+            {
+                if (index.getName().length() > Rdbms.DB2_INDEX_LENGTH)
+                {
                     warnings.add(new ProjectElementException(index, "Index name too long for DB2 (" + index.getName().length() + ">"
                             + Rdbms.DB2_INDEX_LENGTH + "); will be skipped"));
                 }
             }
         }
-        if (!typeManager.isCustomAutoincrementSupported()) {
+        if (!typeManager.isCustomAutoincrementSupported())
+        {
             ColumnDef autoincrementColumn = getAutoincrementColumn();
-            if (autoincrementColumn != null && getStartId() != null) {
+            if (autoincrementColumn != null && getStartId() != null)
+            {
                 warnings.add(new ProjectElementException(autoincrementColumn, "Custom starting autoincrement value is not supported by "
                         + rdbms));
             }
         }
-        for (ColumnDef def : getColumns().getAvailableElements()) {
-            if (def.getType().getTypeName().equals(TYPE_UNKNOWN)) {
+        for (ColumnDef def : getColumns().getAvailableElements())
+        {
+            if (def.getType().getTypeName().equals(TYPE_UNKNOWN))
+            {
                 warnings.add(new ProjectElementException(def, "Cannot determine column type: probably it references to invalid table or column"));
             }
         }
-        for (IndexDef def : getIndices().getAvailableElements()) {
-            for (IndexColumnDef col : def) {
+        for (IndexDef def : getIndices().getAvailableElements())
+        {
+            for (IndexColumnDef col : def)
+            {
                 ColumnDef column = getColumns().getCaseInsensitive(col.getName());
                 if (column == null)
                     warnings.add(new ProjectElementException(col, "Index refers to unknown column"));

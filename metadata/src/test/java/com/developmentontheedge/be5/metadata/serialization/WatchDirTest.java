@@ -30,12 +30,14 @@ public class WatchDirTest
         boolean modify[] = new boolean[]{false};
 
         WatchDir watcher = null;
-        try {
+        try
+        {
             watcher = new WatchDir(Collections.singletonMap("main", project))
                     .onModify(onModify -> modify[0] = true)
                     .start();
 
-            while (!modify[0]) {
+            while (!modify[0])
+            {
                 Thread.sleep(100);
 
                 createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" + new Random().nextInt());
@@ -47,7 +49,8 @@ public class WatchDirTest
             assertTrue(modify[0]);
             watcher.stop();
 
-            do {
+            do
+            {
                 Thread.sleep(100);
 
                 modify[0] = false;
@@ -56,7 +59,8 @@ public class WatchDirTest
             while (modify[0]);
 
             assertFalse(modify[0]);
-        } finally {
+        } finally
+        {
             if (watcher != null) watcher.stop();
         }
     }

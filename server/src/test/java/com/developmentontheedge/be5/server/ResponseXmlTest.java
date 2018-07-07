@@ -78,7 +78,10 @@ public class ResponseXmlTest extends ServerBe5ProjectTest
         String name;
         String arg;
 
-        public ActionForXml(){}
+        public ActionForXml()
+        {
+        }
+
         ActionForXml(String name, String arg)
         {
             this.name = name;

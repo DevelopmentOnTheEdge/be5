@@ -37,18 +37,22 @@ public class StaticPagesDeserializer extends FileDeserializer
         if (pagesByLanguage == null)
             return;
 
-        for (final String language : pagesByLanguage.keySet()) {
+        for (final String language : pagesByLanguage.keySet())
+        {
             final LanguageStaticPages langPages = new LanguageStaticPages(language, target);
             final Map<String, Object> serializedPages = (Map<String, Object>) pagesByLanguage.get(language);
 
-            for (final String pageName : serializedPages.keySet()) {
+            for (final String pageName : serializedPages.keySet())
+            {
                 final Object serializedContent = serializedPages.get(pageName);
                 final StaticPage page = new StaticPage(pageName, langPages);
                 final String content;
 
-                if (serializedContent instanceof String) {
+                if (serializedContent instanceof String)
+                {
                     content = (String) serializedContent;
-                } else if (serializedContent instanceof Map) {
+                } else if (serializedContent instanceof Map)
+                {
                     // a. file: <fileName>
                     // b. code: file: <fileName>
                     //    customizations: <map>
@@ -56,16 +60,19 @@ public class StaticPagesDeserializer extends FileDeserializer
                     //    customizations: <map>
 
                     final Map<String, Object> mapPageContent = (Map<String, Object>) serializedContent;
-                    if (mapPageContent.containsKey("file")) {
+                    if (mapPageContent.containsKey("file"))
+                    {
                         final String fileName = (String) mapPageContent.get("file");
                         page.setFileName(fileName);
                         content = readStaticPageFileContent(fileName);
-                    } else {
+                    } else
+                    {
                         final Object codeObj = mapPageContent.get(SerializationConstants.TAG_CODE);
 
                         if (codeObj instanceof String)
                             content = (String) codeObj;
-                        else if (codeObj instanceof Map) {
+                        else if (codeObj instanceof Map)
+                        {
                             final String fileName = ((Map<String, String>) codeObj).get("file");
                             page.setFileName(fileName);
                             content = readStaticPageFileContent(fileName);
@@ -74,7 +81,8 @@ public class StaticPagesDeserializer extends FileDeserializer
 
                         yamlDeserializer.readCustomizations(mapPageContent, page, false);
                     }
-                } else {
+                } else
+                {
                     content = "";
                 }
 
@@ -91,9 +99,11 @@ public class StaticPagesDeserializer extends FileDeserializer
 
     private String readStaticPageFileContent(final String fileName)
     {
-        try {
+        try
+        {
             return yamlDeserializer.getFileSystem().readStaticPageFileContent(fileName);
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e);
         }
 

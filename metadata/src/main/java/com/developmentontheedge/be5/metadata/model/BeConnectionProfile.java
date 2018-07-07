@@ -58,7 +58,8 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
     public static String resolveTomcatPath()
     {
         String tomcatHome = System.getenv("CATALINA_BASE");
-        if (tomcatHome == null) {
+        if (tomcatHome == null)
+        {
             tomcatHome = System.getenv("CATALINA_HOME");
         }
         return Paths.get(tomcatHome, "webapps").toString();

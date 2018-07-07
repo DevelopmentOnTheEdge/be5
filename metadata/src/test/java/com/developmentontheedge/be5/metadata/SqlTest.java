@@ -19,7 +19,8 @@ public class SqlTest extends TestCase
         public TestSqlHandler(String sql)
         {
             MultiSqlConsumer consumer = new MultiSqlConsumer(DbmsType.DB2, this);
-            for (curPos = 0; curPos < sql.length(); curPos++) {
+            for (curPos = 0; curPos < sql.length(); curPos++)
+            {
                 consumer.symbol(sql.charAt(curPos));
             }
             consumer.end();

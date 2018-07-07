@@ -102,23 +102,29 @@ public class ParseException extends Exception
 
         StringBuffer expected = new StringBuffer();
         int maxSize = 0;
-        for (int i = 0; i < expectedTokenSequences.length; i++) {
-            if (maxSize < expectedTokenSequences[i].length) {
+        for (int i = 0; i < expectedTokenSequences.length; i++)
+        {
+            if (maxSize < expectedTokenSequences[i].length)
+            {
                 maxSize = expectedTokenSequences[i].length;
             }
-            for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+            for (int j = 0; j < expectedTokenSequences[i].length; j++)
+            {
                 expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
             }
-            if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
+            if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0)
+            {
                 expected.append("...");
             }
             expected.append(EOL).append("    ");
         }
         String retval = "Encountered \"";
         Token tok = currentToken.next;
-        for (int i = 0; i < maxSize; i++) {
+        for (int i = 0; i < maxSize; i++)
+        {
             if (i != 0) retval += " ";
-            if (tok.kind == 0) {
+            if (tok.kind == 0)
+            {
                 retval += tokenImage[0];
                 break;
             }
@@ -132,12 +138,16 @@ public class ParseException extends Exception
         retval += "." + EOL;
 
 
-        if (expectedTokenSequences.length == 0) {
+        if (expectedTokenSequences.length == 0)
+        {
             // Nothing to add here
-        } else {
-            if (expectedTokenSequences.length == 1) {
+        } else
+        {
+            if (expectedTokenSequences.length == 1)
+            {
                 retval += "Was expecting:" + EOL + "    ";
-            } else {
+            } else
+            {
                 retval += "Was expecting one of:" + EOL + "    ";
             }
             retval += expected.toString();
@@ -156,8 +166,10 @@ public class ParseException extends Exception
     {
         StringBuffer retval = new StringBuffer();
         char ch;
-        for (int i = 0; i < str.length(); i++) {
-            switch (str.charAt(i)) {
+        for (int i = 0; i < str.length(); i++)
+        {
+            switch (str.charAt(i))
+            {
                 case '\b':
                     retval.append("\\b");
                     continue;
@@ -183,10 +195,12 @@ public class ParseException extends Exception
                     retval.append("\\\\");
                     continue;
                 default:
-                    if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+                    if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e)
+                    {
                         String s = "0000" + Integer.toString(ch, 16);
                         retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-                    } else {
+                    } else
+                    {
                         retval.append(ch);
                     }
                     continue;

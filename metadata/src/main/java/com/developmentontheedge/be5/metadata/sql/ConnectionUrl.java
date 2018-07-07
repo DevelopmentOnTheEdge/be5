@@ -47,12 +47,15 @@ public class ConnectionUrl implements BeElementWithProperties
             throw new IllegalArgumentException("Unsupported DBMS (url = " + url + ")");
         Matcher jtdsMatcher = SQL_SERVER_JTDS_PATTERN.matcher(url);
         Matcher sqlServerMatcher = SQL_SERVER_PATTERN.matcher(url);
-        if (jtdsMatcher.matches()) {
+        if (jtdsMatcher.matches())
+        {
             host = jtdsMatcher.group(1);
             String portNum = jtdsMatcher.group(3);
-            if (portNum.isEmpty()) {
+            if (portNum.isEmpty())
+            {
                 port = rdbms.getDefaultPort();
-            } else {
+            } else
+            {
                 port = Integer.parseInt(portNum);
             }
             db = jtdsMatcher.group(4);
@@ -61,12 +64,15 @@ public class ConnectionUrl implements BeElementWithProperties
             return;
         }
 
-        if (sqlServerMatcher.matches()) {
+        if (sqlServerMatcher.matches())
+        {
             host = sqlServerMatcher.group(1);
             String portNum = sqlServerMatcher.group(3);
-            if (portNum.isEmpty()) {
+            if (portNum.isEmpty())
+            {
                 port = rdbms.getDefaultPort();
-            } else {
+            } else
+            {
                 port = Integer.parseInt(portNum);
             }
             db = sqlServerMatcher.group(4);
@@ -75,13 +81,16 @@ public class ConnectionUrl implements BeElementWithProperties
 
 
         URI uri = URI.create(url.substring("jdbc:".length()));
-        if (uri.getPort() > 0) {
+        if (uri.getPort() > 0)
+        {
             port = uri.getPort();
-        } else {
+        } else
+        {
             port = rdbms.getDefaultPort();
         }
 
-        if (uri.getHost() != null) {
+        if (uri.getHost() != null)
+        {
             host = uri.getHost();
             String path = uri.getPath();
             Matcher matcher = DB_NAME_EXTRACTOR.matcher(path);
@@ -91,20 +100,24 @@ public class ConnectionUrl implements BeElementWithProperties
             setProperties(matcher.group(2));
             if (uri.getQuery() != null)
                 setProperties("?" + uri.getQuery());
-        } else {
+        } else
+        {
             // TODO: enhance algorithm to support port, service, etc.
             // see http://www.orafaq.com/wiki/JDBC#Thin_driver
             String specificPart = uri.getSchemeSpecificPart();
             int pos = specificPart.lastIndexOf(':');
-            if (pos >= -1) {
+            if (pos >= -1)
+            {
                 String sid = specificPart.substring(pos + 1);
                 setProperty("SID", sid);
             }
             pos = specificPart.indexOf('@');
-            if (pos >= -1) {
+            if (pos >= -1)
+            {
                 int pos2 = specificPart.indexOf(':', pos);
                 if (rdbms == Rdbms.H2 && pos2 == -1) pos2 = specificPart.length();
-                if (pos2 >= -1) {
+                if (pos2 >= -1)
+                {
                     host = specificPart.substring(pos + 1, pos2);
                 }
             }
@@ -115,9 +128,11 @@ public class ConnectionUrl implements BeElementWithProperties
     {
         if (dbProperties == null || dbProperties.isEmpty())
             return;
-        for (String part : dbProperties.substring(1).split("[;&]")) {
+        for (String part : dbProperties.substring(1).split("[;&]"))
+        {
             int equalPos = part.indexOf('=');
-            if (equalPos > 0) {
+            if (equalPos > 0)
+            {
                 String key = part.substring(0, equalPos).trim();
                 String value = part.substring(equalPos + 1).trim();
                 setProperty(key, value);
@@ -188,13 +203,15 @@ public class ConnectionUrl implements BeElementWithProperties
 
     public String createConnectionUrl(boolean forContext)
     {
-        if (rdbms == null) {
+        if (rdbms == null)
+        {
             return "";
         }
         Map<String, String> props = new TreeMap<>();
         List<String> stringPropertyNames = new ArrayList<>(properties.stringPropertyNames());
         Collections.sort(stringPropertyNames);
-        for (String name : stringPropertyNames) {
+        for (String name : stringPropertyNames)
+        {
             props.put(name, properties.getProperty(name));
         }
         return rdbms.createConnectionUrl(forContext, host, port, db, props);

@@ -6,7 +6,7 @@ public class AstInsert extends SimpleNode
 {
     public AstInsert(AstTableName tableName, AstColumnList columns, AstInsertValueList values)
     {
-        this( SqlParserTreeConstants.JJTINSERT );
+        this(SqlParserTreeConstants.JJTINSERT);
         addChild(tableName);
         addChild(columns);
         addChild(values);

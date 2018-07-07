@@ -6,13 +6,13 @@ public class AstJoinSpecification extends SimpleNode
 {
     public AstJoinSpecification(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "ON";
     }
-    
+
     public AstJoinSpecification(SimpleNode child)
     {
-        this( SqlParserTreeConstants.JJTJOINSPECIFICATION );
+        this(SqlParserTreeConstants.JJTJOINSPECIFICATION);
         addChild(child);
     }
 }

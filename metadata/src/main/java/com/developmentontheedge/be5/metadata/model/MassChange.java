@@ -38,9 +38,11 @@ public class MassChange extends BeModelElementSupport
         super(name, origin);
         SelectorRule rule = null;
         Throwable ex = null;
-        try {
+        try
+        {
             rule = UnionSelectorRule.create(name);
-        } catch (ParseException | TokenMgrError e) {
+        } catch (ParseException | TokenMgrError e)
+        {
             ex = e;
         }
         this.rule = rule;
@@ -75,7 +77,8 @@ public class MassChange extends BeModelElementSupport
     @Override
     public List<ProjectElementException> getErrors()
     {
-        if (ex != null) {
+        if (ex != null)
+        {
             return Collections.singletonList(new ProjectElementException(getCompletePath(), "name", ex));
         }
         return Collections.emptyList();
@@ -85,18 +88,22 @@ public class MassChange extends BeModelElementSupport
     {
         List<BeModelElement> elements = SelectorUtils.select(project, getRule());
         List<BeModelElement> changedElements = new ArrayList<>();
-        for (BeModelElement element : elements) {
-            if (element instanceof Query) {
+        for (BeModelElement element : elements)
+        {
+            if (element instanceof Query)
+            {
                 Query oldQuery = (Query) element;
                 Query newQuery = YamlDeserializer.readQuery(loadContext, oldQuery.getName(), data, oldQuery.getEntity());
                 DataElementUtils.saveQuiet(newQuery);
                 newQuery.merge(oldQuery, false, true);
                 newQuery.setOriginModuleName(oldQuery.getOriginModuleName());
-            } else if (element instanceof Operation) {
+            } else if (element instanceof Operation)
+            {
                 Operation oldOperation = (Operation) element;
                 Map<String, Object> realData = data;
                 // Set type, because it cannot be inherited yet
-                if (!data.containsKey("type") && !Operation.OPERATION_TYPE_JAVA.equals(oldOperation.getType())) {
+                if (!data.containsKey("type") && !Operation.OPERATION_TYPE_JAVA.equals(oldOperation.getType()))
+                {
                     realData = new HashMap<>(data);
                     realData.put("type", oldOperation.getType());
                 }
@@ -104,11 +111,13 @@ public class MassChange extends BeModelElementSupport
                 DataElementUtils.saveQuiet(newOperation);
                 newOperation.merge(oldOperation, false, true);
                 newOperation.setOriginModuleName(oldOperation.getOriginModuleName());
-            } else if (element instanceof Entity) {
+            } else if (element instanceof Entity)
+            {
                 Entity oldEntity = (Entity) element;
                 Map<String, Object> realData = data;
                 // Set type, because it cannot be inherited yet
-                if (!data.containsKey("type")) {
+                if (!data.containsKey("type"))
+                {
                     realData = new HashMap<>(data);
                     realData.put("type", oldEntity.getType().getSqlName());
                 }
@@ -119,7 +128,8 @@ public class MassChange extends BeModelElementSupport
                     o.setOriginModuleName(oldEntity.getModule().getName());
                 DataElementUtils.saveQuiet(newEntity);
                 newEntity.merge(oldEntity, false, true);
-            } else {
+            } else
+            {
                 loadContext.addWarning(new ReadException(element, null, "Mass change is not supported for type " + element.getClass().getSimpleName()));
                 continue;
             }

@@ -14,21 +14,21 @@ public class ReplacementParametersTest
     public void testSimple()
     {
         String query = "SELECT id FROM persons WHERE name = ?";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test
     public void test2()
     {
         String query = "SELECT id FROM persons WHERE name = ? AND title = ?";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test
     public void inConcat()
     {
         String query = "SELECT id FROM categories WHERE name = CONCAT('user.', ?)";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Ignore
@@ -36,14 +36,14 @@ public class ReplacementParametersTest
     public void testErrorInSelectList()
     {
         String query = "SELECT ? FROM persons";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testReplacementParametersErrorInFrom()
     {
         String query = "SELECT name FROM ?";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
 }

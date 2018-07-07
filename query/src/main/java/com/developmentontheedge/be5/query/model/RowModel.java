@@ -13,7 +13,7 @@ public class RowModel
      */
     public RowModel(String id, List<CellModel> cells)
     {
-        Objects.requireNonNull( cells );
+        Objects.requireNonNull(cells);
         this.id = id;
         this.cells = cells;
     }
@@ -25,11 +25,12 @@ public class RowModel
 
     /**
      * Returns an identifier. Never returns null.
+     *
      * @throws NullPointerException if null
      */
     public String getId()
     {
-        return Objects.requireNonNull( id );
+        return Objects.requireNonNull(id);
     }
 
     @Override

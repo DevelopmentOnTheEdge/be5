@@ -16,9 +16,9 @@ public class AstStart extends SimpleNode
         StringBuffer buf = new StringBuffer("Start, status=" + status + "\r\n");
 
         // print errors and warnings
-        if( status > Parser.STATUS_OK && messages != null )
+        if (status > Parser.STATUS_OK && messages != null)
         {
-            for( int i = 0; i < messages.size(); i++ )
+            for (int i = 0; i < messages.size(); i++)
                 buf.append("  " + messages.get(i) + "\r\n");
         }
 
@@ -36,10 +36,12 @@ public class AstStart extends SimpleNode
      * @see Parser
      */
     protected int status;
+
     public int getStatus()
     {
         return status;
     }
+
     public void setStatus(int status)
     {
         this.status = status;
@@ -48,7 +50,7 @@ public class AstStart extends SimpleNode
     @Override
     public void jjtAddChild(Node n, int i)
     {
-        super.jjtAddChild( n, i );
+        super.jjtAddChild(n, i);
         pushDownPrefix();
     }
 
@@ -57,25 +59,27 @@ public class AstStart extends SimpleNode
      * for corresponding math expression.
      */
     protected List<String> messages;
+
     public List<String> getMessages()
     {
         return messages;
     }
+
     public void setMessages(List<String> messages)
     {
         this.messages = messages;
     }
-    
+
     public AstQuery getQuery()
     {
-        if( children.get( children.size() - 1 ) instanceof AstQuery )
-            return ( (AstQuery)children.get( children.size() - 1 ) );
+        if (children.get(children.size() - 1) instanceof AstQuery)
+            return ((AstQuery) children.get(children.size() - 1));
         return null;
     }
-    
+
     @Override
     public AstStart clone()
     {
-        return (AstStart)super.clone();
+        return (AstStart) super.clone();
     }
 }

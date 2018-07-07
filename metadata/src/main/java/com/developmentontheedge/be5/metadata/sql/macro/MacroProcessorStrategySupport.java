@@ -28,7 +28,8 @@ abstract public class MacroProcessorStrategySupport implements IMacroProcessorSt
     public String genericRef(String entity, String id)
     {
         String def = genericRefCommon(entity, id);
-        if (def != null) {
+        if (def != null)
+        {
             return def;
         }
         return genericRefLowLevel(entity, id);

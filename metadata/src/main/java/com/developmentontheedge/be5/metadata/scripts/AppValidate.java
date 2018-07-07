@@ -52,20 +52,25 @@ public class AppValidate extends ScriptSupport<AppValidate>
     {
         if (be5Project.getConnectionProfile() != null &&
                 be5Project.getConnectionProfile().isProtected() &&
-                !unlockProtectedProfile) {
+                !unlockProtectedProfile)
+        {
             logger.error("=== WARNING! ===");
             logger.error("You are using the protected profile '" + be5Project.getConnectionProfileName() + "'");
             logger.error("The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
             logger.error("Type the profile name to confirm its usage:");
             String line = "";
-            try {
+            try
+            {
                 line = new BufferedReader(new InputStreamReader(System.in)).readLine();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 // ignore
             }
-            if (be5Project.getConnectionProfileName().equals(line)) {
+            if (be5Project.getConnectionProfileName().equals(line))
+            {
                 unlockProtectedProfile = true;
-            } else {
+            } else
+            {
                 throw new ScriptException("Aborted");
             }
         }
@@ -76,7 +81,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
         // Need to set any system to validate project
         if (rdbmsName != null)
             be5Project.setDatabaseSystem(Rdbms.valueOf(rdbmsName.toUpperCase(Locale.ENGLISH)));
-        if (be5Project.getDatabaseSystem() == null) {
+        if (be5Project.getDatabaseSystem() == null)
+        {
             be5Project.setDatabaseSystem(Rdbms.POSTGRESQL);
         }
     }
@@ -84,19 +90,23 @@ public class AppValidate extends ScriptSupport<AppValidate>
     private void validateProject() throws ScriptException
     {
         List<ProjectElementException> errors = new ArrayList<>();
-        if (skipValidation) {
+        if (skipValidation)
+        {
             logger.info("Validation skipped");
-        } else {
+        } else
+        {
             logger.info("Validating...");
             errors.addAll(be5Project.getErrors());
             int count = 0;
-            for (ProjectElementException error : errors) {
+            for (ProjectElementException error : errors)
+            {
                 if (error.getPath().equals(be5Project.getName()) && error.getProperty().equals("connectionProfileName"))
                     continue;
                 count++;
                 displayError(error);
             }
-            if (count > 0) {
+            if (count > 0)
+            {
                 throw new ScriptException("Project has " + count + " errors.");
             }
 
@@ -135,11 +145,14 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void saveProject() throws ScriptException
     {
-        if (saveProject) {
-            try {
+        if (saveProject)
+        {
+            try
+            {
                 logger.info("Saving...");
                 Serialization.save(be5Project, be5Project.getLocation());
-            } catch (ProjectSaveException e) {
+            } catch (ProjectSaveException e)
+            {
                 throw new ScriptException("Can not save project.", e);
             }
         }
@@ -147,14 +160,17 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void checkDdl() throws ScriptException
     {
-        if (ddlPath != null) {
+        if (ddlPath != null)
+        {
             Entity entity = be5Project.getEntity(ddlPath);
-            if (entity == null) {
+            if (entity == null)
+            {
                 throw new ScriptException("Invalid entity: " + ddlPath);
             }
 
             DdlElement scheme = entity.getScheme();
-            if (scheme == null) {
+            if (scheme == null)
+            {
                 throw new ScriptException("Entity has no scheme: " + ddlPath);
             }
 
@@ -164,7 +180,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void checkRoles()
     {
-        if (checkRoles) {
+        if (checkRoles)
+        {
             logger.info("Available roles:" + System.lineSeparator() + " - " +
                     String.join(System.lineSeparator() + " - ", be5Project.getAvailableRoles()));
         }
@@ -176,28 +193,34 @@ public class AppValidate extends ScriptSupport<AppValidate>
             return;
 
         int pos = queryPath.indexOf('.');
-        if (pos <= 0) {
+        if (pos <= 0)
+        {
             throw new ScriptException("Invalid query path supplied: " + queryPath);
         }
 
         String entityName = queryPath.substring(0, pos);
         String queryName = queryPath.substring(pos + 1);
         Entity entity = be5Project.getEntity(entityName);
-        if (entity == null) {
+        if (entity == null)
+        {
             throw new ScriptException("Invalid entity: " + entityName);
         }
 
         Query query = entity.getQueries().get(queryName);
-        if (query == null) {
-            try {
+        if (query == null)
+        {
+            try
+            {
                 queryName = new String(queryName.getBytes("CP866"), "CP1251");
                 query = entity.getQueries().get(queryName);
-            } catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException e)
+            {
                 throw new ScriptException("Can not load query, path=" + queryPath, e);
             }
         }
 
-        if (query == null) {
+        if (query == null)
+        {
             throw new ScriptException("Invalid query: " + queryName);
         }
 

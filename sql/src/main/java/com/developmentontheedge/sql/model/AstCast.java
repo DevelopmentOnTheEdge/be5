@@ -7,43 +7,43 @@ public class AstCast extends SimpleNode
     private String dataType;
     private int size = -1;
     private int scale = -1;
-    
+
     public AstCast(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "CAST(";
         this.nodeSuffix = ")";
     }
-    
+
     public AstCast(SimpleNode child, String dataType)
     {
-        this( SqlParserTreeConstants.JJTCAST );
-        setDataType( dataType );
-        addChild( child );
+        this(SqlParserTreeConstants.JJTCAST);
+        setDataType(dataType);
+        addChild(child);
     }
-    
+
     public AstCast(SimpleNode child, String dataType, int size)
     {
-        this( SqlParserTreeConstants.JJTCAST );
-        setDataType( dataType );
+        this(SqlParserTreeConstants.JJTCAST);
+        setDataType(dataType);
         setSize(size);
-        addChild( child );
+        addChild(child);
     }
-    
+
     public void setDataType(String dataType)
     {
         this.dataType = dataType;
         this.nodeSuffix = "AS " + dataType + ")";
     }
-    
+
     @Override
     public String getNodeSuffix()
     {
-        if( dataType == null )
+        if (dataType == null)
             return ")";
-        if( size < 0 )
+        if (size < 0)
             return "AS " + dataType + ")";
-        if( scale < 0 )
+        if (scale < 0)
             return "AS " + dataType + "(" + size + "))";
         return "AS " + dataType + "(" + size + ", " + scale + "))";
     }
@@ -60,13 +60,13 @@ public class AstCast extends SimpleNode
 
     public void setSize(int size)
     {
-        if(size < 0)
+        if (size < 0)
             size = -1;
-        if(!"CHAR".equals( dataType ) && !"VARCHAR".equals( dataType ) && !"DECIMAL".equals( dataType ) && size != -1)
-            throw new IllegalArgumentException( "Can specify cast size for CHAR, VARCHAR and DECIMAL types only" );
+        if (!"CHAR".equals(dataType) && !"VARCHAR".equals(dataType) && !"DECIMAL".equals(dataType) && size != -1)
+            throw new IllegalArgumentException("Can specify cast size for CHAR, VARCHAR and DECIMAL types only");
         this.size = size;
     }
-    
+
     public int getScale()
     {
         return scale;
@@ -74,8 +74,8 @@ public class AstCast extends SimpleNode
 
     public void setScale(int scale)
     {
-        if(!"DECIMAL".equals( dataType ))
-            throw new IllegalArgumentException( "Can specify cast scale for DECIMAL type only" );
+        if (!"DECIMAL".equals(dataType))
+            throw new IllegalArgumentException("Can specify cast scale for DECIMAL type only");
         this.scale = scale;
     }
 }

@@ -13,26 +13,26 @@ public class MimeMessage2 extends MimeMessage
 {
     public static class PrintStream2 extends PrintStream
     {
-        public PrintStream2(OutputStream outputStream, boolean autoFlush )
+        public PrintStream2(OutputStream outputStream, boolean autoFlush)
         {
-            super( outputStream, autoFlush );
+            super(outputStream, autoFlush);
         }
 
         public ByteArrayOutputStream getOutput()
         {
-            return (ByteArrayOutputStream)out;
+            return (ByteArrayOutputStream) out;
         }
     }
 
-    public MimeMessage2( Session session )
+    public MimeMessage2(Session session)
     {
-        super( session );
+        super(session);
     }
 
-    public MimeMessage2( Session session, InputStream is )
+    public MimeMessage2(Session session, InputStream is)
             throws MessagingException
     {
-        super( session, is );
+        super(session, is);
     }
 
     public Session getSession()

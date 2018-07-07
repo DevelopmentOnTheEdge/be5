@@ -9,8 +9,8 @@ import java.util.Locale;
 /**
  * Request injected to components.
  *
- * @see Controller
  * @author asko
+ * @see Controller
  */
 public interface Request extends SessionAccess, ParametersAccess
 {

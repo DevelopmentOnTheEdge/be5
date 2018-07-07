@@ -62,7 +62,8 @@ public class Files2
 
             final Path targetFile = target.resolve(String.join("/", parts));
 
-            if (shouldCopy.test(file)) {
+            if (shouldCopy.test(file))
+            {
                 Files.createDirectories(targetFile.getParent());
                 Files.deleteIfExists(targetFile);
                 Files.copy(file, targetFile);
@@ -169,9 +170,11 @@ public class Files2
 
     public static boolean contentEq(final Path path, final String content)
     {
-        try {
+        try
+        {
             return Arrays.equals(content.getBytes(StandardCharsets.UTF_8), Files.readAllBytes(path));
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             return false;
         }
     }

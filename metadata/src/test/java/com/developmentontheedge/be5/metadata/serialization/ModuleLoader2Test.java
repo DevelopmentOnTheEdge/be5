@@ -41,7 +41,8 @@ public class ModuleLoader2Test
     @Test
     public void loadAllProjectsTestWithDev() throws IOException, ProjectSaveException, ProjectLoadException
     {
-        try (PrintWriter out = new PrintWriter(path.resolve("dev.yaml").toFile())) {
+        try (PrintWriter out = new PrintWriter(path.resolve("dev.yaml").toFile()))
+        {
             out.println("paths:" + "\n    test: " + path.toAbsolutePath());
         }
 

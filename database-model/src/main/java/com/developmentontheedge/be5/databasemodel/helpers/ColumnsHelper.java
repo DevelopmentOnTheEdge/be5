@@ -28,10 +28,10 @@ public class ColumnsHelper
     static final List<String> insertSpecialColumns = specialColumns;
 
     static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
-                    .add(WHO_MODIFIED_COLUMN_NAME)
-                    .add(MODIFICATION_DATE_COLUMN_NAME)
-                    .add(IP_MODIFIED_COLUMN_NAME)
-                    .build();
+            .add(WHO_MODIFIED_COLUMN_NAME)
+            .add(MODIFICATION_DATE_COLUMN_NAME)
+            .add(IP_MODIFIED_COLUMN_NAME)
+            .build();
 
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
@@ -58,7 +58,7 @@ public class ColumnsHelper
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
-        for(String propertyName: specialColumns)
+        for (String propertyName : specialColumns)
         {
             ColumnDef columnDef = columns.get(propertyName);
             if (columnDef != null)
@@ -74,16 +74,16 @@ public class ColumnsHelper
 
     public Object getSpecialColumnsValue(String propertyName, Timestamp currentTime)
     {
-        if(CREATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
-        if(MODIFICATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
+        if (CREATION_DATE_COLUMN_NAME.equals(propertyName)) return currentTime;
+        if (MODIFICATION_DATE_COLUMN_NAME.equals(propertyName)) return currentTime;
 
-        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName))return userInfoProvider.get().getUserName();
-        if(WHO_MODIFIED_COLUMN_NAME.equals(propertyName))return userInfoProvider.get().getUserName();
+        if (WHO_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getUserName();
+        if (WHO_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getUserName();
 
-        if(IS_DELETED_COLUMN_NAME.equals(propertyName))return "no";
+        if (IS_DELETED_COLUMN_NAME.equals(propertyName)) return "no";
 
-        if(IP_INSERTED_COLUMN_NAME.equals(propertyName))return userInfoProvider.get().getRemoteAddr();
-        if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return userInfoProvider.get().getRemoteAddr();
+        if (IP_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getRemoteAddr();
+        if (IP_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getRemoteAddr();
 
         throw Be5Exception.internal("Not support: " + propertyName);
     }
@@ -93,12 +93,15 @@ public class ColumnsHelper
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
-        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
             values.put(IS_DELETED_COLUMN_NAME, "yes");
-            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))values.put(WHO_MODIFIED_COLUMN_NAME, userInfoProvider.get().getUserName());
-            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))values.put(MODIFICATION_DATE_COLUMN_NAME, currentTime);
-            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))values.put(IP_MODIFIED_COLUMN_NAME, userInfoProvider.get().getRemoteAddr());
+            if (columns.containsKey(WHO_MODIFIED_COLUMN_NAME))
+                values.put(WHO_MODIFIED_COLUMN_NAME, userInfoProvider.get().getUserName());
+            if (columns.containsKey(MODIFICATION_DATE_COLUMN_NAME))
+                values.put(MODIFICATION_DATE_COLUMN_NAME, currentTime);
+            if (columns.containsKey(IP_MODIFIED_COLUMN_NAME))
+                values.put(IP_MODIFIED_COLUMN_NAME, userInfoProvider.get().getRemoteAddr());
         }
         return values;
     }
@@ -125,9 +128,9 @@ public class ColumnsHelper
             }
         }
 
-        if(!errorMsg.toString().isEmpty())
+        if (!errorMsg.toString().isEmpty())
         {
-            throw Be5Exception.internal("Dps columns errors for modelElements '" + entity.getName() + "'\n"+ errorMsg);
+            throw Be5Exception.internal("Dps columns errors for modelElements '" + entity.getName() + "'\n" + errorMsg);
         }
     }
 }

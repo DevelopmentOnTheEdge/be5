@@ -12,12 +12,14 @@ public class RoleMultiSelector extends GenericMultiSelectEditor
     @Override
     protected String[] getAvailableValues()
     {
-        try {
+        try
+        {
             Object bean = getBean();
             Project project = ((RoleSet) bean).getProject();
             List<String> roleList = project.getRolesWithGroups();
             return roleList.toArray(new String[roleList.size()]);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return Strings2.EMPTY;
         }
     }

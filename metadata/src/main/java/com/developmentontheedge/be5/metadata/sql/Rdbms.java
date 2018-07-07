@@ -74,22 +74,28 @@ public enum Rdbms
     public static Rdbms getRdbms(final String url)
     {
         String realUrl = url.startsWith("jdbc:") ? url.substring("jdbc:".length()) : url;
-        if (realUrl.startsWith("mysql:")) {
+        if (realUrl.startsWith("mysql:"))
+        {
             return Rdbms.MYSQL;
         }
-        if (realUrl.startsWith("db2:")) {
+        if (realUrl.startsWith("db2:"))
+        {
             return Rdbms.DB2;
         }
-        if (realUrl.startsWith("oracle:")) {
+        if (realUrl.startsWith("oracle:"))
+        {
             return Rdbms.ORACLE;
         }
-        if (realUrl.startsWith("postgresql:")) {
+        if (realUrl.startsWith("postgresql:"))
+        {
             return Rdbms.POSTGRESQL;
         }
-        if (realUrl.startsWith("h2:")) {
+        if (realUrl.startsWith("h2:"))
+        {
             return Rdbms.H2;
         }
-        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:")) {
+        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:"))
+        {
             return Rdbms.SQLSERVER;
         }
 
@@ -105,7 +111,8 @@ public enum Rdbms
     public static Rdbms getRdbms(DbmsType dbmsType)
     {
         Rdbms[] values = Rdbms.values();
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++)
+        {
             if (values[i].getType() == dbmsType) return values[i];
         }
 
@@ -187,16 +194,19 @@ public enum Rdbms
 
     public String createConnectionUrl(boolean forContext, String host, int port, String database, Map<String, String> properties)
     {
-        switch (this) {
+        switch (this)
+        {
             case ORACLE:
                 return "jdbc:oracle:thin:@" + host + ":" + port + ":" + (database == null ? properties.get("SID") : database);
             case H2:
                 return "jdbc:h2:" + host;
             case SQLSERVER:
-                if ("jtds".equals(properties.get("driver"))) {
+                if ("jtds".equals(properties.get("driver")))
+                {
                     StringBuilder url = new StringBuilder("jdbc:jtds:sqlserver://").append(host).append(':').append(port).append('/')
                             .append(database);
-                    for (Entry<String, String> entry : properties.entrySet()) {
+                    for (Entry<String, String> entry : properties.entrySet())
+                    {
                         if (!entry.getKey().equals("driver"))
                             url.append(';').append(entry.getKey()).append('=').append(entry.getValue());
                     }
@@ -206,15 +216,18 @@ public enum Rdbms
             default:
                 StringBuilder url = new StringBuilder("jdbc:").append(toString().toLowerCase()).append("://").append(host).append(':')
                         .append(port).append('/').append(database);
-                if (!properties.isEmpty()) {
+                if (!properties.isEmpty())
+                {
                     if (this == DB2)
                         url.append(':');
                     else
                         url.append('?');
 
                     boolean first = true;
-                    for (Entry<String, String> entry : properties.entrySet()) {
-                        if (!first) {
+                    for (Entry<String, String> entry : properties.entrySet())
+                    {
+                        if (!first)
+                        {
                             if (forContext)
                                 url.append(';');
                             else

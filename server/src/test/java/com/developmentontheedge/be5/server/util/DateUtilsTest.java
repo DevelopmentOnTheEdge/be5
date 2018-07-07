@@ -17,25 +17,25 @@ public class DateUtilsTest
     @Test
     public void base()
     {
-        assertEquals(DateUtils.makeDate( 2016, 12, 31 ),
-                DateUtils.curMonthEnd(DateUtils.makeDate( 2016, 12, 15 )));
-        assertEquals(DateUtils.makeDate( 2016, 12, 1 ),
-                DateUtils.curMonthBegin(DateUtils.makeDate( 2016, 12, 15 )));
+        assertEquals(DateUtils.makeDate(2016, 12, 31),
+                DateUtils.curMonthEnd(DateUtils.makeDate(2016, 12, 15)));
+        assertEquals(DateUtils.makeDate(2016, 12, 1),
+                DateUtils.curMonthBegin(DateUtils.makeDate(2016, 12, 15)));
 
-        assertEquals(DateUtils.makeDate( 2017, 1, 31 ),
-                DateUtils.nextMonthEnd(DateUtils.makeDate( 2016, 12, 31 )));
-        assertEquals(DateUtils.makeDate( 2017, 1, 1 ),
-                DateUtils.nextMonthBegin(DateUtils.makeDate( 2016, 12, 31 )));
+        assertEquals(DateUtils.makeDate(2017, 1, 31),
+                DateUtils.nextMonthEnd(DateUtils.makeDate(2016, 12, 31)));
+        assertEquals(DateUtils.makeDate(2017, 1, 1),
+                DateUtils.nextMonthBegin(DateUtils.makeDate(2016, 12, 31)));
 
-        assertEquals(DateUtils.makeDate( 2016, 11, 1 ),
-                DateUtils.prevMonthBegin(DateUtils.makeDate( 2016, 12, 31 )));
-        assertEquals(DateUtils.makeDate( 2016, 11, 30 ),
-                DateUtils.prevMonthEnd(DateUtils.makeDate( 2016, 12, 31 )));
+        assertEquals(DateUtils.makeDate(2016, 11, 1),
+                DateUtils.prevMonthBegin(DateUtils.makeDate(2016, 12, 31)));
+        assertEquals(DateUtils.makeDate(2016, 11, 30),
+                DateUtils.prevMonthEnd(DateUtils.makeDate(2016, 12, 31)));
 
-        assertEquals(DateUtils.makeDate( 2017, 1, 1 ),
-                DateUtils.nextDay(DateUtils.makeDate( 2016, 12, 31 )));
-        assertEquals(DateUtils.makeDate( 2016, 12, 30 ),
-                DateUtils.prevDay(DateUtils.makeDate( 2016, 12, 31 )));
+        assertEquals(DateUtils.makeDate(2017, 1, 1),
+                DateUtils.nextDay(DateUtils.makeDate(2016, 12, 31)));
+        assertEquals(DateUtils.makeDate(2016, 12, 30),
+                DateUtils.prevDay(DateUtils.makeDate(2016, 12, 31)));
 
         Date date = DateUtils.makeDate(2016, 12, 1);
 
@@ -112,14 +112,14 @@ public class DateUtilsTest
     @Test
     public void diff()
     {
-        assertEquals(30, DateUtils.getDaysDiff(DateUtils.makeDate( 2017, 1, 1 ),
-                                                        DateUtils.makeDate( 2017, 1, 31 )));
+        assertEquals(30, DateUtils.getDaysDiff(DateUtils.makeDate(2017, 1, 1),
+                DateUtils.makeDate(2017, 1, 31)));
 
-        assertEquals(3, DateUtils.getMonthDiff(DateUtils.makeDate( 2017, 1, 15 ),
-                DateUtils.makeDate( 2017, 4, 1 )));
+        assertEquals(3, DateUtils.getMonthDiff(DateUtils.makeDate(2017, 1, 15),
+                DateUtils.makeDate(2017, 4, 1)));
 
-        assertEquals(2, DateUtils.getFullMonthDiff(DateUtils.makeDate( 2017, 1, 15 ),
-                DateUtils.makeDate( 2017, 4, 1 )));
+        assertEquals(2, DateUtils.getFullMonthDiff(DateUtils.makeDate(2017, 1, 15),
+                DateUtils.makeDate(2017, 4, 1)));
     }
 
     @Test
@@ -132,28 +132,28 @@ public class DateUtilsTest
     @Test
     public void testIsBetween()
     {
-        assertTrue( DateUtils.isBetween( DateUtils.makeDate( 2016, 12, 31 ),
-            DateUtils.makeDate( 2016, 12, 30 ), DateUtils.makeDate( 2017, 1, 1 ) ) );
+        assertTrue(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
+                DateUtils.makeDate(2016, 12, 30), DateUtils.makeDate(2017, 1, 1)));
 
-        assertTrue( DateUtils.isBetween( DateUtils.makeDate( 2016, 12, 31 ),
-                DateUtils.makeDate( 2016, 12, 31 ), DateUtils.makeDate( 2017, 1, 1 ) ) );
+        assertTrue(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
+                DateUtils.makeDate(2016, 12, 31), DateUtils.makeDate(2017, 1, 1)));
 
-        assertFalse( DateUtils.isBetween( DateUtils.makeDate( 2016, 12, 31 ),
-                DateUtils.makeDate( 2016, 12, 31 ), DateUtils.makeDate( 2016, 12, 31 ) ) );
+        assertFalse(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
+                DateUtils.makeDate(2016, 12, 31), DateUtils.makeDate(2016, 12, 31)));
     }
 
     @Test
     public void testAfter()
     {
-        assertTrue( "2013-12-03", !DateUtils.makeDate(2013,12,3).after( DateUtils.makeDate(2013,12,5) ) );
-        assertTrue( "2013-12-04", !DateUtils.makeDate(2013,12,4).after( DateUtils.makeDate(2013,12,5) ) );
-        assertTrue( "2013-12-05", !DateUtils.makeDate(2013,12,5).after( DateUtils.makeDate(2013,12,5) ) );
+        assertTrue("2013-12-03", !DateUtils.makeDate(2013, 12, 3).after(DateUtils.makeDate(2013, 12, 5)));
+        assertTrue("2013-12-04", !DateUtils.makeDate(2013, 12, 4).after(DateUtils.makeDate(2013, 12, 5)));
+        assertTrue("2013-12-05", !DateUtils.makeDate(2013, 12, 5).after(DateUtils.makeDate(2013, 12, 5)));
     }
 
     @Test
     public void testSameDay()
     {
-        assertTrue( DateUtils.isSameDay( DateUtils.makeDate( 2016, 12, 31 ), DateUtils.nextDay( DateUtils.makeDate( 2016, 12, 30 ) ) ) );
+        assertTrue(DateUtils.isSameDay(DateUtils.makeDate(2016, 12, 31), DateUtils.nextDay(DateUtils.makeDate(2016, 12, 30))));
     }
 
     @Test

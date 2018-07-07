@@ -8,26 +8,26 @@ public class AstInterval extends SimpleNode
 {
     public AstInterval(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "INTERVAL";
     }
 
     public AstInterval(SimpleNode child)
     {
-        this( 0 );
-        addChild( child );
+        this(0);
+        addChild(child);
     }
-    
+
     public String getLiteral()
     {
-        if(children.size() != 1 || !(children.get( 0 ) instanceof AstStringConstant))
+        if (children.size() != 1 || !(children.get(0) instanceof AstStringConstant))
             return null;
-        return ((AstStringConstant)child( 0 )).getValueUnescaped();
+        return ((AstStringConstant) child(0)).getValueUnescaped();
     }
-    
+
     public static Predicate<SimpleNode> isInterval(String literal)
     {
-        return node -> node instanceof AstInterval && literal.equals( ( (AstInterval)node ).getLiteral() );
+        return node -> node instanceof AstInterval && literal.equals(((AstInterval) node).getLiteral());
     }
 }
 /* JavaCC - OriginalChecksum=3e9a0762e5c0fc08ed698f3fdb901e1c (do not edit this line) */

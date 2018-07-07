@@ -42,7 +42,8 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
 
     public boolean isFunctional()
     {
-        for (IndexColumnDef col : this) {
+        for (IndexColumnDef col : this)
+        {
             if (col.isFunctional())
                 return true;
         }
@@ -88,10 +89,12 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> errors = super.getErrors();
-        if (getName().length() > Constants.MAX_ID_LENGTH) {
+        if (getName().length() > Constants.MAX_ID_LENGTH)
+        {
             errors.add(new ProjectElementException(getCompletePath(), "name", "Index name is too long: " + getName().length() + " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
         }
-        if (getSize() == 0) {
+        if (getSize() == 0)
+        {
             errors.add(new ProjectElementException(this, "Index must have at least one column"));
         }
         return errors;
@@ -150,7 +153,8 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
 
     public boolean isValidIndex()
     {
-        for (IndexColumnDef col : this) {
+        for (IndexColumnDef col : this)
+        {
             ColumnDef column = getTable().getColumns().getCaseInsensitive(col.getName());
             if (column == null || !column.isAvailable())
                 return false;

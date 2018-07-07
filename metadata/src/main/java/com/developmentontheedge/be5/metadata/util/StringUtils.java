@@ -34,12 +34,14 @@ public class StringUtils
 
     public static String join(Collection c, String delimiter, String prefix)
     {
-        if (c.isEmpty()) {
+        if (c.isEmpty())
+        {
             return "";
         }
         Iterator i = c.iterator();
         StringBuffer result = new StringBuffer().append(prefix).append(i.next());
-        while (i.hasNext()) {
+        while (i.hasNext())
+        {
             result.append(delimiter).append(prefix).append(i.next());
         }
         return result.toString();

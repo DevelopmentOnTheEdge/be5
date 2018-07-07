@@ -50,7 +50,7 @@ public class QueryServiceImpl implements QueryService
     private Map<String, List<String>> getMapOfList(Map<String, ?> parameters)
     {
         Map<String, List<String>> listParams = new HashMap<>();
-        parameters.forEach((k,v) -> listParams.put(k, getParameterList(v)));
+        parameters.forEach((k, v) -> listParams.put(k, getParameterList(v)));
 
         return listParams;
     }
@@ -58,13 +58,12 @@ public class QueryServiceImpl implements QueryService
     @SuppressWarnings("unchecked")
     private List<String> getParameterList(Object parameter)
     {
-        if(parameter == null)return null;
+        if (parameter == null) return null;
 
-        if(parameter instanceof List)
+        if (parameter instanceof List)
         {
             return (List<String>) parameter;
-        }
-        else
+        } else
         {
             return Collections.singletonList(parameter.toString());
         }

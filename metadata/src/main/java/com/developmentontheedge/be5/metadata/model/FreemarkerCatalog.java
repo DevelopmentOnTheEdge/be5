@@ -37,16 +37,20 @@ public class FreemarkerCatalog extends BeVectorCollection<FreemarkerScriptOrCata
     public FreemarkerScript optScript(String relativePath)
     {
         FreemarkerScriptOrCatalog element = this;
-        for (String component : DataElementPath.create(relativePath).getPathComponents()) {
-            if (!(element instanceof FreemarkerCatalog)) {
+        for (String component : DataElementPath.create(relativePath).getPathComponents())
+        {
+            if (!(element instanceof FreemarkerCatalog))
+            {
                 return null;
             }
             element = ((FreemarkerCatalog) element).get(component);
-            if (element == null) {
+            if (element == null)
+            {
                 return null;
             }
         }
-        if (element instanceof FreemarkerScript) {
+        if (element instanceof FreemarkerScript)
+        {
             return (FreemarkerScript) element;
         }
         return null;
@@ -58,10 +62,13 @@ public class FreemarkerCatalog extends BeVectorCollection<FreemarkerScriptOrCata
     public List<FreemarkerScript> getScripts()
     {
         List<FreemarkerScript> result = new ArrayList<>();
-        for (FreemarkerScriptOrCatalog scriptOrCatalog : this) {
-            if (scriptOrCatalog instanceof FreemarkerScript) {
+        for (FreemarkerScriptOrCatalog scriptOrCatalog : this)
+        {
+            if (scriptOrCatalog instanceof FreemarkerScript)
+            {
                 result.add((FreemarkerScript) scriptOrCatalog);
-            } else {
+            } else
+            {
                 result.addAll(((FreemarkerCatalog) scriptOrCatalog).getScripts());
             }
         }

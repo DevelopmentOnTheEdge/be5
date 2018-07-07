@@ -12,19 +12,24 @@ public class DatabaseUtils
     public static Rdbms getRdbms(final String url)
     {
         String realUrl = url.startsWith("jdbc:") ? url.substring("jdbc:".length()) : url;
-        if (realUrl.startsWith("mysql:")) {
+        if (realUrl.startsWith("mysql:"))
+        {
             return Rdbms.MYSQL;
         }
-        if (realUrl.startsWith("db2:")) {
+        if (realUrl.startsWith("db2:"))
+        {
             return Rdbms.DB2;
         }
-        if (realUrl.startsWith("oracle:")) {
+        if (realUrl.startsWith("oracle:"))
+        {
             return Rdbms.ORACLE;
         }
-        if (realUrl.startsWith("postgresql:")) {
+        if (realUrl.startsWith("postgresql:"))
+        {
             return Rdbms.POSTGRESQL;
         }
-        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:")) {
+        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:"))
+        {
             return Rdbms.SQLSERVER;
         }
         return null;
@@ -40,11 +45,14 @@ public class DatabaseUtils
         final String correctedPassword = password == null ? "" : password;
         final String additionalOptions = baseURL.startsWith("jdbc:oracle") ? ";defaultRowPrefetch=1000" : "";
 
-        if (baseURL.endsWith(";")) {
+        if (baseURL.endsWith(";"))
+        {
             return String.format("%s;user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
-        } else if (baseURL.contains("?")) {
+        } else if (baseURL.contains("?"))
+        {
             return String.format("%s;user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
-        } else {
+        } else
+        {
             return String.format("%s?user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
         }
     }
@@ -57,20 +65,24 @@ public class DatabaseUtils
 
     public static void clearMetadataCache(final SqlExecutor sql)
     {
-        try {
+        try
+        {
             sql.startSection("Clear all caches");
             setSystemSetting(sql, "system", "CACHES_TO_CLEAR", "metadata_*,localizedMessagesCache");
-        } catch (ExtendedSqlException e) {
+        } catch (ExtendedSqlException e)
+        {
             // ignore
         }
     }
 
     public static void clearAllCache(final SqlExecutor sql)
     {
-        try {
+        try
+        {
             sql.startSection("Clear all caches");
             setSystemSetting(sql, "system", "CACHES_TO_CLEAR", "all");
-        } catch (ExtendedSqlException e) {
+        } catch (ExtendedSqlException e)
+        {
             // ignore
         }
     }

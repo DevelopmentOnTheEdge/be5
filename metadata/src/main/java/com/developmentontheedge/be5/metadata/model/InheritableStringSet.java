@@ -65,13 +65,16 @@ public class InheritableStringSet
 
         usePrototype = !values.isEmpty();
 
-        for (String value : values) {
-            if (value.startsWith("-")) {
+        for (String value : values)
+        {
+            if (value.startsWith("-"))
+            {
                 excluded.add(value.substring(1));
             } else if (value.startsWith("+") && !value.startsWith("+/")) // exception for inputs like "+/- Category"
             {
                 included.add(value.substring(1));
-            } else {
+            } else
+            {
                 included.add(value);
                 usePrototype = false;
             }
@@ -89,10 +92,12 @@ public class InheritableStringSet
     public List<String> printValues()
     {
         List<String> result = new ArrayList<>();
-        for (String value : includedValues) {
+        for (String value : includedValues)
+        {
             result.add(usePrototype ? '+' + value : value);
         }
-        for (String value : excludedValues) {
+        for (String value : excludedValues)
+        {
             result.add('-' + value);
         }
         return result;
@@ -221,7 +226,8 @@ public class InheritableStringSet
 
     public void setUsePrototype(boolean usePrototype)
     {
-        if (usePrototype != this.usePrototype) {
+        if (usePrototype != this.usePrototype)
+        {
             this.usePrototype = usePrototype;
             customizeAndFireChanged();
         }

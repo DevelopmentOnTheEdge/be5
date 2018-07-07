@@ -25,7 +25,7 @@ public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo
     @Override
     public UserInfo get()
     {
-        return (UserInfo)session.get().get(SessionConstants.USER_INFO);
+        return (UserInfo) session.get().get(SessionConstants.USER_INFO);
     }
 
     @Override

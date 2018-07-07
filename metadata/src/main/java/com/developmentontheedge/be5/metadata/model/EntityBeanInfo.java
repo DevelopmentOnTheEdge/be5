@@ -12,9 +12,11 @@ public class EntityBeanInfo extends BeanInfoEx
     public EntityBeanInfo()
     {
         super(Entity.class);
-        try {
+        try
+        {
             setDisplayNameMethod(Entity.class.getMethod("getType"));
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new InternalError("Unexpected error while registering EntityBeanInfo: " + e);
         }
     }

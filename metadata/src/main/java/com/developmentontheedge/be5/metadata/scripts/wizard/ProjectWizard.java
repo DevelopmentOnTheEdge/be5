@@ -75,9 +75,11 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
     @Override
     public void execute() throws ScriptException
     {
-        try {
+        try
+        {
             wizard();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -90,9 +92,11 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
         MenuAction finishAction = new MenuAction("Save and exit.", () ->
         {
-            try {
+            try
+            {
                 Serialization.save(projectGenerator.generate(), projectPath.toPath());
-            } catch (ProjectSaveException e) {
+            } catch (ProjectSaveException e)
+            {
                 e.printStackTrace();
             }
         });
@@ -161,13 +165,15 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
         selectProjectName(parameters);
 
-        while (true) {
+        while (true)
+        {
             out.println("Current state:");
             print(parameters);
 
             StringBuilder sb = new StringBuilder();
             sb.append("Actions:\n");
-            for (int i = 0; i < actions.length; i++) {
+            for (int i = 0; i < actions.length; i++)
+            {
                 String aString = "" + (i + 1) + ". " + actions[i].getTitle() + "\n";
                 sb.append(aString);
             }
@@ -364,8 +370,10 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         final List<Runnable> actions = new ArrayList<>();
         int iAction = 1;
 
-        for (final String item : items) {
-            if (!elementsToIgnore.contains(item)) {
+        for (final String item : items)
+        {
+            if (!elementsToIgnore.contains(item))
+            {
                 out.println("" + iAction + ". Delete '" + item + "'");
                 iAction++;
                 actions.add(new Runnable()
@@ -393,11 +401,13 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                 final String item;
                 if (avaliableValues == null || avaliableValues.length == 0)
                     item = readLine(addActionQuery);
-                else {
+                else
+                {
                     final TreeSet<String> items2 = Sets.newTreeSet(Sets.newHashSet(avaliableValues));
                     items2.removeAll(Sets.newHashSet(strategy.get()));
 
-                    if (items2.isEmpty()) {
+                    if (items2.isEmpty())
+                    {
                         out.println("Nothing to add.");
                         return;
                     }
@@ -406,7 +416,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                     final List<String> avaliableValues2 = Lists.newArrayList(items2);
                     out.println(addActionQuery);
 
-                    for (final String avaliableValue : avaliableValues2) {
+                    for (final String avaliableValue : avaliableValues2)
+                    {
                         iValue++;
                         out.println("" + iValue + ". " + avaliableValue);
                     }
@@ -425,10 +436,12 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                 final ArrayList<String> newItems = Lists.newArrayList(strategy.get());
                 if (newItems.contains(item))
                     out.println("Already added");
-                else if (strategy.validate(item) != null) {
+                else if (strategy.validate(item) != null)
+                {
                     final String message = strategy.validate(item);
                     out.println(message);
-                } else {
+                } else
+                {
                     newItems.add(item);
                     strategy.apply(Iterables.toArray(newItems, String.class));
                 }
@@ -501,9 +514,11 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     private String readLine()
     {
-        try {
+        try
+        {
             return bufferedReader.readLine();
-        } catch (IOException e1) {
+        } catch (IOException e1)
+        {
             throw new AssertionError();
         }
     }
@@ -516,18 +531,22 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     private int readInt(int minimum, int maximum)
     {
-        while (true) {
+        while (true)
+        {
             final String line = readLine();
-            try {
+            try
+            {
                 final int integer = Integer.parseInt(line);
 
-                if (!(minimum <= integer && integer <= maximum)) {
+                if (!(minimum <= integer && integer <= maximum))
+                {
                     out.println("The integer should be between " + minimum + " and " + maximum + " (inclusive). Write again:");
                     continue;
                 }
 
                 return integer;
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException e)
+            {
                 out.println("An integer is expected. Write again:");
             }
         }
@@ -535,9 +554,11 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     public ProjectWizard setInputStream(String str)
     {
-        try {
+        try
+        {
             this.inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e)
+        {
             e.printStackTrace();
         }
         return this;

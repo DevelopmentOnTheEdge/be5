@@ -66,10 +66,12 @@ public class AppSync extends ScriptSupport<AppSync>
 
         PrintStream ps = createPrintStream(be5Project.getName() + "_sync_ddl.sql");
 
-        try {
+        try
+        {
             sqlExecutor = new BeSqlExecutor(connector, ps);
 
-            if (be5Project.getDebugStream() != null) {
+            if (be5Project.getDebugStream() != null)
+            {
                 be5Project.getDebugStream().println("Modules and extras for " + be5Project.getName() + ":");
                 be5Project.allModules()
                         .map(m -> "- " + m.getName() + ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())))
@@ -82,17 +84,20 @@ public class AppSync extends ScriptSupport<AppSync>
             String ddlString = getDdlStatements(false);
             ddlString = MultiSqlParser.normalize(be5Project.getDatabaseSystem().getType(), ddlString);
 
-            if (ddlString.isEmpty()) {
+            if (ddlString.isEmpty())
+            {
                 logger.info("Database scheme is up-to-date");
                 return;
             }
 
-            if (forceUpdate) {
+            if (forceUpdate)
+            {
                 sqlExecutor.startSection("Sync schema");
                 logger.setOperationName("[>] Schema");
                 sqlExecutor.executeMultiple(ddlString);
                 sqlExecutor.startSection(null);
-            } else {
+            } else
+            {
                 logger.error("The following statements should be executed to update database scheme:");
                 logger.error(ddlString);
                 logger.error("Use -DBE5_FORCE_UPDATE=true, for apply");
@@ -105,13 +110,17 @@ public class AppSync extends ScriptSupport<AppSync>
             if (debug)
                 throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
             throw new ScriptException("Synchronisation error: " + e.getMessage());
-        } catch (IOException | ProcessInterruptedException e) {
+        } catch (IOException | ProcessInterruptedException e)
+        {
             throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
-        } catch (Throwable t) {
+        } catch (Throwable t)
+        {
             t.printStackTrace();
             throw new ScriptException("Synchronisation error: " + t.getMessage(), t);
-        } finally {
-            if (ps != null) {
+        } finally
+        {
+            if (ps != null)
+            {
                 ps.close();
             }
         }
@@ -161,11 +170,14 @@ public class AppSync extends ScriptSupport<AppSync>
         columns = schemaReader.readColumns(sqlExecutor, defSchema, controller);
         indices = schemaReader.readIndices(sqlExecutor, defSchema, controller);
 
-        if (debug) {
-            if (!warnings.isEmpty()) {
+        if (debug)
+        {
+            if (!warnings.isEmpty())
+            {
                 logger.error(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString());
                 Collections.sort(warnings);
-                for (String warning : warnings) {
+                for (String warning : warnings)
+                {
                     logger.error(warning);
                 }
             }
@@ -185,7 +197,8 @@ public class AppSync extends ScriptSupport<AppSync>
         project.setDatabaseSystem(be5Project.getDatabaseSystem());
         Module module = new Module("temp", project);
 
-        for (String table : tableTypes.keySet()) {
+        for (String table : tableTypes.keySet())
+        {
             if (!"TABLE".equals(tableTypes.get(table.toLowerCase())))
                 continue;
 
@@ -197,7 +210,8 @@ public class AppSync extends ScriptSupport<AppSync>
             entities.add(entity);
 
             TableDef tableDef = new TableDef(entity);
-            for (SqlColumnInfo info : columnInfos) {
+            for (SqlColumnInfo info : columnInfos)
+            {
                 ColumnDef column = new ColumnDef(info.getName(), tableDef.getColumns());
                 column.setType(createColumnType(info));
                 typeManager.correctType(column.getType());
@@ -205,10 +219,12 @@ public class AppSync extends ScriptSupport<AppSync>
                 column.setCanBeNull(info.isCanBeNull());
                 String defaultValue = info.getDefaultValue();
                 column.setAutoIncrement(info.isAutoIncrement());
-                if (!info.isAutoIncrement()) {
+                if (!info.isAutoIncrement())
+                {
                     column.setDefaultValue(defaultValue);
                 }
-                if (column.isPrimaryKey() && typeManager.getKeyType().equals(typeManager.getTypeClause(column.getType()))) {
+                if (column.isPrimaryKey() && typeManager.getKeyType().equals(typeManager.getTypeClause(column.getType())))
+                {
                     column.getType().setTypeName(SqlColumnType.TYPE_KEY);
                 }
 //                column.setOriginModuleName( module.getName() );
@@ -216,19 +232,24 @@ public class AppSync extends ScriptSupport<AppSync>
             }
 
             List<IndexInfo> indexInfos = indices.get(table.toLowerCase(Locale.ENGLISH));
-            if (indexInfos != null) {
+            if (indexInfos != null)
+            {
                 INDEX:
-                for (IndexInfo info : indexInfos) {
+                for (IndexInfo info : indexInfos)
+                {
                     if (!casePreserved)
                         info.setName(info.getName().toUpperCase(Locale.ENGLISH));
 
                     IndexDef index = new IndexDef(info.getName(), tableDef.getIndices());
                     index.setUnique(info.isUnique());
 
-                    for (String indexCol : info.getColumns()) {
+                    for (String indexCol : info.getColumns())
+                    {
                         IndexColumnDef indexColumnDef = IndexColumnDef.createFromString(indexCol, index);
-                        if (tableDef.getColumns().get(indexColumnDef.getName()) == null) {
-                            if (debug) {
+                        if (tableDef.getColumns().get(indexColumnDef.getName()) == null)
+                        {
+                            if (debug)
+                            {
                                 warnings.add("Unsupported functional index found: " + index.getName() + " (problem is here: "
                                         + indexCol + "); skipped");
                             }
@@ -238,10 +259,13 @@ public class AppSync extends ScriptSupport<AppSync>
                         DataElementUtils.saveQuiet(indexColumnDef);
                     }
 
-                    if (index.isUnique() && index.getSize() == 1) {
+                    if (index.isUnique() && index.getSize() == 1)
+                    {
                         IndexColumnDef indexColumnDef = index.iterator().next();
-                        if (!indexColumnDef.isFunctional()) {
-                            if (index.getName().equalsIgnoreCase(table + "_pkey")) {
+                        if (!indexColumnDef.isFunctional())
+                        {
+                            if (index.getName().equalsIgnoreCase(table + "_pkey"))
+                            {
                                 entity.setPrimaryKey(indexColumnDef.getName());
                                 continue;
                             }
@@ -257,19 +281,22 @@ public class AppSync extends ScriptSupport<AppSync>
             return;
 
         // For MySQL only now
-        for (Entity entity : entities) {
+        for (Entity entity : entities)
+        {
             final String table = entity.getName();
             if (!"VIEW".equalsIgnoreCase(tableTypes.get(table)))
                 continue;
 
             String createTable;
             ResultSet rs = sqlExecutor.executeNamedQuery("sql.getTableDefinition", table);
-            try {
+            try
+            {
                 if (!rs.next())
                     continue;
 
                 createTable = rs.getString(2);
-            } finally {
+            } finally
+            {
                 sqlExecutor.getConnector().close(rs);
             }
 
@@ -288,15 +315,19 @@ public class AppSync extends ScriptSupport<AppSync>
     {
         SqlColumnType type = new SqlColumnType();
         String[] enumValues = info.getEnumValues();
-        if (enumValues != null) {
-            if (isBool(enumValues)) {
+        if (enumValues != null)
+        {
+            if (isBool(enumValues))
+            {
                 type.setTypeName(SqlColumnType.TYPE_BOOL);
-            } else {
+            } else
+            {
                 type.setTypeName(SqlColumnType.TYPE_ENUM);
                 Arrays.sort(enumValues);
                 type.setEnumValues(enumValues);
             }
-        } else {
+        } else
+        {
             type.setTypeName(info.getType());
             type.setSize(info.getSize());
             type.setPrecision(info.getPrecision());
@@ -306,7 +337,8 @@ public class AppSync extends ScriptSupport<AppSync>
 
     protected static boolean isBool(final String[] enumValues)
     {
-        if (enumValues.length != 2) {
+        if (enumValues.length != 2)
+        {
             return false;
         }
 
@@ -330,37 +362,47 @@ public class AppSync extends ScriptSupport<AppSync>
         Map<String, DdlElement> oldSchemes = new HashMap<>();
         Map<String, DdlElement> newSchemes = new HashMap<>();
 
-        for (Module module : be5Project.getModulesAndApplication()) {
-            for (Entity entity : module.getEntities()) {
+        for (Module module : be5Project.getModulesAndApplication())
+        {
+            for (Entity entity : module.getEntities())
+            {
                 DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-                if (scheme != null) {
+                if (scheme != null)
+                {
                     String normalizedName = entity.getName().toLowerCase();
                     newSchemes.put(normalizedName, scheme);
                 }
             }
         }
 
-        for (Entity entity : entities) {
+        for (Entity entity : entities)
+        {
             DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-            if (scheme != null) {
+            if (scheme != null)
+            {
                 String normalizedName = entity.getName().toLowerCase();
                 oldSchemes.put(normalizedName, scheme);
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, DdlElement> entity : newSchemes.entrySet()) {
+        for (Map.Entry<String, DdlElement> entity : newSchemes.entrySet())
+        {
             DdlElement oldScheme = oldSchemes.get(entity.getKey());
             DdlElement newScheme = entity.getValue();
 
-            if (newScheme.withoutDbScheme()) {
-                if (!dangerousOnly) {
+            if (newScheme.withoutDbScheme())
+            {
+                if (!dangerousOnly)
+                {
                     // PENDING - list of other type
                     //warnings.addAll(newScheme.getWarnings());
                 }
 
-                if (oldScheme == null) {
-                    if (!dangerousOnly) {
+                if (oldScheme == null)
+                {
+                    if (!dangerousOnly)
+                    {
                         sb.append(newScheme.getCreateDdl());
                     }
                     continue;
@@ -375,7 +417,8 @@ public class AppSync extends ScriptSupport<AppSync>
 
                 sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
                         : newScheme.getDiffDdl(oldScheme, sqlExecutor));
-            } else {
+            } else
+            {
                 logger.info("Skip table with schema: " + newScheme.getEntityName());
             }
         }
@@ -431,9 +474,11 @@ public class AppSync extends ScriptSupport<AppSync>
     {
         ColumnDef pk = ddl.getColumns().get(ddl.getEntity().getPrimaryKey());
         // Orphans have no primary key set: try to set the same column as in original table
-        if (pk != null) {
+        if (pk != null)
+        {
             ColumnDef orphanPk = orphanDdl.getColumns().getCaseInsensitive(pk.getName());
-            if (orphanPk != null) {
+            if (orphanPk != null)
+            {
                 orphanDdl.getIndicesUsingColumn(orphanPk.getName()).stream().filter(idx -> idx.getSize() == 1 && idx.isUnique())
                         .findFirst().ifPresent(idx -> {
                     // Remove primary key index

@@ -33,7 +33,8 @@ public class AttributeRule implements SelectorRule
 
     private boolean test(String actual)
     {
-        switch (operator) {
+        switch (operator)
+        {
             case "":
                 return value.equalsIgnoreCase(actual);
             case "^":
@@ -50,13 +51,15 @@ public class AttributeRule implements SelectorRule
     @Override
     public boolean matches(BeModelElement element)
     {
-        try {
+        try
+        {
             Object value = Beans.getBeanPropertyValue(element, attribute);
             if (value == null)
                 return false;
             if (test(value.toString()))
                 return true;
-            if (attribute.equals("type")) {
+            if (attribute.equals("type"))
+            {
                 String val = value.toString().toLowerCase().replace("/", "");
                 if (test(val))
                     return true;
@@ -64,7 +67,8 @@ public class AttributeRule implements SelectorRule
                 if (test(val))
                     return true;
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
         }
         return false;
     }

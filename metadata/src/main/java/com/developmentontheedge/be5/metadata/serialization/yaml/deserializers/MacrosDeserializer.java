@@ -41,15 +41,18 @@ class MacrosDeserializer extends FileDeserializer
 
         final Object serializedPfs = serializedModuleBody.get(TAG_PROJECT_FILE_STRUCTURE);
 
-        if (serializedPfs == null) {
+        if (serializedPfs == null)
+        {
             project.setProjectFileStructure(new ProjectFileStructure(project));
-        } else {
+        } else
+        {
             project.setProjectFileStructure(yamlDeserializer.readProjectFileStructure(this, asMap(serializedPfs), project));
         }
 
         yamlDeserializer.fileSystem = new ProjectFileSystem(project);
 
-        if (module.getMacroCollection() == null) {
+        if (module.getMacroCollection() == null)
+        {
             DataElementUtils.saveQuiet(new FreemarkerCatalog(Module.MACROS, module));
         }
 

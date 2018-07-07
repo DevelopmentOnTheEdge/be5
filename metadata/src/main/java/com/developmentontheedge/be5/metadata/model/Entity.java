@@ -74,19 +74,25 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
         List<TableReference> result = new ArrayList<>();
         Set<String> names = new HashSet<>();
         TableDef tableDef = findTableDefinition();
-        if (tableDef != null) {
-            for (ColumnDef column : tableDef.getColumns().getAvailableElements()) {
-                if (column.hasReference()) {
+        if (tableDef != null)
+        {
+            for (ColumnDef column : tableDef.getColumns().getAvailableElements())
+            {
+                if (column.hasReference())
+                {
                     result.add(column);
                     names.add(column.getName().toLowerCase());
                 }
             }
         }
         BeModelCollection<TableRef> tableRefs = getTableReferences();
-        if (tableRefs != null) {
-            for (TableRef ref : tableRefs.getAvailableElements()) {
+        if (tableRefs != null)
+        {
+            for (TableRef ref : tableRefs.getAvailableElements())
+            {
                 String name = ref.getColumnsFrom().toLowerCase();
-                if (!names.contains(name)) {
+                if (!names.contains(name))
+                {
                     result.add(ref);
                     names.add(name);
                 }
@@ -104,7 +110,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     {
         @SuppressWarnings("unchecked")
         BeVectorCollection<TableRef> element = (BeVectorCollection<TableRef>) get(REFERENCES);
-        if (element == null) {
+        if (element == null)
+        {
             element = new BeCaseInsensitiveCollection<>(REFERENCES, TableRef.class, this).propagateCodeChange();
             DataElementUtils.saveQuiet(element);
         }
@@ -140,14 +147,16 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     @PropertyName("Type")
     public String getTypeString()
     {
-        try {
+        try
+        {
             final EntityType typeValue = getType();
 
             if (typeValue == null)
                 return "";
 
             return typeValue.getHumanReadableName();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return "";
         }
     }
@@ -180,10 +189,12 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
         if (c1.size() != c2.size())
             return false;
         Map<String, TableReference> oldNames = new HashMap<>();
-        for (TableReference oldTableRef : c2) {
+        for (TableReference oldTableRef : c2)
+        {
             oldNames.put(oldTableRef.getColumnsFrom().toLowerCase(), oldTableRef);
         }
-        for (TableReference newTableRef : c1) {
+        for (TableReference newTableRef : c1)
+        {
             TableReference ref = oldNames.remove(newTableRef.getColumnsFrom().toLowerCase());
             if (ref == null || !newTableRef.equalsReference(ref))
                 return false;
@@ -218,10 +229,12 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
             return debugEquals("primaryKey");
         if (!getIcon().equals(other.getIcon()))
             return debugEquals("icon");
-        if (compareScheme) {
+        if (compareScheme)
+        {
             DdlElement scheme = getScheme();
             DdlElement otherScheme = other.getScheme();
-            if (scheme == null) {
+            if (scheme == null)
+            {
                 if (otherScheme != null)
                     return debugEquals("scheme");
             } else if (!scheme.equals(otherScheme))
@@ -231,24 +244,30 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
             return debugEquals("tableReferences");
         final Map<String, Operation> ops = new HashMap<>();
         final Map<String, Operation> otherOps = new HashMap<>();
-        for (final Operation op : getOperations().getAvailableElements()) {
+        for (final Operation op : getOperations().getAvailableElements())
+        {
             ops.put(op.getName(), op);
         }
-        for (final Operation op : other.getOperations().getAvailableElements()) {
+        for (final Operation op : other.getOperations().getAvailableElements())
+        {
             otherOps.put(op.getName(), op);
         }
-        if (!ops.equals(otherOps)) {
+        if (!ops.equals(otherOps))
+        {
             return debugEquals("operations");
         }
         final Map<String, Query> queries = new HashMap<>();
         final Map<String, Query> otherQueries = new HashMap<>();
-        for (final Query query : getQueries().getAvailableElements()) {
+        for (final Query query : getQueries().getAvailableElements())
+        {
             queries.put(query.getName(), query);
         }
-        for (final Query query : other.getQueries().getAvailableElements()) {
+        for (final Query query : other.getQueries().getAvailableElements())
+        {
             otherQueries.put(query.getName(), query);
         }
-        if (!queries.equals(otherQueries)) {
+        if (!queries.equals(otherQueries))
+        {
             return debugEquals("queries");
         }
         if (!DataElementUtils.equals(getCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class),
@@ -320,16 +339,19 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     {
         final List<ProjectElementException> errors = new ArrayList<>();
 
-        if (getName().length() > Constants.MAX_ID_LENGTH) {
+        if (getName().length() > Constants.MAX_ID_LENGTH)
+        {
             errors.add(new ProjectElementException(getCompletePath(), "name", "Entity name is too long."));
         }
 
-        for (final Module module : getProject().getModulesAndApplication()) {
+        for (final Module module : getProject().getModulesAndApplication())
+        {
             final Module thisModule = getModule();
             if (module == thisModule)
                 break;
             final Entity duplicate = module.getEntity(getName());
-            if (duplicate != null) {
+            if (duplicate != null)
+            {
                 errors.add(new ProjectElementException(getCompletePath(), "name", "Entity with name '" + getName() + "' already exists."));
                 break;
             }
@@ -337,13 +359,16 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
 
         final TableDef tableDef = findTableDefinition();
 
-        if (tableDef != null) {
+        if (tableDef != null)
+        {
             errors.addAll(tableDef.getErrors());
         }
-        for (final Query query : getQueries()) {
+        for (final Query query : getQueries())
+        {
             errors.addAll(query.getErrors());
         }
-        for (final Operation operation : getOperations()) {
+        for (final Operation operation : getOperations())
+        {
             errors.addAll(operation.getErrors());
         }
         return errors;

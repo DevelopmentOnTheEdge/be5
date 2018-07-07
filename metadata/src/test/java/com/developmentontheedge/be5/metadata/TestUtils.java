@@ -18,7 +18,8 @@ public class TestUtils
 
     public static void assertFileEquals(String message, File expectedFile, File testFile) throws Exception
     {
-        try (InputStream stream1 = new FileInputStream(expectedFile); InputStream stream2 = new FileInputStream(testFile)) {
+        try (InputStream stream1 = new FileInputStream(expectedFile); InputStream stream2 = new FileInputStream(testFile))
+        {
             assertFileEquals(message, stream1, stream2);
         }
     }
@@ -41,20 +42,26 @@ public class TestUtils
     public static void assertFileEquals(String message, Reader expectedFile, Reader testFile) throws Exception
     {
         try (final BufferedReader brOrig = new BufferedReader(expectedFile);
-             final BufferedReader brTest = new BufferedReader(testFile)) {
+             final BufferedReader brTest = new BufferedReader(testFile))
+        {
             final String cleanMessage = cleanUpMessage(message);
             int i = 0;
-            while (true) {
+            while (true)
+            {
                 i++;
                 String a = brOrig.readLine();
                 String b = brTest.readLine();
-                if (a == null) {
-                    if (b == null) {
+                if (a == null)
+                {
+                    if (b == null)
+                    {
                         break;
                     }
                     Assert.fail(cleanMessage + "Different line count");
-                } else {
-                    if (b == null) {
+                } else
+                {
+                    if (b == null)
+                    {
                         Assert.fail(cleanMessage + "Different line count");
                     }
                 }
@@ -65,10 +72,12 @@ public class TestUtils
 
     private static String cleanUpMessage(String message)
     {
-        if (message == null) {
+        if (message == null)
+        {
             return message;
         }
-        if (!message.isEmpty()) {
+        if (!message.isEmpty())
+        {
             return message + ": ";
         }
         return message;

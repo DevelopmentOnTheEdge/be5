@@ -77,13 +77,15 @@ class EntityDeserializer extends FileDeserializer
     @Override
     protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        if (!(serializedRoot instanceof Map)) {
+        if (!(serializedRoot instanceof Map))
+        {
             throw new ReadException(path, "Expected YAML map on the top level");
         }
 
         final Map<String, Object> serialized = (Map<String, Object>) serializedRoot;
 
-        if (!(serialized.containsKey(name))) {
+        if (!(serialized.containsKey(name)))
+        {
             throw new ReadException(path, "YAML map should start with entity name '" + name + "', found instead: " + serialized.keySet());
         }
 
@@ -98,31 +100,40 @@ class EntityDeserializer extends FileDeserializer
 
         String template = (String) entityContent.get(ATTR_ENTITY_TEMPLATE);
         Entity templateEntity = null;
-        if (template != null) {
+        if (template != null)
+        {
             templateEntity = yamlDeserializer.getTemplates().getEntity(template);
-            if (templateEntity == null) {
+            if (templateEntity == null)
+            {
                 loadContext.addWarning(new ReadException(entity, path, "Unknown template name specified: " + template));
-            } else if (!isFromApp) {
+            } else if (!isFromApp)
+            {
                 loadContext.addWarning(new ReadException(entity, path, "Cannot use template with non-application entity"));
                 templateEntity = null;
             }
         }
 
         final String type = (String) entityContent.get(ATTR_ENTITY_TYPE);
-        if (type == null) {
-            if (isFromApp && templateEntity == null) {
+        if (type == null)
+        {
+            if (isFromApp && templateEntity == null)
+            {
                 loadContext.addWarning(new ReadException(entity, path, "Entity has no type"));
             }
-        } else {
+        } else
+        {
             EntityType entityType = EntityType.forSqlName(type);
-            if (entityType == null) {
+            if (entityType == null)
+            {
                 loadContext.addWarning(new ReadException(entity, path, "Entity type is invalid: " + type));
-            } else {
+            } else
+            {
                 entity.setType(entityType);
             }
         }
 
-        if (yamlDeserializer.fileSystem != null) {
+        if (yamlDeserializer.fileSystem != null)
+        {
             entity.setLinkedFile(yamlDeserializer.getFileSystem().getEntityFile(module.getName(), entity.getName()));
         }
 
@@ -137,12 +148,15 @@ class EntityDeserializer extends FileDeserializer
 
         final List<Map<String, Object>> operationsList = asMaps(entityContent.get("operations"));
 
-        for (Map<String, Object> operationElement : operationsList) {
+        for (Map<String, Object> operationElement : operationsList)
+        {
             for (Map.Entry<String, Object> operationPair : operationElement.entrySet()) // should have only one element
             {
-                try {
+                try
+                {
                     save(readOperation(operationPair.getKey(), asMap(operationPair.getValue()), entity));
-                } catch (ReadException e) {
+                } catch (ReadException e)
+                {
                     Operation operation = Operation.createOperation(operationPair.getKey(), Operation.OPERATION_TYPE_JAVA, entity);
                     save(operation);
                     loadContext.addWarning(e.attachElement(operation));
@@ -152,12 +166,15 @@ class EntityDeserializer extends FileDeserializer
 
         final List<Map<String, Object>> queriesList = asMaps(entityContent.get("queries"));
 
-        for (Map<String, Object> queryElement : queriesList) {
+        for (Map<String, Object> queryElement : queriesList)
+        {
             for (Map.Entry<String, Object> queryPair : queryElement.entrySet()) // should have only one element
             {
-                try {
+                try
+                {
                     if (queryPair.getKey().equals(Query.SPECIAL_TABLE_DEFINITION)
-                            || queryPair.getKey().equals(Query.SPECIAL_LOST_RECORDS)) {
+                            || queryPair.getKey().equals(Query.SPECIAL_LOST_RECORDS))
+                    {
                         loadContext.addWarning(new ReadException(
                                 entity.getQueries().getCompletePath().getChildPath(queryPair.getKey()), path, "Illegal query name: '"
                                 + queryPair.getKey()
@@ -165,7 +182,8 @@ class EntityDeserializer extends FileDeserializer
                         continue;
                     }
                     save(readQuery(queryPair.getKey(), asMap(queryPair.getValue()), entity));
-                } catch (ReadException e) {
+                } catch (ReadException e)
+                {
                     Query query = new Query(queryPair.getKey(), entity);
                     save(query);
                     loadContext.addWarning(e.attachElement(query));
@@ -176,7 +194,8 @@ class EntityDeserializer extends FileDeserializer
         checkChildren(entity, entityContent, Fields.entity(), "type", TAG_COMMENT, TAG_EXTRAS, TAG_CUSTOMIZATIONS, ATTR_ICON,
                 "operations", "queries", "scheme", TAG_REFERENCES, ATTR_ENTITY_TEMPLATE);
 
-        if (templateEntity != null) {
+        if (templateEntity != null)
+        {
             entity.merge(templateEntity, false, !yamlDeserializer.fuseTemplate);
         }
 
@@ -200,31 +219,40 @@ class EntityDeserializer extends FileDeserializer
 
         operation.setOriginModuleName(getProjectOrigin());
 
-        if (operation instanceof SourceFileOperation) {
-            if (operationElement.containsKey(ATTR_FILEPATH)) {
+        if (operation instanceof SourceFileOperation)
+        {
+            if (operationElement.containsKey(ATTR_FILEPATH))
+            {
                 final SourceFileOperation fileOperation = (SourceFileOperation) operation;
                 final String filepath = classPathToFileName((String) operationElement.get(ATTR_FILEPATH), fileOperation.getFileExtension());
                 final String nameSpace = fileOperation.getFileNameSpace();
                 SourceFile sourceFile = yamlDeserializer.project.getApplication().getSourceFile(nameSpace, filepath);
-                if (sourceFile == null) {
+                if (sourceFile == null)
+                {
                     sourceFile = yamlDeserializer.project.getApplication().addSourceFile(nameSpace, filepath);
                     sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(nameSpace, filepath));
                 }
                 fileOperation.setFileName(sourceFile.getName());
                 fileOperation.customizeProperty("code");
-            } else {
-                if (operation.getType().equals(Operation.OPERATION_TYPE_GROOVY)) {
+            } else
+            {
+                if (operation.getType().equals(Operation.OPERATION_TYPE_GROOVY))
+                {
                     throw new ReadException(path, "Groovy operation required 'file' attribute.");
                 }
             }
-        } else {
+        } else
+        {
             String text = (String) operationElement.get(TAG_CODE);
-            if (!Strings2.isNullOrEmpty(text)) {
+            if (!Strings2.isNullOrEmpty(text))
+            {
                 operation.setCode(text);
                 operation.customizeProperty("code");
-            } else {
+            } else
+            {
                 if (operation.getType().equals(Operation.OPERATION_TYPE_JAVA) &&
-                        operationElement.containsKey(ATTR_FILEPATH)) {
+                        operationElement.containsKey(ATTR_FILEPATH))
+                {
                     throw new ReadException(path, "Java operation required 'code' instead 'file' attribute.");
                 }
             }
@@ -240,31 +268,39 @@ class EntityDeserializer extends FileDeserializer
     {
         final List<Map<String, Object>> extendersElement = asMaps(operationElement.get("extenders"));
 
-        for (Map<String, Object> extenderElement : extendersElement) {
+        for (Map<String, Object> extenderElement : extendersElement)
+        {
             final OperationExtender extender;
 
-            if (extenderElement.containsKey(ATTR_CLASS_NAME)) {
+            if (extenderElement.containsKey(ATTR_CLASS_NAME))
+            {
                 extender = new OperationExtender(operation, getProjectOrigin());
                 extender.setClassName((String) extenderElement.get(ATTR_CLASS_NAME));
-            } else {
+            } else
+            {
                 final String filepath = (String) extenderElement.get(ATTR_FILEPATH);
 
-                if (filepath == null) {
+                if (filepath == null)
+                {
                     loadContext.addWarning(new ReadException(path, "Extender: no " + ATTR_FILEPATH + " attribute found").attachElement(operation));
                     continue;
                 }
 
-                if (filepath.endsWith(".js") || filepath.endsWith(".groovy")) {
+                if (filepath.endsWith(".js") || filepath.endsWith(".groovy"))
+                {
                     SourceFileOperationExtender fileExtender;
-                    if (filepath.endsWith(".js")) {
+                    if (filepath.endsWith(".js"))
+                    {
                         fileExtender = new JavaScriptOperationExtender(operation, getProjectOrigin());
-                    } else {
+                    } else
+                    {
                         fileExtender = new GroovyOperationExtender(operation, getProjectOrigin());
                     }
 
                     SourceFile sourceFile = yamlDeserializer.project.getApplication().
                             getSourceFile(fileExtender.getNamespace(), classPathToFileName(filepath, fileExtender.getFileExtension()));
-                    if (sourceFile == null) {
+                    if (sourceFile == null)
+                    {
                         sourceFile = yamlDeserializer.project.getApplication().addSourceFile(fileExtender.getNamespace(),
                                 classPathToFileName(filepath, fileExtender.getFileExtension()));
                         sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(fileExtender.getNamespace(), filepath));
@@ -272,7 +308,8 @@ class EntityDeserializer extends FileDeserializer
 
                     fileExtender.setFileName(sourceFile.getName());
                     extender = fileExtender;
-                } else {
+                } else
+                {
                     loadContext.addWarning(new ReadException(path, "Not supported file extention.").attachElement(operation));
                     continue;
                 }
@@ -297,7 +334,8 @@ class EntityDeserializer extends FileDeserializer
 
         String text;
 
-        switch (query.getType()) {
+        switch (query.getType())
+        {
             case STATIC:
                 text = (String) queryElement.get(ATTR_QUERY_CODE);
                 break;
@@ -305,10 +343,12 @@ class EntityDeserializer extends FileDeserializer
             case GROOVY:
                 final String groovyFileName = (String) queryElement.get("file");
                 // try to read 'code' if there's no 'file'
-                if (groovyFileName == null) {
+                if (groovyFileName == null)
+                {
                     text = (String) queryElement.get(TAG_CODE);
                     query.setFileName(classPathToFileName(query.getName().replace(':', '_') + ".groovy", ".groovy"));
-                } else {
+                } else
+                {
                     text = yamlDeserializer.getFileSystem().readGroovyQuery(classPathToFileName(groovyFileName.replace(':', '_'), ".groovy"));
                     query.setFileName(groovyFileName);
                 }
@@ -317,10 +357,12 @@ class EntityDeserializer extends FileDeserializer
             case JAVASCRIPT:
                 final String jsFileName = (String) queryElement.get("file");
                 // try to read 'code' if there's no 'file'
-                if (jsFileName == null) {
+                if (jsFileName == null)
+                {
                     text = (String) queryElement.get(TAG_CODE);
                     query.setFileName(query.getName().replace(':', '_') + ".js");
-                } else {
+                } else
+                {
                     text = yamlDeserializer.getFileSystem().readJavaScriptQuery(jsFileName.replace(':', '_'));
                     query.setFileName(jsFileName);
                 }
@@ -334,18 +376,21 @@ class EntityDeserializer extends FileDeserializer
         // setQuerySettings must be called before setQuery
         // as setQuerySettings causes Freemarker initialization if query is not empty
         // and Freemarker may initialize incorrectly when project is not completely loaded
-        if (queryElement.containsKey("settings")) {
+        if (queryElement.containsKey("settings"))
+        {
             query.setQuerySettings(readQuerySettings(queryElement, query));
         }
 
-        if (text != null) {
+        if (text != null)
+        {
             query.setQuery(text);
             query.customizeProperty("query");
         }
 
         readQuickFilters(queryElement, query);
         readRoles(queryElement, query);
-        if (queryElement.containsKey(ATTR_QUERY_OPERATIONS)) {
+        if (queryElement.containsKey(ATTR_QUERY_OPERATIONS))
+        {
             query.getOperationNames().parseValues(yamlDeserializer.stringCache(readList(queryElement, ATTR_QUERY_OPERATIONS)));
             query.customizeProperty("operationNames");
         }
@@ -356,7 +401,8 @@ class EntityDeserializer extends FileDeserializer
 
     private void readRoles(final Map<String, Object> element, final EntityItem item)
     {
-        if (element.containsKey(ATTR_ROLES)) {
+        if (element.containsKey(ATTR_ROLES))
+        {
             item.getRoles().parseRoles(yamlDeserializer.stringCache(readList(element, ATTR_ROLES)));
             item.customizeProperty("roles");
         }
@@ -368,8 +414,10 @@ class EntityDeserializer extends FileDeserializer
         final List<QuerySettings> result = new ArrayList<>();
         final List<Map<String, Object>> settingsList = asMaps(queryElement.get("settings"));
 
-        try {
-            for (Map<String, Object> settingsElement : settingsList) {
+        try
+        {
+            for (Map<String, Object> settingsElement : settingsList)
+            {
                 for (Map.Entry<String, Object> settingsPair : settingsElement.entrySet()) // should be only one pair
                 {
                     if (!(settingsPair.getKey().equals("settings"))) // incorrect
@@ -380,16 +428,19 @@ class EntityDeserializer extends FileDeserializer
                     readFields(settings, settingsContent, Fields.querySettings());
                     final List<String> roles = yamlDeserializer.stringCache(readList(settingsContent, ATTR_ROLES));
 
-                    if (roles.isEmpty()) {
+                    if (roles.isEmpty())
+                    {
                         settings.getRoles().parseRoles(allRoles);
-                    } else {
+                    } else
+                    {
                         settings.getRoles().parseRoles(roles);
                     }
 
                     result.add(settings);
                 }
             }
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(query));
         }
 
@@ -399,18 +450,23 @@ class EntityDeserializer extends FileDeserializer
     private void readQuickFilters(final Map<String, Object> queryElement, final Query query)
     {
         Map<String, Object> filterElements;
-        try {
+        try
+        {
             filterElements = asMapOrEmpty(queryElement.get("quickFilters"));
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(query));
             return;
         }
 
-        for (final Map.Entry<String, Object> filterElement : filterElements.entrySet()) {
+        for (final Map.Entry<String, Object> filterElement : filterElements.entrySet())
+        {
             final QuickFilter filter = new QuickFilter(filterElement.getKey(), query);
-            try {
+            try
+            {
                 readFields(filter, asMap(filterElement.getValue()), Fields.quickFilter());
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(filter));
             }
             filter.setOriginModuleName(getProjectOrigin());

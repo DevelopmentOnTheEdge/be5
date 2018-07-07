@@ -8,13 +8,13 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class Either<T, U>
 {
-    
+
     public static <T, U> Either<T, U> first(T first)
     {
         checkNotNull(first);
         return new Either<T, U>(first, null);
     }
-    
+
     public static <T, U> Either<T, U> second(U second)
     {
         checkNotNull(second);
@@ -23,29 +23,29 @@ public class Either<T, U>
 
     private final T first;
     private final U second;
-    
+
     private Either(T first, U second)
     {
         this.first = first;
         this.second = second;
     }
-    
+
     public boolean isFirst()
     {
         return first != null;
     }
-    
+
     public boolean isSecond()
     {
         return second != null;
     }
-    
+
     public T getFirst()
     {
         checkState(first != null);
         return first;
     }
-    
+
     public U getSecond()
     {
         checkState(second != null);
@@ -56,22 +56,21 @@ public class Either<T, U>
     {
         return isFirst() ? getFirst() : getSecond();
     }
-    
+
     public <V> V map(Function<T, V> f, Function<U, V> g)
     {
         return isFirst() ? f.apply(getFirst()) : g.apply(getSecond());
     }
-    
+
     public void apply(Consumer<T> f, Consumer<U> g)
     {
         if (isFirst())
         {
             f.accept(first);
-        }
-        else
+        } else
         {
             g.accept(second);
         }
     }
-    
+
 }

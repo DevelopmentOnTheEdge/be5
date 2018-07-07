@@ -24,9 +24,11 @@ public class ConnectionServiceMock implements ConnectionService
     @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        try {
+        try
+        {
             return executor.run(null);
-        } catch (Throwable e) {
+        } catch (Throwable e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -34,9 +36,11 @@ public class ConnectionServiceMock implements ConnectionService
     @Override
     public void transaction(SqlExecutorVoid executor)
     {
-        try {
+        try
+        {
             executor.run(null);
-        } catch (Throwable e) {
+        } catch (Throwable e)
+        {
             throw new RuntimeException(e);
         }
     }

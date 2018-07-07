@@ -18,12 +18,15 @@ public class EntitiesFactory
     public static Entity createBySqlName(final String sqlName, final String name, final Module module)
     {
         EntityType type = EntityType.forSqlName(sqlName);
-        if (type == null) {
+        if (type == null)
+        {
             throw new IllegalArgumentException("Entity '" + name + "' has unknown type: " + sqlName);
         }
-        try {
+        try
+        {
             return new Entity(name, module, type);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new RuntimeException("Can't create " + name, e);
         }
     }

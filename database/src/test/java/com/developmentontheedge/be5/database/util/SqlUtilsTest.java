@@ -17,7 +17,7 @@ public class SqlUtilsTest extends DatabaseTest
     @Before
     public void setUp()
     {
-        db.update("DELETE FROM persons" );
+        db.update("DELETE FROM persons");
 
         int update = db.update("INSERT INTO persons (name, password) VALUES (?,?)",
                 "user1", "pass1");
@@ -31,10 +31,10 @@ public class SqlUtilsTest extends DatabaseTest
     {
         TestPerson testPerson = db.select("SELECT * FROM persons WHERE name = ?", rs ->
                 new TestPerson(
-                    SqlUtils.getSqlValue(Long.class, rs, 1),
-                    SqlUtils.getSqlValue(String.class, rs, 2),
-                    SqlUtils.getSqlValue(String.class, rs, 3),
-                    SqlUtils.getSqlValue(String.class, rs, 4)
+                        SqlUtils.getSqlValue(Long.class, rs, 1),
+                        SqlUtils.getSqlValue(String.class, rs, 2),
+                        SqlUtils.getSqlValue(String.class, rs, 3),
+                        SqlUtils.getSqlValue(String.class, rs, 4)
                 ), "user2");
 
         assertEquals("pass2", testPerson.getPassword());

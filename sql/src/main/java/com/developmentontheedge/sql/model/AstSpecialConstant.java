@@ -4,15 +4,16 @@ package com.developmentontheedge.sql.model;
 
 public class AstSpecialConstant extends SimpleNode
 {
-    static enum Special {
+    static enum Special
+    {
         NULL
     }
-    
+
     public AstSpecialConstant(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     private Special value;
 
     public Special getValue()

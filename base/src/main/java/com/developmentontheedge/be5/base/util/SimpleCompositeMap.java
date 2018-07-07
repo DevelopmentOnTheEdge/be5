@@ -19,61 +19,61 @@ public class SimpleCompositeMap extends AbstractMap
 
     protected Map me = new HashMap();
 
-    public static Map valueMap( Object ... values )
+    public static Map valueMap(Object... values)
     {
-        if( values == null )
+        if (values == null)
         {
             return null;
         }
-        LinkedHashMap map = new LinkedHashMap( values.length );
-        for( int i = 0; i < values.length; i += 2 )
+        LinkedHashMap map = new LinkedHashMap(values.length);
+        for (int i = 0; i < values.length; i += 2)
         {
-            map.put( values[ i ], values[ i + 1 ] );
+            map.put(values[i], values[i + 1]);
         }
         return map;
     }
 
-    public static Map valueNotNullMap( Object ... values )
+    public static Map valueNotNullMap(Object... values)
     {
-        if( values == null )
+        if (values == null)
         {
             return null;
         }
-        LinkedHashMap map = new LinkedHashMap( values.length / 2 );
-        for( int i = 0; i < values.length; i += 2 )
+        LinkedHashMap map = new LinkedHashMap(values.length / 2);
+        for (int i = 0; i < values.length; i += 2)
         {
-            if( values[ i + 1 ] != null )
+            if (values[i + 1] != null)
             {
-                map.put( values[ i ], values[ i + 1 ] );
+                map.put(values[i], values[i + 1]);
             }
         }
         return map;
     }
 
-    public SimpleCompositeMap( Map basis, Object ... values )
+    public SimpleCompositeMap(Map basis, Object... values)
     {
-        this( basis, valueMap( values ) );
+        this(basis, valueMap(values));
     }
 
-    public SimpleCompositeMap( Map ... varMaps )
+    public SimpleCompositeMap(Map... varMaps)
     {
-        maps = Arrays.asList( varMaps );
+        maps = Arrays.asList(varMaps);
 
         set = new AbstractSet()
         {
             public int size()
             {
                 int size = SimpleCompositeMap.this.me.size();
-                for( int i = 0; i < SimpleCompositeMap.this.maps.size(); i++ )
+                for (int i = 0; i < SimpleCompositeMap.this.maps.size(); i++)
                 {
-                    size += SimpleCompositeMap.this.maps.get( i ).size();
+                    size += SimpleCompositeMap.this.maps.get(i).size();
                 }
                 return size;
             }
 
             public Iterator iterator()
             {
-                throw new RuntimeException( "This class shouldn't be used via Iterator" );
+                throw new RuntimeException("This class shouldn't be used via Iterator");
             }
         };
     }
@@ -86,29 +86,29 @@ public class SimpleCompositeMap extends AbstractMap
     @Override
     public boolean containsKey(Object key)
     {
-        for( int i = 0; i < maps.size(); i++ )
+        for (int i = 0; i < maps.size(); i++)
         {
-            boolean contains = maps.get( i ).containsKey( key );
-            if(contains) return true;
+            boolean contains = maps.get(i).containsKey(key);
+            if (contains) return true;
         }
-        return me.containsKey( key );
+        return me.containsKey(key);
     }
 
-    public Object get( Object key )
+    public Object get(Object key)
     {
-        for( int i = 0; i < maps.size(); i++ )
+        for (int i = 0; i < maps.size(); i++)
         {
-            Object val = maps.get( i ).get( key );
-            if( val != null )
+            Object val = maps.get(i).get(key);
+            if (val != null)
             {
                 return val;
             }
         }
-        return me.get( key );
+        return me.get(key);
     }
 
     public Object put(Object key, Object value)
     {
-        return me.put( key, value );
+        return me.put(key, value);
     }
 }

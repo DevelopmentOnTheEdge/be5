@@ -19,10 +19,10 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     protected String orderDir = "asc";
 
     protected Boolean selectable = false;
-    
+
     public AbstractQueryExecutor(Query query)
     {
-        this.query = Objects.requireNonNull( query );
+        this.query = Objects.requireNonNull(query);
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public final QueryExecutor limit(int limit)
     {
-        checkArgument( limit >= 0 );
+        checkArgument(limit >= 0);
         this.limit = limit;
         return this;
     }
@@ -44,7 +44,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public final QueryExecutor order(int orderColumn, String orderDir)
     {
-        checkArgument( orderColumn >= -2 );
+        checkArgument(orderColumn >= -2);
         this.orderColumn = orderColumn;
         this.orderDir = orderDir;
         return this;

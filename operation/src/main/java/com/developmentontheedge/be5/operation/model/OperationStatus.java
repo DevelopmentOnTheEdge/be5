@@ -3,17 +3,17 @@ package com.developmentontheedge.be5.operation.model;
 
 public enum OperationStatus
 {
-    CREATE      ("create"),
-    GENERATE    ("generate"),
-    EXECUTE     ("execute"),
-    SCHEDULED   ("scheduled"),
-    CANCELLED   ("cancelled"),
+    CREATE("create"),
+    GENERATE("generate"),
+    EXECUTE("execute"),
+    SCHEDULED("scheduled"),
+    CANCELLED("cancelled"),
     //IN_PROGRESS ("in progress"),
     INTERRUPTING("interrupting"),
-    INTERRUPTED ("interrupted"),
-    FINISHED    ("finished"),
-    REDIRECTED  ("redirect"),
-    ERROR       ("error");
+    INTERRUPTED("interrupted"),
+    FINISHED("finished"),
+    REDIRECTED("redirect"),
+    ERROR("error");
 
     /* PENDING
     PAUSED      ("paused"),
@@ -27,7 +27,7 @@ public enum OperationStatus
 
     private final String value;
 
-    OperationStatus( String value )
+    OperationStatus(String value)
     {
         this.value = value;
     }

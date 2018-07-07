@@ -52,9 +52,11 @@ public class JavaScriptForm extends SourceFile
 
     private void updateLocation()
     {
-        try {
+        try
+        {
             setLinkedFile(ModuleLoader2.getFileSystem(getProject(), module).getJavaScriptFormsFolder().resolve(relativePath));
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             setLinkedFile(null);
         }
     }
@@ -62,7 +64,8 @@ public class JavaScriptForm extends SourceFile
     public void load() throws ReadException
     {
         updateLocation();
-        if (getLinkedFile() == null) {
+        if (getLinkedFile() == null)
+        {
             throw new IllegalStateException("File is not set");
         }
         setSource(ProjectFileSystem.read(getLinkedFile()));
@@ -71,7 +74,8 @@ public class JavaScriptForm extends SourceFile
     public void save() throws IOException
     {
         updateLocation();
-        if (getLinkedFile() == null) {
+        if (getLinkedFile() == null)
+        {
             throw new IllegalStateException("File is not set");
         }
         Files.createDirectories(getLinkedFile().getParent());

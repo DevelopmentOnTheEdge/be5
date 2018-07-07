@@ -29,7 +29,8 @@ public class ComplexSelectorRule implements SelectorRule
     @Override
     public boolean matches(BeModelElement element)
     {
-        for (SelectorRule rule : rules) {
+        for (SelectorRule rule : rules)
+        {
             if (!rule.matches(element))
                 return false;
         }
@@ -40,7 +41,8 @@ public class ComplexSelectorRule implements SelectorRule
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        for (SelectorRule rule : rules) {
+        for (SelectorRule rule : rules)
+        {
             sb.append(rule.toString());
         }
         return sb.toString();

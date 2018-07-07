@@ -30,14 +30,14 @@ public class GroovyRegister
         return classLoader;
     }
 
-    private Class parseClass( String text, String name )
+    private Class parseClass(String text, String name)
     {
-        return getClassLoader().parseClass( text, name );
+        return getClassLoader().parseClass(text, name);
     }
 
-    public Class getClass( String key, String code, String fileName )
+    public Class getClass(String key, String code, String fileName)
     {
-        return groovyClasses.get(key, k -> parseClass( code, fileName ));
+        return groovyClasses.get(key, k -> parseClass(code, fileName));
     }
 
     public Cache<String, Class> getGroovyClasses()
@@ -80,26 +80,24 @@ public class GroovyRegister
 //    }
 
 
-    public static void registerMetaClass(Class<? extends MetaClass> metaClazz, Class<?> clazz )
+    public static void registerMetaClass(Class<? extends MetaClass> metaClazz, Class<?> clazz)
     {
         try
         {
-            Constructor<? extends MetaClass> constructor = metaClazz.getDeclaredConstructor( Class.class );
+            Constructor<? extends MetaClass> constructor = metaClazz.getDeclaredConstructor(Class.class);
             MetaClass metaClass;
             try
             {
-                metaClass = constructor.newInstance( clazz );
-            }
-            catch( InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
+                metaClass = constructor.newInstance(clazz);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
             {
-                throw new RuntimeException( e );
+                throw new RuntimeException(e);
             }
             metaClass.initialize();
-            InvokerHelper.getMetaRegistry().setMetaClass( clazz, metaClass );
-        }
-        catch( NoSuchMethodException e )
+            InvokerHelper.getMetaRegistry().setMetaClass(clazz, metaClass);
+        } catch (NoSuchMethodException e)
         {
-            throw new RuntimeException( e );
+            throw new RuntimeException(e);
         }
     }
 

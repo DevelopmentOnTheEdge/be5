@@ -76,7 +76,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String resolveQuery(String entityName, String queryName)
         {
-            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName, queryName );
+            return meta.getQueryCode(entityName == null ? query.getEntity().getName() : entityName, queryName);
         }
 
         @Override
@@ -94,12 +94,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getParameter(String name)
         {
-            if( parameters.get( name ) == null )
+            if (parameters.get(name) == null)
                 return null;
-            if( parameters.get( name ).size() != 1 )
-                throw new IllegalStateException( name+ " contains more than one value" );
+            if (parameters.get(name).size() != 1)
+                throw new IllegalStateException(name + " contains more than one value");
             else
-                return parameters.get( name ).get( 0 );
+                return parameters.get(name).get(0);
         }
 
         @Override
@@ -111,7 +111,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public Map<String, String> asMap()
         {
-            return StreamEx.ofKeys( parameters ).toMap( this::getParameter );
+            return StreamEx.ofKeys(parameters).toMap(this::getParameter);
         }
 
         @Override
@@ -157,7 +157,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.db = db;
 
         this.executorQueryContext = new ExecutorQueryContext();
-        this.contextApplier = new ContextApplier( executorQueryContext );
+        this.contextApplier = new ContextApplier(executorQueryContext);
         this.executeType = ExecuteType.DEFAULT;
 
         selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
@@ -166,13 +166,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public <T> List<T> execute(ResultSetParser<T> parser)
     {
-        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ))
+        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
         {
             try
             {
                 return db.list(getFinalSql(), parser);
-            }
-            catch (RuntimeException e)
+            } catch (RuntimeException e)
             {
                 throw Be5Exception.internalInQuery(query, e);
             }
@@ -184,7 +183,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<String> getColumnNames() throws Be5Exception
     {
-        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN) )
+        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
             return getColumnNames(getFinalSql());
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
@@ -198,16 +197,15 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         String queryText = meta.getQueryCode(query);
 
         dql.log("After FreeMarker", queryText);
-        if(queryText.isEmpty())
+        if (queryText.isEmpty())
             return "";
         AstStart ast;
         try
         {
             ast = SqlQuery.parse(queryText);
-        }
-        catch (RuntimeException e)
+        } catch (RuntimeException e)
         {
-            log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
+            log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
 
             //ast = SqlQuery.parse("select 'error'");
@@ -220,10 +218,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         applyFilters(ast, query.getEntity().getName(), resolveTypes(parameters, meta));
 
         // CATEGORY
-        applyCategory( dql, ast );
+        applyCategory(dql, ast);
 
         // CONTEXT
-        contextApplier.applyContext( ast );
+        contextApplier.applyContext(ast);
         dql.log("With context", ast);
 
         // ID COLUMN
@@ -233,19 +231,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         Simplifier.simplify(ast);
         dql.log("Simplified", ast);
 
-        if(executeType == ExecuteType.COUNT)
+        if (executeType == ExecuteType.COUNT)
         {
             countFromQuery(ast.getQuery());
             dql.log("Count(1) from query", ast);
         }
 
-        if(executeType == ExecuteType.DEFAULT)
+        if (executeType == ExecuteType.DEFAULT)
         {
             // SORT ORDER
             applySort(ast, getSchema(ast.getQuery().toString()), dql, getOrderColumn(), getOrderDir());
 
             // LIMITS
-            new LimitsApplier( offset, limit ).transform( ast );
+            new LimitsApplier(offset, limit).transform(ast);
             dql.log("With limits", ast);
         }
 
@@ -254,14 +252,15 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private DynamicProperty[] getSchema(String sql)
     {
-        try{
+        try
+        {
             return db.execute(conn -> {
-                try(PreparedStatement ps = conn.prepareStatement(sql)) {
+                try (PreparedStatement ps = conn.prepareStatement(sql))
+                {
                     return DpsRecordAdapter.createSchema(ps.getMetaData());
                 }
             });
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
             log.log(Level.FINE, "fail getSchema, return empty", e);
             return new DynamicProperty[]{};
@@ -271,20 +270,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private void applyCategory(DebugQueryLogger dql, AstStart ast)
     {
         String categoryString = executorQueryContext.getParameter(FrontendConstants.CATEGORY_ID_PARAM);
-        if(categoryString != null)
+        if (categoryString != null)
         {
             long categoryId;
             try
             {
                 categoryId = Long.parseLong(categoryString);
-            }
-            catch( NumberFormatException e )
+            } catch (NumberFormatException e)
             {
                 throw Be5Exception.internalInQuery(query,
                         new IllegalArgumentException("Invalid category: " + categoryString, e));
             }
 
-            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply( ast );
+            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply(ast);
             dql.log("With category", ast);
         }
     }
@@ -295,7 +293,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             List<String> result = new ArrayList<>();
             ResultSetMetaData meta = rs.getMetaData();
 
-            for (int column = 1, count = meta.getColumnCount(); column <= count; column++) {
+            for (int column = 1, count = meta.getColumnCount(); column <= count; column++)
+            {
                 result.add(meta.getColumnName(column));
             }
 
@@ -355,7 +354,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public long count()
     {
         executeType = ExecuteType.COUNT;
-        return (Long)execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
+        return (Long) execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
     }
 
     @Override
@@ -369,7 +368,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
 
-        if(subQuery.getQuery() == null)
+        if (subQuery.getQuery() == null)
         {
             return Collections.emptyList();
         }
@@ -381,8 +380,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             dynamicPropertySets = db.list(finalSql, DpsRecordAdapter::createDps);
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
             //TODO only for Document presentation, for operations must be error throw
             Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);
@@ -390,9 +388,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, 
+            dynamicProperties.add(new DynamicProperty("error", String.class,
                     userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
-            dynamicPropertySets =  Collections.singletonList(dynamicProperties);
+            dynamicPropertySets = Collections.singletonList(dynamicProperties);
         }
 
         return dynamicPropertySets;

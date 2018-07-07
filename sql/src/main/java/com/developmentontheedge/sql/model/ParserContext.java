@@ -12,6 +12,8 @@ public interface ParserContext
      */
     Function getFunction(String name);
 
-    /** Declares the function. */
+    /**
+     * Declares the function.
+     */
     void declareFunction(Function function, String... otherNames);
 }

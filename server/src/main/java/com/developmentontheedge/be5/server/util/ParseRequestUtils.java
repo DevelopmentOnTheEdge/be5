@@ -21,7 +21,7 @@ public class ParseRequestUtils
 {
     public static Map<String, Object> getValuesFromJson(String valuesString) throws Be5Exception
     {
-        if(Strings.isNullOrEmpty(valuesString))
+        if (Strings.isNullOrEmpty(valuesString))
         {
             return Collections.emptyMap();
         }
@@ -29,8 +29,8 @@ public class ParseRequestUtils
         Map<String, Object> fieldValues = new HashMap<>();
 
 
-            //todo gson -> json-b
-            //            InputStream stream = new ByteArrayInputStream(valuesString.getBytes(StandardCharsets.UTF_8.name()));
+        //todo gson -> json-b
+        //            InputStream stream = new ByteArrayInputStream(valuesString.getBytes(StandardCharsets.UTF_8.name()));
 //            javax.json.stream.JsonParser parser = Json.createParser(stream);
 //
 //            javax.json.JsonObject object = parser.getObject();
@@ -38,14 +38,13 @@ public class ParseRequestUtils
 
 
         JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
-        for (Map.Entry entry: values.entrySet())
+        for (Map.Entry entry : values.entrySet())
         {
             String name = entry.getKey().toString();
-            if(entry.getValue() instanceof JsonNull)
+            if (entry.getValue() instanceof JsonNull)
             {
                 fieldValues.put(name, null);
-            }
-            else if(entry.getValue() instanceof JsonArray)
+            } else if (entry.getValue() instanceof JsonArray)
             {
                 JsonArray value = (JsonArray) entry.getValue();
 
@@ -56,12 +55,11 @@ public class ParseRequestUtils
                 }
 
                 fieldValues.put(name, arrValues);
-            }
-            else if(entry.getValue() instanceof JsonObject)
+            } else if (entry.getValue() instanceof JsonObject)
             {
                 JsonObject jsonObject = ((JsonObject) entry.getValue());
                 String type = jsonObject.get("type").getAsString();
-                if( "Base64File".equals(type) )
+                if ("Base64File".equals(type))
                 {
                     try
                     {
@@ -75,20 +73,17 @@ public class ParseRequestUtils
                         byte[] decoded = Base64.getDecoder().decode(bytes);
 
                         fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(), decoded, mimeTypes));
-                    }
-                    catch (UnsupportedEncodingException e)
+                    } catch (UnsupportedEncodingException e)
                     {
                         throw Be5Exception.internal(e);
                     }
-                }
-                else
+                } else
                 {
                     fieldValues.put(name, jsonObject.toString());
                 }
-            }
-            else if(entry.getValue() instanceof JsonPrimitive)
+            } else if (entry.getValue() instanceof JsonPrimitive)
             {
-                fieldValues.put(name, ((JsonPrimitive)entry.getValue()).getAsString());
+                fieldValues.put(name, ((JsonPrimitive) entry.getValue()).getAsString());
             }
 
         }
@@ -99,7 +94,7 @@ public class ParseRequestUtils
     public static String getRequestWithoutContext(String contextPath, String requestUri)
     {
         String reqWithoutContext = requestUri.replaceFirst(contextPath, "");
-        if(!reqWithoutContext.endsWith("/"))reqWithoutContext += "/";
+        if (!reqWithoutContext.endsWith("/")) reqWithoutContext += "/";
         return reqWithoutContext;
     }
 }

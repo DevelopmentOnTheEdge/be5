@@ -51,39 +51,52 @@ public class MetadataUtils
         Set set = new HashSet();
         boolean first = true;
         prefix = (prefix == null) ? "" : prefix;
-        for (Object v : values) {
-            if (v == null) {
+        for (Object v : values)
+        {
+            if (v == null)
+            {
                 continue;
             }
 
-            if (isNumeric) {
-                try {
-                    if (v != null && !"null".equalsIgnoreCase(v.toString())) {
+            if (isNumeric)
+            {
+                try
+                {
+                    if (v != null && !"null".equalsIgnoreCase(v.toString()))
+                    {
                         Double.parseDouble(v.toString());
                     }
-                } catch (NumberFormatException exc) {
+                } catch (NumberFormatException exc)
+                {
                     log.log(Level.WARNING, "toInClause: Bad numeric value '" + v + "'");
                     continue;
                 }
             }
 
-            if (!set.add(v)) {
+            if (!set.add(v))
+            {
                 continue;
             }
 
-            if (first) {
+            if (first)
+            {
                 first = false;
-            } else {
+            } else
+            {
                 clause.append(',');
             }
 
-            if (isNumeric) {
+            if (isNumeric)
+            {
                 clause.append(prefix).append(v);
-            } else {
+            } else
+            {
                 String val = v.toString();
-                if (val.startsWith("'") && val.endsWith("'")) {
+                if (val.startsWith("'") && val.endsWith("'"))
+                {
                     clause.append(val);
-                } else {
+                } else
+                {
                     clause.append("'").append(prefix).append(val).append("'");
                 }
             }

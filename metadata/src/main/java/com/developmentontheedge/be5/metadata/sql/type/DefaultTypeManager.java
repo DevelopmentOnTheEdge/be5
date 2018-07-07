@@ -20,7 +20,8 @@ public class DefaultTypeManager implements DbmsTypeManager
     public void correctType(SqlColumnType type)
     {
         if (SqlColumnType.TYPE_DECIMAL.equals(type.getTypeName())
-                && type.getSize() == 18 && type.getPrecision() == 2) {
+                && type.getSize() == 18 && type.getPrecision() == 2)
+        {
             type.setTypeName(SqlColumnType.TYPE_CURRENCY);
         }
     }
@@ -75,12 +76,14 @@ public class DefaultTypeManager implements DbmsTypeManager
     @Override
     public String getConstraintClause(ColumnDef column)
     {
-        if (column.getType().getTypeName().equals(SqlColumnType.TYPE_ENUM) || column.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)) {
+        if (column.getType().getTypeName().equals(SqlColumnType.TYPE_ENUM) || column.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL))
+        {
             StringBuilder sb = new StringBuilder();
             sb.append("CHECK(").append(normalizeIdentifier(column.getName())).append(" IN (");
             String[] enumValues = column.getType().getEnumValues().clone();
             Arrays.sort(enumValues);
-            for (int i = 0; i < enumValues.length; i++) {
+            for (int i = 0; i < enumValues.length; i++)
+            {
                 if (i > 0)
                     sb.append(", ");
                 String value = enumValues[i];
@@ -98,25 +101,31 @@ public class DefaultTypeManager implements DbmsTypeManager
     {
         StringBuilder sb = new StringBuilder(normalizeIdentifier(column.getName()));
         sb.append(' ').append(getTypeClause(column));
-        if (column.isAutoIncrement()) {
+        if (column.isAutoIncrement())
+        {
             sb.append(' ').append(getAutoIncrementClause(column));
         }
-        if (column.getDefaultValue() != null) {
+        if (column.getDefaultValue() != null)
+        {
             String defaultValue = getDefaultValue(column);
             ColumnFunction function = new ColumnFunction(defaultValue);
-            if (function.isTransformed()) {
-                if (getGeneratedPrefix() != null) {
+            if (function.isTransformed())
+            {
+                if (getGeneratedPrefix() != null)
+                {
                     sb.append(' ').append(getGeneratedPrefix()).append(' ')
                             .append(function.getDefinition(column.getProject().getDatabaseSystem(), column.getEntity().getName()));
                 }
-            } else {
+            } else
+            {
                 sb.append(' ').append("DEFAULT ").append(defaultValue);
             }
         }
 
         addCanBeNullAndAndConstraintClause(column, sb);
 
-        if (column.isPrimaryKey()) {
+        if (column.isPrimaryKey())
+        {
             sb.append(' ').append("PRIMARY KEY");
         }
         return sb.toString();
@@ -126,10 +135,12 @@ public class DefaultTypeManager implements DbmsTypeManager
     public void addCanBeNullAndAndConstraintClause(ColumnDef column, StringBuilder sb)
     {
         String constraint = getConstraintClause(column);
-        if (!constraint.isEmpty()) {
+        if (!constraint.isEmpty())
+        {
             sb.append(' ').append(constraint);
         }
-        if (!column.isCanBeNull()) {
+        if (!column.isCanBeNull())
+        {
             sb.append(' ').append("NOT NULL");
         }
     }
@@ -180,37 +191,47 @@ public class DefaultTypeManager implements DbmsTypeManager
         // Works for Postgres and Db2
         String prefix = "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " ALTER COLUMN " + normalizeIdentifier(column.getName()) + " ";
         StringBuilder sb = new StringBuilder();
-        if (!getTypeClause(column.getType()).equals(getTypeClause(oldColumn.getType()))) {
+        if (!getTypeClause(column.getType()).equals(getTypeClause(oldColumn.getType())))
+        {
             sb.append(prefix).append("SET DATA TYPE " + getTypeClause(column.getType())).append(";\n");
         }
         String constraintClause = getConstraintClause(column);
         String oldConstraintClause = getConstraintClause(oldColumn);
-        if (!constraintClause.equals(oldConstraintClause)) {
+        if (!constraintClause.equals(oldConstraintClause))
+        {
             String constraintName = normalizeIdentifier(column.getTableFrom() + "_" + column.getName() + "_check");
-            if (!oldConstraintClause.isEmpty()) {
+            if (!oldConstraintClause.isEmpty())
+            {
                 sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" DROP CONSTRAINT ")
                         .append(constraintName).append(";\n");
             }
-            if (!constraintClause.isEmpty()) {
+            if (!constraintClause.isEmpty())
+            {
                 sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" ADD CONSTRAINT ")
                         .append(constraintName).append(' ').append(constraintClause).append(";\n");
             }
         }
-        if (column.isCanBeNull() && !oldColumn.isCanBeNull()) {
+        if (column.isCanBeNull() && !oldColumn.isCanBeNull())
+        {
             sb.append(prefix).append("DROP NOT NULL;");
         }
-        if (!column.isCanBeNull() && oldColumn.isCanBeNull()) {
-            if (!Strings2.isNullOrEmpty(column.getDefaultValue())) {
+        if (!column.isCanBeNull() && oldColumn.isCanBeNull())
+        {
+            if (!Strings2.isNullOrEmpty(column.getDefaultValue()))
+            {
                 sb.append("UPDATE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" SET ")
                         .append(normalizeIdentifier(column.getName())).append('=').append(column.getDefaultValue()).append(" WHERE ")
                         .append(normalizeIdentifier(column.getName())).append(" IS NULL;");
             }
             sb.append(prefix).append("SET NOT NULL;");
         }
-        if (!Strings2.nullToEmpty(column.getDefaultValue()).equals(Strings2.nullToEmpty(oldColumn.getDefaultValue()))) {
-            if (Strings2.isNullOrEmpty(column.getDefaultValue())) {
+        if (!Strings2.nullToEmpty(column.getDefaultValue()).equals(Strings2.nullToEmpty(oldColumn.getDefaultValue())))
+        {
+            if (Strings2.isNullOrEmpty(column.getDefaultValue()))
+            {
                 sb.append(prefix).append("DROP DEFAULT;");
-            } else {
+            } else
+            {
                 sb.append(prefix).append("SET DEFAULT ").append(column.getDefaultValue()).append(";");
             }
         }

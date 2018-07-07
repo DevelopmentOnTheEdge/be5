@@ -6,19 +6,19 @@ public class AstParenthesis extends SimpleNode
 {
     public AstParenthesis(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "(";
         this.nodeSuffix = ")";
     }
-    
+
     public AstParenthesis()
     {
-        this( SqlParserTreeConstants.JJTPARENTHESIS );
+        this(SqlParserTreeConstants.JJTPARENTHESIS);
     }
 
     public AstParenthesis(SimpleNode child)
     {
-        this( SqlParserTreeConstants.JJTPARENTHESIS );
+        this(SqlParserTreeConstants.JJTPARENTHESIS);
         addChild(child);
     }
 }

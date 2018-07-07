@@ -16,64 +16,58 @@ import static org.junit.Assert.*
 import static org.mockito.Mockito.verify
 
 
-class OperationTest extends OperationsSqlMockProjectTest
-{
+class OperationTest extends OperationsSqlMockProjectTest {
     @Test
-    void testOperation()
-    {
+    void testOperation() {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ImmutableMap.of("name","testName","value", "1"))
+                ImmutableMap.of("name", "testName", "value", "1"))
 
         Object parameters = generate.getFirst()
 
         assertEquals("{" +
-                        "'values':{" +
-                            "'name':'testName'," +
-                            "'value':'1'}," +
-                        "'meta':{" +
-                            "'/name':{'displayName':'Name'}," +
-                            "'/value':{'displayName':'Value','type':'Long'}}," +
-                        "'order':['/name','/value']}",
+                "'values':{" +
+                "'name':'testName'," +
+                "'value':'1'}," +
+                "'meta':{" +
+                "'/name':{'displayName':'Name'}," +
+                "'/value':{'displayName':'Value','type':'Long'}}," +
+                "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(parameters)))
 
         OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "",
-                ImmutableMap.of("name","testName","value", "1")).getSecond()
+                ImmutableMap.of("name", "testName", "value", "1")).getSecond()
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), result)
     }
 
     @Test
-    void withOperationParams()
-    {
+    void withOperationParams() {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
-                ImmutableMap.of("name","testName","value", "1")).getSecond()
+                ImmutableMap.of("name", "testName", "value", "1")).getSecond()
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
     }
 
     @Test
-    void testOperationParameters()
-    {
+    void testOperationParameters() {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0", [:])
 
         assertEquals("{'name':'','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
-    void testReloadOnChange()
-    {
+    void testReloadOnChange() {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperation", "0",
-                        ImmutableMap.of(
-                                "name", "test",
-                                "value", "0",
-                                FrontendConstants.RELOAD_CONTROL_NAME, "name"))
+                ImmutableMap.of(
+                        "name", "test",
+                        "value", "0",
+                        FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
         assertEquals("{'name':'test','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
-    void testReloadOnChangeError()
-    {
+    void testReloadOnChangeError() {
         Either<Object, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
                         "name", "testName",
@@ -90,13 +84,12 @@ class OperationTest extends OperationsSqlMockProjectTest
     }
 
     @Test
-    void testOperationParametersErrorInvoke()
-    {
+    void testOperationParametersErrorInvoke() {
         assertNotNull(generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','value':'ab']).getFirst())
+                ['name': 'testName', 'value': 'ab']).getFirst())
 
         Either<Object, OperationResult> result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','value':'ab'])
+                ['name': 'testName', 'value': 'ab'])
 
         assertNotNull(result.getFirst())
 
@@ -106,45 +99,42 @@ class OperationTest extends OperationsSqlMockProjectTest
     }
 
     @Test
-    void testOperationInvoke()
-    {
+    void testOperationInvoke() {
         executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','value':3L])
+                ['name': 'testName', 'value': 3L])
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "testName", 3L)
     }
 
     @Test
-    void testPropertyInvokeInit()
-    {
+    void testPropertyInvokeInit() {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [:])
 
         assertEquals("{" +
-                        "'simple':''," +
-                        "'simpleNumber':''," +
-                        "'getOrDefault':'defaultValue'," +
-                        "'getOrDefaultNumber':'3'}",
+                "'simple':''," +
+                "'simpleNumber':''," +
+                "'getOrDefault':'defaultValue'," +
+                "'getOrDefaultNumber':'3'}",
                 oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
-    void testManualAndAutomaticSettingOfParameterValues()
-    {
+    void testManualAndAutomaticSettingOfParameterValues() {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "TestOperationProperty", "0",[
-                        "simple": "testName",
-                        "simpleNumber": "1",
-                        "getOrDefault": "testName2",
-                        "getOrDefaultNumber": "2",
-                        "_reloadcontrol_": "name"])
+                "testtableAdmin", "All records", "TestOperationProperty", "0", [
+                "simple"            : "testName",
+                "simpleNumber"      : "1",
+                "getOrDefault"      : "testName2",
+                "getOrDefaultNumber": "2",
+                "_reloadcontrol_"   : "name"])
 
         assertEquals("{" +
-                        "'simple':'testName'," +
-                        "'simpleNumber':'1'," +
-                        "'getOrDefault':'testName2'," +
-                        "'getOrDefaultNumber':'2'}",
+                "'simple':'testName'," +
+                "'simpleNumber':'1'," +
+                "'getOrDefault':'testName2'," +
+                "'getOrDefaultNumber':'2'}",
                 oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
 
         assertFalse(generate.getFirst().toString().contains("error"))
@@ -152,10 +142,9 @@ class OperationTest extends OperationsSqlMockProjectTest
 
     @Test
     @Ignore
-    void testOperationInvokeNullInsteadEmptyString()
-    {
+    void testOperationInvokeNullInsteadEmptyString() {
         executeOperation("testTags", "All records", "Insert", "",
-                ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional']).getSecond()
+                ['CODE': '01', 'referenceTest': '', 'payable': 'yes', 'admlevel': 'Regional']).getSecond()
 
         verify(DbServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel) VALUES (?, ?, ?)",
                 "01", "yes", "Regional"
@@ -163,31 +152,28 @@ class OperationTest extends OperationsSqlMockProjectTest
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOp()
-    {
+    void testOperationInvokeNullInsteadEmptyStringCustomOp() {
         OperationResult second = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
-                        ['CODE':'01','referenceTest':'','testLong':'']).getSecond()
+                ['CODE': '01', 'referenceTest': '', 'testLong': '']).getSecond()
 
         assertEquals(null, second.getMessage())
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOpSpace()
-    {
+    void testOperationInvokeNullInsteadEmptyStringCustomOpSpace() {
         OperationResult second = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
-                        ['CODE':'01','referenceTest':' ','testLong':'']).getSecond()
+                ['CODE': '01', 'referenceTest': ' ', 'testLong': '']).getSecond()
 
         assertEquals(' ', second.getMessage())
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong()
-    {
+    void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong() {
         Object first = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
-                        ['CODE':'01','referenceTest':'','testLong':' ']).getFirst()
+                ['CODE': '01', 'referenceTest': '', 'testLong': ' ']).getFirst()
 
         assertEquals("error", JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/testLong").getString("status"))
     }

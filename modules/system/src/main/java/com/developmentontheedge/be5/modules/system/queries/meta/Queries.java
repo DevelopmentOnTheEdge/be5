@@ -15,13 +15,12 @@ public class Queries extends TableBuilderSupport
     {
         addColumns("EntityName", "Name", "Type", "Roles", "Operations");
 
-        String selectEntity = (String)parameters.get("entity");
+        String selectEntity = (String) parameters.get("entity");
 
-        if(selectEntity != null)
+        if (selectEntity != null)
         {
             addQueries(selectEntity);
-        }
-        else
+        } else
         {
             meta.getOrderedEntities(userInfo.getLanguage()).forEach(
                     e -> addQueries(e.getName())

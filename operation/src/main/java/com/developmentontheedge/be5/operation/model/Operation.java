@@ -50,7 +50,6 @@ public interface Operation extends Serializable
      * Returns {@link OperationResult}.
      * This function can be called several times. If operation is not completed,
      * then it returns
-     *
      */
     OperationResult getResult();
 

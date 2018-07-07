@@ -74,12 +74,15 @@ public class SqlColumnType
     {
         int pos1 = type.indexOf('(');
         int pos2 = type.lastIndexOf(')');
-        if (pos1 > 0 && pos2 > 0) {
+        if (pos1 > 0 && pos2 > 0)
+        {
             typeName = type.substring(0, pos1);
             String[] fields = type.substring(pos1 + 1, pos2).split(",", -1);
-            if (TYPE_ENUM.equals(typeName)) {
+            if (TYPE_ENUM.equals(typeName))
+            {
                 List<String> values = new ArrayList<>(fields.length);
-                for (String field : fields) {
+                for (String field : fields)
+                {
                     field = field.trim();
                     if (field.startsWith("'"))
                         field = field.substring(1);
@@ -90,21 +93,29 @@ public class SqlColumnType
                 }
                 Collections.sort(values);
                 enumValues = values.toArray(new String[values.size()]);
-            } else {
-                if (fields.length > 0) {
-                    try {
+            } else
+            {
+                if (fields.length > 0)
+                {
+                    try
+                    {
                         size = Integer.parseInt(fields[0].trim());
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException e)
+                    {
                     }
                 }
-                if (fields.length > 1) {
-                    try {
+                if (fields.length > 1)
+                {
+                    try
+                    {
                         precision = Integer.parseInt(fields[1].trim());
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException e)
+                    {
                     }
                 }
             }
-        } else {
+        } else
+        {
             typeName = type;
         }
         typeName = typeName.toUpperCase();
@@ -147,7 +158,8 @@ public class SqlColumnType
 
     public boolean doesSupportSize()
     {
-        switch (typeName) {
+        switch (typeName)
+        {
             case TYPE_CHAR:
             case TYPE_VARCHAR:
             case TYPE_DECIMAL:
@@ -202,7 +214,8 @@ public class SqlColumnType
 
     public boolean isValid()
     {
-        for (String type : TYPES) {
+        for (String type : TYPES)
+        {
             if (type.equals(typeName))
                 return true;
         }
@@ -212,7 +225,8 @@ public class SqlColumnType
     @Override
     public String toString()
     {
-        switch (typeName) {
+        switch (typeName)
+        {
             case TYPE_CHAR:
             case TYPE_VARCHAR:
                 return typeName + "(" + size + ")";
@@ -221,9 +235,12 @@ public class SqlColumnType
             case TYPE_ENUM:
                 StringBuilder sb = new StringBuilder(typeName);
                 sb.append('(');
-                if (enumValues != null) {
-                    for (int i = 0; i < enumValues.length; i++) {
-                        if (i > 0) {
+                if (enumValues != null)
+                {
+                    for (int i = 0; i < enumValues.length; i++)
+                    {
+                        if (i > 0)
+                        {
                             sb.append(',');
                         }
                         sb.append('\'').append(enumValues[i].replace("'", "''")).append('\'');
@@ -238,7 +255,8 @@ public class SqlColumnType
 
     boolean doesSupportGeneratedKey()
     {
-        switch (typeName) {
+        switch (typeName)
+        {
             case TYPE_KEY:
             case TYPE_DECIMAL:
             case TYPE_SMALLINT:
@@ -254,7 +272,8 @@ public class SqlColumnType
 
     public boolean isDateTime()
     {
-        switch (typeName) {
+        switch (typeName)
+        {
             case TYPE_DATE:
             case TYPE_DATETIME:
             case TYPE_TIMESTAMP:
@@ -266,7 +285,8 @@ public class SqlColumnType
 
     public boolean isIntegral()
     {
-        switch (typeName) {
+        switch (typeName)
+        {
             case TYPE_INT:
             case TYPE_UINT:
             case TYPE_BIGINT:

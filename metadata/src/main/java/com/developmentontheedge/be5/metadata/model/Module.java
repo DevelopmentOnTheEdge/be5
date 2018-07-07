@@ -44,7 +44,8 @@ public class Module extends BeVectorCollection<BeModelElement>
     {
         put(new Daemons(this));
         put(new Localizations(LOCALIZATION, this));
-        if (getProject() != null && getName().equals(getProject().getProjectOrigin())) {
+        if (getProject() != null && getName().equals(getProject().getProjectOrigin()))
+        {
             put(new FreemarkerCatalog(MACROS, this));
             put(new FreemarkerCatalog(SCRIPTS, this));
             put(new BeVectorCollection<BeModelElement>(SOURCES, SourceFileCollection.class, this).propagateCodeChange());
@@ -66,9 +67,11 @@ public class Module extends BeVectorCollection<BeModelElement>
     @Override
     public <S extends BeModelElement> BeVectorCollection<S> getOrCreateCollection(String name, Class<S> clazz)
     {
-        if (name.equals(PageCustomization.CUSTOMIZATIONS_COLLECTION) && clazz == PageCustomization.class) {
+        if (name.equals(PageCustomization.CUSTOMIZATIONS_COLLECTION) && clazz == PageCustomization.class)
+        {
             PageCustomizations element = (PageCustomizations) get(name);
-            if (element == null) {
+            if (element == null)
+            {
                 element = new PageCustomizations(this);
                 DataElementUtils.saveQuiet(element);
             }
@@ -82,7 +85,8 @@ public class Module extends BeVectorCollection<BeModelElement>
     public Entities getOrCreateEntityCollection()
     {
         Entities entities = (Entities) get(Entities.NAME);
-        if (entities == null) {
+        if (entities == null)
+        {
             entities = new Entities(this);
             DataElementUtils.saveQuiet(entities);
         }
@@ -112,7 +116,8 @@ public class Module extends BeVectorCollection<BeModelElement>
     public JavaScriptForms getJavaScriptFormsCollection()
     {
         JavaScriptForms element = (JavaScriptForms) get(Module.JS_FORMS);
-        if (element == null) {
+        if (element == null)
+        {
             element = new JavaScriptForms(this);
             DataElementUtils.saveQuiet(element);
         }
@@ -134,7 +139,8 @@ public class Module extends BeVectorCollection<BeModelElement>
         String name = Module.MASS_CHANGES;
         MassChanges element = (MassChanges) get(name);
 
-        if (element == null) {
+        if (element == null)
+        {
             element = newMassChangeCollection();
             DataElementUtils.saveQuiet(element);
         }
@@ -169,12 +175,14 @@ public class Module extends BeVectorCollection<BeModelElement>
     {
         BeModelCollection<SourceFileCollection> sourceFiles = getSourceFiles();
         SourceFileCollection dc = sourceFiles.get(nameSpace);
-        if (dc == null) {
+        if (dc == null)
+        {
             dc = new SourceFileCollection(nameSpace, sourceFiles);
             DataElementUtils.saveQuiet(dc);
         }
         SourceFile sourceFile = dc.get(name);
-        if (sourceFile == null) {
+        if (sourceFile == null)
+        {
             sourceFile = new SourceFile(name, dc);
             DataElementUtils.saveQuiet(sourceFile);
         }
@@ -195,7 +203,8 @@ public class Module extends BeVectorCollection<BeModelElement>
     public Set<String> getEntityNames()
     {
         BeModelCollection<Entity> dc = getEntityCollection();
-        if (dc != null) {
+        if (dc != null)
+        {
             return dc.names().toSet();
         }
         return Collections.emptySet();
@@ -205,9 +214,11 @@ public class Module extends BeVectorCollection<BeModelElement>
     {
         Entity entity = null;
         BeModelCollection<Entity> dc = getEntityCollection();
-        if (dc != null) {
+        if (dc != null)
+        {
             entity = dc.get(name);
-            if (entity != null) {
+            if (entity != null)
+            {
                 return entity;
             }
         }
@@ -239,7 +250,8 @@ public class Module extends BeVectorCollection<BeModelElement>
         if (extras == null || extra == null)
             return false;
 
-        for (int i = 0; i < extras.length; i++) {
+        for (int i = 0; i < extras.length; i++)
+        {
             if (extra.equals(extras[i]))
                 return true;
         }
@@ -260,9 +272,11 @@ public class Module extends BeVectorCollection<BeModelElement>
     {
         final List<TableRef> tableReferences = new ArrayList<>();
 
-        for (final Entity entity : getEntities()) {
+        for (final Entity entity : getEntities())
+        {
             final List<TableReference> allReferences = entity.getAllReferences();
-            for (TableReference reference : allReferences) {
+            for (TableReference reference : allReferences)
+            {
                 if (!(reference instanceof TableRef))
                     throw new AssertionError();
                 tableReferences.add((TableRef) reference);
@@ -276,7 +290,8 @@ public class Module extends BeVectorCollection<BeModelElement>
     {
         final List<TableDef> tableDefs = new ArrayList<>();
 
-        for (Entity entity : getModule().getEntities()) {
+        for (Entity entity : getModule().getEntities())
+        {
             final TableDef scheme = entity.findTableDefinition();
             if (scheme != null)
                 tableDefs.add(scheme);

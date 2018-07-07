@@ -32,11 +32,14 @@ public class BeSqlExecutor extends SqlExecutor
     {
         if (script == null || script.getSource().trim().isEmpty())
             return;
-        try {
+        try
+        {
             new FreemarkerSqlHandler(this, false, log).execute(script);
-        } catch (ProjectElementException | FreemarkerSqlException e) {
+        } catch (ProjectElementException | FreemarkerSqlException e)
+        {
             throw e;
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new ProjectElementException(script, e);
         }
     }

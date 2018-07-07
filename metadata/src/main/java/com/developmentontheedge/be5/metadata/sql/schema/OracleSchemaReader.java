@@ -45,11 +45,14 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 + "from user_tab_cols c" +
                 " JOIN entities e ON (UPPER(e.name)=c.table_name)" +
                 " WHERE NOT(c.column_id IS NULL) ORDER BY c.table_name,c.column_id");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
                 List<SqlColumnInfo> list = result.get(tableName);
-                if (list == null) {
+                if (list == null)
+                {
                     list = new ArrayList<>();
                     result.put(tableName, list);
                 }
@@ -59,15 +62,17 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 info.setType(rs.getString(3 /*"data_type"*/));
                 info.setCanBeNull("Y".equals(rs.getString(7 /*"nullable"*/)));
                 info.setSize(rs.getInt(5 /*"data_precision"*/));
-                if (rs.wasNull()) {
+                if (rs.wasNull())
+                {
                     info.setSize(rs.getInt(4 /*"char_length"*/));
                 }
                 info.setPrecision(rs.getInt(6 /* "data_scale" */));
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
-        // Read default values as separate query, because it's LONG column which is streaming and 
+        // Read default values as separate query, because it's LONG column which is streaming and
         // transmitted slowly
         rs = connector.executeQuery("SELECT "
                 + "c.data_default,"
@@ -76,8 +81,10 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 + "from user_tab_cols c" +
                 " JOIN entities e ON (UPPER(e.name)=c.table_name)" +
                 " WHERE NOT(c.column_id IS NULL) AND NOT (data_default IS NULL) ORDER BY c.table_name");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 // Read streaming column at first
                 String defaultValue = rs.getString(1 /* data_default */);
                 String tableName = rs.getString(2 /*"table_name"*/);
@@ -87,13 +94,16 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     continue;
                 defaultValue = defaultValue.trim();
                 defaultValue = DEFAULT_DATE_PATTERN.matcher(defaultValue).replaceFirst("'$1'");
-                if ("'auto-identity'".equals(defaultValue)) {
+                if ("'auto-identity'".equals(defaultValue))
+                {
                     column.setAutoIncrement(true);
-                } else {
+                } else
+                {
                     column.setDefaultValue(defaultValue);
                 }
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         /*rs = connector.executeQuery( "SELECT uc.SEARCH_CONDITION,uc.TABLE_NAME FROM user_constraints uc "
@@ -107,55 +117,69 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 + "WHERE c.type#=1 AND c.obj# = o.obj# "
                 + "AND o.owner# = userenv('SCHEMAID') "
                 + "AND UPPER(e.name)=o.name");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String constr = rs.getString(1);
                 String table = rs.getString(2);
                 // ENUM VALUES
                 // Copied from OperationSupport.loadEntityEnums
                 StringTokenizer st = new StringTokenizer(constr.trim());
                 int nTok = st.countTokens();
-                if (nTok < 3) {
+                if (nTok < 3)
+                {
                     continue;
                 }
                 String colName = st.nextToken().toUpperCase();
                 String in = st.nextToken();
-                if (!"IN".equalsIgnoreCase(in)) {
+                if (!"IN".equalsIgnoreCase(in))
+                {
                     continue;
                 }
                 SqlColumnInfo column = findColumn(result, table, colName);
-                if (column == null) {
+                if (column == null)
+                {
                     continue;
                 }
                 List<String> values = new ArrayList<>();
-                try {
-                    do {
+                try
+                {
+                    do
+                    {
                         String val = st.nextToken("(,')");
-                        if (!val.trim().isEmpty()) {
+                        if (!val.trim().isEmpty())
+                        {
                             values.add(val);
                         }
                     }
                     while (st.hasMoreTokens());
-                } catch (NoSuchElementException ignore) {
+                } catch (NoSuchElementException ignore)
+                {
                 }
-                if (values.size() > 0) {
+                if (values.size() > 0)
+                {
                     column.setEnumValues(values.toArray(new String[values.size()]));
                 }
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         rs = connector.executeQuery("SELECT trigger_name,table_name,trigger_body FROM user_triggers "
                 + "WHERE triggering_event='INSERT OR UPDATE' "
                 + "AND TRIGGER_TYPE='BEFORE EACH ROW'");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 // Read streaming column as first
                 String triggerBody = rs.getString(3);
                 String tableName = rs.getString(2);
 
                 Matcher matcher = GENERATED_TRIGGER_PATTERN.matcher(triggerBody);
-                if (matcher.find()) {
+                if (matcher.find())
+                {
                     String columnName = matcher.group(1);
                     String targetName = matcher.group(3);
                     SqlColumnInfo column = findColumn(result, tableName, columnName);
@@ -164,7 +188,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     column.setDefaultValue(new ColumnFunction(targetName, ColumnFunction.TRANSFORM_GENERIC).toString());
                 }
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;
@@ -175,7 +200,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
         List<SqlColumnInfo> list = result.get(table.toLowerCase());
         if (list == null)
             return null;
-        for (SqlColumnInfo column : list) {
+        for (SqlColumnInfo column : list)
+        {
             if (colName.equals(column.getName()))
                 return column;
         }
@@ -189,22 +215,28 @@ public class OracleSchemaReader extends DefaultSchemaReader
         Map<String, String> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT "
                 + "t.table_name FROM user_tables t JOIN entities e ON (UPPER(e.name)=t.table_name)");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/);
                 result.put(tableName.toLowerCase(), "TABLE");
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         rs = connector.executeQuery("SELECT "
                 + "view_name FROM user_views v JOIN entities e ON (UPPER(e.name)=v.view_name)");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String viewName = rs.getString(1 /*"view_name"*/);
                 result.put(viewName.toLowerCase(), "VIEW");
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;
@@ -221,15 +253,19 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 + "JOIN user_ind_columns ic ON i.index_name=ic.index_name "
                 + "JOIN entities e ON (UPPER(e.name)=i.table_name) "
                 + "ORDER BY i.table_name,i.index_name,ic.column_position");
-        try {
+        try
+        {
             IndexInfo curIndex = null;
             String lastTable = null;
-            while (rs.next()) {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
                 String indexName = rs.getString(2 /*"index_name"*/);
-                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName)) {
+                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName))
+                {
                     List<IndexInfo> list = result.get(tableName);
-                    if (list == null) {
+                    if (list == null)
+                    {
                         list = new ArrayList<>();
                         result.put(tableName, list);
                     }
@@ -242,7 +278,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"column_name"*/);
                 curIndex.addColumn(column);
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         // Read functional indices separately
@@ -255,8 +292,10 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 + "JOIN user_tab_cols c ON (c.column_name=ic.column_name AND c.table_name=ic.table_name) "
                 + "WHERE c.virtual_column='YES' "
                 + "ORDER BY i.table_name,i.index_name,ic.column_position");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 // Read streaming column at first
                 String defaultValue = rs.getString(4 /* data_default */);
                 String tableName = rs.getString(1 /* "table_name" */).toLowerCase();
@@ -265,8 +304,10 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 List<IndexInfo> list = result.get(tableName);
                 if (list == null)
                     continue;
-                for (IndexInfo indexInfo : list) {
-                    if (indexInfo.getName().equals(indexName)) {
+                for (IndexInfo indexInfo : list)
+                {
+                    if (indexInfo.getName().equals(indexName))
+                    {
                         defaultValue = GENERIC_REF_INDEX_PATTERN.matcher(defaultValue).replaceFirst("generic($2)");
                         defaultValue = UPPER_INDEX_PATTERN.matcher(defaultValue).replaceFirst("upper($1)");
                         defaultValue = LOWER_INDEX_PATTERN.matcher(defaultValue).replaceFirst("lower($1)");
@@ -274,7 +315,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     }
                 }
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;

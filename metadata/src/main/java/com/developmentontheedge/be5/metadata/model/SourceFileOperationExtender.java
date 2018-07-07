@@ -76,16 +76,20 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     public void setCode(String code)
     {
         SourceFile file = getSourceFile();
-        if (file == null) {
+        if (file == null)
+        {
             String newFileName = SourceFile.extractFileNameFromCode(code);
-            if (newFileName != null) {
+            if (newFileName != null)
+            {
                 fileName = newFileName;
             }
             file = getSourceFile();
         }
-        if (file == null) {
+        if (file == null)
+        {
             getProject().getApplication().addSourceFile(namespace, fileName, code);
-        } else {
+        } else
+        {
             file.setSource(code);
         }
 

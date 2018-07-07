@@ -6,24 +6,25 @@ public class AstDateAdd extends SimpleNode
 {
     public AstDateAdd(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "DATE_ADD(";
         this.childrenDelimiter = ",";
     }
 
     public AstDateAdd(SimpleNode date, AstInterval interval, String type)
     {
-        this( 0 );
-        setType( type );
-        addChild( date );
-        addChild( interval );
+        this(0);
+        setType(type);
+        addChild(date);
+        addChild(interval);
     }
 
     String type;
+
     public void setType(String type)
     {
-        if( ! ( type.equalsIgnoreCase( "MONTH" ) || type.equalsIgnoreCase( "DAY" ) || type.equalsIgnoreCase( "MICROSECOND" ) ) )
-            throw new IllegalArgumentException( "Unsupported type: " + type );
+        if (!(type.equalsIgnoreCase("MONTH") || type.equalsIgnoreCase("DAY") || type.equalsIgnoreCase("MICROSECOND")))
+            throw new IllegalArgumentException("Unsupported type: " + type);
         this.type = type;
         this.nodeSuffix = type + ")";
     }

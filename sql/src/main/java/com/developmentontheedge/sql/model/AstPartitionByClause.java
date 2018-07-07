@@ -6,7 +6,7 @@ public class AstPartitionByClause extends SimpleNode
 {
     public AstPartitionByClause(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "PARTITION BY";
         this.childrenDelimiter = ",";
     }

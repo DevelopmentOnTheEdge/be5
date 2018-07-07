@@ -129,7 +129,8 @@ public class AutomaticSerializationService
 
     void fireCodeChanged(Query query)
     {
-        for (QueryCodeChangedListener listener : queryCodeChangedListeners) {
+        for (QueryCodeChangedListener listener : queryCodeChangedListeners)
+        {
             listener.codeChanged(query);
         }
     }
@@ -159,7 +160,8 @@ public class AutomaticSerializationService
 
     void fireCodeChanged(Operation operation)
     {
-        for (OperationCodeChangedListener listener : operationCodeChangedListeners) {
+        for (OperationCodeChangedListener listener : operationCodeChangedListeners)
+        {
             listener.codeChanged(operation);
         }
     }
@@ -189,7 +191,8 @@ public class AutomaticSerializationService
 
     void fireCodeChanged(Entity entity)
     {
-        for (EntityCodeChangedListener listener : entityCodeChangedListeners) {
+        for (EntityCodeChangedListener listener : entityCodeChangedListeners)
+        {
             listener.codeChanged(entity);
         }
     }
@@ -219,7 +222,8 @@ public class AutomaticSerializationService
 
     void fireCodeAdded(Entity entity)
     {
-        for (EntityCodeAddedListener listener : entityCodeAddedListeners) {
+        for (EntityCodeAddedListener listener : entityCodeAddedListeners)
+        {
             listener.codeAdded(entity);
         }
     }
@@ -249,7 +253,8 @@ public class AutomaticSerializationService
 
     void fireCodeRemoved(Entity entity)
     {
-        for (EntityCodeRemovedListener listener : entityCodeRemovedListeners) {
+        for (EntityCodeRemovedListener listener : entityCodeRemovedListeners)
+        {
             listener.codeRemoved(entity);
         }
     }
@@ -279,7 +284,8 @@ public class AutomaticSerializationService
 
     void fireCodeAdded(FreemarkerScript script)
     {
-        for (ScriptCodeAddedListener listener : scriptCodeAddedListeners) {
+        for (ScriptCodeAddedListener listener : scriptCodeAddedListeners)
+        {
             listener.codeAdded(script);
         }
     }

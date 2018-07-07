@@ -6,23 +6,26 @@ public class AstBeDictionary extends AstBeNode
 {
     public AstBeDictionary(int id)
     {
-        super( id );
+        super(id);
         this.tagName = "";
         this.allowedParameters = null;
     }
-    
+
     private String name;
+
     public String getName()
     {
         return name;
     }
+
     public void setName(String name)
     {
         this.name = name;
     }
+
     public void setDictionary(String dict)
     {
-        this.tagName = dict.substring( 1, dict.length()-1 );
+        this.tagName = dict.substring(1, dict.length() - 1);
     }
 
     public String getTagName()
@@ -33,7 +36,7 @@ public class AstBeDictionary extends AstBeNode
     @Override
     public String getParametersString()
     {
-        return ":"+getName()+super.getParametersString();
+        return ":" + getName() + super.getParametersString();
     }
 
 }

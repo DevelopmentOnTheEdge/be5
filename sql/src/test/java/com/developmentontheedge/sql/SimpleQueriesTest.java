@@ -11,6 +11,6 @@ public class SimpleQueriesTest
     public void testLineBreak()
     {
         String query = "SELECT a,\n'abc' AS \"b\" FROM table1";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 }

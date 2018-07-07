@@ -6,14 +6,14 @@ public class AstConcatExpression extends AstFunNode implements Squasheable
 {
     public AstConcatExpression(int id)
     {
-        super( id );
-        setFunction( DefaultParserContext.FUNC_CONCAT );
+        super(id);
+        setFunction(DefaultParserContext.FUNC_CONCAT);
     }
-    
-    public AstConcatExpression(SimpleNode ... childs)
+
+    public AstConcatExpression(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTCONCATEXPRESSION );
-        for(SimpleNode child : childs)
+        this(SqlParserTreeConstants.JJTCONCATEXPRESSION);
+        for (SimpleNode child : childs)
             addChild(child);
     }
 

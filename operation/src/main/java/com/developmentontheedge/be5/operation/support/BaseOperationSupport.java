@@ -76,7 +76,7 @@ public abstract class BaseOperationSupport implements Operation
 
         for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
         {
-            if(!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
+            if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
             {
                 map.put(entry.getKey(), entry.getValue().toString());
             }
@@ -84,7 +84,7 @@ public abstract class BaseOperationSupport implements Operation
 
         for (Map.Entry<String, Object> entry : redirectParams.entrySet())
         {
-            if(entry.getValue() != null && !entry.getValue().toString().isEmpty())
+            if (entry.getValue() != null && !entry.getValue().toString().isEmpty())
             {
                 map.put(entry.getKey(), entry.getValue().toString());
             }
@@ -95,23 +95,25 @@ public abstract class BaseOperationSupport implements Operation
 
     /**
      * Puts additional parameters for redirect OperationResult.
+     *
      * @param extra parameters map
      */
     @Override
-    public void addRedirectParams( Map<String, ?> extra )
+    public void addRedirectParams(Map<String, ?> extra)
     {
-        redirectParams.putAll( extra );
+        redirectParams.putAll(extra);
     }
 
     /**
      * Puts additional parameter for redirect OperationResult.
+     *
      * @param name  parameter name
      * @param value parameter value
      */
     @Override
-    public void addRedirectParam( String name, Object value )
+    public void addRedirectParam(String name, Object value)
     {
-        addRedirectParams( Collections.singletonMap( name, value ) );
+        addRedirectParams(Collections.singletonMap(name, value));
     }
 
     @Override

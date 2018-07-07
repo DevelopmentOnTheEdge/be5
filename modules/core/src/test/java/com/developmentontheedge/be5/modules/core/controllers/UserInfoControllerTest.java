@@ -24,7 +24,8 @@ import static org.mockito.Mockito.verify;
 
 public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
 {
-    @Inject private UserInfoController component;
+    @Inject
+    private UserInfoController component;
 
     @Before
     public void init()

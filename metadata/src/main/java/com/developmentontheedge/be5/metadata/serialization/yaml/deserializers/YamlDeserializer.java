@@ -62,7 +62,8 @@ public class YamlDeserializer
         if (collection == null)
             return null;
         List<String> result = new ArrayList<>();
-        for (String str : collection) {
+        for (String str : collection)
+        {
             result.add(strings.get(str));
         }
         return result;
@@ -99,9 +100,11 @@ public class YamlDeserializer
         yamlDeserializer.setProject(module.getProject());
         EntityDeserializer entityDeserializer = new EntityDeserializer(yamlDeserializer, loadContext);
 
-        try {
+        try
+        {
             return entityDeserializer.readEntity(entityName, content, module);
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             Entity entity = new Entity(entityName, module, EntityType.TABLE);
             loadContext.addWarning(e.attachElement(entity));
             return entity;
@@ -113,9 +116,11 @@ public class YamlDeserializer
         YamlDeserializer yamlDeserializer = new YamlDeserializer(loadContext);
         yamlDeserializer.setProject(entity.getProject());
         EntityDeserializer entityDeserializer = new EntityDeserializer(yamlDeserializer, loadContext);
-        try {
+        try
+        {
             return entityDeserializer.readQuery(queryName, content, entity);
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             Query query = new Query(queryName, entity);
             loadContext.addWarning(e.attachElement(query));
             return query;
@@ -128,9 +133,11 @@ public class YamlDeserializer
         yamlDeserializer.setProject(entity.getProject());
         EntityDeserializer entityDeserializer = new EntityDeserializer(yamlDeserializer, loadContext);
 
-        try {
+        try
+        {
             return entityDeserializer.readOperation(operationName, content, entity);
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             Operation operation = Operation.createOperation(operationName, Operation.OPERATION_TYPE_JAVA, entity);
             loadContext.addWarning(e.attachElement(operation));
             return operation;
@@ -175,7 +182,8 @@ public class YamlDeserializer
 
     public Project getTemplates() throws ReadException
     {
-        if (templates == null) {
+        if (templates == null)
+        {
             templates = Templates.getTemplatesProject();
             templates.mergeHostProject(project);
         }
@@ -312,7 +320,8 @@ public class YamlDeserializer
 
     ProjectFileSystem getFileSystem()
     {
-        if (this.fileSystem == null) {
+        if (this.fileSystem == null)
+        {
             this.fileSystem = new ProjectFileSystem(project);
         }
         return fileSystem;
@@ -320,11 +329,13 @@ public class YamlDeserializer
 
     Entity readEntity(final Module module, final String name) throws ReadException
     {
-        try {
+        try
+        {
             final EntityDeserializer entityDeserializer = new EntityDeserializer(this, loadContext, module, name);
             entityDeserializer.deserialize();
             return entityDeserializer.getEntity();
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             throw e.attachElement(module);
         }
     }
@@ -334,9 +345,11 @@ public class YamlDeserializer
         if (project == null)
             throw new IllegalStateException();
 
-        try {
+        try
+        {
             new StaticPagesDeserializer(this, loadContext, getFileSystem().getStaticPagesFile(), target).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e.attachElement(target));
         }
     }
@@ -346,9 +359,11 @@ public class YamlDeserializer
         if (project == null)
             throw new IllegalStateException();
 
-        try {
+        try
+        {
             new SecurityDeserializer(loadContext, getFileSystem().getSecurityFile(), target).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e.attachElement(target));
         }
     }
@@ -358,11 +373,14 @@ public class YamlDeserializer
         if (project == null)
             throw new IllegalStateException();
 
-        try {
+        try
+        {
             new CustomizationDeserializer(this, loadContext, getFileSystem().getCustomizationFile(), target).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e.attachElement(target));
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             loadContext.addWarning(new ReadException(e, target, getFileSystem().getCustomizationFile()));
         }
     }
@@ -383,17 +401,21 @@ public class YamlDeserializer
 
         final BeVectorCollection<PageCustomization> customizations = replace ? new PageCustomizations(target) : target.getOrCreateCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class);
 
-        try {
-            for (final String name : serializedCustomizations.keySet()) {
+        try
+        {
+            for (final String name : serializedCustomizations.keySet())
+            {
                 final Map<String, Object> content = (Map<String, Object>) serializedCustomizations.get(name);
                 final List<String> splitted = StreamEx.split(name, "\\.").toList();
                 final String type;
                 final String domain;
 
-                if (splitted.size() == 1) {
+                if (splitted.size() == 1)
+                {
                     type = "";
                     domain = splitted.get(0);
-                } else {
+                } else
+                {
                     type = splitted.get(splitted.size() - 1);
                     splitted.remove(splitted.size() - 1);
                     domain = String.join(".", splitted);
@@ -404,7 +426,8 @@ public class YamlDeserializer
                 customization.setOriginModuleName(project.getProjectOrigin());
                 DataElementUtils.saveQuiet(customization);
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             loadContext.addWarning(new ReadException(e, target, project.getLocation()));
         }
 
@@ -414,28 +437,35 @@ public class YamlDeserializer
 
     void readDaemons(final BeModelCollection<Daemon> daemonCollection)
     {
-        try {
+        try
+        {
             new DaemonsDeserializer(loadContext, getFileSystem().getDaemonsFile(), daemonCollection).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e);
         }
     }
 
     void readMassChanges(final MassChanges massChangeCollection)
     {
-        try {
+        try
+        {
             new MassChangesDeserializer(loadContext, getFileSystem().getMassChangesFile(), massChangeCollection).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e.attachElement(massChangeCollection));
         }
     }
 
     void readConnectionProfiles(BeConnectionProfilesRoot target)
     {
-        for (final BeConnectionProfileType type : BeConnectionProfileType.values()) {
-            try {
+        for (final BeConnectionProfileType type : BeConnectionProfileType.values())
+        {
+            try
+            {
                 readConnectionProfiles(type, target);
-            } catch (final ReadException e) {
+            } catch (final ReadException e)
+            {
                 loadContext.addWarning(e);
             }
         }
@@ -448,7 +478,8 @@ public class YamlDeserializer
         if (target.getProject().isModuleProject() && !Files.exists(connectionProfilesFile))
             return;
 
-        if (type == BeConnectionProfileType.LOCAL && !Files.exists(connectionProfilesFile)) {
+        if (type == BeConnectionProfileType.LOCAL && !Files.exists(connectionProfilesFile))
+        {
             target.put(new BeConnectionProfiles(BeConnectionProfileType.LOCAL, target));
             return;
         }
@@ -458,19 +489,24 @@ public class YamlDeserializer
 
     void readForms(BeModelCollection<JavaScriptForm> formCollection)
     {
-        try {
+        try
+        {
             new FormsDeserializer(loadContext, getFileSystem().getJavaScriptFormsFile(), formCollection).deserialize();
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e);
         }
     }
 
     void readLocalizations(final List<String> languages, final Localizations localizations)
     {
-        for (final String lang : languages) {
-            try {
+        for (final String lang : languages)
+        {
+            try
+            {
                 new LocalizationDeserializer(loadContext, lang, getFileSystem().getLocalizationFile(lang), localizations).deserialize();
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(localizations));
             }
         }
@@ -483,16 +519,20 @@ public class YamlDeserializer
         if (includes == null)
             return;
 
-        for (final String scriptName : deserializer.asStrList(includes)) {
+        for (final String scriptName : deserializer.asStrList(includes))
+        {
             final Path macroFile = getFileSystem().getMacroFile(scriptName);
-            try {
+            try
+            {
                 final FreemarkerScript script = new FreemarkerScript(scriptName, macroFiles);
-                if (Files.exists(macroFile)) {
+                if (Files.exists(macroFile))
+                {
                     script.setLinkedFile(macroFile);
                     script.getTemplateCode();
                 }
                 DataElementUtils.saveQuiet(script);
-            } catch (final Exception e) {
+            } catch (final Exception e)
+            {
                 loadContext.addWarning(new ReadException(e, macroFiles.getCompletePath().getChildPath(scriptName), macroFile));
             }
         }

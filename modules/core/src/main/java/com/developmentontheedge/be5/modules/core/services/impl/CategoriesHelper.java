@@ -23,7 +23,8 @@ public class CategoriesHelper
         List<Long> categories = new ArrayList<>();
         Long cat = categoryID;
 
-        while (cat != null) {
+        while (cat != null)
+        {
             categories.add(cat);
 
             cat = db.oneLong("SELECT c1.parentID FROM categories c1 WHERE c1.ID = ?", cat);
@@ -39,7 +40,8 @@ public class CategoriesHelper
 
         //bfs
         int i = 0;
-        do {
+        do
+        {
             categories.addAll(db.scalarList("SELECT id FROM categories c WHERE c.parentID = ?", categories.get(i)));
         }
         while (++i < categories.size());
@@ -51,7 +53,7 @@ public class CategoriesHelper
     {
         List<Long> categories = getChildCategories(categoryID);
 
-        db.update("DELETE FROM classifications WHERE recordID = CONCAT('"+entityName+".', " + primaryKey + ")" +
+        db.update("DELETE FROM classifications WHERE recordID = CONCAT('" + entityName + ".', " + primaryKey + ")" +
                 "AND categoryID IN " + Utils.inClause(categories.size()), categories.toArray());
     }
 
@@ -59,11 +61,11 @@ public class CategoriesHelper
     {
         List<Long> categories = getParentCategories(categoryID);
 
-        db.update("DELETE FROM classifications WHERE recordID = CONCAT('"+entityName+".', " + primaryKey + ")" +
+        db.update("DELETE FROM classifications WHERE recordID = CONCAT('" + entityName + ".', " + primaryKey + ")" +
                 "AND categoryID IN " + Utils.inClause(categories.size()), categories.toArray());
 
         db.insert("INSERT INTO classifications (recordID, categoryID)" +
-                "SELECT CONCAT('"+entityName+".', " + primaryKey + "), c.ID FROM categories c " +
+                "SELECT CONCAT('" + entityName + ".', " + primaryKey + "), c.ID FROM categories c " +
                 "WHERE id IN " + Utils.inClause(categories.size()), categories.toArray());
     }
 }

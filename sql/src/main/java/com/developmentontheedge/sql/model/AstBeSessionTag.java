@@ -10,15 +10,15 @@ import java.util.Set;
 public class AstBeSessionTag extends AstBeNode
 {
     private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of(
-            "refColumn", "default", "type", "multiple" ).toSet();
-    
+            "refColumn", "default", "type", "multiple").toSet();
+
     public AstBeSessionTag(int id)
     {
-        super( id );
+        super(id);
         tagName = "session";
         allowedParameters = ALLOWED_PARAMETERS;
     }
-    
+
     private String name;
 
     public String getName()
@@ -34,22 +34,22 @@ public class AstBeSessionTag extends AstBeNode
     @Override
     public String getParametersString()
     {
-        return ":"+name+super.getParametersString();
+        return ":" + name + super.getParametersString();
     }
 
     public String getDefault()
     {
-        return getParameter( "default" );
+        return getParameter("default");
     }
 
     public String getType()
     {
-        return getParameter( "type" );
+        return getParameter("type");
     }
 
     public String getMultiple()
     {
-        return getParameter( "multiple" );
+        return getParameter("multiple");
     }
 }
 /* JavaCC - OriginalChecksum=5bfac9a483d6aca0b9aacdc100e73d4e (do not edit this line) */

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 /**
  * Guarantees correct usage of the low-level response.
- * 
+ *
  * @author asko
  */
 public class RawResponseWrapper
@@ -43,7 +43,7 @@ public class RawResponseWrapper
 //        raw.setCharacterEncoding(charset.name());
 //        characterEncodingIsSet = true;
 //    }
-    
+
     public void append(String string)
     {
         Objects.requireNonNull(string);
@@ -54,7 +54,7 @@ public class RawResponseWrapper
     {
         getWriter().flush();
     }
-    
+
     /**
      * Note that this method is not pure (constant).
      */
@@ -62,22 +62,21 @@ public class RawResponseWrapper
     {
         checkState(contentTypeIsSet);
         //checkState(characterEncodingIsSet);
-        
+
         if (out == null)
         {
             try
             {
                 out = raw.getWriter();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
         }
-        
+
         return out;
     }
-    
+
     HttpServletResponse getRawResponse()
     {
         return raw;
@@ -85,7 +84,8 @@ public class RawResponseWrapper
 
     private static void checkState(boolean expression)
     {
-        if (!expression) {
+        if (!expression)
+        {
             throw new IllegalStateException();
         }
     }

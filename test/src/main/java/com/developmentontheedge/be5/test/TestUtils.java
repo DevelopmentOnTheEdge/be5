@@ -65,15 +65,22 @@ public abstract class TestUtils extends BaseTestUtils
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
-    @Inject private OperationService operationService;
-    @Inject private OperationExecutor operationExecutor;
+    @Inject
+    private OperationService operationService;
+    @Inject
+    private OperationExecutor operationExecutor;
 
-    @Inject protected Meta meta;
-    @Inject protected UserAwareMeta userAwareMeta;
-    @Inject protected DatabaseModel database;
-    @Inject protected DbService db;
+    @Inject
+    protected Meta meta;
+    @Inject
+    protected UserAwareMeta userAwareMeta;
+    @Inject
+    protected DatabaseModel database;
+    @Inject
+    protected DbService db;
 
-    @Inject protected Session session;
+    @Inject
+    protected Session session;
 
     protected static final String TEST_USER = "testUser";
 
@@ -116,14 +123,14 @@ public abstract class TestUtils extends BaseTestUtils
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
-        parameters.forEach((k,v) ->
-            when(httpServletRequest.getParameter(k)).thenReturn((String) v)
+        parameters.forEach((k, v) ->
+                when(httpServletRequest.getParameter(k)).thenReturn((String) v)
         );
 
         Request request = Mockito.spy(new RequestImpl(httpServletRequest));
         when(request.getRequestUri()).thenReturn(requestUri);
 
-        for (Map.Entry<String, Object> entry: sessionValues.entrySet())
+        for (Map.Entry<String, Object> entry : sessionValues.entrySet())
         {
             when(request.getAttribute(entry.getKey())).thenReturn(entry.getValue());
         }
@@ -169,19 +176,19 @@ public abstract class TestUtils extends BaseTestUtils
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                          String selectedRows)
+                                                                String selectedRows)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                          String selectedRows, String values)
+                                                                String selectedRows, String values)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                          String selectedRows, Map<String, Object> presetValues)
+                                                                String selectedRows, Map<String, Object> presetValues)
     {
         return generateOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
@@ -202,19 +209,19 @@ public abstract class TestUtils extends BaseTestUtils
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                                         String selectedRows)
+                                                               String selectedRows)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                                         String selectedRows, String values)
+                                                               String selectedRows, String values)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                                         String selectedRows, Map<String, Object> presetValues)
+                                                               String selectedRows, Map<String, Object> presetValues)
     {
         return executeOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
@@ -250,7 +257,7 @@ public abstract class TestUtils extends BaseTestUtils
 
         String[] stringSelectedRows = OperationUtils.selectedRows(selectedRowsParam);
         Object[] selectedRows = stringSelectedRows;
-        if(!operationInfo.getEntityName().startsWith("_"))
+        if (!operationInfo.getEntityName().startsWith("_"))
         {
             Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
             selectedRows = Utils.changeTypes(stringSelectedRows, primaryKeyColumnType);
@@ -280,7 +287,7 @@ public abstract class TestUtils extends BaseTestUtils
         @Override
         protected void failed(Throwable e, Description description)
         {
-            if(!operations.isEmpty())
+            if (!operations.isEmpty())
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Created operations:");
@@ -295,9 +302,11 @@ public abstract class TestUtils extends BaseTestUtils
 
         private String extension(Operation o)
         {
-            if(OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType())){
+            if (OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType()))
+            {
                 return ".groovy";
-            } else {
+            } else
+            {
                 return ".java";
             }
         }

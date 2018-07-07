@@ -112,8 +112,10 @@ public class Operation extends EntityItem
     public static Operation createOperation(String name, String type, Entity entity)
     {
         String realType = OPERATION_TYPE_JAVA;
-        for (String availableType : getOperationTypes()) {
-            if (availableType.equals(type)) {
+        for (String availableType : getOperationTypes())
+        {
+            if (availableType.equals(type))
+            {
                 realType = type;
                 break;
             }
@@ -289,14 +291,16 @@ public class Operation extends EntityItem
             return debugEquals("confirm");
         if (getExecutionPriority() != other.getExecutionPriority())
             return debugEquals("executionPriority");
-        if (getLogging() == null) {
+        if (getLogging() == null)
+        {
             if (other.getLogging() != null)
                 return debugEquals("logging");
         } else if (!getLogging().equals(other.getLogging()))
             return debugEquals("logging");
         if (getRecords() != other.getRecords())
             return debugEquals("records");
-        if (type == null) {
+        if (type == null)
+        {
             if (other.type != null)
                 return debugEquals("type");
         } else if (!type.equals(other.type))
@@ -310,18 +314,23 @@ public class Operation extends EntityItem
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> result = super.getErrors();
-        try {
+        try
+        {
             ModelValidationUtils.checkValueInSet(this, "logging", logging, OPERATION_LOGGING);
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             result.add(e);
         }
-        try {
+        try
+        {
             ModelValidationUtils.checkValueInSet(this, "records", records, VISIBILITY_OPTIONS);
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             result.add(e);
         }
         Set<String> missingEntries = getRoles().getMissingEntries();
-        if (!missingEntries.isEmpty()) {
+        if (!missingEntries.isEmpty())
+        {
             result.add(new ProjectElementException(getCompletePath(), "roles", "Unknown role(s): " + missingEntries));
         }
         // TODO: add more checks

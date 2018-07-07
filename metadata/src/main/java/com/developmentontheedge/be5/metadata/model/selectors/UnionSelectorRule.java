@@ -34,7 +34,8 @@ public class UnionSelectorRule implements SelectorRule
     @Override
     public boolean matches(BeModelElement element)
     {
-        for (HierarchySelectorRule rule : rules) {
+        for (HierarchySelectorRule rule : rules)
+        {
             if (rule.matches(element))
                 return true;
         }

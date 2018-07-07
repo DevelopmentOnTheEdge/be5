@@ -6,16 +6,16 @@ public class AstWindowFunction extends SimpleNode
 {
     public AstWindowFunction(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstWindowFunction(AstFunNode f, AstWindowSpecification over)
     {
         this(SqlParserTreeConstants.JJTWINDOWFUNCTION);
-        addChild( f );
-        addChild( over );
+        addChild(f);
+        addChild(over);
     }
-    
+
     @Override
     public Token getSpecialPrefix()
     {

@@ -13,13 +13,15 @@ import static org.junit.Assert.*;
 
 public class TransactionInterceptorTest extends DatabaseTest
 {
-    @Inject TestTransactionService testTransactionService;
-    @Inject TestTransaction2Service testTransaction2Service;
+    @Inject
+    TestTransactionService testTransactionService;
+    @Inject
+    TestTransaction2Service testTransaction2Service;
 
     @Before
     public void setUp()
     {
-        db.update("DELETE FROM persons" );
+        db.update("DELETE FROM persons");
     }
 
     @Test
@@ -28,10 +30,11 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransactionService.testMethod();
+        } catch (RuntimeException ignore)
+        {
         }
-        catch (RuntimeException ignore){}
 
-        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" ));
+        assertEquals(1L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 
     @Test
@@ -40,10 +43,11 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransactionService.testMethodWithTransactional();
+        } catch (RuntimeException ignore)
+        {
         }
-        catch (RuntimeException ignore){}
 
-        assertEquals(0L, (long)db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" ));
+        assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 
     @Test
@@ -52,9 +56,10 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransaction2Service.testMethodWithTransactional();
+        } catch (RuntimeException ignore)
+        {
         }
-        catch (RuntimeException ignore){}
 
-        assertEquals(0L, (long)db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" ));
+        assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 }

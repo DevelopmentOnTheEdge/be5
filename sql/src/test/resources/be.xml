@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <testSuite name="be">
- <description>Простые тесты BE-специфичных возможностей</description>
+  <description>Простые тесты BE-специфичных возможностей</description>
 
- <test name="apply-if-parameters">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="apply-if-parameters">
+    <parser>
+      <query><![CDATA[SELECT
    a.ID AS "___myid"
    <if expr="apartmentNo==12 && (param!=13 OR anotherParam==23 )">
        ,a.propertyid AS "___propertyid"
@@ -32,12 +32,12 @@
   ,a.accountnum AS "Accountnum"
   ,'<blankNulls />' AS ";Accountnum"
 FROM households a]]></query>
-   <applyContext>
-    <parameter name="apartmentNo" value="12" />
-    <parameter name="param" value="13" />
-    <parameter name="anotherParam" value="23" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext>
+        <parameter name="apartmentNo" value="12"/>
+        <parameter name="param" value="13"/>
+        <parameter name="anotherParam" value="23"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT
    a.ID AS "___myid", a.propertyid AS "___propertyid"
        , a.propertyid2 AS "___propertyid2"
    
@@ -48,11 +48,11 @@ FROM households a]]></query>
   , a.accountnum AS "Accountnum"
   , '<blankNulls />' AS ";Accountnum"
 FROM households a]]></format>
-  </parser>
- </test>
- <test name="apply-unless-parameters">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="apply-unless-parameters">
+    <parser>
+      <query><![CDATA[SELECT
    a.ID AS "___myid"
    <unless expr="apartmentNo==12 OR param!=13">
        ,a.propertyid AS "___propertyid"
@@ -75,11 +75,11 @@ FROM households a]]></format>
   ,a.accountnum AS "Accountnum"
   ,'<blankNulls />' AS ";Accountnum"
 FROM households a]]></query>
-   <applyContext>
-    <parameter name="apartmentNo" value="12" />
-    <parameter name="param" value="13" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext>
+        <parameter name="apartmentNo" value="12"/>
+        <parameter name="param" value="13"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT
    a.ID AS "___myid"
        , a.propertyid3 AS "___propertyid3"
        , a.propertyid4 AS "___propertyid4"
@@ -90,171 +90,177 @@ FROM households a]]></query>
   , a.accountnum AS "Accountnum"
   , '<blankNulls />' AS ";Accountnum"
 FROM households a]]></format>
-  </parser>
- </test>
- <test name="apply-parameter-tag">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="apply-parameter-tag">
+    <parser>
+      <query><![CDATA[SELECT
    * FROM table t WHERE t.field < <parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>]]></query>
-   <applyContext>
-    <parameter name="aaa" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext>
+        <parameter name="aaa"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT
    * FROM table t WHERE t.field < REPLACEpost]]></format>
-  </parser>
- </test>
- <test name="apply-tclone-id">
-  <parser>
-   <query><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
-   <applyContext>
-    <parameter name="_tcloneid_" value="5" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks5]]></format>
-  </parser>
- </test>
- <test name="apply-tclone-id-def">
-  <parser>
-   <query><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks]]></format>
-  </parser>
- </test>
- <test name="apply-parameter-safestr">
-  <parser>
-   <query><![CDATA[SELECT * FROM table t WHERE t.field < <parameter:aaa default="50" safestr="yes"/>]]></query>
-   <applyContext>
-    <parameter name="aaa" value="a'b'c" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table t WHERE t.field < 'a''b''c']]></format>
-  </parser>
- </test>
- <test name="apply-username">
-  <parser>
-   <query><![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = @@username@@ ORDER BY 1]]></query>
-   <applyContext>
-    <userName name="Guest" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = 'Guest' ORDER BY 1]]></format>
-  </parser>
- </test>
- <test name="subquery-no-parameters">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="apply-tclone-id">
+    <parser>
+      <query>
+        <![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
+      <format dbms="oracle">
+        <![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
+      <applyContext>
+        <parameter name="_tcloneid_" value="5"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks5]]></format>
+    </parser>
+  </test>
+  <test name="apply-tclone-id-def">
+    <parser>
+      <query>
+        <![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
+      <format dbms="oracle">
+        <![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks]]></format>
+    </parser>
+  </test>
+  <test name="apply-parameter-safestr">
+    <parser>
+      <query><![CDATA[SELECT * FROM table t WHERE t.field < <parameter:aaa default="50" safestr="yes"/>]]></query>
+      <applyContext>
+        <parameter name="aaa" value="a'b'c"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table t WHERE t.field < 'a''b''c']]></format>
+    </parser>
+  </test>
+  <test name="apply-username">
+    <parser>
+      <query>
+        <![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = @@username@@ ORDER BY 1]]></query>
+      <applyContext>
+        <userName name="Guest"/>
+      </applyContext>
+      <format dbms="oracle">
+        <![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = 'Guest' ORDER BY 1]]></format>
+    </parser>
+  </test>
+  <test name="subquery-no-parameters">
+    <parser>
+      <query><![CDATA[SELECT
     c2t.territoryID AS "___territoryID"
     ,'<sql>SELECT name FROM territories WHERE ID = '<var:___territoryID/>'</sql>' AS "Location"
 FROM companies2territories c2t]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
     c2t.territoryID AS "___territoryID"
     , '<sql> SELECT name FROM territories WHERE ID = '<var:___territoryID />'</sql>' AS "Location"
 FROM companies2territories c2t]]></format>
-  </parser>
- </test>
- <test name="subquery-external">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="subquery-external">
+    <parser>
+      <query><![CDATA[SELECT
     c2t.territoryID AS "___territoryID"
     ,'<sql outColumns="COUNT" queryName="Calc current" varSubst="paymentBatchId=___pbid,payCompany=___bankID"></sql>' AS "current_count"
 FROM companies2territories c2t]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
     c2t.territoryID AS "___territoryID"
     , '<sql outColumns="COUNT" queryName="Calc current" varSubst="paymentBatchId=___pbid,payCompany=___bankID"></sql>' AS "current_count"
 FROM companies2territories c2t]]></format>
-  </parser>
- </test>
- <test name="session">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="session">
+    <parser>
+      <query><![CDATA[SELECT
 DISTINCT( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
 WHERE ms.mfcCompanyID = <session:user-companyID/>]]></query>
-   <applyContext>
-    <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+      <applyContext>
+        <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
 WHERE ms.mfcCompanyID = 123]]></format>
-  </parser>
- </test>
- <test name="session-default">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="session-default">
+    <parser>
+      <query><![CDATA[SELECT
 DISTINCT( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
 WHERE ms.mfcCompanyID = <session:user-companyID default="0" type="java.lang.Long"/>]]></query>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
 WHERE ms.mfcCompanyID = 0]]></format>
-  </parser>
- </test>
- <test name="session-single-quoted">
-  <parser>
-   <query><![CDATA[SELECT u.ID, u.utility
+    </parser>
+  </test>
+  <test name="session-single-quoted">
+    <parser>
+      <query><![CDATA[SELECT u.ID, u.utility
 FROM utilities u, utilities2providers up 
 WHERE up.utilityID = u.ID AND up.companyID = <session:user-companyID refColumn='companies.ID' />]]></query>
-   <applyContext>
-    <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT u.ID, u.utility
+      <applyContext>
+        <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT u.ID, u.utility
 FROM utilities u, utilities2providers up 
 WHERE up.utilityID = u.ID AND up.companyID = 123]]></format>
-  </parser>
- </test>
- <test name="parameter-multiple">
-  <parser>
-   <query><![CDATA[SELECT name FROM table WHERE id IN <parameter:recordID multiple="true"/>]]></query>
-   <applyContext>
-    <parameter name="recordID" value="123" />
-    <parameter name="recordID" value="456" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT name FROM table WHERE id IN (123, 456)]]></format>
-  </parser>
- </test>
- <test name="sql-auto">
-  <!-- TODO: support applying context -->
-  <parser>
-   <query><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></query>
-   <format dbms="oracle"><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></format>
-  </parser>
- </test>
- <test name="be-if-union">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="parameter-multiple">
+    <parser>
+      <query><![CDATA[SELECT name FROM table WHERE id IN <parameter:recordID multiple="true"/>]]></query>
+      <applyContext>
+        <parameter name="recordID" value="123"/>
+        <parameter name="recordID" value="456"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT name FROM table WHERE id IN (123, 456)]]></format>
+    </parser>
+  </test>
+  <test name="sql-auto">
+    <!-- TODO: support applying context -->
+    <parser>
+      <query><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></query>
+      <format dbms="oracle"><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></format>
+    </parser>
+  </test>
+  <test name="be-if-union">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 <if parameter="foo">
 UNION SELECT * FROM table2
 </if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
 <if parameter="foo">
 UNION SELECT * FROM table2
 </if>]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
-  </parser>
- </test>
- <test name="be-if-select-union">
-  <parser>
-   <query><![CDATA[<if parameter="foo">
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
+    </parser>
+  </test>
+  <test name="be-if-select-union">
+    <parser>
+      <query><![CDATA[<if parameter="foo">
 SELECT * FROM table
 UNION</if>
 SELECT * FROM table2]]></query>
-   <format dbms="oracle"><![CDATA[<if parameter="foo">
+      <format dbms="oracle"><![CDATA[<if parameter="foo">
 SELECT * FROM table
 UNION</if>
 SELECT * FROM table2]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[
 SELECT * FROM table2]]></format>
-  </parser>
- </test>
- <test name="be-if-select-union2">
-  <parser>
-   <query><![CDATA[<if parameter="withCreateNew">
+    </parser>
+  </test>
+  <test name="be-if-select-union2">
+    <parser>
+      <query><![CDATA[<if parameter="withCreateNew">
                 SELECT
                     'createNewDoc' AS "ID",
                     'Создать новый' AS "docName"
@@ -276,7 +282,7 @@ SELECT * FROM table2]]></format>
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
 /* <parameter:withCreateNew/> */]]></query>
-   <format dbms="oracle"><![CDATA[<if parameter="withCreateNew">
+      <format dbms="oracle"><![CDATA[<if parameter="withCreateNew">
                 SELECT
                     'createNewDoc' AS "ID",
                     'Создать новый' AS "docName" FROM DUAL
@@ -298,8 +304,8 @@ SELECT * FROM table2]]></format>
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
 /* <parameter:withCreateNew/> */]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[
 
             SELECT
               d.ID AS "ID",
@@ -314,12 +320,12 @@ SELECT * FROM table2]]></format>
       ( d.activeFrom <= ''  AND d.activeTo > ''  )
 
 /* <parameter:withCreateNew/> */]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="be-if-select-union-with-param">
-  <parser>
-   <query><![CDATA[<if parameter="withCreateNew">
+  <test name="be-if-select-union-with-param">
+    <parser>
+      <query><![CDATA[<if parameter="withCreateNew">
                 SELECT
                     'createNewDoc' AS "ID",
                     'Создать новый' AS "docName"
@@ -341,10 +347,10 @@ SELECT * FROM table2]]></format>
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
 ]]></query>
-   <applyContext>
-    <parameter name="withCreateNew" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[
+      <applyContext>
+        <parameter name="withCreateNew" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[
                 SELECT
                     'createNewDoc' AS "ID",
                     'Создать новый' AS "docName" FROM DUAL
@@ -365,25 +371,25 @@ SELECT * FROM table2]]></format>
       ( d.activeFrom <= ''  AND d.activeTo > ''  )
 
 ]]></format>
-  </parser>
- </test>
- <test name="be-if-where">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-where">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 <if parameter="foo">
 WHERE x < 2
 </if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
 <if parameter="foo">
 WHERE x < 2
 </if>]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
-  </parser>
- </test>
- <test name="be-if-else-where">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
+    </parser>
+  </test>
+  <test name="be-if-else-where">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 <if parameter="foo">
 <then>
   WHERE x < 2
@@ -392,17 +398,17 @@ WHERE x < 2
   WHERE x > 2
 </else>
 </if>]]></query>
-   <applyContext>
-    <parameter name="foo" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="foo" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
   WHERE x < 2
 ]]></format>
-  </parser>
- </test>
- <test name="be-if-else-where2">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-else-where2">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 <if parameter="foo">
 <then>
   WHERE x < 2
@@ -411,51 +417,51 @@ WHERE x < 2
   WHERE x > 2
 </else>
 </if>]]></query>
-   <applyContext>
-    <parameter name="bar" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="bar" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
   WHERE x > 2
 ]]></format>
-  </parser>
- </test>
- <test name="be-if-and">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-and">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE 1 = 1
 <if parameter="foo">
 AND x < 2
 </if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE 1 = 1
 <if parameter="foo">
 AND x < 2
 </if>]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE 1 = 1]]></format>
-  </parser>
- </test>
- <test name="be-if-or">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-or">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE 1 = 1
 <if parameter="foo">
 OR x < 2
 </if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE 1 = 1
 <if parameter="foo">
 OR x < 2
 </if>]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE 1 = 1]]></format>
-  </parser>
- </test>
- <test name="be-if-else-and">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-else-and">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > 2
 <if parameter="foo">
 <then>
@@ -465,17 +471,17 @@ OR x < 2
   AND y < 1
 </else>
 </if>]]></query>
-   <applyContext>
-    <parameter name="foo" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="foo" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > 2 AND y > 1
 ]]></format>
-  </parser>
- </test>
- <test name="be-if-else-and2">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-else-and2">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > 2
 <if parameter="foo">
 <then>
@@ -485,62 +491,62 @@ OR x < 2
   AND y < 1
 </else>
 </if>]]></query>
-   <applyContext>
-    <parameter name="bar" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="bar" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > 2 AND y < 1
 ]]></format>
-  </parser>
- </test>
- <test name="be-if-else-value">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-else-value">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="yes"/> AS DATE)</then><else>NOW()</else></if>]]></query>
-   <applyContext>
-    <parameter name="date" value="2015-11-11" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="date" value="2015-11-11"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > TO_DATE('2015-11-11', 'YYYY-MM-DD')]]></format>
-  </parser>
- </test>
- <test name="be-if-else-value2">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-else-value2">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="yes"/> AS DATE)</then><else>NOW()</else></if>]]></query>
-   <applyContext>
-    <parameter name="datee" value="2015-11-11" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="datee" value="2015-11-11"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > SYSDATE]]></format>
-  </parser>
- </test>
- <test name="be-if-unless-chain">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-unless-chain">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > <if parameter="date">CAST(<parameter:date safestr="yes"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
-   <applyContext>
-    <parameter name="date" value="2015-11-11" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="date" value="2015-11-11"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > TO_DATE('2015-11-11', 'YYYY-MM-DD')]]></format>
-  </parser>
- </test>
- <test name="be-if-unless-chain2">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-if-unless-chain2">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
    WHERE x > <if parameter="date">CAST(<parameter:date safestr="yes"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
-   <applyContext>
-    <parameter name="datee" value="2015-11-11" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="datee" value="2015-11-11"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM table
    WHERE x > SYSDATE]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="be-if-unless-chain-where">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="be-if-unless-chain-where">
+    <parser>
+      <query><![CDATA[SELECT
  CODE,
  name
 FROM
@@ -553,7 +559,7 @@ FROM
  AND klevel = '2'
 </unless>
  ORDER BY name]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
  CODE,
  name
 FROM
@@ -566,8 +572,8 @@ FROM
  AND klevel = '2'
 </unless>
  ORDER BY name]]></format>
-   <applyContext />
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT
  CODE,
  name
 FROM
@@ -576,41 +582,41 @@ FROM
  AND klevel = '2'
 
  ORDER BY name]]></format>
-  </parser>
- </test>
- <test name="be-where-and-if1">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-where-and-if1">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 WHERE 0=0
 <if parameter="foo1">AND x < 1</if>
 <if parameter="foo2">AND x < 2</if>
 <if parameter="foo3">AND x < 3</if>
 <if parameter="foo4">AND x < 4</if>]]></query>
-   <applyContext>
-    <parameter name="foo2" value="bar" />
-    <parameter name="foo3" value="bar" />
-    <parameter name="foo4" value="bar" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="foo2" value="bar"/>
+        <parameter name="foo3" value="bar"/>
+        <parameter name="foo4" value="bar"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
 WHERE 0 = 0 AND x < 2 AND x < 3 AND x < 4]]></format>
-  </parser>
- </test>
- <test name="be-where-and-if2">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="be-where-and-if2">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
 WHERE 1=1
 <if parameter="foo1">AND x < 1</if>
 <if parameter="foo2">AND x < 2</if>]]></query>
-   <applyContext>
-    <parameter name="foo1" value="bar1" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="foo1" value="bar1"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
 WHERE 1 = 1 AND x < 1]]></format>
-  </parser>
- </test>
- <test name="if-session">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="if-session">
+    <parser>
+      <query><![CDATA[SELECT
  CODE,
  name
 FROM
@@ -623,10 +629,10 @@ FROM
  AND klevel = '2'
 </unless>
  ORDER BY name]]></query>
-   <applyContext>
-    <sessionVar name="user-region" value="54" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext>
+        <sessionVar name="user-region" value="54"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT
  CODE,
  name
 FROM
@@ -634,55 +640,58 @@ FROM
 WHERE parent = '54000000000'
 
  ORDER BY name]]></format>
-  </parser>
- </test>
- <test name="if-after-on">
-  <parser>
-   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+    </parser>
+  </test>
+  <test name="if-after-on">
+    <parser>
+      <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
    <if parameter='x'>WHERE a=b</if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+      <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
    <if parameter="x"> WHERE a = b</if>]]></format>
-  </parser>
- </test>
- <test name="if-order">
-  <parser>
-   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+    </parser>
+  </test>
+  <test name="if-order">
+    <parser>
+      <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
    <if parameter='x'>ORDER BY a DESC</if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+      <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
    <if parameter="x"> ORDER BY a DESC</if>]]></format>
-  </parser>
- </test>
- <test name="if-join">
-  <parser>
-   <query><![CDATA[SELECT a FROM t <if parameter='x'>JOIN b ON b.ID=t.ID JOIN c ON c.ID=t.ID</if>
+    </parser>
+  </test>
+  <test name="if-join">
+    <parser>
+      <query><![CDATA[SELECT a FROM t <if parameter='x'>JOIN b ON b.ID=t.ID JOIN c ON c.ID=t.ID</if>
    ORDER BY a DESC]]></query>
-   <format dbms="oracle"><![CDATA[SELECT a FROM t <if parameter="x"> INNER JOIN b ON b.ID = t.ID INNER JOIN c ON c.ID = t.ID</if>
+      <format dbms="oracle"><![CDATA[SELECT a FROM t <if parameter="x"> INNER JOIN b ON b.ID = t.ID INNER JOIN c ON c.ID = t.ID</if>
    ORDER BY a DESC]]></format>
-  </parser>
- </test>
- <test name="if-case">
-  <parser>
-   <query><![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter='x'>WHEN a > <parameter:x/> THEN 2 WHEN a < <parameter:x/> THEN 4</if> ELSE 3 END FROM table]]></query>
-   <format dbms="oracle"><![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter="x"> WHEN a > <parameter:x /> THEN 2 WHEN a < <parameter:x /> THEN 4</if> ELSE 3 END FROM table]]></format>
-   <applyContext>
-    <parameter name="x" value="3" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT CASE WHEN a > 5 THEN 1 WHEN a > 3 THEN 2 WHEN a < 3 THEN 4 ELSE 3 END FROM table]]></format>
-  </parser>
- </test>
- <test name="if-where-order">
-  <parser>
-   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+    </parser>
+  </test>
+  <test name="if-case">
+    <parser>
+      <query>
+        <![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter='x'>WHEN a > <parameter:x/> THEN 2 WHEN a < <parameter:x/> THEN 4</if> ELSE 3 END FROM table]]></query>
+      <format dbms="oracle">
+        <![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter="x"> WHEN a > <parameter:x /> THEN 2 WHEN a < <parameter:x /> THEN 4</if> ELSE 3 END FROM table]]></format>
+      <applyContext>
+        <parameter name="x" value="3"/>
+      </applyContext>
+      <format dbms="oracle">
+        <![CDATA[SELECT CASE WHEN a > 5 THEN 1 WHEN a > 3 THEN 2 WHEN a < 3 THEN 4 ELSE 3 END FROM table]]></format>
+    </parser>
+  </test>
+  <test name="if-where-order">
+    <parser>
+      <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
    <if parameter='x'>WHERE a=b</if>
    <if parameter='x'>ORDER BY a DESC</if>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+      <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
    <if parameter="x"> WHERE a = b</if>
    <if parameter="x"> ORDER BY a DESC</if>]]></format>
-  </parser>
- </test>
- <test name="if-non-quoted">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="if-non-quoted">
+    <parser>
+      <query><![CDATA[SELECT
   p2.id AS "IID"
 FROM persons p1, zagsImportsData p2
 WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
@@ -697,7 +706,7 @@ WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
   </if>
 GROUP BY p2.id
 HAVING COUNT(p2.iD) > 1]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   p2.id AS "IID"
 FROM persons p1, zagsImportsData p2
 WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
@@ -712,78 +721,79 @@ WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
   </if>
 GROUP BY p2.id
 HAVING COUNT(p2.iD) > 1]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="parameter-in-tableName1">
-  <parser>
-   <query><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_/>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_ />]]></format>
-   <applyContext>
-    <parameter name="_tcloneid_" value="bookmarks" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM bookmarks]]></format>
-  </parser>
- </test>
- <!-- <test name="parameter-in-tableName2"> <parser> <query><![CDATA[SELECT 
-  ID AS "Code" FROM a<parameter:_tcloneid_/>b]]></query> <format dbms="oracle"><![CDATA[SELECT 
-  ID AS "Code" FROM a<parameter:_tcloneid_ />b]]></format> <applyContext> <parameter 
-  name="_tcloneid_" value="bookmarks"/> </applyContext> <format dbms="oracle"><![CDATA[SELECT 
-  ID AS "Code" FROM abookmarksb]]></format> </parser> </test> -->
+  <test name="parameter-in-tableName1">
+    <parser>
+      <query><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_/>]]></query>
+      <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_ />]]></format>
+      <applyContext>
+        <parameter name="_tcloneid_" value="bookmarks"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM bookmarks]]></format>
+    </parser>
+  </test>
+  <!-- <test name="parameter-in-tableName2"> <parser> <query><![CDATA[SELECT
+   ID AS "Code" FROM a<parameter:_tcloneid_/>b]]></query> <format dbms="oracle"><![CDATA[SELECT
+   ID AS "Code" FROM a<parameter:_tcloneid_ />b]]></format> <applyContext> <parameter
+   name="_tcloneid_" value="bookmarks"/> </applyContext> <format dbms="oracle"><![CDATA[SELECT
+   ID AS "Code" FROM abookmarksb]]></format> </parser> </test> -->
 
- <test name="parameter-in-string">
-  <parser>
-   <query><![CDATA[SELECT '<parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>2' FROM table t]]></query>
-   <applyContext>
-    <parameter name="aaa" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT 'REPLACEpost2' FROM table t]]></format>
-  </parser>
- </test>
+  <test name="parameter-in-string">
+    <parser>
+      <query>
+        <![CDATA[SELECT '<parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>2' FROM table t]]></query>
+      <applyContext>
+        <parameter name="aaa"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT 'REPLACEpost2' FROM table t]]></format>
+    </parser>
+  </test>
 
- <test name="session-in-string">
-  <parser>
-   <query><![CDATA[SELECT '<session:user-companyID refColumn='companies.ID' />' FROM table t]]></query>
-   <applyContext>
-    <sessionVar name="user-companyID" value="123" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT '123' FROM table t]]></format>
-  </parser>
- </test>
+  <test name="session-in-string">
+    <parser>
+      <query><![CDATA[SELECT '<session:user-companyID refColumn='companies.ID' />' FROM table t]]></query>
+      <applyContext>
+        <sessionVar name="user-companyID" value="123"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT '123' FROM table t]]></format>
+    </parser>
+  </test>
 
- <test name="parameter-safestr-in-string">
-  <parser>
-   <query><![CDATA[SELECT 'str<parameter:aaa default="50" safestr="yes"/>' FROM table t]]></query>
-   <applyContext>
-    <parameter name="aaa" value="a'b'c" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT 'stra''b''c' FROM table t]]></format>
-  </parser>
- </test>
+  <test name="parameter-safestr-in-string">
+    <parser>
+      <query><![CDATA[SELECT 'str<parameter:aaa default="50" safestr="yes"/>' FROM table t]]></query>
+      <applyContext>
+        <parameter name="aaa" value="a'b'c"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT 'stra''b''c' FROM table t]]></format>
+    </parser>
+  </test>
 
- <test name="sql-exec">
-  <parser>
-   <query><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+  <test name="sql-exec">
+    <parser>
+      <query><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
 WHERE ( <sql exec="pre" beautifier="com.beanexplorer.web.html.HtmlLineGlueBeautifier"> SELECT COUNT(*)
 FROM user_roles WHERE user_name = @@username@@ AND role_name IN 
 @@current-role-list@@ AND role_name IN ( 'NursingDistribution' ) </sql> > 0 )]]></query>
-   <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+      <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
 WHERE ( <sql exec="pre" beautifier="com.beanexplorer.web.html.HtmlLineGlueBeautifier"> SELECT COUNT(*)
 FROM user_roles WHERE user_name = @@username@@ AND role_name IN 
 @@current-role-list@@ AND role_name IN ( 'NursingDistribution' ) </sql> > 0 )]]></format>
-   <applyContext>
-    <userName name="Username" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+      <applyContext>
+        <userName name="Username"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
 WHERE ( ( SELECT COUNT(*)
 FROM user_roles WHERE user_name = 'Username' AND role_name IN 
 ('Guest') AND role_name IN ( 'NursingDistribution' ) )> 0 )]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="sql-exec-in-value-list">
-  <parser>
-   <query><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
+  <test name="sql-exec-in-value-list">
+    <parser>
+      <query><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
 FROM territories t
   INNER JOIN companies2welfareGroups c2wg ON c2wg.territoryID=t.ID
 WHERE 1 = 1
@@ -792,21 +802,21 @@ WHERE 1 = 1
 SELECT wt.welfareGroupCode FROM welfareTypes wt WHERE wt.customerType = '<parameter:customerType />'
 </sql>) 
 </if>]]></query>
-   <applyContext>
-    <parameter name="customerType" value="customerType" />
-   </applyContext>
-   <format dbms="mysql"><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
+      <applyContext>
+        <parameter name="customerType" value="customerType"/>
+      </applyContext>
+      <format dbms="mysql"><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
 FROM territories t
   INNER JOIN companies2welfareGroups c2wg ON c2wg.territoryID = t.ID
 WHERE 1 = 1 AND c2wg.welfareGroup IN ((
 SELECT DISTINCT wt.welfareGroupCode FROM welfareTypes wt WHERE wt.customerType = 'customerType' LIMIT 10000
 ))]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="sql-exec-limit-distinct-union">
-  <parser>
-   <query><![CDATA[SELECT DISTINCT gur.status
+  <test name="sql-exec-limit-distinct-union">
+    <parser>
+      <query><![CDATA[SELECT DISTINCT gur.status
 FROM governmentUtilityRequests gur
 WHERE gur.status IN (
       <sql exec="pre" distinct="yes" limit="10000" beautifier="com.beanexplorer.web.html.SqlInClauseQuotedBeautifier">
@@ -820,8 +830,8 @@ WHERE gur.status IN (
       </sql> 
  )
     AND gur.status IN ( '03', '04' )]]></query>
-   <applyContext />
-   <format dbms="mysql"><![CDATA[SELECT DISTINCT gur.status
+      <applyContext/>
+      <format dbms="mysql"><![CDATA[SELECT DISTINCT gur.status
 FROM governmentUtilityRequests gur
 WHERE gur.status IN (
       (
@@ -834,90 +844,91 @@ WHERE gur.status IN (
          SELECT DISTINCT 'some-dummy-value' FROM DUAL  
       ) tmp LIMIT 10000))
     AND gur.status IN ( '03', '04' )]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="dictionary">
-  <parser>
-   <query><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
+  <test name="dictionary">
+    <parser>
+      <query><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
 FROM  welfareTypes wt
 INNER JOIN <parameter:rulesTable default="applicationRules" /> ar ON ar.welfareType=wt.CODE
 INNER JOIN socialRules2attributes sr2a ON sr2a.ownerID = ar."___ownerID"
     AND sr2a.attributeID = <attributes:ID publicID="PRIVILEGECATEGORY" />]]></query>
-   <format dbms="postgres"><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
+      <format dbms="postgres"><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
 FROM  welfareTypes wt
 INNER JOIN <parameter:rulesTable default="applicationRules"/> ar ON ar.welfareType = wt.CODE
 INNER JOIN socialRules2attributes sr2a ON sr2a.ownerID = ar."___ownerID"
     AND sr2a.attributeID = <attributes:ID publicID="PRIVILEGECATEGORY"/>]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="macro">
-  <parser>
-   <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
+  <test name="macro">
+    <parser>
+      <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
   '<!--' || CAST((arg2) AS CHAR) || '-->' || '<a href="...">' || arg1 || '</a>'
 END
 
 SELECT t.ID AS "Code", CARD_LINK_COMMON(a, b), CARD_LINK_COMMON() FROM table t]]></query>
-   <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
+      <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
   '<!--' || TO_CHAR((arg2))|| '-->' || '<a href="...">' || arg1 || '</a>'
 END
 
 SELECT t.ID AS "Code", '<!--'|| TO_CHAR(( b))||'-->'||'<a href="...">'|| a ||'</a>', '<!--'|| TO_CHAR((value))||'-->'||'<a href="...">'|| default ||'</a>' FROM table t]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="timestamp">
-  <parser>
-   <query><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></query>
-   <format dbms="oracle"><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></format>
-  </parser>
- </test>
+  <test name="timestamp">
+    <parser>
+      <query><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></query>
+      <format dbms="oracle"><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></format>
+    </parser>
+  </test>
 
- <test name="macro-nested">
-  <parser>
-   <query><![CDATA[MACRO A(x) x || x END
+  <test name="macro-nested">
+    <parser>
+      <query><![CDATA[MACRO A(x) x || x END
    SELECT A(A(x)) FROM test]]></query>
-   <format dbms="oracle"><![CDATA[MACRO A (x) x || x END
+      <format dbms="oracle"><![CDATA[MACRO A (x) x || x END
    SELECT x || x || x || x FROM test]]></format>
-   <format dbms="sqlserver"><![CDATA[MACRO A (x) x + x END
+      <format dbms="sqlserver"><![CDATA[MACRO A (x) x + x END
    SELECT x + x + x + x FROM test]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="macro-parameter-tag">
-  <parser>
-   <query><![CDATA[MACRO A(x)
+  <test name="macro-parameter-tag">
+    <parser>
+      <query><![CDATA[MACRO A(x)
    x || <parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>
    END
    
    SELECT
    * FROM table t WHERE t.field < A(x)]]></query>
-   <applyContext>
-    <parameter name="aaa" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[MACRO A (x)
+      <applyContext>
+        <parameter name="aaa"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[MACRO A (x)
    x || REPLACEpost
    END
    
    SELECT
    * FROM table t WHERE t.field < x || REPLACEpost]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="username-in-string">
-  <parser>
-   <query><![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = '@@username@@']]></query>
-   <applyContext>
-    <userName name="Guest" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = ''Guest'']]></format>
-  </parser>
- </test>
+  <test name="username-in-string">
+    <parser>
+      <query><![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = '@@username@@']]></query>
+      <applyContext>
+        <userName name="Guest"/>
+      </applyContext>
+      <format dbms="oracle">
+        <![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = ''Guest'']]></format>
+    </parser>
+  </test>
 
- <test name="var-in-field">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="var-in-field">
+    <parser>
+      <query><![CDATA[SELECT
     p.ID
 FROM persons p
 INNER JOIN familyMembers fm ON fm.personID = p.ID
@@ -925,7 +936,7 @@ INNER JOIN familyRelations frf ON frf.toID = fm.ID AND frf.relationType = <famil
 INNER JOIN familyMembers pfmf ON pfmf.ID = frf.fromID
 INNER JOIN persons po ON po.ID = pfmf.personID
 WHERE po.<var:field/> = <var:fieldValue/>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
     p.ID
 FROM persons p
 INNER JOIN familyMembers fm ON fm.personID = p.ID
@@ -933,12 +944,12 @@ INNER JOIN familyRelations frf ON frf.toID = fm.ID AND frf.relationType = <famil
 INNER JOIN familyMembers pfmf ON pfmf.ID = frf.fromID
 INNER JOIN persons po ON po.ID = pfmf.personID
 WHERE po.<var:field /> = <var:fieldValue />]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="huge_opeka">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="huge_opeka">
+    <parser>
+      <query><![CDATA[SELECT
     guard."___ownerID" AS "___guardID",
     CASE WHEN guard.ID IS NOT NULL THEN ( 
   guard.lastName || ' ' || guard.firstName || ' ' || 
@@ -995,7 +1006,7 @@ HAVING 1 = 1
 </if>
 ORDER BY wr.activeFrom DESC
 /* <parameter:status /> <parameter:month /> */]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
     guard."___ownerID" AS "___guardID",
     CASE WHEN guard.ID IS NOT NULL THEN ( 
   guard.lastName || ' ' || guard.firstName || ' ' || 
@@ -1052,12 +1063,12 @@ HAVING 1 = 1
 </if>
 ORDER BY wr.activeFrom DESC
 /* <parameter:status /> <parameter:month /> */]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="huge_demographic">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="huge_demographic">
+    <parser>
+      <query><![CDATA[SELECT
    COUNT(DISTINCT p.ID) AS "personsCount",
    (
   (SELECT COALESCE( SUM(x."payAmount"),0 ) FROM ( SELECT
@@ -1354,7 +1365,7 @@ GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID
    calcDate:   '<parameter:calcDate />'
    personIDs:  '<parameter:personIDs />'
    _tcloneid_: '<parameter:_tcloneid_ />' */]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
    COUNT(DISTINCT p.ID) AS "personsCount",
    (
   (SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
@@ -1651,12 +1662,12 @@ GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID
    calcDate:   '<parameter:calcDate />'
    personIDs:  '<parameter:personIDs />'
    _tcloneid_: '<parameter:_tcloneid_ />' */]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="in-parameters-parens">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="in-parameters-parens">
+    <parser>
+      <query><![CDATA[SELECT
     ea.address, COALESCE( ( COALESCE( p.lastName,''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ),'<i>{{{Prefer not to say}}}</i>'        ) 
 FROM persons p, emailAddresses ea
 WHERE p.userName IN
@@ -1665,7 +1676,7 @@ WHERE p.userName IN
         SELECT assignee FROM problemAssignments WHERE problemID IN ( <parameter:ID multiple="true" /> )
       )
      AND ea.ownerID = p."___ownerID"]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
     ea.address, COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) 
 FROM persons p, emailAddresses ea
 WHERE p.userName IN
@@ -1674,11 +1685,11 @@ WHERE p.userName IN
         SELECT assignee FROM problemAssignments WHERE problemID IN ( <parameter:ID multiple="true"/> )
       )
      AND ea.ownerID = p."___ownerID"]]></format>
-     
-   <applyContext>
-    <parameter name="ID" value="12" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT
+
+      <applyContext>
+        <parameter name="ID" value="12"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT
     ea.address, COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) 
 FROM persons p, emailAddresses ea
 WHERE p.userName IN
@@ -1687,12 +1698,12 @@ WHERE p.userName IN
         SELECT assignee FROM problemAssignments WHERE problemID IN ( 12)
       )
      AND ea.ownerID = p."___ownerID"]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="var-in-table">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="var-in-table">
+    <parser>
+      <query><![CDATA[SELECT
     cv.ID AS "ID;<hidden/>",
     cv.classifierCODE, 
     cv.value AS "value", 
@@ -1713,7 +1724,7 @@ WHERE p.userName IN
 FROM classifierValues<parameter:_tcloneid_ default=""/> cv
    INNER JOIN classifiers cl ON cl.CODE = cv.classifierCODE
       LEFT JOIN entities e ON e.name = cl.dictionaryName]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
     cv.ID AS "ID;<hidden/>",
     cv.classifierCODE, 
     cv.value AS "value", 
@@ -1734,23 +1745,23 @@ FROM classifierValues<parameter:_tcloneid_ default=""/> cv
 FROM classifierValues<parameter:_tcloneid_ default=""/> cv
    INNER JOIN classifiers cl ON cl.CODE = cv.classifierCODE
       LEFT JOIN entities e ON e.name = cl.dictionaryName]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="macro-without-query">
-  <parser>
-   <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
+  <test name="macro-without-query">
+    <parser>
+      <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
   '<!--' || CAST((arg2) AS CHAR) || '-->' || '<a href="...">' || arg1 || '</a>'
 END]]></query>
-   <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
+      <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
   '<!--' || TO_CHAR((arg2))|| '-->' || '<a href="...">' || arg1 || '</a>'
 END]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="if-concat">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="if-concat">
+    <parser>
+      <query><![CDATA[SELECT
 '<center><b>{{{' || COALESCE(q.section,q.entity) || '}}}</center></b>' AS "ENTITY" , '<grouping />' AS ";ENTITY",
 CASE
   WHEN t.table_name IS NOT NULL OR q.table_name IS NULL THEN '<a href="' || q.redirectURL || COALESCE( q.extraUrl, '' ) <if parameter="regionCode">|| '&regionCode=<parameter:regionCode/>'</if> || '">' || COALESCE(lm.message,'{{{' || q.name || '}}}') || '</a>'
@@ -1765,7 +1776,7 @@ LEFT JOIN localizedMessages lm ON lm.entity = q.entity AND lm.topic = 'viewName'
 WHERE 1 = 1
 
 ORDER BY q.section, q.entity, q.name]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
 '<center><b>{{{' || COALESCE(q.section, q.entity) || '}}}</center></b>' AS "ENTITY" , '<grouping />' AS ";ENTITY",
 CASE
   WHEN t.table_name IS NOT NULL OR q.table_name IS NULL THEN '<a href="' || q.redirectURL || COALESCE( q.extraUrl, '' ) <if parameter="regionCode">||'&regionCode=<parameter:regionCode />'</if> || '">' || COALESCE(lm.message, '{{{' || q.name || '}}}') || '</a>'
@@ -1780,30 +1791,33 @@ LEFT JOIN localizedMessages lm ON lm.entity = q.entity AND lm.topic = 'viewName'
 WHERE 1 = 1
 
 ORDER BY q.section, q.entity, q.name]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="if-in-string">
-  <parser>
-   <query><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter='_cat_'>&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>']]></query>
-   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter="_cat_">&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>' FROM DUAL]]></format>
-   <applyContext>
-    <parameter name="_cat_" value="val" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&&_cat_='val'">{{{Edit}}}</a>' FROM DUAL]]></format>
-  </parser>
- </test>
+  <test name="if-in-string">
+    <parser>
+      <query>
+        <![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter='_cat_'>&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>']]></query>
+      <format dbms="oracle">
+        <![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter="_cat_">&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>' FROM DUAL]]></format>
+      <applyContext>
+        <parameter name="_cat_" value="val"/>
+      </applyContext>
+      <format dbms="oracle">
+        <![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&&_cat_='val'">{{{Edit}}}</a>' FROM DUAL]]></format>
+    </parser>
+  </test>
 
- <test name="tag-end-in-literal">
-  <parser>
-   <query><![CDATA[SELECT '/>']]></query>
-   <format dbms="postgres"><![CDATA[SELECT '/>']]></format>
-  </parser>
- </test>
+  <test name="tag-end-in-literal">
+    <parser>
+      <query><![CDATA[SELECT '/>']]></query>
+      <format dbms="postgres"><![CDATA[SELECT '/>']]></format>
+    </parser>
+  </test>
 
- <test name="in-list-several-dictionaries">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="in-list-several-dictionaries">
+    <parser>
+      <query><![CDATA[SELECT
    p.ID AS "personID",
  COALESCE( ( COALESCE( p.lastName,''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ),'<i>{{{Prefer not to say}}}</i>'        ) AS "Name"
 FROM persons p
@@ -1829,7 +1843,7 @@ ORDER BY CASE WHEN
         )
     )
    THEN 1 ELSE 2 END]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
    p.ID AS "personID",
  COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) AS "Name"
 FROM persons p
@@ -1855,61 +1869,61 @@ ORDER BY CASE WHEN
         )
     )
    THEN 1 ELSE 2 END]]></format>
-  </parser>
- </test>
- 
- <test name="dbms_transform">
-  <parser>
-   <query><![CDATA[DBMS_TRANSFORM LEVENSHTEIN(arg1, arg2)
+    </parser>
+  </test>
+
+  <test name="dbms_transform">
+    <parser>
+      <query><![CDATA[DBMS_TRANSFORM LEVENSHTEIN(arg1, arg2)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
          WHEN 'mysql' THEN a * a
     END
 
 SELECT LEVENSHTEIN(a, b) FROM table t]]></query>
-   <format dbms="oracle"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
+      <format dbms="oracle"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
          WHEN 'mysql' THEN a * a
     END
 
 SELECT EDIT_DISTANCE(a, b) FROM table t]]></format>
-   <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
+      <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
          WHEN 'mysql' THEN a * a
     END
 
 SELECT a * a FROM table t]]></format>
-  </parser>
- </test>
- 
- <test name="dbms_transform2">
-  <parser>
-   <query><![CDATA[DBMS_TRANSFORM LLPAD(str, size, fill)
+    </parser>
+  </test>
+
+  <test name="dbms_transform2">
+    <parser>
+      <query><![CDATA[DBMS_TRANSFORM LLPAD(str, size, fill)
     CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
          WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
     END
 
 SELECT LLPAD('lpad', 8, '0') FROM table t]]></query>
-   <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
+      <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
     CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
          WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
     END
 
 SELECT RRIGHT(REPLICATE( '0', 8)+'lpad', rsize) FROM table t]]></format>
-   <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
+      <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
     CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
          WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
     END
 
 SELECT LLPAD('lpad', 8, '0') FROM table t]]></format>
-  </parser>
- </test>
- 
- <test name="dbms_transform3">
-  <parser>
-   <query><![CDATA[DBMS_TRANSFORM A(x)
+    </parser>
+  </test>
+
+  <test name="dbms_transform3">
+    <parser>
+      <query><![CDATA[DBMS_TRANSFORM A(x)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'sqlserver' THEN x + x
     END
@@ -1920,7 +1934,7 @@ SELECT LLPAD('lpad', 8, '0') FROM table t]]></format>
     END
 
 SELECT A(b), C(b) FROM table t]]></query>
-   <format dbms="postgres"><![CDATA[DBMS_TRANSFORM A (x)
+      <format dbms="postgres"><![CDATA[DBMS_TRANSFORM A (x)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'sqlserver' THEN x + x
     END
@@ -1931,7 +1945,7 @@ SELECT A(b), C(b) FROM table t]]></query>
     END
 
 SELECT A(b), C(b) FROM table t]]></format>
-   <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM A (x)
+      <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM A (x)
     CASE WHEN 'postgres' THEN AS IS
          WHEN 'sqlserver' THEN x + x
     END
@@ -1942,37 +1956,39 @@ SELECT A(b), C(b) FROM table t]]></format>
     END
 
 SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
-  </parser>
- </test>
- 
- <test name="var-in-beSql">
-  <parser>
-   <query><![CDATA[SELECT CASE
+    </parser>
+  </test>
+
+  <test name="var-in-beSql">
+    <parser>
+      <query><![CDATA[SELECT CASE
   WHEN d0.type='calc-sql' AND d0.calcExpression LIKE '%</sql>%' THEN NULL
-  WHEN d0.type='calc-sql' THEN '<sql limit="1"><var:___calc safestr="no"/></sql>' END]]></query>   
-   <format dbms="postgres"><![CDATA[SELECT CASE
+  WHEN d0.type='calc-sql' THEN '<sql limit="1"><var:___calc safestr="no"/></sql>' END]]></query>
+      <format dbms="postgres"><![CDATA[SELECT CASE
   WHEN d0.type ='calc-sql' AND d0.calcExpression LIKE '%</sql>%' THEN NULL
   WHEN d0.type ='calc-sql' THEN '<sql limit="1"><var:___calc safestr="no"/></sql>' END]]></format>
-  </parser>
- </test>
- 
- <test name="cyrillic-beIdentifier">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></format>
-  </parser>
- </test>
- 
- <test name="if-groupBy">
-  <parser>
-   <query><![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></format>
-  </parser>
- </test>
- 
- <test name="empty-else">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+    </parser>
+  </test>
+
+  <test name="cyrillic-beIdentifier">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></query>
+      <format dbms="postgres">
+        <![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></format>
+    </parser>
+  </test>
+
+  <test name="if-groupBy">
+    <parser>
+      <query><![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></query>
+      <format dbms="postgres">
+        <![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></format>
+    </parser>
+  </test>
+
+  <test name="empty-else">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID||lastName||firstName||middleName">
         <then>
             AND 2=2
@@ -1980,18 +1996,18 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE (1 = 1
+      <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE (1 = 1
       <if expr="personID||lastName||firstName||middleName">
         <then> AND 2 = 2
         </then>
         <else></else>
     </if> AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="if-in-else">
-  <parser>
-   <query><![CDATA[SELECT * from t where 1=1
+  <test name="if-in-else">
+    <parser>
+      <query><![CDATA[SELECT * from t where 1=1
         <if expr="printParentBanks==yes">
         <then>
             AND pd.bankID IN
@@ -2012,47 +2028,48 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
             </if>
         </else>
     </if>]]></query>
-    <applyContext>
-    <parameter name="bankID" value="id" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE 1 = 1 AND pbo.ID = 'id']]></format>
-  </parser>
- </test>
+      <applyContext>
+        <parameter name="bankID" value="id"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE 1 = 1 AND pbo.ID = 'id']]></format>
+    </parser>
+  </test>
 
- <test name="unless-from">
-  <parser>
-   <query><![CDATA[select * <unless parameter="_tcloneid_">
+  <test name="unless-from">
+    <parser>
+      <query><![CDATA[select * <unless parameter="_tcloneid_">
     FROM persons p
 </unless>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * <unless parameter="_tcloneid_">
+      <format dbms="postgres"><![CDATA[SELECT * <unless parameter="_tcloneid_">
     FROM persons p
 </unless>]]></format>
-  </parser>
- </test> 
- 
- <test name="if-orderBy">
-  <parser>
-   <query><![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_">b</if>, c, d ASC]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_"> b</if>, c, d ASC]]></format>
-   <applyContext/>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table ORDER BY a DESC, c, d ASC]]></format>
-  </parser>
- </test> 
-   
- <test name="unless-from-2">
-  <parser>
-   <query><![CDATA[select a <unless parameter="_tcloneid_">
+    </parser>
+  </test>
+
+  <test name="if-orderBy">
+    <parser>
+      <query><![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_">b</if>, c, d ASC]]></query>
+      <format dbms="postgres">
+        <![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_"> b</if>, c, d ASC]]></format>
+      <applyContext/>
+      <format dbms="postgres"><![CDATA[SELECT * FROM table ORDER BY a DESC, c, d ASC]]></format>
+    </parser>
+  </test>
+
+  <test name="unless-from-2">
+    <parser>
+      <query><![CDATA[select a <unless parameter="_tcloneid_">
     FROM persons p
 </unless>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT a <unless parameter="_tcloneid_">
+      <format dbms="postgres"><![CDATA[SELECT a <unless parameter="_tcloneid_">
     FROM persons p
 </unless>]]></format>
-  </parser>
- </test> 
- 
- <test name="common-tag-parameter-list">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+
+  <test name="common-tag-parameter-list">
+    <parser>
+      <query><![CDATA[SELECT
         fre.ID AS "#",
         fre.fedRegExchangeID AS "packageID",
         <if parameter="<parameter:foo default="50"/>">
@@ -2067,7 +2084,7 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <if session="user-companyID" value='<var:fieldValue/>'>
             c.shortName AS "companyName",
         </if>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
         fre.ID AS "#",
         fre.fedRegExchangeID AS "packageID",
         <if parameter="<parameter:foo default="50"/>">
@@ -2082,12 +2099,12 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <if session="user-companyID" value="<var:fieldValue />">
             c.shortName AS "companyName",
         </if>]]></format>
-  </parser>
- </test>  
+    </parser>
+  </test>
 
- <test name="apply-if-parameters-multiply">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="apply-if-parameters-multiply">
+    <parser>
+      <query><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1
@@ -2095,27 +2112,27 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         AND status IN <parameter:status multiple="true" safestr="yes"/>
      </if>
 ]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1
      <if parameter="status">
         AND status IN <parameter:status multiple="true" safestr="yes"/>
      </if>]]></format>
-   <applyContext>
-    <parameter name="status" value="pending" />
-    <parameter name="status" value="scheduled" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT
+      <applyContext>
+        <parameter name="status" value="pending"/>
+        <parameter name="status" value="scheduled"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1 AND status IN ('pending', 'scheduled')]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="apply-if-parameters-multiply-no-param">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="apply-if-parameters-multiply-no-param">
+    <parser>
+      <query><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1
@@ -2123,74 +2140,74 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         AND status IN <parameter:status multiple="true" />
      </if>
 ]]></query>
-   <format dbms="postgres"><![CDATA[SELECT
+      <format dbms="postgres"><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1
      <if parameter="status">
         AND status IN <parameter:status multiple="true"/>
      </if>]]></format>
-   <applyContext>
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT
+      <applyContext>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT
      field AS "FIELD"
      FROM table t
      WHERE 1 = 1]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="if-GROUP-BY">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+  <test name="if-GROUP-BY">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
         <if expr="viewType==mini"><then>
           GROUP BY table.meterID
         </then></if>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
         <if expr="viewType==mini"><then>
           GROUP BY table.meterID
         </then></if>]]></format>
-  </parser>
- </test>
- <test name="if-ORDER-BY">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="if-ORDER-BY">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
         <if expr="viewType==mini"><then>
           ORDER BY meterID
         </then></if>]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
         <if expr="viewType==mini"><then>
           ORDER BY meterID
         </then></if>]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="ORDER-BY-parameter-dateOrder">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+  <test name="ORDER-BY-parameter-dateOrder">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
          ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />]]></query>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
          ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />
          ]]></format>
-  </parser>
- </test>
- <test name="ORDER-BY-parameter-dateOrder-apply">
-  <parser>
-   <query><![CDATA[SELECT * FROM table
+    </parser>
+  </test>
+  <test name="ORDER-BY-parameter-dateOrder-apply">
+    <parser>
+      <query><![CDATA[SELECT * FROM table
           ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />
          ]]></query>
-   <applyContext>
-    <parameter name="dateOrder" value="desc" />
-   </applyContext>
-   <format dbms="postgres"><![CDATA[SELECT * FROM table
+      <applyContext>
+        <parameter name="dateOrder" value="desc"/>
+      </applyContext>
+      <format dbms="postgres"><![CDATA[SELECT * FROM table
           ORDER BY m.Name, mc.billingMonth desc
          ]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
 
- <test name="expr_AND_existPattern_false">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_AND_existPattern_false">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID&&lastName">
         <then>
             AND 2=2
@@ -2198,16 +2215,16 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
-  </parser>
- </test>
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+    </parser>
+  </test>
 
- <test name="expr_AND_existPattern_true">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_AND_existPattern_true">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID&&lastName">
         <then>
             AND 2=2
@@ -2215,18 +2232,18 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
    AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="expr_AND_equalsMatcher_false">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_AND_equalsMatcher_false">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID==test&&lastName">
         <then>
             AND 2=2
@@ -2234,16 +2251,16 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
-  </parser>
- </test>
- <test name="expr_AND_equalsMatcher_true">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+    </parser>
+  </test>
+  <test name="expr_AND_equalsMatcher_true">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID==test&&lastName">
         <then>
             AND 2=2
@@ -2251,18 +2268,18 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="test" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="personID" value="test"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
 AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="expr_AND_notEqualsMatcher_false">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_AND_notEqualsMatcher_false">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID!=test&&lastName">
         <then>
             AND 2=2
@@ -2270,16 +2287,16 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="test" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
-  </parser>
- </test>
- <test name="expr_AND_notEqualsMatcher_true">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <applyContext>
+        <parameter name="personID" value="test"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+    </parser>
+  </test>
+  <test name="expr_AND_notEqualsMatcher_true">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID!=test&&lastName">
         <then>
             AND 2=2
@@ -2287,18 +2304,18 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
 AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="expr_AND_notExistsMatcher_false">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_AND_notExistsMatcher_false">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID&&!lastName">
         <then>
             AND 2=2
@@ -2306,16 +2323,16 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
-  </parser>
- </test>
- <test name="expr_AND_notExistsMatcher_true">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+    </parser>
+  </test>
+  <test name="expr_AND_notExistsMatcher_true">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID&&!lastName">
         <then>
             AND 2=2
@@ -2323,17 +2340,17 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
 AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="expr_OR_notExistsMatcher_false">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+  <test name="expr_OR_notExistsMatcher_false">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="!personID||!lastName">
         <then>
             AND 2=2
@@ -2341,16 +2358,16 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="lastName" value="foo" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="lastName" value="foo"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
 AND 3 = 3)]]></format>
-  </parser>
- </test>
- <test name="expr_OR_notEqualsMatcher_true">
-  <parser>
-   <query><![CDATA[SELECT * FROM t WHERE (1=1
+    </parser>
+  </test>
+  <test name="expr_OR_notEqualsMatcher_true">
+    <parser>
+      <query><![CDATA[SELECT * FROM t WHERE (1=1
       <if expr="personID!=test||lastName">
         <then>
             AND 2=2
@@ -2358,12 +2375,12 @@ AND 3 = 3)]]></format>
         <else>
         </else>
     </if> AND 3=3)]]></query>
-   <applyContext>
-    <parameter name="personID" value="bar" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+      <applyContext>
+        <parameter name="personID" value="bar"/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
 AND 3 = 3)]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
 </testSuite>

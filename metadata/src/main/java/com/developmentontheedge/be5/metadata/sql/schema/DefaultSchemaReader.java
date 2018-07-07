@@ -17,11 +17,13 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
     public String getDefaultSchema(SqlExecutor sql) throws ExtendedSqlException
     {
         DbmsConnector connector = sql.getConnector();
-        try {
+        try
+        {
             Connection connection = connector.getConnection();
 
             return connection.getMetaData().getUserName();
-        } catch (SQLException ex) {
+        } catch (SQLException ex)
+        {
             throw new ExtendedSqlException(connector.getConnectString(), "getMetaData().getUserName()", ex);
         }
     }
@@ -33,14 +35,17 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
         Connection connection = connector.getConnection();
         ResultSet rs = null;
         Map<String, String> result = new HashMap<>();
-        try {
+        try
+        {
             rs = connection.getMetaData().getTables(null, defSchema, null, new String[]{"TABLE", "VIEW"});
-            while (rs.next()) {
+            while (rs.next())
+            {
                 String name = rs.getString(3 /*"TABLE_NAME"*/).toLowerCase();
                 String type = rs.getString(4 /*"TABLE_TYPE"*/);
                 result.put(name, type);
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;

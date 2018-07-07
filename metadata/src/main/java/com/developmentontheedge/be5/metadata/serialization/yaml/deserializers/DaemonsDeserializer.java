@@ -32,7 +32,8 @@ class DaemonsDeserializer extends FileDeserializer
     {
         final Map<String, Object> daemonsByName = getRootMap(serializedRoot, TAG_DAEMONS);
 
-        for (final String daemonName : daemonsByName.keySet()) {
+        for (final String daemonName : daemonsByName.keySet())
+        {
             final Object daemonContent = daemonsByName.get(daemonName);
             if (!(daemonContent instanceof Map))
                 continue;

@@ -21,7 +21,8 @@ public class LocalizationElement implements Comparable<LocalizationElement>
         {
             put("@AllQueries", (entityName, project) -> {
                 Entity entity = project.getEntity(entityName);
-                if (entity != null) {
+                if (entity != null)
+                {
                     return entity.getQueries().names().without(Query.SPECIAL_TABLE_DEFINITION).without(Query.SPECIAL_LOST_RECORDS)
                             .toSet();
                 }
@@ -87,7 +88,8 @@ public class LocalizationElement implements Comparable<LocalizationElement>
         if (!key.equals(o.key))
             return key.compareTo(o.key);
         List<String> oTopics = o.topics;
-        for (int i = 0; i < topics.size(); i++) {
+        for (int i = 0; i < topics.size(); i++)
+        {
             if (oTopics.size() <= i)
                 return 1;
             int compare = topics.get(i).compareTo(oTopics.get(i));

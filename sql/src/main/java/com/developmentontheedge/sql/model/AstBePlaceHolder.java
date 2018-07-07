@@ -8,23 +8,23 @@ public class AstBePlaceHolder extends SimpleNode
 {
     public AstBePlaceHolder(int id)
     {
-        super( id );
-        setPlaceHolder( "" );
+        super(id);
+        setPlaceHolder("");
     }
-    
+
     String placeHolder;
-    
+
     public void setRawPlaceHolder(String ph)
     {
-        if(!ph.startsWith( "@@" ) && !ph.endsWith( "@@" ))
-            throw new IllegalArgumentException( "Invalid placeholder: "+ph );
-        setPlaceHolder(ph.substring(2, ph.length()-2));
+        if (!ph.startsWith("@@") && !ph.endsWith("@@"))
+            throw new IllegalArgumentException("Invalid placeholder: " + ph);
+        setPlaceHolder(ph.substring(2, ph.length() - 2));
     }
 
     public void setPlaceHolder(String placeHolder)
     {
-        this.placeHolder = Objects.requireNonNull( placeHolder );
-        this.nodeContent = "@@"+placeHolder+"@@";
+        this.placeHolder = Objects.requireNonNull(placeHolder);
+        this.nodeContent = "@@" + placeHolder + "@@";
     }
 
     public String getPlaceHolder()

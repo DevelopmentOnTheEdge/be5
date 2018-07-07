@@ -58,7 +58,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
         String[] fields1 = getPathComponents();
         String[] fields2 = ancestor.getPathComponents();
         if (fields2.length > fields1.length) return false;
-        for (int i = 0; i < fields2.length; i++) {
+        for (int i = 0; i < fields2.length; i++)
+        {
             if (!fields1[i].equals(fields2[i])) return false;
         }
         return true;
@@ -86,7 +87,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
         String[] fields1 = getPathComponents();
         String[] fields2 = sibling.getPathComponents();
         if (fields1.length != fields2.length) return false;
-        for (int i = 0; i < fields1.length - 1; i++) {
+        for (int i = 0; i < fields1.length - 1; i++)
+        {
             if (!fields1[i].equals(fields2[i])) return false;
         }
         return true;
@@ -103,7 +105,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
         String[] myComponents = getPathComponents();
         int depth = ancestor.getDepth();
         StringBuilder result = new StringBuilder();
-        for (int i = depth; i < myComponents.length; i++) {
+        for (int i = depth; i < myComponents.length; i++)
+        {
             if (result.length() > 0) result.append(PATH_SEPARATOR);
             result.append(escapeName(myComponents[i]));
         }
@@ -117,7 +120,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
         String[] myComponents = getPathComponents();
         String[] otherComponents = other.getPathComponents();
         DataElementPath result = EMPTY_PATH;
-        for (int i = 0; i < Math.min(myComponents.length, otherComponents.length); i++) {
+        for (int i = 0; i < Math.min(myComponents.length, otherComponents.length); i++)
+        {
             if (!myComponents[i].equals(otherComponents[i]))
                 break;
             result = result.getChildPath(myComponents[i]);
@@ -138,10 +142,12 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
             return this;
         String[] elements = relativePath.split(PATH_SEPARATOR);
         DataElementPath path = this;
-        for (String element : elements) {
+        for (String element : elements)
+        {
             if (element.equals("."))
                 continue;
-            if (element.equals("..")) {
+            if (element.equals(".."))
+            {
                 path = path.getParentPath();
                 continue;
             }
@@ -159,10 +165,12 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     public DataElementPath getChildPath(String... names)
     {
         DataElementPath result = this;
-        for (String name : names) {
+        for (String name : names)
+        {
             if (name == null)
                 name = "";
-            if (result.path.isEmpty()) {
+            if (result.path.isEmpty())
+            {
                 if (name.isEmpty())
                     result = EMPTY_PATH;
                 result = new DataElementPath(escapeName(name), EMPTY_PATH);
@@ -190,7 +198,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     {
         if (equals(EMPTY_PATH)) return 0;
         int depth = 1;
-        for (int i = 0; i < path.length(); i++) {
+        for (int i = 0; i < path.length(); i++)
+        {
             if (path.charAt(i) == '/') depth++;
         }
         return depth;
@@ -216,7 +225,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     public DataElementPath getParentPath()
     {
         DataElementPath _parentPath = parentPath;
-        if (_parentPath == null) {
+        if (_parentPath == null)
+        {
             int pos = path.lastIndexOf(PATH_SEPARATOR);
             _parentPath = pos <= -1 ? EMPTY_PATH : new DataElementPath(path.substring(0, pos), null);
             parentPath = _parentPath;
@@ -263,9 +273,11 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
      */
     public String getName()
     {
-        if (name == null) {
+        if (name == null)
+        {
             int pos = path.lastIndexOf(PATH_SEPARATOR);
-            if (pos != -1) {
+            if (pos != -1)
+            {
                 name = unescapeName(path.substring(pos + 1));
             } else
                 name = unescapeName(path);
@@ -306,12 +318,14 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     {
         if (element == null)
             return null;
-        if (element instanceof BeModelCollection) {
+        if (element instanceof BeModelCollection)
+        {
             return ((BeModelCollection<?>) element).getCompletePath();
         }
         if (element.getName() == null)
             throw new InvalidParameterException("Cannot obtain element path: element has no name");
-        if (element.getOrigin() == null) {
+        if (element.getOrigin() == null)
+        {
             return create(escapeName(element.getName()));
         }
         return element.getOrigin().getCompletePath().getChildPath(element.getName());
@@ -355,10 +369,13 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     {
         char[] result = null;
         int j = 0;
-        for (int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < name.length(); i++)
+        {
             char curChar = name.charAt(i);
-            if (curChar == '\\' || curChar == '/') {
-                if (result == null) {
+            if (curChar == '\\' || curChar == '/')
+            {
+                if (result == null)
+                {
                     result = new char[name.length() * 2 - i];
                     for (j = 0; j < i; j++) result[j] = name.charAt(j);
                 }
@@ -379,15 +396,19 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     {
         char[] result = null;
         int j = 0;
-        for (int i = 0; i < escapedName.length(); i++) {
+        for (int i = 0; i < escapedName.length(); i++)
+        {
             char curChar = escapedName.charAt(i);
-            if (curChar == '\\') {
-                if (result == null) {
+            if (curChar == '\\')
+            {
+                if (result == null)
+                {
                     result = new char[escapedName.length() - 1];
                     for (j = 0; j < i; j++) result[j] = escapedName.charAt(j);
                 }
                 i++;
-                if (i < escapedName.length()) {
+                if (i < escapedName.length())
+                {
                     char nextChar = escapedName.charAt(i);
                     result[j++] = nextChar == 's' ? '/' : nextChar;
                 }

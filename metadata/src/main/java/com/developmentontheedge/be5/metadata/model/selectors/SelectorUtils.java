@@ -17,7 +17,8 @@ public class SelectorUtils
     public static String escapeIdentifier(String input)
     {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < input.length(); i++) {
+        for (int i = 0; i < input.length(); i++)
+        {
             char c = input.charAt(i);
             boolean alpha = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
             boolean digit = c >= '0' && c <= '9';
@@ -25,11 +26,14 @@ public class SelectorUtils
             boolean underscore = c == '_';
             boolean high = c >= 0xA0;
             if (alpha || underscore || high
-                    || (digit && i > 0 && (i > 1 || result.charAt(0) != '-') || (hyphen && (i != 1 || result.charAt(0) != '-')))) {
+                    || (digit && i > 0 && (i > 1 || result.charAt(0) != '-') || (hyphen && (i != 1 || result.charAt(0) != '-'))))
+            {
                 result.append(c);
-            } else if (digit) {
+            } else if (digit)
+            {
                 result.append("\\3").append(c).append(' ');
-            } else {
+            } else
+            {
                 result.append('\\').append(c);
             }
         }
@@ -40,7 +44,8 @@ public class SelectorUtils
     {
         StringBuilder result = new StringBuilder();
         result.append('"');
-        for (int i = 0; i < input.length(); i++) {
+        for (int i = 0; i < input.length(); i++)
+        {
             char c = input.charAt(i);
             if (c == '"' || c == '\\')
                 result.append('\\').append(c);
@@ -66,30 +71,36 @@ public class SelectorUtils
     {
         StringBuilder sb = new StringBuilder();
         int len = input.length();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++)
+        {
             char c = input.charAt(i);
-            if (c != '\\') {
+            if (c != '\\')
+            {
                 sb.append(c);
                 continue;
             }
             i++;
-            if (i == len) {
+            if (i == len)
+            {
                 sb.append(c);
                 break;
             }
             char c1 = input.charAt(i);
-            if (c1 == '\n' || c1 == '\f' || c1 == '\r') {
+            if (c1 == '\n' || c1 == '\f' || c1 == '\r')
+            {
                 if (identifier)
                     sb.append(c1);
                 continue;
             }
-            if ((c1 < '0' || c1 > '9') && (c1 < 'a' || c1 > 'f')) {
+            if ((c1 < '0' || c1 > '9') && (c1 < 'a' || c1 > 'f'))
+            {
                 sb.append(c1);
                 continue;
             }
             int numDigits = 1;
             int hexcode = c1 >= 'a' ? (c1 - 'a' + 10) : c1 - '0';
-            while (true) {
+            while (true)
+            {
                 i++;
                 if (i == len)
                     break;
@@ -115,7 +126,8 @@ public class SelectorUtils
      */
     public static boolean isIdentifier(String input)
     {
-        for (int i = 0; i < input.length(); i++) {
+        for (int i = 0; i < input.length(); i++)
+        {
             char c = input.charAt(i);
             boolean alpha = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
             boolean digit = c >= '0' && c <= '9';
@@ -137,7 +149,8 @@ public class SelectorUtils
     @SuppressWarnings("unchecked")
     private static void select(List<BeModelElement> result, BeModelCollection<? extends BeModelElement> collection, SelectorRule selector)
     {
-        for (BeModelElement element : collection) {
+        for (BeModelElement element : collection)
+        {
             if (selector.matches(element))
                 result.add(element);
             if (element instanceof BeModelCollection)

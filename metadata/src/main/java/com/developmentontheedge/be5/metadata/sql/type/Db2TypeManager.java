@@ -16,9 +16,11 @@ public class Db2TypeManager extends DefaultTypeManager
     @Override
     public void correctType(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case "INTEGER":
-                if (type.getSize() == 4) {
+                if (type.getSize() == 4)
+                {
                     type.setTypeName(SqlColumnType.TYPE_INT);
                 }
                 break;
@@ -31,7 +33,8 @@ public class Db2TypeManager extends DefaultTypeManager
                 type.setSize(22);
                 break;
             case "BLOB":
-                if (type.getSize() < 4_000_000) {
+                if (type.getSize() < 4_000_000)
+                {
                     type.setTypeName(SqlColumnType.TYPE_MEDIUMBLOB);
                 }
                 break;
@@ -54,7 +57,8 @@ public class Db2TypeManager extends DefaultTypeManager
     @Override
     public String getTypeClause(SqlColumnType type)
     {
-        switch (type.getTypeName()) {
+        switch (type.getTypeName())
+        {
             case SqlColumnType.TYPE_DATETIME:
                 return "TIMESTAMP";
             case SqlColumnType.TYPE_UINT:
@@ -72,7 +76,8 @@ public class Db2TypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
-                for (String enumValue : type.getEnumValues()) {
+                for (String enumValue : type.getEnumValues())
+                {
                     maxLen = Math.max(maxLen, enumValue.length());
                 }
                 return "VARCHAR(" + (maxLen) + ")";
@@ -147,9 +152,11 @@ public class Db2TypeManager extends DefaultTypeManager
     public String getAutoIncrementClause(ColumnDef column)
     {
         Long startId = null;
-        try {
+        try
+        {
             startId = Long.parseLong(column.getTable().getStartId());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             // Ignore
         }
         if (startId != null)

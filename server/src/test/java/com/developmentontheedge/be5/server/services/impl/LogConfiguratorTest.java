@@ -9,7 +9,8 @@ import javax.inject.Inject;
 
 public class LogConfiguratorTest extends ServerBe5ProjectTest
 {
-    @Inject private LogConfigurator logConfigurator;
+    @Inject
+    private LogConfigurator logConfigurator;
 
     @Test//TODO
     public void configure()

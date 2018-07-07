@@ -17,9 +17,12 @@ import static org.junit.Assert.assertEquals;
 
 public class TableModelTest extends QueryBe5ProjectDBTest
 {
-    @Inject private DbService db;
-    @Inject private ProjectProvider projectProvider;
-    @Inject private TableModelService tableModelService;
+    @Inject
+    private DbService db;
+    @Inject
+    private ProjectProvider projectProvider;
+    @Inject
+    private TableModelService tableModelService;
 
     @Before
     public void testTableQueryDBTestBefore()
@@ -27,11 +30,11 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("delete from testtable");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)","tableModelTest", "1");
+        db.insert("insert into testtable (name, value) VALUES (?, ?)", "tableModelTest", "1");
 
         db.update("delete from testSubQuery");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)","tableModelTest", "user1");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)","tableModelTest", "user2");
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "tableModelTest", "user1");
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "tableModelTest", "user2");
     }
 
     @Test

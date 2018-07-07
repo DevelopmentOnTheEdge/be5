@@ -32,7 +32,7 @@ public class SqlExecutorTest
     public void setUp() throws Exception
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        psOut = new PrintStream( out, true, "UTF-8" );
+        psOut = new PrintStream(out, true, "UTF-8");
 
         connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
                 databaseRule.getConnection());
@@ -48,7 +48,7 @@ public class SqlExecutorTest
     @Test
     public void executeMultiple() throws ExtendedSqlException
     {
-        sqlExecutor.startSection( "Sync schema" );
+        sqlExecutor.startSection("Sync schema");
 
         String sql = "INSERT INTO persons (name, password) VALUES ('test','test');" +
                 "INSERT INTO persons (name, password) VALUES ('test2','test');" +
@@ -62,7 +62,7 @@ public class SqlExecutorTest
     @Test
     public void execPrepared() throws ExtendedSqlException, IOException
     {
-        SqlExecutor sqlTestExecutor = new SqlExecutor(connector, psOut, SqlExecutorTest.class.getResource( "test.properties" ));
+        SqlExecutor sqlTestExecutor = new SqlExecutor(connector, psOut, SqlExecutorTest.class.getResource("test.properties"));
         String s = sqlTestExecutor.execPrepared("sql.insert.person", new Object[]{"test", "test"}, true);
 
         assertEquals(1, sqlExecutor.count("persons"));
@@ -71,8 +71,8 @@ public class SqlExecutorTest
     @Test
     public void exec() throws ExtendedSqlException, IOException, SQLException
     {
-        SqlExecutor sqlTestExecutor = new SqlExecutor(connector, psOut, SqlExecutorTest.class.getResource( "test.properties" ));
-        sqlTestExecutor.startSection( "exec test" );
+        SqlExecutor sqlTestExecutor = new SqlExecutor(connector, psOut, SqlExecutorTest.class.getResource("test.properties"));
+        sqlTestExecutor.startSection("exec test");
         sqlTestExecutor.comment("test comment");
         sqlTestExecutor.exec("sql.insert.person", "'test'", "'test'");
 

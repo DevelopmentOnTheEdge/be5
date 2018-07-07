@@ -6,14 +6,15 @@ public class AstUpdateSetList extends SimpleNode
 {
     public AstUpdateSetList(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTUPDATESETLIST );
-        for( SimpleNode child : childs )
+        this(SqlParserTreeConstants.JJTUPDATESETLIST);
+        for (SimpleNode child : childs)
         {
             addChild(child);
         }
     }
 
-    public AstUpdateSetList(int id) {
+    public AstUpdateSetList(int id)
+    {
         super(id);
         this.nodePrefix = "SET";
         this.childrenDelimiter = ",";

@@ -35,9 +35,11 @@ public class DataElementUtils
 
         final BeModelCollection<BeModelElement> collection = element.getOrigin();
 
-        try {
+        try
+        {
             collection.put(element);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -57,9 +59,11 @@ public class DataElementUtils
 
         final BeModelCollection<BeModelElement> collection = element.getOrigin();
 
-        try {
+        try
+        {
             collection.remove(element.getName());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -79,9 +83,11 @@ public class DataElementUtils
     {
         if (collection == null)
             return;
-        try {
+        try
+        {
             collection.put(element);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -90,18 +96,22 @@ public class DataElementUtils
     {
         if (collection == null)
             return;
-        try {
+        try
+        {
             collection.remove(element);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
     public static <T extends BeModelElement> void putQuiet(final BeModelCollection<T> collection, final T element)
     {
-        try {
+        try
+        {
             collection.put(element);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -165,7 +175,8 @@ public class DataElementUtils
             return c1.getSize() == 0;
         if (c1.getSize() != c2.getSize())
             return false;
-        for (BeModelElement e1 : c1) {
+        for (BeModelElement e1 : c1)
+        {
             BeModelElement e2 = c2.get(e1.getName());
             if (e2 == null)
                 return false;
@@ -209,7 +220,8 @@ public class DataElementUtils
      */
     public static void moveBackToItsModule(final BeModelElement modelElement)
     {
-        if (modelElement instanceof BeElementWithOriginModule) {
+        if (modelElement instanceof BeElementWithOriginModule)
+        {
             BeElementWithOriginModule r = (BeElementWithOriginModule) modelElement;
             r.setOriginModuleName(r.getModule().getName());
         }
@@ -222,7 +234,8 @@ public class DataElementUtils
      */
     public static void moveToApplication(final BeModelElement modelElement)
     {
-        if (modelElement instanceof BeElementWithOriginModule) {
+        if (modelElement instanceof BeElementWithOriginModule)
+        {
             BeElementWithOriginModule r = (BeElementWithOriginModule) modelElement;
             r.setOriginModuleName(r.getProject().getProjectOrigin());
         }

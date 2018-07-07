@@ -38,7 +38,8 @@ public class ResultSetWrapper implements ResultSet
     }
 
     @Override
-    public boolean next() throws SQLException{
+    public boolean next() throws SQLException
+    {
         throw new UnsupportedOperationException("Method next() run automatically. Do not call this.");
     }
 

@@ -18,17 +18,15 @@ public class Jaxb
             JAXBContext jaxbContext = JAXBContext.newInstance(klass);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             return (T) jaxbUnmarshaller.unmarshal(new URL(url));
-        }
-        catch (MalformedURLException e)
+        } catch (MalformedURLException e)
         {
             throw new IllegalArgumentException();
-        }
-        catch (JAXBException e)
+        } catch (JAXBException e)
         {
             throw new RuntimeException();
         }
     }
-    
+
     public static <T> String toXml(Class<T> klass, T object)
     {
         StringWriter out = new StringWriter();
@@ -39,8 +37,7 @@ public class Jaxb
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(object, out);
-        }
-        catch (JAXBException e)
+        } catch (JAXBException e)
         {
             throw new RuntimeException(e);
         }

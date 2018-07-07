@@ -13,7 +13,8 @@ public class OperationTest
         Project prj = new Project("test");
         Entity e = new Entity("e", prj.getApplication(), EntityType.TABLE);
         DataElementUtils.save(e);
-        for (String type : Operation.getOperationTypes()) {
+        for (String type : Operation.getOperationTypes())
+        {
             String name = "op of type " + type;
             Operation operation = Operation.createOperation(name, type, e);
             operation.setCode("code");

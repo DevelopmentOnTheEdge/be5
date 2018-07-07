@@ -86,14 +86,18 @@ public class ColumnDef extends TableRef
         if (stack.contains(this))
             return SqlColumnType.unknown();
 
-        if (!Strings2.isNullOrEmpty(getTableTo())) {
+        if (!Strings2.isNullOrEmpty(getTableTo()))
+        {
             final Entity entity = getProject().getEntity(getTableTo());
-            if (entity != null && entity.findTableDefinition() != null) {
+            if (entity != null && entity.findTableDefinition() != null)
+            {
                 final TableDef targetTableDef = entity.findTableDefinition();
                 final String columnTo = getColumnsTo();
-                if (!Strings2.isNullOrEmpty(columnTo)) {
+                if (!Strings2.isNullOrEmpty(columnTo))
+                {
                     final ColumnDef targetColumn = targetTableDef.findColumn(columnTo);
-                    if (targetColumn != null) {
+                    if (targetColumn != null)
+                    {
                         stack.add(this);
                         return targetColumn.getType(stack);
                     }
@@ -192,23 +196,29 @@ public class ColumnDef extends TableRef
     {
         List<ProjectElementException> errors = new ArrayList<>();
 
-        if (getName().length() > Constants.MAX_ID_LENGTH) {
+        if (getName().length() > Constants.MAX_ID_LENGTH)
+        {
             errors.add(new ProjectElementException(getCompletePath(), "name", "Column name is too long: " + getName().length() + " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
         }
 
-        if (!hasReference() && getRawType() == null) {
+        if (!hasReference() && getRawType() == null)
+        {
             errors.add(new ProjectElementException(getCompletePath(), "type", "Column type should be specified."));
         }
 
-        if (!getType().isValid()) {
+        if (!getType().isValid())
+        {
             errors.add(new ProjectElementException(getCompletePath(), "type", "Type is invalid: " + getType()));
         }
-        if (isAutoIncrement() && !getType().doesSupportGeneratedKey()) {
+        if (isAutoIncrement() && !getType().doesSupportGeneratedKey())
+        {
             errors.add(new ProjectElementException(getCompletePath(), "autoIncrement",
                     "Autoincrement set for non-integral type " + getType()));
         }
-        for (String oldName : getOldNames()) {
-            if (getTable().getColumns().getCaseInsensitive(oldName) != null) {
+        for (String oldName : getOldNames())
+        {
+            if (getTable().getColumns().getCaseInsensitive(oldName) != null)
+            {
                 errors.add(new ProjectElementException(getCompletePath(), "oldNames", "List of old names contains existing column name '"
                         + oldName + "'."));
             }

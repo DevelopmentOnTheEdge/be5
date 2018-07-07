@@ -14,11 +14,9 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class LogoutTest extends CoreBe5ProjectDbMockTest
-{
+class LogoutTest extends CoreBe5ProjectDbMockTest {
     @Test
-    void logout()
-    {
+    void logout() {
         def request = mock(Request.class)
         //userInfoProvider.get().setRequest(request)
 

@@ -15,7 +15,8 @@ import static org.junit.Assert.assertNull;
 
 public class MenuHelperTest extends ServerBe5ProjectTest
 {
-    @Inject private MenuHelper menuHelper;
+    @Inject
+    private MenuHelper menuHelper;
 
     @Test
     public void testGenerateSimpleMenu()

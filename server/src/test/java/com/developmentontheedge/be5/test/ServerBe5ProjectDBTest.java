@@ -15,7 +15,8 @@ import static org.mockito.Mockito.when;
 
 public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
 {
-    static {
+    static
+    {
         when(CoreUtilsForTest.mock.getSystemSettingInSection(
                 "TestDaemon", "PERIOD", null)).thenReturn("50");
         when(CoreUtilsForTest.mock.getSystemSettingInSection(
@@ -27,7 +28,8 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
             new CoreModuleForTest()
     );
 
-    static {
+    static
+    {
         initDb(injector);
     }
 

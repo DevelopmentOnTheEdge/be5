@@ -15,12 +15,12 @@ public class MutableCategory
     {
         return new MutableCategory(rs.getInt("ID"), rs.getInt("parentID"), rs.getString("name"));
     }
-    
+
     public final int id;
     public final String name;
     public final Integer parentId;
     public final List<MutableCategory> children;
-    
+
     private MutableCategory(int id, Integer parentId, String name, List<MutableCategory> children)
     {
         this.id = id;
@@ -28,12 +28,12 @@ public class MutableCategory
         this.parentId = parentId;
         this.children = children;
     }
-    
+
     private MutableCategory(int id, int parentId, String name)
     {
         this(id, parentId, name, new ArrayList<>());
     }
-    
+
     public MutableCategory withChildren(List<MutableCategory> children)
     {
         return new MutableCategory(id, parentId, name, children);
@@ -48,5 +48,5 @@ public class MutableCategory
     {
         return categories.stream().map(MutableCategory::toCategory).collect(Collectors.toList());
     }
-    
+
 }

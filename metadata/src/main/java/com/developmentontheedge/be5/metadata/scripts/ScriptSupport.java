@@ -67,13 +67,15 @@ public abstract class ScriptSupport<T>
 
     public void initConnector()
     {
-        if (connectionProfileName != null) {
+        if (connectionProfileName != null)
+        {
             be5Project.setConnectionProfileName(connectionProfileName);
         }
 
         BeConnectionProfile profile = be5Project.getConnectionProfile();
 
-        if (profile != null) {
+        if (profile != null)
+        {
             this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
 
             this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
@@ -81,7 +83,8 @@ public abstract class ScriptSupport<T>
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
             logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
-        } else {
+        } else
+        {
             throw new ScriptException(
                     "Please specify connection profile: create "
                             + be5Project.getProjectFileStructure().getSelectedProfileFile()
@@ -93,19 +96,23 @@ public abstract class ScriptSupport<T>
     {
         initLogging();
 
-        if (be5Project == null) {
+        if (be5Project == null)
+        {
             if (projectPath == null)
                 throw new ScriptException("Please specify projectPath attribute");
 
             logger.info("Reading project from '" + projectPath + "'");
 
-            try {
+            try
+            {
                 be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath());
-            } catch (ProjectLoadException | MalformedURLException e) {
+            } catch (ProjectLoadException | MalformedURLException e)
+            {
                 e.printStackTrace();
             }
 
-            if (debug) {
+            if (debug)
+            {
                 be5Project.setDebugStream(System.err);
             }
         }
@@ -129,21 +136,26 @@ public abstract class ScriptSupport<T>
         // JUL - String.format(format, date, source, logger, level, message, thrown);
         //                             1     2       3       4      5        6
 
-        try {
+        try
+        {
             LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             logger.error("Could not setup logger configuration: " + e.toString());
         }
     }
 
     public PrintStream createPrintStream(String name)
     {
-        if (sqlPath != null) {
+        if (sqlPath != null)
+        {
             sqlPath.mkdirs();
-            try {
+            try
+            {
                 sqlFile = new File(sqlPath, name);
                 return new PrintStream(sqlFile, "UTF-8");
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 throw new RuntimeException(e);
             }
         }
@@ -152,7 +164,8 @@ public abstract class ScriptSupport<T>
 
     public void logSqlFilePath()
     {
-        if (sqlPath != null) {
+        if (sqlPath != null)
+        {
             logger.info("Logs: " + sqlFile.getAbsolutePath());
         }
     }
@@ -164,11 +177,15 @@ public abstract class ScriptSupport<T>
 
     public void checkErrors(final LoadContext loadContext, String messageTemplate) throws ScriptException
     {
-        if (!loadContext.getWarnings().isEmpty()) {
-            for (ReadException exception : loadContext.getWarnings()) {
-                if (debug) {
+        if (!loadContext.getWarnings().isEmpty())
+        {
+            for (ReadException exception : loadContext.getWarnings())
+            {
+                if (debug)
+                {
                     exception.printStackTrace();
-                } else {
+                } else
+                {
                     logger.error("Error: " + exception.getMessage());
                 }
             }

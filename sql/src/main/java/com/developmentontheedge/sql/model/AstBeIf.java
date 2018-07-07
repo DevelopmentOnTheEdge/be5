@@ -6,13 +6,13 @@ public class AstBeIf extends AstBeCondition
 {
     public AstBeIf(int id)
     {
-        super( id );
+        super(id);
         this.tagName = "if";
     }
-    
+
     public boolean hasElse()
     {
-        return children().anyMatch( AstBeElse.class::isInstance );
+        return children().anyMatch(AstBeElse.class::isInstance);
     }
 }
 /* JavaCC - OriginalChecksum=574273ae5438a95cad4ff1695ce37939 (do not edit this line) */

@@ -19,8 +19,10 @@ public class Collections3
     {
         final List<U> us = new ArrayList<>();
 
-        for (final T t : iterable) {
-            if (!map.containsKey(t)) {
+        for (final T t : iterable)
+        {
+            if (!map.containsKey(t))
+            {
                 throw new IllegalArgumentException();
             }
 

@@ -8,24 +8,26 @@ public class AstExcept extends SimpleNode
 {
     public AstExcept(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "EXCEPT";
     }
 
     private SetQuantifier setQuantifier = SetQuantifier.DEFAULT;
+
     public SetQuantifier getQuantifier()
     {
         return setQuantifier;
     }
+
     public void setQuantifier(SetQuantifier setQuantifier)
     {
-        this.setQuantifier = Objects.requireNonNull( setQuantifier );
-        if( setQuantifier == SetQuantifier.DEFAULT )
+        this.setQuantifier = Objects.requireNonNull(setQuantifier);
+        if (setQuantifier == SetQuantifier.DEFAULT)
             this.nodeContent = null;
         else
             this.nodeContent = setQuantifier.toString();
     }
-    
+
     public void setMinus()
     {
         this.nodePrefix = "MINUS";

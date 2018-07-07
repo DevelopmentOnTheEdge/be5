@@ -120,7 +120,8 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         lastModified = Math.max(lastModified + 1, System.currentTimeMillis());
         BeModelCollection<?> origin = getOrigin();
-        if (origin != null) {
+        if (origin != null)
+        {
             origin.updateLastModification();
         }
     }
@@ -140,7 +141,8 @@ public abstract class BeModelElementSupport implements BeModelElement
     protected boolean debugEquals(String property)
     {
         PrintStream debugStream = getProject().getDebugStream();
-        if (debugStream != null) {
+        if (debugStream != null)
+        {
             debugStream.println(getCompletePath() + ": difference: " + property);
         }
         return false;
@@ -163,12 +165,15 @@ public abstract class BeModelElementSupport implements BeModelElement
         Set<BeModelElement> nextStepGenerators = new HashSet<>();
         nextStepGenerators.add(this);
 
-        while (!nextStepGenerators.isEmpty()) {
+        while (!nextStepGenerators.isEmpty())
+        {
             final Set<BeModelElement> newGeneration = new HashSet<>();
 
-            for (final BeModelElement nextStepGenerator : nextStepGenerators) {
+            for (final BeModelElement nextStepGenerator : nextStepGenerators)
+            {
                 newGeneration.addAll(nextStepGenerator.getDependentElements());
-                if (nextStepGenerator instanceof BeModelCollection) {
+                if (nextStepGenerator instanceof BeModelCollection)
+                {
                     ((BeModelCollection<?>) nextStepGenerator).stream().forEach(newGeneration::add);
                 }
             }
@@ -232,7 +237,8 @@ public abstract class BeModelElementSupport implements BeModelElement
         Module module = getModule();
         String[] extras = module == null ? Strings2.EMPTY : module.getExtras();
         Project project = getProject();
-        for (String usedInExtra : usedInExtras) {
+        for (String usedInExtra : usedInExtras)
+        {
             if (!hasExtra(extras, project, usedInExtra))
                 return false;
         }
@@ -243,7 +249,8 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         if (project.hasCapability(usedInExtra))
             return true;
-        for (String extra : extras) {
+        for (String extra : extras)
+        {
             if (usedInExtra.equals(extra))
                 return true;
         }
@@ -258,7 +265,8 @@ public abstract class BeModelElementSupport implements BeModelElement
     @Override
     public Collection<String> getCustomizedProperties()
     {
-        if (customizedProperties == null) {
+        if (customizedProperties == null)
+        {
             return Collections.emptySet();
         }
 
@@ -290,7 +298,8 @@ public abstract class BeModelElementSupport implements BeModelElement
 
     protected void internalCustomizeProperty(String propertyName)
     {
-        if (customizedProperties == null) {
+        if (customizedProperties == null)
+        {
             customizedProperties = new HashSet<>();
         }
         customizedProperties.add(propertyName);
@@ -333,11 +342,14 @@ public abstract class BeModelElementSupport implements BeModelElement
     protected <V> V customizeProperty(String propertyName, V oldValue, V newValue)
     {
         this.customizing = true;
-        try {
-            if (!Objects.equals(oldValue, newValue)) {
+        try
+        {
+            if (!Objects.equals(oldValue, newValue))
+            {
                 internalCustomizeProperty(propertyName);
             }
-        } finally {
+        } finally
+        {
             this.customizing = false;
         }
         return newValue;
@@ -351,23 +363,30 @@ public abstract class BeModelElementSupport implements BeModelElement
 
     protected void mergeThis(BeModelElement other, boolean inherit)
     {
-        if (inherit) {
+        if (inherit)
+        {
             this.prototype = other;
-        } else {
+        } else
+        {
             this.prototype = null;
             Set<String> customizableProperties = new HashSet<>(getCustomizableProperties());
             customizableProperties.removeAll(getCustomizedProperties());
-            for (String customizableProperty : customizableProperties) {
-                try {
+            for (String customizableProperty : customizableProperties)
+            {
+                try
+                {
                     Object value = Beans.getBeanPropertyValue(other, customizableProperty);
                     ComponentModel info = ComponentFactory.getModel(this, ComponentFactory.Policy.DEFAULT);
                     Property property = info.findProperty(customizableProperty);
-                    if (property != null) {
-                        if (!customizableProperty.equals("roles")) {
+                    if (property != null)
+                    {
+                        if (!customizableProperty.equals("roles"))
+                        {
                             property.setValue(value);
                         }
                     }
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     throw new RuntimeException(e);
                 }
             }
@@ -383,15 +402,19 @@ public abstract class BeModelElementSupport implements BeModelElement
     protected BeModelElementSupport clone(BeModelCollection<?> origin, String name, boolean inherit)
     {
         BeModelElementSupport clone;
-        try {
+        try
+        {
             clone = (BeModelElementSupport) super.clone();
             clone.name = name;
             clone.origin = origin;
-        } catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e)
+        {
             throw new AssertionError("Unexpected exception", e);
         }
-        if (inherit) {
-            if (clone.customizedProperties != null && !clone.customizedProperties.isEmpty()) {
+        if (inherit)
+        {
+            if (clone.customizedProperties != null && !clone.customizedProperties.isEmpty())
+            {
                 clone.prototype = this;
                 clone.customizedProperties = null;
             }

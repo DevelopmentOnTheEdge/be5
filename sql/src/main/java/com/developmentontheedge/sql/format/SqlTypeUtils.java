@@ -23,7 +23,7 @@ public class SqlTypeUtils
 
     public static Object parseValue(Object value, String className)
     {
-        if(value.getClass() == String.class)
+        if (value.getClass() == String.class)
         {
             if ("java.lang.Long".equals(className))
             {

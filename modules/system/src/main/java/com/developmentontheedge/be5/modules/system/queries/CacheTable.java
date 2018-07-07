@@ -11,7 +11,8 @@ import java.util.Map;
 
 public class CacheTable extends TableBuilderSupport
 {
-    @Inject private Be5Caches be5Caches;
+    @Inject
+    private Be5Caches be5Caches;
 
     @Override
     public TableModel getTableModel()

@@ -10,36 +10,33 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class CategoriesServiceTest extends CoreBe5ProjectDBTest
-{
-    @Inject CategoriesService categoriesService
+class CategoriesServiceTest extends CoreBe5ProjectDBTest {
+    @Inject
+    CategoriesService categoriesService
 
     @Before
-    void setUp()
-    {
+    void setUp() {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
 
         db.update("DELETE FROM categories")
 
         database.categories.add([
-                entity  : "anotherCategory",
-                name    : "another root"
+                entity: "anotherCategory",
+                name  : "another root"
         ])
     }
 
     @Test
-    void empty()
-    {
+    void empty() {
         def docTypes = categoriesService.getCategoriesForest("docTypes", false)
         assertEquals(0, docTypes.size())
     }
 
     @Test
-    void test()
-    {
+    void test() {
         database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
 
         def docTypes = categoriesService.getCategoriesForest("docTypes", false)
@@ -48,11 +45,10 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    void snapshot()
-    {
+    void snapshot() {
         def rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
         def p1ID = database.categories.add([
                 entity  : "docTypes",
@@ -73,21 +69,20 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
 
         assertEquals("[" +
                 "{'children':[" +
-                    "{'children':[" +
-                        "{'children':[" +
-                        "],'id':${c1ID},'name':'c1'}" +
-                    "],'id':${p1ID},'name':'p1'}," +
-                    "{'children':[" +
-                    "],'id':${p2ID},'name':'p2'}" +
+                "{'children':[" +
+                "{'children':[" +
+                "],'id':${c1ID},'name':'c1'}" +
+                "],'id':${p1ID},'name':'p1'}," +
+                "{'children':[" +
+                "],'id':${p2ID},'name':'p2'}" +
                 "],'id':${rootID},'name':'Root'}]", oneQuotes(jsonb.toJson(docTypes)))
     }
 
     @Test
-    void testhideEmpty()
-    {
+    void testhideEmpty() {
         def rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
         database.categories.add([
                 entity  : "docTypes",
@@ -100,7 +95,7 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
 
         database.classifications.add([
                 categoryID: rootID,
-                recordID: "docTypes.1"
+                recordID  : "docTypes.1"
         ])
 
         docTypes = categoriesService.getCategoriesForest("docTypes", true)
@@ -110,11 +105,10 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    void getCategoryNavigationTest()
-    {
+    void getCategoryNavigationTest() {
         Long rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
 
         Long p1ID = database.categories.add([

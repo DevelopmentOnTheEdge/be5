@@ -26,9 +26,12 @@ public class ProjectTopologicalSort
     {
         used.put(v, true);
 
-        for (Module module : g.get(v).getModules()) {
-            if (!used.getOrDefault(module.getName(), false)) {
-                if (!g.containsKey(module.getName())) {
+        for (Module module : g.get(v).getModules())
+        {
+            if (!used.getOrDefault(module.getName(), false))
+            {
+                if (!g.containsKey(module.getName()))
+                {
                     throw new RuntimeException("Module " + module.getName() +
                             " not found, required for " + v + ". Add module to classpath.");
                 }

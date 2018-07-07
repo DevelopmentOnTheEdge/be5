@@ -72,17 +72,22 @@ public class ReadException extends Exception implements Formattable
     public String getMessage()
     {
         String msg = message;
-        if (getCause() != null) {
-            if (msg == null) {
+        if (getCause() != null)
+        {
+            if (msg == null)
+            {
                 msg = getCause().getMessage();
-            } else {
+            } else
+            {
                 msg += ": " + getCause().getMessage();
             }
         }
-        if (this.path != null) {
+        if (this.path != null)
+        {
             msg += System.lineSeparator() + "\tFile: " + this.path;
         }
-        if (this.element != null) {
+        if (this.element != null)
+        {
             msg += System.lineSeparator() + "\tElement: " + this.element;
         }
         return msg;

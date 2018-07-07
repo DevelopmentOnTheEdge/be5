@@ -19,7 +19,8 @@ public abstract class CoreBe5ProjectDBTest extends TestUtils
             ).with(new ServerDBTestModule())
     );
 
-    static {
+    static
+    {
         initDb(injector);
     }
 

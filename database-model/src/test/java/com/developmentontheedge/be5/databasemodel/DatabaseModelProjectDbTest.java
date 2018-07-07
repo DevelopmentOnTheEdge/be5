@@ -14,13 +14,15 @@ import javax.inject.Inject;
 
 public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
 {
-    @Inject protected DatabaseModel database;
+    @Inject
+    protected DatabaseModel database;
 
     private static final Injector injector = initInjector(
             Modules.override(new BaseModule()).with(new DatabaseModelDbTestModule())
     );
 
-    static {
+    static
+    {
         initDb(injector);
     }
 

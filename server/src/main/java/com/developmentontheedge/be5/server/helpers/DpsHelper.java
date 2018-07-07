@@ -92,8 +92,8 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, 
-                                                  Map<String, Object> operationParams, Map<String, ? super Object> values)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements,
+                                                                      Map<String, Object> operationParams, Map<String, ? super Object> values)
     {
         addDpExcludeAutoIncrement(dps, modelElements, operationParams);
         return DpsUtils.setValues(dps, values);
@@ -102,8 +102,8 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
         List<String> excludedColumns = Collections.emptyList();
-        if(meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()) != null &&
-           meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()).isAutoIncrement())
+        if (meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()) != null &&
+                meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()).isAutoIncrement())
         {
             excludedColumns = Collections.singletonList(getEntity(modelElements).getPrimaryKey());
         }
@@ -122,7 +122,7 @@ public class DpsHelper
     }
 
     public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements,
-                Collection<String> columnNames, Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
+                                                                Collection<String> columnNames, Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
     {
         addDpExcludeColumns(dps, modelElements, columnNames, operationParams);
 
@@ -132,8 +132,8 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, 
-                                                    Collection<String> columnNames, Map<String, Object> operationParams)
+    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements,
+                                                                Collection<String> columnNames, Map<String, Object> operationParams)
     {
         addDpsExcludedColumnsWithoutTags(dps, modelElements, columnNames);
 
@@ -146,11 +146,11 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, Object> operationParams)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
-        for(String propertyName: columnNames)
+        for (String propertyName : columnNames)
         {
             DynamicProperty property = dps.getProperty(propertyName);
             ColumnDef columnDef = columns.get(property.getName());
-            if(columnDef != null)addTags(property, columnDef, operationParams);
+            if (columnDef != null) addTags(property, columnDef, operationParams);
         }
         return dps;
     }
@@ -160,9 +160,9 @@ public class DpsHelper
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
 
         ArrayList<String> excludedColumnsList = new ArrayList<>(excludedColumns);
-        for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
+        for (Map.Entry<String, ColumnDef> entry : columns.entrySet())
         {
-            if(!excludedColumnsList.contains(entry.getKey()))
+            if (!excludedColumnsList.contains(entry.getKey()))
             {
                 DynamicProperty dynamicProperty = getDynamicProperty(entry.getValue());
                 addMeta(dynamicProperty, entry.getValue(), modelElements);
@@ -171,7 +171,7 @@ public class DpsHelper
             excludedColumnsList.remove(entry.getKey());
         }
 
-        for(String propertyName: excludedColumnsList)
+        for (String propertyName : excludedColumnsList)
         {
             log.warning("Column " + propertyName + " not found in " + modelElements.getName());
         }
@@ -179,7 +179,7 @@ public class DpsHelper
     }
 
     public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames,
-                                            Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
+                                                            Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
     {
         addDpForColumns(dps, modelElements, columnNames, operationParams);
 
@@ -200,12 +200,12 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, 
-                                                     Collection<String> propertyNames, Map<String, Object> operationParams)
+    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements,
+                                                                 Collection<String> propertyNames, Map<String, Object> operationParams)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
 
-        for(String propertyName: propertyNames)
+        for (String propertyName : propertyNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
             DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
@@ -242,10 +242,10 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addMeta(T dps, BeModelElement modelElements)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
-        for(DynamicProperty property : dps)
+        for (DynamicProperty property : dps)
         {
             ColumnDef columnDef = columns.get(property.getName());
-            if(columnDef != null)addMeta(property, columnDef, modelElements);
+            if (columnDef != null) addMeta(property, columnDef, modelElements);
         }
         return dps;
     }
@@ -253,16 +253,15 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> columnNames)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
-        for(String propertyName: columnNames)
+        for (String propertyName : columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
-            if(columnDef != null)
+            if (columnDef != null)
             {
                 DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
                 addMeta(dynamicProperty, columnDef, modelElements);
                 dps.add(dynamicProperty);
-            }
-            else
+            } else
             {
                 throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
             }
@@ -278,7 +277,7 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDpBase(T dps, BeModelElement modelElements)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
-        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        for (Map.Entry<String, ColumnDef> column : columns.entrySet())
         {
             dps.add(getDynamicProperty(column.getValue()));
         }
@@ -288,15 +287,14 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames)
     {
         Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
-        for(String propertyName: columnNames)
+        for (String propertyName : columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
-            if(columnDef != null)
+            if (columnDef != null)
             {
                 DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
                 dps.add(dynamicProperty);
-            }
-            else
+            } else
             {
                 throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
             }
@@ -304,17 +302,16 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements, 
+    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements,
                                                                Query query, Map<String, Object> operationParams)
     {
         AstStart ast;
         try
         {
             ast = SqlQuery.parse(meta.getQueryCode(query));
-        }
-        catch (RuntimeException e)
+        } catch (RuntimeException e)
         {
-            log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
+            log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
         }
 
@@ -327,22 +324,20 @@ public class DpsHelper
 
     public DynamicProperty addMeta(DynamicProperty dp, ColumnDef columnDef, BeModelElement modelElements)
     {
-        if(modelElements.getClass() == Query.class)
+        if (modelElements.getClass() == Query.class)
         {
             dp.setDisplayName(userAwareMeta.getColumnTitle(
                     columnDef.getEntity().getName(),
                     modelElements.getName(),
                     columnDef.getName()
             ));
-        }
-        else if(modelElements.getClass() == Entity.class)
+        } else if (modelElements.getClass() == Entity.class)
         {
             dp.setDisplayName(userAwareMeta.getColumnTitle(
                     columnDef.getEntity().getName(),
                     columnDef.getName()
             ));
-        }
-        else if(modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
+        } else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
             dp.setDisplayName(userAwareMeta.getLocalizedOperationField(
                     columnDef.getEntity().getName(),
@@ -351,29 +346,30 @@ public class DpsHelper
             ));
         }
 
-        if(columnDef.getDefaultValue() != null)
+        if (columnDef.getDefaultValue() != null)
         {
             dp.setValue(meta.getColumnDefaultValue(columnDef));
         }
 
-        if(columnDef.isCanBeNull() ||
-                (columnDef.getTypeString().equals(TYPE_BOOL) && columnDef.getDefaultValue() != null) )
+        if (columnDef.isCanBeNull() ||
+                (columnDef.getTypeString().equals(TYPE_BOOL) && columnDef.getDefaultValue() != null))
         {
             dp.setCanBeNull(true);
         }
 
         String typeName = columnDef.getType().getTypeName();
 
-        if(TYPE_TEXT.equals(typeName))
+        if (TYPE_TEXT.equals(typeName))
         {
             dp.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{{"inputType", "textArea"}});
         }
 
-        if(TYPE_VARCHAR.equals(typeName) || TYPE_CHAR.equals(typeName)){
+        if (TYPE_VARCHAR.equals(typeName) || TYPE_CHAR.equals(typeName))
+        {
             dp.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
         }
 
-        if(TYPE_DECIMAL.equals(typeName))
+        if (TYPE_DECIMAL.equals(typeName))
         {
             int size = columnDef.getType().getSize();
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
@@ -382,7 +378,7 @@ public class DpsHelper
             ));
         }
 
-        if(TYPE_CURRENCY.equals(typeName))
+        if (TYPE_CURRENCY.equals(typeName))
         {
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
                     getRange(columnDef.getType().getSize(), false),
@@ -390,7 +386,7 @@ public class DpsHelper
             ));
         }
 
-        if(TYPE_INT.equals(typeName) || TYPE_UINT.equals(typeName))
+        if (TYPE_INT.equals(typeName) || TYPE_UINT.equals(typeName))
         {
             boolean unsigned = TYPE_UINT.equals(typeName);
 
@@ -400,7 +396,7 @@ public class DpsHelper
             ));
         }
 
-        if(TYPE_BIGINT.equals(typeName) || TYPE_UBIGINT.equals(typeName))
+        if (TYPE_BIGINT.equals(typeName) || TYPE_UBIGINT.equals(typeName))
         {
             boolean unsigned = TYPE_UBIGINT.equals(typeName);
 
@@ -410,19 +406,25 @@ public class DpsHelper
             ));
         }
 
-        if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
+        if (columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX)) dp.setHidden(true);
 
         return dp;
     }
 
     public String getPrecision(int precision)
     {
-        switch (precision){
-            case 0 : return "1";
-            case 1 : return "0.1";
-            case 2 : return "0.01";
-            case 3 : return "0.001";
-            case 4 : return "1.0E-4";
+        switch (precision)
+        {
+            case 0:
+                return "1";
+            case 1:
+                return "0.1";
+            case 2:
+                return "0.01";
+            case 3:
+                return "0.001";
+            case 4:
+                return "1.0E-4";
             default:
                 return "1.0E-" + Integer.toString(precision);
         }
@@ -430,23 +432,24 @@ public class DpsHelper
 
     public ValidationRules.Rule getRange(int size, boolean unsigned)
     {
-        if(size <= 18){
+        if (size <= 18)
+        {
             return range(unsigned ? 0 : -LongMath.pow(10, size), LongMath.pow(10, size));
-        }else{
+        } else
+        {
             return range(unsigned ? 0 : -Math.pow(10, size), Math.pow(10, size));
         }
     }
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
-        if(columnDef.getType().getTypeName().equals(TYPE_BOOL)){
+        if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
+        {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
-        }
-        else if(columnDef.getType().getEnumValues() != Strings2.EMPTY)
+        } else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
-        }
-        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
+        } else if (columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     queries.getTagsFromSelectionView(columnDef.getTableTo(),
@@ -530,7 +533,7 @@ public class DpsHelper
     {
         Map<String, Object> values = new HashMap<>();
         dps.forEach(p -> {
-            if(p.getValue() != null && !p.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
+            if (p.getValue() != null && !p.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {
                 values.put(p.getName(), p.getValue().toString());
             }
@@ -546,7 +549,7 @@ public class DpsHelper
         for (Map.Entry<String, ?> entry : params.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
-            if(property != null)
+            if (property != null)
             {
                 property.setValue(entry.getValue());
                 property.setReadOnly(true);
@@ -554,31 +557,28 @@ public class DpsHelper
         }
         return dps;
     }
-    
+
     private Entity getEntity(BeModelElement modelElements)
     {
-        if(modelElements.getClass() == Entity.class)
+        if (modelElements.getClass() == Entity.class)
         {
-            return (Entity)modelElements;
-        }
-        else if(modelElements.getClass() == Query.class)
+            return (Entity) modelElements;
+        } else if (modelElements.getClass() == Query.class)
         {
-            return ((Query)modelElements).getEntity();
-        }
-        else if(modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
+            return ((Query) modelElements).getEntity();
+        } else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
-            return ((Operation)modelElements).getEntity();
-        }
-        else
+            return ((Operation) modelElements).getEntity();
+        } else
         {
-            throw new RuntimeException("not supported modelElements");    
+            throw new RuntimeException("not supported modelElements");
         }
     }
 
     protected Map<String, ColumnDef> getColumnsWithoutSpecial(BeModelElement modelElements)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
-        for(String specialColumnsName : specialColumns)
+        for (String specialColumnsName : specialColumns)
         {
             columns.remove(specialColumnsName);
         }

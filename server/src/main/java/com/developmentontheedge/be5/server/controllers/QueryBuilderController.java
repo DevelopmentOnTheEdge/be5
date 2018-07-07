@@ -76,32 +76,32 @@ public class QueryBuilderController extends JsonApiModelController
         includedData = new ArrayList<>();
         errorModelList = new ArrayList<>();
 
-        if(userInfoProvider.isSystemDeveloper())
+        if (userInfoProvider.isSystemDeveloper())
         {
             String sql = req.get("sql");
             boolean execute = sql != null;
 
             List<String> history;
-            if(req.getAttribute(QUERY_BUILDER_HISTORY) != null)
+            if (req.getAttribute(QUERY_BUILDER_HISTORY) != null)
             {
                 history = (List<String>) req.getAttribute(QUERY_BUILDER_HISTORY);
-            }
-            else
+            } else
             {
                 history = new ArrayList<>();
             }
 
-            if(sql == null)
+            if (sql == null)
             {
-                if(!history.isEmpty()){
-                    sql = history.get(history.size()-1);
-                }else{
+                if (!history.isEmpty())
+                {
+                    sql = history.get(history.size() - 1);
+                } else
+                {
                     sql = "select * from users";
                 }
-            }
-            else
+            } else
             {
-                if(history.isEmpty() || !history.get(history.size()-1).equals(sql))
+                if (history.isEmpty() || !history.get(history.size() - 1).equals(sql))
                 {
                     history.add(sql);
                     req.setAttribute(QUERY_BUILDER_HISTORY, history);
@@ -114,16 +114,16 @@ public class QueryBuilderController extends JsonApiModelController
                     Collections.singletonMap(SELF_LINK, "queryBuilder")
             );
 
-            try{
+            try
+            {
                 SqlType type = getSqlType(sql);
 
-                if(type == SqlType.SELECT)
+                if (type == SqlType.SELECT)
                 {
                     select(sql, req);
-                }
-                else
+                } else
                 {
-                    if(execute)
+                    if (execute)
                     {
                         switch (type)
                         {
@@ -141,8 +141,7 @@ public class QueryBuilderController extends JsonApiModelController
                         }
                     }
                 }
-            }
-            catch (Throwable e)
+            } catch (Throwable e)
             {
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
@@ -152,8 +151,7 @@ public class QueryBuilderController extends JsonApiModelController
                     errorModelList.toArray(new ErrorModel[0]),
                     includedData.toArray(new ResourceData[0])
             );
-        }
-        else
+        } else
         {
             return error(errorModelHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
                     Collections.singletonMap(SELF_LINK, "queryBuilder")));
@@ -196,17 +194,17 @@ public class QueryBuilderController extends JsonApiModelController
 
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        Entity entity = new Entity( entityName, projectProvider.get().getApplication(), EntityType.TABLE );
-        DataElementUtils.save( entity );
+        Entity entity = new Entity(entityName, projectProvider.get().getApplication(), EntityType.TABLE);
+        DataElementUtils.save(entity);
 
-        Query query = new Query( userQBuilderQueryName, entity );
+        Query query = new Query(userQBuilderQueryName, entity);
         query.setType(QueryType.D1_UNKNOWN);
 
-        if(sql != null)
+        if (sql != null)
         {
             query.setQuery(sql);
         }
-        DataElementUtils.save( query );
+        DataElementUtils.save(query);
 
         try
         {
@@ -219,10 +217,9 @@ public class QueryBuilderController extends JsonApiModelController
                     ),
                     null
             ));
-        }
-        catch (Be5Exception e)
+        } catch (Be5Exception e)
         {
-            if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
+            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
         }
 
@@ -234,10 +231,9 @@ public class QueryBuilderController extends JsonApiModelController
             document.getData().setId("result");
             includedData.add(document.getData());
             includedData.addAll(Arrays.asList(document.getIncluded()));
-        }
-        catch (Be5Exception e)
+        } catch (Be5Exception e)
         {
-            if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
+            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
         }
 
@@ -246,18 +242,18 @@ public class QueryBuilderController extends JsonApiModelController
 
     private static SqlType getSqlType(String sql)
     {
-        if(sql == null || sql.trim().length() == 0)return SqlType.SELECT;
+        if (sql == null || sql.trim().length() == 0) return SqlType.SELECT;
 
         AstStart parse = SqlQuery.parse(sql);
-        if(parse.getQuery().children().select(AstUpdate.class).findAny().isPresent())
+        if (parse.getQuery().children().select(AstUpdate.class).findAny().isPresent())
         {
             return SqlType.UPDATE;
         }
-        if(parse.getQuery().children().select(AstInsert.class).findAny().isPresent())
+        if (parse.getQuery().children().select(AstInsert.class).findAny().isPresent())
         {
             return SqlType.INSERT;
         }
-        if(parse.getQuery().children().select(AstDelete.class).findAny().isPresent())
+        if (parse.getQuery().children().select(AstDelete.class).findAny().isPresent())
         {
             return SqlType.DELETE;
         }
@@ -265,7 +261,8 @@ public class QueryBuilderController extends JsonApiModelController
         return SqlType.SELECT;
     }
 
-    enum SqlType {
+    enum SqlType
+    {
         INSERT, SELECT, UPDATE, DELETE
     }
 

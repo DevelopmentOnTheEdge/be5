@@ -157,7 +157,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         if (name == null)
             return null;
         BeConnectionProfile profile = getConnectionProfiles().getLocalProfiles().get(name);
-        if (profile == null) {
+        if (profile == null)
+        {
             profile = getConnectionProfiles().getRemoteProfiles().get(name);
         }
         return profile;
@@ -174,14 +175,17 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         // @pending firePropertyChange
         this.connectionProfileName = connectionProfileName;
-        try {
+        try
+        {
             final BeConnectionProfile connectionProfile = getConnectionProfile();
-            if (connectionProfile == null) {
+            if (connectionProfile == null)
+            {
                 setDatabaseSystem(null);
                 return;
             }
             setDatabaseSystem(connectionProfile.getRdbms());
-        } catch (Throwable e) {
+        } catch (Throwable e)
+        {
             setDatabaseSystem(null);
         }
 
@@ -207,7 +211,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public void setDatabaseSystem(Rdbms databaseSystem)
     {
-        if (this.databaseSystem != databaseSystem) {
+        if (this.databaseSystem != databaseSystem)
+        {
             this.databaseSystem = databaseSystem;
             reconfigureFreemarker();
         }
@@ -249,7 +254,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         final Module application = (Module) get(getProjectOrigin());
 
-        if (application == null) {
+        if (application == null)
+        {
             throw new IllegalStateException("Project " + getName() + ": structure is invalid (no application defined)");
         }
 
@@ -327,7 +333,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public Configuration getConfiguration()
     {
-        if (freemarkerConfiguration == null) {
+        if (freemarkerConfiguration == null)
+        {
             freemarkerConfiguration = FreemarkerUtils.getConfiguration(this);
             reconfigureFreemarker();
         }
@@ -344,26 +351,35 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         Map<String, Object> context = new HashMap<>();
         BeModelElement parent = element;
-        while (parent != null) {
-            if (parent instanceof PageCustomization) {
+        while (parent != null)
+        {
+            if (parent instanceof PageCustomization)
+            {
                 context.put("customization", parent);
-            } else if (parent instanceof Query) {
+            } else if (parent instanceof Query)
+            {
                 context.put("query", parent);
-            } else if (parent instanceof Operation) {
+            } else if (parent instanceof Operation)
+            {
                 context.put("operation", parent);
-            } else if (parent instanceof Entity) {
+            } else if (parent instanceof Entity)
+            {
                 context.put("entity", parent);
-            } else if (parent instanceof Module) {
+            } else if (parent instanceof Module)
+            {
                 context.put("module", parent);
             }
             parent = parent.getOrigin();
         }
-        for (String name : getPropertyNames()) {
+        for (String name : getPropertyNames())
+        {
             context.put(name, getProperty(name));
         }
         BeConnectionProfile profile = getConnectionProfile();
-        if (profile != null) {
-            for (String name : profile.getPropertyNames()) {
+        if (profile != null)
+        {
+            for (String name : profile.getPropertyNames())
+            {
                 context.put(name, profile.getProperty(name));
             }
         }
@@ -374,15 +390,18 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         if (freemarkerConfiguration == null)
             return;
-        try {
-            if (getDatabaseSystem() != null) {
+        try
+        {
+            if (getDatabaseSystem() != null)
+            {
                 freemarkerConfiguration.setSharedVariable("dbPlatform", getDatabaseSystem().getName());
                 IMacroProcessorStrategy macroProcessorStrategy = getDatabaseSystem().getMacroProcessorStrategy();
                 freemarkerConfiguration.setSharedVariable("currentDateTime", macroProcessorStrategy.currentDatetime());
                 freemarkerConfiguration.setSharedVariable("currentDate", macroProcessorStrategy.currentDate());
                 freemarkerConfiguration.setSharedVariable("fromFakeTable", macroProcessorStrategy.fromFakeTable());
             }
-        } catch (TemplateModelException e) {
+        } catch (TemplateModelException e)
+        {
             throw new AssertionError("Unexpected exception in reconfigureFreemarker", e);
         }
     }
@@ -391,7 +410,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         boolean besql = element instanceof Query && ((Query) element).getEntity().isBesql() &&
                 ((Query) element).isSqlQuery();
-        try {
+        try
+        {
             sqlMacros.clear();
             if (" ".equals(element.getTemplateCode()))
                 return new ParseResult(" ");
@@ -400,11 +420,14 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (besql)
                 enterSQL();
             return new ParseResult(besql ? translateSQL(merged) : merged);
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             return new ParseResult(e);
-        } catch (Throwable e) {
+        } catch (Throwable e)
+        {
             return new ParseResult(new ProjectElementException(getCompletePath(), "source", e));
-        } finally {
+        } finally
+        {
             beSQL = 0;
             sqlMacros.clear();
         }
@@ -421,19 +444,23 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         if (name == null || name.isEmpty())
             return null;
-        try {
+        try
+        {
             Template template = new Template("", "", getConfiguration());
             Environment environment = template.createProcessingEnvironment(getContext(null), new StringWriter());
             environment.process();
             Object value = environment.__getitem__(name);
-            if (value instanceof TemplateScalarModel) {
+            if (value instanceof TemplateScalarModel)
+            {
                 return ((TemplateScalarModel) value).getAsString();
             }
-            if (value == null) {
+            if (value == null)
+            {
                 return null;
             }
             return value.toString();
-        } catch (IOException | TemplateException e) {
+        } catch (IOException | TemplateException e)
+        {
             throw new RuntimeException("Unexpected exception in getVariableValue: " + e);
         }
     }
@@ -441,26 +468,32 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     public Map<String, String> getVariables()
     {
         Map<String, String> result = new TreeMap<>();
-        try {
+        try
+        {
             Template template = new Template("", "", getConfiguration());
             Environment environment = template.createProcessingEnvironment(getContext(null), new StringWriter());
             environment.process();
-            for (Object name : environment.getKnownVariableNames()) {
+            for (Object name : environment.getKnownVariableNames())
+            {
                 if ("null".equals(name))
                     continue;
                 Object value = environment.__getitem__(name.toString());
-                if (value instanceof TemplateScalarModel) {
+                if (value instanceof TemplateScalarModel)
+                {
                     result.put(name.toString(), ((TemplateScalarModel) value).getAsString());
                 }
-                if (value instanceof String) {
+                if (value instanceof String)
+                {
                     result.put(name.toString(), (String) value);
                 }
-                if (value instanceof Number) {
+                if (value instanceof Number)
+                {
                     result.put(name.toString(), ((Number) value).toString());
                 }
             }
             return result;
-        } catch (IOException | TemplateException e) {
+        } catch (IOException | TemplateException e)
+        {
             throw new RuntimeException("Unexpected exception in getVariableNames: " + e);
         }
     }
@@ -490,10 +523,12 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         final Set<String> sortedRoles = new TreeSet<>(roles);
         SecurityCollection securityCollection = getSecurityCollection();
         BeModelCollection<Role> roleCollection = securityCollection.getRoleCollection();
-        for (String name : roleCollection.names().toArray(String[]::new)) {
+        for (String name : roleCollection.names().toArray(String[]::new))
+        {
             DataElementUtils.removeQuiet(roleCollection, name);
         }
-        for (String name : sortedRoles) {
+        for (String name : sortedRoles)
+        {
             DataElementUtils.saveQuiet(new Role(name, roleCollection));
         }
         fireCodeChanged();
@@ -528,17 +563,20 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         String category = capability.substring(0, colonPos);
         String value = capability.substring(colonPos + 1);
         boolean invert = false;
-        if (category.startsWith("!")) {
+        if (category.startsWith("!"))
+        {
             category = category.substring(1);
             invert = true;
         }
         final boolean result;
-        switch (category) {
+        switch (category)
+        {
             case "db":
                 result = getDatabaseSystem().getName().equals(value);
                 break;
             case "dbcap":
-                switch (value) {
+                switch (value)
+                {
                     case "fnindex":
                         result = getDatabaseSystem().getTypeManager().isFunctionalIndexSupported();
                         break;
@@ -553,7 +591,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                         break;
                 }
                 break;
-            case "extra": {
+            case "extra":
+            {
                 String[] parts = value.split("::", 2);
                 Module module = getModule(parts[0]);
                 result = parts.length == 2 && module != null && module.getExtras() != null && StreamEx.of(module.getExtras()).has(parts[1]);
@@ -568,10 +607,12 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             case "var":
                 int pos = value.indexOf('=');
                 String varName, varValue;
-                if (pos > 0) {
+                if (pos > 0)
+                {
                     varName = value.substring(0, pos);
                     varValue = value.substring(pos + 1);
-                } else {
+                } else
+                {
                     varName = value;
                     varValue = null;
                 }
@@ -606,11 +647,13 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     public Set<String> getEntityNames()
     {
         Set<String> result = new HashSet<>();
-        for (Module module : getModules()) {
+        for (Module module : getModules())
+        {
             result.addAll(module.getEntityNames());
         }
         Module app = (Module) get(getProjectOrigin());
-        if (app != null) {
+        if (app != null)
+        {
             result.addAll(app.getEntityNames());
         }
         return result;
@@ -624,7 +667,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         Entity entity = app == null ? null : app.getEntity(name);
         if (entity != null)
             return entity;
-        for (Module module : getModules()) {
+        for (Module module : getModules())
+        {
             entity = module.getEntity(name);
             if (entity != null)
                 return entity;
@@ -645,10 +689,13 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
         final String newPrefix = prefix + shift;
 
-        for (BeModelElement de : collection) {
-            if (de instanceof BeModelCollection) {
+        for (BeModelElement de : collection)
+        {
+            if (de instanceof BeModelCollection)
+            {
                 dump((BeModelCollection<?>) de, msg, newPrefix, shift);
-            } else {
+            } else
+            {
                 msg.append(newPrefix + de.getName() + nl);
             }
         }
@@ -678,7 +725,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> errors = super.getErrors();
-        if (!isModuleProject()) {
+        if (!isModuleProject())
+        {
             if (connectionProfileName == null || connectionProfileName.isEmpty())
                 errors.add(ProjectElementException.notSpecified(this, "connectionProfileName"));
             else if (getConnectionProfile() == null)
@@ -712,7 +760,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     public void merge(Project sqlProject)
     {
         getModules().merge(sqlProject.getModules(), true, true);
-        if (isModuleProject()) {
+        if (isModuleProject())
+        {
             getApplication().merge(sqlProject.getModule(getProjectOrigin()), true, true);
         }
     }
@@ -721,25 +770,31 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         assert isModuleProject();
         DataElementUtils.saveQuiet(applicationProject.getSecurityCollection().getRoleCollection().clone(getSecurityCollection(), SecurityCollection.ROLES));
-        for (RoleGroup group : applicationProject.getRoleGroups()) {
+        for (RoleGroup group : applicationProject.getRoleGroups())
+        {
             if (group.isPredefined())
                 continue;
             RoleGroup myGroup = getRoleGroups().get(group.getName());
-            if (myGroup != null) {
+            if (myGroup != null)
+            {
                 myGroup.getRoleSet().clear();
                 myGroup.getRoleSet().addInclusionAll(group.getRoleSet().getIncludedValues());
             }
         }
-        for (Module module : applicationProject.getModules()) {
+        for (Module module : applicationProject.getModules())
+        {
             Module myModule = getModule(module.getName());
-            if (myModule == null) {
+            if (myModule == null)
+            {
                 myModule = new Module(module.getName(), getModules());
                 DataElementUtils.saveQuiet(myModule);
             }
             myModule.setExtras(module.getExtras());
-            for (Entity entity : module.getEntities()) {
+            for (Entity entity : module.getEntities())
+            {
                 Entity myEntity = myModule.getEntity(entity.getName());
-                if (myEntity != null) {
+                if (myEntity != null)
+                {
                     // this code is necessary to properly update localized displayNames
                     // TODO: perform host project merging in wiser way
                     if (entity.getCustomizedProperties().contains("displayName"))
@@ -810,13 +865,16 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public void applyMassChanges(LoadContext context)
     {
-        for (MassChange change : getApplication().getMassChangeCollection()) {
+        for (MassChange change : getApplication().getMassChangeCollection())
+        {
             List<BeModelElement> changed = change.apply(context, this);
-            if (debugStream != null) {
+            if (debugStream != null)
+            {
                 debugStream.println("Selector: " + change.getName());
                 if (changed.isEmpty())
                     debugStream.println("- Nothing changed");
-                for (BeModelElement changedElement : changed) {
+                for (BeModelElement changedElement : changed)
+                {
                     debugStream.println("- Changed: " + changedElement.getCompletePath());
                 }
             }
@@ -842,8 +900,10 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         List<Entity> entities = new ArrayList<>();
 
-        for (Module module : getProject().getModulesAndApplication()) {
-            for (Entity entity : module.getEntities()) {
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            for (Entity entity : module.getEntities())
+            {
                 entities.add(entity);
             }
         }
@@ -884,17 +944,20 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         Entity entity = getEntity(entityName);
 
-        if (entity == null) {
+        if (entity == null)
+        {
             return null;
         }
 
         Query query = entity.getQueries().get(queryName);
 
-        if (query == null) {
+        if (query == null)
+        {
             return null;
         }
 
-        if (!query.getOperationNames().getFinalValues().contains(opearationName)) {
+        if (!query.getOperationNames().getFinalValues().contains(opearationName))
+        {
             return null;
         }
 
@@ -911,7 +974,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         Entity entity = getEntity(entityName);
 
-        if (entity == null) {
+        if (entity == null)
+        {
             return null;
         }
 
@@ -926,18 +990,22 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
      */
     public StaticPage findStaticPage(String language, String name)
     {
-        for (Module module : getModulesAndApplication()) {
+        for (Module module : getModulesAndApplication())
+        {
             StaticPages staticPages = module.getStaticPageCollection();
 
-            if (staticPages == null) {
+            if (staticPages == null)
+            {
                 continue;
             }
 
             LanguageStaticPages languageStaticPages = staticPages.get(language);
 
-            if (languageStaticPages != null) {
+            if (languageStaticPages != null)
+            {
                 StaticPage staticPage = languageStaticPages.get(name);
-                if (staticPage != null) {
+                if (staticPage != null)
+                {
                     return staticPage;
                 }
             }
@@ -956,7 +1024,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         final StaticPage page = findStaticPage(language, name);
 
-        if (page != null) {
+        if (page != null)
+        {
             return page.getContent();
         }
 
@@ -971,22 +1040,26 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
      */
     public String translateSQL(String sql)
     {
-        if (beSQL > 0) {
+        if (beSQL > 0)
+        {
             if (--beSQL == 0)
                 reconfigureFreemarker();
         }
-        if (sqlParser == null) {
+        if (sqlParser == null)
+        {
             throw new IllegalStateException("translateSQL was called without enterSQL");
         }
         sqlParser.parse(sql);
         List<String> messages = sqlParser.getMessages();
-        if (!messages.isEmpty()) {
+        if (!messages.isEmpty())
+        {
             throw new IllegalArgumentException(
                     ("SQL cannot be parsed:\nQuery:" + sql + "\nErrors: " + String.join("\n", messages)).replace("\r", "").replace("\n",
                             System.lineSeparator()));
         }
         AstStart ast = sqlParser.getStartNode();
-        if (databaseSystem != Rdbms.BESQL) {
+        if (databaseSystem != Rdbms.BESQL)
+        {
             new MacroExpander().expandMacros(ast);
             Dbms dbms = databaseSystem == null ? Dbms.POSTGRESQL : Dbms.valueOf(databaseSystem.name());
             DbmsTransformer dbmsTransformer = new Context(dbms).getDbmsTransformer();
@@ -1003,13 +1076,16 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public void enterSQL()
     {
-        if (++beSQL == 1) {
+        if (++beSQL == 1)
+        {
             reconfigureFreemarker();
             SqlParser parser = new SqlParser();
-            for (String sqlMacro : sqlMacros) {
+            for (String sqlMacro : sqlMacros)
+            {
                 parser.parse(sqlMacro);
                 List<String> messages = parser.getMessages();
-                if (!messages.isEmpty()) {
+                if (!messages.isEmpty())
+                {
                     throw new IllegalArgumentException(("SQL Macro cannot be parsed:\nMacro:" + sqlMacro + "\nErrors: " + String.join("\n",
                             messages)).replace("\r", "").replace("\n", System.lineSeparator()));
                 }

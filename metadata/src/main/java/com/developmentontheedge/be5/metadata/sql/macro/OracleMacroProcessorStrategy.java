@@ -33,11 +33,13 @@ public class OracleMacroProcessorStrategy extends MacroProcessorStrategySupport
     public String coalesce(String... args)
     {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < args.length - 1; i++) {
+        for (int i = 0; i < args.length - 1; i++)
+        {
             sb.append("NVL( ").append(args[i]).append(", ");
         }
         sb.append(args[args.length - 1]);
-        for (int i = 0; i < args.length - 1; i++) {
+        for (int i = 0; i < args.length - 1; i++)
+        {
             sb.append(" )");
         }
         return sb.toString();

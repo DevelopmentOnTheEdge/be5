@@ -3,9 +3,9 @@ package com.developmentontheedge.sql.format.dbms;
 
 public enum DateFormat
 {
-    FORMAT_DATE("'YYYY-MM-DD'", "'%Y-%m-%d'"), 
-    FORMAT_DATETIME("'YYYY-MM-DD HH24:MI:SS'", "'%Y-%m-%d %H:%i:%S'"), 
-    FORMAT_DATE_RUS("'DD.MM.YYYY'", "'%d.%m.%Y'"), 
+    FORMAT_DATE("'YYYY-MM-DD'", "'%Y-%m-%d'"),
+    FORMAT_DATETIME("'YYYY-MM-DD HH24:MI:SS'", "'%Y-%m-%d %H:%i:%S'"),
+    FORMAT_DATE_RUS("'DD.MM.YYYY'", "'%d.%m.%Y'"),
     FORMAT_DATE_RUS_SHORT("'DD.MM.YY'", "'%d.%m.%y'"),
     FORMAT_MONTHYEAR("'month YYYY'", "'%M %Y'"),
     FORMAT_FMDAYMONTH("'FMDD.MM'", "'%e.%c'"),
@@ -17,7 +17,7 @@ public enum DateFormat
     YEAR("'YYYY'", "'%Y'"),
     MONTH("'MM'", "'%m'"),
     DAY("'DD'", "'%d'");
-    
+
     private final String formatMySQL;
     private final String formatOther;
 
@@ -26,17 +26,17 @@ public enum DateFormat
         this.formatMySQL = formatMySQL;
         this.formatOther = formatOther;
     }
-    
+
     public static DateFormat byFunction(String name)
     {
-        for( DateFormat f : values() )
+        for (DateFormat f : values())
         {
-            if( name.equalsIgnoreCase( f.name() ) )
+            if (name.equalsIgnoreCase(f.name()))
                 return f;
         }
         return null;
     }
-    
+
     public String getFormatMySQL()
     {
         return formatMySQL;
@@ -49,9 +49,9 @@ public enum DateFormat
 
     public static DateFormat byFormatString(String format)
     {
-        for( DateFormat f : values() )
+        for (DateFormat f : values())
         {
-            if( f.formatMySQL.equals( format ) || f.formatOther.equalsIgnoreCase( format ) )
+            if (f.formatMySQL.equals(format) || f.formatOther.equalsIgnoreCase(format))
                 return f;
         }
         return null;

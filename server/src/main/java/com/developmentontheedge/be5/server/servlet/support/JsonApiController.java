@@ -12,11 +12,10 @@ public abstract class JsonApiController extends ApiControllerSupport
     protected final void generate(Request req, Response res, String subUrl)
     {
         Object object = generate(req, subUrl);
-        if(object != null)
+        if (object != null)
         {
             res.sendAsJson(object);
-        }
-        else
+        } else
         {
             res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }

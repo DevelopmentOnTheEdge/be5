@@ -29,12 +29,14 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     @Override
     public void execute()
     {
-        if (skipGenerateContextPath) {
+        if (skipGenerateContextPath)
+        {
             log.info("Generate context.xml skipped.");
             return;
         }
 
-        if (connectionProfileName == null) {
+        if (connectionProfileName == null)
+        {
             log.info("Generate context.xml skipped - BE5_PROFILE not specified.");
             return;
         }
@@ -45,20 +47,24 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
 
         File file = Paths.get(generateFilePath).toFile();
 
-        if (file.exists() && !file.isDirectory()) {
+        if (file.exists() && !file.isDirectory())
+        {
             log.info("Generate context.xml skipped, file exists: " + generateFilePath);
             return;
         }
 
         initProject();
 
-        if (connectionProfileName != null) {
+        if (connectionProfileName != null)
+        {
             be5Project.setConnectionProfileName(connectionProfileName);
         }
 
-        try {
+        try
+        {
             createFile();
-        } catch (IOException | ProjectLoadException e) {
+        } catch (IOException | ProjectLoadException e)
+        {
             e.printStackTrace();
         }
     }
@@ -70,7 +76,8 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
         //InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
         InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/tomcat-pool.xml");
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource)))
+        {
             text = br.lines().collect(Collectors.joining("\n"));
         }
         String resultContext = replacePlaceholders(text);
@@ -86,7 +93,8 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     private String replacePlaceholders(String text) throws ScriptException, ProjectLoadException
     {
         BeConnectionProfile prof = be5Project.getConnectionProfile();
-        if (prof == null) {
+        if (prof == null)
+        {
             throw new ScriptException("Connection profile is required for 'generate-context'");
         }
 

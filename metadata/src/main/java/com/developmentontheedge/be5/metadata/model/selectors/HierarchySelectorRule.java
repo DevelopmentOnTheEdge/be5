@@ -35,7 +35,8 @@ public class HierarchySelectorRule implements SelectorRule
         if (!rules.get(ruleNum).matches(element))
             return false;
         ruleNum--;
-        while (ruleNum >= 0) {
+        while (ruleNum >= 0)
+        {
             element = element.getOrigin();
             if (element == null)
                 return false;

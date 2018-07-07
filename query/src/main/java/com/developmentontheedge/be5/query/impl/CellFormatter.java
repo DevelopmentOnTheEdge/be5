@@ -52,59 +52,58 @@ public class CellFormatter
 //        if(formattedContent == null) {
 //            return null;
 //        }
-            //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
-            if(formattedContent instanceof String)
+        //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
+        if (formattedContent instanceof String)
+        {
+            formattedContent = userAwareMeta.getLocalizedCell((String) formattedContent, query.getEntity().getName(), query.getName());
+        }
+        //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
+
+        Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
+        if (blankNullsProperties != null)
+        {
+            if (formattedContent == null || formattedContent.equals("null"))
             {
-                formattedContent = userAwareMeta.getLocalizedCell((String)formattedContent, query.getEntity().getName(), query.getName());
+                formattedContent = blankNullsProperties.getOrDefault("value", "");
             }
-            //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
+        }
 
-            Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
-            if(blankNullsProperties != null)
+
+        Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
+        if (nullIfProperties != null)
+        {
+            if (formattedContent == null || formattedContent.equals(nullIfProperties.get("value")))
             {
-                if( formattedContent == null || formattedContent.equals( "null" ) )
-                {
-                    formattedContent = blankNullsProperties.getOrDefault("value", "");
-                }
+                formattedContent = nullIfProperties.getOrDefault("result", "");
             }
+        }
 
-
-            Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
-            if(nullIfProperties != null)
+        Map<String, String> linkProperties = cell.options.get(DatabaseConstants.COL_ATTR_LINK);
+        if (linkProperties != null)
+        {
+            try
             {
-                if( formattedContent == null || formattedContent.equals( nullIfProperties.get("value") ) )
+                HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
+                        .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+                String cols = linkProperties.get("columns");
+                String vals = linkProperties.get("using");
+                if (cols != null && vals != null)
                 {
-                    formattedContent = nullIfProperties.getOrDefault("result", "");
-                }
-            }
-
-            Map<String, String> linkProperties = cell.options.get(DatabaseConstants.COL_ATTR_LINK);
-            if(linkProperties != null)
-            {
-                try
-                {
-                    HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
-                            .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-                    String cols = linkProperties.get("columns");
-                    String vals = linkProperties.get("using");
-                    if(cols != null && vals != null)
+                    String[] colsArr = cols.split(",");
+                    String[] valuesArr = vals.split(",");
+                    for (int i = 0; i < colsArr.length; i++)
                     {
-                        String[] colsArr = cols.split(",");
-                        String[] valuesArr = vals.split(",");
-                        for (int i=0;i<colsArr.length;i++)
-                        {
-                            String resolveValue = varResolver.resolve(valuesArr[i]);
-                            if(resolveValue != null)url = url.named(colsArr[i], resolveValue);
-                        }
+                        String resolveValue = varResolver.resolve(valuesArr[i]);
+                        if (resolveValue != null) url = url.named(colsArr[i], resolveValue);
                     }
-                    cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
                 }
-                catch (Throwable e)
-                {
-                    throw Be5Exception.internalInQuery(query,
-                            new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
-                }
+                cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
+            } catch (Throwable e)
+            {
+                throw Be5Exception.internalInQuery(query,
+                        new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
             }
+        }
 
         return formattedContent;
     }
@@ -115,31 +114,32 @@ public class CellFormatter
 
         boolean hasLink = cell.options.containsKey("link");
         Map<String, String> link = null;
-        if(hasLink) {
+        if (hasLink)
+        {
             link = cell.options.get("link");
             cell.options.remove("link");
         }
 
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
 
-        if(cell.content == null)
+        if (cell.content == null)
         {
             return null;
         }
 
-        if(cell.content instanceof String)
+        if (cell.content instanceof String)
         {
-            unzipper.unzip((String)cell.content, builder::add, subquery ->
+            unzipper.unzip((String) cell.content, builder::add, subquery ->
                     builder.add(toTable(subquery, varResolver))
             );
             ImmutableList<Object> formattedParts = builder.build();
 
-            if(hasLink) {
+            if (hasLink)
+            {
                 cell.options.put("link", link);
             }
             return StreamEx.of(formattedParts).map(this::print).joining();
-        }
-        else
+        } else
         {
             return cell.content;
         }
@@ -153,16 +153,14 @@ public class CellFormatter
         if (formattedPart instanceof String)
         {
             return (String) formattedPart;
-        }
-        else if (formattedPart instanceof List)
+        } else if (formattedPart instanceof List)
         {
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
             return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
-                    .map(x-> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
-        }
-        else
+                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
+        } else
         {
             throw new AssertionError(formattedPart.getClass().getName());
         }

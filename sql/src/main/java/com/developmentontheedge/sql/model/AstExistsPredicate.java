@@ -6,7 +6,7 @@ public class AstExistsPredicate extends SimpleNode
 {
     public AstExistsPredicate(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "EXISTS";
     }
 }

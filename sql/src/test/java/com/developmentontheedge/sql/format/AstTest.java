@@ -116,7 +116,7 @@ public class AstTest
     @Test
     public void limitWithOffset()
     {
-        AstSelect users = Ast.selectAll().from("users").limit(20,10);
+        AstSelect users = Ast.selectAll().from("users").limit(20, 10);
         assertEquals("SELECT * FROM users LIMIT 20, 10",
                 users.format());
     }

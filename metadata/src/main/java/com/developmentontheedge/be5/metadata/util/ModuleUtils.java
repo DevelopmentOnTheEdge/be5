@@ -9,7 +9,8 @@ public class ModuleUtils
 {
     public static void addModuleScripts(Project project) throws ReadException
     {
-        for (Module module : project.getModules()) {
+        for (Module module : project.getModules())
+        {
             Serialization.loadModuleMacros(module);
         }
     }

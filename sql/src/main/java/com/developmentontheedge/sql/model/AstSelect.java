@@ -12,68 +12,72 @@ public class AstSelect extends SimpleNode
 {
     public AstSelect(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "SELECT";
     }
 
     public AstSelect(AstSelectList list, AstFrom from, AstWhere where)
     {
-        this( SqlParserTreeConstants.JJTSELECT );
-        addChild( list );
-        addChild( from );
-        if(where != null)addChild( where );
+        this(SqlParserTreeConstants.JJTSELECT);
+        addChild(list);
+        addChild(from);
+        if (where != null) addChild(where);
     }
-    
+
     public AstSelect(AstSelectList list, AstFrom from)
     {
-        this( SqlParserTreeConstants.JJTSELECT );
-        addChild( list );
-        addChild( from );
+        this(SqlParserTreeConstants.JJTSELECT);
+        addChild(list);
+        addChild(from);
     }
 
     private SetQuantifier setQuantifier = SetQuantifier.DEFAULT;
+
     public SetQuantifier getQuantifier()
     {
         return setQuantifier;
     }
+
     public void setQuantifier(SetQuantifier setQuantifier)
     {
-        this.setQuantifier = Objects.requireNonNull( setQuantifier );
-        if(setQuantifier == SetQuantifier.DEFAULT)
+        this.setQuantifier = Objects.requireNonNull(setQuantifier);
+        if (setQuantifier == SetQuantifier.DEFAULT)
             this.nodePrefix = "SELECT";
         else
-            this.nodePrefix = "SELECT "+setQuantifier;
+            this.nodePrefix = "SELECT " + setQuantifier;
     }
 
     public AstSelectList getSelectList()
     {
-        return children().select( AstSelectList.class ).findFirst().get();
+        return children().select(AstSelectList.class).findFirst().get();
     }
-    
+
     public AstFrom getFrom()
     {
-        return children().select( AstFrom.class ).findFirst().orElse( null );
+        return children().select(AstFrom.class).findFirst().orElse(null);
     }
-    
+
     public void from(AstFrom from)
     {
-        if(from != null)
-            from.jjtSetParent( this );
-        int idx = IntStreamEx.ofIndices( children, AstSelectList.class::isInstance ).findFirst().getAsInt();
-        if(children.size() > idx+1 && children.get( idx+1 ) instanceof AstFrom) {
-            if(from == null)
-                children.remove( idx+1 );
+        if (from != null)
+            from.jjtSetParent(this);
+        int idx = IntStreamEx.ofIndices(children, AstSelectList.class::isInstance).findFirst().getAsInt();
+        if (children.size() > idx + 1 && children.get(idx + 1) instanceof AstFrom)
+        {
+            if (from == null)
+                children.remove(idx + 1);
             else
-                children.set( idx+1, from );
-        } else {
-            if(from != null)
-                children.add( idx+1, from );
+                children.set(idx + 1, from);
+        } else
+        {
+            if (from != null)
+                children.add(idx + 1, from);
         }
     }
-    
+
     public AstWhere getWhere()
     {
-        return children().select( AstWhere.class ).findFirst().orElse( null );
+        return children().select(AstWhere.class).findFirst().orElse(null);
     }
 
     public AstSelect where(String key, Object value)
@@ -87,44 +91,45 @@ public class AstSelect extends SimpleNode
     public AstSelect where(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
-        if(!conditions.isEmpty()) where(new AstWhere(conditions));
+        if (!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;
     }
 
     public void where(AstWhere where)
     {
-        Objects.requireNonNull( where );
+        Objects.requireNonNull(where);
         AstWhere oldWhere = getWhere();
-        if(oldWhere == null)
+        if (oldWhere == null)
         {
             SimpleNode prev = getFrom();
-            if(prev == null)
+            if (prev == null)
                 prev = getSelectList();
-            prev.appendSibling( where );
-        }
-        else
+            prev.appendSibling(where);
+        } else
         {
-            oldWhere.replaceWith( where );
+            oldWhere.replaceWith(where);
         }
     }
-    
+
     public AstGroupBy getGroupBy()
     {
-        return children().select( AstGroupBy.class ).findFirst().orElse( null );
+        return children().select(AstGroupBy.class).findFirst().orElse(null);
     }
-    
+
     public AstLimit getLimit()
     {
-        return children().select( AstLimit.class ).findFirst().orElse( null );
+        return children().select(AstLimit.class).findFirst().orElse(null);
     }
 
     public AstSelect limit(int offset, int count)
     {
         AstLimit limit = AstLimit.of(offset, count);
         AstLimit oldLimit = children().select(AstLimit.class).findFirst().orElse(null);
-        if(oldLimit != null){
+        if (oldLimit != null)
+        {
             oldLimit.replaceWith(limit);
-        }else{
+        } else
+        {
             addChild(limit);
         }
         return this;
@@ -134,19 +139,19 @@ public class AstSelect extends SimpleNode
     {
         return limit(0, count);
     }
-    
+
     public AstOrderBy getOrderBy()
     {
-        return children().select( AstOrderBy.class ).findFirst().orElse( null );
+        return children().select(AstOrderBy.class).findFirst().orElse(null);
     }
-    
+
     public void dropOrder()
     {
-        children.removeIf( AstOrderBy.class::isInstance );
+        children.removeIf(AstOrderBy.class::isInstance);
     }
-    
+
     public void dropLimit()
     {
-        children.removeIf( AstLimit.class::isInstance );
+        children.removeIf(AstLimit.class::isInstance);
     }
 }

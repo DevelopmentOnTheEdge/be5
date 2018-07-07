@@ -7,7 +7,7 @@ public class OperationUtils
 {
     public static String[] selectedRows(String selectedRowsString)
     {
-        if(selectedRowsString.trim().isEmpty())return new String[0];
+        if (selectedRowsString.trim().isEmpty()) return new String[0];
         return selectedRowsString.split(",");
     }
 
@@ -16,11 +16,10 @@ public class OperationUtils
         HashMap<String, Object> map = new HashMap<>();
         for (Map.Entry<String, Object> entry : values.entrySet())
         {
-            if( "".equals(entry.getValue()) )
+            if ("".equals(entry.getValue()))
             {
                 map.put(entry.getKey(), null);
-            }
-            else
+            } else
             {
                 map.put(entry.getKey(), entry.getValue());
             }

@@ -39,8 +39,7 @@ public class ApplicationInfoController extends JsonApiController
         try
         {
             return getApplicationInfo();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw Be5Exception.internal(e);
         }

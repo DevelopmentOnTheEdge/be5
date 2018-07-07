@@ -9,9 +9,11 @@ public class OperationMultiSelector extends GenericMultiSelectEditor
     @Override
     protected String[] getAvailableValues()
     {
-        try {
+        try
+        {
             return ((OperationSet) getBean()).getOwner().getEntity().getOperations().names().toArray(String[]::new);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return Strings2.EMPTY;
         }
     }

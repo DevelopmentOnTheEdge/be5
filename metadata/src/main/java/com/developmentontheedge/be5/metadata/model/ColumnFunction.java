@@ -18,13 +18,16 @@ public class ColumnFunction
         String transform = TRANSFORM_NONE;
         String columnName = definition == null ? "" : definition;
 
-        if (columnName.startsWith("upper(") && columnName.endsWith(")")) {
+        if (columnName.startsWith("upper(") && columnName.endsWith(")"))
+        {
             transform = TRANSFORM_UPPER;
             columnName = columnName.substring("upper(".length(), columnName.length() - ")".length());
-        } else if (columnName.startsWith("lower(") && columnName.endsWith(")")) {
+        } else if (columnName.startsWith("lower(") && columnName.endsWith(")"))
+        {
             transform = TRANSFORM_LOWER;
             columnName = columnName.substring("lower(".length(), columnName.length() - ")".length());
-        } else if (columnName.startsWith("generic(") && columnName.endsWith(")")) {
+        } else if (columnName.startsWith("generic(") && columnName.endsWith(")"))
+        {
             transform = TRANSFORM_GENERIC;
             columnName = columnName.substring("generic(".length(), columnName.length() - ")".length());
         }
@@ -56,11 +59,14 @@ public class ColumnFunction
     public String getDefinition(Rdbms databaseSystem, String entity)
     {
         String definition = databaseSystem.getTypeManager().normalizeIdentifier(getColumnName());
-        if (ColumnFunction.TRANSFORM_GENERIC.equals(getTransform())) {
+        if (ColumnFunction.TRANSFORM_GENERIC.equals(getTransform()))
+        {
             definition = databaseSystem.getMacroProcessorStrategy().genericRefLowLevel(entity, definition);
-        } else if (ColumnFunction.TRANSFORM_UPPER.equals(getTransform())) {
+        } else if (ColumnFunction.TRANSFORM_UPPER.equals(getTransform()))
+        {
             definition = databaseSystem.getMacroProcessorStrategy().upper(definition);
-        } else if (ColumnFunction.TRANSFORM_LOWER.equals(getTransform())) {
+        } else if (ColumnFunction.TRANSFORM_LOWER.equals(getTransform()))
+        {
             definition = databaseSystem.getMacroProcessorStrategy().lower(definition);
         }
         return definition;
@@ -70,7 +76,8 @@ public class ColumnFunction
     public String toString()
     {
         String definition = getColumnName();
-        if (isTransformed()) {
+        if (isTransformed())
+        {
             definition = getTransform() + "(" + definition + ")";
         }
         return definition;

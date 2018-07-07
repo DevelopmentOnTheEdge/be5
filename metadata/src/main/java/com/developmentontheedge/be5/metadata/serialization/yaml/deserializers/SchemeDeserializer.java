@@ -55,20 +55,24 @@ class SchemeDeserializer extends BaseDeserializer
     {
         final Map<String, Object> serializedReferences;
 
-        try {
+        try
+        {
             serializedReferences = asMapOrEmpty(serializedEntityBody.get(TAG_REFERENCES));
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(entity));
             return;
         }
 
-        for (final String name : serializedReferences.keySet()) {
+        for (final String name : serializedReferences.keySet())
+        {
             final String columnFrom = name;
             final Object content = serializedReferences.get(name);
 
             final TableRefStructure tableRefStructure = toTableReference(content);
 
-            if (tableRefStructure != null) {
+            if (tableRefStructure != null)
+            {
                 final BeModelCollection<TableRef> references = entity.getOrCreateTableReferences();
                 final String tableRefName = TableRef.nameFor(columnFrom, tableRefStructure.tableTo);
                 final TableRef tableRef = new TableRef(tableRefName, columnFrom, references);
@@ -95,9 +99,11 @@ class SchemeDeserializer extends BaseDeserializer
 
     private void readSchemeContent(Entity entity, final Map<String, Object> schemeContent) throws ReadException
     {
-        if (schemeContent.get(TAG_VIEW_DEFINITION) instanceof String) {
+        if (schemeContent.get(TAG_VIEW_DEFINITION) instanceof String)
+        {
             save(readViewDef(schemeContent, entity));
-        } else {
+        } else
+        {
             save(readTableDef(schemeContent, entity));
         }
     }
@@ -121,15 +127,18 @@ class SchemeDeserializer extends BaseDeserializer
         final BeVectorCollection<IndexDef> indices = tableDef.getIndices();
         final List<Map<String, Object>> indicesList = asMaps(tableContent.get(TAG_INDICES));
 
-        try {
-            for (Map<String, Object> indexElement : indicesList) {
+        try
+        {
+            for (Map<String, Object> indexElement : indicesList)
+            {
                 for (Map.Entry<String, Object> indexPair : indexElement.entrySet()) // should be only one pair
                 {
                     IndexDef index = readIndexDef(indexPair.getKey(), asMap(indexPair.getValue()), indices);
                     save(index);
                 }
             }
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(indices));
         }
     }
@@ -139,15 +148,18 @@ class SchemeDeserializer extends BaseDeserializer
         final BeVectorCollection<ColumnDef> columns = tableDef.getColumns();
         final List<Map<String, Object>> columnsList = asMaps(tableContent.get(TAG_COLUMNS));
 
-        try {
-            for (Map<String, Object> columnElement : columnsList) {
+        try
+        {
+            for (Map<String, Object> columnElement : columnsList)
+            {
                 for (Map.Entry<String, Object> columnPair : columnElement.entrySet()) // should be only one pair
                 {
                     ColumnDef column = readColumnDef(columnPair.getKey(), asMap(columnPair.getValue()), columns);
                     save(column);
                 }
             }
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(columns));
         }
     }
@@ -161,7 +173,8 @@ class SchemeDeserializer extends BaseDeserializer
 
         final Object serializedOldNames = columnElement.get(SerializationConstants.TAG_OLD_NAMES);
 
-        if (serializedOldNames != null) {
+        if (serializedOldNames != null)
+        {
             final List<String> oldNames = asStrList(serializedOldNames);
             column.setOldNames(oldNames.toArray(new String[oldNames.size()]));
         }
@@ -170,7 +183,8 @@ class SchemeDeserializer extends BaseDeserializer
 
         final TableRefStructure tableRefStructure = toTableReference(columnElement.get(TAG_REFERENCE));
 
-        if (tableRefStructure != null) {
+        if (tableRefStructure != null)
+        {
             tableRefStructure.applyTo(column);
         }
 
@@ -188,7 +202,8 @@ class SchemeDeserializer extends BaseDeserializer
         readUsedExtras(indexElement, index);
         List<String> cols = asStrList(indexElement.get(TAG_COLUMNS));
 
-        for (String indexColumnStr : cols) {
+        for (String indexColumnStr : cols)
+        {
             DataElementUtils.saveQuiet(IndexColumnDef.createFromString(indexColumnStr, index));
         }
 
@@ -216,11 +231,13 @@ class SchemeDeserializer extends BaseDeserializer
     {
         TableRefStructure tableRef = new TableRefStructure();
 
-        if (content instanceof String) {
+        if (content instanceof String)
+        {
             final String joined = (String) content;
             final List<String> splittedTo = StreamEx.split(joined, "\\.").toList();
 
-            if (splittedTo.size() == 1) {
+            if (splittedTo.size() == 1)
+            {
                 final String tableTo = splittedTo.get(0);
                 final String columnTo = "";
                 tableRef.tableTo = tableTo;
@@ -229,7 +246,8 @@ class SchemeDeserializer extends BaseDeserializer
                 return tableRef;
             }
 
-            if (splittedTo.size() >= 2) {
+            if (splittedTo.size() >= 2)
+            {
                 final String tableTo = splittedTo.get(0);
                 final String columnTo = Strings2.joinTail(".", splittedTo);
                 tableRef.tableTo = tableTo;
@@ -237,31 +255,37 @@ class SchemeDeserializer extends BaseDeserializer
 
                 return tableRef;
             }
-        } else if (content instanceof List) {
+        } else if (content instanceof List)
+        {
             final List<?> tablesRaw = (List<?>) content;
             final List<String> tables2 = new ArrayList<>();
 
-            for (Object tableRaw : tablesRaw) {
+            for (Object tableRaw : tablesRaw)
+            {
                 tables2.add(String.valueOf(tableRaw));
             }
 
             tableRef.permittedTables = tables2.toArray(new String[tables2.size()]);
 
             return tableRef;
-        } else if (content instanceof Map) {
+        } else if (content instanceof Map)
+        {
             final Map<?, ?> map = (Map<?, ?>) content;
             final Object view = map.get("view");
             final Object to = map.get("to");
 
-            if (view != null) {
+            if (view != null)
+            {
                 tableRef.view = String.valueOf(view);
             }
 
-            if (to instanceof String) {
+            if (to instanceof String)
+            {
                 final String joined = (String) to;
                 final List<String> splittedTo = StreamEx.split(joined, "\\.").toList();
 
-                if (splittedTo.size() == 1) {
+                if (splittedTo.size() == 1)
+                {
                     final String tableTo = splittedTo.get(0);
                     final String columnTo = "";
                     tableRef.tableTo = tableTo;
@@ -270,7 +294,8 @@ class SchemeDeserializer extends BaseDeserializer
                     return tableRef;
                 }
 
-                if (splittedTo.size() >= 2) {
+                if (splittedTo.size() >= 2)
+                {
                     final String tableTo = splittedTo.get(0);
                     final String columnTo = Strings2.joinTail(".", splittedTo);
                     tableRef.tableTo = tableTo;
@@ -278,11 +303,13 @@ class SchemeDeserializer extends BaseDeserializer
 
                     return tableRef;
                 }
-            } else {
+            } else
+            {
                 final List<?> tablesRaw = (to instanceof List) ? (List<?>) to : new ArrayList<>();
                 final List<String> tables2 = new ArrayList<>();
 
-                for (Object tableRaw : tablesRaw) {
+                for (Object tableRaw : tablesRaw)
+                {
                     tables2.add(String.valueOf(tableRaw));
                 }
 

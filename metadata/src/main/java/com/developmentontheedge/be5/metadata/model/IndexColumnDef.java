@@ -70,11 +70,13 @@ public class IndexColumnDef extends BeModelElementSupport
     public String getDefinition()
     {
         Rdbms rdbms = getProject().getDatabaseSystem();
-        if (rdbms == Rdbms.MYSQL && !function.isTransformed()) {
+        if (rdbms == Rdbms.MYSQL && !function.isTransformed())
+        {
             ColumnDef column = getIndexDef().getTable().getColumns().get(getName());
             if (column != null && (column.getType().getTypeName().equals(SqlColumnType.TYPE_TEXT)
                     || column.getType().getTypeName().equals(SqlColumnType.TYPE_BIGTEXT)
-                    || column.getType().getTypeName().equals(SqlColumnType.TYPE_BLOB))) {
+                    || column.getType().getTypeName().equals(SqlColumnType.TYPE_BLOB)))
+            {
                 return rdbms.getTypeManager().normalizeIdentifier(getName()) + "(" + 100 + ")";
             }
         }
@@ -85,12 +87,15 @@ public class IndexColumnDef extends BeModelElementSupport
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> result = new ArrayList<>();
-        try {
+        try
+        {
             ModelValidationUtils.checkValueInSet(this, "transform", getTransform(), ColumnFunction.TRANSFORMS);
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             result.add(e);
         }
-        if (isFromApplication() && ((IndexDef) getOrigin()).getTable().getColumns().getCaseInsensitive(getName()) == null) {
+        if (isFromApplication() && ((IndexDef) getOrigin()).getTable().getColumns().getCaseInsensitive(getName()) == null)
+        {
             result.add(new ProjectElementException(this, "Column not found"));
         }
         return result;

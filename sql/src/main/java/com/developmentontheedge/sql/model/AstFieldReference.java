@@ -6,39 +6,39 @@ public class AstFieldReference extends SimpleNode
 {
     public AstFieldReference(int id)
     {
-        super( id );
+        super(id);
         this.childrenDelimiter = ".";
     }
 
     public AstFieldReference(String fieldName)
     {
-        this(new AstIdentifierConstant( fieldName, false ));
+        this(new AstIdentifierConstant(fieldName, false));
     }
 
     public AstFieldReference(String fieldName, boolean quote)
     {
-        this(new AstIdentifierConstant( fieldName, quote ));
+        this(new AstIdentifierConstant(fieldName, quote));
     }
 
     public AstFieldReference(AstIdentifierConstant fieldName)
     {
         this(SqlParserTreeConstants.JJTFIELDREFERENCE);
-        addChild( fieldName );
+        addChild(fieldName);
     }
 
     public AstFieldReference(String tableName, String fieldName)
     {
-        this(new AstIdentifierConstant( tableName, false ),
-             new AstIdentifierConstant( fieldName, false ));
+        this(new AstIdentifierConstant(tableName, false),
+                new AstIdentifierConstant(fieldName, false));
     }
-    
+
     public AstFieldReference(AstIdentifierConstant tableName, AstIdentifierConstant fieldName)
     {
         this(SqlParserTreeConstants.JJTFIELDREFERENCE);
-        addChild( tableName );
-        addChild( fieldName );
+        addChild(tableName);
+        addChild(fieldName);
     }
-    
+
     public String getValue()
     {
         return format().trim();

@@ -9,7 +9,7 @@ public class AstDelete extends SimpleNode
 {
     public AstDelete(AstTableName tableName)
     {
-        this( SqlParserTreeConstants.JJTDELETE );
+        this(SqlParserTreeConstants.JJTDELETE);
         addChild(tableName);
     }
 
@@ -19,35 +19,35 @@ public class AstDelete extends SimpleNode
         this.nodePrefix = "DELETE FROM";
     }
 
-    public AstDelete where(Map<String, ? super Object> conditions){
+    public AstDelete where(Map<String, ? super Object> conditions)
+    {
         Objects.requireNonNull(conditions);
-        if(!conditions.isEmpty()) where(new AstWhere(conditions));
+        if (!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;
     }
 
     public AstDelete where(AstWhere where)
     {
-        Objects.requireNonNull( where );
+        Objects.requireNonNull(where);
         AstWhere oldWhere = getWhere();
-        if(oldWhere == null)
+        if (oldWhere == null)
         {
             addChild(where);
-        }
-        else
+        } else
         {
-            oldWhere.replaceWith( where );
+            oldWhere.replaceWith(where);
         }
         return this;
     }
 
     public AstWhere getWhere()
     {
-        return children().select( AstWhere.class ).findFirst().orElse( null );
+        return children().select(AstWhere.class).findFirst().orElse(null);
     }
 
     public AstDelete whereInPredicate(String columnName, int count)
     {
-        Objects.requireNonNull( columnName );
+        Objects.requireNonNull(columnName);
         where(AstWhere.withReplacementParameter(columnName, count));
         return this;
     }

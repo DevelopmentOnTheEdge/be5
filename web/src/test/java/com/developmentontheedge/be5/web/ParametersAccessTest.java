@@ -107,7 +107,7 @@ public class ParametersAccessTest
     {
         when(httpServletRequest.getParameter("name")).thenReturn("123");
 
-        assertEquals(123, (int)req.getInteger("name"));
+        assertEquals(123, (int) req.getInteger("name"));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ParametersAccessTest
     {
         when(httpServletRequest.getParameter("name")).thenReturn("123");
 
-        assertEquals(123L, (long)req.getLong("name"));
+        assertEquals(123L, (long) req.getLong("name"));
     }
 
     @Test

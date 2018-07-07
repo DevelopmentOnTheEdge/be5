@@ -9,26 +9,25 @@ import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import javax.inject.Inject
 import java.sql.Date
 
-class TestGroovyOp extends GOperationSupport implements Operation
-{
-    @Inject private UserAwareMeta userAwareMeta
+class TestGroovyOp extends GOperationSupport implements Operation {
+    @Inject
+    private UserAwareMeta userAwareMeta
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception
-    {
-        if(!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
+    Object getParameters(Map<String, Object> presetValues) throws Exception {
+        if (!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
 
         params << [
-                name         : "name",
-                DISPLAY_NAME : "Имя",
-                value        : "Test"
+                name        : "name",
+                DISPLAY_NAME: "Имя",
+                value       : "Test"
         ]
 
         params << [
-                name         : "beginDate",
-                DISPLAY_NAME : "Дата начала",
-                TYPE         : Date,
-                value        : "2017-07-01"
+                name        : "beginDate",
+                DISPLAY_NAME: "Дата начала",
+                TYPE        : Date,
+                value       : "2017-07-01"
         ]
 
         params << [
@@ -44,7 +43,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
                 DISPLAY_NAME           : "Множественный выбор",
                 MULTIPLE_SELECTION_LIST: true,
                 TAG_LIST_ATTR          : [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                value                  : ["vacation","sick"] as String[]
+                value                  : ["vacation", "sick"] as String[]
         ]
 
         //@Deprecated
@@ -88,8 +87,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters) throws Exception
-    {
+    void invoke(Object parameters) throws Exception {
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", params.$name, params.$beginDate, params.$reason)
     }
 

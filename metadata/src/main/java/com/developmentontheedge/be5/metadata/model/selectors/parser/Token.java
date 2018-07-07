@@ -128,7 +128,8 @@ public class Token implements java.io.Serializable
      */
     public static Token newToken(int ofKind, String image)
     {
-        switch (ofKind) {
+        switch (ofKind)
+        {
             default:
                 return new Token(ofKind, image);
         }

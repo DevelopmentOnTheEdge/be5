@@ -54,32 +54,40 @@ class YamlRepresenter extends Representer
 
     private void collectFlowStyleElements(final String name, final Object element, final Map<Object, Object> out, final int level)
     {
-        if (name != null) {
+        if (name != null)
+        {
             stack.push(name);
         }
 
-        if (level > MAXIMUM_LEVEL) {
+        if (level > MAXIMUM_LEVEL)
+        {
             throw new IllegalStateException();
         }
 
-        if (name != null) {
-            if (flowStyleListNames.contains(name) && element instanceof List) {
+        if (name != null)
+        {
+            if (flowStyleListNames.contains(name) && element instanceof List)
+            {
                 out.put(element, element);
             }
         }
 
-        if (element instanceof List && stack.contains(SerializationConstants.TAG_REFERENCES)) {
+        if (element instanceof List && stack.contains(SerializationConstants.TAG_REFERENCES))
+        {
             out.put(element, element);
         }
 
-        if (element instanceof List) {
+        if (element instanceof List)
+        {
             final List<?> list = (List<?>) element;
-            for (final Object child : list) {
+            for (final Object child : list)
+            {
                 collectFlowStyleElements(null, child, out, level + 1);
             }
         }
 
-        if (element instanceof Map) {
+        if (element instanceof Map)
+        {
             final Map<?, ?> map = (Map<?, ?>) element;
             map.forEach((key, child) -> {
                 String childName = key instanceof String ? (String) key : null;
@@ -87,7 +95,8 @@ class YamlRepresenter extends Representer
             });
         }
 
-        if (name != null) {
+        if (name != null)
+        {
             stack.pop();
         }
     }
@@ -102,8 +111,10 @@ class YamlRepresenter extends Representer
 
     private void patch(final Node represented, Object data)
     {
-        if (represented instanceof SequenceNode) {
-            if (getFlowStyle(data)) {
+        if (represented instanceof SequenceNode)
+        {
+            if (getFlowStyle(data))
+            {
                 ((CollectionNode) represented).setFlowStyle(DumperOptions.FlowStyle.FLOW);
             }
         }

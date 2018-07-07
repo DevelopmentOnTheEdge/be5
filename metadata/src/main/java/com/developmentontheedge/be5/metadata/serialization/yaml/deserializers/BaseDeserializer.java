@@ -48,12 +48,15 @@ class BaseDeserializer
     {
         Collection<String> customizableProperties = target.getCustomizableProperties();
 
-        for (final Field field : fields) {
-            if (field.name.equals("name") || (customizableProperties.contains(field.name) && !content.containsKey(field.name))) {
+        for (final Field field : fields)
+        {
+            if (field.name.equals("name") || (customizableProperties.contains(field.name) && !content.containsKey(field.name)))
+            {
                 continue;
             }
 
-            try {
+            try
+            {
                 Class<?> type = Beans.getBeanPropertyType(target, field.name);
                 final Object value = readField(content, field, type);
 
@@ -61,7 +64,8 @@ class BaseDeserializer
                     Beans.setBeanPropertyValue(target, field.name, value);
 
                 target.customizeProperty(field.name);
-            } catch (final Exception e) {
+            } catch (final Exception e)
+            {
                 loadContext.addWarning(new ReadException(e, target, path, "Error reading field " + field.name));
             }
         }
@@ -70,41 +74,50 @@ class BaseDeserializer
     private Object readField(Map<String, Object> content, Field field, Class<?> klass)
     {
         Object fieldValue = content.get(field.name);
-        if (fieldValue == null) {
+        if (fieldValue == null)
+        {
             return field.defaultValue;
         }
         if (!(fieldValue instanceof Boolean) && !(fieldValue instanceof Number) && !(fieldValue instanceof String)
-                && !(fieldValue instanceof Enum)) {
+                && !(fieldValue instanceof Enum))
+        {
             throw new IllegalArgumentException("Invalid value: expected scalar");
         }
         final String value = fieldValue.toString();
 
-        try {
+        try
+        {
             return castValue(klass, value);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        {
             throw new AssertionError();
         }
     }
 
     private /*static*/ Object castValue(final Class<?> klass, final String value) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        if (klass == Boolean.class || klass == boolean.class) {
+        if (klass == Boolean.class || klass == boolean.class)
+        {
             return Boolean.parseBoolean(value);
         }
 
-        if (klass == Integer.class || klass == int.class) {
+        if (klass == Integer.class || klass == int.class)
+        {
             return Integer.parseInt(value);
         }
 
-        if (klass == Long.class || klass == long.class) {
+        if (klass == Long.class || klass == long.class)
+        {
             return Long.parseLong(value);
         }
 
-        if (klass == String.class) {
+        if (klass == String.class)
+        {
             return value;
         }
 
-        if (klass == QueryType.class) {
+        if (klass == QueryType.class)
+        {
             return QueryType.fromString(value);
         }
 
@@ -121,7 +134,8 @@ class BaseDeserializer
     {
         final Object serializedExtras = source.get(SerializationConstants.TAG_EXTRAS);
 
-        if (serializedExtras != null) {
+        if (serializedExtras != null)
+        {
             final List<String> extras = asStrList(serializedExtras);
             if (extras.contains(""))
                 loadContext.addWarning(new ReadException(target, path, "Extras tag contains empty string: probably it's incorrectly specified in YAML"));
@@ -133,14 +147,17 @@ class BaseDeserializer
     {
         final Object serializedProperties = elementBody.get(TAG_PROPERTIES);
 
-        if (serializedProperties == null) {
+        if (serializedProperties == null)
+        {
             return;
         }
 
-        for (final Object serializedProperty : asList(serializedProperties)) {
+        for (final Object serializedProperty : asList(serializedProperties))
+        {
             final Map<String, Object> serializedProperty0 = asMap(serializedProperty);
 
-            if (serializedProperty0.size() != 1) {
+            if (serializedProperty0.size() != 1)
+            {
                 loadContext.addWarning(new ReadException(path, "Property should contain a key-value pair"));
                 continue;
             }
@@ -154,14 +171,17 @@ class BaseDeserializer
 
     protected void readIcon(final Map<String, Object> element, final Icon icon)
     {
-        try {
-            if (element.containsKey(SerializationConstants.ATTR_ICON)) {
+        try
+        {
+            if (element.containsKey(SerializationConstants.ATTR_ICON))
+            {
                 icon.setMetaPath((String) element.get(SerializationConstants.ATTR_ICON));
                 icon.load();
                 icon.setOriginModuleName(icon.getOwner().getProject().getProjectOrigin());
                 ((BeModelCollection<?>) icon.getOwner()).customizeProperty("icon");
             }
-        } catch (final ReadException e) {
+        } catch (final ReadException e)
+        {
             loadContext.addWarning(e);
         }
     }
@@ -176,15 +196,18 @@ class BaseDeserializer
 
         final String strValue = (String) value;
 
-        if (strValue == null || strValue.trim().isEmpty()) {
+        if (strValue == null || strValue.trim().isEmpty())
+        {
             return Collections.emptyList();
         }
 
         final List<String> result = new ArrayList<>();
 
-        for (String item : strValue.trim().split(";")) {
+        for (String item : strValue.trim().split(";"))
+        {
             item = item.trim();
-            if (!item.isEmpty()) {
+            if (!item.isEmpty())
+            {
                 result.add(item);
             }
         }
@@ -198,7 +221,8 @@ class BaseDeserializer
             return Collections.emptyList();
         if (object instanceof String)
             return Collections.singletonList((String) object);
-        if (object instanceof List) {
+        if (object instanceof List)
+        {
             final List<?> list = (List<?>) object;
             final List<String> strings = new ArrayList<>();
             for (Object element : list)
@@ -249,7 +273,8 @@ class BaseDeserializer
     @SuppressWarnings("unchecked")
     protected List<Map<String, Object>> asMaps(Object object)
     {
-        if (object instanceof List) {
+        if (object instanceof List)
+        {
             final List<?> list = (List<?>) object;
             final List<Map<String, Object>> maps = new ArrayList<>();
             for (Object element : list)
@@ -258,10 +283,12 @@ class BaseDeserializer
             return maps;
         }
 
-        if (object instanceof Map) {
+        if (object instanceof Map)
+        {
             final List<Map<String, Object>> splitted = new ArrayList<>();
             final Map<String, Object> map = (Map<String, Object>) object;
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+            for (Map.Entry<String, Object> entry : map.entrySet())
+            {
                 final String name = entry.getKey();
                 final Object value = entry.getValue();
                 final Map<String, Object> adaptedEntry = new LinkedHashMap<>();
@@ -276,10 +303,12 @@ class BaseDeserializer
 
     protected List<Map.Entry<String, Object>> asPairs(Object object) throws ReadException
     {
-        if (object instanceof List) {
+        if (object instanceof List)
+        {
             final List<?> list = (List<?>) object;
             final List<Map.Entry<String, Object>> pairs = new ArrayList<>();
-            for (Object listPair : list) {
+            for (Object listPair : list)
+            {
                 if (!(listPair instanceof Map))
                     throw new ReadException(path, "Invalid file format: pair expected");
 
@@ -315,7 +344,8 @@ class BaseDeserializer
     @SuppressWarnings("unchecked")
     protected Map<String, Object> getRootMap(Object object, String name) throws ReadException
     {
-        try {
+        try
+        {
             if (!(object instanceof Map))
                 throw new IllegalArgumentException("Invalid file format: map expected");
             Map<String, Object> topLevelMap = (Map<String, Object>) object;
@@ -327,7 +357,8 @@ class BaseDeserializer
             if (!(rootObject instanceof Map))
                 throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be a map");
             return (Map<String, Object>) rootObject;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e)
+        {
             throw new ReadException(path, e.getMessage());
         }
     }
@@ -336,8 +367,10 @@ class BaseDeserializer
     {
         Set<String> allowed = getAllowedFields(allowedFields);
 
-        for (String name : element.keySet()) {
-            if (!allowed.contains(name)) {
+        for (String name : element.keySet())
+        {
+            if (!allowed.contains(name))
+            {
                 String message = "Unknown child element found: " + name + ", possible values: " + allowed;
                 loadContext.addWarning(new ReadException(context, path, message));
             }
@@ -348,10 +381,13 @@ class BaseDeserializer
     {
         Set<String> allowed = new HashSet<>();
 
-        for (Object allowedField : allowedFields) {
-            if (allowedField instanceof Field) {
+        for (Object allowedField : allowedFields)
+        {
+            if (allowedField instanceof Field)
+            {
                 allowed.add(((Field) allowedField).name);
-            } else if (allowedField instanceof Collection) {
+            } else if (allowedField instanceof Collection)
+            {
                 allowed.addAll(getAllowedFields(((Collection<?>) allowedField).toArray()));
             } else
                 allowed.add(allowedField.toString());

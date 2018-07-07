@@ -116,21 +116,27 @@ public class RoleSet extends InheritableStringSet
     public void foldSystemGroup()
     {
         Set<String> projectRoles = getProject().getRoles();
-        if (projectRoles.size() == includedValues.size() || projectRoles.size() == includedValues.size() + 1) {
+        if (projectRoles.size() == includedValues.size() || projectRoles.size() == includedValues.size() + 1)
+        {
             boolean allRoles = true;
             boolean allRolesExceptGuest = true;
-            for (String projectRole : projectRoles) {
-                if (!this.includedValues.contains(projectRole)) {
+            for (String projectRole : projectRoles)
+            {
+                if (!this.includedValues.contains(projectRole))
+                {
                     allRoles = false;
-                    if (!projectRole.equals("Guest")) {
+                    if (!projectRole.equals("Guest"))
+                    {
                         allRolesExceptGuest = false;
                         break;
                     }
                 }
             }
-            if (allRoles) {
+            if (allRoles)
+            {
                 this.includedValues = Collections.singleton('@' + SpecialRoleGroup.ALL_ROLES_GROUP);
-            } else if (allRolesExceptGuest) {
+            } else if (allRolesExceptGuest)
+            {
                 this.includedValues = Collections.singleton('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP);
             }
         }
@@ -140,12 +146,14 @@ public class RoleSet extends InheritableStringSet
     {
         Set<String> result = new HashSet<>();
         Set<String> projectRoles = project.getRoles();
-        for (String role : includedValues) {
+        for (String role : includedValues)
+        {
             if (role.startsWith("@") || projectRoles.contains(role))
                 continue;
             result.add(role);
         }
-        for (String role : excludedValues) {
+        for (String role : excludedValues)
+        {
             if (role.startsWith("@") || projectRoles.contains(role))
                 continue;
             result.add(role);
@@ -167,25 +175,33 @@ public class RoleSet extends InheritableStringSet
     {
         Set<String> projectRoles = project.getAvailableRoles();
         Set<String> result = new TreeSet<>();
-        for (String role : initialRoleSet) {
-            if (role.startsWith("@")) {
+        for (String role : initialRoleSet)
+        {
+            if (role.startsWith("@"))
+            {
                 String groupName = role.substring(1);
-                if (dependentGroups.contains(groupName)) {
+                if (dependentGroups.contains(groupName))
+                {
                     continue;
                 }
                 RoleGroup group = project.getRoleGroups().get(groupName);
-                if (group != null) {
+                if (group != null)
+                {
                     Set<String> newDependentGroups;
-                    if (dependentGroups.isEmpty()) {
+                    if (dependentGroups.isEmpty())
+                    {
                         newDependentGroups = Collections.singleton(groupName);
-                    } else {
+                    } else
+                    {
                         newDependentGroups = new HashSet<>(dependentGroups);
                         newDependentGroups.add(groupName);
                     }
                     result.addAll(group.getRoleSet().getFinalRoles(newDependentGroups));
                 }
-            } else {
-                if (projectRoles.contains(role)) {
+            } else
+            {
+                if (projectRoles.contains(role))
+                {
                     result.add(role);
                 }
             }
@@ -203,7 +219,8 @@ public class RoleSet extends InheritableStringSet
             ((EntityItem) this.owner).fireChanged();
         else if (this.owner instanceof QuerySettings)
             ((QuerySettings) this.owner).fireChanged();
-        else if (this.owner instanceof RoleGroup && !(this.owner instanceof SpecialRoleGroup)) {
+        else if (this.owner instanceof RoleGroup && !(this.owner instanceof SpecialRoleGroup))
+        {
             final RoleGroup roleGroup = (RoleGroup) this.owner;
             if (roleGroup.getRoleSet() == this)
                 roleGroup.fireChanged();

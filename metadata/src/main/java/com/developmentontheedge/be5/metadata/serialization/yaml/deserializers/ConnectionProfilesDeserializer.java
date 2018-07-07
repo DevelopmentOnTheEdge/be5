@@ -48,14 +48,17 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
         final Map<String, Object> serializedConnectionProfilesBody = asMap(asMap(serializedRoot).get(TAG_CONNECTION_PROFILES));
         final Map<String, Object> profilesMap = asMap(serializedConnectionProfilesBody.get(TAG_CONNECTION_PROFILES_INNER));
 
-        for (Map.Entry<String, Object> serializedProfile : profilesMap.entrySet()) {
-            try {
+        for (Map.Entry<String, Object> serializedProfile : profilesMap.entrySet())
+        {
+            try
+            {
                 final String profileName = serializedProfile.getKey();
                 final Map<String, Object> serializedProfileBody = asMap(serializedProfile.getValue());
                 final BeConnectionProfile connectionProfile = deserializeConnectionProfile(profileName, serializedProfileBody);
 
                 save(connectionProfile);
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(target));
             }
         }
@@ -63,7 +66,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
         // default connection profile can be deserialized after
         // deserialization of connection profiles
         Object defProfileObj = serializedConnectionProfilesBody.get("defaultProfileName");
-        if (defProfileObj instanceof String) {
+        if (defProfileObj instanceof String)
+        {
             target.getProject().setConnectionProfileName((String) defProfileObj);
         }
         DataElementUtils.saveQuiet(target);
@@ -80,7 +84,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
 
         List<String> propertiesToRequest = readList(serializedProfileBody, TAG_REQUESTED_PROPERTIES);
 
-        if (propertiesToRequest != null) {
+        if (propertiesToRequest != null)
+        {
             connectionProfile.setPropertiesToRequest(propertiesToRequest.toArray(new String[propertiesToRequest.size()]));
         }
 

@@ -8,21 +8,23 @@ import java.util.Set;
 
 public class AstBeParameterTag extends AstBeNode
 {
-    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of( "default", "changeCase", "prefix", "postfix", "regex",
-            "replacement", "safestr", "multiple", "refColumn", "strict", "type", "entity", "queryName" ).toSet();
-    
+    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of("default", "changeCase", "prefix", "postfix", "regex",
+            "replacement", "safestr", "multiple", "refColumn", "strict", "type", "entity", "queryName").toSet();
+
     public AstBeParameterTag(int id)
     {
-        super( id );
+        super(id);
         tagName = "parameter";
         this.allowedParameters = ALLOWED_PARAMETERS;
     }
 
     private String name;
+
     public String getName()
     {
         return name;
     }
+
     public void setName(String name)
     {
         this.name = name;
@@ -30,63 +32,63 @@ public class AstBeParameterTag extends AstBeNode
 
     public String getRefColumn()
     {
-        return getParameter( "refColumn" );
+        return getParameter("refColumn");
     }
-    
+
     public String getDefValue()
     {
-        return getParameter( "default" );
+        return getParameter("default");
     }
-    
+
     public String getCase()
     {
-        return getParameter( "changeCase" );
+        return getParameter("changeCase");
     }
-    
+
     public String getPrefix()
     {
         return getParameter("prefix");
     }
-    
+
     public String getPostfix()
     {
-        return getParameter( "postfix" );
+        return getParameter("postfix");
     }
-    
+
     public String getRegex()
     {
         return getParameter("regex");
     }
-    
+
     public String getReplacement()
     {
-        return getParameter( "replacement" );
+        return getParameter("replacement");
     }
-    
+
     public String getSafeStr()
     {
-        return getParameter( "safestr" );
+        return getParameter("safestr");
     }
-    
+
     public String getMultiple()
     {
-        return getParameter( "multiple" );
+        return getParameter("multiple");
     }
 
     public String getType()
     {
-        return getParameter( "type" );
+        return getParameter("type");
     }
 
     public void setType(String value)
     {
-        setParameter( "type", value );
+        setParameter("type", value);
     }
 
     @Override
     public String getParametersString()
     {
-        return ":"+getName()+super.getParametersString();
+        return ":" + getName() + super.getParametersString();
     }
 }
 /* JavaCC - OriginalChecksum=35bf548207ecaa84eb21200ee686cb99 (do not edit this line) */

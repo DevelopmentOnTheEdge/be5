@@ -17,7 +17,8 @@ public class VariableSelector extends StringTagEditor
         String[] result = new String[variableNames.size() + 1];
         result[0] = "(none)";
         int i = 1;
-        for (Entry<String, String> entry : variableNames.entrySet()) {
+        for (Entry<String, String> entry : variableNames.entrySet())
+        {
             result[i++] = entry.getKey() + " (" + entry.getValue() + ")";
         }
         return result;
@@ -39,9 +40,11 @@ public class VariableSelector extends StringTagEditor
     {
         int pos = text.indexOf('(');
         String value;
-        if (pos >= 0) {
+        if (pos >= 0)
+        {
             value = text.substring(0, pos).trim();
-        } else {
+        } else
+        {
             value = text.trim();
         }
         super.setAsText(value);

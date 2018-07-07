@@ -11,7 +11,7 @@ public class PredefinedFunction implements Function
         this.priority = priority;
         this.minNumberOfParams = this.maxNumberOfParams = numberOfParameters;
     }
-    
+
     public PredefinedFunction(String name, int priority, int minNumberOfParams, int maxNumberOfParams)
     {
         this.name = name;
@@ -29,14 +29,18 @@ public class PredefinedFunction implements Function
     private final int minNumberOfParams;
     private final int maxNumberOfParams;
 
-    /** Returns the name of the node (operator symbol or function name). */
+    /**
+     * Returns the name of the node (operator symbol or function name).
+     */
     @Override
     public String getName()
     {
         return name;
     }
 
-    /** Returns the function or operator priority. */
+    /**
+     * Returns the function or operator priority.
+     */
     @Override
     public int getPriority()
     {
@@ -52,7 +56,7 @@ public class PredefinedFunction implements Function
     {
         return minNumberOfParams;
     }
-    
+
     /**
      * Returns the biggest possible number of required parameters, or -1 if any number of
      * parameters is allowed.

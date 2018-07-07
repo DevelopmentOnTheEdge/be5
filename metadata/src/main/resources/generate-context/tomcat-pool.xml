@@ -1,24 +1,24 @@
 <Context>
 
-    <Logger className="org.apache.catalina.logger.FileLogger"
-            prefix="PROJECT_NAME." suffix=".txt" timestamp="true"/>
+  <Logger className="org.apache.catalina.logger.FileLogger"
+          prefix="PROJECT_NAME." suffix=".txt" timestamp="true"/>
 
-    <Valve className="org.apache.catalina.valves.AccessLogValve"
-           directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
-           pattern="common"/>
+  <Valve className="org.apache.catalina.valves.AccessLogValve"
+         directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
+         pattern="common"/>
 
-    <Resource name="jdbc/PROJECT_NAME"
-              auth="Container"
-              description="DB Connection PROJECT_NAME"
-              username="USERNAME"
-              password="PASSWORD"
-              driverClassName="org.postgresql.Driver"
-              url="URL"
-              maxActive="200"
-              maxIdle="10"
-              maxWait="999"
-              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-              type="javax.sql.DataSource"
-    />
+  <Resource name="jdbc/PROJECT_NAME"
+            auth="Container"
+            description="DB Connection PROJECT_NAME"
+            username="USERNAME"
+            password="PASSWORD"
+            driverClassName="org.postgresql.Driver"
+            url="URL"
+            maxActive="200"
+            maxIdle="10"
+            maxWait="999"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            type="javax.sql.DataSource"
+  />
 
 </Context>

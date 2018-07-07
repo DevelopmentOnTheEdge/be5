@@ -6,16 +6,16 @@ public class AstOrderBy extends SimpleNode
 {
     public AstOrderBy(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "ORDER BY";
         this.childrenDelimiter = ",";
     }
-    
+
     public AstOrderBy(AstOrderingElement... childs)
     {
-        this( SqlParserTreeConstants.JJTORDERBY );
-        for( AstOrderingElement child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTORDERBY);
+        for (AstOrderingElement child : childs)
+            addChild(child);
     }
 }
 /* JavaCC - OriginalChecksum=4cd525f1823ad2d4d5c20c9cc01d4025 (do not edit this line) */

@@ -20,7 +20,8 @@ public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVec
 
     public T getCaseInsensitive(String name)
     {
-        for (T element : this) {
+        for (T element : this)
+        {
             if (element.getName().compareToIgnoreCase(name) == 0)
                 return element;
         }
@@ -33,29 +34,36 @@ public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVec
     {
         mergeThis(other, inherit);
         Map<String, T> myElements = new LinkedHashMap<>();
-        for (T element : this) {
+        for (T element : this)
+        {
             myElements.put(element.getName().toLowerCase(), element);
         }
         clear();
-        for (T otherElement : other) {
+        for (T otherElement : other)
+        {
             T element = myElements.remove(otherElement.getName().toLowerCase());
-            if (element instanceof BeModelCollection && otherElement instanceof BeModelCollection) {
+            if (element instanceof BeModelCollection && otherElement instanceof BeModelCollection)
+            {
                 ((BeModelCollection<?>) element).merge((BeModelCollection) otherElement, ignoreMyItems, inherit);
-            } else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport) {
+            } else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
+            {
                 ((BeModelElementSupport) element).mergeThis(otherElement, inherit);
             }
-            if (element == null) {
+            if (element == null)
+            {
                 // Do not merge EntityItems with the same origin as our project:
                 // Probably it's some element we deleted from project, but didn't synchronized with db yet
                 if (ignoreMyItems && otherElement instanceof BeElementWithOriginModule
                         && ((BeElementWithOriginModule) otherElement).getOriginModuleName().equals(getProject().getProjectOrigin()))
                     continue;
                 saveClone(otherElement, inherit);
-            } else {
+            } else
+            {
                 DataElementUtils.saveQuiet(element);
             }
         }
-        for (T element : myElements.values()) {
+        for (T element : myElements.values())
+        {
             DataElementUtils.saveQuiet(element);
         }
     }

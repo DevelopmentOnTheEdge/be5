@@ -76,9 +76,11 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     @Override
     public String getColumnsTo()
     {
-        if (!Strings2.isNullOrEmpty(tableTo) && Strings2.isNullOrEmpty(columnsTo)) {
+        if (!Strings2.isNullOrEmpty(tableTo) && Strings2.isNullOrEmpty(columnsTo))
+        {
             final Entity entity = getProject().getEntity(tableTo);
-            if (entity != null) {
+            if (entity != null)
+            {
                 final String primaryKey = entity.getPrimaryKey();
                 return primaryKey;
             }
@@ -119,7 +121,8 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     public void setPermittedTables(String[] permittedTables)
     {
         this.permittedTables = permittedTables;
-        if (permittedTables != null) {
+        if (permittedTables != null)
+        {
             Arrays.sort(permittedTables);
         }
         fireChanged();
@@ -143,11 +146,13 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
      */
     public String[] getTargetTables()
     {
-        if (tableTo != null) {
+        if (tableTo != null)
+        {
             return new String[]{tableTo};
         }
 
-        if (permittedTables == null) {
+        if (permittedTables == null)
+        {
             return Strings2.EMPTY;
         }
 
@@ -174,23 +179,28 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     @Override
     public boolean equalsReference(TableReference other)
     {
-        if (columnsFrom == null) {
+        if (columnsFrom == null)
+        {
             if (other.getColumnsFrom() != null)
                 return debugEquals("columnsFrom");
         } else if (!columnsFrom.equalsIgnoreCase(other.getColumnsFrom()))
             return debugEquals("columnsFrom");
-        if (getColumnsTo() == null) {
+        if (getColumnsTo() == null)
+        {
             if (other.getColumnsTo() != null)
                 return debugEquals("columnsTo");
         } else if (!getColumnsTo().equalsIgnoreCase(other.getColumnsTo()))
             return debugEquals("columnsTo");
-        if (tableTo == null) {
+        if (tableTo == null)
+        {
             if (other.getTableTo() != null)
                 return debugEquals("tableTo");
         } else if (!tableTo.equalsIgnoreCase(other.getTableTo()))
             return debugEquals("tableTo");
-        if (tableTo != null) {
-            if (viewName == null) {
+        if (tableTo != null)
+        {
+            if (viewName == null)
+            {
                 if (other.getViewName() != null)
                     return debugEquals("viewName");
             } else if (!viewName.equals(other.getViewName()))

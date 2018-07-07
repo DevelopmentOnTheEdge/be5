@@ -30,11 +30,14 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 + "numeric_precision,numeric_scale,character_maximum_length,extra "
                 + "FROM information_schema.columns "
                 + "WHERE table_schema='" + defSchema + "' ORDER BY table_name, ordinal_position");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
                 List<SqlColumnInfo> list = result.get(tableName);
-                if (list == null) {
+                if (list == null)
+                {
                     list = new ArrayList<>();
                     result.put(tableName, list);
                 }
@@ -44,29 +47,37 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 String type = rs.getString(3 /*"column_type"*/);
                 info.setCanBeNull("YES".equals(rs.getString(5 /* "is_nullable" */)));
                 String defaultValue = rs.getString(4 /*"column_default"*/);
-                if (defaultValue != null) {
+                if (defaultValue != null)
+                {
                     if (type.startsWith("text") || type.startsWith("enum") || type.startsWith("varchar")
-                            || type.startsWith("char")) {
+                            || type.startsWith("char"))
+                    {
                         defaultValue = "'" + defaultValue + "'";
-                    } else if (type.startsWith("date") || type.startsWith("time")) {
-                        if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP")) {
+                    } else if (type.startsWith("date") || type.startsWith("time"))
+                    {
+                        if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP"))
+                        {
                             defaultValue = "NOW()";
-                        } else {
+                        } else
+                        {
                             defaultValue = "'" + defaultValue + "'";
                         }
                     }
                 }
                 info.setDefaultValue(defaultValue);
                 info.setSize(rs.getInt(8 /*"character_maximum_length"*/));
-                if (rs.wasNull()) {
+                if (rs.wasNull())
+                {
                     info.setSize(rs.getInt(6 /*"numeric_precision"*/));
                 }
                 info.setPrecision(rs.getInt(7 /* "numeric_scale" */));
                 info.setAutoIncrement("auto_increment".equals(rs.getString(9 /* "extra" */)));
 
-                if (type.startsWith("enum(")) {
+                if (type.startsWith("enum("))
+                {
                     String[] enumValues = type.substring("enum(".length(), type.length() - 1).split(",", -1);
-                    for (int i = 0; i < enumValues.length; i++) {
+                    for (int i = 0; i < enumValues.length; i++)
+                    {
                         enumValues[i] = enumValues[i].substring(1, enumValues[i].length() - 1);
                     }
                     type = "enum";
@@ -76,7 +87,8 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 info.setType(type.toUpperCase(Locale.ENGLISH));
                 controller.setProgress(0); // Just to check for interrupts
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;
@@ -89,15 +101,19 @@ public class MySqlSchemaReader extends DefaultSchemaReader
         Map<String, List<IndexInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT table_name,index_name,column_name,non_unique FROM information_schema.statistics "
                 + "WHERE table_schema='" + defSchema + "' ORDER BY table_name,index_name,seq_in_index");
-        try {
+        try
+        {
             IndexInfo curIndex = null;
             String lastTable = null;
-            while (rs.next()) {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
                 String indexName = rs.getString(2 /*"index_name"*/);
-                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName)) {
+                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName))
+                {
                     List<IndexInfo> list = result.get(tableName);
-                    if (list == null) {
+                    if (list == null)
+                    {
                         list = new ArrayList<>();
                         result.put(tableName, list);
                     }
@@ -111,7 +127,8 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"column_name"*/);
                 curIndex.addColumn(column);
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;

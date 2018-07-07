@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * All methods, which not generate RecordModel, not use caches!<br>
  * All methods throws EntityModelException if the method have internal error
  * EntityModel are generally not synchronized. It is recommended to create separate
  * instances for each thread. If multiple threads access a format concurrently,
  * it must be synchronized externally.
+ *
  * @author ruslan
  */
 public interface EntityModel<T>
@@ -21,6 +21,7 @@ public interface EntityModel<T>
     /**
      * Returns the number of records a table.
      * This method never use cache.
+     *
      * @return number of records
      */
     long count();
@@ -28,6 +29,7 @@ public interface EntityModel<T>
     /**
      * Returns the number of records a table.
      * This method never use cache.
+     *
      * @return number of records
      */
     long count(Map<String, ? super Object> values);
@@ -35,6 +37,7 @@ public interface EntityModel<T>
     /**
      * Returns <tt>true</tt> if this table contains no records.
      * This method never use caches.
+     *
      * @return <tt>true</tt> if this table contains no records
      */
     boolean isEmpty();
@@ -43,6 +46,7 @@ public interface EntityModel<T>
      * Returns <tt>true</tt> if entity contains record consistent with the
      * specified condition.
      * This method never use caches.
+     *
      * @param conditions condition values
      * @return <tt>true</tt> if entity contains record consistent with
      * conditions, otherwise false
@@ -54,7 +58,8 @@ public interface EntityModel<T>
      * and key value is the column value.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #add( DynamicPropertySet )}
+     * This method calls {@link #add(DynamicPropertySet)}
+     *
      * @param values map with column names and values
      * @return generated record identify number
      */
@@ -64,6 +69,7 @@ public interface EntityModel<T>
      * Adds record into database from map, where key is the column name
      * and key value is the column value.<br>
      * This method may not contain any checks, it's just the method implementation.
+     *
      * @param dps DynamicPropertySet
      * @return generated record identify number
      */
@@ -72,6 +78,7 @@ public interface EntityModel<T>
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the
      * all specified condition in collection otherwise <tt>false</tt>
+     *
      * @param c collection of conditions
      * @return <tt>true</tt> if entity contains record consistent with the
      * all specified condition
@@ -80,6 +87,7 @@ public interface EntityModel<T>
 
     /**
      * Adds all records from collection into database.
+     *
      * @param c collection with column names and values
      * @return list with record identify numbers
      */
@@ -87,6 +95,7 @@ public interface EntityModel<T>
 
     /**
      * Returns the record object with the specified id
+     *
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
@@ -95,6 +104,7 @@ public interface EntityModel<T>
     /**
      * Returns the record object consistent with the specified condition,
      * where key is the column name with the value equals map key value
+     *
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
@@ -106,6 +116,7 @@ public interface EntityModel<T>
 
     /**
      * Returns a list of records of current entity.
+     *
      * @return list of records
      */
     List<RecordModel<T>> toList();
@@ -114,12 +125,14 @@ public interface EntityModel<T>
 
     /**
      * Returns a array of records of current entity.
+     *
      * @return array of records
      */
     RecordModel<T>[] toArray();
 
     /**
      * Returns a list of records of current entity filtered by the specified parameters.
+     *
      * @param conditions the filter parameters
      * @return array of records
      */
@@ -127,6 +140,7 @@ public interface EntityModel<T>
 
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
+     *
      * @param conditions the filter parameters
      * @return array of records
      */
@@ -136,10 +150,11 @@ public interface EntityModel<T>
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( T, Map )}
-     * @param id identify number of record
+     * This method calls {@link #set(T, Map)}
+     *
+     * @param id           identify number of record
      * @param propertyName column name
-     * @param value new value
+     * @param value        new value
      * @return number of affected rows
      */
     int set(T id, String propertyName, Object value);
@@ -148,8 +163,9 @@ public interface EntityModel<T>
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( T, DynamicPropertySet )}
-     * @param id identify number of record
+     * This method calls {@link #set(T, DynamicPropertySet)}
+     *
+     * @param id     identify number of record
      * @param values column names and values
      * @return number of affected rows
      */
@@ -160,7 +176,8 @@ public interface EntityModel<T>
     /**
      * Sets value to property with a specified name.<br>
      * This method may not contain any checks, it's just the method implementation.
-     * @param id identify number of record
+     *
+     * @param id     identify number of record
      * @param values new column names and values
      * @return number of affected rows
      */
@@ -183,13 +200,16 @@ public interface EntityModel<T>
 
     /**
      * Operation removes all the records
+     *
      * @return number of affected rows
      */
     int removeAll();
+
     /**
      * Operation removes all the records, consistent with conditions.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
+     *
      * @param conditions conditions
      * @return number of affected rows
      */
@@ -200,6 +220,7 @@ public interface EntityModel<T>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #remove(T[])}
+     *
      * @param id first identify number of record
      * @return number of affected rows
      */
@@ -208,6 +229,7 @@ public interface EntityModel<T>
     /**
      * Deletes the record with the specified identifiers.<br>
      * This method may not contain any checks, it's just the method implementation.
+     *
      * @param ids numbers of record
      * @return number of affected rows
      */
@@ -227,12 +249,14 @@ public interface EntityModel<T>
 
     /**
      * Returns entity name.
+     *
      * @return entity name
      */
     String getEntityName();
 
     /**
      * Returns primary key of entity table.
+     *
      * @return primary key
      */
     String getPrimaryKeyName();

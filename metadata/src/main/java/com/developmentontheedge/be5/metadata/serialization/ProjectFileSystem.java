@@ -109,15 +109,18 @@ public class ProjectFileSystem
 
     public ProjectFileSystem(final Project project)
     {
-        if (project == null) {
+        if (project == null)
+        {
             throw new IllegalArgumentException();
         }
         Path root = project.getLocation();
-        if (root == null) {
+        if (root == null)
+        {
             throw new IllegalArgumentException("Project " + project.getName() + " is not bound to file system");
         }
         ProjectFileStructure structure = project.getProjectFileStructure();
-        if (structure == null) {
+        if (structure == null)
+        {
             throw new IllegalArgumentException("Project " + project.getName() + " has no structure defined");
         }
         this.root = root;
@@ -217,7 +220,8 @@ public class ProjectFileSystem
     {
         final String fileName;
 
-        switch (type) {
+        switch (type)
+        {
             case LOCAL:
                 fileName = structure.getLocalConnectionProfilesFile();
                 break;
@@ -305,13 +309,15 @@ public class ProjectFileSystem
         if (!Files.isDirectory(iconsFolder))
             return Collections.emptyList();
 
-        try (Stream<Path> list = Files.list(iconsFolder)) {
+        try (Stream<Path> list = Files.list(iconsFolder))
+        {
             return list
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .collect(Collectors.toList());
-        } catch (IOException | UncheckedIOException e) {
+        } catch (IOException | UncheckedIOException e)
+        {
             return Collections.emptyList();
         }
     }
@@ -343,7 +349,8 @@ public class ProjectFileSystem
 
     public Path getNameSpaceFolder(String nameSpace)
     {
-        switch (nameSpace) {
+        switch (nameSpace)
+        {
             case SourceFileCollection.NAMESPACE_JAVASCRIPT_OPERATION:
                 return getJavaScriptOperationsFolder();
             case SourceFileCollection.NAMESPACE_GROOVY_OPERATION:
@@ -424,7 +431,8 @@ public class ProjectFileSystem
 
     public Path getEntityFile(final String moduleName, final String name)
     {
-        if (structure.getProject().getProjectOrigin().equals(moduleName)) {
+        if (structure.getProject().getProjectOrigin().equals(moduleName))
+        {
             return getEntitiesFolder().resolve(name + ProjectFileStructure.FORMAT_SUFFIX);
         }
 
@@ -445,14 +453,16 @@ public class ProjectFileSystem
      */
     public String readEntityFile(final String moduleName, final String name)
     {
-        try {
+        try
+        {
             final Path file = getEntityFile(moduleName, name);
 
             if (!Files.isRegularFile(file))
                 return null;
 
             return read(file);
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             return null;
         }
     }
@@ -560,26 +570,36 @@ public class ProjectFileSystem
 
     public static Function<ProjectFileSystem, Path> getSerializedFilePathEvaluator(final BeModelElement element)
     {
-        if (element instanceof LanguageLocalizations) {
+        if (element instanceof LanguageLocalizations)
+        {
             return Fn.languageLocalizationsPath((LanguageLocalizations) element);
-        } else if (element instanceof Entity) {
+        } else if (element instanceof Entity)
+        {
             // TODO remove some old code and use this case
             return null;
-        } else if (element instanceof BeConnectionProfiles) {
+        } else if (element instanceof BeConnectionProfiles)
+        {
             return Fn.connectionProfilesPath((BeConnectionProfiles) element);
-        } else if (element instanceof SecurityCollection) {
+        } else if (element instanceof SecurityCollection)
+        {
             return Fn.securityPath();
-        } else if (element instanceof MassChanges) {
+        } else if (element instanceof MassChanges)
+        {
             return Fn.massChangesPath();
-        } else if (element instanceof PageCustomizations && element.getOrigin() instanceof Module) {
+        } else if (element instanceof PageCustomizations && element.getOrigin() instanceof Module)
+        {
             return Fn.customizationsPath();
-        } else if (element instanceof Daemons) {
+        } else if (element instanceof Daemons)
+        {
             return Fn.daemonsPath();
-        } else if (element instanceof JavaScriptForms) {
+        } else if (element instanceof JavaScriptForms)
+        {
             return Fn.formsPath();
-        } else if (element instanceof StaticPages) {
+        } else if (element instanceof StaticPages)
+        {
             return Fn.staticPagesPath();
-        } else if (element instanceof LanguageStaticPages) {
+        } else if (element instanceof LanguageStaticPages)
+        {
             return Fn.staticPagesPath();
         }
 
@@ -595,7 +615,8 @@ public class ProjectFileSystem
 
     private static void write(final Path file, final String content) throws IOException
     {
-        if (!Files.exists(file.getParent())) {
+        if (!Files.exists(file.getParent()))
+        {
             Files.createDirectories(file.getParent());
         }
 
@@ -609,20 +630,26 @@ public class ProjectFileSystem
 
     public static String read(final Path file, boolean nullAble) throws ReadException
     {
-        if (!Files.exists(file)) {
-            if (nullAble) {
+        if (!Files.exists(file))
+        {
+            if (nullAble)
+            {
                 return null;
-            } else {
+            } else
+            {
                 throw new ReadException(file, ReadException.LEE_NOT_FOUND);
             }
         }
-        if (!Files.isRegularFile(file)) {
+        if (!Files.isRegularFile(file))
+        {
             throw new ReadException(file, ReadException.LEE_NOT_A_FILE);
         }
         final byte[] bytes;
-        try {
+        try
+        {
             bytes = readBytes(file);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new ReadException(e, file, ReadException.LEE_UNREADABLE);
         }
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
@@ -632,15 +659,18 @@ public class ProjectFileSystem
         char[] resultArray = new char[(int) (bytes.length * decoder.maxCharsPerByte() + 1)];
         CharBuffer decoded = CharBuffer.wrap(resultArray);
         CoderResult result = decoder.decode(buffer, decoded, true);
-        try {
+        try
+        {
             if (!result.isUnderflow())
                 result.throwException();
             result = decoder.flush(decoded);
             if (!result.isUnderflow())
                 result.throwException();
-        } catch (UnmappableCharacterException e) {
+        } catch (UnmappableCharacterException e)
+        {
             throw new ReadException(new Exception("Unmappable character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
-        } catch (CharacterCodingException e) {
+        } catch (CharacterCodingException e)
+        {
             throw new ReadException(new Exception("Malformed character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
         }
         int start = 0;
@@ -660,17 +690,22 @@ public class ProjectFileSystem
     {
         int nAttempts = 10;
 
-        for (int iAttempt = 0; iAttempt < nAttempts; iAttempt++) {
+        for (int iAttempt = 0; iAttempt < nAttempts; iAttempt++)
+        {
             boolean lastAttempt = (iAttempt == nAttempts - 1);
 
-            try {
+            try
+            {
                 return Files.readAllBytes(file);
-            } catch (ClosedByInterruptException e) {
+            } catch (ClosedByInterruptException e)
+            {
                 if (lastAttempt)
                     throw e;
-                try {
+                try
+                {
                     Thread.sleep(100);
-                } catch (InterruptedException e1) {
+                } catch (InterruptedException e1)
+                {
                     continue;
                 }
             }
@@ -684,10 +719,12 @@ public class ProjectFileSystem
         char[] data = decoded.array();
         int position = decoded.position();
         int row = 1, col = 1;
-        for (int i = 0; i < position; i++) {
+        for (int i = 0; i < position; i++)
+        {
             if (data[i] == '\r')
                 continue;
-            if (data[i] == '\n') {
+            if (data[i] == '\n')
+            {
                 row++;
                 col = 1;
             } else

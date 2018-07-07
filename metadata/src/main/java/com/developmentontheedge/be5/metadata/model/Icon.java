@@ -42,13 +42,16 @@ public class Icon
     @PropertyName("Owner ID")
     public String getOwnerID()
     {
-        if (owner instanceof Entity) {
+        if (owner instanceof Entity)
+        {
             return "entities." + owner.getName();
         }
-        if (owner instanceof Query) {
+        if (owner instanceof Query)
+        {
             return "queries." + ((Query) owner).getEntity().getName() + "." + owner.getName();
         }
-        if (owner instanceof Operation) {
+        if (owner instanceof Operation)
+        {
             return "operations." + ((Operation) owner).getEntity().getName() + "." + owner.getName();
         }
         return "unknown";
@@ -73,10 +76,13 @@ public class Icon
     public void setSource(String source)
     {
         String newSource = SOURCE_BE.equals(source) || SOURCE_PROJECT.equals(source) ? source : SOURCE_NONE;
-        if (!newSource.equals(this.source)) {
+        if (!newSource.equals(this.source))
+        {
             this.source = newSource;
-            if (notificationEnabled) {
-                if (owner instanceof BeModelCollection) {
+            if (notificationEnabled)
+            {
+                if (owner instanceof BeModelCollection)
+                {
                     ((BeModelCollection<?>) owner).customizeProperty("icon");
                 }
                 fireChanged();
@@ -101,10 +107,13 @@ public class Icon
 
     public void setName(String name)
     {
-        if (!Objects.equals(name, this.name)) {
+        if (!Objects.equals(name, this.name))
+        {
             this.name = name;
-            if (notificationEnabled) {
-                if (owner instanceof BeModelCollection) {
+            if (notificationEnabled)
+            {
+                if (owner instanceof BeModelCollection)
+                {
                     ((BeModelCollection<?>) owner).customizeProperty("icon");
                 }
                 fireChanged();
@@ -114,7 +123,8 @@ public class Icon
 
     public String getMetaPath()
     {
-        switch (source) {
+        switch (source)
+        {
             case SOURCE_BE:
                 return "be:" + name;
             case SOURCE_PROJECT:
@@ -126,25 +136,29 @@ public class Icon
 
     public void setMetaPath(String path)
     {
-        if (path == null) {
+        if (path == null)
+        {
             setSource(SOURCE_NONE);
             return;
         }
         path = path.trim();
-        if (path.startsWith("be:")) {
+        if (path.startsWith("be:"))
+        {
             setSource(SOURCE_BE);
             setName(path.substring("be:".length()).trim());
-        } else if (path.startsWith("project:")) {
+        } else if (path.startsWith("project:"))
+        {
             setSource(SOURCE_PROJECT);
             setName(path.substring("project:".length()).trim());
-        } else {
+        } else
+        {
             setSource(SOURCE_NONE);
         }
     }
 
     protected byte[] getBeIcon() throws IOException
     {
-          // TODO be5 has not special path for icons
+        // TODO be5 has not special path for icons
 //        Path beanExplorerIconsPath;
 //        try
 //        {
@@ -167,17 +181,21 @@ public class Icon
     public void setData(byte[] data)
     {
         this.data = data;
-        if (data == null) {
+        if (data == null)
+        {
             this.source = SOURCE_NONE;
             return;
         }
-        try {
+        try
+        {
             byte[] data2 = getBeIcon();
-            if (Arrays.equals(data, data2)) {
+            if (Arrays.equals(data, data2))
+            {
                 this.source = SOURCE_BE;
                 return;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
         }
         this.source = SOURCE_PROJECT;
     }
@@ -200,9 +218,11 @@ public class Icon
 
     public void save() throws IOException
     {
-        if (SOURCE_PROJECT.equals(this.source)) {
+        if (SOURCE_PROJECT.equals(this.source))
+        {
             Path iconsFileName = getProjectFileSystem().getIconsFile(name);
-            if (data != null) {
+            if (data != null)
+            {
                 Files.createDirectories(iconsFileName.getParent());
                 Files.write(iconsFileName, data);
             }
@@ -212,8 +232,10 @@ public class Icon
     public void load() throws ReadException
     {
         Path iconsFile = null;
-        try {
-            switch (source) {
+        try
+        {
+            switch (source)
+            {
                 case SOURCE_PROJECT:
                     iconsFile = getProjectFileSystem().getIconsFile(name);
                     data = Files.readAllBytes(iconsFile);
@@ -224,7 +246,8 @@ public class Icon
                 default:
                     data = null;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new ReadException(e, getOwner(), iconsFile, "Unable to load icon");
         }
     }

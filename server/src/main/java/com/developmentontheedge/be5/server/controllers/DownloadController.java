@@ -33,21 +33,21 @@ public class DownloadController extends ApiControllerSupport implements Controll
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        String entity         = req.getNonEmpty("_t_");
-        String ID             = req.getNonEmpty("ID");
+        String entity = req.getNonEmpty("_t_");
+        String ID = req.getNonEmpty("ID");
 
-        String typeColumn     = req.getOrDefault("_typeColumn_", "mimeType");
+        String typeColumn = req.getOrDefault("_typeColumn_", "mimeType");
         String filenameColumn = req.getOrDefault("_filenameColumn_", "name");
-        String dataColumn     = req.getOrDefault("_dataColumn_", "data");
+        String dataColumn = req.getOrDefault("_dataColumn_", "data");
 
-        String charsetColumn  = req.get("_charsetColumn_");
-        boolean download      = "yes".equals(req.get("_download_"));
+        String charsetColumn = req.get("_charsetColumn_");
+        boolean download = "yes".equals(req.get("_download_"));
 
         RecordModel record = database.getEntity(entity).get(ID);
 
-        String filename    = record.getValueAsString(filenameColumn);
+        String filename = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
-        Object data        = record.getValue(dataColumn);
+        Object data = record.getValue(dataColumn);
         String charset = MoreObjects.
                 firstNonNull(charsetColumn != null ? record.getValueAsString(charsetColumn) : null, Charsets.UTF_8.name());
 
@@ -55,7 +55,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
 
         if (data instanceof byte[])//postgres, mysql
         {
-            in = new ByteArrayInputStream((byte[])data);
+            in = new ByteArrayInputStream((byte[]) data);
         }
 //        else if (data instanceof Blob)
 //        {

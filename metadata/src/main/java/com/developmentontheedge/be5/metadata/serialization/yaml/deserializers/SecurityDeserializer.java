@@ -43,10 +43,13 @@ class SecurityDeserializer extends FileDeserializer
 
     private void readRoles(final Map<String, Object> serializedRoles)
     {
-        for (final Map.Entry<String, Object> serializedRole : serializedRoles.entrySet()) {
-            try {
+        for (final Map.Entry<String, Object> serializedRole : serializedRoles.entrySet())
+        {
+            try
+            {
                 readRole(serializedRole);
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(target.getRoleCollection()));
             }
         }
@@ -65,10 +68,13 @@ class SecurityDeserializer extends FileDeserializer
 
     private void readGroups(Map<String, Object> serializedGroups)
     {
-        for (final Map.Entry<String, Object> serializedGroup : serializedGroups.entrySet()) {
-            try {
+        for (final Map.Entry<String, Object> serializedGroup : serializedGroups.entrySet())
+        {
+            try
+            {
                 readGroup(serializedGroup);
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 loadContext.addWarning(e.attachElement(target.getRoleGroupCollection()));
             }
         }

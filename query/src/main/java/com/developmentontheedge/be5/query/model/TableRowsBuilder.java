@@ -3,14 +3,17 @@ package com.developmentontheedge.be5.query.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TableRowsBuilder<RowT, CellT> {
-    
-    public TableRowsBuilder() {
+public abstract class TableRowsBuilder<RowT, CellT>
+{
+
+    public TableRowsBuilder()
+    {
     }
-    
-    public List<RowT> build() {
+
+    public List<RowT> build()
+    {
         List<RowT> rows = new ArrayList<>();
-        
+
         for (RowModel rowModel : getTableModel().getRows())
         {
             List<CellT> cells = new ArrayList<>();
@@ -20,11 +23,12 @@ public abstract class TableRowsBuilder<RowT, CellT> {
             }
             rows.add(createRow(rowModel, cells));
         }
-        
+
         return rows;
     }
-    
+
     protected abstract CellT createCell(CellModel cellModel);
+
     protected abstract RowT createRow(RowModel rowModel, List<CellT> cells);
 
     public abstract TableModel getTableModel();

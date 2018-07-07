@@ -49,7 +49,7 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = operationExecutor.generate(operation, presetValues);
 
-        if(OperationStatus.ERROR == operation.getStatus())
+        if (OperationStatus.ERROR == operation.getStatus())
         {
             return Either.second(operation.getResult());
         }
@@ -59,15 +59,14 @@ public class OperationServiceImpl implements OperationService
             return execute(operation, presetValues);
         }
 
-        if(presetValues.containsKey(RELOAD_CONTROL_NAME))
+        if (presetValues.containsKey(RELOAD_CONTROL_NAME))
         {
             try
             {
                 validator.checkErrorAndCast(parameters);
-            }
-            catch (RuntimeException e)
+            } catch (RuntimeException e)
             {
-                if(userInfoProvider.isSystemDeveloper())
+                if (userInfoProvider.isSystemDeveloper())
                 {
                     log.log(Level.INFO, "error on generate in validate parameters", e);
                     //operation.setResult(OperationResult.error(e.getMessage(), e));
@@ -87,7 +86,7 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = operationExecutor.execute(operation, presetValues);
 
-        if(OperationStatus.EXECUTE == operation.getStatus())
+        if (OperationStatus.EXECUTE == operation.getStatus())
         {
             operation.setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
                     operation.getInfo().getEntityName(), operation.getContext().getQueryName())
@@ -95,13 +94,12 @@ public class OperationServiceImpl implements OperationService
             );
         }
 
-        if(OperationStatus.ERROR == operation.getStatus())
+        if (OperationStatus.ERROR == operation.getStatus())
         {
             try
             {
                 validator.isError(parameters);
-            }
-            catch (RuntimeException e)
+            } catch (RuntimeException e)
             {
                 log.log(Level.INFO, "error on execute in parameters", e);
                 //remove duplicate operation.setResult(OperationResult.error(e));
@@ -111,7 +109,7 @@ public class OperationServiceImpl implements OperationService
             Operation newOperation = operationExecutor.create(operation.getInfo(), operation.getContext());
             Object newParameters = operationExecutor.generate(newOperation, presetValues);
 
-            if(newParameters != null && OperationStatus.ERROR != newOperation.getStatus())
+            if (newParameters != null && OperationStatus.ERROR != newOperation.getStatus())
             {
                 return replaceNullValueToEmptyStringAndReturn(newParameters);
             }
@@ -142,13 +140,12 @@ public class OperationServiceImpl implements OperationService
     {
         if (parameters instanceof DynamicPropertySet)
         {
-            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
                 if (property.getValue() == null)
                 {
                     property.setValue("");
-                }
-                else if(property.getValue().getClass() != String.class &&
+                } else if (property.getValue().getClass() != String.class &&
                         property.getValue().getClass() != Boolean.class &&
                         !(property.getValue() instanceof Object[]))
                 {

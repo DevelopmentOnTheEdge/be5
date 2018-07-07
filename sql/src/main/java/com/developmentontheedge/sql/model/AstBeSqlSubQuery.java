@@ -10,78 +10,78 @@ import java.util.Set;
 
 public class AstBeSqlSubQuery extends AstBeNode
 {
-    static final Set<String> ALLOWED_PARAMETERS = StreamEx.of( "beautifier", "beautifierName", "limit", "property", "default", "distinct",
+    static final Set<String> ALLOWED_PARAMETERS = StreamEx.of("beautifier", "beautifierName", "limit", "property", "default", "distinct",
             "if", "unless", "connectString", "noError", "varSubst", "outColumns", "entity", "queryName", "cache", "filterKey",
             "filterKeyProperty", "filterVal", "filterValProperty", "exec", "queryNameProperty", "entityProperty", "splitParameter",
-            "queryID" ).toSet();
-    
+            "queryID").toSet();
+
     private Map<String, String> substMap = null;
 
     public AstBeSqlSubQuery(int id)
     {
-        super( id );
+        super(id);
         tagName = "sql";
         allowedParameters = ALLOWED_PARAMETERS;
     }
 
     public AstQuery getQuery()
     {
-        return this.children().select( AstQuery.class ).findFirst().orElse( null );
+        return this.children().select(AstQuery.class).findFirst().orElse(null);
     }
 
     public AstBeSqlVar getAstBeSqlVar()
     {
-        return this.children().select( AstBeSqlVar.class ).findFirst().orElse( null );
+        return this.children().select(AstBeSqlVar.class).findFirst().orElse(null);
     }
 
     public Integer getLimit()
     {
-        String limit = getParameter( "limit" );
-        return limit == null ? null : Integer.valueOf( limit );
+        String limit = getParameter("limit");
+        return limit == null ? null : Integer.valueOf(limit);
     }
 
     public String getQueryName()
     {
-        return getParameter( "queryName" );
+        return getParameter("queryName");
     }
 
     public String getEntityName()
     {
-        return getParameter( "entity" );
+        return getParameter("entity");
     }
-    
+
     public String translateVar(String name)
     {
-        if(substMap == null)
+        if (substMap == null)
         {
-            String substString = getParameter( "varSubst" );
-            if(substString == null)
+            String substString = getParameter("varSubst");
+            if (substString == null)
                 substMap = Collections.emptyMap();
             else
-                substMap = StreamEx.split( substString, "," ).map( s -> s.split( "=" ) )
-                    .toMap( arr -> arr[0].trim(), arr -> arr[1].trim() );
+                substMap = StreamEx.split(substString, ",").map(s -> s.split("="))
+                        .toMap(arr -> arr[0].trim(), arr -> arr[1].trim());
         }
-        return substMap.getOrDefault( name, name );
+        return substMap.getOrDefault(name, name);
     }
 
     public String getExec()
     {
-        return getParameter( "exec" );
+        return getParameter("exec");
     }
 
     public String getFilterKeys()
     {
-        return getParameter( "filterKey" );
+        return getParameter("filterKey");
     }
 
     public String getFilterValProperties()
     {
-        return getParameter( "filterValProperty" );
+        return getParameter("filterValProperty");
     }
 
     public String getOutColumns()
     {
-        return getParameter( "outColumns" );
+        return getParameter("outColumns");
     }
 }
 /* JavaCC - OriginalChecksum=ec5b3915a160671116c3a7ccecc25aa9 (do not edit this line) */

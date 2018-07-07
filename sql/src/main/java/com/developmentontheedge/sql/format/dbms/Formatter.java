@@ -9,18 +9,18 @@ public class Formatter
     public String format(AstStart start, Context context, ParserContext parserContext)
     {
         DbmsTransformer dbmsTransformer = context.getDbmsTransformer();
-        dbmsTransformer.setParserContext( parserContext );
+        dbmsTransformer.setParserContext(parserContext);
         AstStart clone = start.clone();
-        dbmsTransformer.transformAst( clone );
+        dbmsTransformer.transformAst(clone);
         return clone.format();
     }
 
     public String format(AstQuery start, Context context, ParserContext parserContext)
     {
         DbmsTransformer dbmsTransformer = context.getDbmsTransformer();
-        dbmsTransformer.setParserContext( parserContext );
+        dbmsTransformer.setParserContext(parserContext);
         AstQuery clone = start.clone();
-        dbmsTransformer.transformQuery( clone );
+        dbmsTransformer.transformQuery(clone);
         return clone.format();
     }
 }

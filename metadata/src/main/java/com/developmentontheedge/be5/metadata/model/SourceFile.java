@@ -38,9 +38,11 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
     private void loadSource()
     {
         if (file != null)
-            try {
+            try
+            {
                 setSource(ProjectFileSystem.read(file));
-            } catch (ReadException e) {
+            } catch (ReadException e)
+            {
                 throw new RuntimeException(e);
             }
     }
@@ -57,7 +59,8 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
         final Pattern pattern = Pattern.compile(" \\$Id: ([A-Za-z\\.]+\\.js)");
         final Matcher matcher = pattern.matcher(code);
 
-        if (matcher.find()) {
+        if (matcher.find())
+        {
             return makeSafeFileName(matcher.group(1));
         }
 

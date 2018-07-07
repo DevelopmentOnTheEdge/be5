@@ -6,8 +6,8 @@ public class AstBooleanExpression extends AstFunNode implements Squasheable
 {
     public AstBooleanExpression(int id)
     {
-        super( id );
-        setFunction( DefaultParserContext.FUNC_OR );
+        super(id);
+        setFunction(DefaultParserContext.FUNC_OR);
     }
 
     @Override

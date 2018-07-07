@@ -8,9 +8,11 @@ public class OperationSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        try {
+        try
+        {
             return ((EntityItem) getBean()).getEntity().getOperations().names().prepend("").toArray(String[]::new);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return new String[]{""};
         }
     }

@@ -32,19 +32,19 @@ public class FilterApplier
     public void setFilter(AstStart ast, Map<ColumnRef, List<Object>> conditions)
     {
         AstQuery query = ast.getQuery();
-        dropOldConditions( query );
-        if( conditions.size() == 0 )
+        dropOldConditions(query);
+        if (conditions.size() == 0)
             return;
         AstWhere where = new AstWhere();
         addWhere(where, conditions);
-        if(query.jjtGetNumChildren() == 1)
-            ( (AstSelect)query.child( 0 ) ).where( where );
+        if (query.jjtGetNumChildren() == 1)
+            ((AstSelect) query.child(0)).where(where);
         else
         {
-            AstTableRef tableRef = new AstTableRef( new AstParenthesis( query.clone() ), new AstIdentifierConstant( "tmp" ) );
-            AstSelect select = new AstSelect( new AstSelectList(), new AstFrom( tableRef ) );
-            select.where( where );
-            query.replaceWith( new AstQuery( select ) );
+            AstTableRef tableRef = new AstTableRef(new AstParenthesis(query.clone()), new AstIdentifierConstant("tmp"));
+            AstSelect select = new AstSelect(new AstSelectList(), new AstFrom(tableRef));
+            select.where(where);
+            query.replaceWith(new AstQuery(select));
         }
     }
 
@@ -55,71 +55,67 @@ public class FilterApplier
 
     public void addFilter(AstQuery query, Map<ColumnRef, List<Object>> conditions)
     {
-        if( conditions.size() == 0 )
+        if (conditions.size() == 0)
             return;
         AstWhere where = new AstWhere();
-        if(query.jjtGetNumChildren() == 1)
+        if (query.jjtGetNumChildren() == 1)
         {
-            AstSelect select = (AstSelect)query.child( 0 );
-            if( select.getWhere() != null )
+            AstSelect select = (AstSelect) query.child(0);
+            if (select.getWhere() != null)
                 where = select.getWhere();
             else
-                select.where( where );
-        }
-        else
+                select.where(where);
+        } else
         {
-            AstTableRef tableRef = new AstTableRef( new AstParenthesis( query.clone() ), new AstIdentifierConstant( "tmp" ) );
-            AstSelect select = new AstSelect( new AstSelectList(), new AstFrom( tableRef ) );
-            select.where( where );
-            query.replaceWith( new AstQuery( select ) );
+            AstTableRef tableRef = new AstTableRef(new AstParenthesis(query.clone()), new AstIdentifierConstant("tmp"));
+            AstSelect select = new AstSelect(new AstSelectList(), new AstFrom(tableRef));
+            select.where(where);
+            query.replaceWith(new AstQuery(select));
         }
         addWhere(where, conditions);
     }
-    
+
     private void dropOldConditions(AstQuery query)
     {
-        query.children().select( AstSelect.class ).forEach( s -> {
-            for( AstJoinSpecification js : s.getFrom().tree().select( AstJoinSpecification.class ) )
+        query.children().select(AstSelect.class).forEach(s -> {
+            for (AstJoinSpecification js : s.getFrom().tree().select(AstJoinSpecification.class))
                 js.remove();
-            if( s.getWhere() != null )
+            if (s.getWhere() != null)
                 s.getWhere().remove();
-            } );
+        });
     }
-    
+
     private void addWhere(AstWhere where, Map<ColumnRef, List<Object>> conditions)
     {
-        if( where.jjtGetNumChildren() != 0 )
+        if (where.jjtGetNumChildren() != 0)
         {
-            if( !AstFunNode.isFunction( DefaultParserContext.AND_LIT ).test( where.child( 0 ) ) )
+            if (!AstFunNode.isFunction(DefaultParserContext.AND_LIT).test(where.child(0)))
             {
                 AstFunNode and = DefaultParserContext.FUNC_AND.node();
-                for( SimpleNode child : where.children() )
-                    and.addChild( child instanceof AstBooleanExpression ? new AstParenthesis(child) : child );
+                for (SimpleNode child : where.children())
+                    and.addChild(child instanceof AstBooleanExpression ? new AstParenthesis(child) : child);
                 where.removeChildren();
-                where.addChild( and );
+                where.addChild(and);
             }
-            setConditions( where.child( 0 ), conditions );
-        }
-        else if( conditions.size() > 1 )
+            setConditions(where.child(0), conditions);
+        } else if (conditions.size() > 1)
         {
-            where.addChild( DefaultParserContext.FUNC_AND.node() );
-            setConditions( where.child( 0 ), conditions );
-        }
-        else
-            setConditions( where, conditions );
+            where.addChild(DefaultParserContext.FUNC_AND.node());
+            setConditions(where.child(0), conditions);
+        } else
+            setConditions(where, conditions);
     }
-    
+
     public void setConditions(SimpleNode where, Map<ColumnRef, List<Object>> conditions)
     {
         for (Map.Entry<ColumnRef, List<Object>> entry : conditions.entrySet())
         {
             List<Object> parameter = entry.getValue();
             AstFunNode node;
-            if(parameter.size() == 1)
+            if (parameter.size() == 1)
             {
                 node = DefaultParserContext.FUNC_EQ.node(entry.getKey().asNode(), toNode(parameter.get(0)));
-            }
-            else
+            } else
             {
                 List<SimpleNode> nodes = parameter.stream().map(this::toNode).collect(toList());
                 node = DefaultParserContext.FUNC_IN.node(entry.getKey().asNode(), AstInValueList.of(nodes));
@@ -132,14 +128,15 @@ public class FilterApplier
 
     private SimpleNode toNode(Object value)
     {
-        if(SqlTypeUtils.isNumber(value.getClass())) return AstNumericConstant.of( (Number) value );
+        if (SqlTypeUtils.isNumber(value.getClass())) return AstNumericConstant.of((Number) value);
 
         String strValue = value.toString();
         Matcher matcher = BeSqlVar_PATTERN.matcher(strValue);
-        if(matcher.find()){
+        if (matcher.find())
+        {
             return new AstBeSqlVar(matcher.group(1));
         }
-        return new AstStringConstant( strValue );
+        return new AstStringConstant(strValue);
     }
 
 }

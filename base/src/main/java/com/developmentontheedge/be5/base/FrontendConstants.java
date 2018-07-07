@@ -10,7 +10,7 @@ public interface FrontendConstants
     String TABLE_MORE_ACTION = "table_more";
 
     String STATIC_ACTION = "static";
-    
+
     /**
      * The first part of the link to the form.
      */

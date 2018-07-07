@@ -69,7 +69,8 @@ public class ProjectDeserializer extends FileDeserializer
         // Read the file structure
         final Object serializedPfs = serializedProjectBody.get(TAG_PROJECT_FILE_STRUCTURE);
 
-        if (serializedPfs != null) {
+        if (serializedPfs != null)
+        {
             project.setProjectFileStructure(readProjectFileStructure(asMap(serializedPfs), project));
         }
 
@@ -98,13 +99,15 @@ public class ProjectDeserializer extends FileDeserializer
 
         yamlDeserializer.readDaemons(application.getDaemonCollection());
 
-        if (Files.exists(yamlDeserializer.getFileSystem().getMassChangesFile())) {
+        if (Files.exists(yamlDeserializer.getFileSystem().getMassChangesFile()))
+        {
             yamlDeserializer.readMassChanges(application.getMassChangeCollection());
         }
 
         final List<Module> modules = readModuleReferences(serializedProjectBody, project);
 
-        for (final Module module : modules) {
+        for (final Module module : modules)
+        {
             DataElementUtils.saveQuiet(module);
         }
 
@@ -115,11 +118,13 @@ public class ProjectDeserializer extends FileDeserializer
         readConnectionProfiles(project.getConnectionProfiles());
 
         Path selectedProfileFile = yamlDeserializer.getFileSystem().getSelectedProfileFile();
-        if (Files.exists(selectedProfileFile)) {
+        if (Files.exists(selectedProfileFile))
+        {
             project.setConnectionProfileName(ProjectFileSystem.read(selectedProfileFile).trim());
         }
 
-        if (!project.isModuleProject()) {
+        if (!project.isModuleProject())
+        {
             yamlDeserializer.readForms(application.getCollection(Module.JS_FORMS, JavaScriptForm.class));
         }
 
@@ -133,7 +138,8 @@ public class ProjectDeserializer extends FileDeserializer
     {
         final Object serializedL10ns = serializedProjectBody.get(ATTR_LOCALIZATIONS);
 
-        if (serializedL10ns != null) {
+        if (serializedL10ns != null)
+        {
             yamlDeserializer.readLocalizations(asStrList(serializedL10ns), project.getApplication().getLocalizations());
         }
     }
@@ -158,12 +164,15 @@ public class ProjectDeserializer extends FileDeserializer
 
         final DataElementPath modulesPath = project.getModules().getCompletePath();
 
-        for (final Map.Entry<String, Object> serializedModule : asPairs(serializedModules)) {
+        for (final Map.Entry<String, Object> serializedModule : asPairs(serializedModules))
+        {
             final String name = serializedModule.getKey();
 
-            try {
+            try
+            {
                 modules.add(readModuleReference(name, asMap(serializedModule.getValue()), project));
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 loadContext.addWarning(new ReadException(e, name == null ? modulesPath : modulesPath.getChildPath(name), path));
             }
         }
@@ -176,15 +185,18 @@ public class ProjectDeserializer extends FileDeserializer
         final Module module = new Module(moduleName, project.getModules());
         final Object entities = serializedModuleBody.get(TAG_ENTITIES);
 
-        if (entities != null) {
-            for (final String entityName : asStrList(entities)) {
+        if (entities != null)
+        {
+            for (final String entityName : asStrList(entities))
+            {
                 readEntity(module, entityName);
             }
         }
 
         final Object serializedExtras = serializedModuleBody.get(TAG_EXTRAS);
 
-        if (serializedExtras != null) {
+        if (serializedExtras != null)
+        {
             final List<String> extras = asStrList(serializedExtras);
             module.setExtras(extras.toArray(new String[extras.size()]));
         }
@@ -197,8 +209,10 @@ public class ProjectDeserializer extends FileDeserializer
         final Module application = new Module(project.getProjectOrigin(), project);
         project.setApplication(application);
 
-        if (entities != null) {
-            for (final String entityName : asStrList(entities)) {
+        if (entities != null)
+        {
+            for (final String entityName : asStrList(entities))
+            {
                 readEntity(application, entityName);
             }
         }
@@ -208,13 +222,15 @@ public class ProjectDeserializer extends FileDeserializer
 
     private void readEntity(final Module module, final String entityName)
     {
-        try {
+        try
+        {
             final Path file = yamlDeserializer.getFileSystem().getEntityFile(module.getName(), entityName);
             final Entity entity = yamlDeserializer.readEntity(module, entityName);
 
             EntitiesFactory.addToModule(entity, module);
             entity.getProject().getAutomaticDeserializationService().registerFile(file, ManagedFileType.ENTITY);
-        } catch (ReadException e) {
+        } catch (ReadException e)
+        {
             loadContext.addWarning(e.attachElement(module));
         }
     }
@@ -226,34 +242,42 @@ public class ProjectDeserializer extends FileDeserializer
         if (serializedScripts == null)
             return;
 
-        for (final String scriptName : asStrList(serializedScripts)) {
+        for (final String scriptName : asStrList(serializedScripts))
+        {
             final Path scriptsFile = yamlDeserializer.getFileSystem().getScriptFile(scriptName);
-            try {
+            try
+            {
                 FreemarkerCatalog parent = scripts;
                 String[] pathComponents = DataElementPath.create(scriptName).getPathComponents();
-                for (int i = 0; i < pathComponents.length - 1; i++) {
+                for (int i = 0; i < pathComponents.length - 1; i++)
+                {
                     FreemarkerScriptOrCatalog newParent = parent.get(pathComponents[i]);
-                    if (newParent instanceof FreemarkerScript) {
+                    if (newParent instanceof FreemarkerScript)
+                    {
                         loadContext.addWarning(new ReadException(new Exception("Cannot create catalog for script " + scriptName + ": script with the same name exists"), newParent.getCompletePath(), path));
                         continue;
                     }
-                    if (newParent == null) {
+                    if (newParent == null)
+                    {
                         newParent = new FreemarkerCatalog(pathComponents[i], parent);
                         DataElementUtils.saveQuiet(newParent);
                     }
                     parent = (FreemarkerCatalog) newParent;
                 }
                 FreemarkerScriptOrCatalog scriptOrCatalog = parent.get(pathComponents[pathComponents.length - 1]);
-                if (scriptOrCatalog instanceof FreemarkerCatalog) {
+                if (scriptOrCatalog instanceof FreemarkerCatalog)
+                {
                     loadContext.addWarning(new ReadException(new Exception("Cannot create script " + scriptName + ": catalog with the same name exists"), scriptOrCatalog.getCompletePath(), path));
                     continue;
                 }
                 final FreemarkerScript script = new FreemarkerScript(pathComponents[pathComponents.length - 1], parent);
-                if (Files.exists(scriptsFile)) {
+                if (Files.exists(scriptsFile))
+                {
                     script.setLinkedFile(scriptsFile);
                 }
                 DataElementUtils.saveQuiet(script);
-            } catch (final Exception e) {
+            } catch (final Exception e)
+            {
                 loadContext.addWarning(new ReadException(e, scripts.getCompletePath().getChildPath(scriptName), scriptsFile));
             }
         }

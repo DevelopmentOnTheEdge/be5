@@ -30,13 +30,16 @@ class MassChangesDeserializer extends FileDeserializer
             throw new ReadException(path, "Top-element must be a list");
         @SuppressWarnings("unchecked")
         List<Object> changesList = (List<Object>) changes;
-        for (Object massChangeObject : changesList) {
+        for (Object massChangeObject : changesList)
+        {
             Map<String, Object> massChangeElement = asMap(massChangeObject);
             Object selectObject = massChangeElement.get("select");
-            if (selectObject == null) {
+            if (selectObject == null)
+            {
                 throw new ReadException(path, "'select' string must be present in each massChange");
             }
-            if (!(selectObject instanceof String)) {
+            if (!(selectObject instanceof String))
+            {
                 throw new ReadException(path, "'select' value must be a string");
             }
             String selectString = (String) selectObject;

@@ -45,13 +45,16 @@ public class H2SchemaReader extends DefaultSchemaReader
                 "c.CHECK_CONSTRAINT " +
                 "FROM INFORMATION_SCHEMA.COLUMNS c " +
                 "WHERE c.TABLE_SCHEMA <> 'INFORMATION_SCHEMA'");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
                 if (!tableName.equals(tableName.toLowerCase()))
                     continue;
                 List<SqlColumnInfo> list = result.get(tableName);
-                if (list == null) {
+                if (list == null)
+                {
                     list = new ArrayList<>();
                     result.put(tableName, list);
                 }
@@ -61,8 +64,10 @@ public class H2SchemaReader extends DefaultSchemaReader
                 info.setType(rs.getString(4 /*"udt_name"*/));
                 info.setCanBeNull("YES".equals(rs.getString(8 /*"is_nullable"*/)));
                 String defaultValue = rs.getString(3 /*"column_default"*/);
-                if (defaultValue != null) {
-                    for (String suffix : SUFFICES) {
+                if (defaultValue != null)
+                {
+                    for (String suffix : SUFFICES)
+                    {
                         if (defaultValue.endsWith(suffix))
                             defaultValue = defaultValue.substring(0, defaultValue.length() - suffix.length());
                     }
@@ -70,7 +75,8 @@ public class H2SchemaReader extends DefaultSchemaReader
                 }
                 info.setDefaultValue(defaultValue);
                 info.setSize(rs.getInt(5 /*"character_maximum_length"*/));
-                if (rs.wasNull()) {
+                if (rs.wasNull())
+                {
                     info.setSize(rs.getInt(6 /*"numeric_precision"*/));
                 }
                 info.setPrecision(rs.getInt(7 /* "numeric_precision" */));
@@ -81,13 +87,15 @@ public class H2SchemaReader extends DefaultSchemaReader
                     continue;
                 Matcher matcher = ENUM_VALUES_PATTERN.matcher(check);
                 List<String> vals = new ArrayList<>();
-                while (matcher.find()) {
+                while (matcher.find())
+                {
                     vals.add(matcher.group(1));
                 }
                 info.setEnumValues(vals.toArray(new String[vals.size()]));
                 controller.setProgress(0); // Just to check for interrupts
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;
@@ -98,7 +106,8 @@ public class H2SchemaReader extends DefaultSchemaReader
     {
         DbmsConnector connector = null;
         ResultSet rs = null;
-        try {
+        try
+        {
             connector = sqlExecutor.getConnector();
             rs = sqlExecutor.getConnector().executeQuery("SELECT SCHEMA()");
             rs.next();
@@ -108,9 +117,11 @@ public class H2SchemaReader extends DefaultSchemaReader
                 return search_path.split(",")[1].trim();
             else
                 return search_path.trim();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             throw new RuntimeException(e);
-        } finally {
+        } finally
+        {
             if (connector != null) connector.close(rs);
         }
     }
@@ -121,8 +132,10 @@ public class H2SchemaReader extends DefaultSchemaReader
         DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT table_name,table_type FROM information_schema.tables t WHERE table_schema='" + defSchema + "' AND table_type IN ('TABLE','VIEW')");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
 //                if(!tableName.equals( tableName.toLowerCase() ))
 //                    continue;
@@ -133,7 +146,8 @@ public class H2SchemaReader extends DefaultSchemaReader
 //                }
                 result.put(tableName, type);
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;

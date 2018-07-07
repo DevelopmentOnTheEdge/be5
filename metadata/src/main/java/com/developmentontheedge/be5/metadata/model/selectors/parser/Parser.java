@@ -26,9 +26,12 @@ public class Parser implements ParserConstants
         List rules = new ArrayList();
         HierarchySelectorRule rule;
         label_1:
-        while (true) {
-            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-                case SPACE: {
+        while (true)
+        {
+            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+            {
+                case SPACE:
+                {
                     ;
                     break;
                 }
@@ -40,9 +43,12 @@ public class Parser implements ParserConstants
         }
         rule = getHierarchySelector();
         label_2:
-        while (true) {
-            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-                case COMMA: {
+        while (true)
+        {
+            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+            {
+                case COMMA:
+                {
                     ;
                     break;
                 }
@@ -52,9 +58,12 @@ public class Parser implements ParserConstants
             }
             jj_consume_token(COMMA);
             label_3:
-            while (true) {
-                switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-                    case SPACE: {
+            while (true)
+            {
+                switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+                {
+                    case SPACE:
+                    {
                         ;
                         break;
                     }
@@ -80,9 +89,12 @@ public class Parser implements ParserConstants
         ComplexSelectorRule rule;
         rule = getComplexSelector();
         label_4:
-        while (true) {
-            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-                case SPACE: {
+        while (true)
+        {
+            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+            {
+                case SPACE:
+                {
                     ;
                     break;
                 }
@@ -91,10 +103,13 @@ public class Parser implements ParserConstants
                     break label_4;
             }
             label_5:
-            while (true) {
+            while (true)
+            {
                 jj_consume_token(SPACE);
-                switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-                    case SPACE: {
+                switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+                {
+                    case SPACE:
+                    {
                         ;
                         break;
                     }
@@ -119,14 +134,17 @@ public class Parser implements ParserConstants
         SelectorRule rule;
         rule = getSimpleSelector();
         label_6:
-        while (true) {
-            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
+        while (true)
+        {
+            switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+            {
                 case IDENT:
                 case DOT:
                 case HASH:
                 case LEFT_BRACKET:
                 case NOT_START:
-                case MATCH_START: {
+                case MATCH_START:
+                {
                     ;
                     break;
                 }
@@ -147,28 +165,35 @@ public class Parser implements ParserConstants
     final public SelectorRule getSimpleSelector() throws ParseException
     {
         SelectorRule rule;
-        switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-            case IDENT: {
+        switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+        {
+            case IDENT:
+            {
                 rule = getClassSelector();
                 break;
             }
-            case HASH: {
+            case HASH:
+            {
                 rule = getNameSelector();
                 break;
             }
-            case DOT: {
+            case DOT:
+            {
                 rule = getTypeSelector();
                 break;
             }
-            case NOT_START: {
+            case NOT_START:
+            {
                 rule = getNotSelector();
                 break;
             }
-            case MATCH_START: {
+            case MATCH_START:
+            {
                 rule = getMatchesSelector();
                 break;
             }
-            case LEFT_BRACKET: {
+            case LEFT_BRACKET:
+            {
                 rule = getAttributeSelector();
                 break;
             }
@@ -221,12 +246,15 @@ public class Parser implements ParserConstants
         jj_consume_token(LEFT_BRACKET);
         name = jj_consume_token(IDENT);
         op = jj_consume_token(OPERATOR);
-        switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
-            case IDENT: {
+        switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk)
+        {
+            case IDENT:
+            {
                 value = jj_consume_token(IDENT);
                 break;
             }
-            case STRING: {
+            case STRING:
+            {
                 value = jj_consume_token(STRING);
                 break;
             }
@@ -284,7 +312,8 @@ public class Parser implements ParserConstants
     final private int[] jj_la1 = new int[8];
     static private int[] jj_la1_0;
 
-    static {
+    static
+    {
         jj_la1_init_0();
     }
 
@@ -306,9 +335,11 @@ public class Parser implements ParserConstants
      */
     public Parser(java.io.InputStream stream, String encoding)
     {
-        try {
+        try
+        {
             jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
-        } catch (java.io.UnsupportedEncodingException e) {
+        } catch (java.io.UnsupportedEncodingException e)
+        {
             throw new RuntimeException(e);
         }
         token_source = new ParserTokenManager(jj_input_stream);
@@ -331,9 +362,11 @@ public class Parser implements ParserConstants
      */
     public void ReInit(java.io.InputStream stream, String encoding)
     {
-        try {
+        try
+        {
             jj_input_stream.ReInit(stream, encoding, 1, 1);
-        } catch (java.io.UnsupportedEncodingException e) {
+        } catch (java.io.UnsupportedEncodingException e)
+        {
             throw new RuntimeException(e);
         }
         token_source.ReInit(jj_input_stream);
@@ -361,12 +394,15 @@ public class Parser implements ParserConstants
      */
     public void ReInit(java.io.Reader stream)
     {
-        if (jj_input_stream == null) {
+        if (jj_input_stream == null)
+        {
             jj_input_stream = new SimpleCharStream(stream, 1, 1);
-        } else {
+        } else
+        {
             jj_input_stream.ReInit(stream, 1, 1);
         }
-        if (token_source == null) {
+        if (token_source == null)
+        {
             token_source = new ParserTokenManager(jj_input_stream);
         }
 
@@ -407,7 +443,8 @@ public class Parser implements ParserConstants
         if ((oldToken = token).next != null) token = token.next;
         else token = token.next = token_source.getNextToken();
         jj_ntk = -1;
-        if (token.kind == kind) {
+        if (token.kind == kind)
+        {
             jj_gen++;
             return token;
         }
@@ -435,7 +472,8 @@ public class Parser implements ParserConstants
     final public Token getToken(int index)
     {
         Token t = token;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i < index; i++)
+        {
             if (t.next != null) t = t.next;
             else t = t.next = token_source.getNextToken();
         }
@@ -461,28 +499,36 @@ public class Parser implements ParserConstants
     {
         jj_expentries.clear();
         boolean[] la1tokens = new boolean[23];
-        if (jj_kind >= 0) {
+        if (jj_kind >= 0)
+        {
             la1tokens[jj_kind] = true;
             jj_kind = -1;
         }
-        for (int i = 0; i < 8; i++) {
-            if (jj_la1[i] == jj_gen) {
-                for (int j = 0; j < 32; j++) {
-                    if ((jj_la1_0[i] & (1 << j)) != 0) {
+        for (int i = 0; i < 8; i++)
+        {
+            if (jj_la1[i] == jj_gen)
+            {
+                for (int j = 0; j < 32; j++)
+                {
+                    if ((jj_la1_0[i] & (1 << j)) != 0)
+                    {
                         la1tokens[j] = true;
                     }
                 }
             }
         }
-        for (int i = 0; i < 23; i++) {
-            if (la1tokens[i]) {
+        for (int i = 0; i < 23; i++)
+        {
+            if (la1tokens[i])
+            {
                 jj_expentry = new int[1];
                 jj_expentry[0] = i;
                 jj_expentries.add(jj_expentry);
             }
         }
         int[][] exptokseq = new int[jj_expentries.size()][];
-        for (int i = 0; i < jj_expentries.size(); i++) {
+        for (int i = 0; i < jj_expentries.size(); i++)
+        {
             exptokseq[i] = jj_expentries.get(i);
         }
         return new ParseException(token, exptokseq, tokenImage);

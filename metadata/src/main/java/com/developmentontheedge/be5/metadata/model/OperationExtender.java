@@ -14,7 +14,8 @@ public class OperationExtender extends BeModelElementSupport
     {
         BeModelCollection<OperationExtender> parent = owner.getOrCreateExtenders();
         int i = 0;
-        while (true) {
+        while (true)
+        {
             String name = String.format("%s - %04d", module == null ? owner.getOriginModuleName() : module, ++i);
             if (!parent.contains(name))
                 return name;
@@ -97,7 +98,8 @@ public class OperationExtender extends BeModelElementSupport
         if (getClass() != obj.getClass())
             return debugEquals("class");
         OperationExtender other = (OperationExtender) obj;
-        if (className == null) {
+        if (className == null)
+        {
             if (other.className != null)
                 return debugEquals("className");
         } else if (!className.equals(other.className))

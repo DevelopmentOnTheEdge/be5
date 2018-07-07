@@ -14,13 +14,12 @@ public class Operations extends TableBuilderSupport
     {
         addColumns("EntityName", "Name", "Type", "Roles");
 
-        String selectEntity = (String)parameters.get("entity");
+        String selectEntity = (String) parameters.get("entity");
 
-        if(selectEntity != null)
+        if (selectEntity != null)
         {
             addOperations(selectEntity);
-        }
-        else
+        } else
         {
             meta.getOrderedEntities(userInfo.getLanguage()).forEach(
                     e -> addOperations(e.getName())

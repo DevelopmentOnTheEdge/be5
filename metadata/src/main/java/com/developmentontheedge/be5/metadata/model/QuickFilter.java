@@ -109,17 +109,20 @@ public class QuickFilter extends BeModelElementSupport
         QuickFilter other = (QuickFilter) obj;
         if (!getName().equals(other.getName()))
             return debugEquals("name");
-        if (filteringClass == null) {
+        if (filteringClass == null)
+        {
             if (other.filteringClass != null)
                 return debugEquals("filteringClass");
         } else if (!filteringClass.equals(other.filteringClass))
             return debugEquals("filteringClass");
-        if (queryParam == null) {
+        if (queryParam == null)
+        {
             if (other.queryParam != null)
                 return debugEquals("queryParam");
         } else if (!queryParam.equals(other.queryParam))
             return debugEquals("queryParam");
-        if (targetQueryName == null) {
+        if (targetQueryName == null)
+        {
             if (other.targetQueryName != null)
                 return debugEquals("targetQueryName");
         } else if (!targetQueryName.equals(other.targetQueryName))

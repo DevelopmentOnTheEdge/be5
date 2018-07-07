@@ -22,7 +22,8 @@ public class LanguageLocalizations extends BeVectorCollection<EntityLocalization
     public boolean addLocalization(String entity, Collection<String> topics, String key, String value)
     {
         EntityLocalizations localizations = this.get(entity);
-        if (localizations == null) {
+        if (localizations == null)
+        {
             localizations = new EntityLocalizations(entity, this);
             DataElementUtils.saveQuiet(localizations);
         }

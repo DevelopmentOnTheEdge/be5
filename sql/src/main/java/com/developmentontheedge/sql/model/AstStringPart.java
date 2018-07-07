@@ -6,43 +6,43 @@ public class AstStringPart extends SimpleNode
 {
     public AstStringPart(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstStringPart(String content)
     {
-        this( SqlParserTreeConstants.JJTSTRINGPART );
+        this(SqlParserTreeConstants.JJTSTRINGPART);
         setContent(content, false);
     }
-    
+
     public AstStringPart(String content, boolean safed)
     {
-        this( SqlParserTreeConstants.JJTSTRINGPART );
+        this(SqlParserTreeConstants.JJTSTRINGPART);
         setContent(content, safed);
     }
 
     @Override
     protected void append(StringBuilder sb, String token)
     {
-        if(token != null)
-            sb.append( token );
+        if (token != null)
+            sb.append(token);
     }
 
     public void setContent(String content, boolean safed)
     {
         // TODO: unescape
-        this.nodeContent = safed ? content : content.replaceAll( "'", "''" );
+        this.nodeContent = safed ? content : content.replaceAll("'", "''");
     }
-    
+
     public String getContent()
     {
         return this.nodeContent;
     }
-    
+
     @Override
     public String toString()
     {
-        return "StringPart: "+nodeContent;
+        return "StringPart: " + nodeContent;
     }
 }
 /* JavaCC - OriginalChecksum=f33498a8d7cc2450902938a06c1f9780 (do not edit this line) */

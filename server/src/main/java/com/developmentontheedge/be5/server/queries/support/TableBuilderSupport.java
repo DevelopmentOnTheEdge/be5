@@ -20,15 +20,23 @@ import java.util.Map;
 
 public abstract class TableBuilderSupport extends BaseTableBuilderSupport
 {
-    @Inject public DatabaseModel database;
-    @Inject public DbService db;
-    @Inject public DpsHelper dpsHelper;
-    @Inject public Meta meta;
-    @Inject public QueriesService queries;
-    @Inject public Validator validator;
+    @Inject
+    public DatabaseModel database;
+    @Inject
+    public DbService db;
+    @Inject
+    public DpsHelper dpsHelper;
+    @Inject
+    public Meta meta;
+    @Inject
+    public QueriesService queries;
+    @Inject
+    public Validator validator;
 
-    @Inject protected Request request;
-    @Inject protected Session session;
+    @Inject
+    protected Request request;
+    @Inject
+    protected Session session;
 
     protected UserInfo userInfo;
 

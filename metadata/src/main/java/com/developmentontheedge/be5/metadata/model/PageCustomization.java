@@ -64,9 +64,11 @@ public class PageCustomization extends BeModelElementSupport implements Template
         this.type = type;
         this.domain = domain;
         Entity entity = getEntity();
-        if (entity != null) {
+        if (entity != null)
+        {
             setOriginModuleName(entity.getModule().getName());
-        } else {
+        } else
+        {
             setOriginModuleName(getProject().getProjectOrigin());
         }
     }
@@ -75,9 +77,11 @@ public class PageCustomization extends BeModelElementSupport implements Template
     {
         String location = type;
         BeModelCollection<?> owner = origin.getOrigin();
-        if (owner instanceof EntityItem) {
+        if (owner instanceof EntityItem)
+        {
             location = ((EntityItem) owner).getEntity().getName() + "." + owner.getName() + "." + type;
-        } else if (owner instanceof Entity || owner instanceof StaticPage) {
+        } else if (owner instanceof Entity || owner instanceof StaticPage)
+        {
             location = owner.getName() + "." + type;
         }
         return domain + "." + location;
@@ -86,10 +90,12 @@ public class PageCustomization extends BeModelElementSupport implements Template
     public Entity getEntity()
     {
         BeModelElement owner = getOwner();
-        if (owner instanceof EntityItem) {
+        if (owner instanceof EntityItem)
+        {
             return ((EntityItem) owner).getEntity();
         }
-        if (owner instanceof Entity) {
+        if (owner instanceof Entity)
+        {
             return (Entity) owner;
         }
         return null;
@@ -108,19 +114,24 @@ public class PageCustomization extends BeModelElementSupport implements Template
 
     public static String[] getDomains(BeModelElement owner)
     {
-        if (owner instanceof Operation) {
+        if (owner instanceof Operation)
+        {
             return OPERATION_DOMAIN_LIST.clone();
         }
-        if (owner instanceof Query) {
+        if (owner instanceof Query)
+        {
             return QUERY_DOMAIN_LIST.clone();
         }
-        if (owner instanceof Entity) {
+        if (owner instanceof Entity)
+        {
             return ENTITY_DOMAIN_LIST.clone();
         }
-        if (owner instanceof Module) {
+        if (owner instanceof Module)
+        {
             return MODULE_DOMAIN_LIST.clone();
         }
-        if (owner instanceof StaticPage) {
+        if (owner instanceof StaticPage)
+        {
             return STATIC_PAGE_DOMAIN_LIST.clone();
         }
         return Strings2.EMPTY;
@@ -176,7 +187,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
     {
         if (roles == null)
             this.roles = Collections.emptySet();
-        else {
+        else
+        {
             this.roles = new TreeSet<>(roles);
         }
         fireChanged();
@@ -190,12 +202,14 @@ public class PageCustomization extends BeModelElementSupport implements Template
 
     public boolean merge(PageCustomization other)
     {
-        if (code == null) {
+        if (code == null)
+        {
             if (other.code != null)
                 return false;
         } else if (!code.equals(other.code))
             return false;
-        if (type == null) {
+        if (type == null)
+        {
             if (other.type != null)
                 return false;
         } else if (!type.equals(other.type))
@@ -216,7 +230,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
         if (getClass() != obj.getClass())
             return debugEquals("class");
         PageCustomization other = (PageCustomization) obj;
-        if (type == null) {
+        if (type == null)
+        {
             if (other.type != null)
                 return debugEquals("type");
         } else if (!type.equals(other.type))
@@ -254,7 +269,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
     public boolean isCustomized()
     {
         Entity entity = getEntity();
-        if (entity == null) {
+        if (entity == null)
+        {
             return false;
         }
         Module module = getModule();
@@ -265,18 +281,23 @@ public class PageCustomization extends BeModelElementSupport implements Template
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> result = new ArrayList<>();
-        try {
+        try
+        {
             ModelValidationUtils.checkValueInSet(this, "domain", domain, getDomains());
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             result.add(e);
         }
-        try {
+        try
+        {
             ModelValidationUtils.checkValueInSet(this, "type", type, TYPES);
-        } catch (ProjectElementException e) {
+        } catch (ProjectElementException e)
+        {
             result.add(e);
         }
         ProjectElementException error = getResult().getError();
-        if (error != null && !error.isNoError()) {
+        if (error != null && !error.isNoError())
+        {
             DataElementPath path = getCompletePath();
             if (error.getPath().equals(path.toString()))
                 result.add(error);
@@ -306,12 +327,14 @@ public class PageCustomization extends BeModelElementSupport implements Template
         if (origin == null || origin.get(getName()) != this)
             return;
 
-        if (origin instanceof PageCustomizations && origin.getOrigin() instanceof Module) {
+        if (origin instanceof PageCustomizations && origin.getOrigin() instanceof Module)
+        {
             origin.fireCodeChanged();
             return;
         }
 
-        if (origin.getOrigin() instanceof EntityItem && origin.getOrigin().get(PageCustomization.CUSTOMIZATIONS_COLLECTION) == origin) {
+        if (origin.getOrigin() instanceof EntityItem && origin.getOrigin().get(PageCustomization.CUSTOMIZATIONS_COLLECTION) == origin)
+        {
             ((EntityItem) origin.getOrigin()).fireChanged();
             return;
         }

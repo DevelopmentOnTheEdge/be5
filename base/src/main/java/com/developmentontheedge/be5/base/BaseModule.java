@@ -26,9 +26,9 @@ public class BaseModule extends AbstractModule
 {
     static
     {
-        GroovyRegister.registerMetaClass( DynamicPropertyMetaClass.class, DynamicProperty.class );
-        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
-        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class );
+        GroovyRegister.registerMetaClass(DynamicPropertyMetaClass.class, DynamicProperty.class);
+        GroovyRegister.registerMetaClass(DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class);
+        GroovyRegister.registerMetaClass(DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class);
     }
 
     @Override

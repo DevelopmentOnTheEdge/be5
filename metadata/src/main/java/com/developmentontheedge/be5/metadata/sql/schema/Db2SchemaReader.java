@@ -38,11 +38,14 @@ public class Db2SchemaReader extends DefaultSchemaReader
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT tabname,colname,typename,nulls,default,length,scale,identity,text FROM syscat.columns c " +
                 (defSchema == null ? "" : "WHERE c.tabschema='" + defSchema + "' ") + " ORDER BY c.tabname,c.colno");
-        try {
-            while (rs.next()) {
+        try
+        {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"TABNAME"*/).toLowerCase();
                 List<SqlColumnInfo> list = result.get(tableName);
-                if (list == null) {
+                if (list == null)
+                {
                     list = new ArrayList<>();
                     result.put(tableName, list);
                 }
@@ -56,20 +59,25 @@ public class Db2SchemaReader extends DefaultSchemaReader
                 info.setPrecision(rs.getInt(7 /* "SCALE" */));
                 info.setAutoIncrement(rs.getString(8 /*"IDENTITY"*/).equals("Y"));
                 String text = rs.getString(9 /*"TEXT"*/);
-                if (text != null) {
+                if (text != null)
+                {
                     Matcher m = GENERIC_COLUMN_PATTERN.matcher(text);
-                    if (m.matches()) {
+                    if (m.matches())
+                    {
                         String colName = m.group(2);
                         info.setDefaultValue(new ColumnFunction(colName, ColumnFunction.TRANSFORM_GENERIC).toString());
                     }
                 }
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
-        for (Entry<String, List<SqlColumnInfo>> table : result.entrySet()) {
+        for (Entry<String, List<SqlColumnInfo>> table : result.entrySet())
+        {
             HashMap<String, String[]> enums = loadEntityEnums(connector, table.getKey());
-            for (SqlColumnInfo column : table.getValue()) {
+            for (SqlColumnInfo column : table.getValue())
+            {
                 column.setEnumValues(enums.get(column.getName()));
             }
         }
@@ -85,15 +93,19 @@ public class Db2SchemaReader extends DefaultSchemaReader
                 + "FROM syscat.indexes i "
                 + "JOIN syscat.indexcoluse ic ON (i.indschema=ic.indschema AND i.indname=ic.indname) " +
                 (defSchema == null ? "" : "WHERE i.tabschema='" + defSchema + "' ") + " ORDER BY i.tabname,i.indname,ic.colseq");
-        try {
+        try
+        {
             IndexInfo curIndex = null;
             String lastTable = null;
-            while (rs.next()) {
+            while (rs.next())
+            {
                 String tableName = rs.getString(1 /*"TABNAME"*/).toLowerCase();
                 String indexName = rs.getString(2 /*"INDNAME"*/);
-                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName)) {
+                if (!tableName.equals(lastTable) || curIndex == null || !curIndex.getName().equals(indexName))
+                {
                     List<IndexInfo> list = result.get(tableName);
-                    if (list == null) {
+                    if (list == null)
+                    {
                         list = new ArrayList<>();
                         result.put(tableName, list);
                     }
@@ -107,7 +119,8 @@ public class Db2SchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"COLNAMES"*/);
                 curIndex.addColumn(column);
             }
-        } finally {
+        } finally
+        {
             connector.close(rs);
         }
         return result;
@@ -126,7 +139,8 @@ public class Db2SchemaReader extends DefaultSchemaReader
 
         List<String> constraints = readAsListOfStrings(connector, sql);
 
-        for (String constr : constraints) {
+        for (String constr : constraints)
+        {
             StringTokenizer st = new StringTokenizer(constr.trim());
             int nTok = st.countTokens();
             if (nTok < 3)
@@ -138,15 +152,19 @@ public class Db2SchemaReader extends DefaultSchemaReader
                 continue;
 
             ArrayList<String> values = new ArrayList<String>();
-            try {
-                do {
+            try
+            {
+                do
+                {
                     String val = st.nextToken("(,')");
-                    if (val != null && val.length() > 0) {
+                    if (val != null && val.length() > 0)
+                    {
                         values.add(val);
                     }
                 }
                 while (st.hasMoreTokens());
-            } catch (NoSuchElementException ignore) {
+            } catch (NoSuchElementException ignore)
+            {
             }
 
             if (values.size() > 0)

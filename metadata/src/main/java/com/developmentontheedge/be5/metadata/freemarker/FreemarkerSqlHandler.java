@@ -49,22 +49,29 @@ public class FreemarkerSqlHandler implements SqlHandler
     public void endStatement(String statement)
     {
         List<Position> positions = calculatePosition();
-        if (debug) {
-            for (Position position : positions) {
+        if (debug)
+        {
+            for (Position position : positions)
+            {
                 sqlExecutor.comment("At " + position, false);
             }
         }
         List<String> newIncludeChain = getIncludeChain(positions);
-        if (!newIncludeChain.equals(includeChain)) {
+        if (!newIncludeChain.equals(includeChain))
+        {
             int i = 0;
-            while (newIncludeChain.size() > i && includeChain.size() > i && newIncludeChain.get(i).equals(includeChain.get(i))) {
+            while (newIncludeChain.size() > i && includeChain.size() > i && newIncludeChain.get(i).equals(includeChain.get(i)))
+            {
                 i++;
             }
-            for (int j = includeChain.size() - 1; j >= i; j--) {
+            for (int j = includeChain.size() - 1; j >= i; j--)
+            {
                 sqlExecutor.comment("End of included " + includeChain.get(j), false);
             }
-            for (int j = i; j < newIncludeChain.size(); j++) {
-                if (log != null) {
+            for (int j = i; j < newIncludeChain.size(); j++)
+            {
+                if (log != null)
+                {
                     StringBuilder sb = new StringBuilder("[>]   ");
                     for (int k = 0; k < j; k++)
                         sb.append("  ");
@@ -75,11 +82,15 @@ public class FreemarkerSqlHandler implements SqlHandler
             }
         }
         includeChain = newIncludeChain;
-        try {
+        try
+        {
             sqlExecutor.executeSingle(statement);
-        } catch (ExtendedSqlException e) {
-            if (!debug) {
-                for (Position position : positions) {
+        } catch (ExtendedSqlException e)
+        {
+            if (!debug)
+            {
+                for (Position position : positions)
+                {
                     sqlExecutor.comment("At " + position, false);
                 }
             }
@@ -90,7 +101,8 @@ public class FreemarkerSqlHandler implements SqlHandler
     private List<String> getIncludeChain(List<Position> positions)
     {
         List<String> chain = new ArrayList<>();
-        for (int i = 0; i < positions.size() - 1; i++) {
+        for (int i = 0; i < positions.size() - 1; i++)
+        {
             if (positions.get(i).getElementType().equals("Include"))
                 chain.add(positions.get(i + 1).getPath());
         }
@@ -104,7 +116,8 @@ public class FreemarkerSqlHandler implements SqlHandler
         if (env == null)
             return positions;
         TemplateElement[] endPosition = env.getInstructionStackSnapshot();
-        for (int i = 0; i < Math.min(startPosition.length, endPosition.length); i++) {
+        for (int i = 0; i < Math.min(startPosition.length, endPosition.length); i++)
+        {
             TemplateElement startElement = startPosition[startPosition.length - i - 1];
             TemplateElement endElement = endPosition[endPosition.length - i - 1];
             if (startElement.getTemplate() != endElement.getTemplate())
@@ -112,13 +125,15 @@ public class FreemarkerSqlHandler implements SqlHandler
             String path = startElement.getTemplate().getName();
             int fromLine = startElement.getBeginLine();
             int fromColumn = startElement.getBeginColumn();
-            if (startElement.getNodeName().equals("TextBlock")) {
+            if (startElement.getNodeName().equals("TextBlock"))
+            {
                 fromLine += startLineOffset;
                 fromColumn = (startLineOffset == 0 ? fromColumn : 1) + startColumnOffset;
             }
             int toLine = endElement.getEndLine();
             int toColumn = endElement.getEndColumn();
-            if (endElement.getNodeName().equals("TextBlock")) {
+            if (endElement.getNodeName().equals("TextBlock"))
+            {
                 toLine = endElement.getBeginLine() + lineOffset;
                 toColumn = (lineOffset == 0 ? endElement.getBeginColumn() : 1) + columnOffset;
             }
@@ -126,8 +141,10 @@ public class FreemarkerSqlHandler implements SqlHandler
             if (startElement != endElement)
                 break;
         }
-        for (int i = 0; i < positions.size(); i++) {
-            if (i < positions.size() - 1 && positions.get(i + 1).inside(positions.get(i))) {
+        for (int i = 0; i < positions.size(); i++)
+        {
+            if (i < positions.size() - 1 && positions.get(i + 1).inside(positions.get(i)))
+            {
                 positions.remove(i);
                 i--;
             }
@@ -138,14 +155,16 @@ public class FreemarkerSqlHandler implements SqlHandler
     public void execute(FreemarkerScript freemarkerScript) throws ProjectElementException, FreemarkerSqlException
     {
         DataElementPath path = freemarkerScript.getCompletePath();
-        if (log != null) {
+        if (log != null)
+        {
             log.setOperationName("[>] " + path);
         }
         sqlExecutor.comment("Execute " + path);
         Project project = freemarkerScript.getProject();
         ResultToConsumerWriter out = new ResultToConsumerWriter(new MultiSqlConsumer(project.getDatabaseSystem().getType(), this));
         FreemarkerUtils.mergeTemplateByPath(path.toString(), project.getContext(freemarkerScript), project.getConfiguration(), out);
-        for (int j = includeChain.size() - 1; j >= 0; j--) {
+        for (int j = includeChain.size() - 1; j >= 0; j--)
+        {
             sqlExecutor.comment("End of included " + includeChain.get(j), false);
         }
     }
@@ -164,10 +183,12 @@ public class FreemarkerSqlHandler implements SqlHandler
         {
             lineOffset = 0;
             columnOffset = 0;
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++)
+            {
                 if (cbuf[i] != '\r')
                     consumer.symbol(cbuf[i + off]);
-                if (cbuf[i] == '\n') {
+                if (cbuf[i] == '\n')
+                {
                     lineOffset++;
                     columnOffset = 0;
                 } else if (cbuf[i] != '\r')

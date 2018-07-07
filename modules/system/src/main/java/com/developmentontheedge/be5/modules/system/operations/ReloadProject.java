@@ -8,7 +8,8 @@ import javax.inject.Inject;
 
 public class ReloadProject extends OperationSupport
 {
-    @Inject private ProjectProvider projectProvider;
+    @Inject
+    private ProjectProvider projectProvider;
 
     @Override
     public void invoke(Object parameters) throws Exception

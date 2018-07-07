@@ -21,7 +21,7 @@ public class HashUrlTest
     @Test
     public void test2()
     {
-        assertEquals(new HashUrl(TABLE_ACTION,"entity", "query").named(Collections.singletonMap("name", "value")),
+        assertEquals(new HashUrl(TABLE_ACTION, "entity", "query").named(Collections.singletonMap("name", "value")),
                 new HashUrl(TABLE_ACTION, "entity").positional("query").named("name", "value"));
     }
 }

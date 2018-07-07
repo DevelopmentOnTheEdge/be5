@@ -152,7 +152,8 @@ public class YamlSerializer
 
         Object transform(Object node)
         {
-            if (node instanceof String) {
+            if (node instanceof String)
+            {
                 final String s = (String) node;
                 if (isBool(s))
                     return Boolean.valueOf(s);
@@ -160,7 +161,8 @@ public class YamlSerializer
                 return formatText(s);
             }
 
-            if (node instanceof Map) {
+            if (node instanceof Map)
+            {
                 @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) node;
                 final Map<String, Object> result = map();
                 for (final Entry<String, Object> entry : map.entrySet())
@@ -169,7 +171,8 @@ public class YamlSerializer
                 return result;
             }
 
-            if (node instanceof List) {
+            if (node instanceof List)
+            {
                 @SuppressWarnings("unchecked") final List<Object> list = (List<Object>) node;
                 if (list.size() == 1 && list.get(0) instanceof String)
                     return transform(list.get(0));
@@ -186,17 +189,20 @@ public class YamlSerializer
 
         private static String formatText(final String text)
         {
-            if (" ".equals(text)) {
+            if (" ".equals(text))
+            {
                 return text;
             }
 
             final List<String> lines = StreamEx.split(text, "\n").toList();
 
-            while (!lines.isEmpty() && lines.get(0).trim().isEmpty()) {
+            while (!lines.isEmpty() && lines.get(0).trim().isEmpty())
+            {
                 lines.remove(0);
             }
 
-            for (int i = 0; i < lines.size(); i++) {
+            for (int i = 0; i < lines.size(); i++)
+            {
                 String line = lines.get(i);
                 line = line.replace("\t", "  ");
                 lines.set(i, trimTrailingSpaces(line));
@@ -210,7 +216,8 @@ public class YamlSerializer
             final StringBuilder sb = new StringBuilder(s);
             int index = s.length() - 1;
 
-            while (index >= 0 && Character.isWhitespace(sb.charAt(index))) {
+            while (index >= 0 && Character.isWhitespace(sb.charAt(index)))
+            {
                 sb.deleteCharAt(index);
                 index--;
             }
@@ -227,9 +234,11 @@ public class YamlSerializer
         {
             final String string = toString(daemons);
 
-            try {
+            try
+            {
                 fileSystem.writeDaemonsFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(daemons, e);
             }
         }
@@ -239,7 +248,8 @@ public class YamlSerializer
             final Map<String, Object> root = map();
             final Map<String, Object> content = map();
 
-            for (final Daemon daemon : daemons) {
+            for (final Daemon daemon : daemons)
+            {
                 final Map<String, Object> serializedDaemon = map();
                 serializeDocumentation(daemon, serializedDaemon);
                 serializeFields(daemon, Fields.daemon(), serializedDaemon);
@@ -260,9 +270,11 @@ public class YamlSerializer
         {
             final String string = toString(massChanges);
 
-            try {
+            try
+            {
                 fileSystem.writeMassChangesFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(massChanges, e);
             }
         }
@@ -273,7 +285,8 @@ public class YamlSerializer
             List<Object> content = list();
             root.put(TAG_MASS_CHANGES, content);
 
-            for (final MassChange massChange : massChanges) {
+            for (final MassChange massChange : massChanges)
+            {
                 final Map<String, Object> serializedMassChange = map();
                 serializedMassChange.put("select", massChange.getName());
                 serializeDocumentation(massChange, serializedMassChange);
@@ -294,18 +307,22 @@ public class YamlSerializer
         {
             final String string = toString(pages, true);
 
-            try {
+            try
+            {
                 fileSystem.writeStaticPagesFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(pages, e);
             }
         }
 
         String toString(StaticPages pages)
         {
-            try {
+            try
+            {
                 return toString(pages, false);
-            } catch (WriteException e) {
+            } catch (WriteException e)
+            {
                 throw new AssertionError();
             }
         }
@@ -315,10 +332,12 @@ public class YamlSerializer
             final Map<String, Object> root = map();
             final Map<String, Object> content = map();
 
-            for (final LanguageStaticPages languagePages : pages) {
+            for (final LanguageStaticPages languagePages : pages)
+            {
                 final Map<String, Object> serializedPages = map();
 
-                for (final StaticPage page : languagePages) {
+                for (final StaticPage page : languagePages)
+                {
                     final BeModelCollection<PageCustomization> customizations =
                             page.getCollection(
                                     PageCustomization.CUSTOMIZATIONS_COLLECTION,
@@ -326,7 +345,8 @@ public class YamlSerializer
 
                     if (customizations == null || customizations.getNameList().isEmpty())
                         serializedPages.put(page.getName(), getContentOrFileReference(page, saveReferencedFiles));
-                    else {
+                    else
+                    {
                         final Map<String, Object> serializedPage = map();
                         serializedPage.put(TAG_CODE, getContentOrFileReference(page, saveReferencedFiles));
                         serializeCustomizationsStatement(page, serializedPage);
@@ -345,11 +365,14 @@ public class YamlSerializer
 
         private Object getContentOrFileReference(final StaticPage page, final boolean saveReferencedFiles) throws WriteException
         {
-            if (!Strings2.isNullOrEmpty(page.getFileName())) {
-                try {
+            if (!Strings2.isNullOrEmpty(page.getFileName()))
+            {
+                try
+                {
                     if (saveReferencedFiles)
                         fileSystem.writeStaticPageFile(page.getFileName(), page.getContent());
-                } catch (final IOException e) {
+                } catch (final IOException e)
+                {
                     throw new WriteException(page, e);
                 }
 
@@ -368,9 +391,11 @@ public class YamlSerializer
         {
             final String string = toString(application);
 
-            try {
+            try
+            {
                 fileSystem.writeCustomizationFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(application, e);
             }
         }
@@ -411,7 +436,8 @@ public class YamlSerializer
             else
                 return;
 
-            if (!schemeContent.isEmpty()) {
+            if (!schemeContent.isEmpty())
+            {
                 entityContent.put(TAG_SCHEME, schemeContent);
             }
         }
@@ -430,15 +456,18 @@ public class YamlSerializer
         private void serializeTableDefinition(final TableDef tableDef, final Map<String, Object> schemeContent)
         {
             final Map<String, Object> serializedTableDefinitionBody = schemeContent;
-            if (tableDef.getModule().getName().equals(projectOrigin)) {
+            if (tableDef.getModule().getName().equals(projectOrigin))
+            {
                 serializeDocumentation(tableDef, serializedTableDefinitionBody);
                 serializeFields(tableDef, Fields.tableDef(), serializedTableDefinitionBody);
                 serializeUsedExtras(tableDef, serializedTableDefinitionBody);
             }
 
             final List<Object> serializedColumnDefinitionList = list();
-            for (final ColumnDef column : tableDef.getColumns()) {
-                if (column.getOriginModuleName().equals(projectOrigin)) {
+            for (final ColumnDef column : tableDef.getColumns())
+            {
+                if (column.getOriginModuleName().equals(projectOrigin))
+                {
                     serializedColumnDefinitionList.add(serializeColumnDefinition(column));
                 }
             }
@@ -446,8 +475,10 @@ public class YamlSerializer
                 serializedTableDefinitionBody.put(TAG_COLUMNS, serializedColumnDefinitionList);
 
             final List<Object> serializedIndexDefinitionList = list();
-            for (final IndexDef index : tableDef.getIndices()) {
-                if (index.getOriginModuleName().equals(projectOrigin)) {
+            for (final IndexDef index : tableDef.getIndices())
+            {
+                if (index.getOriginModuleName().equals(projectOrigin))
+                {
                     serializedIndexDefinitionList.add(serializeIndexDefinition(index));
                 }
             }
@@ -461,18 +492,21 @@ public class YamlSerializer
             final Map<String, Object> serializedColumnDefinitionBody = map();
             serializeDocumentation(column, serializedColumnDefinitionBody);
 
-            if (column.getRawType() != null && column.getCustomizedProperties().contains("type")) {
+            if (column.getRawType() != null && column.getCustomizedProperties().contains("type"))
+            {
                 serializedColumnDefinitionBody.put("type", column.getRawType().toString());
             }
             String[] oldNames = column.getOldNames();
-            if (oldNames.length > 0) {
+            if (oldNames.length > 0)
+            {
                 List<Object> oldNamesList = list();
                 oldNamesList.addAll(Arrays.asList(oldNames));
                 serializedColumnDefinitionBody.put(TAG_OLD_NAMES, oldNamesList);
             }
 
             final List<Field> columnFields = new ArrayList<>(Fields.columnDef());
-            for (final Iterator<Field> iterator = columnFields.iterator(); iterator.hasNext(); ) {
+            for (final Iterator<Field> iterator = columnFields.iterator(); iterator.hasNext(); )
+            {
                 final Field field = iterator.next();
                 if (field.name.equals("type"))
                     iterator.remove();
@@ -482,7 +516,8 @@ public class YamlSerializer
             serializeUsedExtras(column, serializedColumnDefinitionBody);
             serializedColumnDefinition.put(column.getName(), serializedColumnDefinitionBody);
 
-            if (column.hasReference()) {
+            if (column.hasReference())
+            {
                 serializedColumnDefinitionBody.put(TAG_REFERENCE, serializeTableReference(column));
             }
 
@@ -496,7 +531,8 @@ public class YamlSerializer
             serializeDocumentation(index, serializedIndexDefinitionBody);
             serializeFields(index, Fields.indexDef(), serializedIndexDefinitionBody);
             List<Object> serializedColumns = list();
-            for (IndexColumnDef col : index) {
+            for (IndexColumnDef col : index)
+            {
                 serializedColumns.add(col.getAsString());
             }
             serializedIndexDefinitionBody.put(TAG_COLUMNS, serializedColumns);
@@ -517,7 +553,8 @@ public class YamlSerializer
         {
             final Map<String, Object> serializedReferences = map();
 
-            for (final TableRef tableRef : tableReferences) {
+            for (final TableRef tableRef : tableReferences)
+            {
                 if (tableRef.getOriginModuleName().equals(projectOrigin))
                     serializedReferences.put(tableRef.getColumnsFrom(), serializeTableReference(tableRef));
             }
@@ -528,7 +565,8 @@ public class YamlSerializer
         private Object serializeTableReference(final TableReference tableRef)
         {
             if (tableRef.getViewName() != null && tableRef.getViewName().equals(DatabaseConstants.SELECTION_VIEW)
-                    && (tableRef.getUsedInExtras() == null || tableRef.getUsedInExtras().length == 0)) {
+                    && (tableRef.getUsedInExtras() == null || tableRef.getUsedInExtras().length == 0))
+            {
                 return serializeTargetTableAndColumn(tableRef);
             }
             Map<String, Object> serializedTableReferenceBody = map();
@@ -540,7 +578,8 @@ public class YamlSerializer
 
         private Object serializeTargetTableAndColumn(final TableReference tableRef)
         {
-            if (!Strings2.isNullOrEmpty(tableRef.getTableTo())) {
+            if (!Strings2.isNullOrEmpty(tableRef.getTableTo()))
+            {
                 // empty columnTo means a primary key
                 if (Strings2.isNullOrEmpty(tableRef.getColumnsTo()))
                     return tableRef.getTableTo();
@@ -553,7 +592,8 @@ public class YamlSerializer
                     return tableRef.getTableTo();
 
                 return tableRef.getTableTo() + "." + tableRef.getColumnsTo();
-            } else {
+            } else
+            {
                 final String[] permittedTables = tableRef.getPermittedTables() == null ? Strings2.EMPTY : tableRef.getPermittedTables();
                 return list(permittedTables);
             }
@@ -568,18 +608,22 @@ public class YamlSerializer
         {
             final String string = toString(forms, true);
 
-            try {
+            try
+            {
                 fileSystem.writeJavaScriptFormsFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(forms, e);
             }
         }
 
         String toString(final JavaScriptForms forms)
         {
-            try {
+            try
+            {
                 return toString(forms, false);
-            } catch (WriteException e) {
+            } catch (WriteException e)
+            {
                 throw new AssertionError();
             }
         }
@@ -590,16 +634,20 @@ public class YamlSerializer
             final Map<String, Object> serializedForms = map();
             final String projectOrigin = forms.getProject().getProjectOrigin();
 
-            for (final JavaScriptForm form : forms) {
+            for (final JavaScriptForm form : forms)
+            {
                 final Map<String, Object> serializedForm = map();
                 serializeFields(form, Fields.jsForms(), serializedForm);
                 serializedForms.put(form.getName(), serializedForm);
 
-                if (form.getModuleName().equals(projectOrigin)) {
-                    try {
+                if (form.getModuleName().equals(projectOrigin))
+                {
+                    try
+                    {
                         if (saveReferencedFiles)
                             form.save();
-                    } catch (IOException e) {
+                    } catch (IOException e)
+                    {
                         throw new WriteException(form, e);
                     }
                 }
@@ -621,9 +669,11 @@ public class YamlSerializer
             final String language = localizations.getName();
             final String string = toString(localizations);
 
-            try {
+            try
+            {
                 fileSystem.writeLocalizationFile(language, string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(localizations, e);
             }
         }
@@ -652,11 +702,13 @@ public class YamlSerializer
             final List<Object> serializedBlocks = list();
             final Map<String, List<LocalizationElement>> blocks = new TreeMap<>();
 
-            for (final LocalizationElement entry : entityLocalizations.elements()) {
+            for (final LocalizationElement entry : entityLocalizations.elements())
+            {
                 final String blockName = String.join(";", entry.getTopics());
                 List<LocalizationElement> block = blocks.get(blockName);
 
-                if (block == null) {
+                if (block == null)
+                {
                     block = new ArrayList<>();
                     blocks.put(blockName, block);
                 }
@@ -664,7 +716,8 @@ public class YamlSerializer
                 block.add(entry);
             }
 
-            for (final List<LocalizationElement> block : blocks.values()) {
+            for (final List<LocalizationElement> block : blocks.values())
+            {
                 serializedBlocks.add(serializeBlock(block));
             }
 
@@ -697,9 +750,11 @@ public class YamlSerializer
         {
             final String string = toString(securityCollection);
 
-            try {
+            try
+            {
                 fileSystem.writeSecurityFile(string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(securityCollection, e);
             }
         }
@@ -710,7 +765,8 @@ public class YamlSerializer
             final Map<String, Object> content = map();
 
             final Map<String, Object> roles = map();
-            for (final Role role : securityCollection.getRoleCollection()) {
+            for (final Role role : securityCollection.getRoleCollection())
+            {
                 final Map<String, Object> serializedRole = map();
                 serializeDocumentation(role, serializedRole);
                 serializeUsedExtras(role, serializedRole);
@@ -719,8 +775,10 @@ public class YamlSerializer
             content.put(TAG_ROLES, roles);
 
             final Map<String, Object> roleGroups = map();
-            for (final RoleGroup roleGroup : securityCollection.getRoleGroupCollection()) {
-                if (!roleGroup.isPredefined()) {
+            for (final RoleGroup roleGroup : securityCollection.getRoleGroupCollection())
+            {
+                if (!roleGroup.isPredefined())
+                {
                     RoleSet r = roleGroup.getRoleSet();
                     roleGroups.put(roleGroup.getName(), list(r.printValues()));
                 }
@@ -742,9 +800,11 @@ public class YamlSerializer
         {
             final String string = toString(profiles);
 
-            try {
+            try
+            {
                 fileSystem.writeConnectionProfilesFile(type, string);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(profiles, e);
             }
         }
@@ -755,7 +815,8 @@ public class YamlSerializer
             final Map<String, Object> content = map();
             final Map<String, Object> serializedProfiles = map();
 
-            for (final BeConnectionProfile profile : profiles) {
+            for (final BeConnectionProfile profile : profiles)
+            {
                 serializedProfiles.put(profile.getName(), serializeProfile(profile));
             }
 
@@ -780,14 +841,17 @@ public class YamlSerializer
             final String oldContent = fileSystem.readEntityFile(module.getName(), entity.getName());
             final String newContent = serializeToString(entity, true);
 
-            if (Objects.equals(newContent, oldContent)) {
+            if (Objects.equals(newContent, oldContent))
+            {
                 entity.setLinkedFile(fileSystem.getEntityFile(module.getName(), entity.getName()));
                 return oldContent;
             }
 
-            try {
+            try
+            {
                 fileSystem.writeEntityFile(module.getName(), entity.getName(), newContent);
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 throw new WriteException(entity, e);
             }
 
@@ -800,9 +864,11 @@ public class YamlSerializer
         {
             module = entity.getModule();
 
-            try {
+            try
+            {
                 return serializeToString(entity, false);
-            } catch (WriteException e) {
+            } catch (WriteException e)
+            {
                 throw new AssertionError(); // no write operations should be called
             }
         }
@@ -816,7 +882,8 @@ public class YamlSerializer
             final Map<String, Object> content = map();
 
             BeModelElement prototype = entity.getPrototype();
-            if (prototype != null && prototype.getProject().getName().equals(Templates.TEMPLATES_PROJECT_NAME)) {
+            if (prototype != null && prototype.getProject().getName().equals(Templates.TEMPLATES_PROJECT_NAME))
+            {
                 content.put(ATTR_ENTITY_TEMPLATE, prototype.getName());
             }
 
@@ -824,7 +891,8 @@ public class YamlSerializer
 
             final Collection<String> customizedProperties = entity.getCustomizedProperties();
 
-            if (customizedProperties.contains("type")) {
+            if (customizedProperties.contains("type"))
+            {
                 content.put(ATTR_ENTITY_TYPE, type);
             }
 
@@ -833,7 +901,8 @@ public class YamlSerializer
 
             root.put(entity.getName(), content);
 
-            if (customizedProperties.contains("icon")) {
+            if (customizedProperties.contains("icon"))
+            {
                 writeIcon(content, entity.getIcon());
             }
 
@@ -842,8 +911,10 @@ public class YamlSerializer
             final BeModelCollection<Query> queries = entity.getQueries();
             final List<Object> serializedQueries = list();
 
-            for (final Query query : queries) {
-                if (projectOrigin.equals(query.getOriginModuleName()) || query.isCustomized()) {
+            for (final Query query : queries)
+            {
+                if (projectOrigin.equals(query.getOriginModuleName()) || query.isCustomized())
+                {
                     serializedQueries.add(serializeQuery(query, serializeReferencedFiles));
                 }
             }
@@ -851,8 +922,10 @@ public class YamlSerializer
             final BeModelCollection<Operation> operations = entity.getOperations();
             final List<Object> serializedOperations = list();
 
-            for (final Operation operation : operations) {
-                if (projectOrigin.equals(operation.getOriginModuleName()) || operation.isCustomized()) {
+            for (final Operation operation : operations)
+            {
+                if (projectOrigin.equals(operation.getOriginModuleName()) || operation.isCustomized())
+                {
                     serializedOperations.add(serializeOperation(operation));
                 }
             }
@@ -884,9 +957,11 @@ public class YamlSerializer
 
             writeRoles(customizedProperties, query, content);
 
-            if (customizedProperties.contains("operationNames")) {
+            if (customizedProperties.contains("operationNames"))
+            {
                 final boolean writeEmpty = query.isCustomized();
-                if (writeEmpty || !query.getOperationNames().isEmpty()) {
+                if (writeEmpty || !query.getOperationNames().isEmpty())
+                {
                     OperationSet s = query.getOperationNames();
                     content.put(ATTR_QUERY_OPERATIONS, list(s.printValues()));
                 }
@@ -897,20 +972,24 @@ public class YamlSerializer
             if (!serializedFilters.isEmpty())
                 content.put("quickFilters", serializedFilters);
 
-            if (customizedProperties.contains("querySettings")) {
+            if (customizedProperties.contains("querySettings"))
+            {
                 content.put("settings", serializeSettings(query.getQuerySettings(), new HashSet<>(query.getProject().getRoles())));
             }
 
             serializeCustomizationsStatement(query, content);
 
-            if (customizedProperties.contains("icon")) {
+            if (customizedProperties.contains("icon"))
+            {
                 writeIcon(content, query.getIcon());
             }
 
-            if (customizedProperties.contains("query")) {
+            if (customizedProperties.contains("query"))
+            {
                 if (query.getType() == QueryType.STATIC)
                     content.put(ATTR_QUERY_CODE, query.getQuery());
-                else if (query.getType() == QueryType.JAVASCRIPT) {
+                else if (query.getType() == QueryType.JAVASCRIPT)
+                {
                     if (query.getFileName().isEmpty())
                         query.setFileName(query.getName() + ".js");
                     else if (!query.getFileName().endsWith(".js"))
@@ -921,26 +1000,33 @@ public class YamlSerializer
                     content.put("file", query.getFileName());
 
                     write:
-                    if (serializeReferencedFiles) {
-                        try {
+                    if (serializeReferencedFiles)
+                    {
+                        try
+                        {
                             final String newContent = query.getQuery();
 
-                            if (Files.isRegularFile(fileSystem.getJavaScriptQueryFile(query.getFileName()))) {
-                                try {
+                            if (Files.isRegularFile(fileSystem.getJavaScriptQueryFile(query.getFileName())))
+                            {
+                                try
+                                {
                                     final String oldContent = fileSystem.readJavaScriptQuery(query.getFileName());
                                     if (oldContent.equals(newContent))
                                         break write;
-                                } catch (ReadException e) {
+                                } catch (ReadException e)
+                                {
                                     // ignore
                                 }
                             }
 
                             fileSystem.writeJavaScriptQuery(query.getFileName(), query.getQuery());
-                        } catch (IOException e) {
+                        } catch (IOException e)
+                        {
                             throw new WriteException(query, e);
                         }
                     }
-                } else if (query.getType() == QueryType.GROOVY) {
+                } else if (query.getType() == QueryType.GROOVY)
+                {
                     if (query.getFileName().isEmpty())
                         query.setFileName(query.getName() + "groovy");
                     else if (!query.getFileName().endsWith("groovy"))
@@ -951,22 +1037,28 @@ public class YamlSerializer
                     content.put("file", query.getFileName());
 
                     write:
-                    if (serializeReferencedFiles) {
-                        try {
+                    if (serializeReferencedFiles)
+                    {
+                        try
+                        {
                             final String newContent = query.getQuery();
 
-                            if (Files.isRegularFile(fileSystem.getGroovyQueryFile(query.getFileName()))) {
-                                try {
+                            if (Files.isRegularFile(fileSystem.getGroovyQueryFile(query.getFileName())))
+                            {
+                                try
+                                {
                                     final String oldContent = fileSystem.readGroovyQuery(query.getFileName());
                                     if (oldContent.equals(newContent))
                                         break write;
-                                } catch (ReadException e) {
+                                } catch (ReadException e)
+                                {
                                     // ignore
                                 }
                             }
 
                             fileSystem.writeGroovyQuery(query.getFileName(), query.getQuery());
-                        } catch (IOException e) {
+                        } catch (IOException e)
+                        {
                             throw new WriteException(query, e);
                         }
                     }
@@ -983,7 +1075,8 @@ public class YamlSerializer
         {
             final Map<String, Object> serializedFilters = map();
 
-            for (final QuickFilter quickFilter : quickFilters) {
+            for (final QuickFilter quickFilter : quickFilters)
+            {
                 if (!projectOrigin.equals(quickFilter.getOriginModuleName()))
                     continue;
 
@@ -999,7 +1092,8 @@ public class YamlSerializer
         {
             final List<Object> serializedSettings = list();
 
-            for (final QuerySettings setting : querySettings) {
+            for (final QuerySettings setting : querySettings)
+            {
                 if (setting.getRoles().getAllIncludedValues().isEmpty())
                     continue;
 
@@ -1044,7 +1138,8 @@ public class YamlSerializer
             final BeModelCollection<OperationExtender> extenders = operation.getExtenders();
             final List<Object> sExtenders = list();
 
-            if (extenders != null) {
+            if (extenders != null)
+            {
                 for (final OperationExtender extender : extenders)
                     if (extender.getOriginModuleName().equals(projectOrigin))
                         sExtenders.add(serializeExtender(extender));
@@ -1055,7 +1150,8 @@ public class YamlSerializer
 
             serializeCustomizationsStatement(operation, content);
 
-            if (customizedProperties.contains("code")) {
+            if (customizedProperties.contains("code"))
+            {
                 if (operation instanceof SourceFileOperation)
                     content.put(ATTR_FILEPATH, ((SourceFileOperation) operation).getFileName());
                 else
@@ -1080,9 +1176,11 @@ public class YamlSerializer
 
         private void writeRoles(final Collection<String> customizedProperties, final EntityItem item, final Map<String, Object> target)
         {
-            if (customizedProperties.contains("roles")) {
+            if (customizedProperties.contains("roles"))
+            {
                 final boolean writeEmpty = item.isCustomized();
-                if (!item.getRoles().isEmpty() || writeEmpty) {
+                if (!item.getRoles().isEmpty() || writeEmpty)
+                {
                     RoleSet r = item.getRoles();
                     target.put(ATTR_ROLES, list(r.printValues()));
                 }
@@ -1091,19 +1189,23 @@ public class YamlSerializer
 
         private void writeIcon(final Map<String, Object> target, final Icon icon)
         {
-            if (!icon.getOriginModuleName().equals(projectOrigin)) {
+            if (!icon.getOriginModuleName().equals(projectOrigin))
+            {
                 return;
             }
 
             final String path = icon.getMetaPath();
 
-            if (path != null) {
+            if (path != null)
+            {
                 target.put(ATTR_ICON, path);
             }
 
-            try {
+            try
+            {
                 icon.save();
-            } catch (final IOException e) {
+            } catch (final IOException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -1265,9 +1367,11 @@ public class YamlSerializer
     {
         final String string = serializeToString(project, serializeReferencedFiles);
 
-        try {
+        try
+        {
             new ProjectFileSystem(project).writeProject(string);
-        } catch (final IOException e) {
+        } catch (final IOException e)
+        {
             throw new WriteException(project, e);
         }
     }
@@ -1314,7 +1418,8 @@ public class YamlSerializer
 
         serializeProperties(project, content);
 
-        if (serializeReferencedFiles) {
+        if (serializeReferencedFiles)
+        {
             serializeDaemons(project.getApplication().getDaemonCollection());
             serializeStaticPages(project.getApplication().getStaticPageCollection());
             serializeSources(project);
@@ -1324,12 +1429,16 @@ public class YamlSerializer
             serializeCustomization(project.getApplication());
             serializeMassChanges(project.getApplication().getMassChangeCollection());
 
-            if (!project.isModuleProject()) {
+            if (!project.isModuleProject())
+            {
                 serializeConnectionProfiles(project.getConnectionProfiles());
-                if (project.getConnectionProfileName() != null) {
-                    try {
+                if (project.getConnectionProfileName() != null)
+                {
+                    try
+                    {
                         fileSystem.writeSelectedProfileFile(project.getConnectionProfileName());
-                    } catch (IOException e) {
+                    } catch (IOException e)
+                    {
                         throw new WriteException(project, e);
                     }
                 }
@@ -1345,7 +1454,8 @@ public class YamlSerializer
     {
         final Collection<String> connectedBugtrackers = project.getConnectedBugtrackers();
 
-        if (!connectedBugtrackers.isEmpty()) {
+        if (!connectedBugtrackers.isEmpty())
+        {
             final Map<String, String> serializedConnectedBugtrackers = new LinkedHashMap<>();
 
             for (final String bugtracker : connectedBugtrackers)
@@ -1367,23 +1477,27 @@ public class YamlSerializer
     {
         final List<Object> serializedModules = list();
 
-        for (final Module module : modules) {
+        for (final Module module : modules)
+        {
             final Map<String, Object> serializedModule = map();
             final Map<String, Object> serializedModuleContent = map();
             final List<Object> serializedEntities = list();
             final Iterable<Entity> entities = module.getEntities();
             for (final Entity entity : entities)
-                if (entity.isCustomized()) {
+                if (entity.isCustomized())
+                {
                     if (serializeReferencedFiles)
                         new EntitySerializer().serialize(entity);
                     serializedEntities.add(entity.getName());
                 }
             serializedModuleContent.put(TAG_ENTITIES, serializedEntities);
             final List<Object> serializedExtras = list();
-            for (String extra : module.getExtras()) {
+            for (String extra : module.getExtras())
+            {
                 serializedExtras.add(extra);
             }
-            if (!serializedExtras.isEmpty()) {
+            if (!serializedExtras.isEmpty())
+            {
                 serializedModuleContent.put(TAG_EXTRAS, serializedExtras);
             }
             serializedModule.put(module.getName(), serializedModuleContent);
@@ -1397,7 +1511,8 @@ public class YamlSerializer
     {
         final List<Object> serializedEntities = list();
         final Iterable<Entity> entities = application.getEntities();
-        for (final Entity entity : entities) {
+        for (final Entity entity : entities)
+        {
             if (serializeReferencedFiles)
                 new EntitySerializer().serialize(entity);
             serializedEntities.add(entity.getName());
@@ -1419,10 +1534,13 @@ public class YamlSerializer
     private List<Object> serialize(final FreemarkerCatalog scripts, Function<String, Path> getPath, final boolean serializeReferencedFiles) throws WriteException
     {
         List<Object> paths = list();
-        for (final FreemarkerScript script : scripts.getScripts()) {
-            try {
+        for (final FreemarkerScript script : scripts.getScripts())
+        {
+            try
+            {
                 String relativePath = script.getRelativePath(scripts);
-                if (serializeReferencedFiles) {
+                if (serializeReferencedFiles)
+                {
                     final Path scriptFile = getPath.apply(relativePath);
 
                     if (!Files.exists(scriptFile.getParent()))
@@ -1435,7 +1553,8 @@ public class YamlSerializer
                     script.setLinkedFile(scriptFile);
                 }
                 paths.add(relativePath);
-            } catch (final Exception e) {
+            } catch (final Exception e)
+            {
                 throw new WriteException(script, e);
             }
         }
@@ -1445,16 +1564,19 @@ public class YamlSerializer
 
     private void write(final Path scriptFile, final FreemarkerScript script) throws IOException, UnsupportedEncodingException
     {
-        try {
+        try
+        {
             // skip writing of the same content as this action
             // changes editors state
-            if (Files.isRegularFile(scriptFile)) {
+            if (Files.isRegularFile(scriptFile))
+            {
                 final String oldSource = new String(Files.readAllBytes(scriptFile), StandardCharsets.UTF_8);
                 final String newSource = script.getSource();
                 if (newSource.equals(oldSource))
                     return;
             }
-        } catch (Throwable e) { /* skip this action to fallback to the default behavior */}
+        } catch (Throwable e)
+        { /* skip this action to fallback to the default behavior */}
 
         Files.write(scriptFile, script.getSource().getBytes(StandardCharsets.UTF_8));
     }
@@ -1481,15 +1603,19 @@ public class YamlSerializer
 
     private void serializeSources(final Project project) throws WriteException
     {
-        for (SourceFileCollection collection : project.getApplication().getSourceFiles()) {
-            for (final SourceFile file : collection) {
+        for (SourceFileCollection collection : project.getApplication().getSourceFiles())
+        {
+            for (final SourceFile file : collection)
+            {
                 if (!file.isLoaded())
                     continue;
 
-                try {
+                try
+                {
                     fileSystem.writeSourceFile(collection.getName(), file.getName(), file.getSource());
                     file.setLinkedFile(fileSystem.getNameSpaceFile(collection.getName(), file.getName()));
-                } catch (final IOException e) {
+                } catch (final IOException e)
+                {
                     throw new WriteException(file, e);
                 }
             }
@@ -1505,7 +1631,8 @@ public class YamlSerializer
     {
         final Localizations localizations = project.getApplication().getLocalizations();
 
-        for (final LanguageLocalizations languageLocalizations : localizations) {
+        for (final LanguageLocalizations languageLocalizations : localizations)
+        {
             new LocalizationSerializer().serialize(languageLocalizations);
         }
     }
@@ -1543,10 +1670,12 @@ public class YamlSerializer
                         PageCustomization.CUSTOMIZATIONS_COLLECTION,
                         PageCustomization.class);
 
-        if (customiazations != null) {
+        if (customiazations != null)
+        {
             final String projectOrigin = parent.getProject().getProjectOrigin();
 
-            for (final PageCustomization customization : customiazations) {
+            for (final PageCustomization customization : customiazations)
+            {
                 if (!projectOrigin.equals(customization.getOriginModuleName()))
                     continue;
 
@@ -1606,22 +1735,26 @@ public class YamlSerializer
         customizedProperties = model.getCustomizedProperties();
         inheritedProperties.removeAll(customizedProperties);
 
-        for (final Field field : fields) {
+        for (final Field field : fields)
+        {
             // TODO
             // Remove 'name' field.
             if (inheritedProperties.contains(field.name) || field.name.equals(ATTR_NAME))
                 continue;
 
-            try {
+            try
+            {
                 final Object fieldValue = Beans.getBeanPropertyValue(model, field.name);
 
-                if (fieldValue != null && (!fieldValue.equals(field.defaultValue) || customizedProperties.contains(field.name))) {
+                if (fieldValue != null && (!fieldValue.equals(field.defaultValue) || customizedProperties.contains(field.name)))
+                {
                     if (fieldValue instanceof Integer || fieldValue instanceof Boolean || fieldValue instanceof String)
                         target.put(field.name, fieldValue);
                     else
                         target.put(field.name, String.valueOf(fieldValue));
                 }
-            } catch (final Exception e) {
+            } catch (final Exception e)
+            {
                 throw new RuntimeException("Unexpected error when serializing '" + field.name + "' of " + model.getCompletePath(), e);
             }
         }

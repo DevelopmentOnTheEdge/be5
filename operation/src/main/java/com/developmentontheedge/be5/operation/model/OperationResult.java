@@ -6,7 +6,7 @@ public class OperationResult
     ///////////////////////////////////////////////////////////////////
     // immutable properties
     //
-    
+
     private final OperationStatus status;
     private final String message;
     private final Object details;
@@ -17,11 +17,11 @@ public class OperationResult
 
     private OperationResult(OperationStatus status, String message, Object details)
     {
-        this.status  = status;
+        this.status = status;
         this.message = message;
         this.details = details;
     }
-    
+
     private OperationResult(OperationStatus status, Object details)
     {
         this(status, null, details);
@@ -99,19 +99,19 @@ public class OperationResult
 
     public static OperationResult interrupting()
     {
-        return new OperationResult(OperationStatus.INTERRUPTING); 
+        return new OperationResult(OperationStatus.INTERRUPTING);
     }
 
     public static OperationResult interrupted()
     {
-        return new OperationResult(OperationStatus.INTERRUPTED); 
+        return new OperationResult(OperationStatus.INTERRUPTED);
     }
 
     public static OperationResult finished()
     {
         return finished;
     }
-    
+
     public static OperationResult finished(String message)
     {
         return new OperationResult(OperationStatus.FINISHED, message, null);
@@ -134,7 +134,7 @@ public class OperationResult
      */
     public static OperationResult error(String message, Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, message, details); 
+        return new OperationResult(OperationStatus.ERROR, message, details);
     }
 
     public static OperationResult error(Throwable details)

@@ -61,21 +61,27 @@ public class ModuleLoader2
     {
         Project project = null;
 
-        if (modulesMap.size() == 0) {
+        if (modulesMap.size() == 0)
+        {
             throw new RuntimeException("modulesMap is empty");
         }
 
-        for (Map.Entry<String, Project> module : modulesMap.entrySet()) {
-            if (module.getValue() != null && !module.getValue().isModuleProject()) {
-                if (project != null) {
+        for (Map.Entry<String, Project> module : modulesMap.entrySet())
+        {
+            if (module.getValue() != null && !module.getValue().isModuleProject())
+            {
+                if (project != null)
+                {
                     throw new RuntimeException("Several projects were found: " + project + ", " + module);
-                } else {
+                } else
+                {
                     project = module.getValue();
                 }
             }
         }
 
-        if (project == null) {
+        if (project == null)
+        {
             //todo create new not module project for tests?
             log.info("Project not found, try load main module.");
             project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
@@ -108,13 +114,15 @@ public class ModuleLoader2
         if (modulesMap != null && !dirty)
             return;
 
-        try {
+        try
+        {
             ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
 
             urls.addAll(additionalUrls);
             loadAllProjects(urls);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -122,10 +130,12 @@ public class ModuleLoader2
     public static void loadAllProjects(List<URL> urls)
     {
         modulesMap = new HashMap<>();
-        try {
+        try
+        {
             replaceAndAddURLtoSource(urls);
 
-            for (URL url : urls) {
+            for (URL url : urls)
+            {
                 LoadContext loadContext = new LoadContext();
 
                 Project module;
@@ -140,9 +150,11 @@ public class ModuleLoader2
                     String jar = ext.substring(0, ext.indexOf('!'));
                     FileSystem fs;// = FileSystems.getFileSystem(URI.create(jar));
 
-                    try {
+                    try
+                    {
                         fs = FileSystems.newFileSystem(URI.create(jar), Collections.emptyMap());
-                    } catch (FileSystemAlreadyExistsException e) {
+                    } catch (FileSystemAlreadyExistsException e)
+                    {
                         fs = FileSystems.getFileSystem(URI.create(jar));
                         log.fine("Get exists FileSystem after exception");
                     }
@@ -155,7 +167,8 @@ public class ModuleLoader2
                 loadContext.check();
                 modulesMap.put(module.getAppName(), module);
             }
-        } catch (ProjectLoadException | IOException | URISyntaxException e) {
+        } catch (ProjectLoadException | IOException | URISyntaxException e)
+        {
             e.printStackTrace();
         }
     }
@@ -163,7 +176,8 @@ public class ModuleLoader2
     public static String parse(URL url) throws IOException
     {
         try (InputStream in = url.openStream();
-             BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8"))) {
+             BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8")))
+        {
             String ln = r.readLine();
             return ln.substring(0, ln.indexOf(':')).trim();
         }
@@ -187,7 +201,8 @@ public class ModuleLoader2
     {
         loadAllProjects(false);
 
-        for (Module module : project.getModules()) {
+        for (Module module : project.getModules())
+        {
             Serialization.loadModuleMacros(module);
         }
     }
@@ -195,11 +210,14 @@ public class ModuleLoader2
     public static List<Project> loadModules(Project application, ProcessController logger, LoadContext loadContext) throws ProjectLoadException
     {
         List<Project> result = new ArrayList<>();
-        for (Module module : application.getModules()) {
-            if (containsModule(module.getName())) {
+        for (Module module : application.getModules())
+        {
+            if (containsModule(module.getName()))
+            {
                 Project moduleProject = modulesMap.get(module.getName());
                 result.add(moduleProject);
-            } else {
+            } else
+            {
                 throw new RuntimeException("Module project not found: '" + module.getName() + "'");
             }
         }
@@ -218,9 +236,11 @@ public class ModuleLoader2
     {
         long startTime = System.nanoTime();
         LoadContext loadContext = new LoadContext();
-        try {
+        try
+        {
             ModuleLoader2.mergeAllModules(be5Project, logger, loadContext);
-        } catch (ProjectLoadException e) {
+        } catch (ProjectLoadException e)
+        {
             throw new ProjectLoadException("Merge modules", e);
         }
         loadContext.check();
@@ -239,26 +259,31 @@ public class ModuleLoader2
     {
         modules = new LinkedList<>(modules);
 
-        for (Project module : modules) {
+        for (Project module : modules)
+        {
             module.mergeHostProject(model);
         }
 
         final Project compositeModule = foldModules(model, modules, context);
-        if (compositeModule != null) {
+        if (compositeModule != null)
+        {
             model.merge(compositeModule);
         }
     }
 
     private static Project foldModules(final Project model, final List<Project> modules, LoadContext context)
     {
-        if (modules.isEmpty()) {
+        if (modules.isEmpty())
+        {
             return null;
         }
 
         Project compositeModule = null;
 
-        for (Project module : modules) {
-            if (compositeModule != null) {
+        for (Project module : modules)
+        {
+            if (compositeModule != null)
+            {
                 module.getModules().merge(compositeModule.getModules(), true, true);
                 module.getApplication().merge(compositeModule.getModule(module.getProjectOrigin()), true, true);
             }
@@ -266,7 +291,8 @@ public class ModuleLoader2
             module.applyMassChanges(context);
             compositeModule = module;
 
-            if (compositeModule.isModuleProject()) {
+            if (compositeModule.isModuleProject())
+            {
                 DataElementUtils.addQuiet(module.getModules(), module.getApplication());
                 module.setApplication(new Module(model.getProjectOrigin(), model));
             }
@@ -280,11 +306,13 @@ public class ModuleLoader2
      */
     public static ProjectFileSystem getFileSystem(Project app, String moduleName)
     {
-        if (app.getProjectOrigin().equals(moduleName)) {
+        if (app.getProjectOrigin().equals(moduleName))
+        {
             return new ProjectFileSystem(app);
         }
         Path modulePath = ModuleLoader2.getModulePath(moduleName);
-        if (modulePath != null) {
+        if (modulePath != null)
+        {
             Project project = new Project(moduleName);
             project.setLocation(modulePath);
             project.setProjectFileStructure(new ProjectFileStructure(project));
@@ -297,15 +325,18 @@ public class ModuleLoader2
     private static String logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder();
-        if (project.isModuleProject()) {
+        if (project.isModuleProject())
+        {
             sb.append("Module      : ");
-        } else {
+        } else
+        {
             sb.append("Project     : ");
         }
 
         sb.append(project.getName());
 
-        if (project.getModules().getSize() > 0) {
+        if (project.getModules().getSize() > 0)
+        {
             sb.append("\nModules     : ").append(project.getModules().getNameList().stream().collect(joining(", ")));
         }
         sb.append("\nLoading time: ")
@@ -320,7 +351,8 @@ public class ModuleLoader2
      */
     private static void replaceAndAddURLtoSource(List<URL> urls)
     {
-        try {
+        try
+        {
             readDevPathsToSourceProjects();
             if (pathsToProjectsToHotReload.isEmpty()) return;
 
@@ -328,17 +360,21 @@ public class ModuleLoader2
             sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
             boolean started = false;
 
-            for (Map.Entry<String, Path> moduleSource : pathsToProjectsToHotReload.entrySet()) {
+            for (Map.Entry<String, Path> moduleSource : pathsToProjectsToHotReload.entrySet())
+            {
                 boolean used = false;
-                for (int i = 0; i < urls.size(); i++) {
+                for (int i = 0; i < urls.size(); i++)
+                {
                     String name = getProjectName(urls.get(i));
-                    if (name.equals(moduleSource.getKey())) {
+                    if (name.equals(moduleSource.getKey()))
+                    {
                         used = started = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
                         sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
-                if (!used) {
+                if (!used)
+                {
                     URL url = moduleSource.getValue().resolve("project.yaml").toUri().toURL();
                     urls.add(url);
                     sb.append("\n - ").append(moduleSource.getKey()).append(": ").append(url).append(" - add");
@@ -346,7 +382,8 @@ public class ModuleLoader2
             }
             sb.append("\n");
             if (started) log.info(sb.toString());
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -375,17 +412,20 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     static void readDevPathsToSourceProjects(List<URL> urls) throws IOException
     {
-        if (urls.size() > 1) {
+        if (urls.size() > 1)
+        {
             log.severe("dev.yaml should be only in the project.");
             throw new RuntimeException("dev.yaml should be only in the project.");
         }
 
-        if (urls.size() == 1) {
+        if (urls.size() == 1)
+        {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
             Map<String, Object> content = new Yaml().load(reader);
 
             initPathsForDev(content);
-            if (content.get("roles") != null) {
+            if (content.get("roles") != null)
+            {
                 devRoles = (List<String>) content.get("roles");
                 log.info("Dev roles read - " + devRoles.toString());
             }
@@ -396,11 +436,15 @@ public class ModuleLoader2
     private static void initPathsForDev(Map<String, Object> content)
     {
         Map<String, String> paths = (Map<String, String>) content.get("paths");
-        if (paths != null) {
-            for (Map.Entry<String, String> entry : paths.entrySet()) {
-                if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists()) {
+        if (paths != null)
+        {
+            for (Map.Entry<String, String> entry : paths.entrySet())
+            {
+                if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
+                {
                     pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
-                } else {
+                } else
+                {
                     log.severe("Error path in dev.yaml for " + entry.getKey());
                 }
             }

@@ -12,15 +12,16 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class OperationExecutorTest extends OperationBe5ProjectDBTest
-{
-    @Inject OperationsFactory operations
-    @Inject OperationExecutor operationExecutor
-    @Inject Meta meta
+class OperationExecutorTest extends OperationBe5ProjectDBTest {
+    @Inject
+    OperationsFactory operations
+    @Inject
+    OperationExecutor operationExecutor
+    @Inject
+    Meta meta
 
     @Test
-    void execute()
-    {
+    void execute() {
         def info = new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp"))
         def operation = operationExecutor.create(info, new OperationContext([] as String[], null, Collections.emptyMap()))
 
@@ -33,14 +34,12 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     }
 
     @Test(expected = Be5Exception)
-    void executeWithDatabase()
-    {
+    void executeWithDatabase() {
         operations.get("testtableAdmin", "TransactionTestOp").execute()
     }
 
     @Test
-    void create()
-    {
+    void create() {
         def op = operationExecutor.create(
                 new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp")),
                 "All records", ["1"] as String[], [:])
