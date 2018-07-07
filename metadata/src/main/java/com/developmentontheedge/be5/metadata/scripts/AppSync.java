@@ -399,11 +399,11 @@ public class AppSync extends ScriptSupport<AppSync>
 
             if (newScheme.withoutDbScheme())
             {
-                if (!dangerousOnly)
-                {
-                    // PENDING - list of other type
-                    //warnings.addAll(newScheme.getWarnings());
-                }
+//                if (!dangerousOnly)
+//                {
+//                    // PENDING - list of other type
+//                    //warnings.addAll(newScheme.getWarnings());
+//                }
 
                 if (oldScheme == null)
                 {

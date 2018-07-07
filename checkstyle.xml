@@ -124,10 +124,14 @@
     <!-- Checks for blocks. You know, those {}'s         -->
     <!-- See http://checkstyle.sf.net/config_blocks.html -->
     <!--<module name="AvoidNestedBlocks"/>-->
-    <!--<module name="EmptyBlock"/>-->
-    <!--<module name="LeftCurly"/>-->
+    <module name="EmptyBlock"/>
+    <module name="LeftCurly">
+      <property name="option" value="nl"/>
+      <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,METHOD_DEF,LITERAL_WHILE, LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_SYNCHRONIZED, LITERAL_SWITCH, LITERAL_DO, LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, STATIC_INIT"/>
+    </module>
+    <!--<module name="RightCurly">-->
+    <!--</module>-->
     <!--<module name="NeedBraces"/>-->
-    <!--<module name="RightCurly"/>-->
 
     <!-- Checks for common coding problems               -->
     <!-- See http://checkstyle.sf.net/config_coding.html -->
