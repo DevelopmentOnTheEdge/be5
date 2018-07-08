@@ -3,11 +3,10 @@ core:
   features: []
   l10n: ru
   projectFileStructure: {}
-  modules:
-  - system:
-      entities: []
+  modules: []
   application:
   - _logout_
+  - _system_
   - _categoriesService_
   - categories
   - classifications

@@ -22,7 +22,7 @@ public class ProjectGenerator
         private String projectName = "new-project";
         private String[] languages = new String[]{"ru"};
         //private String[] features = new String[] { "logging" };
-        private String[] modules = new String[]{"core", "system"};
+        private String[] modules = new String[]{"core"};
         private String[] roles = new String[]{"Administrator", "SystemDeveloper", "Guest"};
 //        private String testUserLogin;
 //        private String testUserPassword;

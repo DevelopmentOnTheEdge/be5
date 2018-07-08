@@ -32,9 +32,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.developmentontheedge.be5.modules</groupId>
-      <artifactId>be5-modules-system</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-server</artifactId>
+      <version>0.1.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
