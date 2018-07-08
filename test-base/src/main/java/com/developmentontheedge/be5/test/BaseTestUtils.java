@@ -17,6 +17,7 @@ import com.developmentontheedge.be5.metadata.scripts.AppDb;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
@@ -177,7 +178,25 @@ public abstract class BaseTestUtils
         {
             throw new RuntimeException(e);
         }
+        initDb(project);
+    }
 
+    protected static void addH2ProfileAndCreateDb()
+    {
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        } catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
+        addH2Profile(project);
+        initDb(project);
+    }
+
+    protected static void initDb(Project project)
+    {
         if (project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
@@ -207,6 +226,16 @@ public abstract class BaseTestUtils
         {
             e.printStackTrace();
         }
+    }
+
+    public static void addH2Profile(Project project)
+    {
+        if (project.getConnectionProfile() == null ||
+                !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
+        {
+            ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
+        }
+        project.setConnectionProfileName(profileForIntegrationTests);
     }
 
     public static class BaseDbMockTestModule extends AbstractModule
