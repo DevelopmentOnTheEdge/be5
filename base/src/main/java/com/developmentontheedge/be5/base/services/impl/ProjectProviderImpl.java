@@ -67,7 +67,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
             try
             {
-                return ModuleLoader2.findAndLoadProjectWithModules(true);
+                return ModuleLoader2.findAndLoadProjectWithModules(dirty);
             }
             catch (RuntimeException e)
             {
