@@ -21,7 +21,7 @@ public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
     );
 
     static {
-        initDb(injector);
+        initDb();
     }
 
     @Override

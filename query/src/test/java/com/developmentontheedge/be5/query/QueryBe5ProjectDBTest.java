@@ -20,7 +20,7 @@ public abstract class QueryBe5ProjectDBTest extends BaseTestUtils
     );
 
     static {
-        initDb(injector);
+        initDb();
     }
 
     @Override

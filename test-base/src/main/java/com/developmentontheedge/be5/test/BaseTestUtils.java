@@ -10,9 +10,11 @@ import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
@@ -157,9 +159,16 @@ public abstract class BaseTestUtils
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 
-    protected static void initDb(Injector injector)
+    protected static void initDb()
     {
-        Project project = injector.getInstance(ProjectProvider.class).get();
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        } catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
 
         if(project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))

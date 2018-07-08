@@ -1,11 +1,11 @@
-package com.developmentontheedge.be5.server.services.process.impl;
+package com.developmentontheedge.be5.modules.core.services.impl.scheduling.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.server.services.process.DaemonStarter;
+import com.developmentontheedge.be5.modules.core.services.impl.scheduling.DaemonStarter;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;

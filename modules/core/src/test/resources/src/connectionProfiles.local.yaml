@@ -1,0 +1,6 @@
+connectionProfiles:
+  profiles:
+    profileForIntegrationTests:
+      connectionUrl: jdbc:h2:~/profileForIntegrationTestsCore
+      username: sa
+      password: ''

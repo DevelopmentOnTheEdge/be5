@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.server.services.process.impl.DaemonStarterImpl;
 import com.google.inject.Stage;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import javax.servlet.ServletContextEvent;
 import java.util.logging.Logger;
 
 
@@ -22,12 +20,12 @@ public abstract class Be5GuiceServletContextListener extends GuiceServletContext
         log.info("Stage: " + stage);
         return stage;
     }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent)
-    {
-        getInjector().getInstance(DaemonStarterImpl.class).shutdown();
-
-        super.contextDestroyed(servletContextEvent);
-    }
+//
+//    @Override
+//    public void contextDestroyed(ServletContextEvent servletContextEvent)
+//    {
+//        getInjector().getInstance(DaemonStarterImpl.class).shutdown();
+//
+//        super.contextDestroyed(servletContextEvent);
+//    }
 }

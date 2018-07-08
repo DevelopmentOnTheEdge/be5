@@ -4,31 +4,21 @@ import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
-import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
-import static org.mockito.Mockito.when;
-
 
 public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
 {
-    static {
-        when(CoreUtilsForTest.mock.getSystemSettingInSection(
-                "TestDaemon", "PERIOD", null)).thenReturn("50");
-        when(CoreUtilsForTest.mock.getSystemSettingInSection(
-                "TestDaemon", "STATUS", "disabled")).thenReturn("enabled");
-    }
-
     private static final Injector injector = initInjector(
             Modules.override(new ServerModule()).with(new ServerDBTestModule()),
             new CoreModuleForTest()
     );
 
     static {
-        initDb(injector);
+        initDb();
     }
 
     @Override

@@ -12,18 +12,18 @@ import com.google.inject.util.Modules;
 
 public abstract class CoreBe5ProjectDBTest extends TestUtils
 {
+    static {
+        initDb();
+    }
+
     private static final Injector injector = initInjector(
             Modules.override(
                     new ServerModule(),
                     new CoreModule()
-            ).with(new ServerDBTestModule())
+            ).with(new CoreDBTestModule())
     );
 
-    static {
-        initDb(injector);
-    }
-
-    private static class ServerDBTestModule extends AbstractModule
+    private static class CoreDBTestModule extends AbstractModule
     {
         @Override
         protected void configure()

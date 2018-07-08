@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.test.mocks;
+package com.developmentontheedge.be5.modules.core.services.impl.scheduling;
 
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.server.services.process.DaemonStarter;
 
 
 public class DaemonStarterForTest implements DaemonStarter
