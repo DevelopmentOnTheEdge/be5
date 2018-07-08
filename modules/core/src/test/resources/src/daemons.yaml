@@ -1,6 +1,6 @@
 daemons:
   TestDeamon:
-    className: com.developmentontheedge.be5.modules.core.services.impl.scheduling.TestDaemon
+    className: com.developmentontheedge.be5.modules.core.services.scheduling.TestDaemon
     configSection: TestDaemon
     daemonType: periodic
     description: Test daemon

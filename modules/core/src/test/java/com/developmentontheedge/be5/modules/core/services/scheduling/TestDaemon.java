@@ -1,14 +1,13 @@
-package com.developmentontheedge.be5.modules.core.services.impl.scheduling;
+package com.developmentontheedge.be5.modules.core.services.scheduling;
 
 import com.developmentontheedge.be5.database.DbService;
-import org.quartz.Job;
+import com.developmentontheedge.be5.modules.core.model.scheduling.Process;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import javax.inject.Inject;
 
 
-public class TestDaemon implements Job
+public class TestDaemon extends Process
 {
     private final DbService db;
 
@@ -19,7 +18,7 @@ public class TestDaemon implements Job
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void doWork(JobExecutionContext context) throws Exception
     {
 
     }

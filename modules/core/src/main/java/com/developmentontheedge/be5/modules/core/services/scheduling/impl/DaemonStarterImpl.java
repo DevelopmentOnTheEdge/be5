@@ -1,12 +1,12 @@
-package com.developmentontheedge.be5.modules.core.services.impl.scheduling.impl;
+package com.developmentontheedge.be5.modules.core.services.scheduling.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.modules.core.services.impl.scheduling.DaemonStarter;
-import org.quartz.Job;
+import com.developmentontheedge.be5.modules.core.model.scheduling.Process;
+import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -247,10 +247,10 @@ public class DaemonStarterImpl implements DaemonStarter
         }
         String type = daemon.getDaemonType();
 
-        Class<? extends Job> cls;
+        Class<? extends Process> cls;
         try
         {
-            cls = (Class<? extends Job>)Class.forName(daemon.getClassName());
+            cls = (Class<? extends Process>)Class.forName(daemon.getClassName());
         }
         catch (ClassNotFoundException e)
         {
