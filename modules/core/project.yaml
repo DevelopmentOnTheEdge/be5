@@ -12,7 +12,6 @@ core:
   - classifications
   - countries
   - entities
-  - icons
   - languages
   - mimeTypes
   - provinces
