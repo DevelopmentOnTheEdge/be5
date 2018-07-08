@@ -10,6 +10,8 @@ import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStart
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -18,6 +20,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,6 +72,48 @@ public class DaemonStarterImpl implements DaemonStarter
             log.log(Level.SEVERE, "Error in scheduler", se);
             throw Be5Exception.internal(se);
         }
+    }
+
+    @Override
+    public JobDetail getJobDetail(String jobName)
+    {
+        try
+        {
+            JobKey jobKey = new JobKey(jobName, DAEMONS_GROUP);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+//            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
+//            triggersOfJob.get(0)
+            return jobDetail;
+        }
+        catch (SchedulerException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+    }
+
+    @Override
+    public boolean isJobRunning(String jobName)
+    {
+        List<JobExecutionContext> currentJobs;
+        try
+        {
+            currentJobs = scheduler.getCurrentlyExecutingJobs();
+        }
+        catch (SchedulerException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+
+        for (JobExecutionContext jobCtx : currentJobs)
+        {
+            String thisJobName = jobCtx.getJobDetail().getKey().getName();
+            String thisGroupName = jobCtx.getJobDetail().getKey().getGroup();
+            if (jobName.equalsIgnoreCase(thisJobName) && DAEMONS_GROUP.equalsIgnoreCase(thisGroupName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

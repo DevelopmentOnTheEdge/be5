@@ -10,6 +10,10 @@ _system_:
       operations:
       - ReloadProject
       code: com.developmentontheedge.be5.modules.core.queries.system.CacheTable
+  - Daemons:
+      type: Java
+      roles: [SystemDeveloper, Administrator]
+      code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsQuery
   - Entities:
       type: Java
       roles: [SystemDeveloper, Administrator]
