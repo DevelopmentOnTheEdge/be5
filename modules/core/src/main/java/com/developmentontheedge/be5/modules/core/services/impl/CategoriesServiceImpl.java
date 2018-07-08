@@ -32,7 +32,7 @@ public class CategoriesServiceImpl implements CategoriesService
     {
         List<MutableCategory> categories = queryService
                 .build(meta.getQuery("_categoriesService_", "getCategoriesForest"),
-                       Collections.singletonMap("entity", entityName))
+                        Collections.singletonMap("entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
         return getCategories(categories, hideEmpty);
@@ -43,7 +43,7 @@ public class CategoriesServiceImpl implements CategoriesService
     {
         return queryService
                 .build(meta.getQuery("_categoriesService_", "getRootCategory"),
-                       Collections.singletonMap("entity", entityName))
+                        Collections.singletonMap("entity", entityName))
                 .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
 
@@ -77,40 +77,40 @@ public class CategoriesServiceImpl implements CategoriesService
     private ImmutableList<MutableCategory> removeLeafCategoriesWithNoItems(List<MutableCategory> forest)
     {
         ImmutableList.Builder<MutableCategory> result = ImmutableList.builder();
-        
+
         for (MutableCategory category : forest)
         {
             Optional<MutableCategory> r = removeLeafCategoriesWithNoItems(category);
             r.ifPresent(result::add);
         }
-        
+
         return result.build();
     }
-    
+
     private Optional<MutableCategory> removeLeafCategoriesWithNoItems(MutableCategory category)
     {
         ImmutableList.Builder<MutableCategory> childrenBuilder = ImmutableList.builder();
-        
+
         for (MutableCategory child : category.children)
         {
             Optional<MutableCategory> c = removeLeafCategoriesWithNoItems(child);
             c.ifPresent(childrenBuilder::add);
         }
-        
+
         ImmutableList<MutableCategory> children = childrenBuilder.build();
-        
+
         if (children.isEmpty() && !hasAnyItem(category))
             return Optional.empty();
-        
+
         return Optional.of(category.withChildren(children));
     }
-    
+
     private boolean hasAnyItem(MutableCategory category)
     {
-        return (Long)queryService
+        return (Long) queryService
                 .build(meta.getQuery("_categoriesService_", "hasAnyItem"),
                         Collections.singletonMap("categoryID", "" + category.id))
                 .execute().get(0).asMap().get("count") > 0;
     }
-    
+
 }

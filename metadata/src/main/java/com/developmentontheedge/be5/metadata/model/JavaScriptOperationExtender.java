@@ -12,7 +12,7 @@ public class JavaScriptOperationExtender extends SourceFileOperationExtender
     }
 
     @Override
-    public void setClassName( String className )
+    public void setClassName(String className)
     {
     }
 

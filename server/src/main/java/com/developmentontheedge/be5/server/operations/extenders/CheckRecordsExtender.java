@@ -22,6 +22,7 @@ import java.util.Set;
  * then simply "AllowedRecords". Thus you can make common view for all operations and then create special view
  * for some specific operations which should be filtered in different way.
  * If some of records absent in the given view, operation invocation will be stopped.
+ *
  * @author lan
  */
 public class CheckRecordsExtender extends OperationExtenderSupport
@@ -35,7 +36,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
     public boolean preGetParameters(Operation op, Map<String, Object> presetValues) throws Exception
     {
         boolean skip = skip(op);
-        if(skip)
+        if (skip)
         {
             op.setResult(OperationResult.error(message));
         }
@@ -46,7 +47,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
     public boolean skipInvoke(Operation op, Object parameters)
     {
         boolean skip = skip(op);
-        if(skip)
+        if (skip)
         {
             op.setResult(OperationResult.error(message));
         }
@@ -58,12 +59,12 @@ public class CheckRecordsExtender extends OperationExtenderSupport
         Entity entity = op.getInfo().getEntity();
         BeModelCollection<Query> entityQueries = entity.getQueries();
         Query query;
-        query = entityQueries.get(ALLOWED_RECORDS_VIEW_PREFIX+op.getInfo().getName());
-        if(query == null)
+        query = entityQueries.get(ALLOWED_RECORDS_VIEW_PREFIX + op.getInfo().getName());
+        if (query == null)
         {
             query = entityQueries.get(ALLOWED_RECORDS_VIEW);
         }
-        if(query == null)
+        if (query == null)
         {
             message = "Checked query not found for entity: " + op.getInfo().getEntityName();
             return true;
@@ -77,19 +78,18 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             List<DynamicPropertySet> dps = queries.readAsRecordsFromQuery(query,
                     Collections.singletonMap(op.getInfo().getPrimaryKey(), records));
 
-            for(DynamicPropertySet row: dps)
+            for (DynamicPropertySet row : dps)
             {
                 disabledRecords.remove(row.getValue("ID"));
             }
-            if(disabledRecords.size() > 0)
+            if (disabledRecords.size() > 0)
             {
                 message = "Cannot execute operation " + op.getInfo().getName() + ": the following records are not found or not accessible: " + disabledRecords;
                 return true;
             }
-        }
-        catch( Throwable e )
+        } catch (Throwable e)
         {
-            message = "Cannot execute operation " + op.getInfo().getName() + ": "+e.getMessage();
+            message = "Cannot execute operation " + op.getInfo().getName() + ": " + e.getMessage();
             return true;
         }
 

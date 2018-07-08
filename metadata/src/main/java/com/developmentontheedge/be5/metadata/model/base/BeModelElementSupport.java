@@ -35,12 +35,13 @@ public abstract class BeModelElementSupport implements BeModelElement
 
     public BeModelElementSupport(String name, BeModelCollection<?> origin)
     {
-        this.name   = name;
+        this.name = name;
         this.origin = origin;
     }
 
     /**
      * Return name of the data element.
+     *
      * @return Name of the data element.
      * @todo final specifier needed.
      */
@@ -75,8 +76,8 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         return prototype != null && customizedProperties != null && !customizedProperties.isEmpty();
     }
-    
-    @SuppressWarnings( "rawtypes" )
+
+    @SuppressWarnings("rawtypes")
     @Override
     public BeModelCollection getOrigin()
     {
@@ -89,7 +90,7 @@ public abstract class BeModelElementSupport implements BeModelElement
         BeModelCollection<?> origin = getOrigin();
         return origin == null ? null : origin.getProject();
     }
-    
+
     @Override
     public Module getModule()
     {
@@ -102,9 +103,9 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         return comment;
     }
-    
+
     @Override
-    public void setComment( final String comment )
+    public void setComment(final String comment)
     {
         this.comment = comment;
     }
@@ -114,12 +115,12 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         return lastModified;
     }
-    
+
     public void updateLastModification()
     {
-        lastModified = Math.max( lastModified + 1, System.currentTimeMillis() );
+        lastModified = Math.max(lastModified + 1, System.currentTimeMillis());
         BeModelCollection<?> origin = getOrigin();
-        if(origin != null)
+        if (origin != null)
         {
             origin.updateLastModification();
         }
@@ -130,23 +131,23 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         return DataElementPath.create(this);
     }
-    
+
     @Override
     public String toString()
     {
-        return getClass().getSimpleName()+":"+getCompletePath();
+        return getClass().getSimpleName() + ":" + getCompletePath();
     }
-    
+
     protected boolean debugEquals(String property)
     {
         PrintStream debugStream = getProject().getDebugStream();
-        if(debugStream != null)
+        if (debugStream != null)
         {
-            debugStream.println( getCompletePath()+": difference: "+property );
+            debugStream.println(getCompletePath() + ": difference: " + property);
         }
         return false;
     }
-    
+
     /**
      * Default implementation: always returns an empty collection.
      */
@@ -155,61 +156,62 @@ public abstract class BeModelElementSupport implements BeModelElement
     {
         return Collections.emptyList();
     }
-    
+
     @Override
     public final Collection<BeModelElement> getTransitiveDependentElements()
     {
         Set<BeModelElement> result = new LinkedHashSet<>();
-        result.add( this );
+        result.add(this);
         Set<BeModelElement> nextStepGenerators = new HashSet<>();
-        nextStepGenerators.add( this );
-        
-        while ( !nextStepGenerators.isEmpty() )
+        nextStepGenerators.add(this);
+
+        while (!nextStepGenerators.isEmpty())
         {
             final Set<BeModelElement> newGeneration = new HashSet<>();
-            
-            for ( final BeModelElement nextStepGenerator : nextStepGenerators )
+
+            for (final BeModelElement nextStepGenerator : nextStepGenerators)
             {
-                newGeneration.addAll( nextStepGenerator.getDependentElements() );
-                if(nextStepGenerator instanceof BeModelCollection)
+                newGeneration.addAll(nextStepGenerator.getDependentElements());
+                if (nextStepGenerator instanceof BeModelCollection)
                 {
-                    ((BeModelCollection<?>)nextStepGenerator).stream().forEach( newGeneration::add );
+                    ((BeModelCollection<?>) nextStepGenerator).stream().forEach(newGeneration::add);
                 }
             }
-            
-            newGeneration.removeAll( result );
-            result.addAll( newGeneration );
+
+            newGeneration.removeAll(result);
+            result.addAll(newGeneration);
             nextStepGenerators = newGeneration;
         }
-        
-        result = reduce( result );
-        result.remove( this );
-        
+
+        result = reduce(result);
+        result.remove(this);
+
         return result;
     }
-    
+
     /**
      * Removes child elements from the set.
+     *
      * @param elements
      * @return
      */
-    private static Set<BeModelElement> reduce( final Set<BeModelElement> elements )
+    private static Set<BeModelElement> reduce(final Set<BeModelElement> elements)
     {
         final Set<BeModelElement> reduced = new LinkedHashSet<>();
 
-        for ( BeModelElement element : elements )
-            if ( !hasAncestorIn( element, elements ) )
-                reduced.add( element );
-        
+        for (BeModelElement element : elements)
+            if (!hasAncestorIn(element, elements))
+                reduced.add(element);
+
         return reduced;
     }
 
-    private static boolean hasAncestorIn( final BeModelElement element, final Set<BeModelElement> elements )
+    private static boolean hasAncestorIn(final BeModelElement element, final Set<BeModelElement> elements)
     {
-        for ( final BeModelElement element2 : elements )
-            if ( element2 != element && element2.getCompletePath().isAncestorOf( element.getCompletePath() ) )
+        for (final BeModelElement element2 : elements)
+            if (element2 != element && element2.getCompletePath().isAncestorOf(element.getCompletePath()))
                 return true;
-        
+
         return false;
     }
 
@@ -221,35 +223,35 @@ public abstract class BeModelElementSupport implements BeModelElement
     }
 
     @Override
-    public void setUsedInExtras( String[] usedInExtras )
+    public void setUsedInExtras(String[] usedInExtras)
     {
         this.usedInExtras = usedInExtras;
     }
-    
+
     @PropertyName("Available in current project")
     @Override
     public boolean isAvailable()
     {
-        if(usedInExtras == null || usedInExtras.length == 0)
+        if (usedInExtras == null || usedInExtras.length == 0)
             return true;
         Module module = getModule();
         String[] extras = module == null ? Strings2.EMPTY : module.getExtras();
         Project project = getProject();
-        for(String usedInExtra : usedInExtras)
+        for (String usedInExtra : usedInExtras)
         {
-            if(!hasExtra( extras, project, usedInExtra ))
+            if (!hasExtra(extras, project, usedInExtra))
                 return false;
         }
         return true;
     }
 
-    private boolean hasExtra( String[] extras, Project project, String usedInExtra )
+    private boolean hasExtra(String[] extras, Project project, String usedInExtra)
     {
-        if(project.hasCapability( usedInExtra ))
+        if (project.hasCapability(usedInExtra))
             return true;
-        for(String extra : extras)
+        for (String extra : extras)
         {
-            if(usedInExtra.equals( extra ))
+            if (usedInExtra.equals(extra))
                 return true;
         }
         return false;
@@ -263,19 +265,19 @@ public abstract class BeModelElementSupport implements BeModelElement
     @Override
     public Collection<String> getCustomizedProperties()
     {
-        if ( customizedProperties == null )
+        if (customizedProperties == null)
         {
             return Collections.emptySet();
         }
-        
-        return Collections.unmodifiableSet( customizedProperties );
+
+        return Collections.unmodifiableSet(customizedProperties);
     }
 
     @Override
-    public void inheritProperty( String propertyName )
+    public void inheritProperty(String propertyName)
     {
-        if(customizedProperties != null)
-            customizedProperties.remove( propertyName );
+        if (customizedProperties != null)
+            customizedProperties.remove(propertyName);
         fireChanged();
     }
 
@@ -285,22 +287,22 @@ public abstract class BeModelElementSupport implements BeModelElement
     }
 
     @Override
-    public void customizeProperty( String propertyName )
+    public void customizeProperty(String propertyName)
     {
-        if ( !getCustomizableProperties().contains( propertyName ) 
-                || (customizedProperties != null && customizedProperties.contains( propertyName )))
+        if (!getCustomizableProperties().contains(propertyName)
+                || (customizedProperties != null && customizedProperties.contains(propertyName)))
             return;
-        internalCustomizeProperty( propertyName );
+        internalCustomizeProperty(propertyName);
         fireChanged();
     }
 
-    protected void internalCustomizeProperty( String propertyName )
+    protected void internalCustomizeProperty(String propertyName)
     {
-        if ( customizedProperties == null )
+        if (customizedProperties == null)
         {
             customizedProperties = new HashSet<>();
         }
-        customizedProperties.add( propertyName );
+        customizedProperties.add(propertyName);
     }
 
 //    protected <V> V getValueWithReflection( String propertyName, V value, V defaultValue )
@@ -324,30 +326,29 @@ public abstract class BeModelElementSupport implements BeModelElement
 
     protected <V> V getValue(String propertyName, V value, V defaultValue, Supplier<V> getPrototypeValue)
     {
-        if ( customizedProperties != null && customizedProperties.contains( propertyName ) )
+        if (customizedProperties != null && customizedProperties.contains(propertyName))
             return value;
-        if ( prototype == null )
+        if (prototype == null)
             return defaultValue;
 
         return getPrototypeValue.get();
     }
 
-    protected <V> V getValue( String propertyName, V value, Supplier<V> getPrototypeValue )
+    protected <V> V getValue(String propertyName, V value, Supplier<V> getPrototypeValue)
     {
-        return getValue( propertyName, value, null, getPrototypeValue );
+        return getValue(propertyName, value, null, getPrototypeValue);
     }
 
-    protected <V> V customizeProperty( String propertyName, V oldValue, V newValue )
+    protected <V> V customizeProperty(String propertyName, V oldValue, V newValue)
     {
         this.customizing = true;
         try
         {
-            if ( !Objects.equals( oldValue, newValue ) )
+            if (!Objects.equals(oldValue, newValue))
             {
-                internalCustomizeProperty( propertyName );
+                internalCustomizeProperty(propertyName);
             }
-        }
-        finally
+        } finally
         {
             this.customizing = false;
         }
@@ -360,61 +361,59 @@ public abstract class BeModelElementSupport implements BeModelElement
         return Collections.emptySet();
     }
 
-    protected void mergeThis( BeModelElement other, boolean inherit )
+    protected void mergeThis(BeModelElement other, boolean inherit)
     {
-        if(inherit)
+        if (inherit)
         {
             this.prototype = other;
         } else
         {
             this.prototype = null;
             Set<String> customizableProperties = new HashSet<>(getCustomizableProperties());
-            customizableProperties.removeAll( getCustomizedProperties() );
-            for(String customizableProperty : customizableProperties)
+            customizableProperties.removeAll(getCustomizedProperties());
+            for (String customizableProperty : customizableProperties)
             {
                 try
                 {
-                    Object value = Beans.getBeanPropertyValue( other, customizableProperty );
-                    ComponentModel info = ComponentFactory.getModel( this, ComponentFactory.Policy.DEFAULT );
-                    Property property = info.findProperty( customizableProperty );
-                    if(property != null)
+                    Object value = Beans.getBeanPropertyValue(other, customizableProperty);
+                    ComponentModel info = ComponentFactory.getModel(this, ComponentFactory.Policy.DEFAULT);
+                    Property property = info.findProperty(customizableProperty);
+                    if (property != null)
                     {
-                        if(!customizableProperty.equals( "roles" ))
+                        if (!customizableProperty.equals("roles"))
                         {
-                            property.setValue( value );
+                            property.setValue(value);
                         }
                     }
-                }
-                catch ( Exception e )
+                } catch (Exception e)
                 {
-                    throw new RuntimeException( e );
+                    throw new RuntimeException(e);
                 }
             }
         }
     }
 
     @Override
-    public BeModelElementSupport clone( BeModelCollection<?> origin, String name )
+    public BeModelElementSupport clone(BeModelCollection<?> origin, String name)
     {
-        return clone( origin, name, true );
+        return clone(origin, name, true);
     }
 
-    protected BeModelElementSupport clone( BeModelCollection<?> origin, String name, boolean inherit )
+    protected BeModelElementSupport clone(BeModelCollection<?> origin, String name, boolean inherit)
     {
         BeModelElementSupport clone;
         try
         {
-            clone = (BeModelElementSupport)super.clone();
+            clone = (BeModelElementSupport) super.clone();
             clone.name = name;
             clone.origin = origin;
-        }
-        catch ( CloneNotSupportedException e )
+        } catch (CloneNotSupportedException e)
         {
-            throw new AssertionError( "Unexpected exception", e );
+            throw new AssertionError("Unexpected exception", e);
         }
-        if(inherit)
+        if (inherit)
         {
-            if(clone.customizedProperties != null && !clone.customizedProperties.isEmpty())
+            if (clone.customizedProperties != null && !clone.customizedProperties.isEmpty())
             {
                 clone.prototype = this;
                 clone.customizedProperties = null;
@@ -422,7 +421,7 @@ public abstract class BeModelElementSupport implements BeModelElement
         }
         return clone;
     }
-    
+
     @Override
     public boolean isFromApplication()
     {

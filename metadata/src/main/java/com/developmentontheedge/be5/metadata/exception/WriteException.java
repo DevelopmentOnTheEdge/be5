@@ -8,6 +8,6 @@ public class WriteException extends Exception
 
     public WriteException(BeModelElement de, Throwable t)
     {
-        super("Unable to write "+de.getCompletePath()+": "+t.getMessage(), t);
+        super("Unable to write " + de.getCompletePath() + ": " + t.getMessage(), t);
     }
 }

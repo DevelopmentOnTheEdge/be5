@@ -13,7 +13,9 @@ public class TestPerson
     private String password;
     private String email;
 
-    public TestPerson(){}
+    public TestPerson()
+    {
+    }
 
     public TestPerson(Long id, String name, String password, String email)
     {

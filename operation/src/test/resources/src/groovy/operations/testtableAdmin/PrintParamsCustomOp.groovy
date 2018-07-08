@@ -8,11 +8,9 @@ import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
-class PrintParamsCustomOp extends BaseOperationSupport
-{
+class PrintParamsCustomOp extends BaseOperationSupport {
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception
-    {
+    Object getParameters(Map<String, Object> presetValues) throws Exception {
         //return dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), context.getOperationParams(), presetValues)
         def dps = new GDynamicPropertySetSupport()
         dps.add("name")
@@ -22,8 +20,7 @@ class PrintParamsCustomOp extends BaseOperationSupport
     }
 
     @Override
-    void invoke(Object parameters) throws Exception
-    {
-        setResult(OperationResult.finished(((DynamicPropertySet)parameters).asMap().toString()))
+    void invoke(Object parameters) throws Exception {
+        setResult(OperationResult.finished(((DynamicPropertySet) parameters).asMap().toString()))
     }
 }

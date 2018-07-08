@@ -5,7 +5,8 @@ import com.google.common.collect.ImmutableList.Builder;
 
 import java.util.List;
 
-public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object> {
+public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object>
+{
 
     private final TableModel tableModel;
 

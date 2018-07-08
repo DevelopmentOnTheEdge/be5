@@ -81,9 +81,9 @@ public class UserAwareMetaImpl implements UserAwareMeta
     {
         Optional<String> localization = localizations.getEntityTitle(getLanguage(), entity.getName());
 
-        if(!localization.isPresent())
+        if (!localization.isPresent())
         {
-            if(!Strings.isNullOrEmpty(entity.getDisplayName()))
+            if (!Strings.isNullOrEmpty(entity.getDisplayName()))
             {
                 return entity.getDisplayName();
             }
@@ -131,7 +131,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
                 localizations.get(getLanguage(), entity, query, message).orElse(content)
         );
 
-        if(localized.startsWith("{{{") && localized.endsWith("}}}"))
+        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
             String clearContent = localized.substring(3, localized.length() - 3);
             return localizations.get(getLanguage(), entity, query, clearContent)
@@ -157,12 +157,12 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public QuerySettings getQuerySettings(Query query)
     {
         List<String> currentRoles = userInfoProvider.get().getCurrentRoles();
-        for(QuerySettings settings : query.getQuerySettings())
+        for (QuerySettings settings : query.getQuerySettings())
         {
             Set<String> roles = settings.getRoles().getFinalRoles();
-            for(String role : currentRoles)
+            for (String role : currentRoles)
             {
-                if(roles.contains(role))
+                if (roles.contains(role))
                 {
                     return settings;
                 }
@@ -175,7 +175,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Operation getOperation(String entityName, String name)
     {
         Operation operation = meta.getOperation(entityName, name);
-        if(!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
@@ -185,7 +185,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = meta.getOperation(entityName, queryName, name);
-        if(!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
@@ -195,7 +195,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Query getQuery(String entityName, String queryName)
     {
         Query query = meta.getQuery(entityName, queryName);
-        if(!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5Exception.accessDeniedToQuery(entityName, queryName);
         return query;
     }
@@ -209,10 +209,10 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public String getColumnTitle(String entityName, String columnName)
     {
         ImmutableList<String> defaultQueries = ImmutableList.of("All records");
-        for(String queryName : defaultQueries)
+        for (String queryName : defaultQueries)
         {
             Optional<String> columnTitle = localizations.get(getLanguage(), entityName, queryName, columnName);
-            if(columnTitle.isPresent()) return columnTitle.get();
+            if (columnTitle.isPresent()) return columnTitle.get();
         }
         return columnName;
     }
@@ -237,7 +237,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public String getStaticPageContent(String name)
     {
         String pageContent = projectProvider.get().getStaticPageContent(getLanguage(), name);
-        if(pageContent == null)
+        if (pageContent == null)
             throw Be5Exception.notFound("static/" + name);
 
         return pageContent;

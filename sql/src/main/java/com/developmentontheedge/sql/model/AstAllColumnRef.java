@@ -6,10 +6,10 @@ public class AstAllColumnRef extends SimpleNode
 {
     public AstAllColumnRef(int id)
     {
-        super( id );
+        super(id);
         nodeSuffix = ".*";
     }
-    
+
     public String getValue()
     {
         return format().trim();

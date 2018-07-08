@@ -11,21 +11,22 @@ import java.util.Objects;
 
 /**
  * SQL view definition
+ *
  * @author lan
  */
 @PropertyName("SQL view")
 public class ViewDef extends BeModelElementSupport implements DdlElement
 {
     private String definition;
-    
-    public ViewDef( Entity entity )
+
+    public ViewDef(Entity entity)
     {
-        super( Entity.SCHEME, entity );
+        super(Entity.SCHEME, entity);
     }
-    
+
     private Entity getEntity()
     {
-        return ( Entity ) getOrigin();
+        return (Entity) getOrigin();
     }
 
     @PropertyName("Definition")
@@ -33,8 +34,8 @@ public class ViewDef extends BeModelElementSupport implements DdlElement
     {
         return definition;
     }
-    
-    public void setDefinition( String definition )
+
+    public void setDefinition(String definition)
     {
         this.definition = definition;
         fireChanged();
@@ -59,11 +60,11 @@ public class ViewDef extends BeModelElementSupport implements DdlElement
     }
 
     @Override
-    public String getDiffDdl( DdlElement other, SqlExecutor sql )
+    public String getDiffDdl(DdlElement other, SqlExecutor sql)
     {
-        if(other == null)
+        if (other == null)
             return getCreateDdl();
-        return other.getDropDdl()+getCreateDdl();
+        return other.getDropDdl() + getCreateDdl();
     }
 
     @Override
@@ -73,18 +74,18 @@ public class ViewDef extends BeModelElementSupport implements DdlElement
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        ViewDef other = ( ViewDef ) obj;
-        return Objects.equals( definition, other.definition );
+        ViewDef other = (ViewDef) obj;
+        return Objects.equals(definition, other.definition);
     }
 
     @Override
-    public String getDangerousDiffStatements( DdlElement other, SqlExecutor sql )
+    public String getDangerousDiffStatements(DdlElement other, SqlExecutor sql)
     {
         return "";
     }
@@ -94,12 +95,12 @@ public class ViewDef extends BeModelElementSupport implements DdlElement
     {
         return Collections.emptyList();
     }
-    
+
     @Override
     protected void fireChanged()
     {
-        if ( getEntity().getScheme() ==  this )
+        if (getEntity().getScheme() == this)
             getEntity().fireCodeChanged();
     }
-    
+
 }

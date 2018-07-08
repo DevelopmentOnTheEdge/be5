@@ -28,7 +28,7 @@ public class SqlExecutor
 
     static URL getDefaultPropertiesFile()
     {
-        return SqlExecutor.class.getResource( "basesql.properties" );
+        return SqlExecutor.class.getResource("basesql.properties");
     }
 
     public SqlExecutor(DbmsConnector connector, PrintStream log, URL propertiesURL) throws IOException
@@ -36,12 +36,12 @@ public class SqlExecutor
         this.connector = connector;
         this.platform = connector.getType();
         this.log = log;
-        this.properties = loadSQL( propertiesURL, loadSQL( getDefaultPropertiesFile(), null ) );
+        this.properties = loadSQL(propertiesURL, loadSQL(getDefaultPropertiesFile(), null));
     }
 
     public SqlExecutor(DbmsConnector connector, URL propertiesURL) throws IOException
     {
-        this( connector, null, propertiesURL );
+        this(connector, null, propertiesURL);
     }
 
     public DbmsType getType()
@@ -56,63 +56,61 @@ public class SqlExecutor
 
     public void close(ResultSet rs)
     {
-        if( rs != null )
-            connector.close( rs );
+        if (rs != null)
+            connector.close(rs);
     }
 
     /**
      * Executes the query with the given name.
      *
      * @param queryName The name of the query to be executed.
-     * @param args Query arguments.
+     * @param args      Query arguments.
      * @throws ExtendedSqlException SQL execution error
      */
-    public void exec(String queryName, Object ... args) throws ExtendedSqlException
+    public void exec(String queryName, Object... args) throws ExtendedSqlException
     {
-        if( mustUsePreparedStatement( args ) )
+        if (mustUsePreparedStatement(args))
         {
-            execPrepared( queryName, args, false );
+            execPrepared(queryName, args, false);
             return;
         }
-        String sql = sql( queryName, args );
-        if( sql.isEmpty() )
+        String sql = sql(queryName, args);
+        if (sql.isEmpty())
             return;
         try
         {
-            log( sql );
-            connector.executeUpdate( sql );
-        }
-        catch( Exception e )
+            log(sql);
+            connector.executeUpdate(sql);
+        } catch (Exception e)
         {
-            comment( "Warning: SQL error " + e.getMessage() + " trying again...", false );
+            comment("Warning: SQL error " + e.getMessage() + " trying again...", false);
             try
             {
-                connector.executeUpdate( sql );
-            }
-            catch( SQLException e1 )
+                connector.executeUpdate(sql);
+            } catch (SQLException e1)
             {
-                throw handleError( sql, e );
+                throw handleError(sql, e);
             }
         }
     }
 
     public void comment(String comment)
     {
-        comment( comment, true );
+        comment(comment, true);
     }
 
     public void comment(String comment, boolean margin)
     {
-        if( log != null )
+        if (log != null)
         {
-            if( margin )
+            if (margin)
             {
                 log.println();
             }
-            for( String line : comment.split( "\n", -1 ) )
+            for (String line : comment.split("\n", -1))
             {
-                log.print( "-- " );
-                log.println( line.replace( "\r", "" ) );
+                log.print("-- ");
+                log.println(line.replace("\r", ""));
             }
         }
     }
@@ -126,52 +124,50 @@ public class SqlExecutor
     {
         try
         {
-            log( statement );
-            if( platform == DbmsType.ORACLE )
+            log(statement);
+            if (platform == DbmsType.ORACLE)
             {
-                String upperStatement = statement.toUpperCase( Locale.ENGLISH );
-                if( upperStatement.endsWith( "END" ) )
+                String upperStatement = statement.toUpperCase(Locale.ENGLISH);
+                if (upperStatement.endsWith("END"))
                 {
-                    // Oracle CREATE TRIGGER statements must have a trailing semicolon 
+                    // Oracle CREATE TRIGGER statements must have a trailing semicolon
                     statement += ";";
-                    comment( "(trailing semicolon included)", false );
+                    comment("(trailing semicolon included)", false);
                 }
             }
-            connector.executeUpdate( statement );
-        }
-        catch( Exception e1 )
+            connector.executeUpdate(statement);
+        } catch (Exception e1)
         {
-            if( ( statement.startsWith( "DROP INDEX " ) ) && platform == DbmsType.DB2 )
+            if ((statement.startsWith("DROP INDEX ")) && platform == DbmsType.DB2)
             {
-                comment( "Exception ignored: " + e1.getMessage(), false );
+                comment("Exception ignored: " + e1.getMessage(), false);
                 return;
             }
-            comment( "Failure: " + e1.getMessage() );
-            throw new ExtendedSqlException( connector, statement, e1 );
+            comment("Failure: " + e1.getMessage());
+            throw new ExtendedSqlException(connector, statement, e1);
         }
     }
 
     public void executeMultiple(String sql) throws ExtendedSqlException
     {
-        MultiSqlParser multiSqlParser = new MultiSqlParser( platform, sql );
+        MultiSqlParser multiSqlParser = new MultiSqlParser(platform, sql);
         String statement;
-        while( ( statement = multiSqlParser.nextStatement() ) != null )
+        while ((statement = multiSqlParser.nextStatement()) != null)
         {
-            executeSingle( statement );
+            executeSingle(statement);
         }
     }
 
-    public ResultSet executeNamedQuery(final String queryName, Object ... args) throws ExtendedSqlException
+    public ResultSet executeNamedQuery(final String queryName, Object... args) throws ExtendedSqlException
     {
-        String sql = sql( queryName, args );
+        String sql = sql(queryName, args);
         try
         {
-            log( sql );
-            return connector.executeQuery( sql );
-        }
-        catch( Exception e )
+            log(sql);
+            return connector.executeQuery(sql);
+        } catch (Exception e)
         {
-            throw new ExtendedSqlException( connector, sql, e );
+            throw new ExtendedSqlException(connector, sql, e);
         }
     }
 //
@@ -268,31 +264,29 @@ public class SqlExecutor
      * If result set is empty, then returns <code>null</code>.
      *
      * @param queryName The name of the query to execute.
-     * @param args Query arguments.
+     * @param args      Query arguments.
      * @return Value of first column in result se or null, if result set is empty.
      * @throws ExtendedSqlException SQL execution error
      */
-    public String readString(String queryName, Object ... args) throws ExtendedSqlException
+    public String readString(String queryName, Object... args) throws ExtendedSqlException
     {
-        String sql = sql( queryName, args );
+        String sql = sql(queryName, args);
         try
         {
-            log( sql );
-            ResultSet rs = connector.executeQuery( sql );
+            log(sql);
+            ResultSet rs = connector.executeQuery(sql);
             try
             {
-                if( rs.next() )
-                    return rs.getString( 1 );
+                if (rs.next())
+                    return rs.getString(1);
                 return null;
-            }
-            finally
+            } finally
             {
-                connector.close( rs );
+                connector.close(rs);
             }
-        }
-        catch( Exception e )
+        } catch (Exception e)
         {
-            throw new ExtendedSqlException( connector, sql, e );
+            throw new ExtendedSqlException(connector, sql, e);
         }
     }
 //
@@ -377,25 +371,25 @@ public class SqlExecutor
 //        }
 //    }
 
-    public boolean hasResult(String queryName, Object ... args) throws ExtendedSqlException
+    public boolean hasResult(String queryName, Object... args) throws ExtendedSqlException
     {
-        return readString( queryName, args ) != null;
+        return readString(queryName, args) != null;
     }
 
     public boolean isEmpty(String tableName) throws ExtendedSqlException
     {
-        return !hasResult( "sql.test.table", tableName );
+        return !hasResult("sql.test.table", tableName);
     }
 
     public void testConnection() throws ExtendedSqlException
     {
-        readString( "sql.test.connection" );
+        readString("sql.test.connection");
     }
 
     public int count(String table) throws ExtendedSqlException
     {
-        String str = readString( "sql.countRows", table );
-        return str == null ? 0 : Integer.parseInt( str );
+        String str = readString("sql.countRows", table);
+        return str == null ? 0 : Integer.parseInt(str);
     }
 
     /**
@@ -405,46 +399,46 @@ public class SqlExecutor
      *
      * @param connector Database connector
      * @param statement SQL statement
-     * @param args Actual values
+     * @param args      Actual values
      * @return Prepared statement
      */
-    static String prepare(DbmsType platform, String statement, Object ... args)
+    static String prepare(DbmsType platform, String statement, Object... args)
     {
-        String[] tokens = statement.split( "\\?", -1 );
-        if( tokens.length == 1 )
+        String[] tokens = statement.split("\\?", -1);
+        if (tokens.length == 1)
             return statement;
         StringBuilder prepared = new StringBuilder();
-        for( int i = 0; i < tokens.length - 1; i++ )
+        for (int i = 0; i < tokens.length - 1; i++)
         {
             String token = tokens[i];
-            if( token.startsWith( "'" ) && token.length() > 1 )
+            if (token.startsWith("'") && token.length() > 1)
             {
-                token = token.substring( 1 );
+                token = token.substring(1);
             }
-            boolean escape = !token.endsWith( "&" );
-            boolean quote = token.endsWith( "'" );
-            prepared.append( escape && !quote ? token : token.substring( 0, token.length() - 1 ) );
-            String nextValue = stringValue( i < args.length ? args[i] : null );
-            prepared.append( ( escape && quote && nextValue != null ) ? platform.quoteString( nextValue ) : nextValue );
+            boolean escape = !token.endsWith("&");
+            boolean quote = token.endsWith("'");
+            prepared.append(escape && !quote ? token : token.substring(0, token.length() - 1));
+            String nextValue = stringValue(i < args.length ? args[i] : null);
+            prepared.append((escape && quote && nextValue != null) ? platform.quoteString(nextValue) : nextValue);
         }
         String lastToken = tokens[tokens.length - 1];
-        if( lastToken.startsWith( "'" ) )
-            lastToken = lastToken.substring( 1 );
-        prepared.append( lastToken );
+        if (lastToken.startsWith("'"))
+            lastToken = lastToken.substring(1);
+        prepared.append(lastToken);
         return prepared.toString();
     }
 
     private static String stringValue(Object value)
     {
-        if( null == value )
+        if (null == value)
         {
             return null;
         }
-        if( value instanceof Boolean )
+        if (value instanceof Boolean)
         {
-            return ( (Boolean)value ) ? YES : NO;
+            return ((Boolean) value) ? YES : NO;
         }
-        if( value instanceof byte[] )
+        if (value instanceof byte[])
         {
             return "<binary_data>";
         }
@@ -460,99 +454,95 @@ public class SqlExecutor
     {
         try (InputStream s = url.openStream())
         {
-            Properties properties = new Properties( defaults );
-            properties.load( s );
+            Properties properties = new Properties(defaults);
+            properties.load(s);
             return properties;
         }
     }
 
     protected void log(String sql)
     {
-        if( log != null )
+        if (log != null)
         {
-            if( sectionName != null )
+            if (sectionName != null)
             {
-                comment( sectionName );
+                comment(sectionName);
                 sectionName = null;
             }
-            log.print( sql );
-            log.println( ';' );
+            log.print(sql);
+            log.println(';');
         }
     }
 
     protected String execPrepared(String queryName, Object[] args, boolean needId) throws ExtendedSqlException
     {
-        String sql = sql( queryName, args );
+        String sql = sql(queryName, args);
         try
         {
-            log( sql + "; -- via PreparedStatement" );
-            String query = getQuery( queryName ).replace( "'?'", "?" );
+            log(sql + "; -- via PreparedStatement");
+            String query = getQuery(queryName).replace("'?'", "?");
             int params = 0;
             int lastParamPos = 0;
-            while( ( lastParamPos = query.indexOf( '?', lastParamPos ) + 1 ) > 0 )
+            while ((lastParamPos = query.indexOf('?', lastParamPos) + 1) > 0)
                 params++;
             Connection conn = connector.getConnection();
-            try (PreparedStatement st = conn.prepareStatement( query ))
+            try (PreparedStatement st = conn.prepareStatement(query))
             {
-                for( int i = 0; i < params; i++ )
+                for (int i = 0; i < params; i++)
                 {
                     Object arg = args[i];
-                    if( arg == null )
+                    if (arg == null)
                     {
-                        st.setNull( i + 1, Types.VARCHAR );
-                    }
-                    else if( arg instanceof Boolean )
+                        st.setNull(i + 1, Types.VARCHAR);
+                    } else if (arg instanceof Boolean)
                     {
-                        st.setString( i + 1, ( (Boolean)arg ) ? YES : NO );
-                    }
-                    else if( arg instanceof byte[] )
+                        st.setString(i + 1, ((Boolean) arg) ? YES : NO);
+                    } else if (arg instanceof byte[])
                     {
-                        st.setBytes( i + 1, (byte[])arg );
-                    }
-                    else
+                        st.setBytes(i + 1, (byte[]) arg);
+                    } else
                     {
-                        st.setString( i + 1, arg.toString() );
+                        st.setString(i + 1, arg.toString());
                     }
                 }
                 st.execute();
-                if( needId )
+                if (needId)
                 {
-                    if( platform == DbmsType.ORACLE )
+                    if (platform == DbmsType.ORACLE)
                     {
-                        return readString( "sql.lastInsertId", "beIDGenerator" );
+                        return readString("sql.lastInsertId", "beIDGenerator");
                     }
                     // TODO: support other DBMS if necessary
                 }
                 return null;
             }
-        }
-        catch( Exception e )
+        } catch (Exception e)
         {
-            throw handleError( sql, e );
+            throw handleError(sql, e);
         }
     }
 
     /**
      * @param sql query which was executing when error occurred
-     * @param e an Exception which should be wrapped
+     * @param e   an Exception which should be wrapped
      * @return ExtendedSqlException
      */
     protected ExtendedSqlException handleError(String sql, Exception e)
     {
-        comment( "Failure: " + e );
-        if( e instanceof ExtendedSqlException )
-            return (ExtendedSqlException)e;
-        return new ExtendedSqlException( connector, sql, e );
+        comment("Failure: " + e);
+        if (e instanceof ExtendedSqlException)
+            return (ExtendedSqlException) e;
+        return new ExtendedSqlException(connector, sql, e);
     }
 
     protected boolean mustUsePreparedStatement(Object[] args)
     {
         boolean oracle = platform == DbmsType.ORACLE;
-        for( Object arg : args )
+        for (Object arg : args)
         {
-            if( arg instanceof byte[] )
+            if (arg instanceof byte[])
                 return true;
-            if( oracle && arg != null && arg.toString().getBytes( StandardCharsets.UTF_8 ).length > MAX_ORACLE_STRING_LENGTH )
+            if (oracle && arg != null && arg.toString().getBytes(StandardCharsets.UTF_8).length > MAX_ORACLE_STRING_LENGTH)
                 return true;
         }
         return false;
@@ -562,31 +552,31 @@ public class SqlExecutor
      * Returns prepared SQL query with the specified name.
      *
      * @param queryName Query name.
-     * @param args Query arguments (replacements for ?)
+     * @param args      Query arguments (replacements for ?)
      * @return Prepared SQL.
      * @throws IllegalArgumentException When query with the specified name not found.
      */
-    protected String sql(String queryName, Object ... args)
+    protected String sql(String queryName, Object... args)
     {
-        String query = getQuery( queryName );
-        return prepare( platform, query, args );
+        String query = getQuery(queryName);
+        return prepare(platform, query, args);
     }
 
     protected String getQuery(String queryName)
     {
         // try to load db specific query
-        String query = properties.getProperty( queryName + '.' + platform.getName() );
+        String query = properties.getProperty(queryName + '.' + platform.getName());
 
         // try to load common query
-        if( query == null )
+        if (query == null)
         {
-            query = properties.getProperty( queryName );
+            query = properties.getProperty(queryName);
         }
 
-        if( null == query )
+        if (null == query)
         {
-            throw new IllegalArgumentException( "Cannot find query with name \"" + queryName + "\" for " + platform + " platform."
-                    + " Please add it in sql.properties." );
+            throw new IllegalArgumentException("Cannot find query with name \"" + queryName + "\" for " + platform + " platform."
+                    + " Please add it in sql.properties.");
         }
         return query;
     }

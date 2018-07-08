@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Usage example: 
+ * Usage example:
  * mvn be5:validate -DBE5_DEBUG=true
  */
 public class AppValidate extends ScriptSupport<AppValidate>
@@ -50,27 +50,26 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void checkProfileProtection() throws ScriptException
     {
-        if(be5Project.getConnectionProfile() != null &&
+        if (be5Project.getConnectionProfile() != null &&
                 be5Project.getConnectionProfile().isProtected() &&
-                ! unlockProtectedProfile )
+                !unlockProtectedProfile)
         {
-            logger.error( "=== WARNING! ===" );
-            logger.error( "You are using the protected profile '" + be5Project.getConnectionProfileName()+"'");
-            logger.error( "The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
-            logger.error( "Type the profile name to confirm its usage:" );
+            logger.error("=== WARNING! ===");
+            logger.error("You are using the protected profile '" + be5Project.getConnectionProfileName() + "'");
+            logger.error("The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
+            logger.error("Type the profile name to confirm its usage:");
             String line = "";
             try
             {
-                line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
-            }
-            catch ( IOException e )
+                line = new BufferedReader(new InputStreamReader(System.in)).readLine();
+            } catch (IOException e)
             {
                 // ignore
             }
-            if(be5Project.getConnectionProfileName().equals( line ))
+            if (be5Project.getConnectionProfileName().equals(line))
             {
                 unlockProtectedProfile = true;
-            } else 
+            } else
             {
                 throw new ScriptException("Aborted");
             }
@@ -80,38 +79,37 @@ public class AppValidate extends ScriptSupport<AppValidate>
     private void setRdbms()
     {
         // Need to set any system to validate project
-        if(rdbmsName != null)
-            be5Project.setDatabaseSystem( Rdbms.valueOf( rdbmsName.toUpperCase(Locale.ENGLISH) ) );
-        if(be5Project.getDatabaseSystem() == null)
+        if (rdbmsName != null)
+            be5Project.setDatabaseSystem(Rdbms.valueOf(rdbmsName.toUpperCase(Locale.ENGLISH)));
+        if (be5Project.getDatabaseSystem() == null)
         {
-            be5Project.setDatabaseSystem( Rdbms.POSTGRESQL );
+            be5Project.setDatabaseSystem(Rdbms.POSTGRESQL);
         }
     }
 
     private void validateProject() throws ScriptException
     {
         List<ProjectElementException> errors = new ArrayList<>();
-        if( skipValidation )
+        if (skipValidation)
         {
             logger.info("Validation skipped");
-        } 
-        else
+        } else
         {
             logger.info("Validating...");
-            errors.addAll( be5Project.getErrors() );
+            errors.addAll(be5Project.getErrors());
             int count = 0;
-            for(ProjectElementException error : errors)
+            for (ProjectElementException error : errors)
             {
-                if(error.getPath().equals( be5Project.getName() ) && error.getProperty().equals( "connectionProfileName" ))
+                if (error.getPath().equals(be5Project.getName()) && error.getProperty().equals("connectionProfileName"))
                     continue;
                 count++;
-                displayError( error );
+                displayError(error);
             }
-            if(count > 0)
+            if (count > 0)
             {
-                throw new ScriptException("Project has " + count + " errors." );
+                throw new ScriptException("Project has " + count + " errors.");
             }
-            
+
             logger.info("Project is valid.");
             skipValidation = true;
         }
@@ -147,14 +145,13 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void saveProject() throws ScriptException
     {
-        if( saveProject )
+        if (saveProject)
         {
             try
             {
                 logger.info("Saving...");
                 Serialization.save(be5Project, be5Project.getLocation());
-            }
-            catch(ProjectSaveException e)
+            } catch (ProjectSaveException e)
             {
                 throw new ScriptException("Can not save project.", e);
             }
@@ -163,72 +160,71 @@ public class AppValidate extends ScriptSupport<AppValidate>
 
     private void checkDdl() throws ScriptException
     {
-        if( ddlPath != null)
+        if (ddlPath != null)
         {
             Entity entity = be5Project.getEntity(ddlPath);
-            if(entity == null)
+            if (entity == null)
             {
-                throw new ScriptException("Invalid entity: " +  ddlPath);
+                throw new ScriptException("Invalid entity: " + ddlPath);
             }
 
             DdlElement scheme = entity.getScheme();
-            if(scheme == null)
+            if (scheme == null)
             {
                 throw new ScriptException("Entity has no scheme: " + ddlPath);
             }
-            
+
             logger.info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
         }
     }
-    
+
     private void checkRoles()
     {
-        if( checkRoles )
+        if (checkRoles)
         {
             logger.info("Available roles:" + System.lineSeparator() + " - " +
-                    String.join( System.lineSeparator()+ " - " , be5Project.getAvailableRoles()));
+                    String.join(System.lineSeparator() + " - ", be5Project.getAvailableRoles()));
         }
     }
 
     private void checkQuery() throws ScriptException
     {
-        if( queryPath == null)
+        if (queryPath == null)
             return;
-        
-        int pos = queryPath.indexOf( '.' );
-        if(pos <= 0)
+
+        int pos = queryPath.indexOf('.');
+        if (pos <= 0)
         {
             throw new ScriptException("Invalid query path supplied: " + queryPath);
         }
-        
-        String entityName = queryPath.substring( 0, pos );
-        String queryName  = queryPath.substring( pos+1 );
-        Entity entity = be5Project.getEntity( entityName );
-        if(entity == null)
+
+        String entityName = queryPath.substring(0, pos);
+        String queryName = queryPath.substring(pos + 1);
+        Entity entity = be5Project.getEntity(entityName);
+        if (entity == null)
         {
             throw new ScriptException("Invalid entity: " + entityName);
         }
 
-        Query query = entity.getQueries().get( queryName );
-        if(query == null)
+        Query query = entity.getQueries().get(queryName);
+        if (query == null)
         {
             try
             {
-                queryName = new String(queryName.getBytes( "CP866" ), "CP1251");
-                query = entity.getQueries().get( queryName );
-            }
-            catch(UnsupportedEncodingException e)
+                queryName = new String(queryName.getBytes("CP866"), "CP1251");
+                query = entity.getQueries().get(queryName);
+            } catch (UnsupportedEncodingException e)
             {
                 throw new ScriptException("Can not load query, path=" + queryPath, e);
             }
         }
 
-        if(query == null)
+        if (query == null)
         {
-            throw new ScriptException("Invalid query: "+queryName);
+            throw new ScriptException("Invalid query: " + queryName);
         }
-        
-        logger.info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
+
+        logger.info("Query: " + query.getQueryCompiled().getResult().replaceAll("\n", System.lineSeparator()));
     }
 
     public AppValidate setCheckQueryPath(String queryPath)
@@ -267,7 +263,9 @@ public class AppValidate extends ScriptSupport<AppValidate>
         return this;
     }
 
-    @Override public AppValidate me() {
+    @Override
+    public AppValidate me()
+    {
         return this;
     }
 }

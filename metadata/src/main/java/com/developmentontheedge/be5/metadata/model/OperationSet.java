@@ -5,13 +5,13 @@ public class OperationSet extends InheritableStringSet
 {
     private final Query owner;
 
-    public OperationSet( Query owner )
+    public OperationSet(Query owner)
     {
         super(owner);
         this.owner = owner;
     }
-    
-    public OperationSet( Query owner, OperationSet source )
+
+    public OperationSet(Query owner, OperationSet source)
     {
         super(owner, source);
         this.owner = owner;
@@ -20,9 +20,9 @@ public class OperationSet extends InheritableStringSet
     @Override
     protected void customizeAndFireChanged()
     {
-        if(this.owner != null) // can be called by superclass constructor, thus null is possible
+        if (this.owner != null) // can be called by superclass constructor, thus null is possible
         {
-            this.owner.customizeProperty( "operationNames" );
+            this.owner.customizeProperty("operationNames");
             this.owner.fireChanged();
         }
     }

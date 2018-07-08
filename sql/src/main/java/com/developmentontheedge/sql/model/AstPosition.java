@@ -6,17 +6,17 @@ public class AstPosition extends SimpleNode
 {
     public AstPosition(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "POSITION(";
         this.childrenDelimiter = "IN";
         this.nodeSuffix = ")";
     }
-    
+
     public AstPosition(SimpleNode substring, SimpleNode string)
     {
-        this( SqlParserTreeConstants.JJTPOSITION );
-        addChild( substring );
-        addChild( string );
+        this(SqlParserTreeConstants.JJTPOSITION);
+        addChild(substring);
+        addChild(string);
     }
 }
 /* JavaCC - OriginalChecksum=06135cb90736d479a2affcf5f6a14d44 (do not edit this line) */

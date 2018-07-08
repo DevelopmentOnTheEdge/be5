@@ -34,17 +34,17 @@ public class StaticPageController extends JsonApiModelController
     {
         String url = new HashUrl(STATIC_ACTION, requestSubUrl).toString();
 
-        try{
+        try
+        {
             return data(new ResourceData(STATIC_ACTION, new StaticPagePresentation(
-                            "",
-                            userAwareMeta.getStaticPageContent(requestSubUrl)),
-                            Collections.singletonMap(SELF_LINK, url)));
-        }
-        catch(Be5Exception e)
+                    "",
+                    userAwareMeta.getStaticPageContent(requestSubUrl)),
+                    Collections.singletonMap(SELF_LINK, url)));
+        } catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in static page: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
     }
-	
+
 }

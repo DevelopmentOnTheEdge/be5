@@ -14,7 +14,7 @@ public class RoleGroupBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add(new PropertyDescriptor( "name", beanClass, "getName", null ));
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("roleSet");
     }
 }

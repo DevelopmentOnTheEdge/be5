@@ -6,14 +6,14 @@ public class AstFrameBound extends SimpleNode
 {
     public AstFrameBound(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public void setPrefix(String prefix)
     {
         this.nodePrefix = prefix;
     }
-    
+
     public void setSuffix(String suffix)
     {
         this.nodeSuffix = suffix;

@@ -19,7 +19,8 @@ import static org.junit.Assert.assertTrue;
 
 public class MetaTest extends BaseTest
 {
-    @Inject private Meta meta;
+    @Inject
+    private Meta meta;
 
     @Test
     public void getTableReferences()

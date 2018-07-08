@@ -6,7 +6,7 @@ public class AstBeUnless extends AstBeCondition
 {
     public AstBeUnless(int id)
     {
-        super( id );
+        super(id);
         this.tagName = "unless";
     }
 }

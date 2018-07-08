@@ -7,7 +7,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AstInsertBuildTest {
+public class AstInsertBuildTest
+{
 
     @Test
     public void test()

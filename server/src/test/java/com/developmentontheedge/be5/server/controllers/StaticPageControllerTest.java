@@ -18,7 +18,8 @@ import static org.mockito.Mockito.verify;
 
 public class StaticPageControllerTest extends ServerBe5ProjectTest
 {
-    @Inject private StaticPageController component;
+    @Inject
+    private StaticPageController component;
 
     @Before
     public void setUp()

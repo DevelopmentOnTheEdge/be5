@@ -17,24 +17,23 @@ import static org.mockito.Matchers.*
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
-class EntityModelTest extends DatabaseModelSqlMockProjectTest
-{
-    @Inject private DatabaseModel database
+class EntityModelTest extends DatabaseModelSqlMockProjectTest {
+    @Inject
+    private DatabaseModel database
 
     @Before
-    void before(){
+    void before() {
         DbServiceMock.clearMock()
     }
 
     @Test
-    void testAdd()
-    {
-        EntityModel entity = database.getEntity( "testtableAdmin" )
+    void testAdd() {
+        EntityModel entity = database.getEntity("testtableAdmin")
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
         entity.add([
-            name : "Test",
-            value: 1
+                name : "Test",
+                value: 1
         ])
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
@@ -42,9 +41,8 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
     }
 
     @Test
-    void testAddAll()
-    {
-        EntityModel entity = database.getEntity( "testtableAdmin" )
+    void testAddAll() {
+        EntityModel entity = database.getEntity("testtableAdmin")
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
         def list = [
@@ -62,27 +60,26 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
                 ],
         ]
 
-        entity.addAll( list )
+        entity.addAll(list)
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 1)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 2)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 3)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 1)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 2)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 3)
     }
 
     @Test
-    void testReturnValue()
-    {
-        EntityModel entity = database.getEntity( "testtableAdmin" )
+    void testReturnValue() {
+        EntityModel entity = database.getEntity("testtableAdmin")
 
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
-        String id = entity.add( [
+        String id = entity.add([
                 name : "Test",
                 value: "1"
         ])
         assertEquals("1", id)
 
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(2L)
-        id = entity.add( [
+        id = entity.add([
                 name : "Test",
                 value: "1"
         ])
@@ -90,13 +87,12 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
     }
 
     @Test
-    void simpleMockTestExample() throws Exception
-    {
+    void simpleMockTestExample() throws Exception {
         when(DbServiceMock.mock.select(anyString(),
                 Matchers.<ResultSetParser<DynamicPropertySet>> any(), eq(4444L))).thenReturn(getDpsS([
-                ID    : 4444L,
-                name  : "test",
-                value    : 123
+                ID   : 4444L,
+                name : "test",
+                value: 123
         ]))
 
         def rec = database.getEntity("testtableAdmin").get(4444L)

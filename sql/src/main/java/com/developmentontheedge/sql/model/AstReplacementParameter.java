@@ -7,16 +7,19 @@ public class AstReplacementParameter extends SimpleNode
     private static final String replacementParameter = "?";
     public static final AstReplacementParameter parameter = new AstReplacementParameter();
 
-    public static AstReplacementParameter get(){
+    public static AstReplacementParameter get()
+    {
         return parameter;
     }
 
-    public AstReplacementParameter(){
+    public AstReplacementParameter()
+    {
         super(SqlParserTreeConstants.JJTREPLACEMENTPARAMETER);
         this.nodeContent = replacementParameter;
     }
 
-    public AstReplacementParameter(int id) {
+    public AstReplacementParameter(int id)
+    {
         super(id);
     }
 

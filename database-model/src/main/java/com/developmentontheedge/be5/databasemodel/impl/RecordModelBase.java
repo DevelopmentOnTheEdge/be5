@@ -16,8 +16,8 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
 
     RecordModelBase(T id, EntityModel<T> entityModel, DynamicPropertySet dps)
     {
-        super( dps );
-        if(dps.getProperty(entityModel.getPrimaryKeyName()) == null)
+        super(dps);
+        if (dps.getProperty(entityModel.getPrimaryKeyName()) == null)
         {
             throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModel.getPrimaryKeyName() + "'");
         }
@@ -34,7 +34,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public int remove()
     {
-        return entityModel.remove( id );
+        return entityModel.remove(id);
     }
 
     @Override
@@ -44,31 +44,31 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     }
 
     @Override
-    public void update( String propertyName, Object value )
+    public void update(String propertyName, Object value)
     {
-        entityModel.set( getPrimaryKey(), propertyName, value );
+        entityModel.set(getPrimaryKey(), propertyName, value);
 
-        super.setValueHidden( propertyName, value );
+        super.setValueHidden(propertyName, value);
     }
 
     @Override
-    public void update( Map<String, Object> values )
+    public void update(Map<String, Object> values)
     {
-        entityModel.set( getPrimaryKey(), values );
+        entityModel.set(getPrimaryKey(), values);
 
-        for( String propertyName : values.keySet() )
+        for (String propertyName : values.keySet())
         {
-            if( super.hasProperty( propertyName ) )
+            if (super.hasProperty(propertyName))
             {
-                super.setValueHidden( propertyName, values.get( propertyName ) );
+                super.setValueHidden(propertyName, values.get(propertyName));
             }
         }
     }
 
     @Override
-    public void setValue( String propertyName, Object value )
+    public void setValue(String propertyName, Object value)
     {
-        throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
+        throw new IllegalAccessError("You can't use this operation. Use EntityModel#set() to update value in database.");
     }
 //
 //    public class MethodProviderBase implements MethodProvider

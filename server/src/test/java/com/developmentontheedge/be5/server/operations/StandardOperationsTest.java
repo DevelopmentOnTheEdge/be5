@@ -60,8 +60,8 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals("{" +
                         "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'name','columnSize':'20'}," +
-                            "'/value':{'displayName':'value','columnSize':'30'}}," +
+                        "'/name':{'displayName':'name','columnSize':'20'}," +
+                        "'/value':{'displayName':'value','columnSize':'30'}}," +
                         "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(first)));
 
@@ -78,15 +78,15 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editOperationGenerate()
     {
-        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
+        when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 1,
                 "ID", 12L
         )));
 
-        Object first = generateOperation("testtableAdmin", "All records", "Edit", "12","{}").getFirst();
+        Object first = generateOperation("testtableAdmin", "All records", "Edit", "12", "{}").getFirst();
 
-        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
 
         assertEquals("{'name':'TestName','value':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -99,11 +99,11 @@ public class StandardOperationsTest extends SqlMockOperationTest
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("propertyTypes"), Collections.emptyMap());
         dps.setValue("name", "TestName");
         dps.setValue("CODE", "02");
-        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+        when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(dps);
 
-        Object first = generateOperation("propertyTypes", "All records", "Edit", "01","{}").getFirst();
+        Object first = generateOperation("propertyTypes", "All records", "Edit", "01", "{}").getFirst();
 
-        verify(DbServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE = ?"),any(),eq("01"));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE = ?"), any(), eq("01"));
 
         assertEquals("{'CODE':'02','name':'TestName'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -138,7 +138,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
     private void executeEditWithParams(String params)
     {
-        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
+        when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 12345,
                 "ID", 12L
@@ -150,6 +150,6 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
-        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
     }
 }

@@ -34,25 +34,25 @@ public abstract class TestUtils
     {
         tpmProjectPath = tmp.newFolder().toPath();
         project = ProjectTestUtils.getProject("test");
-        Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
-        ProjectTestUtils.createScheme( entity );
-        ProjectTestUtils.createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
-        ProjectTestUtils.createScript( project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')" );
+        Entity entity = ProjectTestUtils.createEntity(project, "entity", "ID");
+        ProjectTestUtils.createScheme(entity);
+        ProjectTestUtils.createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')");
+        ProjectTestUtils.createScript(project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')");
         ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
 
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
-        query.getOperationNames().setValues( Collections.singleton( "op" ) );
+        query.getOperationNames().setValues(Collections.singleton("op"));
 
-        ProjectTestUtils.createOperation( entity, "op" );
+        ProjectTestUtils.createOperation(entity, "op");
 
-        Serialization.save( project, tpmProjectPath);
+        Serialization.save(project, tpmProjectPath);
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
         ModuleLoader2.loadAllProjects(urls);
 
         LoadContext ctx = new LoadContext();
-        ModuleLoader2.mergeAllModules( project, Collections.emptyList(), ctx );
+        ModuleLoader2.mergeAllModules(project, Collections.emptyList(), ctx);
     }
 
     void createTestDB() throws Exception

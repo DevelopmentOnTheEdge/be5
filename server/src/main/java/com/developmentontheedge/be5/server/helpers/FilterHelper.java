@@ -40,7 +40,7 @@ public class FilterHelper
         filterPresetValues.putAll(presetValues);
 
         List<String> searchPresets = new ArrayList<>();
-        if(!filterPresetValues.containsKey(SEARCH_PARAM))
+        if (!filterPresetValues.containsKey(SEARCH_PARAM))
         {
             searchPresets.addAll(
                     presetValues.entrySet()
@@ -49,10 +49,9 @@ public class FilterHelper
                             .map(Map.Entry::getKey)
                             .collect(Collectors.toList())
             );
-        }
-        else
+        } else
         {
-            if(filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
+            if (filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
             {
                 searchPresets.addAll(Arrays.asList(((String) filterPresetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
             }
@@ -60,7 +59,7 @@ public class FilterHelper
 
         for (DynamicProperty property : dps)
         {
-            if(!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
+            if (!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {
                 property.setValue(null);//remove defaultValue
             }
@@ -71,7 +70,7 @@ public class FilterHelper
         for (DynamicProperty property : dps)
         {
             property.setCanBeNull(true);
-            if(searchPresets.contains(property.getName()))property.setReadOnly(true);
+            if (searchPresets.contains(property.getName())) property.setReadOnly(true);
         }
 
         dps.add(new DynamicPropertyBuilder(SEARCH_PRESETS_PARAM, String.class)

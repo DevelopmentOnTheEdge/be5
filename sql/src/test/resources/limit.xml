@@ -2,15 +2,15 @@
 
 <testSuite name="count">
 
- <test name="limit-basic">
-  <parser>
-   <query><![CDATA[select * from persons]]></query>
-   <applyLimit count = "10"/>
-   <format dbms="mysql"><![CDATA[SELECT * FROM persons LIMIT 10]]></format>
-   <format dbms="sqlserver"><![CDATA[SELECT TOP 10 * FROM persons]]></format>
-   <format dbms="postgres"><![CDATA[SELECT * FROM persons LIMIT 10]]></format>
-   <format dbms="db2"><![CDATA[SELECT * FROM persons FETCH FIRST 10 ROWS ONLY]]></format>
-   <format dbms="oracle"><![CDATA[SELECT * FROM (SELECT * FROM persons) WHERE ROWNUM <= 10]]></format>
-  </parser>
- </test>
+  <test name="limit-basic">
+    <parser>
+      <query><![CDATA[select * from persons]]></query>
+      <applyLimit count="10"/>
+      <format dbms="mysql"><![CDATA[SELECT * FROM persons LIMIT 10]]></format>
+      <format dbms="sqlserver"><![CDATA[SELECT TOP 10 * FROM persons]]></format>
+      <format dbms="postgres"><![CDATA[SELECT * FROM persons LIMIT 10]]></format>
+      <format dbms="db2"><![CDATA[SELECT * FROM persons FETCH FIRST 10 ROWS ONLY]]></format>
+      <format dbms="oracle"><![CDATA[SELECT * FROM (SELECT * FROM persons) WHERE ROWNUM <= 10]]></format>
+    </parser>
+  </test>
 </testSuite>

@@ -17,7 +17,8 @@ import static org.mockito.Mockito.verify;
 
 public class QueryBuilderTest extends SqlMockOperationTest
 {
-    @Inject private QueryBuilderController component;
+    @Inject
+    private QueryBuilderController component;
 
     @Test
     public void generate()

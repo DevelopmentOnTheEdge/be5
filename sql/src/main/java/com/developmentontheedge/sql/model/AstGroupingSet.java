@@ -6,7 +6,7 @@ public class AstGroupingSet extends SimpleNode
 {
     public AstGroupingSet(int id)
     {
-        super( id );
+        super(id);
     }
 }
 /* JavaCC - OriginalChecksum=823145ac0ecce6ab2a8b3f1871bc54cb (do not edit this line) */

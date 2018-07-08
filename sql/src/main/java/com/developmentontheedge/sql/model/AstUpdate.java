@@ -10,7 +10,7 @@ public class AstUpdate extends SimpleNode
 
     public AstUpdate(AstTableName tableName, AstUpdateSetList astUpdateSetList)
     {
-        this( SqlParserTreeConstants.JJTUPDATE );
+        this(SqlParserTreeConstants.JJTUPDATE);
         addChild(tableName);
         addChild(astUpdateSetList);
     }
@@ -24,32 +24,31 @@ public class AstUpdate extends SimpleNode
     public AstUpdate where(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
-        if(!conditions.isEmpty()) where(new AstWhere(conditions));
+        if (!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;
     }
 
     public void where(AstWhere where)
     {
-        Objects.requireNonNull( where );
+        Objects.requireNonNull(where);
         AstWhere oldWhere = getWhere();
-        if(oldWhere == null)
+        if (oldWhere == null)
         {
             addChild(where);
-        }
-        else
+        } else
         {
-            oldWhere.replaceWith( where );
+            oldWhere.replaceWith(where);
         }
     }
 
     public AstWhere getWhere()
     {
-        return children().select( AstWhere.class ).findFirst().orElse( null );
+        return children().select(AstWhere.class).findFirst().orElse(null);
     }
 
     public AstUpdate whereInWithReplacementParameter(String columnName, int count)
     {
-        Objects.requireNonNull( columnName );
+        Objects.requireNonNull(columnName);
         where(AstWhere.withReplacementParameter(columnName, count));
         return this;
     }

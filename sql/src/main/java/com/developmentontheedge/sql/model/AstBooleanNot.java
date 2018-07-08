@@ -6,8 +6,8 @@ public class AstBooleanNot extends AstFunNode
 {
     public AstBooleanNot(int id)
     {
-        super( id );
-        setFunction( DefaultParserContext.FUNC_NOT );
+        super(id);
+        setFunction(DefaultParserContext.FUNC_NOT);
     }
 }
 /* JavaCC - OriginalChecksum=8ab21e1cffc567fd86a733b82f077bec (do not edit this line) */

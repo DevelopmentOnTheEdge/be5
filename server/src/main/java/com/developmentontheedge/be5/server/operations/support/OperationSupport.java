@@ -28,16 +28,25 @@ import java.util.Map;
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
 {
-    @Inject public Meta meta;
-    @Inject public DbService db;
-    @Inject public DatabaseModel database;
-    @Inject public DpsHelper dpsHelper;
-    @Inject public Validator validator;
-    @Inject public OperationsFactory operations;
-    @Inject public QueriesService queries;
+    @Inject
+    public Meta meta;
+    @Inject
+    public DbService db;
+    @Inject
+    public DatabaseModel database;
+    @Inject
+    public DpsHelper dpsHelper;
+    @Inject
+    public Validator validator;
+    @Inject
+    public OperationsFactory operations;
+    @Inject
+    public QueriesService queries;
 
-    @Inject protected Session session;
-    @Inject protected Request request;
+    @Inject
+    protected Session session;
+    @Inject
+    protected Request request;
 
     protected UserInfo userInfo;
 

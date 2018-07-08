@@ -72,11 +72,13 @@ public class Ast
     {
         String tableName;
 
-        InsertTable(String tableName) {
+        InsertTable(String tableName)
+        {
             this.tableName = tableName;
         }
 
-        public InsertValues fields(Object... columns){
+        public InsertValues fields(Object... columns)
+        {
             return new InsertValues(tableName, columns);
         }
     }
@@ -86,7 +88,8 @@ public class Ast
         String tableName;
         Object[] columns;
 
-        InsertValues(String tableName, Object[] columns) {
+        InsertValues(String tableName, Object[] columns)
+        {
             this.tableName = tableName;
             this.columns = columns;
         }
@@ -106,7 +109,8 @@ public class Ast
     {
         String tableName;
 
-        UpdateSet(String tableName) {
+        UpdateSet(String tableName)
+        {
             this.tableName = tableName;
         }
 
@@ -124,17 +128,20 @@ public class Ast
 
     private static SimpleNode valueMapper(Object x)
     {
-        if(x instanceof SimpleNode)return (SimpleNode)x;
-        if(x instanceof String) {
-            if("?".equals(x))return AstReplacementParameter.get();
+        if (x instanceof SimpleNode) return (SimpleNode) x;
+        if (x instanceof String)
+        {
+            if ("?".equals(x)) return AstReplacementParameter.get();
             return new AstStringConstant((String) x);
         }
         return new AstNumericConstant((Number) x);
     }
 
-    static AstFieldReference getAstFieldReference(Object column){
-        if(column instanceof AstFieldReference)return (AstFieldReference)column;
-        else {
+    static AstFieldReference getAstFieldReference(Object column)
+    {
+        if (column instanceof AstFieldReference) return (AstFieldReference) column;
+        else
+        {
             String stringColumn = (String) column;
             return new AstFieldReference(stringColumn, stringColumn.startsWith("_"));
         }
@@ -142,7 +149,7 @@ public class Ast
 
     public static ColumnList select(List<String> columns)
     {
-        if(columns.size() == 0)return ALL;
+        if (columns.size() == 0) return ALL;
         return new ColumnList(columns);
     }
 

@@ -10,6 +10,7 @@ public interface BeElementWithOriginModule extends BeModelElement
 
     /**
      * Set the module where this element is really defined
+     *
      * @param module
      */
     public void setOriginModuleName(String module);

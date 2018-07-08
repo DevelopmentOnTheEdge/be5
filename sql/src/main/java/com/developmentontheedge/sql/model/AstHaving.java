@@ -6,7 +6,7 @@ public class AstHaving extends SimpleNode
 {
     public AstHaving(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "HAVING";
     }
 }

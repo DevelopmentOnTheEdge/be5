@@ -8,19 +8,20 @@ public class AstExtract extends SimpleNode
 {
     public AstExtract(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "EXTRACT(";
         this.nodeSuffix = ")";
     }
 
     public AstExtract(String dateField, SimpleNode child)
     {
-        this( SqlParserTreeConstants.JJTEXTRACT );
-        setDateField( dateField );
-        addChild( child );
+        this(SqlParserTreeConstants.JJTEXTRACT);
+        setDateField(dateField);
+        addChild(child);
     }
 
     private String dateField;
+
     public void setDateField(String dateField)
     {
         this.dateField = dateField;
@@ -31,10 +32,10 @@ public class AstExtract extends SimpleNode
     {
         return dateField;
     }
-    
+
     public static Predicate<SimpleNode> isExtract(String dateField)
     {
-        return node -> node instanceof AstExtract && dateField.equals( ( (AstExtract)node ).getDateField() );
+        return node -> node instanceof AstExtract && dateField.equals(((AstExtract) node).getDateField());
     }
 }
 

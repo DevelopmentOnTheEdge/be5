@@ -7,27 +7,27 @@ public class BeConnectionProfilesRoot extends BeVectorCollection<BeConnectionPro
 {
 
     public static final String NAME = "Connection profiles";
-    
-    public BeConnectionProfilesRoot( final BeModelCollection<?> parent )
+
+    public BeConnectionProfilesRoot(final BeModelCollection<?> parent)
     {
-        super( NAME, BeConnectionProfiles.class, parent );
-        DataElementUtils.saveQuiet( new BeConnectionProfiles( BeConnectionProfileType.LOCAL, this ) );
-        DataElementUtils.saveQuiet( new BeConnectionProfiles( BeConnectionProfileType.REMOTE, this ) );
+        super(NAME, BeConnectionProfiles.class, parent);
+        DataElementUtils.saveQuiet(new BeConnectionProfiles(BeConnectionProfileType.LOCAL, this));
+        DataElementUtils.saveQuiet(new BeConnectionProfiles(BeConnectionProfileType.REMOTE, this));
     }
-    
-    public void setProfiles( final BeConnectionProfiles profiles )
+
+    public void setProfiles(final BeConnectionProfiles profiles)
     {
-        DataElementUtils.saveQuiet( profiles );
+        DataElementUtils.saveQuiet(profiles);
     }
-    
+
     public BeConnectionProfiles getLocalProfiles()
     {
-        return get( BeConnectionProfileType.LOCAL.getName() );
+        return get(BeConnectionProfileType.LOCAL.getName());
     }
-    
+
     public BeConnectionProfiles getRemoteProfiles()
     {
-        return get( BeConnectionProfileType.REMOTE.getName() );
+        return get(BeConnectionProfileType.REMOTE.getName());
     }
 
 }

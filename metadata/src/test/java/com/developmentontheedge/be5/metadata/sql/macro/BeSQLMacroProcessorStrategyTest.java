@@ -10,6 +10,6 @@ public class BeSQLMacroProcessorStrategyTest
     @Test
     public void testAsPk()
     {
-        assertEquals("TO_KEY( test )", Rdbms.BESQL.getMacroProcessorStrategy().castAsPrimaryKey( "test" ));
+        assertEquals("TO_KEY( test )", Rdbms.BESQL.getMacroProcessorStrategy().castAsPrimaryKey("test"));
     }
 }

@@ -20,19 +20,17 @@ public class ResponseUtils
 
         if (download)
         {
-            response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-        else
+            response.setHeader("Content-disposition", "attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+        } else
         {
-            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+            response.setHeader("Content-disposition", "filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
         }
 
         try
         {
             ByteStreams.copy(in, response.getOutputStream());
             in.close();
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             throw new RuntimeException(e);
         }

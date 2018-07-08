@@ -39,8 +39,7 @@ public class ConnectionServiceImpl implements ConnectionService
         if (conn != null)
         {
             return conn;
-        }
-        else
+        } else
         {
             conn = databaseService.getDataSource().getConnection();
             conn.setAutoCommit(false);
@@ -53,7 +52,7 @@ public class ConnectionServiceImpl implements ConnectionService
     public Connection beginTransaction() throws SQLException
     {
         Connection txConnection = getTxConnection();
-        if(TRANSACT_CONN_COUNT.get() == null)TRANSACT_CONN_COUNT.set(0);
+        if (TRANSACT_CONN_COUNT.get() == null) TRANSACT_CONN_COUNT.set(0);
         TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
         return txConnection;
     }
@@ -63,13 +62,12 @@ public class ConnectionServiceImpl implements ConnectionService
     {
         Connection txConnection = getCurrentTxConn();
         TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-        if(TRANSACT_CONN_COUNT.get() == 0)
+        if (TRANSACT_CONN_COUNT.get() == 0)
         {
             try
             {
                 txConnection.commit();
-            }
-            finally
+            } finally
             {
                 returnConnection(txConnection);
                 TRANSACT_CONN.set(null);
@@ -89,13 +87,11 @@ public class ConnectionServiceImpl implements ConnectionService
                 txConnection.rollback();
             }
             return returnRuntimeExceptionOrWrap(e);
-        }
-        catch (SQLException se)
+        } catch (SQLException se)
         {
             log.log(Level.SEVERE, "Unable to rollback transaction", se);
             return returnRuntimeExceptionOrWrap(e);
-        }
-        finally
+        } finally
         {
             returnConnection(txConnection);
             TRANSACT_CONN.set(null);
@@ -104,19 +100,21 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
     {
-        return e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
+        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
     }
 
     @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         Connection conn;
-        try {
+        try
+        {
             conn = beginTransaction();
             T res = executor.run(conn);
             endTransaction();
             return res;
-        } catch (Throwable e) {
+        } catch (Throwable e)
+        {
             throw rollbackTransaction(e);
         }
     }
@@ -127,7 +125,8 @@ public class ConnectionServiceImpl implements ConnectionService
         transactionWithResult(getWrapperExecutor(executor));
     }
 
-    private static SqlExecutor<Void> getWrapperExecutor(final SqlExecutorVoid voidExecutor) {
+    private static SqlExecutor<Void> getWrapperExecutor(final SqlExecutorVoid voidExecutor)
+    {
         return conn -> {
             voidExecutor.run(conn);
             return null;
@@ -138,7 +137,8 @@ public class ConnectionServiceImpl implements ConnectionService
     public Connection getConnection(boolean isReadOnly) throws SQLException
     {
         Connection conn = databaseService.getDataSource().getConnection();
-        if (isReadOnly) {
+        if (isReadOnly)
+        {
             conn.setReadOnly(true);
         }
         return conn;
@@ -147,7 +147,7 @@ public class ConnectionServiceImpl implements ConnectionService
     @Override
     public void releaseConnection(Connection conn)
     {
-        if ( !isInTransaction() )
+        if (!isInTransaction())
         {
             returnConnection(conn);
         }
@@ -159,17 +159,16 @@ public class ConnectionServiceImpl implements ConnectionService
         {
             try
             {
-                if(!conn.isClosed())
+                if (!conn.isClosed())
                 {
-                    if(!conn.getAutoCommit())
+                    if (!conn.getAutoCommit())
                         conn.setAutoCommit(true);
                     if (conn.isReadOnly())
                         conn.setReadOnly(false);
 
                     conn.close();
                 }
-            }
-            catch (SQLException e)
+            } catch (SQLException e)
             {
                 throw new RuntimeException(e);
             }

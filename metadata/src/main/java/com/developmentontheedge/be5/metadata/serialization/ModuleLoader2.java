@@ -61,27 +61,26 @@ public class ModuleLoader2
     {
         Project project = null;
 
-        if(modulesMap.size() == 0)
+        if (modulesMap.size() == 0)
         {
             throw new RuntimeException("modulesMap is empty");
         }
 
-        for (Map.Entry<String,Project> module: modulesMap.entrySet())
+        for (Map.Entry<String, Project> module : modulesMap.entrySet())
         {
-            if(module.getValue() != null && !module.getValue().isModuleProject())
+            if (module.getValue() != null && !module.getValue().isModuleProject())
             {
-                if(project != null)
+                if (project != null)
                 {
                     throw new RuntimeException("Several projects were found: " + project + ", " + module);
-                }
-                else
+                } else
                 {
                     project = module.getValue();
                 }
             }
         }
 
-        if(project == null)
+        if (project == null)
         {
             //todo create new not module project for tests?
             log.info("Project not found, try load main module.");
@@ -112,7 +111,7 @@ public class ModuleLoader2
 
     private static synchronized void loadAllProjects(boolean dirty, List<URL> additionalUrls)
     {
-        if( modulesMap != null && !dirty)
+        if (modulesMap != null && !dirty)
             return;
 
         try
@@ -122,8 +121,7 @@ public class ModuleLoader2
 
             urls.addAll(additionalUrls);
             loadAllProjects(urls);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -142,20 +140,21 @@ public class ModuleLoader2
 
                 Project module;
                 String ext = url.toExternalForm();
-                if( ext.indexOf('!') < 0 ) // usual file in directory
+                if (ext.indexOf('!') < 0) // usual file in directory
                 {
                     Path path = Paths.get(url.toURI()).getParent();
                     module = Serialization.load(path, loadContext);
                     log.fine("Load module from dir: " + path);
-                }
-                else // war or jar file
+                } else // war or jar file
                 {
                     String jar = ext.substring(0, ext.indexOf('!'));
                     FileSystem fs;// = FileSystems.getFileSystem(URI.create(jar));
 
-                    try {
+                    try
+                    {
                         fs = FileSystems.newFileSystem(URI.create(jar), Collections.emptyMap());
-                    } catch (FileSystemAlreadyExistsException e) {
+                    } catch (FileSystemAlreadyExistsException e)
+                    {
                         fs = FileSystems.getFileSystem(URI.create(jar));
                         log.fine("Get exists FileSystem after exception");
                     }
@@ -168,57 +167,56 @@ public class ModuleLoader2
                 loadContext.check();
                 modulesMap.put(module.getAppName(), module);
             }
-        }
-        catch (ProjectLoadException | IOException | URISyntaxException e){
+        } catch (ProjectLoadException | IOException | URISyntaxException e)
+        {
             e.printStackTrace();
         }
     }
-    
+
     public static String parse(URL url) throws IOException
     {
-        try(InputStream in = url.openStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8")))
+        try (InputStream in = url.openStream();
+             BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8")))
         {
             String ln = r.readLine();
             return ln.substring(0, ln.indexOf(':')).trim();
         }
     }
-    
+
     public static boolean containsModule(String name)
     {
         loadAllProjects(false);
-        
+
         return modulesMap.containsKey(name);
     }
-    
+
     public static Path getModulePath(String name)
     {
         loadAllProjects(false);
-        
+
         return modulesMap.get(name).getLocation();
     }
 
-    public static void addModuleScripts( Project project ) throws ReadException
+    public static void addModuleScripts(Project project) throws ReadException
     {
         loadAllProjects(false);
 
-        for ( Module module : project.getModules() )
+        for (Module module : project.getModules())
         {
             Serialization.loadModuleMacros(module);
         }
     }
 
-    public static List<Project> loadModules( Project application, ProcessController logger, LoadContext loadContext ) throws ProjectLoadException
+    public static List<Project> loadModules(Project application, ProcessController logger, LoadContext loadContext) throws ProjectLoadException
     {
         List<Project> result = new ArrayList<>();
-        for ( Module module : application.getModules() )
+        for (Module module : application.getModules())
         {
-            if ( containsModule(module.getName()) )
+            if (containsModule(module.getName()))
             {
                 Project moduleProject = modulesMap.get(module.getName());
-                result.add( moduleProject );
-            }
-            else
+                result.add(moduleProject);
+            } else
             {
                 throw new RuntimeException("Module project not found: '" + module.getName() + "'");
             }
@@ -240,9 +238,8 @@ public class ModuleLoader2
         LoadContext loadContext = new LoadContext();
         try
         {
-            ModuleLoader2.mergeAllModules( be5Project, logger, loadContext );
-        }
-        catch(ProjectLoadException e)
+            ModuleLoader2.mergeAllModules(be5Project, logger, loadContext);
+        } catch (ProjectLoadException e)
         {
             throw new ProjectLoadException("Merge modules", e);
         }
@@ -251,53 +248,53 @@ public class ModuleLoader2
     }
 
     private static void mergeAllModules(
-        final Project model,
-        final ProcessController logger,
-        final LoadContext context ) throws ProjectLoadException
+            final Project model,
+            final ProcessController logger,
+            final LoadContext context) throws ProjectLoadException
     {
         mergeAllModules(model, loadModules(model, logger, context), context);
     }
 
-    public static void mergeAllModules( final Project model, List<Project> modules, final LoadContext context ) throws ProjectLoadException
+    public static void mergeAllModules(final Project model, List<Project> modules, final LoadContext context) throws ProjectLoadException
     {
-        modules = new LinkedList<>( modules );
+        modules = new LinkedList<>(modules);
 
-        for ( Project module : modules )
+        for (Project module : modules)
         {
-            module.mergeHostProject( model );
+            module.mergeHostProject(model);
         }
 
-        final Project compositeModule = foldModules( model, modules, context );
-        if ( compositeModule != null )
+        final Project compositeModule = foldModules(model, modules, context);
+        if (compositeModule != null)
         {
-            model.merge( compositeModule );
+            model.merge(compositeModule);
         }
     }
 
-    private static Project foldModules( final Project model, final List<Project> modules, LoadContext context )
+    private static Project foldModules(final Project model, final List<Project> modules, LoadContext context)
     {
-        if ( modules.isEmpty() )
+        if (modules.isEmpty())
         {
             return null;
         }
 
         Project compositeModule = null;
 
-        for ( Project module : modules )
+        for (Project module : modules)
         {
-            if ( compositeModule != null )
+            if (compositeModule != null)
             {
-                module.getModules().merge( compositeModule.getModules(), true, true );
-                module.getApplication().merge( compositeModule.getModule( module.getProjectOrigin() ), true, true );
+                module.getModules().merge(compositeModule.getModules(), true, true);
+                module.getApplication().merge(compositeModule.getModule(module.getProjectOrigin()), true, true);
             }
 
-            module.applyMassChanges( context );
+            module.applyMassChanges(context);
             compositeModule = module;
 
-            if ( compositeModule.isModuleProject() )
+            if (compositeModule.isModuleProject())
             {
-                DataElementUtils.addQuiet( module.getModules(), module.getApplication() );
-                module.setApplication( new Module(model.getProjectOrigin(), model) );
+                DataElementUtils.addQuiet(module.getModules(), module.getApplication());
+                module.setApplication(new Module(model.getProjectOrigin(), model));
             }
         }
 
@@ -307,19 +304,19 @@ public class ModuleLoader2
     /**
      * Returns BeanExplorerProjectFileSystem for given module if possible
      */
-    public static ProjectFileSystem getFileSystem( Project app, String moduleName )
+    public static ProjectFileSystem getFileSystem(Project app, String moduleName)
     {
-        if ( app.getProjectOrigin().equals( moduleName ) )
+        if (app.getProjectOrigin().equals(moduleName))
         {
-            return new ProjectFileSystem( app );
+            return new ProjectFileSystem(app);
         }
         Path modulePath = ModuleLoader2.getModulePath(moduleName);
-        if ( modulePath != null )
+        if (modulePath != null)
         {
-            Project project = new Project( moduleName );
-            project.setLocation( modulePath );
-            project.setProjectFileStructure( new ProjectFileStructure( project ) );
-            return new ProjectFileSystem( project );
+            Project project = new Project(moduleName);
+            project.setLocation(modulePath);
+            project.setProjectFileStructure(new ProjectFileStructure(project));
+            return new ProjectFileSystem(project);
         }
 
         return null;
@@ -328,18 +325,17 @@ public class ModuleLoader2
     private static String logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder();
-        if(project.isModuleProject())
+        if (project.isModuleProject())
         {
             sb.append("Module      : ");
-        }
-        else
+        } else
         {
             sb.append("Project     : ");
         }
 
         sb.append(project.getName());
 
-        if(project.getModules().getSize()>0)
+        if (project.getModules().getSize() > 0)
         {
             sb.append("\nModules     : ").append(project.getModules().getNameList().stream().collect(joining(", ")));
         }
@@ -350,6 +346,7 @@ public class ModuleLoader2
 
     /**
      * For hot reload
+     *
      * @param urls projects URL
      */
     private static void replaceAndAddURLtoSource(List<URL> urls)
@@ -357,7 +354,7 @@ public class ModuleLoader2
         try
         {
             readDevPathsToSourceProjects();
-            if(pathsToProjectsToHotReload.isEmpty())return;
+            if (pathsToProjectsToHotReload.isEmpty()) return;
 
             StringBuilder sb = new StringBuilder();
             sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
@@ -376,7 +373,7 @@ public class ModuleLoader2
                         sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
-                if(!used)
+                if (!used)
                 {
                     URL url = moduleSource.getValue().resolve("project.yaml").toUri().toURL();
                     urls.add(url);
@@ -384,9 +381,8 @@ public class ModuleLoader2
                 }
             }
             sb.append("\n");
-            if(started)log.info(sb.toString());
-        }
-        catch (IOException e)
+            if (started) log.info(sb.toString());
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -409,28 +405,28 @@ public class ModuleLoader2
     /**
      * dev.yaml example:
      * paths:
-     *   testBe5app: /home/uuinnk/workspace/github/testBe5app
+     * testBe5app: /home/uuinnk/workspace/github/testBe5app
      *
      * @return Map name -> source path of modules
      */
     @SuppressWarnings("unchecked")
     static void readDevPathsToSourceProjects(List<URL> urls) throws IOException
     {
-        if(urls.size() > 1)
+        if (urls.size() > 1)
         {
             log.severe("dev.yaml should be only in the project.");
             throw new RuntimeException("dev.yaml should be only in the project.");
         }
 
-        if(urls.size() == 1)
+        if (urls.size() == 1)
         {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
             Map<String, Object> content = new Yaml().load(reader);
 
             initPathsForDev(content);
-            if(content.get("roles") != null)
+            if (content.get("roles") != null)
             {
-                devRoles = ( List<String> ) content.get("roles");
+                devRoles = (List<String>) content.get("roles");
                 log.info("Dev roles read - " + devRoles.toString());
             }
         }
@@ -439,16 +435,15 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     private static void initPathsForDev(Map<String, Object> content)
     {
-        Map<String, String> paths = ( Map<String, String> ) content.get("paths");
-        if(paths != null)
+        Map<String, String> paths = (Map<String, String>) content.get("paths");
+        if (paths != null)
         {
             for (Map.Entry<String, String> entry : paths.entrySet())
             {
-                if(Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
+                if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
                 {
                     pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
-                }
-                else
+                } else
                 {
                     log.severe("Error path in dev.yaml for " + entry.getKey());
                 }

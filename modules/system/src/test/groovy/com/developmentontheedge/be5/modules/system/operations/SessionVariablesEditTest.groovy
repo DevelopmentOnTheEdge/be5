@@ -14,34 +14,31 @@ import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
 
 
-class SessionVariablesEditTest extends SystemBe5ProjectTest
-{
+class SessionVariablesEditTest extends SystemBe5ProjectTest {
     @Before
-    void setUp(){
+    void setUp() {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER)
     }
 
     @Test
-    void testGet()
-    {
+    void testGet() {
         session.set("remoteAddr", "199.168.0.1")
 
         Object first = generateOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", "").getFirst()
 
         assertEquals("{" +
                 "'values':{" +
-                    "'label':'Тип: java.lang.String'," +
-                    "'newValue':'199.168.0.1'}," +
+                "'label':'Тип: java.lang.String'," +
+                "'newValue':'199.168.0.1'}," +
                 "'meta':{" +
-                    "'/label':{'displayName':'label','labelField':true}," +
-                    "'/newValue':{'displayName':'Новое значение:'}}," +
+                "'/label':{'displayName':'label','labelField':true}," +
+                "'/newValue':{'displayName':'Новое значение:'}}," +
                 "'order':['/label','/newValue']" +
-            "}", oneQuotes(JsonFactory.bean(first)))
+                "}", oneQuotes(JsonFactory.bean(first)))
     }
 
     @Test
-    void testInvoke()
-    {
+    void testInvoke() {
         session.set("remoteAddr", "199.168.0.1")
         //setSession("remoteAddr", "199.168.0.1")
 

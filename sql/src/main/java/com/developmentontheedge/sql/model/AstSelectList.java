@@ -6,26 +6,26 @@ public class AstSelectList extends SimpleNode
 {
     public AstSelectList(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstSelectList()
     {
-        this( SqlParserTreeConstants.JJTSELECTLIST );
+        this(SqlParserTreeConstants.JJTSELECTLIST);
     }
-    
-    public AstSelectList(SimpleNode ... childs)
+
+    public AstSelectList(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTSELECTLIST );
-        for( SimpleNode child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTSELECTLIST);
+        for (SimpleNode child : childs)
+            addChild(child);
     }
 
     public boolean isAllColumns()
     {
         return jjtGetNumChildren() == 0;
     }
-    
+
     @Override
     public String getNodeContent()
     {

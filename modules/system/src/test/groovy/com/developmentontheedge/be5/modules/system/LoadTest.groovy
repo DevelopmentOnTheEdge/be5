@@ -11,13 +11,12 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class LoadTest extends SystemBe5ProjectTest
-{
-    @Inject ProjectProvider projectProvider
+class LoadTest extends SystemBe5ProjectTest {
+    @Inject
+    ProjectProvider projectProvider
 
     @Test
-    void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
-    {
+    void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException {
         assertEquals("system", projectProvider.get().getAppName())
 
         BeModelCollection<Module> modules = projectProvider.get().getModules()
@@ -25,8 +24,7 @@ class LoadTest extends SystemBe5ProjectTest
     }
 
     @Test
-    void validate()
-    {
+    void validate() {
         new AppValidate().setBe5ProjectPath("./").execute()
     }
 }

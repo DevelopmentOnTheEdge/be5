@@ -20,7 +20,8 @@ import java.util.TreeMap;
 
 public class DataSource extends TableBuilderSupport
 {
-    @Inject private DataSourceService databaseService;
+    @Inject
+    private DataSourceService databaseService;
 
     @Override
     public TableModel getTableModel()

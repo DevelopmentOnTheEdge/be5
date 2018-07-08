@@ -20,7 +20,8 @@ import static org.junit.Assert.assertNull;
 
 public class FormTest extends ServerBe5ProjectTest
 {
-    @Inject private FormController component;
+    @Inject
+    private FormController component;
 
     @After
     public void tearDown()
@@ -38,8 +39,8 @@ public class FormTest extends ServerBe5ProjectTest
         assertNull(jsonApiModel.getErrors());
         assertNotNull(jsonApiModel.getData());
 
-        assertEquals("Insert", ((FormPresentation)jsonApiModel.getData().getAttributes()).getOperation());
-        assertEquals("All records", ((FormPresentation)jsonApiModel.getData().getAttributes()).getQuery());
+        assertEquals("Insert", ((FormPresentation) jsonApiModel.getData().getAttributes()).getOperation());
+        assertEquals("All records", ((FormPresentation) jsonApiModel.getData().getAttributes()).getQuery());
     }
 
     @Test

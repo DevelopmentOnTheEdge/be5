@@ -91,7 +91,7 @@ public class SqlHelper
         return Ast.delete(tableName).whereInPredicate(columnName, count).format();
     }
 
-    private static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+    private static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper)
     {

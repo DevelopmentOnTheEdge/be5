@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.exception.WriteException;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
@@ -22,41 +22,39 @@ import java.util.Objects;
 
 /**
  * Facade.
- * 
+ *
  * @author asko
- * 
  */
 public class Serialization
 {
     private static boolean automaticSerializationIsTurnedOn = true;
-    
+
     public static boolean automaticSerializationIsTurnedOn()
     {
         return automaticSerializationIsTurnedOn;
     }
-    
+
     private static void turnOffAutomaticSerialization()
     {
         automaticSerializationIsTurnedOn = false;
     }
-    
+
     private static void turnOnAutomaticSerialization()
     {
         automaticSerializationIsTurnedOn = true;
     }
 
-    public static void save( final Project project, final Path root ) throws ProjectSaveException
+    public static void save(final Project project, final Path root) throws ProjectSaveException
     {
-        Objects.requireNonNull( project );
-        Objects.requireNonNull( root );
+        Objects.requireNonNull(project);
+        Objects.requireNonNull(root);
 
         try
         {
-            new YamlSerializer().serializeProjectTo( project, root );
-        }
-        catch ( final WriteException e )
+            new YamlSerializer().serializeProjectTo(project, root);
+        } catch (final WriteException e)
         {
-            throw new ProjectSaveException( root, e );
+            throw new ProjectSaveException(root, e);
         }
     }
 //
@@ -163,9 +161,9 @@ public class Serialization
     /**
      * Determines whether the given folder contain any correct BeanExplorer project file.
      */
-    public static boolean canBeLoaded( final Path root )
+    public static boolean canBeLoaded(final Path root)
     {
-        return ProjectFileSystem.canBeLoaded( root );
+        return ProjectFileSystem.canBeLoaded(root);
     }
 //
 //    private static void checkProject( Project proj )
@@ -178,40 +176,39 @@ public class Serialization
 //        }
 //    }
 //
+
     /**
      * Tries to determine the project format.
      *
      * @see Serialization#canBeLoaded(Path)
      */
-    public static Project load( final Path root ) throws ProjectLoadException
+    public static Project load(final Path root) throws ProjectLoadException
     {
-        return load( root, null );
+        return load(root, null);
     }
-    
-    public static Project load( final Path root, final LoadContext loadContext ) throws ProjectLoadException
+
+    public static Project load(final Path root, final LoadContext loadContext) throws ProjectLoadException
     {
         return load(root, false, loadContext);
     }
-        
+
     /**
      * @param fuseTemplates whether to fuse templates into entities (useful for modules loading)
      * @see Serialization#canBeLoaded(Path)
      */
-    public static Project load( final Path root, final boolean fuseTemplates, final LoadContext loadContext ) throws ProjectLoadException
+    public static Project load(final Path root, final boolean fuseTemplates, final LoadContext loadContext) throws ProjectLoadException
     {
-        Objects.requireNonNull( root );
+        Objects.requireNonNull(root);
 
         turnOffAutomaticSerialization();
-        
+
         try
         {
-            return new YamlDeserializer( loadContext == null ? new LoadContext() : loadContext, fuseTemplates ).readProject( root );
-        }
-        catch ( final ReadException e )
+            return new YamlDeserializer(loadContext == null ? new LoadContext() : loadContext, fuseTemplates).readProject(root);
+        } catch (final ReadException e)
         {
-            throw new ProjectLoadException( root, e );
-        }
-        finally
+            throw new ProjectLoadException(root, e);
+        } finally
         {
             turnOnAutomaticSerialization();
         }
@@ -360,53 +357,50 @@ public class Serialization
 //            turnOnAutomaticSerialization();
 //        }
 //    }
-    
-    public static void loadModuleMacros( final Module module ) throws ReadException
+
+    public static void loadModuleMacros(final Module module) throws ReadException
     {
         final Path root = ModuleLoader2.getModulePath(module.getName());
-        
-        if ( root != null )
+
+        if (root != null)
         {
             turnOffAutomaticSerialization();
-            
+
             try
             {
-                new YamlDeserializer( new LoadContext() ).loadMacroFiles( module );
-            }
-            finally
+                new YamlDeserializer(new LoadContext()).loadMacroFiles(module);
+            } finally
             {
                 turnOnAutomaticSerialization();
             }
         }
     }
-    
-    public static Object derepresent( Node node )
+
+    public static Object derepresent(Node node)
     {
-        if ( node instanceof MappingNode )
+        if (node instanceof MappingNode)
         {
-            final List<NodeTuple> pairs = ( ( MappingNode ) node ).getValue();
+            final List<NodeTuple> pairs = ((MappingNode) node).getValue();
             final LinkedHashMap<Object, Object> result = new LinkedHashMap<>();
-            
-            for ( final NodeTuple pair : pairs )
-                result.put( derepresent( pair.getKeyNode() ), derepresent( pair.getValueNode() ) ) ;
-            
+
+            for (final NodeTuple pair : pairs)
+                result.put(derepresent(pair.getKeyNode()), derepresent(pair.getValueNode()));
+
             return result;
-        }
-        else if ( node instanceof SequenceNode )
+        } else if (node instanceof SequenceNode)
         {
-            final List<Node> value = ( ( SequenceNode ) node ).getValue();
+            final List<Node> value = ((SequenceNode) node).getValue();
             final ArrayList<Object> result = new ArrayList<>();
-            
-            for ( final Node child : value )
-                result.add( derepresent( child ) );
-            
+
+            for (final Node child : value)
+                result.add(derepresent(child));
+
             return result;
-        }
-        else if ( node instanceof ScalarNode )
+        } else if (node instanceof ScalarNode)
         {
-            return ( ( ScalarNode ) node ).getValue();
+            return ((ScalarNode) node).getValue();
         }
-        
+
         throw new AssertionError();
     }
 

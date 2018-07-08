@@ -37,20 +37,19 @@ public interface DbService
     default Long oneLong(String sql, Object... params)
     {
         Object number = one(sql, params);
-        if(number == null) return null;
+        if (number == null) return null;
 
         Long res;
-        if(number instanceof BigInteger)
+        if (number instanceof BigInteger)
         {
-            return ((BigInteger)number).longValue();
+            return ((BigInteger) number).longValue();
         }
-        if(!(number instanceof Long))
+        if (!(number instanceof Long))
         {
             res = Long.parseLong(number.toString());
-        }
-        else
+        } else
         {
-            res = (Long)number;
+            res = (Long) number;
         }
         return res;
     }

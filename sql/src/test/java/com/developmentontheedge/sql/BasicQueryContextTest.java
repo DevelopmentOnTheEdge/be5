@@ -13,12 +13,12 @@ public class BasicQueryContextTest
     public void testBuilder()
     {
         QueryContext context = new BasicQueryContext.Builder()
-            .parameter( "foo", "bar" )
-            .sessionVar( "var", "value" )
-            .build();
-        
-        assertEquals( "bar", context.getParameter( "foo" ) );
-        assertEquals( "value", context.getSessionVariable( "var" ) );
-        assertNull( context.getSessionVariable( "test" ) );
+                .parameter("foo", "bar")
+                .sessionVar("var", "value")
+                .build();
+
+        assertEquals("bar", context.getParameter("foo"));
+        assertEquals("value", context.getSessionVariable("var"));
+        assertNull(context.getSessionVariable("test"));
     }
 }

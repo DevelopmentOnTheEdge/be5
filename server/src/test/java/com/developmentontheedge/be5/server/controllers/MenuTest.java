@@ -17,7 +17,8 @@ import static org.mockito.Mockito.verify;
 
 public class MenuTest extends ServerBe5ProjectTest
 {
-    @Inject private MenuController component;
+    @Inject
+    private MenuController component;
 
     @Before
     public void init()

@@ -13,7 +13,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TableBuilderSupportTest extends ServerBe5ProjectTest
 {
-    @Inject private TableModelService tableModelService;
+    @Inject
+    private TableModelService tableModelService;
 
     @Test
     public void test()

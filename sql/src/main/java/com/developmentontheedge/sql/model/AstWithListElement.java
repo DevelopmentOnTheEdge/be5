@@ -4,9 +4,9 @@ public class AstWithListElement extends SimpleNode
 {
     public AstWithListElement(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     @Override
     public String getChildrenDelimiter(SimpleNode prev, SimpleNode next)
     {

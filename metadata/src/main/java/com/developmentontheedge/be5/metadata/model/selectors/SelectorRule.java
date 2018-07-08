@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 
 /**
  * Interface representing selector rule like .1D or [attr="value"]
+ *
  * @author lan
  */
 public interface SelectorRule

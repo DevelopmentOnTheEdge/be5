@@ -23,7 +23,7 @@ public class OperationContextTest
     public void getRecord()
     {
         OperationContext test = new OperationContext(new Long[]{1L}, "test", Collections.emptyMap());
-        assertEquals(1L, (long)test.getRecord());
+        assertEquals(1L, (long) test.getRecord());
 
         OperationContext test2 = new OperationContext(new String[]{"1"}, "test", Collections.emptyMap());
         assertEquals("1", test2.getRecord());
@@ -33,7 +33,7 @@ public class OperationContextTest
     public void getRecordError()
     {
         OperationContext test = new OperationContext(new Long[]{1L, 2L}, "test", Collections.emptyMap());
-        assertEquals(1L, (long)test.getRecord());
+        assertEquals(1L, (long) test.getRecord());
     }
 
 }

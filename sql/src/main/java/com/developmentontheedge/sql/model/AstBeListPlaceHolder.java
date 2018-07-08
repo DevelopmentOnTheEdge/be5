@@ -6,7 +6,7 @@ public class AstBeListPlaceHolder extends AstBePlaceHolder
 {
     public AstBeListPlaceHolder(int id)
     {
-        super( id );
+        super(id);
     }
 }
 /* JavaCC - OriginalChecksum=834f5db23a9a591e796bdecc285f30b1 (do not edit this line) */

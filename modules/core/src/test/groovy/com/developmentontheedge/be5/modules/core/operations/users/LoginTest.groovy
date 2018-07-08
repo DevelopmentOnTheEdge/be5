@@ -22,18 +22,17 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.when
 
-class LoginTest extends CoreBe5ProjectDbMockTest
-{
-    @Inject UserInfoProvider userInfoProvider
+class LoginTest extends CoreBe5ProjectDbMockTest {
+    @Inject
+    UserInfoProvider userInfoProvider
 
     @Before
-    void init(){
+    void init() {
         initUserWithRoles(RoleType.ROLE_GUEST)
     }
 
     @Test
-    void generate()
-    {
+    void generate() {
         def first = generateOperation(createOperation("users", "All records", "Login", "")).getFirst()
 
         assertEquals("{'values':{'user_name':'','user_pass':''},'meta':{'/user_name':{'displayName':'Логин','columnSize':'100'},'/user_pass':{'displayName':'Пароль','passwordField':true,'columnSize':'50'}},'order':['/user_name','/user_pass']}",
@@ -41,8 +40,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     }
 
     @Test
-    void execute()
-    {
+    void execute() {
 //        def request = mock(Request.class)
 //        UserInfoHolder.setRequest(request)
 //
@@ -55,7 +53,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
         when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
-                Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
+                Matchers.<ResultSetParser<String>> any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
         when(DbServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
@@ -86,8 +84,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
 
     @Test
     @Ignore
-    void loginAccessDenied()
-    {
+    void loginAccessDenied() {
 //        String testPass = "testPass"
 //        Response response = mock(Response.class)
 //        Request request = getMockRequest("")
@@ -106,8 +103,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
 
     @Test
     @Ignore
-    void error()
-    {
+    void error() {
 //        Response response = mock(Response.class)
 //
 //        component.generate(getMockRequest(""), response, injector)

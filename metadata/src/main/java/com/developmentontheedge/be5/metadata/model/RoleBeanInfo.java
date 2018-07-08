@@ -15,8 +15,8 @@ public class RoleBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add( new PropertyDescriptor( "name", beanClass, "getName", null ) );
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("usedInExtras");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
     }
 }

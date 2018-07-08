@@ -13,32 +13,32 @@ class TestHelpers
     {
         assertEquals(e1, e2);
         assertFalse(e1.getCustomizableProperties().isEmpty());
-        for(String prop : e1.getCustomizableProperties())
+        for (String prop : e1.getCustomizableProperties())
         {
-            Class<?> type = Beans.getBeanPropertyType( e2, prop );
-            if(type == String.class)
+            Class<?> type = Beans.getBeanPropertyType(e2, prop);
+            if (type == String.class)
             {
-                String oldValue = ( String ) Beans.getBeanPropertyValue( e2, prop );
-                Beans.setBeanPropertyValue( e2, prop, oldValue+"a" );
-                assertNotEquals( prop, e1, e2 );
-                Beans.setBeanPropertyValue( e2, prop, oldValue );
-                assertEquals( prop, e1, e2 );
-            } else if(type == boolean.class)
+                String oldValue = (String) Beans.getBeanPropertyValue(e2, prop);
+                Beans.setBeanPropertyValue(e2, prop, oldValue + "a");
+                assertNotEquals(prop, e1, e2);
+                Beans.setBeanPropertyValue(e2, prop, oldValue);
+                assertEquals(prop, e1, e2);
+            } else if (type == boolean.class)
             {
-                boolean oldValue = ( boolean ) Beans.getBeanPropertyValue( e2, prop );
-                Beans.setBeanPropertyValue( e2, prop, !oldValue );
-                assertNotEquals( prop, e1, e2 );
-                Beans.setBeanPropertyValue( e2, prop, oldValue );
-                assertEquals( prop, e1, e2 );
-            } else if(type == int.class)
+                boolean oldValue = (boolean) Beans.getBeanPropertyValue(e2, prop);
+                Beans.setBeanPropertyValue(e2, prop, !oldValue);
+                assertNotEquals(prop, e1, e2);
+                Beans.setBeanPropertyValue(e2, prop, oldValue);
+                assertEquals(prop, e1, e2);
+            } else if (type == int.class)
             {
-                int oldValue = ( int ) Beans.getBeanPropertyValue( e2, prop );
-                Beans.setBeanPropertyValue( e2, prop, oldValue+1 );
-                assertNotEquals( prop, e1, e2 );
-                Beans.setBeanPropertyValue( e2, prop, oldValue );
-                assertEquals( prop, e1, e2 );
+                int oldValue = (int) Beans.getBeanPropertyValue(e2, prop);
+                Beans.setBeanPropertyValue(e2, prop, oldValue + 1);
+                assertNotEquals(prop, e1, e2);
+                Beans.setBeanPropertyValue(e2, prop, oldValue);
+                assertEquals(prop, e1, e2);
             }
         }
-        
+
     }
 }

@@ -10,73 +10,73 @@ public class AstStringConstant extends SimpleNode
 {
     public AstStringConstant(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "'";
         nodeSuffix = "'";
     }
 
     public AstStringConstant(String val)
     {
-        this( SqlParserTreeConstants.JJTSTRINGCONSTANT );
-        setValue( val, false );
+        this(SqlParserTreeConstants.JJTSTRINGCONSTANT);
+        setValue(val, false);
     }
 
     public AstStringConstant(String val, boolean safed)
     {
-        this( SqlParserTreeConstants.JJTSTRINGCONSTANT );
-        setValue( val, safed );
+        this(SqlParserTreeConstants.JJTSTRINGCONSTANT);
+        setValue(val, safed);
     }
-    
+
     public AstStringConstant(AstStringPart stringPart)
     {
-        this( SqlParserTreeConstants.JJTSTRINGCONSTANT );
-        addChild( stringPart );
+        this(SqlParserTreeConstants.JJTSTRINGCONSTANT);
+        addChild(stringPart);
     }
-    
+
     @Override
     protected void formatBody(StringBuilder sb, Set<Token> printedSpecials)
     {
-        append( sb, getNodePrefix() );
-        if( children != null )
+        append(sb, getNodePrefix());
+        if (children != null)
         {
-            for( SimpleNode child : children )
+            for (SimpleNode child : children)
             {
-                child.format( sb, printedSpecials );
+                child.format(sb, printedSpecials);
             }
         }
-        sb.append( getNodeSuffix() );
+        sb.append(getNodeSuffix());
     }
 
     public String getValue()
     {
         return format().trim();
     }
-    
+
     protected boolean escape = false;
-    
+
     public void setEscape(boolean escape)
     {
         this.escape = escape;
         this.nodePrefix = escape ? "E'" : "'";
     }
-    
+
     public boolean isEscape()
     {
         return escape;
     }
-    
+
     public String getValueUnescaped()
     {
         String val = getValue();
-        return val.substring( 1, val.length()-1 ).replace( "''", "'" );
+        return val.substring(1, val.length() - 1).replace("''", "'");
     }
 
     public void setValue(String value, boolean safed)
     {
-        if( value.startsWith( "'" ) && value.endsWith( "'" ) )
-            value = value.substring( 1, value.length() - 1 );
+        if (value.startsWith("'") && value.endsWith("'"))
+            value = value.substring(1, value.length() - 1);
         removeChildren();
-        addChild( new AstStringPart( value, safed ) );
+        addChild(new AstStringPart(value, safed));
     }
 
     @Override
@@ -88,22 +88,22 @@ public class AstStringConstant extends SimpleNode
     @Override
     public boolean equals(Object obj)
     {
-        if( this == obj )
+        if (this == obj)
             return true;
-        if( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        final AstStringConstant other = (AstStringConstant)obj;
-        return Objects.equals( format().trim(), other.format().trim() );
+        final AstStringConstant other = (AstStringConstant) obj;
+        return Objects.equals(format().trim(), other.format().trim());
     }
-    
+
     public static Predicate<SimpleNode> isString(String str)
     {
-        return node -> node instanceof AstStringConstant && ( (AstStringConstant)node ).getValueUnescaped().equals( str );
+        return node -> node instanceof AstStringConstant && ((AstStringConstant) node).getValueUnescaped().equals(str);
     }
-    
+
     public static int getASCII(char c)
     {
-        switch( c )
+        switch (c)
         {
             case 'b':
                 return 8;
@@ -116,7 +116,7 @@ public class AstStringConstant extends SimpleNode
             case 'r':
                 return 13;
             default:
-                throw new IllegalArgumentException( "Unexpected char: " + c );
+                throw new IllegalArgumentException("Unexpected char: " + c);
         }
     }
 

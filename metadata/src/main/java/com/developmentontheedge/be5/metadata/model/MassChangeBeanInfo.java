@@ -14,8 +14,8 @@ public class MassChangeBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add(new PropertyDescriptor( "name", beanClass, "getName", null ));
-        add(new PropertyDescriptor( "computedSelector", beanClass, "getSelectorString", null ));
-        add(new PropertyDescriptor( "properties", beanClass, "getPropertiesString", null ));
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
+        add(new PropertyDescriptor("computedSelector", beanClass, "getSelectorString", null));
+        add(new PropertyDescriptor("properties", beanClass, "getPropertiesString", null));
     }
 }

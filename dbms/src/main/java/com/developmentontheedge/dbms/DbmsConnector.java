@@ -10,13 +10,13 @@ public interface DbmsConnector
 
     String getConnectString();
 
-    int executeUpdate( String query ) throws SQLException;
+    int executeUpdate(String query) throws SQLException;
 
-    ResultSet executeQuery( String sql ) throws SQLException;
+    ResultSet executeQuery(String sql) throws SQLException;
 
-    String executeInsert( String sql ) throws SQLException;
+    String executeInsert(String sql) throws SQLException;
 
-    void close( ResultSet rs );
+    void close(ResultSet rs);
 
     Connection getConnection() throws SQLException;
 

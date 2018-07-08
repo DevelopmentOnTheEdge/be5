@@ -63,11 +63,15 @@ public abstract class BaseTestUtils
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
-    @Inject protected Meta meta;
-    @Inject protected UserAwareMeta userAwareMeta;
-    @Inject protected DbService db;
+    @Inject
+    protected Meta meta;
+    @Inject
+    protected UserAwareMeta userAwareMeta;
+    @Inject
+    protected DbService db;
 
-    @Inject protected UserInfoProvider userInfoProvider;
+    @Inject
+    protected UserInfoProvider userInfoProvider;
 
     protected static final String TEST_USER = "testUser";
     //protected static final Jsonb jsonb = JsonbBuilder.create();
@@ -75,7 +79,7 @@ public abstract class BaseTestUtils
     @Before
     public void setUpBaseTestUtils()
     {
-        if(getInjector() != null)
+        if (getInjector() != null)
         {
             getInjector().injectMembers(this);
         }
@@ -107,17 +111,22 @@ public abstract class BaseTestUtils
         return s.toString().replace("'", "\"");
     }
 
-    public static String resultSetToString(ResultSet rs) {
+    public static String resultSetToString(ResultSet rs)
+    {
         List<String> list = new ArrayList<>();
-        try {
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                if(rs.getObject(i) != null)
+        try
+        {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
+            {
+                if (rs.getObject(i) != null)
                     list.add(rs.getObject(i).toString());
-                else{
+                else
+                {
                     list.add("null");
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             e.printStackTrace();
         }
         return list.stream().collect(Collectors.joining(","));
@@ -130,7 +139,7 @@ public abstract class BaseTestUtils
 
     public static <T extends DynamicPropertySet> T getDps(T dps, Map<String, ?> nameValues)
     {
-        for(Map.Entry<String, ?> entry : nameValues.entrySet())
+        for (Map.Entry<String, ?> entry : nameValues.entrySet())
         {
             dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
         }
@@ -143,8 +152,7 @@ public abstract class BaseTestUtils
         try
         {
             return new Date(df.parse(stringDate).getTime());
-        }
-        catch (ParseException e)
+        } catch (ParseException e)
         {
             throw new RuntimeException(e);
         }
@@ -170,7 +178,7 @@ public abstract class BaseTestUtils
             throw new RuntimeException(e);
         }
 
-        if(project.getConnectionProfileName() != null &&
+        if (project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
             log.info(JULLogger.infoBlock("Execute be5:create-db"));
@@ -181,10 +189,9 @@ public abstract class BaseTestUtils
                     .setLogger(new JULLogger(log))
                     .setBe5Project(project)
                     .execute();
-        }
-        else
+        } else
         {
-            log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
+            log.warning("Fail set '" + profileForIntegrationTests + "' profile, maybe DatabaseService already initialized.");
         }
     }
 
@@ -196,8 +203,7 @@ public abstract class BaseTestUtils
         try
         {
             connector.executeUpdate("DROP ALL OBJECTS");
-        }
-        catch(SQLException e)
+        } catch (SQLException e)
         {
             e.printStackTrace();
         }

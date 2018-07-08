@@ -6,13 +6,12 @@ import org.junit.Test
 
 import javax.inject.Inject
 
-class DataSourceQueryTest extends SystemBe5ProjectTest
-{
-    @Inject Meta meta
+class DataSourceQueryTest extends SystemBe5ProjectTest {
+    @Inject
+    Meta meta
 
     @Test
-    void get() throws Exception
-    {
+    void get() throws Exception {
         meta.getQuery("_system_", "DataSource");
 //        TableModel tableModel = new DataSource().initialize(
 //                injector.getMeta().getQuery("_system_", "DataSource Parameters"),

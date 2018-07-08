@@ -12,14 +12,14 @@ public class VariableSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        Project project = ((BeModelElement)getBean()).getProject();
+        Project project = ((BeModelElement) getBean()).getProject();
         Map<String, String> variableNames = project.getVariables();
-        String[] result = new String[variableNames.size()+1];
+        String[] result = new String[variableNames.size() + 1];
         result[0] = "(none)";
-        int i=1;
-        for(Entry<String, String> entry: variableNames.entrySet())
+        int i = 1;
+        for (Entry<String, String> entry : variableNames.entrySet())
         {
-            result[i++] = entry.getKey()+" ("+entry.getValue()+")"; 
+            result[i++] = entry.getKey() + " (" + entry.getValue() + ")";
         }
         return result;
     }
@@ -28,25 +28,25 @@ public class VariableSelector extends StringTagEditor
     public String getAsText()
     {
         String name = super.getAsText();
-        if(name.isEmpty())
+        if (name.isEmpty())
             return "(none)";
-        Project project = ((BeModelElement)getBean()).getProject();
-        String value = project.getVariableValue( name );
-        return name+" ("+value+")";
+        Project project = ((BeModelElement) getBean()).getProject();
+        String value = project.getVariableValue(name);
+        return name + " (" + value + ")";
     }
 
     @Override
-    public void setAsText( String text )
+    public void setAsText(String text)
     {
-        int pos = text.indexOf( '(' );
+        int pos = text.indexOf('(');
         String value;
-        if(pos >= 0)
+        if (pos >= 0)
         {
-            value = text.substring( 0, pos ).trim();
+            value = text.substring(0, pos).trim();
         } else
         {
             value = text.trim();
         }
-        super.setAsText( value );
+        super.setAsText(value);
     }
 }

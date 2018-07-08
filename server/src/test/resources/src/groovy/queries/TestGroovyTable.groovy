@@ -4,11 +4,9 @@ import com.developmentontheedge.be5.query.model.TableModel
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport
 
 
-class TestGroovyTable extends TableBuilderSupport
-{
+class TestGroovyTable extends TableBuilderSupport {
     @Override
-    TableModel getTableModel()
-    {
+    TableModel getTableModel() {
         addColumns(userInfo.getUserName())
 
         addRow(cells(userInfo.getCurrentRoles().toString()))

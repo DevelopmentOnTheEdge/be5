@@ -6,20 +6,20 @@ package com.developmentontheedge.dbms;
  */
 public enum DbmsType
 {
-    DB2( "db2", 50000 ),
-    ORACLE( "oracle", 1521 ),
-    SQLSERVER( "sqlserver", 1433 ),
-    POSTGRESQL( "postgres", 5432 ),
+    DB2("db2", 50000),
+    ORACLE("oracle", 1521),
+    SQLSERVER("sqlserver", 1433),
+    POSTGRESQL("postgres", 5432),
     BESQL("besql", 0),
     H2("h2", 0),
-    MYSQL( "mysql", 3306 )
-    {
-        @Override
-        public String quoteString( String input )
-        {
-            return "\'"+input.replace( "\\", "\\\\" ).replace( "\'", "\'\'" )+"\'";
-        }
-    };
+    MYSQL("mysql", 3306)
+            {
+                @Override
+                public String quoteString(String input)
+                {
+                    return "\'" + input.replace("\\", "\\\\").replace("\'", "\'\'") + "\'";
+                }
+            };
 
     private DbmsType(String name, int port)
     {
@@ -28,12 +28,14 @@ public enum DbmsType
     }
 
     private final String name;
+
     public String getName()
     {
         return name;
     }
 
     private final int defaultPort;
+
     public int getDefaultPort()
     {
         return defaultPort;
@@ -44,9 +46,9 @@ public enum DbmsType
     {
         return name;
     }
-    
+
     public String quoteString(String input)
     {
-        return "\'"+input.replace( "\'", "\'\'" )+"\'";
+        return "\'" + input.replace("\'", "\'\'") + "\'";
     }
 }

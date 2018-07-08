@@ -44,7 +44,7 @@ public class GroovyOperationLoader
             for (String operationName : operationNames)
             {
                 com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity.getName(), operationName);
-                if(operation.getType().equals(OPERATION_TYPE_GROOVY))
+                if (operation.getType().equals(OPERATION_TYPE_GROOVY))
                 {
                     GroovyOperation groovyOperation = (GroovyOperation) operation;
                     String fileName = groovyOperation.getFileName().replace("/", ".");
@@ -70,7 +70,7 @@ public class GroovyOperationLoader
 
         if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
         {
-            if(groovyRegister.getGroovyClasses().getIfPresent(superOperationCanonicalName) == null)
+            if (groovyRegister.getGroovyClasses().getIfPresent(superOperationCanonicalName) == null)
             {
                 ArrayList<String> list = new ArrayList<>(preloadSuperOperation(superOperation));
 
@@ -91,7 +91,7 @@ public class GroovyOperationLoader
         GroovyOperation groovyOperation = (GroovyOperation) operationMeta;
         String fileName = groovyOperation.getFileName();
         String canonicalName = fileName.replace("/", ".");
-        String simpleName = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
+        String simpleName = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length() - ".groovy".length()).trim();
 
         return groovyRegister.getClass(canonicalName, operationMeta.getCode(), simpleName + ".groovy");
     }
@@ -100,12 +100,12 @@ public class GroovyOperationLoader
     {
         GroovyOperation groovyOperation = (GroovyOperation) operationMeta;
         String fileName = groovyOperation.getFileName();
-        String className = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
+        String className = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length() - ".groovy".length()).trim();
         String classBegin = "class " + className + " extends ";
 
         String code = operationMeta.getCode();
         int superClassBeginPos = code.indexOf(classBegin);
-        if(superClassBeginPos == -1)return null;
+        if (superClassBeginPos == -1) return null;
 
         superClassBeginPos += classBegin.length();
         int superClassEndPos = Math.min(
@@ -124,7 +124,8 @@ public class GroovyOperationLoader
         String superOperationFullName = superOperationName + ".groovy";
 
         int lineBegin = code.indexOf("package ");
-        if(lineBegin != -1){
+        if (lineBegin != -1)
+        {
             int lineEnd = code.indexOf("\n", lineBegin);
             String line = code.substring(lineBegin, lineEnd);
             superOperationFullName = line.replace("package ", "").replace(";", "")
@@ -136,7 +137,8 @@ public class GroovyOperationLoader
         {
             int lineEnd = code.indexOf("\n", lineBegin);
             String line = code.substring(lineBegin, lineEnd);
-            if(line.contains("." + superOperationName)){
+            if (line.contains("." + superOperationName))
+            {
                 superOperationFullName = line.replace("import ", "").replace(";", "") + ".groovy";
             }
             lineBegin = code.indexOf("import ", lineEnd);

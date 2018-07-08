@@ -8,15 +8,27 @@ public class Context
     public Context(Dbms dbms)
     {
         this.dbms = dbms;
-        
-        switch(dbms)
+
+        switch (dbms)
         {
-        case DB2:        dbmsTransformer = new DB2Transformer();          break;
-        case MYSQL:      dbmsTransformer = new MySqlTransformer();        break;
-        case ORACLE:     dbmsTransformer = new OracleTransformer();       break;
-        case POSTGRESQL: dbmsTransformer = new PostgreSqlTransformer();   break;
-        case SQLSERVER:  dbmsTransformer = new SqlServerTransformer();    break;
-        case H2:         dbmsTransformer = new PostgreSqlTransformer();   break;
+            case DB2:
+                dbmsTransformer = new DB2Transformer();
+                break;
+            case MYSQL:
+                dbmsTransformer = new MySqlTransformer();
+                break;
+            case ORACLE:
+                dbmsTransformer = new OracleTransformer();
+                break;
+            case POSTGRESQL:
+                dbmsTransformer = new PostgreSqlTransformer();
+                break;
+            case SQLSERVER:
+                dbmsTransformer = new SqlServerTransformer();
+                break;
+            case H2:
+                dbmsTransformer = new PostgreSqlTransformer();
+                break;
         }
     }
 
@@ -27,6 +39,6 @@ public class Context
 
     public DbmsTransformer getDbmsTransformer()
     {
-        return dbmsTransformer;        
+        return dbmsTransformer;
     }
 }

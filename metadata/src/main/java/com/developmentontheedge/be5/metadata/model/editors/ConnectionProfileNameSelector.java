@@ -11,10 +11,10 @@ public class ConnectionProfileNameSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        final Project project = ( Project ) getBean();
+        final Project project = (Project) getBean();
         final String[] profileNames = project.getProfileNames();
-        
+
         return profileNames;
     }
-    
+
 }

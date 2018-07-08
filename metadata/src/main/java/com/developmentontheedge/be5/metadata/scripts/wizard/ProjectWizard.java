@@ -36,7 +36,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         private final String title;
         private final Runnable action;
 
-        public MenuAction( String title, Runnable action )
+        public MenuAction(String title, Runnable action)
         {
             this.title = title;
             this.action = action;
@@ -57,9 +57,13 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
     private interface MenuStrategy
     {
         void onRemove(String value);
+
         void apply(String[] values);
+
         String[] get();
+
         String validate(String value);
+
         String[] getAvaliableValues();
     }
 
@@ -74,8 +78,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             wizard();
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -92,43 +95,51 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
             try
             {
                 Serialization.save(projectGenerator.generate(), projectPath.toPath());
-            } catch(ProjectSaveException e)
+            } catch (ProjectSaveException e)
             {
                 e.printStackTrace();
             }
         });
 
-        final MenuAction[] actions = new MenuAction[] {
-            new MenuAction( "Change project name.", new Runnable() {
-                @Override
-                public void run() {
-                    selectProjectName( parameters );
-                }
-            } ),
-            new MenuAction( "Change roles.", new Runnable() {
-                @Override
-                public void run() {
-                    selectRoles( parameters );
-                }
-            } ),
-            new MenuAction( "Change languages.", new Runnable() {
-                @Override
-                public void run() {
-                    selectLanguages( parameters );
-                }
-            } ),
+        final MenuAction[] actions = new MenuAction[]{
+                new MenuAction("Change project name.", new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        selectProjectName(parameters);
+                    }
+                }),
+                new MenuAction("Change roles.", new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        selectRoles(parameters);
+                    }
+                }),
+                new MenuAction("Change languages.", new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        selectLanguages(parameters);
+                    }
+                }),
 //            new MenuAction( "Change features.", new Runnable() {
 //                @Override
 //                public void run() {
 //                    selectFeatures( parameters );
 //                }
 //            } ),
-            new MenuAction( "Change modules.", new Runnable() {
-                @Override
-                public void run() {
-                    selectModules( parameters );
-                }
-            } ),
+                new MenuAction("Change modules.", new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        selectModules(parameters);
+                    }
+                }),
 //            new MenuAction( "Change test user login.", new Runnable() {
 //                @Override
 //                public void run() {
@@ -149,95 +160,107 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //                    parameters.setCreateLoginAndLogoutOperations( !parameters.shouldCreateLoginAndLogoutOperations() );
 //                }
 //            } ),
-            finishAction
+                finishAction
         };
 
-        selectProjectName( parameters );
+        selectProjectName(parameters);
 
-        while ( true )
+        while (true)
         {
-            out.println( "Current state:" );
-            print( parameters );
+            out.println("Current state:");
+            print(parameters);
 
             StringBuilder sb = new StringBuilder();
-            sb.append("Actions:\n" );
-            for ( int i = 0; i < actions.length; i++ ){
-                String aString = "" + ( i + 1 ) + ". " + actions[i].getTitle() + "\n";
+            sb.append("Actions:\n");
+            for (int i = 0; i < actions.length; i++)
+            {
+                String aString = "" + (i + 1) + ". " + actions[i].getTitle() + "\n";
                 sb.append(aString);
             }
 
-            final int iAction = readInt(sb.toString(), 1, actions.length );
+            final int iAction = readInt(sb.toString(), 1, actions.length);
             actions[iAction - 1].run();
 
-            if ( actions[iAction - 1] == finishAction )
+            if (actions[iAction - 1] == finishAction)
                 break;
         }
     }
 
-    private void selectProjectName( final Parameters parameters )
+    private void selectProjectName(final Parameters parameters)
     {
-        parameters.setProjectName( readLine( "Project name: " ) );
+        parameters.setProjectName(readLine("Project name: "));
     }
 
-    private void selectRoles( final Parameters parameters )
+    private void selectRoles(final Parameters parameters)
     {
-        final Set<String> elementsToIgnore = Sets.newHashSet( "Administrator" );
+        final Set<String> elementsToIgnore = Sets.newHashSet("Administrator");
         final String addActionTitle = "Add role";
         final String addActionQuery = "Role name: ";
-        final MenuStrategy strategy = new MenuStrategy() {
+        final MenuStrategy strategy = new MenuStrategy()
+        {
             @Override
-            public void onRemove( String role ) {
+            public void onRemove(String role)
+            {
 //                if ( parameters.getTestUserRole().equals( role ) )
 //                    parameters.setTestUserRole( "Administrator" );
             }
 
             @Override
-            public void apply( String[] roles ) {
-                parameters.setRoles( roles );
+            public void apply(String[] roles)
+            {
+                parameters.setRoles(roles);
             }
 
             @Override
-            public String[] get() {
+            public String[] get()
+            {
                 return parameters.getRoles();
             }
 
             @Override
-            public String validate( String value ) {
+            public String validate(String value)
+            {
                 return null;
             }
 
             @Override
-            public String[] getAvaliableValues() {
+            public String[] getAvaliableValues()
+            {
                 return null;
             }
         };
 
-        showAddRemoveMenu( addActionTitle, addActionQuery, elementsToIgnore, strategy );
+        showAddRemoveMenu(addActionTitle, addActionQuery, elementsToIgnore, strategy);
     }
 
-    private void selectLanguages( final Parameters parameters )
+    private void selectLanguages(final Parameters parameters)
     {
-        final Set<String> elementsToIgnore = Sets.newHashSet( "ru" );
+        final Set<String> elementsToIgnore = Sets.newHashSet("ru");
         final String addActionTitle = "Add language";
         final String addActionQuery = "Language code: ";
-        final MenuStrategy strategy = new MenuStrategy() {
+        final MenuStrategy strategy = new MenuStrategy()
+        {
             @Override
-            public void onRemove( String language ) {
+            public void onRemove(String language)
+            {
                 // do nothing
             }
 
             @Override
-            public void apply( String[] languages ) {
-                parameters.setLanguages( languages );
+            public void apply(String[] languages)
+            {
+                parameters.setLanguages(languages);
             }
 
             @Override
-            public String[] get() {
+            public String[] get()
+            {
                 return parameters.getLanguages();
             }
 
             @Override
-            public String validate( String value ) {
+            public String validate(String value)
+            {
                 //final LanguagesService languagesService = new LanguagesService();
 //                if ( !Arrays.asList( languagesService.getLanguageCodes() ).contains( value ) )
 //                    return "Unknown language code '" + value + "'. Use one of " + Joiner.on( ", " ).join( languagesService.getLanguageCodes() ) + ".";
@@ -246,14 +269,16 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
             }
 
             @Override
-            public String[] getAvaliableValues() {
+            public String[] getAvaliableValues()
+            {
                 return null;
             }
         };
 
-        showAddRemoveMenu( addActionTitle, addActionQuery, elementsToIgnore, strategy );
+        showAddRemoveMenu(addActionTitle, addActionQuery, elementsToIgnore, strategy);
     }
-//
+
+    //
 //    private static void selectFeatures( final Parameters parameters )
 //    {
 //        final Set<String> elementsToIgnore = Sets.newHashSet( "logging" );
@@ -289,34 +314,40 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //        showAddRemoveMenu( addActionTitle, addActionQuery, elementsToIgnore, strategy );
 //    }
 //
-    private void selectModules( final Parameters parameters )
+    private void selectModules(final Parameters parameters)
     {
         final Set<String> elementsToIgnore = Collections.emptySet();
         final String addActionTitle = "Add module";
         final String addActionQuery = "Module: ";
-        final MenuStrategy strategy = new MenuStrategy() {
+        final MenuStrategy strategy = new MenuStrategy()
+        {
             @Override
-            public void onRemove( String module ) {
+            public void onRemove(String module)
+            {
                 // do nothing
             }
 
             @Override
-            public void apply( String[] modules ) {
-                parameters.setModules( modules );
+            public void apply(String[] modules)
+            {
+                parameters.setModules(modules);
             }
 
             @Override
-            public String[] get() {
+            public String[] get()
+            {
                 return parameters.getModules();
             }
 
             @Override
-            public String validate( String value ) {
+            public String validate(String value)
+            {
                 return null;
             }
 
             @Override
-            public String[] getAvaliableValues() {
+            public String[] getAvaliableValues()
+            {
 //                final Set<String> modules = Sets.newHashSet();
 //                modules.addAll( ModuleUtils.getAvailableModules() );
 //                modules.addAll( ModuleUtils.getAvailableLegacyModules() );
@@ -325,105 +356,110 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
             }
         };
 
-        showAddRemoveMenu( addActionTitle, addActionQuery, elementsToIgnore, strategy );
+        showAddRemoveMenu(addActionTitle, addActionQuery, elementsToIgnore, strategy);
     }
 
     private void showAddRemoveMenu(
-        final String addActionTitle,
-        final String addActionQuery,
-        final Set<String> elementsToIgnore,
-        final MenuStrategy strategy )
+            final String addActionTitle,
+            final String addActionQuery,
+            final Set<String> elementsToIgnore,
+            final MenuStrategy strategy)
     {
-        out.println( "Actions:" );
+        out.println("Actions:");
         final String[] items = strategy.get();
         final List<Runnable> actions = new ArrayList<>();
         int iAction = 1;
 
-        for ( final String item : items )
+        for (final String item : items)
         {
-            if ( !elementsToIgnore.contains( item ) )
+            if (!elementsToIgnore.contains(item))
             {
-                out.println( "" + iAction + ". Delete '" + item + "'" );
+                out.println("" + iAction + ". Delete '" + item + "'");
                 iAction++;
-                actions.add( new Runnable() {
+                actions.add(new Runnable()
+                {
                     @Override
-                    public void run() {
-                        final ArrayList<String> newItems = Lists.newArrayList( strategy.get() );
-                        newItems.remove( item );
-                        strategy.onRemove( item );
-                        strategy.apply( Iterables.toArray( newItems, String.class ) );
+                    public void run()
+                    {
+                        final ArrayList<String> newItems = Lists.newArrayList(strategy.get());
+                        newItems.remove(item);
+                        strategy.onRemove(item);
+                        strategy.apply(Iterables.toArray(newItems, String.class));
                     }
-                } );
+                });
             }
         }
 
-        out.println( "" + iAction + ". " + addActionTitle + "." );
+        out.println("" + iAction + ". " + addActionTitle + ".");
         iAction++;
-        actions.add( new Runnable() {
+        actions.add(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 final String[] avaliableValues = strategy.getAvaliableValues();
                 final String item;
-                if ( avaliableValues == null || avaliableValues.length == 0 )
-                    item = readLine( addActionQuery );
+                if (avaliableValues == null || avaliableValues.length == 0)
+                    item = readLine(addActionQuery);
                 else
                 {
-                    final TreeSet<String> items2 = Sets.newTreeSet( Sets.newHashSet( avaliableValues ) );
-                    items2.removeAll( Sets.newHashSet( strategy.get() ) );
+                    final TreeSet<String> items2 = Sets.newTreeSet(Sets.newHashSet(avaliableValues));
+                    items2.removeAll(Sets.newHashSet(strategy.get()));
 
-                    if ( items2.isEmpty() )
+                    if (items2.isEmpty())
                     {
-                        out.println( "Nothing to add." );
+                        out.println("Nothing to add.");
                         return;
                     }
 
                     int iValue = 0;
-                    final List<String> avaliableValues2 = Lists.newArrayList( items2 );
-                    out.println( addActionQuery );
+                    final List<String> avaliableValues2 = Lists.newArrayList(items2);
+                    out.println(addActionQuery);
 
-                    for ( final String avaliableValue : avaliableValues2 )
+                    for (final String avaliableValue : avaliableValues2)
                     {
                         iValue++;
-                        out.println( "" + iValue + ". " + avaliableValue );
+                        out.println("" + iValue + ". " + avaliableValue);
                     }
 
                     iValue++;
                     //out.println( "" + iValue + ". Back to the main menu." );
 
-                    final int itemIndex = readInt( "" + iValue + ". Back to the main menu.", 1, iValue );
+                    final int itemIndex = readInt("" + iValue + ". Back to the main menu.", 1, iValue);
 
-                    if ( itemIndex - 1 == avaliableValues2.size() )
+                    if (itemIndex - 1 == avaliableValues2.size())
                         return;
 
-                    item = avaliableValues2.get( itemIndex - 1 );
+                    item = avaliableValues2.get(itemIndex - 1);
                 }
 
-                final ArrayList<String> newItems = Lists.newArrayList( strategy.get() );
-                if ( newItems.contains( item ) )
-                    out.println( "Already added" );
-                else if ( strategy.validate( item ) != null )
+                final ArrayList<String> newItems = Lists.newArrayList(strategy.get());
+                if (newItems.contains(item))
+                    out.println("Already added");
+                else if (strategy.validate(item) != null)
                 {
-                    final String message = strategy.validate( item );
-                    out.println( message );
-                }
-                else
+                    final String message = strategy.validate(item);
+                    out.println(message);
+                } else
                 {
-                    newItems.add( item );
-                    strategy.apply( Iterables.toArray( newItems, String.class ) );
+                    newItems.add(item);
+                    strategy.apply(Iterables.toArray(newItems, String.class));
                 }
             }
-        } );
+        });
 
-        out.println( "" + iAction + ". Back to the main menu." );
-        actions.add( new Runnable() {
+        out.println("" + iAction + ". Back to the main menu.");
+        actions.add(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 // do nothing
             }
-        } );
+        });
 
-        final int iAction2 = readInt( 1, iAction );
-        actions.get( iAction2 - 1 ).run();
+        final int iAction2 = readInt(1, iAction);
+        actions.get(iAction2 - 1).run();
     }
 //
 //    private static void selectConnectionUrl( final Parameters parameters )
@@ -451,13 +487,13 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //        parameters.setConnectionUrl( connectionUrl );
 //    }
 
-    private void print( final Parameters parameters )
+    private void print(final Parameters parameters)
     {
-        out.println( "- Project name: " + parameters.getProjectName() );
-        out.println( "- Roles: "        + toString( parameters.getRoles() ) );
-        out.println( "- Languages: "    + toString( parameters.getLanguages() ) );
+        out.println("- Project name: " + parameters.getProjectName());
+        out.println("- Roles: " + toString(parameters.getRoles()));
+        out.println("- Languages: " + toString(parameters.getLanguages()));
         //out.println( "- Features: "     + toString( parameters.getFeatures() ) );
-        out.println( "- Modules: "      + toString( parameters.getModules() ) );
+        out.println("- Modules: " + toString(parameters.getModules()));
 //        out.println( "- Test user login: "    + parameters.getTestUserLogin() );
 //        out.println( "- Test user password: " + parameters.getTestUserPassword() );
 //        out.println( "- Test user role: "     + parameters.getTestUserRole() );
@@ -465,14 +501,14 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //        out.println( "- Create Login and Logout: " + parameters.shouldCreateLoginAndLogoutOperations() );
     }
 
-    private String toString( final String[] array )
+    private String toString(final String[] array)
     {
-        return Joiner.on( ", " ).join( array );
+        return Joiner.on(", ").join(array);
     }
 
-    private String readLine( final String query )
+    private String readLine(final String query)
     {
-        out.println( query );
+        out.println(query);
         return readLine();
     }
 
@@ -481,39 +517,37 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             return bufferedReader.readLine();
-        }
-        catch ( IOException e1 )
+        } catch (IOException e1)
         {
             throw new AssertionError();
         }
     }
 
-    private int readInt( final String query, int minimum, int maximum )
+    private int readInt(final String query, int minimum, int maximum)
     {
-        out.println( query );
+        out.println(query);
         return readInt(minimum, maximum);
     }
 
-    private int readInt( int minimum, int maximum )
+    private int readInt(int minimum, int maximum)
     {
-        while ( true )
+        while (true)
         {
             final String line = readLine();
             try
             {
-                final int integer = Integer.parseInt( line );
+                final int integer = Integer.parseInt(line);
 
-                if ( !( minimum <= integer && integer <= maximum ) )
+                if (!(minimum <= integer && integer <= maximum))
                 {
-                    out.println( "The integer should be between " + minimum + " and " + maximum  + " (inclusive). Write again:" );
+                    out.println("The integer should be between " + minimum + " and " + maximum + " (inclusive). Write again:");
                     continue;
                 }
 
                 return integer;
-            }
-            catch ( NumberFormatException e )
+            } catch (NumberFormatException e)
             {
-                out.println( "An integer is expected. Write again:" );
+                out.println("An integer is expected. Write again:");
             }
         }
     }
@@ -523,8 +557,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             this.inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        }
-        catch (UnsupportedEncodingException e)
+        } catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }
@@ -537,7 +570,9 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         return this;
     }
 
-    @Override public ProjectWizard me() {
+    @Override
+    public ProjectWizard me()
+    {
         return this;
     }
 }

@@ -8,16 +8,16 @@ public class IndexColumnDefBeanInfo extends BeanInfoEx
 {
     public IndexColumnDefBeanInfo()
     {
-        super( IndexColumnDef.class );
+        super(IndexColumnDef.class);
     }
 
     @Override
     protected void initProperties() throws Exception
     {
-        add( new PropertyDescriptorEx( "name", beanClass, "getName", null ) );
-        add( "transform", IndexTransformSelector.class );
+        add(new PropertyDescriptorEx("name", beanClass, "getName", null));
+        add("transform", IndexTransformSelector.class);
     }
-    
+
     public static class IndexTransformSelector extends StringTagEditor
     {
         @Override

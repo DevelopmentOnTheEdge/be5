@@ -15,7 +15,7 @@ public class AstInValueList extends SimpleNode
         checkArgument(count > 0);
 
         AstInValueList astInValueList = new AstInValueList(SqlParserTreeConstants.JJTINVALUELIST);
-        for (int i=0 ; i<count; i++)
+        for (int i = 0; i < count; i++)
         {
             astInValueList.addChild(AstReplacementParameter.get());
         }
@@ -34,7 +34,7 @@ public class AstInValueList extends SimpleNode
 
     public AstInValueList(int id)
     {
-        super( id );
+        super(id);
         this.childrenDelimiter = ",";
         this.nodePrefix = "(";
         this.nodeSuffix = ")";

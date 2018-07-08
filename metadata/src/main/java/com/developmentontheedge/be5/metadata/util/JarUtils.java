@@ -7,17 +7,18 @@ import java.nio.file.Paths;
 public class JarUtils
 {
 
-    public static Path resolveJarForClass(Class<?> clazz) {
-        URL url = clazz.getResource( clazz.getSimpleName()+".class" );
-        if ( url != null && url.getProtocol().equals( "jar" ) )
+    public static Path resolveJarForClass(Class<?> clazz)
+    {
+        URL url = clazz.getResource(clazz.getSimpleName() + ".class");
+        if (url != null && url.getProtocol().equals("jar"))
         {
             String urlPath = url.getPath();
-            if ( urlPath.startsWith( "file:/" ) )
+            if (urlPath.startsWith("file:/"))
             {
-                int endPos = urlPath.lastIndexOf( '!' );
-                if ( endPos > 0 )
+                int endPos = urlPath.lastIndexOf('!');
+                if (endPos > 0)
                 {
-                    return Paths.get( urlPath.substring( "file:/".length(), endPos ) );
+                    return Paths.get(urlPath.substring("file:/".length(), endPos));
                 }
             }
         }

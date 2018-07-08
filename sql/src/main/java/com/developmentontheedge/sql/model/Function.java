@@ -25,14 +25,16 @@ public interface Function
     // Properties
     //
 
-    /** 
-     * Returns the name of the node (operator symbol or function name). 
+    /**
+     * Returns the name of the node (operator symbol or function name).
+     *
      * @return the name of the node (operator symbol or function name).
      */
     String getName();
 
-    /** 
+    /**
      * Returns the function or operator priority.
+     *
      * @return the function or operator priority.
      */
     int getPriority();
@@ -40,15 +42,17 @@ public interface Function
     /**
      * Returns the lowest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
+     *
      * @return the lowest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
      */
     int maxNumberOfParams();
-    
-    
+
+
     /**
      * Returns the biggest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
+     *
      * @return the biggest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
      */
@@ -56,16 +60,16 @@ public interface Function
 
     default AstFunNode node(SimpleNode... arguments)
     {
-        if( maxNumberOfParams() >= 0 && ( arguments.length < minNumberOfParams() || arguments.length > maxNumberOfParams() ) )
+        if (maxNumberOfParams() >= 0 && (arguments.length < minNumberOfParams() || arguments.length > maxNumberOfParams()))
         {
-            throw new IllegalArgumentException( "Function " + getName() + " accepts "
-                    + ( minNumberOfParams() == maxNumberOfParams() ? minNumberOfParams()
-                            : "from " + minNumberOfParams() + " to " + maxNumberOfParams() )
-                    + " parameters (passed " + arguments.length + ")" );
+            throw new IllegalArgumentException("Function " + getName() + " accepts "
+                    + (minNumberOfParams() == maxNumberOfParams() ? minNumberOfParams()
+                    : "from " + minNumberOfParams() + " to " + maxNumberOfParams())
+                    + " parameters (passed " + arguments.length + ")");
         }
-        AstFunNode node = new AstFunNode( this );
-        for(SimpleNode child : arguments)
-            node.addChild( child );
+        AstFunNode node = new AstFunNode(this);
+        for (SimpleNode child : arguments)
+            node.addChild(child);
         return node;
     }
 }

@@ -6,16 +6,16 @@ public class AstNestedQuery extends SimpleNode
 {
     public AstNestedQuery(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "(";
         nodeSuffix = ")";
     }
 
-    public AstNestedQuery(SimpleNode ... childs)
+    public AstNestedQuery(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTNESTEDQUERY );
-        for( SimpleNode child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTNESTEDQUERY);
+        for (SimpleNode child : childs)
+            addChild(child);
     }
 }
 /* JavaCC - OriginalChecksum=38313e9a90b3cd42014302639521a439 (do not edit this line) */

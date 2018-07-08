@@ -6,5 +6,6 @@ import javax.inject.Inject;
 
 public abstract class TestOperationExtenderSupport extends BaseOperationExtenderSupport
 {
-    @Inject public DbService db;
+    @Inject
+    public DbService db;
 }

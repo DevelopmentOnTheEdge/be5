@@ -17,18 +17,21 @@ public class DynamicPropertyUtils
     private static final Logger log = Logger.getLogger(DynamicPropertyUtils.class.getName());
 
     static final Map<String, String> beanInfoConstants = new HashMap<>();
-    static {
+
+    static
+    {
         Field[] fields = BeanInfoConstants.class.getDeclaredFields();
         for (Field f : fields)
         {
-            if (Modifier.isStatic(f.getModifiers())) {
-                try{
-                    beanInfoConstants.put(f.getName(),
-                            BeanInfoConstants.class.getDeclaredField( f.getName() ).get( null ).toString());
-                }
-                catch( Exception exc )
+            if (Modifier.isStatic(f.getModifiers()))
+            {
+                try
                 {
-                    throw new RuntimeException( exc );
+                    beanInfoConstants.put(f.getName(),
+                            BeanInfoConstants.class.getDeclaredField(f.getName()).get(null).toString());
+                } catch (Exception exc)
+                {
+                    throw new RuntimeException(exc);
                 }
             }
         }
@@ -36,14 +39,14 @@ public class DynamicPropertyUtils
 
     static Object processValue(Object value, Class type)
     {
-        if(value != null && value.getClass() == GStringImpl.class)
+        if (value != null && value.getClass() == GStringImpl.class)
         {
             value = value.toString();
         }
 
-        if( type == java.sql.Date.class && value != null )
+        if (type == java.sql.Date.class && value != null)
         {
-            value = Utils.changeType( value, java.sql.Date.class );
+            value = Utils.changeType(value, java.sql.Date.class);
         }
 
         return value;
@@ -51,38 +54,36 @@ public class DynamicPropertyUtils
 
     static void setAttributes(DynamicProperty dp, Map<String, Object> map)
     {
-        String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
-        Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
+        String displayName = asString(removeFromMap(map, "DISPLAY_NAME"));
+        Boolean isHidden = (Boolean) removeFromMap(map, "HIDDEN");
 
-        if( displayName != null )dp.setDisplayName( displayName );
-        if( isHidden == Boolean.TRUE )dp.setHidden( true );
+        if (displayName != null) dp.setDisplayName(displayName);
+        if (isHidden == Boolean.TRUE) dp.setHidden(true);
 
-        for( String key : map.keySet() )
+        for (String key : map.keySet())
         {
             String attributeName = beanInfoConstants.get(key);
-            if( attributeName != null )
+            if (attributeName != null)
             {
-                dp.setAttribute( attributeName, map.get( key ) );
-            }
-            else
+                dp.setAttribute(attributeName, map.get(key));
+            } else
             {
                 log.warning("Not found attribute: " + key + " in BeanInfoConstants");
             }
         }
     }
 
-    static String asString( Object o )
+    static String asString(Object o)
     {
         return o != null ? o.toString() : null;
     }
 
-    static Object removeFromMap( Map map, Object element )
+    static Object removeFromMap(Map map, Object element)
     {
-        if( map.containsKey( element ) )
+        if (map.containsKey(element))
         {
-            return map.remove( element );
-        }
-        else
+            return map.remove(element);
+        } else
         {
             return null;
         }

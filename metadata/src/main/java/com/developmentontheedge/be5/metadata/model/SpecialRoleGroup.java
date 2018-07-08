@@ -10,10 +10,10 @@ public class SpecialRoleGroup extends RoleGroup
 {
     public static final String ALL_ROLES_GROUP = "AllRoles";
     public static final String ALL_ROLES_EXCEPT_GUEST_GROUP = "AllRolesExceptGuest";
-    
-    public SpecialRoleGroup( String name, BeModelCollection<RoleGroup> origin )
+
+    public SpecialRoleGroup(String name, BeModelCollection<RoleGroup> origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
 
     @Override
@@ -25,10 +25,10 @@ public class SpecialRoleGroup extends RoleGroup
     @Override
     public RoleSet getRoleSet()
     {
-        RoleSet roleSet = new RoleSet( this );
-        roleSet.addInclusionAll( getProject().getSecurityCollection().getRoleCollection().getNameList() );
-        if(getName().equals( ALL_ROLES_EXCEPT_GUEST_GROUP ))
-            roleSet.remove( "Guest" );
+        RoleSet roleSet = new RoleSet(this);
+        roleSet.addInclusionAll(getProject().getSecurityCollection().getRoleCollection().getNameList());
+        if (getName().equals(ALL_ROLES_EXCEPT_GUEST_GROUP))
+            roleSet.remove("Guest");
         return roleSet;
     }
 

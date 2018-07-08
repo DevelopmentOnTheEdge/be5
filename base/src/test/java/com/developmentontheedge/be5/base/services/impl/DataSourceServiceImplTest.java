@@ -13,12 +13,13 @@ import static org.junit.Assert.*;
 
 public class DataSourceServiceImplTest extends BaseTest
 {
-    @Inject private DataSourceService dataSourceService;
+    @Inject
+    private DataSourceService dataSourceService;
 
     @Test
     public void test() throws Exception
     {
-        BasicDataSource dataSource = (BasicDataSource)dataSourceService.getDataSource();
+        BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
         assertEquals("jdbc:h2:~/profileForIntegrationTestsServer", dataSource.getUrl());
         assertEquals("sa", dataSource.getUsername());
 

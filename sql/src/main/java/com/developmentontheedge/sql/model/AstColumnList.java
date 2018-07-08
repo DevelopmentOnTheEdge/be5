@@ -6,7 +6,7 @@ public class AstColumnList extends SimpleNode
 {
     public AstColumnList(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "(";
         nodeSuffix = ")";
         childrenDelimiter = ",";
@@ -14,16 +14,16 @@ public class AstColumnList extends SimpleNode
 
     public AstColumnList(AstFieldReference... childs)
     {
-        this( SqlParserTreeConstants.JJTCOLUMNLIST );
-        for( AstFieldReference child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTCOLUMNLIST);
+        for (AstFieldReference child : childs)
+            addChild(child);
     }
 
     public AstColumnList(AstIdentifierConstant... childs)
     {
-        this( SqlParserTreeConstants.JJTCOLUMNLIST );
-        for( AstIdentifierConstant child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTCOLUMNLIST);
+        for (AstIdentifierConstant child : childs)
+            addChild(child);
     }
 }
 /* JavaCC - OriginalChecksum=1229f88b53fdc7d4a4c2e53dff8fc946 (do not edit this line) */

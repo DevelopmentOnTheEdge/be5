@@ -14,39 +14,38 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
-class QueriesTest extends SystemBe5ProjectTest
-{
-    @Inject DocumentGenerator documentGenerator
-    @Inject Meta meta
+class QueriesTest extends SystemBe5ProjectTest {
+    @Inject
+    DocumentGenerator documentGenerator
+    @Inject
+    Meta meta
 
     @Before
-    void setUp(){
+    void setUp() {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER)
     }
 
     @Test
-    void getEntities()
-    {
+    void getEntities() {
         Query query = meta.getQuery("_system_", "Entities")
 
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
         assertTrue(table.getRows().stream()
-                .filter({ x -> ((CellModel)x.cells.get(0)).getContent() == "_system_"})
+                .filter({ x -> ((CellModel) x.cells.get(0)).getContent() == "_system_" })
                 .findFirst().present)
     }
 
     @Test
-    void getSessionVariables()
-    {
+    void getSessionVariables() {
         session.set("test", "value")
         Query query = meta.getQuery("_system_", "Session variables")
 
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
         assertEquals(true, table.getRows().stream()
-                .map({x -> x.id})
-                .filter({x -> x.equals("test")})
+                .map({ x -> x.id })
+                .filter({ x -> x.equals("test") })
                 .findFirst().isPresent())
 
 //        assertEquals("test", ((TableModel.CellModel)table.getRows().get(0).cells.get(0)).content)

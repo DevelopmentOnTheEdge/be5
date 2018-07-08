@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.scripts.AppDb;
 import org.apache.maven.plugins.annotations.Mojo;
 
 
-@Mojo( name = "create-db")
+@Mojo(name = "create-db")
 public class AppDbMojo extends Be5Mojo
 {
     @Override

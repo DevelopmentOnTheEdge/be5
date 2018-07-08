@@ -5,15 +5,17 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.ParserContext;
 
 /**
- * Interface to process DB specific issues. 
- * 
+ * Interface to process DB specific issues.
+ * <p>
  * For this purpose DB specific transformers modifies AST.
  */
 public interface DbmsTransformer
 {
     void transformAst(AstStart start);
+
     void transformQuery(AstQuery start);
 
     ParserContext getParserContext();
+
     void setParserContext(ParserContext parserContext);
 }

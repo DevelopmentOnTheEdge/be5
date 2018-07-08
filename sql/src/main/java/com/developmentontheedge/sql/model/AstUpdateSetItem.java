@@ -6,7 +6,7 @@ public class AstUpdateSetItem extends SimpleNode
 {
     public AstUpdateSetItem(AstFieldReference column, SimpleNode value)
     {
-        this( SqlParserTreeConstants.JJTUPDATESETITEM );
+        this(SqlParserTreeConstants.JJTUPDATESETITEM);
 
         addChild(DefaultParserContext.FUNC_EQ.node(column, value));
     }

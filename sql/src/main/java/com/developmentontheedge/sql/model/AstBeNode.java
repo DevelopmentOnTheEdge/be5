@@ -16,44 +16,44 @@ public abstract class AstBeNode extends SimpleNode
 
     public AstBeNode(int i)
     {
-        super( i );
+        super(i);
     }
-    
+
     public void init()
     {
-        AstBeParameterList list = this.children().select( AstBeParameterList.class ).findFirst().get();
-        for( int i = 0; i < list.jjtGetNumChildren() - 1; i++ )
+        AstBeParameterList list = this.children().select(AstBeParameterList.class).findFirst().get();
+        for (int i = 0; i < list.jjtGetNumChildren() - 1; i++)
         {
-            addParameter( list.child( i ).format().trim(), list.child( ++i ).format().trim() );
+            addParameter(list.child(i).format().trim(), list.child(++i).format().trim());
         }
-        this.removeChild( list );
+        this.removeChild(list);
     }
-       
+
     public void addParameter(String key, String value)
     {
         String oldValue = parameters.get(key);
-        if(oldValue != null)
+        if (oldValue != null)
         {
-            throw new IllegalArgumentException( "BE tag <" + tagName + ">: attribute: '" + key + "' is specified twice" );
+            throw new IllegalArgumentException("BE tag <" + tagName + ">: attribute: '" + key + "' is specified twice");
         }
-        setParameter( key, value );
+        setParameter(key, value);
     }
-    
+
     public void setParameter(String key, String value)
     {
-        Objects.requireNonNull( value );
-        if(allowedParameters != null && !allowedParameters.contains( key ) )
+        Objects.requireNonNull(value);
+        if (allowedParameters != null && !allowedParameters.contains(key))
         {
-            throw new IllegalArgumentException( "BE tag <" + tagName + ">: unsupported attribute: '" + key + "'" );
+            throw new IllegalArgumentException("BE tag <" + tagName + ">: unsupported attribute: '" + key + "'");
         }
-        if(value.startsWith( "\"" ) && value.endsWith( "\"" ) || value.startsWith( "'" ) && value.endsWith( "'" ))
-            value = value.substring( 1, value.length()-1 );
-        parameters.put( key, value );
+        if (value.startsWith("\"") && value.endsWith("\"") || value.startsWith("'") && value.endsWith("'"))
+            value = value.substring(1, value.length() - 1);
+        parameters.put(key, value);
     }
-    
+
     public String getParameter(String key)
     {
-        return parameters.get( key );
+        return parameters.get(key);
     }
 
     public Map<String, String> getParameters()
@@ -63,8 +63,8 @@ public abstract class AstBeNode extends SimpleNode
 
     public String getParametersString()
     {
-        String result = EntryStream.of( parameters ).mapKeyValue( (k, v) -> k+"=\""+v+"\"").joining( " ", " ", "" );
-        return result.equals( " " ) ? "" : result;
+        String result = EntryStream.of(parameters).mapKeyValue((k, v) -> k + "=\"" + v + "\"").joining(" ", " ", "");
+        return result.equals(" ") ? "" : result;
     }
 
     private String start()
@@ -80,37 +80,38 @@ public abstract class AstBeNode extends SimpleNode
     @Override
     protected void formatBody(StringBuilder sb, Set<Token> printedSpecial)
     {
-        if(tagName == null) {
-            super.formatBody( sb, printedSpecial );
+        if (tagName == null)
+        {
+            super.formatBody(sb, printedSpecial);
             return;
         }
-        append( sb, start() + tagName );
-        append( sb, getParametersString());
-        // TODO: support <sql ... /> 
-        if( children.isEmpty() && !tagName.equals( "sql" ) && !tagName.equals( "else" ) )
-            append( sb, "/"+end() );
+        append(sb, start() + tagName);
+        append(sb, getParametersString());
+        // TODO: support <sql ... />
+        if (children.isEmpty() && !tagName.equals("sql") && !tagName.equals("else"))
+            append(sb, "/" + end());
         else
         {
-            sb.append( ">" );
+            sb.append(">");
             SimpleNode prev = null;
-            for( SimpleNode child : children )
+            for (SimpleNode child : children)
             {
-                if( prev != null )
+                if (prev != null)
                 {
-                    append( sb, getChildrenDelimiter( prev, child ) );
+                    append(sb, getChildrenDelimiter(prev, child));
                 }
                 prev = child;
-                child.format( sb, printedSpecial );
+                child.format(sb, printedSpecial);
             }
-            append( sb, "</" + tagName + end() );
+            append(sb, "</" + tagName + end());
         }
     }
 
     @Override
     public SimpleNode clone()
     {
-        AstBeNode clone = (AstBeNode)super.clone();
-        clone.parameters = new LinkedHashMap<>( clone.parameters );
+        AstBeNode clone = (AstBeNode) super.clone();
+        clone.parameters = new LinkedHashMap<>(clone.parameters);
         return clone;
     }
 }

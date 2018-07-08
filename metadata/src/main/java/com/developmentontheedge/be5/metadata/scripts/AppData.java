@@ -34,84 +34,79 @@ public class AppData extends ScriptSupport<AppData>
         PrintStream ps = null;
         try
         {
-            ps = createPrintStream(be5Project.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql");
+            ps = createPrintStream(be5Project.getName() + "_scripts_" + script.replace(';', '_').replace(':', '.') + ".sql");
 
             ModuleLoader2.addModuleScripts(be5Project);
 
             List<FreemarkerScript> scripts = new ArrayList<>();
-            for(String scriptName : script.split(";"))
+            for (String scriptName : script.split(";"))
             {
-                int pos = scriptName.indexOf( ':' );
+                int pos = scriptName.indexOf(':');
                 FreemarkerCatalog scriptsCatalog = be5Project.getApplication().getFreemarkerScripts();
-                if(pos > 0)
+                if (pos > 0)
                 {
-                    String moduleName = scriptName.substring( 0, pos );
-                    scriptName = scriptName.substring( pos+1 );
-                    if(moduleName.equals( "all" ))
+                    String moduleName = scriptName.substring(0, pos);
+                    scriptName = scriptName.substring(pos + 1);
+                    if (moduleName.equals("all"))
                     {
-                        for(Module module : be5Project.getModules())
+                        for (Module module : be5Project.getModules())
                         {
                             scriptsCatalog = module.getFreemarkerScripts();
-                            if(scriptsCatalog == null)
+                            if (scriptsCatalog == null)
                                 continue;
-                            FreemarkerScript script = scriptsCatalog.optScript( scriptName );
-                            if(script == null)
+                            FreemarkerScript script = scriptsCatalog.optScript(scriptName);
+                            if (script == null)
                                 continue;
-                            scripts.add( script );
+                            scripts.add(script);
                         }
-                        FreemarkerScript script = be5Project.getApplication().getFreemarkerScripts().optScript( scriptName );
-                        if(script != null)
+                        FreemarkerScript script = be5Project.getApplication().getFreemarkerScripts().optScript(scriptName);
+                        if (script != null)
                         {
-                            scripts.add( script );
+                            scripts.add(script);
                         }
                         continue;
                     } else
                     {
-                        Module module = be5Project.getModule( moduleName );
-                        if(module == null)
+                        Module module = be5Project.getModule(moduleName);
+                        if (module == null)
                         {
-                            if(ignoreMissing)
+                            if (ignoreMissing)
                             {
-                                logger.error( "Warning: module '"+moduleName+"' not found" );
+                                logger.error("Warning: module '" + moduleName + "' not found");
                                 continue;
-                            }
-                            else
-                                throw new ScriptException( "Module '"+moduleName+"' not found" );
+                            } else
+                                throw new ScriptException("Module '" + moduleName + "' not found");
                         }
                         scriptsCatalog = module.getFreemarkerScripts();
                     }
                 }
-                FreemarkerScript freemarkerScript = scriptsCatalog == null ? null : scriptsCatalog.optScript( scriptName );
-                if(freemarkerScript == null)
+                FreemarkerScript freemarkerScript = scriptsCatalog == null ? null : scriptsCatalog.optScript(scriptName);
+                if (freemarkerScript == null)
                 {
-                    if(ignoreMissing)
+                    if (ignoreMissing)
                     {
-                        logger.error( "Warning: FTL script '"+scriptName+"' not found");
+                        logger.error("Warning: FTL script '" + scriptName + "' not found");
                         continue;
-                    }
-                    else
-                        throw new ScriptException("FTL script '"+scriptName+"' not found");
+                    } else
+                        throw new ScriptException("FTL script '" + scriptName + "' not found");
                 }
-                scripts.add( freemarkerScript );
+                scripts.add(freemarkerScript);
             }
-            SqlExecutor sqlExecutor = new BeSqlExecutor( connector, ps );
-            for(FreemarkerScript freemarkerScript : scripts)
+            SqlExecutor sqlExecutor = new BeSqlExecutor(connector, ps);
+            for (FreemarkerScript freemarkerScript : scripts)
             {
-                executeScript( sqlExecutor, freemarkerScript );
+                executeScript(sqlExecutor, freemarkerScript);
             }
-            DatabaseUtils.clearAllCache( sqlExecutor );
-        }
-        catch( ProjectElementException | FreemarkerSqlException e )
+            DatabaseUtils.clearAllCache(sqlExecutor);
+        } catch (ProjectElementException | FreemarkerSqlException e)
         {
             throw new ScriptException(e.getMessage(), e);
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
             throw new ScriptException(e.getMessage(), e);
-        }
-        finally
+        } finally
         {
-            if(ps != null)
+            if (ps != null)
             {
                 ps.close();
             }
@@ -119,24 +114,24 @@ public class AppData extends ScriptSupport<AppData>
 
         logSqlFilePath();
     }
-    
-    protected void executeScript( final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript ) throws ProjectElementException, IOException
+
+    protected void executeScript(final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript) throws ProjectElementException, IOException
     {
         String compiled = freemarkerScript.getResult().validate();
-        if(sqlPath != null)
+        if (sqlPath != null)
         {
             Files.write(
                     sqlPath.toPath().resolve(
                             be5Project.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
-                                + freemarkerScript.getName() + ".compiled" ), compiled.getBytes( StandardCharsets.UTF_8 ) );
+                                    + freemarkerScript.getName() + ".compiled"), compiled.getBytes(StandardCharsets.UTF_8));
         }
         String sql = compiled.trim();
-        if(sql.isEmpty())
+        if (sql.isEmpty())
             return;
         DataElementPath path = freemarkerScript.getCompletePath();
-        if(debug)
-            logger.error( sql );
-        sqlExecutor.comment( "Execute " + path );
+        if (debug)
+            logger.error(sql);
+        sqlExecutor.comment("Execute " + path);
         new FreemarkerSqlHandler(sqlExecutor, debug, logger).execute(freemarkerScript);
     }
 
@@ -152,7 +147,9 @@ public class AppData extends ScriptSupport<AppData>
         return this;
     }
 
-    @Override public AppData me() {
+    @Override
+    public AppData me()
+    {
         return this;
     }
 }

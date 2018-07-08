@@ -89,9 +89,9 @@ public interface Meta
 
     ColumnDef getColumn(Entity entity, String columnName);
 
-    default boolean columnExists( String entity, String column )
+    default boolean columnExists(String entity, String column)
     {
-        return getColumn( entity, column ) == null;
+        return getColumn(entity, column) == null;
     }
 
     default String getColumnDefaultValue(Entity entity, String columnName)
@@ -101,12 +101,12 @@ public interface Meta
 
     default String getColumnDefaultValue(ColumnDef column)
     {
-        if(column == null) return null;
+        if (column == null) return null;
 
         String defaultValue = column.getDefaultValue();
         if (defaultValue != null && defaultValue.startsWith("'") && defaultValue.endsWith("'"))
         {
-            defaultValue = defaultValue.substring(1,defaultValue.length()-1);
+            defaultValue = defaultValue.substring(1, defaultValue.length() - 1);
         }
         return defaultValue;
     }
@@ -118,6 +118,7 @@ public interface Meta
 //    boolean isNumericColumn(String entityName, String columnName);
 //
 //    boolean isNumericColumn(Entity entity, String columnName);
+
     /**
      * Returns a localized title. Takes into consideration its display name.
      */

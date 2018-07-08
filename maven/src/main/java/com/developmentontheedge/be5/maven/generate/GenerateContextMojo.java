@@ -7,7 +7,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 
-@Mojo( name = "generate-context")
+@Mojo(name = "generate-context")
 public class GenerateContextMojo extends Be5Mojo
 {
     @Parameter(property = "GENERATE_CONTEXT_PATH")

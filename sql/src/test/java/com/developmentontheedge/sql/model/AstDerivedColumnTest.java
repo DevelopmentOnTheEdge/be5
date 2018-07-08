@@ -29,6 +29,6 @@ public class AstDerivedColumnTest
         AstStart parse = SqlQuery.parse(sql);
         AstSelect astSelect = (AstSelect) parse.getQuery().child(0);
 
-        assertEquals("table.*", ((AstDerivedColumn)astSelect.getSelectList().child(0)).getColumn());
+        assertEquals("table.*", ((AstDerivedColumn) astSelect.getSelectList().child(0)).getColumn());
     }
 }

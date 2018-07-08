@@ -6,8 +6,8 @@ public class AstInsertValueList extends SimpleNode
 {
     public AstInsertValueList(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTINSERTVALUELIST );
-        for( SimpleNode child : childs )
+        this(SqlParserTreeConstants.JJTINSERTVALUELIST);
+        for (SimpleNode child : childs)
         {
             addChild(child);
         }

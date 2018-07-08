@@ -20,55 +20,56 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
 {
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
-    public DynamicPropertyMetaClass( Class<T> theClass )
+    public DynamicPropertyMetaClass(Class<T> theClass)
     {
-        super( theClass );
+        super(theClass);
     }
 
     public final static class AttributeAccessor extends GroovyObjectSupport
     {
         final private DynamicProperty dp;
-        private AttributeAccessor( DynamicProperty dp )
+
+        private AttributeAccessor(DynamicProperty dp)
         {
             this.dp = dp;
         }
 
         @Override
-        public Object getProperty( String name )
+        public Object getProperty(String name)
         {
             String attributeName = beanInfoConstants.get(name);
-            return dp.getAttribute( attributeName != null ? attributeName : name );
+            return dp.getAttribute(attributeName != null ? attributeName : name);
         }
 
         @Override
-        public void setProperty( String name, Object value )
+        public void setProperty(String name, Object value)
         {
             String attributeName = beanInfoConstants.get(name);
-            dp.setAttribute( attributeName != null ? attributeName : name, value );
+            dp.setAttribute(attributeName != null ? attributeName : name, value);
         }
     }
 
     @Override
-    public Object getProperty( Object object, String property )
+    public Object getProperty(Object object, String property)
     {
-        DynamicProperty dp = ( DynamicProperty )object;
-        if( "attr".equals( property ) )
+        DynamicProperty dp = (DynamicProperty) object;
+        if ("attr".equals(property))
         {
-            return new AttributeAccessor( dp );
+            return new AttributeAccessor(dp);
         }
-        return super.getProperty( object, property );
+        return super.getProperty(object, property);
     }
 
-    public static DynamicProperty leftShift( DynamicProperty dp, Map<String, Object> properties )
+    public static DynamicProperty leftShift(DynamicProperty dp, Map<String, Object> properties)
     {
         Map<String, Object> map = new HashMap<>(properties);
 
-        removeFromMap( map, "name" );
+        removeFromMap(map, "name");
 
-        Class type = ( Class )removeFromMap( map, "TYPE" );
-        if( type != null )dp.setType( type );
+        Class type = (Class) removeFromMap(map, "TYPE");
+        if (type != null) dp.setType(type);
 
-        if(map.containsKey("value"))
+        if (map.containsKey("value"))
         {
             Object value = processValue(removeFromMap(map, "value"), type);
             dp.setValue(value);

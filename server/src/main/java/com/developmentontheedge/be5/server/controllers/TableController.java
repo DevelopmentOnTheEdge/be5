@@ -40,7 +40,7 @@ public class TableController extends JsonApiModelController
 
         try
         {
-            switch(requestSubUrl)
+            switch (requestSubUrl)
             {
                 case "":
                     return documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
@@ -49,8 +49,7 @@ public class TableController extends JsonApiModelController
                 default:
                     return null;
             }
-        }
-        catch(Be5Exception e)
+        } catch (Be5Exception e)
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
             log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);

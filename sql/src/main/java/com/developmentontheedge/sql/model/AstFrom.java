@@ -11,26 +11,26 @@ public class AstFrom extends SimpleNode
 {
     public AstFrom(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "FROM";
     }
-    
+
     public AstFrom(AstTableRef... children)
     {
         this(SqlParserTreeConstants.JJTFROM);
-        for(AstTableRef child : children)
+        for (AstTableRef child : children)
             addChild(child);
     }
-    
+
     public boolean isDual()
     {
-        return children.size() == 1 && children.get( 0 ) instanceof AstTableRef
-                && "DUAL".equalsIgnoreCase( ( (AstTableRef)children.get( 0 ) ).getTable() );
+        return children.size() == 1 && children.get(0) instanceof AstTableRef
+                && "DUAL".equalsIgnoreCase(((AstTableRef) children.get(0)).getTable());
     }
-    
+
     public StreamEx<AstTableRef> tableRefs()
     {
-        return children().select( AstTableRef.class );
+        return children().select(AstTableRef.class);
     }
 
     @Override
@@ -41,18 +41,18 @@ public class AstFrom extends SimpleNode
 
     public static AstFrom createDual()
     {
-        return new AstFrom( new AstTableRef( "DUAL" ) );
+        return new AstFrom(new AstTableRef("DUAL"));
     }
-    
+
     public Optional<AstTableRef> getTableRef(String tableName)
     {
-        return tree().select( AstTableRef.class ).findFirst( ref -> tableName.equalsIgnoreCase( ref.getTable() ) );
+        return tree().select(AstTableRef.class).findFirst(ref -> tableName.equalsIgnoreCase(ref.getTable()));
     }
 
     public Optional<String> getTableAlias(String tableName)
     {
-        AstTableRef tableRef = getTableRef(tableName).orElse( null );
-        if(tableRef == null)
+        AstTableRef tableRef = getTableRef(tableName).orElse(null);
+        if (tableRef == null)
             return Optional.empty();
         String alias = tableRef.getAlias();
         return Optional.of(alias == null ? tableName : alias);

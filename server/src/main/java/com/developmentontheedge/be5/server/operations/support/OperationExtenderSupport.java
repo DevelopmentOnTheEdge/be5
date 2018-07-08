@@ -15,13 +15,20 @@ import javax.inject.Inject;
 
 public abstract class OperationExtenderSupport implements OperationExtender
 {
-    @Inject public Meta meta;
-    @Inject public DbService db;
-    @Inject public DatabaseModel database;
-    @Inject public DpsHelper dpsHelper;
-    @Inject public Validator validator;
-    @Inject public OperationsFactory operations;
-    @Inject public QueriesService queries;
+    @Inject
+    public Meta meta;
+    @Inject
+    public DbService db;
+    @Inject
+    public DatabaseModel database;
+    @Inject
+    public DpsHelper dpsHelper;
+    @Inject
+    public Validator validator;
+    @Inject
+    public OperationsFactory operations;
+    @Inject
+    public QueriesService queries;
 
     @Override
     public boolean skipInvoke(Operation op, Object parameters)

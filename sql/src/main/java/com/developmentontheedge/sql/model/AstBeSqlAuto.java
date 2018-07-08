@@ -6,7 +6,7 @@ public class AstBeSqlAuto extends SimpleNode
 {
     public AstBeSqlAuto(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "<sql auto=\"true\" />";
     }
 }

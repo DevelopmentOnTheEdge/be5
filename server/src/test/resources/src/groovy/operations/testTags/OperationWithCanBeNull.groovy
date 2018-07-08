@@ -7,16 +7,14 @@ import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
-class OperationWithCanBeNull extends SilentInsertOperation implements Operation
-{
+class OperationWithCanBeNull extends SilentInsertOperation implements Operation {
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception
-    {
+    Object getParameters(Map<String, Object> presetValues) throws Exception {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-                name       : "CODE",
-                value      : presetValues.get("CODE")
+                name : "CODE",
+                value: presetValues.get("CODE")
         ]
 
         dps << [
@@ -36,9 +34,8 @@ class OperationWithCanBeNull extends SilentInsertOperation implements Operation
     }
 
     @Override
-    void invoke(Object parameters) throws Exception
-    {
-        setResult(OperationResult.finished(((DynamicPropertySet)parameters).getValueAsString("referenceTest")))
+    void invoke(Object parameters) throws Exception {
+        setResult(OperationResult.finished(((DynamicPropertySet) parameters).getValueAsString("referenceTest")))
     }
 
 }

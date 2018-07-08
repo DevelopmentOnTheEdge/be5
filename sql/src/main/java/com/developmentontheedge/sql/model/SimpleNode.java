@@ -34,7 +34,7 @@ public class SimpleNode implements Node, Cloneable
 
     public SimpleNode(SqlParser p, int i)
     {
-        this( i );
+        this(i);
         parser = p;
     }
 
@@ -51,8 +51,8 @@ public class SimpleNode implements Node, Cloneable
     @Override
     public void jjtSetParent(Node n)
     {
-        parent = (SimpleNode)n;
-        if( parent.specialPrefix == specialPrefix )
+        parent = (SimpleNode) n;
+        if (parent.specialPrefix == specialPrefix)
         {
             this.specialPrefix = null;
         }
@@ -67,32 +67,33 @@ public class SimpleNode implements Node, Cloneable
     @Override
     public void jjtAddChild(Node n, int i)
     {
-        while( i >= children.size() )
-            children.add( null );
-        SimpleNode sn = (SimpleNode)n;
-        children.set( i, sn );
-        if( i == 0 && sn.specialPrefix == specialPrefix )
+        while (i >= children.size())
+            children.add(null);
+        SimpleNode sn = (SimpleNode) n;
+        children.set(i, sn);
+        if (i == 0 && sn.specialPrefix == specialPrefix)
         {
             sn.specialPrefix = null;
         }
-        if( i > 0 )
+        if (i > 0)
         {
-            updateSpecialSuffix( children.get( i - 1 ), sn );
+            updateSpecialSuffix(children.get(i - 1), sn);
         }
-        if( i < children.size() - 1 )
+        if (i < children.size() - 1)
         {
-            updateSpecialSuffix( sn, children.get( i + 1 ) );
+            updateSpecialSuffix(sn, children.get(i + 1));
         }
     }
 
     /**
      * Add given node to the end of children list setting its parent to this node
+     *
      * @param node node to add
      */
     public void addChild(SimpleNode node)
     {
-        node.jjtSetParent( this );
-        children.add( node );
+        node.jjtSetParent(this);
+        children.add(node);
     }
 
     public void addChilds(List<SimpleNode> nodes)
@@ -105,15 +106,15 @@ public class SimpleNode implements Node, Cloneable
 
     private void updateSpecialSuffix(SimpleNode prev, SimpleNode next)
     {
-        if( prev == null || next == null )
+        if (prev == null || next == null)
             return;
         Token prevEnd = prev.jjtGetLastToken();
         Token curStart = next.jjtGetFirstToken();
-        if( prev.specialSuffix == null && prevEnd != null && curStart != null && prevEnd.next != null && prevEnd.next.next == curStart )
+        if (prev.specialSuffix == null && prevEnd != null && curStart != null && prevEnd.next != null && prevEnd.next.next == curStart)
         {
             // single delimiter token in-between
             prev.specialSuffix = prevEnd.next.specialToken;
-            if( this.specialPrefix == prev.specialSuffix )
+            if (this.specialPrefix == prev.specialSuffix)
                 this.specialPrefix = null;
         }
     }
@@ -121,38 +122,39 @@ public class SimpleNode implements Node, Cloneable
     @Override
     public boolean removeChild(Node n)
     {
-        return children.remove( n );
+        return children.remove(n);
     }
 
     public SimpleNode removeChild(int idx)
     {
-        return children.remove( idx );
+        return children.remove(idx);
     }
 
     public void moveToFront(SimpleNode node)
     {
-        int pos = children.indexOf( node );
-        if( pos < 0 )
+        int pos = children.indexOf(node);
+        if (pos < 0)
             throw new NoSuchElementException();
-        children.remove( pos );
-        children.add( 0, node );
+        children.remove(pos);
+        children.add(0, node);
     }
 
     @Override
     public SimpleNode jjtGetChild(int i)
     {
-        return children.get( i );
+        return children.get(i);
     }
 
     /**
      * Shortcut for auto-generated jjtGetChild(i)
+     *
      * @param i child number (0-based)
      * @return requested child
      * @throws IndexOutOfBoundsException
      */
     public SimpleNode child(int i)
     {
-        return children.get( i );
+        return children.get(i);
     }
 
     @Override
@@ -179,7 +181,7 @@ public class SimpleNode implements Node, Cloneable
     public void jjtSetFirstToken(Token token)
     {
         this.firstToken = token;
-        if( children.isEmpty() )
+        if (children.isEmpty())
             this.specialPrefix = token == null ? null : token.specialToken;
     }
 
@@ -191,10 +193,10 @@ public class SimpleNode implements Node, Cloneable
     public void jjtSetLastToken(Token token)
     {
         this.lastToken = token;
-        if( !children.isEmpty() && token != null )
+        if (!children.isEmpty() && token != null)
         {
-            SimpleNode lastChild = children.get( children.size() - 1 );
-            if( lastChild.jjtGetLastToken() != null && lastChild.jjtGetLastToken().next == token )
+            SimpleNode lastChild = children.get(children.size() - 1);
+            if (lastChild.jjtGetLastToken() != null && lastChild.jjtGetLastToken().next == token)
             {
                 lastChild.specialSuffix = token.specialToken;
             }
@@ -227,21 +229,21 @@ public class SimpleNode implements Node, Cloneable
     public String dump()
     {
         StringBuilder sb = new StringBuilder();
-        dump( sb, "" );
+        dump(sb, "");
         return sb.toString();
     }
 
     protected void dump(StringBuilder ps, String prefix)
     {
-        ps.append( toString( prefix ) ).append( "\n" );
-        if( children != null )
+        ps.append(toString(prefix)).append("\n");
+        if (children != null)
         {
-            for( Node child : children )
+            for (Node child : children)
             {
-                SimpleNode n = (SimpleNode)child;
-                if( n != null )
+                SimpleNode n = (SimpleNode) child;
+                if (n != null)
                 {
-                    n.dump( ps, prefix + " " );
+                    n.dump(ps, prefix + " ");
                 }
             }
         }
@@ -250,81 +252,81 @@ public class SimpleNode implements Node, Cloneable
     public String format()
     {
         StringBuilder sb = new StringBuilder();
-        format( sb, Collections.newSetFromMap( new IdentityHashMap<>() ) );
+        format(sb, Collections.newSetFromMap(new IdentityHashMap<>()));
         return sb.toString();
     }
 
     protected static boolean isColliding(char left, char right)
     {
-        if( Character.isSpaceChar( right ) || Character.isSpaceChar( left ) || right == '\n' || left == '\n' || left == '.' || right == '.' )
+        if (Character.isSpaceChar(right) || Character.isSpaceChar(left) || right == '\n' || left == '\n' || left == '.' || right == '.')
             return false;
-        if( left == '(' || right == ')' )
+        if (left == '(' || right == ')')
             return false;
-        if( Character.isDigit( right ) || Character.isAlphabetic( right ) || right == '_' )
+        if (Character.isDigit(right) || Character.isAlphabetic(right) || right == '_')
             return true;
-        if( Character.isDigit( left ) || Character.isAlphabetic( left ) || left == '_' )
+        if (Character.isDigit(left) || Character.isAlphabetic(left) || left == '_')
             return right != ',' && right != ':';
-        if( left == ',' )
+        if (left == ',')
             return true;
-        if( left == '"' && right == '"' )
+        if (left == '"' && right == '"')
             return true;
-        if( left == '=' && right == '?' )
+        if (left == '=' && right == '?')
             return true;
         return false;
     }
 
     protected void append(StringBuilder sb, String token)
     {
-        if( token == null || token.isEmpty() )
+        if (token == null || token.isEmpty())
             return;
-        if( sb.length() > 0 && isColliding( sb.charAt( sb.length() - 1 ), token.charAt( 0 ) )
-                && ! ( token.length() > 2 && token.startsWith( "<" ) ) )
+        if (sb.length() > 0 && isColliding(sb.charAt(sb.length() - 1), token.charAt(0))
+                && !(token.length() > 2 && token.startsWith("<")))
         {
-            sb.append( ' ' );
+            sb.append(' ');
         }
-        sb.append( token );
+        sb.append(token);
     }
 
     protected void printSpecials(StringBuilder sb, Set<Token> printedSpecials, Token start)
     {
-        if( printedSpecials == null )
+        if (printedSpecials == null)
             return;
         List<Token> specials = new ArrayList<>();
-        while( start != null )
+        while (start != null)
         {
-            if( printedSpecials.add( start ) )
-                specials.add( start );
+            if (printedSpecials.add(start))
+                specials.add(start);
             start = start.specialToken;
         }
-        for( int i = specials.size() - 1; i >= 0; i-- )
-            append( sb, specials.get( i ).image );
+        for (int i = specials.size() - 1; i >= 0; i--)
+            append(sb, specials.get(i).image);
     }
 
     protected void format(StringBuilder sb, Set<Token> printedSpecials)
     {
-        printSpecials( sb, printedSpecials, getSpecialPrefix() );
-        formatBody( sb, printedSpecials );
-        printSpecials( sb, printedSpecials, getSpecialSuffix() );
+        printSpecials(sb, printedSpecials, getSpecialPrefix());
+        formatBody(sb, printedSpecials);
+        printSpecials(sb, printedSpecials, getSpecialSuffix());
     }
 
     protected void formatBody(StringBuilder sb, Set<Token> printedSpecials)
     {
-        append( sb, getNodePrefix() );
-        append( sb, getNodeContent() );
-        if( children != null )
+        append(sb, getNodePrefix());
+        append(sb, getNodeContent());
+        if (children != null)
         {
             SimpleNode prev = null;
-            for( SimpleNode child : children )
+            for (SimpleNode child : children)
             {
-                if( prev != null )
+                if (prev != null)
                 {
-                    append( sb, getChildrenDelimiter( prev, child ) );
+                    append(sb, getChildrenDelimiter(prev, child));
                 }
                 prev = child;
-                child.format( sb, printedSpecials );
+                child.format(sb, printedSpecials);
             }
         }
-        append( sb, getNodeSuffix() );
+        append(sb, getNodeSuffix());
     }
 
     @Override
@@ -335,12 +337,12 @@ public class SimpleNode implements Node, Cloneable
 
     public StreamEx<SimpleNode> children()
     {
-        return StreamEx.of( children );
+        return StreamEx.of(children);
     }
 
     public StreamEx<SimpleNode> tree()
     {
-        return StreamEx.ofTree( this, node -> node.jjtGetNumChildren() == 0 ? null : node.children() );
+        return StreamEx.ofTree(this, node -> node.jjtGetNumChildren() == 0 ? null : node.children());
     }
 
     @Override
@@ -348,17 +350,16 @@ public class SimpleNode implements Node, Cloneable
     {
         try
         {
-            SimpleNode clone = (SimpleNode)super.clone();
-            clone.children = new ArrayList<>( children.size() );
-            for( Node child : children )
+            SimpleNode clone = (SimpleNode) super.clone();
+            clone.children = new ArrayList<>(children.size());
+            for (Node child : children)
             {
-                SimpleNode childClone = ( (SimpleNode)child ).clone();
-                childClone.jjtSetParent( clone );
-                clone.children.add( childClone );
+                SimpleNode childClone = ((SimpleNode) child).clone();
+                childClone.jjtSetParent(clone);
+                clone.children.add(childClone);
             }
             return clone;
-        }
-        catch( CloneNotSupportedException e )
+        } catch (CloneNotSupportedException e)
         {
             throw new InternalError();
         }
@@ -381,6 +382,7 @@ public class SimpleNode implements Node, Cloneable
 
     /**
      * Returns delimiter between given nodes
+     *
      * @param prev previous node
      * @param next next node
      * @return the delimiter string
@@ -412,59 +414,61 @@ public class SimpleNode implements Node, Cloneable
 
     /**
      * Replace this node in its parent with given other nodes
+     *
      * @param nodes
      */
-    public void replaceWith(SimpleNode ... nodes)
+    public void replaceWith(SimpleNode... nodes)
     {
-        if( parent == null )
-            throw new IllegalStateException( this + ": No parent available" );
-        for( int i = 0; i < parent.jjtGetNumChildren(); i++ )
+        if (parent == null)
+            throw new IllegalStateException(this + ": No parent available");
+        for (int i = 0; i < parent.jjtGetNumChildren(); i++)
         {
-            if( parent.child( i ) == this )
+            if (parent.child(i) == this)
             {
-                if( nodes.length == 0 )
+                if (nodes.length == 0)
                 {
-                    parent.removeChild( i );
+                    parent.removeChild(i);
                     return;
                 }
                 SimpleNode node = nodes[0];
-                parent.jjtAddChild( node, i );
-                if( specialPrefix != null && node.specialPrefix == null )
+                parent.jjtAddChild(node, i);
+                if (specialPrefix != null && node.specialPrefix == null)
                 {
                     node.specialPrefix = specialPrefix;
                     specialPrefix = null;
                 }
-                node.jjtSetParent( parent );
-                for( int j = 1; j < nodes.length; j++ )
+                node.jjtSetParent(parent);
+                for (int j = 1; j < nodes.length; j++)
                 {
                     node = nodes[j];
-                    parent.children.add( i + 1, node );
-                    node.jjtSetParent( parent );
+                    parent.children.add(i + 1, node);
+                    node.jjtSetParent(parent);
                 }
                 return;
             }
         }
-        throw new IllegalStateException( this + ": Parent does not contain me" );
+        throw new IllegalStateException(this + ": Parent does not contain me");
     }
 
     /**
      * Insert given node to this node parent right after this node
+     *
      * @param node to insert
      */
     public void appendSibling(SimpleNode node)
     {
-        if( parent == null )
-            throw new IllegalStateException( this + ": No parent available" );
-        for( int i = 0; i < parent.jjtGetNumChildren(); i++ )
+        if (parent == null)
+            throw new IllegalStateException(this + ": No parent available");
+        for (int i = 0; i < parent.jjtGetNumChildren(); i++)
         {
-            if( parent.child( i ) == this )
+            if (parent.child(i) == this)
             {
-                parent.children.add( i + 1, node );
-                node.jjtSetParent( parent );
+                parent.children.add(i + 1, node);
+                node.jjtSetParent(parent);
                 return;
             }
         }
-        throw new IllegalStateException( this + ": Parent does not contain me" );
+        throw new IllegalStateException(this + ": Parent does not contain me");
     }
 
     /**
@@ -472,29 +476,31 @@ public class SimpleNode implements Node, Cloneable
      */
     public void remove()
     {
-        if( parent == null )
-            throw new IllegalStateException( this + ": No parent available" );
-        if( !parent.removeChild( this ) )
-            throw new IllegalStateException( this + ": Parent does not contain me" );
+        if (parent == null)
+            throw new IllegalStateException(this + ": No parent available");
+        if (!parent.removeChild(this))
+            throw new IllegalStateException(this + ": Parent does not contain me");
     }
 
     /**
      * Wraps current node with given node
+     *
      * @param node wrapper node
      */
     public void wrapWith(SimpleNode node)
     {
-        replaceWith( node );
-        node.addChild( this );
+        replaceWith(node);
+        node.addChild(this);
     }
 
     /**
      * Call when the supplied node is removed from the tree and replaced with this node
+     *
      * @param node to inherit from
      */
     public void inheritFrom(SimpleNode node)
     {
-        this.jjtSetParent( node.jjtGetParent() );
+        this.jjtSetParent(node.jjtGetParent());
         this.specialPrefix = node.specialPrefix;
         this.specialSuffix = node.specialSuffix;
     }
@@ -506,30 +512,30 @@ public class SimpleNode implements Node, Cloneable
 
     public int indexOf(SimpleNode node)
     {
-        return children.indexOf( node );
+        return children.indexOf(node);
     }
 
     /**
      * Returns other child of this node assuming that this node contains exactly two children
      *
      * @return other node
-     * @throws IllegalStateException if this node contains not two children
+     * @throws IllegalStateException    if this node contains not two children
      * @throws IllegalArgumentException if the supplied argument is not the child of this node
      */
     public SimpleNode other(SimpleNode child)
     {
-        if( children.size() != 2 )
-            throw new IllegalStateException( this + ": expected exactly two children" );
-        if( children.get( 1 ) == child )
-            return children.get( 0 );
-        if( children.get( 0 ) == child )
-            return children.get( 1 );
-        throw new IllegalArgumentException( child + ": is not the child of " + this );
+        if (children.size() != 2)
+            throw new IllegalStateException(this + ": expected exactly two children");
+        if (children.get(1) == child)
+            return children.get(0);
+        if (children.get(0) == child)
+            return children.get(1);
+        throw new IllegalArgumentException(child + ": is not the child of " + this);
     }
 
     public void pullUpPrefix()
     {
-        if( specialPrefix != null && parent != null && parent.specialPrefix == null )
+        if (specialPrefix != null && parent != null && parent.specialPrefix == null)
         {
             parent.specialPrefix = specialPrefix;
             this.specialPrefix = null;
@@ -538,16 +544,16 @@ public class SimpleNode implements Node, Cloneable
 
     public void pushDownPrefix()
     {
-        if( specialPrefix != null && !children.isEmpty() && children.get( 0 ).specialPrefix == null )
+        if (specialPrefix != null && !children.isEmpty() && children.get(0).specialPrefix == null)
         {
-            children.get( 0 ).specialPrefix = specialPrefix;
+            children.get(0).specialPrefix = specialPrefix;
             this.specialPrefix = null;
         }
     }
 
     public boolean isActual()
     {
-        return this.parent.children.contains( this );
+        return this.parent.children.contains(this);
     }
 }
 

@@ -10,11 +10,9 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 
 
-class DynamicPropertySetMetaClassTest extends RegisterMetaClass
-{
+class DynamicPropertySetMetaClassTest extends RegisterMetaClass {
     @Test
-    void leftShiftTest()
-    {
+    void leftShiftTest() {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
 
         DynamicPropertySetMetaClass.leftShift(dps, ImmutableMap.of(

@@ -6,19 +6,19 @@ public class AstCaseElse extends SimpleNode
 {
     public AstCaseElse(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "ELSE";
     }
 
     public AstCaseElse(SimpleNode elseBranch)
     {
         this(SqlParserTreeConstants.JJTCASEELSE);
-        addChild( elseBranch );
+        addChild(elseBranch);
     }
-    
+
     public SimpleNode getValue()
     {
-        return child( 0 );
+        return child(0);
     }
 }
 /* JavaCC - OriginalChecksum=feabdbca124d9be735efba5fd0852e7d (do not edit this line) */

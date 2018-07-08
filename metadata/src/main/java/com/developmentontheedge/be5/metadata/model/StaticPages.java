@@ -5,16 +5,16 @@ import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 public class StaticPages extends BeVectorCollection<LanguageStaticPages>
 {
 
-    public StaticPages( final Module module )
+    public StaticPages(final Module module)
     {
-        super( Module.STATIC_PAGES, LanguageStaticPages.class, module );
+        super(Module.STATIC_PAGES, LanguageStaticPages.class, module);
     }
-    
+
     @Override
     public void fireCodeChanged()
     {
-        if ( getModule().get( getName() ) == this )
-            getProject().getAutomaticSerializationService().fireCodeChanged( this );
+        if (getModule().get(getName()) == this)
+            getProject().getAutomaticSerializationService().fireCodeChanged(this);
     }
 
 }

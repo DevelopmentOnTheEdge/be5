@@ -37,7 +37,7 @@ public class UserInfo implements Serializable
         return userName;
     }
 
-    public void setUserName(String userName )
+    public void setUserName(String userName)
     {
         this.userName = userName;
     }
@@ -45,14 +45,14 @@ public class UserInfo implements Serializable
     public Locale getLocale()
     {
         String lang = locale.getLanguage();
-        if( !"kz".equals( lang ) )
+        if (!"kz".equals(lang))
             return locale;
         // fix for incorrect Kyrgyz language code in IE 6.0
         // should be 'ky' but IE sets it to 'kz'
-        return new Locale( "ky", locale.getCountry(), locale.getVariant() );
+        return new Locale("ky", locale.getCountry(), locale.getVariant());
     }
 
-    public void setLocale( Locale locale )
+    public void setLocale(Locale locale)
     {
         this.locale = locale;
     }
@@ -62,14 +62,14 @@ public class UserInfo implements Serializable
         return timeZone;
     }
 
-    public void setTimeZone( TimeZone timeZone )
+    public void setTimeZone(TimeZone timeZone)
     {
         this.timeZone = timeZone;
     }
 
-    public void setTimeZone( String timeZoneID )
+    public void setTimeZone(String timeZoneID)
     {
-        this.timeZone = timeZoneID != null ? TimeZone.getTimeZone( timeZoneID ) : null;
+        this.timeZone = timeZoneID != null ? TimeZone.getTimeZone(timeZoneID) : null;
     }
 
     public Timestamp getLoggedInTime()
@@ -97,7 +97,7 @@ public class UserInfo implements Serializable
         return creationTime;
     }
 
-    public boolean isUserInRole( String role )
+    public boolean isUserInRole(String role)
     {
         return currentRoles.contains(role);
     }

@@ -9,69 +9,59 @@ import static com.developmentontheedge.beans.BeanInfoConstants.*
 import static org.junit.Assert.*
 
 
-class DynamicPropertiesGroovyTest extends RegisterMetaClass
-{
+class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     @Test
-    void testSetValue()
-    {
+    void testSetValue() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps[ "property" ] = "value"
-        assertEquals "value", dps.getValue( "property" )
+        dps["property"] = "value"
+        assertEquals "value", dps.getValue("property")
     }
 
     @Test
-    void testGetValue()
-    {
+    void testGetValue() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "property", String.class ).value( "value" )
+        dps.build("property", String.class).value("value")
 
         assertEquals "value", dps.$property
     }
 
     @Test
-    void testGetProperty()
-    {
+    void testGetProperty() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "property", String.class ).value( "value" )
+        dps.build("property", String.class).value("value")
 
         assertTrue dps.property instanceof DynamicProperty
         assertEquals "value", dps.property.value
     }
 
     @Test
-    void testGetMissingValue()
-    {
+    void testGetMissingValue() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         assertNull dps.$property
     }
 
     @Test
-    void testPropertyAccess()
-    {
+    void testPropertyAccess() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "property", String.class ).value( "value" )
+        dps.build("property", String.class).value("value")
         assertEquals "value", dps._property.value
     }
 
     @Test
-    void testGetMissingValueWithoutAccessor()
-    {
+    void testGetMissingValueWithoutAccessor() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         boolean assertException = false
-        try
-        {
+        try {
             dps.property
         }
-        catch( MissingPropertyException e )
-        {
+        catch (MissingPropertyException e) {
             assertException = true
         }
         assertTrue assertException
     }
 
     @Test
-    void testCreateProperty()
-    {
+    void testCreateProperty() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         dps << [
                 name            : "testProperty",
@@ -91,62 +81,56 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
         assertTrue property.hidden
 
         final def tags = ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd']
-        assertEquals tags, property.getAttribute( TAG_LIST_ATTR )
-        assertTrue((boolean)property.getAttribute( RELOAD_ON_CHANGE ))
-        assertTrue((boolean)property.getAttribute( RAW_VALUE ))
+        assertEquals tags, property.getAttribute(TAG_LIST_ATTR)
+        assertTrue((boolean) property.getAttribute(RELOAD_ON_CHANGE))
+        assertTrue((boolean) property.getAttribute(RAW_VALUE))
     }
 
     @Test
-    void testAddProperty()
-    {
-        DynamicPropertySet dps = [ a : "a", b : "b" ] as DynamicPropertySetSupport
-        DynamicProperty property = new DynamicProperty( "d", String, "d" )
-        assertTrue ( ( dps << property ).hasProperty( "d" ) )
-        assertTrue dps.hasProperty( "d" )
+    void testAddProperty() {
+        DynamicPropertySet dps = [a: "a", b: "b"] as DynamicPropertySetSupport
+        DynamicProperty property = new DynamicProperty("d", String, "d")
+        assertTrue((dps << property).hasProperty("d"))
+        assertTrue dps.hasProperty("d")
     }
 
     @Test
-    void testGetAttribute()
-    {
+    void testGetAttribute() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" )
+        dps.build("test", String.class).attr(INPUT_SIZE_ATTR, "10")
 
-        assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
+        assertEquals dps._test.attr[INPUT_SIZE_ATTR], "10"
     }
 
     @Test
-    void testGetAttributeStringConstant()
-    {
+    void testGetAttributeStringConstant() {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" )
+        dps.build("test", String.class).attr(INPUT_SIZE_ATTR, "10")
 
-        assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
+        assertEquals dps._test.attr[INPUT_SIZE_ATTR], "10"
         assertEquals dps._test.attr.INPUT_SIZE_ATTR, "10"
     }
 
     @Test
-    void testSetAttribute()
-    {
+    void testSetAttribute() {
         def DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class )
+        dps.build("test", String.class)
 
-        dps._test.attr[ INPUT_SIZE_ATTR ] = "10"
-        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10"
+        dps._test.attr[INPUT_SIZE_ATTR] = "10"
+        assertEquals dps._test.getAttribute(INPUT_SIZE_ATTR), "10"
     }
 
     @Test
-    void testSetAttributeStringConstant()
-    {
+    void testSetAttributeStringConstant() {
         def DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class )
+        dps.build("test", String.class)
 
-        dps._test.attr[ "INPUT_SIZE_ATTR" ] = "10"
-        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10"
+        dps._test.attr["INPUT_SIZE_ATTR"] = "10"
+        assertEquals dps._test.getAttribute(INPUT_SIZE_ATTR), "10"
     }
 
     @Test
-    void testGetAt()
-    {
+    void testGetAt() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         dps << [
                 name : "testProperty",
@@ -159,8 +143,7 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
     }
 
     @Test
-    void testGStringImplConvertToString()
-    {
+    void testGStringImplConvertToString() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         def test = "1"
         dps << [
@@ -169,49 +152,46 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
         ]
         assertEquals String.class, dps.getValue("property1").getClass()
 
-        dps[ "property2" ] = "test value ${test}"
+        dps["property2"] = "test value ${test}"
         assertEquals String.class, dps.getValue("property2").getClass()
     }
 
     @Test
-    void testGetAtWithoutAccessor()
-    {
+    void testGetAtWithoutAccessor() {
         def dps = new DynamicPropertySetSupport()
         dps << [
                 name : "testProperty",
                 value: 1
         ]
-        assertEquals 1, dps[ "testProperty" ].value
+        assertEquals 1, dps["testProperty"].value
     }
 
 
     @Test
-    void testDynamicPropertySetPlus()
-    {
-        def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport
-        def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport
+    void testDynamicPropertySetPlus() {
+        def dps1 = [a: "a", b: "b", c: "c"] as DynamicPropertySetSupport
+        def dps2 = [d: "d", e: "e", f: "f"] as DynamicPropertySetSupport
 
         DynamicPropertySetSupport dps3 = dps1 + dps2
         assertTrue dps1.size() == 3
         assertTrue dps2.size() == 3
-        [ a : "a", b : "b", c : "c", d : "d", e : "e", f : "f" ].each( { a, b ->
-            assertTrue dps3.getValue( a ) == b
-        } )
+        [a: "a", b: "b", c: "c", d: "d", e: "e", f: "f"].each({ a, b ->
+            assertTrue dps3.getValue(a) == b
+        })
     }
 
 
     @Test
-    void testSetWith()
-    {
+    void testSetWith() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
-        dps << [ name : "testProperty", value: 1 ]
-        dps << [ name : "testProperty2", value: 1 ]
+        dps << [name: "testProperty", value: 1]
+        dps << [name: "testProperty2", value: 1]
         dps.with {
             testProperty = 2
             testProperty2 = 2
         }
-        assertEquals 2, dps.getValue( "testProperty" )
-        assertEquals 2, dps.getValue( "testProperty2" )
+        assertEquals 2, dps.getValue("testProperty")
+        assertEquals 2, dps.getValue("testProperty2")
     }
 
 }

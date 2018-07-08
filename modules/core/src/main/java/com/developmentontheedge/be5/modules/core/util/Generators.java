@@ -24,7 +24,7 @@ public class Generators
 //        Collections.reverse(list);
 //        return Collections.unmodifiableList(list);
 //    }
-    
+
     public static <K, T> List<T> forest(
             List<T> items,
             Function<T, K> getId,
@@ -37,25 +37,24 @@ public class Generators
         requireNonNull(isRoot);
         requireNonNull(getParentId);
         requireNonNull(addChild);
-        
+
         Map<K, T> index = StreamEx.of(items).toMap(getId, Function.identity());
         List<T> forest = new ArrayList<>();
-        
+
         for (T item : items)
         {
             if (isRoot.test(item))
             {
                 forest.add(item);
-            }
-            else
+            } else
             {
                 T parent = index.get(getParentId.apply(item));
                 requireNonNull(parent);
                 addChild.accept(parent, item);
             }
         }
-        
+
         return ImmutableList.copyOf(forest);
     }
-    
+
 }

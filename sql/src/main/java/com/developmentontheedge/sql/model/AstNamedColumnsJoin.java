@@ -6,7 +6,7 @@ public class AstNamedColumnsJoin extends SimpleNode
 {
     public AstNamedColumnsJoin(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "USING (";
         nodeSuffix = ")";
         childrenDelimiter = ",";

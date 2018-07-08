@@ -13,9 +13,9 @@ public class HashUrlUtils
     {
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION,
                 operation.getInfo().getEntityName(), operation.getContext().getQueryName(), operation.getInfo().getName())
-                    .named(operation.getRedirectParams());
+                .named(operation.getRedirectParams());
 
-        if(operation.getContext().getRecords().length > 0)
+        if (operation.getContext().getRecords().length > 0)
         {
             hashUrl = hashUrl.named("selectedRows", Arrays.stream(operation.getContext().getRecords())
                     .map(Object::toString)

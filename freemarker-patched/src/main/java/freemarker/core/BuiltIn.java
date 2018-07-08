@@ -113,17 +113,21 @@ import java.util.List;
 
 /**
  * The {@code ?} operator used for things like {@code foo?upper_case}.
+ *
  * @author <a href="mailto:jon@revusky.com">Jonathan Revusky</a>
  */
-public abstract class BuiltIn extends Expression implements Cloneable {
-    
+public abstract class BuiltIn extends Expression implements Cloneable
+{
+
     private static final Logger logger = Logger.getLogger("freemarker.runtime");
-    
+
     protected Expression target;
     protected String key;
 
     static final HashMap builtins = new HashMap();
-    static {
+
+    static
+    {
         builtins.put("abs", new absBI());
         builtins.put("ancestors", new ancestorsBI());
         builtins.put("byte", new byteBI());
@@ -133,7 +137,7 @@ public abstract class BuiltIn extends Expression implements Cloneable {
         builtins.put("ceiling", new ceilingBI());
         builtins.put("children", new childrenBI());
         builtins.put("chop_linebreak", new chop_linebreakBI());
-        builtins.put("contains", new StringBuiltins.containsBI());        
+        builtins.put("contains", new StringBuiltins.containsBI());
         builtins.put("date", new MiscellaneousBuiltins.dateBI(TemplateDateModel.DATE));
         builtins.put("datetime", new MiscellaneousBuiltins.dateBI(TemplateDateModel.DATETIME));
         builtins.put("default", new ExistenceBuiltins.defaultBI());
@@ -264,13 +268,15 @@ public abstract class BuiltIn extends Expression implements Cloneable {
         builtins.put("word_list", new word_listBI());
         builtins.put("xhtml", new StringBuiltins.xhtmlBI());
         builtins.put("xml", new StringBuiltins.xmlBI());
-        try {
+        try
+        {
             Class.forName("java.util.regex.Pattern");
             builtins.put("matches", instantiateBI("freemarker.core._RegexBuiltins$matchesBI"));
             builtins.put("groups", instantiateBI("freemarker.core._RegexBuiltins$groupsBI"));
             builtins.put("replace", instantiateBI("freemarker.core._RegexBuiltins$replace_reBI"));
             builtins.put("split", instantiateBI("freemarker.core._RegexBuiltins$split_reBI"));
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             logger.debug("Regular expression built-ins won't be avilable", e);
         }
     }
@@ -284,44 +290,51 @@ public abstract class BuiltIn extends Expression implements Cloneable {
     {
         return Class.forName(className).newInstance();
     }
-    
-    static BuiltIn newBuiltIn(int incompatibleImprovements, Expression target, String key) throws ParseException {
+
+    static BuiltIn newBuiltIn(int incompatibleImprovements, Expression target, String key) throws ParseException
+    {
         BuiltIn bi = (BuiltIn) builtins.get(key);
-        if (bi == null) {
+        if (bi == null)
+        {
             StringBuffer buf = new StringBuffer(
                     "Unknown built-in: " + StringUtil.jQuote(key) + ". "
-                    + "Help (latest version): http://freemarker.org/docs/ref_builtins.html; "
-                    + "you're using FreeMarker " + Configuration.getVersion() + ".\n" 
-                    + "The alphabetical list of built-ins:");
+                            + "Help (latest version): http://freemarker.org/docs/ref_builtins.html; "
+                            + "you're using FreeMarker " + Configuration.getVersion() + ".\n"
+                            + "The alphabetical list of built-ins:");
             List names = new ArrayList(builtins.keySet().size());
             names.addAll(builtins.keySet());
             Collections.sort(names);
             char lastLetter = 0;
-            for (Iterator it = names.iterator(); it.hasNext();) {
+            for (Iterator it = names.iterator(); it.hasNext(); )
+            {
                 String name = (String) it.next();
                 char firstChar = name.charAt(0);
-                if (firstChar != lastLetter) {
+                if (firstChar != lastLetter)
+                {
                     lastLetter = firstChar;
                     buf.append('\n');
                 }
                 buf.append(name);
-                
-                if (it.hasNext()) {
+
+                if (it.hasNext())
+                {
                     buf.append(", ");
                 }
             }
             throw new ParseException(buf.toString(), target);
         }
-        
+
         while (bi instanceof ICIChainMember
-                && incompatibleImprovements < ((ICIChainMember) bi).getMinimumICIVersion()) {
+                && incompatibleImprovements < ((ICIChainMember) bi).getMinimumICIVersion())
+        {
             bi = (BuiltIn) ((ICIChainMember) bi).getPreviousICIChainMember();
         }
-        
-        try {
+
+        try
+        {
             bi = (BuiltIn) bi.clone();
-        }
-        catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e)
+        {
             throw new InternalError();
         }
         bi.target = target;
@@ -329,34 +342,43 @@ public abstract class BuiltIn extends Expression implements Cloneable {
         return bi;
     }
 
-    public String getCanonicalForm() {
+    public String getCanonicalForm()
+    {
         return target.getCanonicalForm() + getNodeTypeSymbol();
     }
-    
-    String getNodeTypeSymbol() {
+
+    String getNodeTypeSymbol()
+    {
         return "?" + key;
     }
 
-    boolean isLiteral() {
+    boolean isLiteral()
+    {
         return false; // be on the safe side.
     }
-    
-    protected final void checkMethodArgCount(List args, int expectedCnt) throws TemplateModelException {
+
+    protected final void checkMethodArgCount(List args, int expectedCnt) throws TemplateModelException
+    {
         checkMethodArgCount(args.size(), expectedCnt);
     }
-    
-    protected final void checkMethodArgCount(int argCnt, int expectedCnt) throws TemplateModelException {
-        if (argCnt != expectedCnt) {
+
+    protected final void checkMethodArgCount(int argCnt, int expectedCnt) throws TemplateModelException
+    {
+        if (argCnt != expectedCnt)
+        {
             throw MessageUtil.newArgCntError("?" + key, argCnt, expectedCnt);
         }
     }
 
-    protected final void checkMethodArgCount(List args, int minCnt, int maxCnt) throws TemplateModelException {
+    protected final void checkMethodArgCount(List args, int minCnt, int maxCnt) throws TemplateModelException
+    {
         checkMethodArgCount(args.size(), minCnt, maxCnt);
     }
-    
-    protected final void checkMethodArgCount(int argCnt, int minCnt, int maxCnt) throws TemplateModelException {
-        if (argCnt < minCnt || argCnt > maxCnt) {
+
+    protected final void checkMethodArgCount(int argCnt, int minCnt, int maxCnt) throws TemplateModelException
+    {
+        if (argCnt < minCnt || argCnt > maxCnt)
+        {
             throw MessageUtil.newArgCntError("?" + key, argCnt, minCnt, maxCnt);
         }
     }
@@ -366,19 +388,23 @@ public abstract class BuiltIn extends Expression implements Cloneable {
      * isn't.
      */
     protected final String getOptStringMethodArg(List args, int argIdx)
-            throws TemplateModelException {
+            throws TemplateModelException
+    {
         return args.size() > argIdx ? getStringMethodArg(args, argIdx) : null;
     }
-    
+
     /**
      * Gets a method argument and checks if it's a string; it does NOT check if {@code args} is big enough.
      */
     protected final String getStringMethodArg(List args, int argIdx)
-            throws TemplateModelException {
+            throws TemplateModelException
+    {
         TemplateModel arg = (TemplateModel) args.get(argIdx);
-        if (!(arg instanceof TemplateScalarModel)) {
+        if (!(arg instanceof TemplateScalarModel))
+        {
             throw MessageUtil.newMethodArgMustBeStringException("?" + key, argIdx, arg);
-        } else {
+        } else
+        {
             return EvalUtil.modelToString((TemplateScalarModel) arg, null, null);
         }
     }
@@ -387,45 +413,61 @@ public abstract class BuiltIn extends Expression implements Cloneable {
      * Gets a method argument and checks if it's a number; it does NOT check if {@code args} is big enough.
      */
     protected final Number getNumberMethodArg(List args, int argIdx)
-            throws TemplateModelException {
+            throws TemplateModelException
+    {
         TemplateModel arg = (TemplateModel) args.get(argIdx);
-        if (!(arg instanceof TemplateNumberModel)) {
+        if (!(arg instanceof TemplateNumberModel))
+        {
             throw MessageUtil.newMethodArgMustBeNumberException("?" + key, argIdx, arg);
-        } else {
+        } else
+        {
             return EvalUtil.modelToNumber((TemplateNumberModel) arg, null);
         }
     }
-    
+
     protected final Expression deepCloneWithIdentifierReplaced_inner(
-            String replacedIdentifier, Expression replacement, ReplacemenetState replacementState) {
-    	try {
-	    	BuiltIn clone = (BuiltIn)clone();
-	    	clone.target = target.deepCloneWithIdentifierReplaced(replacedIdentifier, replacement, replacementState);
-	    	return clone;
-        }
-        catch (CloneNotSupportedException e) {
+            String replacedIdentifier, Expression replacement, ReplacemenetState replacementState)
+    {
+        try
+        {
+            BuiltIn clone = (BuiltIn) clone();
+            clone.target = target.deepCloneWithIdentifierReplaced(replacedIdentifier, replacement, replacementState);
+            return clone;
+        } catch (CloneNotSupportedException e)
+        {
             throw new RuntimeException("Internal error: " + e);
         }
     }
 
-    int getParameterCount() {
+    int getParameterCount()
+    {
         return 2;
     }
 
-    Object getParameterValue(int idx) {
-        switch (idx) {
-        case 0: return target;
-        case 1: return key;
-        default: throw new IndexOutOfBoundsException();
+    Object getParameterValue(int idx)
+    {
+        switch (idx)
+        {
+            case 0:
+                return target;
+            case 1:
+                return key;
+            default:
+                throw new IndexOutOfBoundsException();
         }
     }
 
-    ParameterRole getParameterRole(int idx) {
-        switch (idx) {
-        case 0: return ParameterRole.LEFT_HAND_OPERAND;
-        case 1: return ParameterRole.RIGHT_HAND_OPERAND;
-        default: throw new IndexOutOfBoundsException();
+    ParameterRole getParameterRole(int idx)
+    {
+        switch (idx)
+        {
+            case 0:
+                return ParameterRole.LEFT_HAND_OPERAND;
+            case 1:
+                return ParameterRole.RIGHT_HAND_OPERAND;
+            default:
+                throw new IndexOutOfBoundsException();
         }
     }
-    
+
 }

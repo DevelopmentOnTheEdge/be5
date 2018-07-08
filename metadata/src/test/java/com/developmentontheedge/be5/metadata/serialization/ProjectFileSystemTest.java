@@ -24,12 +24,12 @@ public class ProjectFileSystemTest
     {
         Project prj = new Project("test");
         Path root = tmp.newFolder().toPath();
-        prj.setLocation( root );
-        ProjectFileSystem pfs = new ProjectFileSystem( prj );
-        Map<Path, Boolean> map = EntryStream.of( pfs.getPaths() ).mapKeys( root::relativize ).toSortedMap();
-        assertTrue( StreamEx
-                .of( "", "src", "src/js/extenders", "src/js/forms", "src/js/operations", "src/js/queries", "src/l10n", "src/meta/data",
-                        "src/meta/entities" ).map( Paths::get ).noneMatch( map::get ) );
-        assertTrue( StreamEx.of( "src/ftl", "src/include", "src/meta/modules", "src/groovy/operations", "src/pages" ).map( Paths::get ).allMatch( map::get ) );
+        prj.setLocation(root);
+        ProjectFileSystem pfs = new ProjectFileSystem(prj);
+        Map<Path, Boolean> map = EntryStream.of(pfs.getPaths()).mapKeys(root::relativize).toSortedMap();
+        assertTrue(StreamEx
+                .of("", "src", "src/js/extenders", "src/js/forms", "src/js/operations", "src/js/queries", "src/l10n", "src/meta/data",
+                        "src/meta/entities").map(Paths::get).noneMatch(map::get));
+        assertTrue(StreamEx.of("src/ftl", "src/include", "src/meta/modules", "src/groovy/operations", "src/pages").map(Paths::get).allMatch(map::get));
     }
 }

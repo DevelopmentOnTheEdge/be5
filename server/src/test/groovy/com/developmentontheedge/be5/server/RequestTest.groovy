@@ -15,20 +15,17 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class RequestTest extends ServerTestUtils
-{
+class RequestTest extends ServerTestUtils {
     HttpServletRequest rawRequest
 
     @Before
-    void setUp()
-    {
+    void setUp() {
         rawRequest = mock(HttpServletRequest.class)
         when(rawRequest.getSession()).thenReturn(mock(HttpSession.class))
     }
 
     @Test
-    void getValues()
-    {
+    void getValues() {
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'name':'test','value':1,'accept':true}")
 
@@ -37,8 +34,7 @@ class RequestTest extends ServerTestUtils
     }
 
     @Test
-    void testBase64File()
-    {
+    void testBase64File() {
         String text = "Simple text"
         String frontendEncoded = "data:;base64," + Base64.getEncoder().encodeToString(text.getBytes("UTF-8"))
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
@@ -50,13 +46,12 @@ class RequestTest extends ServerTestUtils
     }
 
     @Test
-    void testBase64FileWithMimeTypes()
-    {
+    void testBase64FileWithMimeTypes() {
         String text = "test opendocument.text"
         String frontendEncoded = "data:application/vnd.oasis.opendocument.text;base64," + Base64.getEncoder().encodeToString(text.getBytes("UTF-8"))
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'base64':{'type':'Base64File','data':'${frontendEncoded}','name':'test.txt'}}")
-        Base64File base64File = (Base64File)ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
+        Base64File base64File = (Base64File) ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
 
         assertEquals(text, new String(base64File.data))
         assertEquals("application/vnd.oasis.opendocument.text", new String(base64File.mimeTypes))

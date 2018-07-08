@@ -40,7 +40,7 @@ public class UserHelper
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
                              Locale locale, String remoteAddr)
     {
-        if(stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
+        if (stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
             Set<String> hs = new HashSet<>();
             hs.addAll(availableRoles);

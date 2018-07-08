@@ -18,7 +18,7 @@ public class SqlColumnTypeBeanInfo extends BeanInfoEx
         add("precision");
         add("enumValues");
     }
-    
+
     public static class TypeSelector extends StringTagEditor
     {
         @Override

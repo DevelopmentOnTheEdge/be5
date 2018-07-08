@@ -11,21 +11,21 @@ import org.codehaus.groovy.runtime.InvokerHelper;
  */
 public class ExtensionMethodsMetaClass extends DelegatingMetaClass
 {
-    protected ExtensionMethodsMetaClass(Class classForExtension )
+    protected ExtensionMethodsMetaClass(Class classForExtension)
     {
-        super( classForExtension );
+        super(classForExtension);
     }
 
     @Override
-    public Object invokeMethod( Object object, String methodName, Object[] args )
+    public Object invokeMethod(Object object, String methodName, Object[] args)
     {
         try
         {
-            return InvokerHelper.invokeMethod( getClass(), methodName, ObjectArrays.concat(object, args));
-        }
-        catch( MissingMethodException e ) { /*missing method in meta-class*/ }
+            return InvokerHelper.invokeMethod(getClass(), methodName, ObjectArrays.concat(object, args));
+        } catch (MissingMethodException e)
+        { /*missing method in meta-class*/ }
 
-        return super.invokeMethod( object, methodName, args );
+        return super.invokeMethod(object, methodName, args);
     }
 
 }

@@ -35,8 +35,7 @@ public class GuiceJobFactory implements JobFactory
             log.fine("Producing instance of Job '" + jobDetail.getKey() + "', class=" + jobClass.getName());
 
             return guice.getInstance(bundle.getJobDetail().getJobClass());
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new SchedulerException("Problem instantiating class '" + jobDetail.getJobClass().getName() + "'", e);
         }

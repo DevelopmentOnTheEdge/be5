@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A way to run queries from the project model.
  * Note that a query executor has its state. Don't reuse the same executor for several requests.
- * 
+ *
  * @author asko
  */
 public interface QueryExecutor
@@ -22,7 +22,7 @@ public interface QueryExecutor
      * Sets an offset (changes state). Returns the query executor itself.
      */
     QueryExecutor offset(int offset);
-    
+
     /**
      * Sets sort order (changes state). Returns the query executor itself.
      */
@@ -34,14 +34,14 @@ public interface QueryExecutor
      * Executes the query.
      */
     List<DynamicPropertySet> execute();
-    
+
     //List<DynamicPropertySet> execute(Object... params);
 
     /**
      * Executes the query for aggregate.
      */
     List<DynamicPropertySet> executeAggregate();
-    
+
     /**
      * Executes the query.
      */

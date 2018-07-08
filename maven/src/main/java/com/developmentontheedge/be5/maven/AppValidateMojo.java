@@ -8,25 +8,25 @@ import org.apache.maven.plugins.annotations.Parameter;
  * Usage example:
  * mvn be5:validate -DBE5_DEBUG=true
  */
-@Mojo( name = "validate")
+@Mojo(name = "validate")
 public class AppValidateMojo extends Be5Mojo
 {
-    @Parameter (property = "BE5_RDBMS")
+    @Parameter(property = "BE5_RDBMS")
     private String rdbmsName;
 
-    @Parameter (property = "BE5_SKIP_VALIDATION")
+    @Parameter(property = "BE5_SKIP_VALIDATION")
     private boolean skipValidation = false;
 
-    @Parameter (property = "BE5_CHECK_QUERY")
+    @Parameter(property = "BE5_CHECK_QUERY")
     private String queryPath;
 
-    @Parameter (property = "BE5_CHECK_ROLES")
+    @Parameter(property = "BE5_CHECK_ROLES")
     private boolean checkRoles;
 
-    @Parameter (property = "BE5_CHECK_DDL")
+    @Parameter(property = "BE5_CHECK_DDL")
     private String ddlPath;
 
-    @Parameter (property = "BE5_SAVE_PROJECT")
+    @Parameter(property = "BE5_SAVE_PROJECT")
     private boolean saveProject;
 
     @Override

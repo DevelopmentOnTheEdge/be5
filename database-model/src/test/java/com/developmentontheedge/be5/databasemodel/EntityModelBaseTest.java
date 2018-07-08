@@ -11,7 +11,8 @@ import static org.junit.Assert.assertEquals;
 
 public class EntityModelBaseTest extends DatabaseModelProjectDbTest
 {
-    @Inject private DatabaseModel database;
+    @Inject
+    private DatabaseModel database;
 
     @Before
     public void before()
@@ -32,7 +33,7 @@ public class EntityModelBaseTest extends DatabaseModelProjectDbTest
     @Test(expected = RuntimeException.class)
     public void get()
     {
-        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of( "name", "TestName", "value", 1 ));
+        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of("name", "TestName", "value", 1));
 
         RecordModel<String> record = database.<String>getEntity("testtableAdmin").get(id.toString());
     }
@@ -40,7 +41,7 @@ public class EntityModelBaseTest extends DatabaseModelProjectDbTest
     @Test(expected = RuntimeException.class)
     public void set()
     {
-        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of( "name", "TestName", "value", 1 ));
+        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of("name", "TestName", "value", 1));
 
         int count = database.<String>getEntity("testtableAdmin").set(id.toString(), ImmutableMap.of("value", 2));
     }

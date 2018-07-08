@@ -4,7 +4,7 @@ public class AstValues extends SimpleNode
 {
     public AstValues(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "VALUES";
         this.childrenDelimiter = ",";
     }

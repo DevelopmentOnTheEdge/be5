@@ -4,17 +4,17 @@ public class SqlQuery
 {
     public static AstStart parse(String query)
     {
-        return parse( query, new DefaultParserContext() );
+        return parse(query, new DefaultParserContext());
     }
-    
+
     public static AstStart parse(String query, ParserContext context)
     {
         SqlParser parser = new SqlParser();
-        parser.setContext( context );
-        parser.parse( query );
-        if(!parser.getMessages().isEmpty())
+        parser.setContext(context);
+        parser.parse(query);
+        if (!parser.getMessages().isEmpty())
         {
-            throw new IllegalArgumentException( String.join("\n", parser.getMessages() + "\n" + query) );
+            throw new IllegalArgumentException(String.join("\n", parser.getMessages() + "\n" + query));
         }
         return parser.getStartNode();
     }

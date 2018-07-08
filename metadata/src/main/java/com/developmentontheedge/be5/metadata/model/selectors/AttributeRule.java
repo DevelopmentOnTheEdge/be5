@@ -15,60 +15,59 @@ public class AttributeRule implements SelectorRule
     private final String valueOriginal;
     private final String operator;
 
-    public AttributeRule( String attribute, String value, String operator )
+    public AttributeRule(String attribute, String value, String operator)
     {
         assert attribute != null;
         assert value != null;
-        assert OP_EQUALS.equals( operator ) || OP_STARTS.equals( operator ) || OP_ENDS.equals( operator ) || OP_CONTAINS.equals( operator );
+        assert OP_EQUALS.equals(operator) || OP_STARTS.equals(operator) || OP_ENDS.equals(operator) || OP_CONTAINS.equals(operator);
         this.attribute = attribute;
         this.operator = operator;
         this.value = value.toLowerCase();
         this.valueOriginal = value;
     }
 
-    public AttributeRule( String attribute, String value )
+    public AttributeRule(String attribute, String value)
     {
         this(attribute, value, OP_EQUALS);
     }
 
-    private boolean test( String actual )
+    private boolean test(String actual)
     {
-        switch ( operator )
+        switch (operator)
         {
-        case "":
-            return value.equalsIgnoreCase( actual );
-        case "^":
-            return actual.toLowerCase().startsWith( value );
-        case "$":
-            return actual.toLowerCase().endsWith( value );
-        case "*":
-            return actual.toLowerCase().contains( value );
-        default:
-            return false;
+            case "":
+                return value.equalsIgnoreCase(actual);
+            case "^":
+                return actual.toLowerCase().startsWith(value);
+            case "$":
+                return actual.toLowerCase().endsWith(value);
+            case "*":
+                return actual.toLowerCase().contains(value);
+            default:
+                return false;
         }
     }
 
     @Override
-    public boolean matches( BeModelElement element )
+    public boolean matches(BeModelElement element)
     {
         try
         {
-            Object value = Beans.getBeanPropertyValue( element, attribute );
-            if ( value == null )
+            Object value = Beans.getBeanPropertyValue(element, attribute);
+            if (value == null)
                 return false;
-            if ( test( value.toString() ) )
+            if (test(value.toString()))
                 return true;
-            if ( attribute.equals( "type" ) )
+            if (attribute.equals("type"))
             {
-                String val = value.toString().toLowerCase().replace( "/", "" );
-                if ( test( val ) )
+                String val = value.toString().toLowerCase().replace("/", "");
+                if (test(val))
                     return true;
-                val = val.replace( "javascript", "js" );
-                if ( test( val ) )
+                val = val.replace("javascript", "js");
+                if (test(val))
                     return true;
             }
-        }
-        catch ( Exception e )
+        } catch (Exception e)
         {
         }
         return false;
@@ -77,11 +76,11 @@ public class AttributeRule implements SelectorRule
     @Override
     public String toString()
     {
-        boolean identifier = SelectorUtils.isIdentifier( valueOriginal );
-        if ( OP_EQUALS.equals( operator ) && attribute.equals( "name" ) && identifier )
+        boolean identifier = SelectorUtils.isIdentifier(valueOriginal);
+        if (OP_EQUALS.equals(operator) && attribute.equals("name") && identifier)
             return "#" + valueOriginal;
-        if ( OP_EQUALS.equals( operator ) && attribute.equals( "type" ) && identifier )
+        if (OP_EQUALS.equals(operator) && attribute.equals("type") && identifier)
             return "." + valueOriginal;
-        return '[' + SelectorUtils.escapeIdentifier( attribute ) + operator + '=' + ( identifier ? valueOriginal : SelectorUtils.escapeString( valueOriginal ) ) + ']';
+        return '[' + SelectorUtils.escapeIdentifier(attribute) + operator + '=' + (identifier ? valueOriginal : SelectorUtils.escapeString(valueOriginal)) + ']';
     }
 }

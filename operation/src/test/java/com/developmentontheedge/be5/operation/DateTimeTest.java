@@ -37,9 +37,9 @@ public class DateTimeTest extends OperationsSqlMockProjectTest
         Object parameters = generate.getFirst();
 
         Assert.assertEquals("{" +
-                        "'values':{'activeFrom':'1901-02-03'}," +
-                        "'meta':{'/activeFrom':{'displayName':'activeFrom','type':'Date'}}," +
-                        "'order':['/activeFrom']" +
+                "'values':{'activeFrom':'1901-02-03'}," +
+                "'meta':{'/activeFrom':{'displayName':'activeFrom','type':'Date'}}," +
+                "'order':['/activeFrom']" +
                 "}", BaseTestUtils.oneQuotes(JsonFactory.bean(parameters)));
 
         OperationResult result = executeOperation(operation, values).getSecond();
@@ -49,7 +49,7 @@ public class DateTimeTest extends OperationsSqlMockProjectTest
     @Test
     public void invoke()
     {
-        executeOperation("testtable", "All records", "DateTimeTestOperation", "0", ImmutableMap.of("activeFrom","1901-02-03"));
+        executeOperation("testtable", "All records", "DateTimeTestOperation", "0", ImmutableMap.of("activeFrom", "1901-02-03"));
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtable (activeFrom) VALUES (?)",
                 Date.valueOf("1901-02-03"));
@@ -59,7 +59,7 @@ public class DateTimeTest extends OperationsSqlMockProjectTest
     public void invokeEmptyValue()
     {
         Object first = executeOperation("testtable", "All records", "DateTimeTestOperation", "0",
-                        ImmutableMap.of("activeFrom", "")).getFirst();
+                ImmutableMap.of("activeFrom", "")).getFirst();
 
         assertEquals("Это поле должно быть заполнено.",
                 JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/activeFrom").getString("message"));

@@ -18,7 +18,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
     static
     {
-        GroovyRegister.registerMetaClass( GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class );
+        GroovyRegister.registerMetaClass(GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class);
     }
 
 //may be add
@@ -91,8 +91,8 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     private DPSAttributes getBuilder(Closure cl)
     {
         DPSAttributes dpsAttributes = new DPSAttributes();
-        cl.setResolveStrategy( Closure.DELEGATE_FIRST );
-        cl.setDelegate( dpsAttributes );
+        cl.setResolveStrategy(Closure.DELEGATE_FIRST);
+        cl.setDelegate(dpsAttributes);
         cl.call();
         return dpsAttributes;
     }
@@ -105,12 +105,12 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     @Deprecated
     public void putAt(String propertyName, Map<String, Object> value)
     {
-        value.put( "name", propertyName );
-        DynamicPropertySetMetaClass.leftShift(this, value );
+        value.put("name", propertyName);
+        DynamicPropertySetMetaClass.leftShift(this, value);
     }
 
     @Deprecated
-    public DynamicPropertySet leftShift( Map<String, Object> properties )
+    public DynamicPropertySet leftShift(Map<String, Object> properties)
     {
         return DynamicPropertySetMetaClass.leftShift(this, properties);
     }

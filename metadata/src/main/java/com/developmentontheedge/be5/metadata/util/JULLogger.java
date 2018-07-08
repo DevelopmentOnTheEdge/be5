@@ -4,15 +4,15 @@ import java.util.logging.Logger;
 
 public class JULLogger implements ProcessController
 {
-	protected final Logger log;
-    
+    protected final Logger log;
+
     public JULLogger(Logger log)
     {
         this.log = log;
     }
 
     @Override
-    public void setOperationName( String name )
+    public void setOperationName(String name)
     {
         log.info("Operation started: " + name);
     }
@@ -20,13 +20,14 @@ public class JULLogger implements ProcessController
     @Override
     public void setProgress(double progress)
     {
-        log.info("  progress: " + progress*100 + "%");
+        log.info("  progress: " + progress * 100 + "%");
     }
 
-    public static String infoBlock(String info){
+    public static String infoBlock(String info)
+    {
         return "\n------------------------------------------------------------------------" +
-               "\n" + info +
-               "\n------------------------------------------------------------------------";
+                "\n" + info +
+                "\n------------------------------------------------------------------------";
     }
 
     @Override

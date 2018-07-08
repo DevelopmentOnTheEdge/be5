@@ -139,7 +139,7 @@ public class MailService
 //        lWriter.flush();
 //        lWriter.close();
 
-        if(from != null)
+        if (from != null)
         {
             message.setFrom(from);
         }
@@ -227,10 +227,10 @@ public class MailService
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
 
-        if(host == null)
+        if (host == null)
         {
             host = coreUtils.getSystemSetting("MAIL_HOST");
-            if(Utils.isEmpty(host))
+            if (Utils.isEmpty(host))
             {
                 host = "localhost";
                 log.warning("No mail host defined (MAIL_HOST). Using localhost.");
@@ -240,18 +240,18 @@ public class MailService
 
         String login = coreUtils.getSystemSetting("SMTP_AUTH_USER");
         String password = coreUtils.getSystemSetting("SMTP_AUTH_PASSWORD");
-        if(!Utils.isEmpty(login) && !Utils.isEmpty(password))
+        if (!Utils.isEmpty(login) && !Utils.isEmpty(password))
         {
             props.put("mail.smtp.user", login);
             props.put("mail.smtp.auth", "true");
-            if(host.endsWith(".gmail.com"))
+            if (host.endsWith(".gmail.com"))
             {
                 props.put("mail.smtp.port", "587");
                 props.put("mail.smtp.starttls.enable", "true");
             }
             SmtpAuthenticator auth = new SmtpAuthenticator(login, password);
             Session session = Session.getInstance(props, auth);
-            if(Boolean.parseBoolean(coreUtils.getSystemSetting("SMTP_DEBUG", "false")))
+            if (Boolean.parseBoolean(coreUtils.getSystemSetting("SMTP_DEBUG", "false")))
             {
                 session.setDebug(true);
                 session.setDebugOut(new MimeMessage2.PrintStream2(new ByteArrayOutputStream(), true));
@@ -292,7 +292,7 @@ public class MailService
                 ? new MimeMessage2(getMailSession(host))
                 : new MimeMessage2(getMailSession(host), stream);
 
-        if(stream != null)
+        if (stream != null)
         {
             return message;
         }
@@ -300,12 +300,12 @@ public class MailService
         String fromAddr = coreUtils.getSystemSetting("MAIL_FROM_ADDRESS");
         String fromName = coreUtils.getSystemSetting("MAIL_FROM_NAME");
 
-        if(Utils.isEmpty(fromAddr))
+        if (Utils.isEmpty(fromAddr))
         {
             return message;
         }
 
-        if(!Utils.isEmpty(fromName))
+        if (!Utils.isEmpty(fromName))
         {
             message.setFrom(new InternetAddress(fromAddr, fromName, "UTF-8"));
         } else

@@ -6,20 +6,20 @@ public class AstBetweenPredicate extends SimpleNode
 {
     public AstBetweenPredicate(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstBetweenPredicate(SimpleNode... children)
     {
         this(SqlParserTreeConstants.JJTBETWEENPREDICATE);
-        for(SimpleNode child : children)
+        for (SimpleNode child : children)
             addChild(child);
     }
-    
+
     @Override
     public String getChildrenDelimiter(SimpleNode prev, SimpleNode next)
     {
-        return prev == child( 0 ) ? "BETWEEN" : "AND";
+        return prev == child(0) ? "BETWEEN" : "AND";
     }
 }
 /* JavaCC - OriginalChecksum=ae9e6a940a7105363aa804cec5db559b (do not edit this line) */

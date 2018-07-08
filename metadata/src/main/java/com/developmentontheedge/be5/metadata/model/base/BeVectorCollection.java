@@ -16,11 +16,9 @@ import java.util.TreeMap;
 
 /**
  * Main DataCollection implementation for BE4
- * 
- * @author lan
  *
- * @param <T>
- *            element type
+ * @param <T> element type
+ * @author lan
  */
 public class BeVectorCollection<T extends BeModelElement> extends BeModelElementSupport implements BeModelCollection<T>
 {
@@ -30,16 +28,16 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     private DataElementPath completeName = null;
     private boolean propagateCodeChange = false;
 
-    public BeVectorCollection( String name, Class<? extends T> elementClass, BeModelCollection<?> parent, boolean saveOrder )
+    public BeVectorCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent, boolean saveOrder)
     {
-        super( name, parent );
+        super(name, parent);
         this.elementClass = elementClass;
         this.saveOrder = saveOrder;
     }
 
-    public BeVectorCollection( String name, Class<? extends T> elementClass, BeModelCollection<?> parent )
+    public BeVectorCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent)
     {
-        this( name, elementClass, parent, false );
+        this(name, elementClass, parent, false);
     }
 
     public BeVectorCollection<T> propagateCodeChange()
@@ -52,16 +50,16 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> errors = new ArrayList<>();
-        for ( BeModelElement element : this )
-            errors.addAll( element.getErrors() );
+        for (BeModelElement element : this)
+            errors.addAll(element.getErrors());
         return errors;
     }
 
     @Override
     public boolean hasErrors()
     {
-        for ( BeModelElement element : this )
-            if ( element.hasErrors() )
+        for (BeModelElement element : this)
+            if (element.hasErrors())
                 return true;
         return false;
     }
@@ -69,45 +67,45 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     @Override
     public boolean isCustomized()
     {
-        if ( super.isCustomized() )
+        if (super.isCustomized())
             return true;
-        for ( BeModelElement element : this )
-            if ( element.isCustomized() )
+        for (BeModelElement element : this)
+            if (element.isCustomized())
                 return true;
         return false;
     }
 
     @Override
-    public synchronized T get( String name )
+    public synchronized T get(String name)
     {
-        if ( elements == null )
+        if (elements == null)
             return null;
-        return elements.get( name );
+        return elements.get(name);
     }
 
-    @SuppressWarnings( "unchecked" )
-    public <S extends BeModelElement> BeModelCollection<S> getCollection( String name, Class<S> clazz )
+    @SuppressWarnings("unchecked")
+    public <S extends BeModelElement> BeModelCollection<S> getCollection(String name, Class<S> clazz)
     {
         // TODO: check class and throw reasonable exception
-        return ( BeModelCollection<S> ) get( name );
+        return (BeModelCollection<S>) get(name);
     }
 
-    public <S extends BeModelElement> BeVectorCollection<S> getOrCreateCollection( String name, Class<S> clazz )
+    public <S extends BeModelElement> BeVectorCollection<S> getOrCreateCollection(String name, Class<S> clazz)
     {
-        @SuppressWarnings( "unchecked" )
-        BeVectorCollection<S> element = ( BeVectorCollection<S> ) get( name );
-        if ( element == null )
+        @SuppressWarnings("unchecked")
+        BeVectorCollection<S> element = (BeVectorCollection<S>) get(name);
+        if (element == null)
         {
-            element = new BeVectorCollection<>( name, clazz, this );
-            DataElementUtils.saveQuiet( element );
+            element = new BeVectorCollection<>(name, clazz, this);
+            DataElementUtils.saveQuiet(element);
         }
         return element;
     }
 
     @Override
-    public BeVectorCollection<T> clone( BeModelCollection<?> origin, String name )
+    public BeVectorCollection<T> clone(BeModelCollection<?> origin, String name)
     {
-        return clone( origin, name, true );
+        return clone(origin, name, true);
     }
 
     protected void beforeCloningElements()
@@ -116,105 +114,102 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     }
 
     @Override
-    protected BeVectorCollection<T> clone( BeModelCollection<?> origin, String name, boolean inherit )
+    protected BeVectorCollection<T> clone(BeModelCollection<?> origin, String name, boolean inherit)
     {
-        @SuppressWarnings( "unchecked" )
-        BeVectorCollection<T> clone = ( BeVectorCollection<T> ) super.clone( origin, name, inherit );
+        @SuppressWarnings("unchecked")
+        BeVectorCollection<T> clone = (BeVectorCollection<T>) super.clone(origin, name, inherit);
         clone.completeName = null;
         clone.elements = null;
         clone.beforeCloningElements();
-        for ( T element : this )
+        for (T element : this)
         {
-            clone.saveClone( element, inherit );
+            clone.saveClone(element, inherit);
         }
         return clone;
     }
 
-    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void merge( BeModelCollection<T> other, boolean ignoreMyItems, boolean inherit )
+    public void merge(BeModelCollection<T> other, boolean ignoreMyItems, boolean inherit)
     {
-        if ( other == null )
+        if (other == null)
         {
             return;
         }
-        mergeThis( other, inherit );
-        for ( T otherElement : other )
+        mergeThis(other, inherit);
+        for (T otherElement : other)
         {
-            T element = this.get( otherElement.getName() );
-            if ( element instanceof BeModelCollection && otherElement instanceof BeModelCollection )
+            T element = this.get(otherElement.getName());
+            if (element instanceof BeModelCollection && otherElement instanceof BeModelCollection)
             {
-                ( ( BeModelCollection<?> ) element ).merge( ( BeModelCollection ) otherElement, ignoreMyItems, inherit );
-            }
-            else if ( element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport )
+                ((BeModelCollection<?>) element).merge((BeModelCollection) otherElement, ignoreMyItems, inherit);
+            } else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
             {
-                ( ( BeModelElementSupport ) element ).mergeThis( otherElement, inherit );
-            }
-            else if ( element == null )
+                ((BeModelElementSupport) element).mergeThis(otherElement, inherit);
+            } else if (element == null)
             {
                 // Do not merge EntityItems with the same origin as our project:
                 // Probably it's some element we deleted from project, but
                 // didn't synchronized with db yet
-                if ( ignoreMyItems && otherElement instanceof BeElementWithOriginModule
-                    && ( ( BeElementWithOriginModule ) otherElement ).getOriginModuleName().equals( getProject().getProjectOrigin() ) )
+                if (ignoreMyItems && otherElement instanceof BeElementWithOriginModule
+                        && ((BeElementWithOriginModule) otherElement).getOriginModuleName().equals(getProject().getProjectOrigin()))
                     continue;
-                saveClone( otherElement, inherit );
+                saveClone(otherElement, inherit);
             }
         }
     }
 
-    void saveClone( T element, boolean inherit ) throws InternalError
+    void saveClone(T element, boolean inherit) throws InternalError
     {
         BeModelElement clone;
-        if ( element instanceof BeModelElementSupport )
+        if (element instanceof BeModelElementSupport)
         {
-            clone = ( ( BeModelElementSupport ) element ).clone( this, element.getName(), inherit );
-        }
-        else
+            clone = ((BeModelElementSupport) element).clone(this, element.getName(), inherit);
+        } else
         {
-            clone = element.clone( this, element.getName() );
+            clone = element.clone(this, element.getName());
         }
-        DataElementUtils.saveQuiet( clone );
+        DataElementUtils.saveQuiet(clone);
     }
 
     @Override
-    public T put( T element )
+    public T put(T element)
     {
-        if ( element == null )
-            throw new IllegalArgumentException( "dataElement cannot be null: " + getCompletePath() );
+        if (element == null)
+            throw new IllegalArgumentException("dataElement cannot be null: " + getCompletePath());
 
         T prev = null;
         String dataElementName = element.getName();
-        if ( dataElementName == null )
-            throw new IllegalArgumentException( "dataElement name cannot be null: " + getCompletePath() );
-        synchronized ( this )
+        if (dataElementName == null)
+            throw new IllegalArgumentException("dataElement name cannot be null: " + getCompletePath());
+        synchronized (this)
         {
-            if ( elements == null )
+            if (elements == null)
             {
                 elements = this.saveOrder ? new LinkedHashMap<>() : new TreeMap<>();
             }
-            prev = elements.put( dataElementName, element );
+            prev = elements.put(dataElementName, element);
         }
-        if ( prev != null )
-            fireElementChanged( this, this, dataElementName, prev );
+        if (prev != null)
+            fireElementChanged(this, this, dataElementName, prev);
         else
-            fireElementAdded( this, dataElementName );
+            fireElementAdded(this, dataElementName);
         updateLastModification();
         return prev;
     }
 
     @Override
-    public void remove( String name )
+    public void remove(String name)
     {
-        if ( elements == null )
+        if (elements == null)
             return;
         T prev;
-        synchronized ( this )
+        synchronized (this)
         {
-            prev = elements.remove( name );
+            prev = elements.remove(name);
         }
-        if ( prev != null )
-            fireElementRemoved( this, name, prev );
+        if (prev != null)
+            fireElementRemoved(this, name, prev);
         updateLastModification();
     }
 
@@ -227,11 +222,11 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     public List<String> getAvailableNames()
     {
         List<String> result = new ArrayList<>();
-        for ( T element : this )
+        for (T element : this)
         {
-            if ( element.isAvailable() )
+            if (element.isAvailable())
             {
-                result.add( element.getName() );
+                result.add(element.getName());
             }
         }
         return result;
@@ -241,7 +236,7 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     public Collection<T> getAvailableElements()
     {
         final BeVectorCollection<T> beVectorCollection = this;
-        return getAvailableElements( beVectorCollection );
+        return getAvailableElements(beVectorCollection);
     }
 
     public T getAvailableElement(String name)
@@ -250,10 +245,11 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
         return getAvailableElement(name, beVectorCollection);
     }
 
-    private <T2 extends BeModelElement> T2 getAvailableElement(String name, final Iterable<T2> iterable){
-        for ( T2 element : iterable )
+    private <T2 extends BeModelElement> T2 getAvailableElement(String name, final Iterable<T2> iterable)
+    {
+        for (T2 element : iterable)
         {
-            if ( element.isAvailable() && name.equals(element.getName()))
+            if (element.isAvailable() && name.equals(element.getName()))
             {
                 return element;
             }
@@ -261,14 +257,14 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
         return null;
     }
 
-    private static <T extends BeModelElement> Collection<T> getAvailableElements( final Iterable<T> iterable )
+    private static <T extends BeModelElement> Collection<T> getAvailableElements(final Iterable<T> iterable)
     {
         Collection<T> result = new ArrayList<>();
-        for ( T element : iterable )
+        for (T element : iterable)
         {
-            if ( element.isAvailable() )
+            if (element.isAvailable())
             {
-                result.add( element );
+                result.add(element);
             }
         }
         return result;
@@ -277,7 +273,7 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     @Override
     public int getSize()
     {
-        if ( elements == null )
+        if (elements == null)
             return 0;
         return elements.size();
     }
@@ -289,13 +285,13 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     }
 
     @Override
-    public boolean contains( String name )
+    public boolean contains(String name)
     {
-        if ( elements == null )
+        if (elements == null)
             return false;
-        synchronized ( this )
+        synchronized (this)
         {
-            return elements.containsKey( name );
+            return elements.containsKey(name);
         }
     }
 
@@ -308,21 +304,21 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     @Override
     public List<String> getNameList()
     {
-        if ( elements == null )
+        if (elements == null)
             return Collections.emptyList();
-        synchronized ( this )
+        synchronized (this)
         {
-            return new ArrayList<>( elements.keySet() );
+            return new ArrayList<>(elements.keySet());
         }
     }
 
     @Override
     public void fireCodeChanged()
     {
-        if ( propagateCodeChange )
+        if (propagateCodeChange)
         {
             final BeModelCollection<?> origin = getOrigin();
-            if ( origin != null && origin.get( getName() ) == this )
+            if (origin != null && origin.get(getName()) == this)
                 origin.fireCodeChanged();
         }
     }
@@ -330,30 +326,30 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     @Override
     public DataElementPath getCompletePath()
     {
-        if ( completeName == null )
+        if (completeName == null)
         {
             BeModelCollection<?> origin = getOrigin();
-            completeName = ( origin == null ? DataElementPath.EMPTY_PATH : origin.getCompletePath() ).getChildPath( getName() );
+            completeName = (origin == null ? DataElementPath.EMPTY_PATH : origin.getCompletePath()).getChildPath(getName());
         }
         return completeName;
     }
 
-    public void replace( T oldElement, T newElement )
+    public void replace(T oldElement, T newElement)
     {
-        if ( !saveOrder )
+        if (!saveOrder)
         {
-            remove( oldElement.getName() );
-            put( newElement );
+            remove(oldElement.getName());
+            put(newElement);
             return;
         }
         Map<String, T> oldElements = elements;
         clear();
-        for ( Entry<String, T> entry : oldElements.entrySet() )
+        for (Entry<String, T> entry : oldElements.entrySet())
         {
-            if ( entry.getValue() == oldElement )
-                put( newElement );
+            if (entry.getValue() == oldElement)
+                put(newElement);
             else
-                put( entry.getValue() );
+                put(entry.getValue());
         }
     }
 
@@ -362,7 +358,7 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param dataElementName
      * @throws Exception
      */
-    protected void fireElementAdded( Object source, String dataElementName )
+    protected void fireElementAdded(Object source, String dataElementName)
     {
         fireCodeChanged();
     }
@@ -375,7 +371,7 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param primaryEvent
      * @throws Exception
      */
-    protected void fireElementChanged( Object source, BeModelCollection<?> owner, String dataElementName, BeModelElement oldElement )
+    protected void fireElementChanged(Object source, BeModelCollection<?> owner, String dataElementName, BeModelElement oldElement)
     {
         fireCodeChanged();
     }
@@ -386,7 +382,7 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param oldElement
      * @throws Exception
      */
-    protected void fireElementRemoved( Object source, String dataElementName, BeModelElement oldElement )
+    protected void fireElementRemoved(Object source, String dataElementName, BeModelElement oldElement)
     {
         fireCodeChanged();
     }

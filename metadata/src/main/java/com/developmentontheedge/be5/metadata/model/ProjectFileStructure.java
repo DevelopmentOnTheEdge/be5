@@ -10,47 +10,47 @@ public class ProjectFileStructure extends BeModelElementSupport
     public static final String NAME = "File Structure";
     public static final String PROJECT_FILE_NAME_WITHOUT_SUFFIX = "project";
     public static final String FORMAT_SUFFIX = ".yaml";
-    
-    private String htmlDir             = "src/html";
-    private String javaSourcesDir      = "src/main/java";
 
-    private String jsDir               = "src/js";
-    private String jsFormsDir          = "src/js/forms";
-    private String jsQueriesDir        = "src/js/queries";
-    private String jsOperationsDir     = "src/js/operations";
-    private String jsExtendersDir      = "src/js/extenders";
+    private String htmlDir = "src/html";
+    private String javaSourcesDir = "src/main/java";
 
-    private String groovyQueriesDir    = "src/groovy/queries";
+    private String jsDir = "src/js";
+    private String jsFormsDir = "src/js/forms";
+    private String jsQueriesDir = "src/js/queries";
+    private String jsOperationsDir = "src/js/operations";
+    private String jsExtendersDir = "src/js/extenders";
+
+    private String groovyQueriesDir = "src/groovy/queries";
     private String groovyOperationsDir = "src/groovy/operations";
-    private String groovyExtendersDir  = "src/groovy/extenders";
+    private String groovyExtendersDir = "src/groovy/extenders";
 
-    private String scriptsDir          = "src/ftl";
-    private String iconsDir            = "src/icons";
-    private String entitiesDir         = "src/meta/entities";
-    private String modulesDir          = "src/meta/modules";
-    private String dataDir             = "src/meta/data";
-    private String l10nDir             = "src/l10n";
-    private String securityFile        = "src/security.yaml";
-    private String pagesFile           = "src/pages.yaml";
-    private String pagesDir            = "src/pages";
-    private String daemonsFile         = "src/daemons.yaml";
-    private String jsFormsFile         = "src/forms.yaml";
-    private String customizationFile   = "src/customization.yaml";
-    private String massChangesFile     = "src/massChanges.yaml";
+    private String scriptsDir = "src/ftl";
+    private String iconsDir = "src/icons";
+    private String entitiesDir = "src/meta/entities";
+    private String modulesDir = "src/meta/modules";
+    private String dataDir = "src/meta/data";
+    private String l10nDir = "src/l10n";
+    private String securityFile = "src/security.yaml";
+    private String pagesFile = "src/pages.yaml";
+    private String pagesDir = "src/pages";
+    private String daemonsFile = "src/daemons.yaml";
+    private String jsFormsFile = "src/forms.yaml";
+    private String customizationFile = "src/customization.yaml";
+    private String massChangesFile = "src/massChanges.yaml";
     private String localConnectionProfilesFile = "src/connectionProfiles.local.yaml";
     private String remoteConnectionProfilesFile = "src/connectionProfiles.remote.yaml";
-    private String macroDir            = "src/include";
+    private String macroDir = "src/include";
     private String selectedProfileFile = "src/profile.local";
-    
-    public ProjectFileStructure( final Project project )
+
+    public ProjectFileStructure(final Project project)
     {
-        super( ProjectFileStructure.NAME, project );
+        super(ProjectFileStructure.NAME, project);
     }
-    
+
     @Override
     public Project getProject()
     {
-        return ( Project ) getOrigin();
+        return (Project) getOrigin();
     }
 
     @PropertyName("Directory for HTML files")
@@ -59,7 +59,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return htmlDir;
     }
 
-    public void setHtmlDir( final String htmlDir )
+    public void setHtmlDir(final String htmlDir)
     {
         this.htmlDir = htmlDir;
         fireChanged();
@@ -71,7 +71,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return javaSourcesDir;
     }
 
-    public void setJavaSourcesDir( final String javaSourcesDir )
+    public void setJavaSourcesDir(final String javaSourcesDir)
     {
         this.javaSourcesDir = javaSourcesDir;
         fireChanged();
@@ -83,7 +83,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsDir;
     }
 
-    public void setJsDir( final String jsDir )
+    public void setJsDir(final String jsDir)
     {
         this.jsDir = jsDir;
         fireChanged();
@@ -95,7 +95,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsFormsDir;
     }
 
-    public void setJsFormsDir( final String jsFormsDir )
+    public void setJsFormsDir(final String jsFormsDir)
     {
         this.jsFormsDir = jsFormsDir;
         fireChanged();
@@ -107,7 +107,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsExtendersDir;
     }
 
-    public void setJsExtendersDir( final String jsExtendersDir )
+    public void setJsExtendersDir(final String jsExtendersDir)
     {
         this.jsExtendersDir = jsExtendersDir;
         fireChanged();
@@ -119,7 +119,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return groovyExtendersDir;
     }
 
-    public void setGroovyExtendersDir( final String groovyExtendersDir )
+    public void setGroovyExtendersDir(final String groovyExtendersDir)
     {
         this.groovyExtendersDir = groovyExtendersDir;
         fireChanged();
@@ -131,31 +131,31 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsOperationsDir;
     }
 
-    public void setJsOperationsDir( final String jsOperationsDir )
+    public void setJsOperationsDir(final String jsOperationsDir)
     {
         this.jsOperationsDir = jsOperationsDir;
         fireChanged();
     }
-    
+
     @PropertyName("Directory for Groovy operations")
     public String getGroovyOperationsDir()
     {
         return groovyOperationsDir;
     }
-    
-    public void setGroovyOperationsDir( final String groovyOperationsDir )
+
+    public void setGroovyOperationsDir(final String groovyOperationsDir)
     {
         this.groovyOperationsDir = groovyOperationsDir;
         fireChanged();
     }
-    
+
     @PropertyName("Directory for JavaScript queries")
     public String getJsQueriesDir()
     {
         return jsQueriesDir;
     }
 
-    public void setJsQueriesDir( String jsQueriesDir )
+    public void setJsQueriesDir(String jsQueriesDir)
     {
         this.jsQueriesDir = jsQueriesDir;
         fireChanged();
@@ -178,19 +178,19 @@ public class ProjectFileStructure extends BeModelElementSupport
         return scriptsDir;
     }
 
-    public void setScriptsDir( final String scriptsDir )
+    public void setScriptsDir(final String scriptsDir)
     {
         this.scriptsDir = scriptsDir;
         fireChanged();
     }
-    
+
     @PropertyName("Directory for files with Freemarker includes")
     public String getMacroDir()
     {
         return macroDir;
     }
-    
-    public void setMacroDir( final String macroDir )
+
+    public void setMacroDir(final String macroDir)
     {
         this.macroDir = macroDir;
         fireChanged();
@@ -202,7 +202,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return entitiesDir;
     }
 
-    public void setEntitiesDir( final String entitiesDir )
+    public void setEntitiesDir(final String entitiesDir)
     {
         this.entitiesDir = entitiesDir;
         fireChanged();
@@ -214,7 +214,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return modulesDir;
     }
 
-    public void setModulesDir( final String modulesDir )
+    public void setModulesDir(final String modulesDir)
     {
         this.modulesDir = modulesDir;
         fireChanged();
@@ -226,35 +226,35 @@ public class ProjectFileStructure extends BeModelElementSupport
         return dataDir;
     }
 
-    public void setDataDir( final String dataDir )
+    public void setDataDir(final String dataDir)
     {
         this.dataDir = dataDir;
         fireChanged();
     }
-    
+
     @PropertyName("Local connection profiles yaml file location")
     @PropertyDescription("'.yaml' suffix is mandatory. "
-        + "The word 'local' means that these connections will be used by an one user, "
-        + "and this file with local connections should be added to '.gitignore.'")
+            + "The word 'local' means that these connections will be used by an one user, "
+            + "and this file with local connections should be added to '.gitignore.'")
     public String getLocalConnectionProfilesFile()
     {
         return localConnectionProfilesFile;
     }
-    
-    public void setLocalConnectionProfilesFile( final String localConnectionProfilesFile )
+
+    public void setLocalConnectionProfilesFile(final String localConnectionProfilesFile)
     {
         this.localConnectionProfilesFile = localConnectionProfilesFile;
         fireChanged();
     }
-    
+
     @PropertyName("Remote connection profiles yaml file location")
     @PropertyDescription(".yaml suffix is mandatory")
     public String getRemoteConnectionProfilesFile()
     {
         return remoteConnectionProfilesFile;
     }
-    
-    public void setRemoteConnectionProfilesFile( final String remoteConnectionProfilesFile )
+
+    public void setRemoteConnectionProfilesFile(final String remoteConnectionProfilesFile)
     {
         this.remoteConnectionProfilesFile = remoteConnectionProfilesFile;
         fireChanged();
@@ -266,7 +266,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return iconsDir;
     }
 
-    public void setIconsDir( final String iconsDir )
+    public void setIconsDir(final String iconsDir)
     {
         this.iconsDir = iconsDir;
         fireChanged();
@@ -278,7 +278,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return l10nDir;
     }
 
-    public void setL10nDir( final String l10nDir )
+    public void setL10nDir(final String l10nDir)
     {
         this.l10nDir = l10nDir;
         fireChanged();
@@ -290,8 +290,8 @@ public class ProjectFileStructure extends BeModelElementSupport
     {
         return securityFile;
     }
-    
-    public void setSecurityFile( final String securityFile )
+
+    public void setSecurityFile(final String securityFile)
     {
         this.securityFile = securityFile;
         fireChanged();
@@ -303,21 +303,21 @@ public class ProjectFileStructure extends BeModelElementSupport
     {
         return daemonsFile;
     }
-    
-    public void setDaemonsFile( final String daemonsFile )
+
+    public void setDaemonsFile(final String daemonsFile)
     {
         this.daemonsFile = daemonsFile;
         fireChanged();
     }
-    
+
     @PropertyName("Application customizations yaml file location")
     @PropertyDescription(".yaml suffix is mandatory")
     public String getCustomizationFile()
     {
         return customizationFile;
     }
-    
-    public void setCustomizationFile( final String customizationFile )
+
+    public void setCustomizationFile(final String customizationFile)
     {
         this.customizationFile = customizationFile;
         fireChanged();
@@ -330,19 +330,19 @@ public class ProjectFileStructure extends BeModelElementSupport
         return pagesFile;
     }
 
-    public void setPagesFile( String pagesFile )
+    public void setPagesFile(String pagesFile)
     {
         this.pagesFile = pagesFile;
         fireChanged();
     }
-    
+
     @PropertyName("Directory for static pages")
     public String getPagesDir()
     {
         return pagesDir;
     }
-    
-    public void setPagesDir( String pagesDir )
+
+    public void setPagesDir(String pagesDir)
     {
         this.pagesDir = pagesDir;
         fireChanged();
@@ -354,7 +354,7 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsFormsFile;
     }
 
-    public void setJsFormsFile( String jsFormsFile )
+    public void setJsFormsFile(String jsFormsFile)
     {
         this.jsFormsFile = jsFormsFile;
         fireChanged();
@@ -366,19 +366,19 @@ public class ProjectFileStructure extends BeModelElementSupport
         return massChangesFile;
     }
 
-    public void setMassChangesFile( String massChangesFile )
+    public void setMassChangesFile(String massChangesFile)
     {
         this.massChangesFile = massChangesFile;
         fireChanged();
     }
-    
+
     @PropertyName("File containing selected profile")
     public String getSelectedProfileFile()
     {
         return selectedProfileFile;
     }
 
-    public void setSelectedProfileFile( String selectedProfileFile )
+    public void setSelectedProfileFile(String selectedProfileFile)
     {
         this.selectedProfileFile = selectedProfileFile;
         fireChanged();

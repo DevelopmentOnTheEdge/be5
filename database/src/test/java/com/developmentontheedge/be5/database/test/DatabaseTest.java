@@ -24,12 +24,13 @@ public abstract class DatabaseTest
             Modules.override(new DatabaseModule()).with(new DatabaseModuleTestModule())
     );
 
-    @Inject protected DbService db;
+    @Inject
+    protected DbService db;
 
     @Before
     public void setUpBaseTestUtils()
     {
-        if(getInjector() != null)
+        if (getInjector() != null)
         {
             getInjector().injectMembers(this);
         }
@@ -51,7 +52,8 @@ public abstract class DatabaseTest
         }
     }
 
-    static {
+    static
+    {
         LogManager.getLogManager().reset();
     }
 

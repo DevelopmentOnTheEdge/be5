@@ -6,15 +6,16 @@ public class AstWindowSpecification extends SimpleNode
 {
     public AstWindowSpecification(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "OVER(";
         this.nodeSuffix = ")";
     }
+
     public AstWindowSpecification(SimpleNode... childs)
     {
-        this( SqlParserTreeConstants.JJTWINDOWSPECIFICATION );
-        for( SimpleNode child : childs )
-            addChild( child );
+        this(SqlParserTreeConstants.JJTWINDOWSPECIFICATION);
+        for (SimpleNode child : childs)
+            addChild(child);
     }
 }
 /* JavaCC - OriginalChecksum=9a7329d073f4ad1414dfd75647829132 (do not edit this line) */

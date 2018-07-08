@@ -13,23 +13,21 @@ import java.util.Map;
 public interface QueryContext
 {
     /**
-     * @param name
-     *            parameter name
+     * @param name parameter name
      * @return parameter value by name or null if parameter absent
      */
     List<String> getListParameter(String name);
-    
+
     String getParameter(String name);
 
     /**
-     * @param name
-     *            session variable name
+     * @param name session variable name
      * @return session variable value or null if such variable does not exist
      */
     Object getSessionVariable(String name);
 
     Map<String, String> asMap();
-    
+
     String resolveQuery(String entity, String name);
 
     /**

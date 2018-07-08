@@ -9,19 +9,17 @@ import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
-class DynamicPropertyMetaClassTest extends RegisterMetaClass
-{
+class DynamicPropertyMetaClassTest extends RegisterMetaClass {
     @Test
-    void leftShift()
-    {
+    void leftShift() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-            name: "testField",
-            DISPLAY_NAME: "Test Field",
-            value: 1L,
-            TYPE: Long,
-            GROUP_ID: 1
+                name        : "testField",
+                DISPLAY_NAME: "Test Field",
+                value       : 1L,
+                TYPE        : Long,
+                GROUP_ID    : 1
         ]
 
         DynamicPropertyMetaClass.leftShift(dps.getProperty("testField"), ImmutableMap.of(
@@ -39,12 +37,11 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
     }
 
     @Test
-    void leftShiftChangeValue()
-    {
+    void leftShiftChangeValue() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-                name: "testField",
+                name : "testField",
                 value: 1L
         ]
 
@@ -56,15 +53,14 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
     }
 
     @Test
-    void setProperty()
-    {
+    void setProperty() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps.testField = [
                 DISPLAY_NAME: "Test Field",
-                value: 1L,
-                TYPE: Long,
-                GROUP_ID: 1
+                value       : 1L,
+                TYPE        : Long,
+                GROUP_ID    : 1
         ]
 
         DynamicProperty testField = dps.getProperty("testField")
@@ -76,8 +72,7 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
     }
 
     @Test
-    void setPropertyNull()
-    {
+    void setPropertyNull() {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps.testField = null

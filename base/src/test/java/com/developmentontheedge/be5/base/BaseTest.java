@@ -23,7 +23,7 @@ public abstract class BaseTest
     @Before
     public void setUpBaseTestUtils()
     {
-        if(getInjector() != null)
+        if (getInjector() != null)
         {
             getInjector().injectMembers(this);
         }

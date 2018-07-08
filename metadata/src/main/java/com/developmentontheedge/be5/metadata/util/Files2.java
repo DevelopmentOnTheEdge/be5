@@ -14,20 +14,20 @@ import java.util.function.Predicate;
 
 public class Files2
 {
-    
+
     private static class Copier implements FileVisitor<Path>
     {
-        
+
         private final Path source;
         private final Path target;
         private final Predicate<Path> shouldCopy;
 
-        public Copier( final Path source, final Path target )
+        public Copier(final Path source, final Path target)
         {
-            this( source, target, path -> true );
+            this(source, target, path -> true);
         }
-        
-        public Copier( final Path source, final Path target, final Predicate<Path> copy )
+
+        public Copier(final Path source, final Path target, final Predicate<Path> copy)
         {
             this.source = source;
             this.target = target;
@@ -35,55 +35,59 @@ public class Files2
         }
 
         @Override
-        public FileVisitResult postVisitDirectory( Path dir, IOException e ) throws IOException {
+        public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult preVisitDirectory( Path dir, BasicFileAttributes attrs ) throws IOException {
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult visitFile( Path file, BasicFileAttributes attrs ) throws IOException {
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+        {
             final int baseNameCount = source.getNameCount();
             final int fileNameCount = file.getNameCount();
             final List<String> parts = new ArrayList<>();
-            
-            for ( int i = baseNameCount; i < fileNameCount; i++ )
-                parts.add( file.getName( i ).toString() );
-            
-            if ( !parts.isEmpty() && parts.get( parts.size() - 1 ).equals( ".gitignore" ) )
+
+            for (int i = baseNameCount; i < fileNameCount; i++)
+                parts.add(file.getName(i).toString());
+
+            if (!parts.isEmpty() && parts.get(parts.size() - 1).equals(".gitignore"))
                 return FileVisitResult.CONTINUE;
-            
-            
-            final Path targetFile = target.resolve( String.join( "/", parts ) );
-            
-            if ( shouldCopy.test( file ) )
+
+
+            final Path targetFile = target.resolve(String.join("/", parts));
+
+            if (shouldCopy.test(file))
             {
-                Files.createDirectories( targetFile.getParent() );
-                Files.deleteIfExists( targetFile );
-                Files.copy( file, targetFile );
+                Files.createDirectories(targetFile.getParent());
+                Files.deleteIfExists(targetFile);
+                Files.copy(file, targetFile);
             }
-            
+
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult visitFileFailed( Path file, IOException e ) throws IOException {
+        public FileVisitResult visitFileFailed(Path file, IOException e) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
-        
+
     }
-    
+
     private static class Collector implements FileVisitor<Path>
     {
-        
+
         private final Path path;
         private final Predicate<String> select;
         private final List<String> relativePaths;
 
-        public Collector( final Path path, final Predicate<String> select )
+        public Collector(final Path path, final Predicate<String> select)
         {
             this.path = path;
             this.select = select;
@@ -91,42 +95,46 @@ public class Files2
         }
 
         @Override
-        public FileVisitResult postVisitDirectory( Path dir, IOException exc ) throws IOException {
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult preVisitDirectory( Path dir, BasicFileAttributes attrs ) throws IOException {
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult visitFile( Path file, BasicFileAttributes attrs ) throws IOException {
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+        {
             final int baseNameCount = path.getNameCount();
             final int fileNameCount = file.getNameCount();
             final List<String> parts = new ArrayList<>();
-            
-            for ( int i = baseNameCount; i < fileNameCount; i++ )
-                parts.add( file.getName( i ).toString() );
-            
-            final String relativePath = String.join( "/", parts );
-            
-            if ( select.test( relativePath ) )
-                relativePaths.add( relativePath );
-            
+
+            for (int i = baseNameCount; i < fileNameCount; i++)
+                parts.add(file.getName(i).toString());
+
+            final String relativePath = String.join("/", parts);
+
+            if (select.test(relativePath))
+                relativePaths.add(relativePath);
+
             return FileVisitResult.CONTINUE;
         }
 
         @Override
-        public FileVisitResult visitFileFailed( Path file, IOException exc ) throws IOException {
+        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
+        {
             return FileVisitResult.CONTINUE;
         }
-        
+
         public List<String> getRelativePaths()
         {
             return relativePaths;
         }
-        
+
     }
 
     /**
@@ -135,38 +143,37 @@ public class Files2
     private Files2()
     {
     }
-    
-    public static void copyAll( final Path from, final Path to ) throws IOException
+
+    public static void copyAll(final Path from, final Path to) throws IOException
     {
-        Files.walkFileTree( from, new Copier( from, to ) );
+        Files.walkFileTree(from, new Copier(from, to));
     }
-    
-    public static void copyAll( final Path from, final Path to, final Predicate<Path> copy ) throws IOException
+
+    public static void copyAll(final Path from, final Path to, final Predicate<Path> copy) throws IOException
     {
-        Files.walkFileTree( from, new Copier( from, to, copy ) );
+        Files.walkFileTree(from, new Copier(from, to, copy));
     }
-    
-    public static String[] collectRelativePaths( final Path path, final Predicate<String> select ) throws IOException
+
+    public static String[] collectRelativePaths(final Path path, final Predicate<String> select) throws IOException
     {
-        final Collector collector = new Collector( path, select );
-        Files.walkFileTree( path, collector );
-        
-        return collector.getRelativePaths().stream().toArray( String[]::new );
+        final Collector collector = new Collector(path, select);
+        Files.walkFileTree(path, collector);
+
+        return collector.getRelativePaths().stream().toArray(String[]::new);
     }
 
     public static Predicate<Path> byExtension(final String extension)
     {
-        final String suffix = "."+extension;
-        return input -> input.getFileName().toString().endsWith( suffix );
+        final String suffix = "." + extension;
+        return input -> input.getFileName().toString().endsWith(suffix);
     }
 
-    public static boolean contentEq( final Path path, final String content )
+    public static boolean contentEq(final Path path, final String content)
     {
         try
         {
-            return Arrays.equals( content.getBytes( StandardCharsets.UTF_8 ), Files.readAllBytes( path ) );
-        }
-        catch ( IOException e )
+            return Arrays.equals(content.getBytes(StandardCharsets.UTF_8), Files.readAllBytes(path));
+        } catch (IOException e)
         {
             return false;
         }

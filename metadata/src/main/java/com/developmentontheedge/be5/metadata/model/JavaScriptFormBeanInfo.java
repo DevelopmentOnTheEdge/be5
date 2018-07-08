@@ -14,9 +14,9 @@ public class JavaScriptFormBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add(new PropertyDescriptorEx( "name", beanClass, "getName", null ));
-        add(new PropertyDescriptorEx( "module", beanClass, "getModuleName", "setModule" ), ModuleSelector.class);
+        add(new PropertyDescriptorEx("name", beanClass, "getName", null));
+        add(new PropertyDescriptorEx("module", beanClass, "getModuleName", "setModule"), ModuleSelector.class);
         add("relativePath");
-        add(new PropertyDescriptorEx( "path", beanClass, "getFilePath", null ));
+        add(new PropertyDescriptorEx("path", beanClass, "getFilePath", null));
     }
 }

@@ -29,18 +29,18 @@ public class Entities extends TableBuilderSupport
             if (allRecords != null) name.option("link", "url", ActionUtils.toAction(allRecords).getArg());
 
             addRow(cells(name,
-                entity.getTypeString(),
-                meta.getColumns(entity).size(),
+                    entity.getTypeString(),
+                    meta.getColumns(entity).size(),
 
-                cell(meta.getQueryNames(entity).size())
-                    .option("link", "url",
-                        new HashUrl(TABLE_ACTION, "_system_", "Queries")
-                            .named("entity", entity.getName()).toString()),
+                    cell(meta.getQueryNames(entity).size())
+                            .option("link", "url",
+                                    new HashUrl(TABLE_ACTION, "_system_", "Queries")
+                                            .named("entity", entity.getName()).toString()),
 
-                cell(meta.getOperationNames(entity).size())
-                        .option("link", "url",
-                                new HashUrl(TABLE_ACTION, "_system_", "Operations")
-                                        .named("entity", entity.getName()).toString())
+                    cell(meta.getOperationNames(entity).size())
+                            .option("link", "url",
+                                    new HashUrl(TABLE_ACTION, "_system_", "Operations")
+                                            .named("entity", entity.getName()).toString())
             ));
         }
 

@@ -6,9 +6,9 @@ public class AstBeQuoted extends SimpleNode
 {
     public AstBeQuoted(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public void setContent(String content)
     {
         this.nodeContent = content;

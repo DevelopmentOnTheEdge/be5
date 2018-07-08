@@ -10,11 +10,10 @@ public class OperationSelector extends StringTagEditor
     {
         try
         {
-            return ((EntityItem)getBean()).getEntity().getOperations().names().prepend( "" ).toArray( String[]::new );
-        }
-        catch( Exception e )
+            return ((EntityItem) getBean()).getEntity().getOperations().names().prepend("").toArray(String[]::new);
+        } catch (Exception e)
         {
-            return new String[] {""};
+            return new String[]{""};
         }
     }
 }

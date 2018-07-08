@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <testSuite name="payments">
- <description>Тестирование реального запроса PAYMENTS_QUERY из
-  BeanExplorer\modules\soccalc\src\sql\metadata.m4</description>
+  <description>Тестирование реального запроса PAYMENTS_QUERY из
+    BeanExplorer\modules\soccalc\src\sql\metadata.m4
+  </description>
 
- <test name="select_simple">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="select_simple">
+    <parser>
+      <query><![CDATA[SELECT
   "___payID" AS "___ID",
   "___ownerid",
   "___pbid",
@@ -23,7 +24,7 @@
   "___bankAccount",
   "Карточка"
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   "___payID" AS "___ID",
   "___ownerid",
   "___pbid",
@@ -40,12 +41,12 @@
   "___bankAccount",
   "Карточка"
   FROM payments pay]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="select_if">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="select_if">
+    <parser>
+      <query><![CDATA[SELECT
   "Карточка",
 <if expr="isDeduction==yes">
   <then>
@@ -59,7 +60,7 @@
   "Адрес", ";Адрес", 
   "Карточка"
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   "Карточка",
 <if expr="isDeduction==yes">
   <then>
@@ -73,12 +74,12 @@
   "Адрес", ";Адрес", 
   "Карточка"
   FROM payments pay]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="select_if_param">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="select_if_param">
+    <parser>
+      <query><![CDATA[SELECT
   "Банк", ";Банк",
   "Р.Счет", ";Р.Счет"
 <if parameter="___forVerification">
@@ -93,7 +94,7 @@
   /*<parameter:___forVerification />*/
 </if>
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   "Банк", ";Банк",
   "Р.Счет", ";Р.Счет"
 <if parameter="___forVerification">
@@ -108,12 +109,12 @@
   /*<parameter:___forVerification />*/
 </if>
   FROM payments pay]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="select_if_sql">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="select_if_sql">
+    <parser>
+      <query><![CDATA[SELECT
   "Банк"
 <if parameter="___extraData">
  ,'<sql limit="1">SELECT d.num || ' !!!' AS "num" FROM documents d </sql>'
@@ -121,7 +122,7 @@
 /*<parameter:___extraData />*/
 </if>
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   "Банк"
 <if parameter="___extraData">
  , '<sql limit="1"> SELECT d.num || ' !!!' AS "num" FROM documents d </sql>'
@@ -129,12 +130,12 @@
 /*<parameter:___extraData />*/
 </if>
   FROM payments pay]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="select_unless">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="select_unless">
+    <parser>
+      <query><![CDATA[SELECT
   "Банк"
 <unless parameter="quickCalc">
 ,
@@ -145,7 +146,7 @@
     payReal."payAmount" AS "payAmount"
 </unless>
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
   "Банк"
 <unless parameter="quickCalc">
 ,
@@ -156,25 +157,25 @@
     payReal."payAmount" AS "payAmount"
 </unless>
   FROM payments pay]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="where_in">
-  <parser>
-   <query><![CDATA[SELECT 
+  <test name="where_in">
+    <parser>
+      <query><![CDATA[SELECT
 "Л.Счет" AS "___clientAccount"
 FROM documents d
 WHERE d.typeID IN ( 'ПАСПОРТ РОССИИ' )]]></query>
-   <format dbms="oracle"><![CDATA[SELECT 
+      <format dbms="oracle"><![CDATA[SELECT
 "Л.Счет" AS "___clientAccount"
 FROM documents d
 WHERE d.typeID IN ( 'ПАСПОРТ РОССИИ' )]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="column_sql_where">
-  <parser>
-   <query><![CDATA[SELECT 
+  <test name="column_sql_where">
+    <parser>
+      <query><![CDATA[SELECT
 "Л.Счет" AS "___clientAccount",
 '<sql limit="1">SELECT ( d.num || ' ' || d.series ) AS "num"
 FROM documents d
@@ -183,7 +184,7 @@ WHERE d.entity = 'persons' AND d.entityID = <var:___receivePersonId refColumn="p
       ( d.activeFrom <= SYSDATE  AND d.activeTo > SYSDATE  )
 </sql>'
   FROM payments pay]]></query>
-   <format dbms="oracle"><![CDATA[SELECT 
+      <format dbms="oracle"><![CDATA[SELECT
 "Л.Счет" AS "___clientAccount",
 '<sql limit="1"> SELECT ( d.num || ' ' || d.series ) AS "num"
 FROM documents d
@@ -192,14 +193,14 @@ WHERE d.entity = 'persons' AND d.entityID = <var:___receivePersonId refColumn="p
       ( d.activeFrom <= SYSDATE  AND d.activeTo > SYSDATE  )
 </sql>'
   FROM payments pay]]></format>
-  </parser>
- </test>
- 
- <!--  TODO: parse table names like 'FROM households<parameter:_tcloneid_ default=""/>' -->
+    </parser>
+  </test>
 
- <!-- ////////////////////////////////////////////////////////////////////////// -->
+  <!--  TODO: parse table names like 'FROM households<parameter:_tcloneid_ default=""/>' -->
 
- <sql><![CDATA[
+  <!-- ////////////////////////////////////////////////////////////////////////// -->
+
+  <sql><![CDATA[
  
 SELECT
   "___payID" AS "___ID",
@@ -694,7 +695,7 @@ AND payReal."___eventType" IN ('14','15','16','17','25','26','68' , '24')
 </if>
 ORDER BY "___ID"]]></sql>
 
- <m4><![CDATA[
+  <m4><![CDATA[
 SELECT
   "___payID" AS "___ID",
   "___ownerid",

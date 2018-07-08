@@ -22,11 +22,10 @@ class PropertiesToRowTransformer
     private final String queryName;
     private final DynamicPropertySet properties;
     private final UserAwareMeta userAwareMeta;
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat( "dd.MM.yyyy" );
-    private SimpleDateFormat timestampFormatter = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+    private SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     /**
-     *
      * @param properties represent a row
      */
     PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta)
@@ -42,11 +41,11 @@ class PropertiesToRowTransformer
      */
     String getRowId()
     {
-        Object idObject = properties.getValue( DatabaseConstants.ID_COLUMN_LABEL );
+        Object idObject = properties.getValue(DatabaseConstants.ID_COLUMN_LABEL);
 
-        if( idObject != null )
+        if (idObject != null)
         {
-            return String.valueOf( idObject );//MapParamHelper.mapNameOut( String.valueOf( idObject ) );
+            return String.valueOf(idObject);//MapParamHelper.mapNameOut( String.valueOf( idObject ) );
         }
 
         throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");
@@ -59,9 +58,10 @@ class PropertiesToRowTransformer
     {
         List<ColumnModel> columns = new ArrayList<>();
 
-        for( DynamicProperty property : properties )
+        for (DynamicProperty property : properties)
         {
-            if( !shouldBeSkipped( property ) ) {
+            if (!shouldBeSkipped(property))
+            {
                 columns.add(new ColumnModel(property.getName(), userAwareMeta.getColumnTitle(entityName, queryName, property.getName())));
             }
         }
@@ -71,6 +71,7 @@ class PropertiesToRowTransformer
 
     /**
      * Glues and constructs cells.
+     *
      * @see # preprocessProperties(DatabaseConnector, List<DynamicProperty>, Map<String, DynamicProperty>)
      */
     List<RawCellModel> collectCells()
@@ -104,11 +105,11 @@ class PropertiesToRowTransformer
 
         List<RawCellModel> cells = new ArrayList<>();
 
-        for( DynamicProperty property : properties )
+        for (DynamicProperty property : properties)
         {
             String cellName = property.getName();
             Object cellContent = formatValue(property);
-            boolean hidden = shouldBeSkipped( cellName );
+            boolean hidden = shouldBeSkipped(cellName);
             cells.add(new RawCellModel(cellName, cellContent, DynamicPropertyMeta.get(property), hidden));
         }
 
@@ -152,24 +153,24 @@ class PropertiesToRowTransformer
     private Object formatValue(DynamicProperty property)
     {
         Object value = property.getValue();
-        if(value == null)return null;
+        if (value == null) return null;
 
-        if(property.getType() == java.sql.Date.class)
+        if (property.getType() == java.sql.Date.class)
         {
             return dateFormatter.format(value);
         }
 
-        if(property.getType() == java.sql.Time.class)
+        if (property.getType() == java.sql.Time.class)
         {
             String timestamp = timestampFormatter.format(value);
-            if(timestamp.startsWith("01.01.1970"))
+            if (timestamp.startsWith("01.01.1970"))
             {
                 timestamp = timestamp.substring(11);
             }
             return timestamp;
         }
 
-        if(property.getType() == java.sql.Timestamp.class)
+        if (property.getType() == java.sql.Timestamp.class)
         {
             return timestampFormatter.format(value);
         }
@@ -179,13 +180,13 @@ class PropertiesToRowTransformer
 
     private boolean shouldBeSkipped(DynamicProperty property)
     {
-        return shouldBeSkipped( property.getDisplayName() );
+        return shouldBeSkipped(property.getDisplayName());
     }
 
     private boolean shouldBeSkipped(String propertyName)
     {
-        return MoreStrings.startsWithAny( propertyName, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX, DatabaseConstants.HIDDEN_COLUMN_PREFIX,
-        		DatabaseConstants.GLUE_COLUMN_PREFIX );
+        return MoreStrings.startsWithAny(propertyName, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX, DatabaseConstants.HIDDEN_COLUMN_PREFIX,
+                DatabaseConstants.GLUE_COLUMN_PREFIX);
     }
 
 }

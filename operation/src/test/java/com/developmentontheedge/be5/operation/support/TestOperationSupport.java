@@ -8,7 +8,10 @@ import javax.inject.Inject;
 
 public abstract class TestOperationSupport extends BaseOperationSupport
 {
-    @Inject public DbService db;
-    @Inject public Meta meta;
-    @Inject public Validator validator;
+    @Inject
+    public DbService db;
+    @Inject
+    public Meta meta;
+    @Inject
+    public Validator validator;
 }

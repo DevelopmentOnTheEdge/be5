@@ -13,7 +13,8 @@ import java.util.Map;
 
 public class TestOperationProperty extends TestOperationSupport
 {
-    @Inject SqlHelper sqlHelper;
+    @Inject
+    SqlHelper sqlHelper;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues)

@@ -10,35 +10,35 @@ import java.util.List;
 
 public class ColumnsApplier
 {
-    public void keepOnlyOutColumns(AstBeSqlSubQuery subQuery){
+    public void keepOnlyOutColumns(AstBeSqlSubQuery subQuery)
+    {
         List<String> outColumns = Arrays.asList(subQuery.getOutColumns().split(","));
 
-        AstSelect select = (AstSelect)subQuery.getQuery().child( 0 );
+        AstSelect select = (AstSelect) subQuery.getQuery().child(0);
         AstSelectList selectList = select.getSelectList();
-        if(selectList.isAllColumns())
+        if (selectList.isAllColumns())
         {
-            throw new IllegalStateException( "All columns not support " + selectList.getNodeContent() );
-        }
-        else
+            throw new IllegalStateException("All columns not support " + selectList.getNodeContent());
+        } else
         {
-            for (int i = selectList.jjtGetNumChildren()-1; i >= 0 ; i--)
+            for (int i = selectList.jjtGetNumChildren() - 1; i >= 0; i--)
             {
-                AstDerivedColumn derivedColumn = (AstDerivedColumn)selectList.jjtGetChild(i);
-                if(!outColumns.contains(derivedColumn.getAlias().replace("\"","")))
+                AstDerivedColumn derivedColumn = (AstDerivedColumn) selectList.jjtGetChild(i);
+                if (!outColumns.contains(derivedColumn.getAlias().replace("\"", "")))
                 {
                     derivedColumn.remove();
                 }
             }
 
-            if(selectList.jjtGetNumChildren() == 0)
+            if (selectList.jjtGetNumChildren() == 0)
             {
                 throw new IllegalStateException("selectList is empty");
             }
 
-            AstDerivedColumn lastColumn = (AstDerivedColumn)selectList.jjtGetChild(selectList.jjtGetNumChildren() -1);
+            AstDerivedColumn lastColumn = (AstDerivedColumn) selectList.jjtGetChild(selectList.jjtGetNumChildren() - 1);
             lastColumn.setSuffixComma(false);
 
-            AstDerivedColumn firstColumn = (AstDerivedColumn)selectList.jjtGetChild(0);
+            AstDerivedColumn firstColumn = (AstDerivedColumn) selectList.jjtGetChild(0);
             firstColumn.removeSpecialPrefix();
         }
     }

@@ -6,6 +6,6 @@ public class ProjectCreateException extends Exception
 
     public ProjectCreateException(String projectName, Throwable cause)
     {
-        super("Unable to create project "+projectName, cause);
+        super("Unable to create project " + projectName, cause);
     }
 }
