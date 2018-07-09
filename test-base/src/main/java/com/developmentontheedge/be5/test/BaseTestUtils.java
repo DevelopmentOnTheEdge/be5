@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -22,6 +23,7 @@ import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.test.mocks.TestMailService;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -255,6 +257,7 @@ public abstract class BaseTestUtils
             bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
+            bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
         }
     }
 
@@ -265,6 +268,7 @@ public abstract class BaseTestUtils
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
+            bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
         }
     }
 

@@ -27,7 +27,6 @@ import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
-import com.developmentontheedge.be5.server.services.mail.MailService;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
@@ -74,7 +73,6 @@ public class ServerModule extends ServletModule
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
         bind(ErrorModelHelper.class).in(Scopes.SINGLETON);
-        bind(MailService.class).in(Scopes.SINGLETON);
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);

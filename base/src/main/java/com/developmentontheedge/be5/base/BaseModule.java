@@ -4,12 +4,14 @@ import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.base.services.impl.DataSourceServiceImpl;
 import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
+import com.developmentontheedge.be5.base.services.impl.MailServiceImpl;
 import com.developmentontheedge.be5.base.services.impl.MetaImpl;
 import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl;
@@ -44,5 +46,6 @@ public class BaseModule extends AbstractModule
         bind(LogConfigurator.class).asEagerSingleton();
         bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
+        bind(MailService.class).to(MailServiceImpl.class).in(Scopes.SINGLETON);
     }
 }

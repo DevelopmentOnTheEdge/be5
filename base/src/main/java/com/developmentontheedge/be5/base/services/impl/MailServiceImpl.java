@@ -1,6 +1,7 @@
-package com.developmentontheedge.be5.server.services.mail;
+package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.util.Utils;
 
 import javax.activation.DataHandler;
@@ -27,14 +28,14 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 
-public class MailService
+public class MailServiceImpl implements MailService
 {
-    public static final Logger log = Logger.getLogger(MailService.class.getName());
+    public static final Logger log = Logger.getLogger(MailServiceImpl.class.getName());
 
     private final CoreUtils coreUtils;
 
     @Inject
-    public MailService(CoreUtils coreUtils)
+    public MailServiceImpl(CoreUtils coreUtils)
     {
         this.coreUtils = coreUtils;
     }
@@ -44,12 +45,8 @@ public class MailService
      * <br/><br/>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
-     *
-     * @param to
-     * @param subject
-     * @param body
-     * @throws Exception
      */
+    @Override
     public void sendPlainEmail(String to, String subject, String body)
             throws Exception
     {
@@ -62,12 +59,8 @@ public class MailService
      * <br/><br/>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
-     *
-     * @param to
-     * @param subject
-     * @param body
-     * @throws Exception
      */
+    @Override
     public void sendHtmlEmail(String to, String subject, String body)
             throws Exception
     {
@@ -77,16 +70,11 @@ public class MailService
 
     /**
      * Same as,
-     * {@link #sendEmailReal(InternetAddress, InternetAddress[], String, String, String, Map) sendEmailReal(InternetAddress, InternetAddress[], String, String, String, Map, Locale)}
+     * {@link #sendEmailReal(InternetAddress, InternetAddress[], String, String, String, Map)
+     * sendEmailReal(InternetAddress, InternetAddress[], String, String, String, Map, Locale)}
      * only map of localized messages extract from a current operation.
-     *
-     * @param from
-     * @param to
-     * @param subject
-     * @param body
-     * @param type
-     * @throws Exception
      */
+    @Override
     public void sendEmail(InternetAddress from, InternetAddress[] to, String subject, String body, String type)
             throws Exception
     {
@@ -98,15 +86,8 @@ public class MailService
 
     /**
      * Send email passed localized.
-     *
-     * @param from
-     * @param to
-     * @param subject
-     * @param body
-     * @param type
-     * @param locMessages
-     * @throws Exception
      */
+    @Override
     public void sendEmailReal(InternetAddress from, InternetAddress[] to, String subject, String body, String type,
                               Map locMessages)
             throws Exception
@@ -161,9 +142,8 @@ public class MailService
      *
      * @param bodyBytes message body, as byte array
      * @param mimeType  body text parameter
-     * @return
      */
-    public static DataHandler getEmailBodyDataHandler(final byte[] bodyBytes, final String mimeType)
+    private static DataHandler getEmailBodyDataHandler(final byte[] bodyBytes, final String mimeType)
     {
         return new DataHandler(
                 new DataSource()
@@ -199,7 +179,7 @@ public class MailService
         private String user = null;
         private String pwd = null;
 
-        public SmtpAuthenticator(String user, String pwd)
+        SmtpAuthenticator(String user, String pwd)
         {
             this.user = user;
             this.pwd = pwd;
@@ -213,14 +193,14 @@ public class MailService
     }
 
     /**
-     * Creates session for the mail host. Mail host is passed parameter "host" or host is fetching from the system settings
-     * ( {@link CoreUtils#getSystemSetting(String) getSystemSetting(DatabaseConnector, String)} ), parameter "MAIL_HOST".
+     * Creates session for the mail host. Mail host is passed parameter "host"
+     * or host is fetching from the system settings
+     * {@link CoreUtils#getSystemSetting(String) getSystemSetting(DatabaseConnector, String)}, parameter "MAIL_HOST".
      * If mail host wasn't specified or is empty, then "localhost" will be taken instead.
      *
      * @param host mail host
-     * @return
      */
-    public Session getMailSession(String host)
+    private Session getMailSession(String host)
     {
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
@@ -264,26 +244,23 @@ public class MailService
      * with host=null and stream=null
      *
      * @return created mime message
-     * @throws MessagingException
-     * @throws UnsupportedEncodingException
      */
-    public MimeMessage2 createMimeMessage()
+    private MimeMessage2 createMimeMessage()
             throws MessagingException, UnsupportedEncodingException
     {
         return createMimeMessage(null, null);
     }
 
     /**
-     * Creates mime message from passed stream, for sending it as letter with the specified host. If system settings contains parameter
+     * Creates mime message from passed stream, for sending it as letter with the specified host.
+     * If system settings contains parameter
      * "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", then mime message will contain from address and name.
      *
      * @param host   smtp host
      * @param stream message body
      * @return created mime message
-     * @throws MessagingException
-     * @throws UnsupportedEncodingException
      */
-    public MimeMessage2 createMimeMessage(String host, InputStream stream)
+    private MimeMessage2 createMimeMessage(String host, InputStream stream)
             throws MessagingException, UnsupportedEncodingException
     {
         MimeMessage2 message = stream == null

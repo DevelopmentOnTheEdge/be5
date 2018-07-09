@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.base;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.test.BaseCoreUtilsForTest;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -47,6 +49,7 @@ public abstract class BaseTest
         protected void configure()
         {
             bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
+            bind(CoreUtils.class).to(BaseCoreUtilsForTest.class).in(Scopes.SINGLETON);
         }
     }
 }
