@@ -56,12 +56,12 @@ public class DataSourceServiceImpl implements DataSourceService
         {
             throw Be5Exception.internal("When fetching datasource", e);
         }
-        catch (NamingException ignore)
+        catch (NamingException e)
         {
             BeConnectionProfile profile = project.getConnectionProfile();
             if (profile == null)
             {
-                throw Be5Exception.internal("Connection profile is not configured.");
+                throw Be5Exception.internal("Connection profile is not configured. and NamingException: ", e);
             }
 
             type = profile.getRdbms();
