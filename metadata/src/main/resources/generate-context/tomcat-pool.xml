@@ -12,7 +12,7 @@
             description="DB Connection PROJECT_NAME"
             username="USERNAME"
             password="PASSWORD"
-            driverClassName="org.postgresql.Driver"
+            driverClassName="DRIVER_DEFINITION"
             url="URL"
             maxActive="200"
             maxIdle="10"

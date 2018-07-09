@@ -103,7 +103,8 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
                 replaceAll("PROJECT_NAME", be5Project.getName()).
                 replaceAll("USERNAME", prof.getUsername()).
                 replaceAll("PASSWORD", connectionPassword != null ? connectionPassword : prof.getPassword()).
-                replaceAll("URL", prof.getConnectionUrl());
+                replaceAll("URL", prof.getConnectionUrl()).
+                replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition());
     }
 
     public GenerateContext setGenerateContextPath(String generateContextPath)
