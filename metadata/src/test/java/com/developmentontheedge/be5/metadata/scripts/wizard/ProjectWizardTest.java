@@ -68,10 +68,10 @@ public class ProjectWizardTest
     public void modules() throws Exception
     {
         projectWizard
-                .setInputStream("test-name\n4\n3\ntest-module\n5")
+                .setInputStream("test-name\n4\n2\ntest-module\n5")
                 .execute();
 
-        assertEquals(ImmutableList.of("core", "system", "test-module"),
+        assertEquals(ImmutableList.of("core", "test-module"),
                 getProject().getModules().names().toList());
     }
 
