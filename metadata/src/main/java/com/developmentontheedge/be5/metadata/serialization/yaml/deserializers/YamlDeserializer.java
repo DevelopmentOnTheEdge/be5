@@ -103,7 +103,8 @@ public class YamlDeserializer
         try
         {
             return entityDeserializer.readEntity(entityName, content, module);
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             Entity entity = new Entity(entityName, module, EntityType.TABLE);
             loadContext.addWarning(e.attachElement(entity));
@@ -119,7 +120,8 @@ public class YamlDeserializer
         try
         {
             return entityDeserializer.readQuery(queryName, content, entity);
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             Query query = new Query(queryName, entity);
             loadContext.addWarning(e.attachElement(query));
@@ -136,7 +138,8 @@ public class YamlDeserializer
         try
         {
             return entityDeserializer.readOperation(operationName, content, entity);
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             Operation operation = Operation.createOperation(operationName, Operation.OPERATION_TYPE_JAVA, entity);
             loadContext.addWarning(e.attachElement(operation));
@@ -296,8 +299,8 @@ public class YamlDeserializer
 //
 //    public StaticPages reloadPages( final Path path, final Module target ) throws ReadException
 //    {
-//        final StaticPages pages = new StaticPages( target );
-//        final StaticPagesDeserializer deserializer = new StaticPagesDeserializer( path, pages );
+//        static final Pages pages = new StaticPages( target );
+//        static final PagesDeserializer deserializer = new StaticPagesDeserializer( path, pages );
 //        deserializer.deserialize();
 //        DataElementUtils.saveQuiet( pages );
 //
@@ -334,7 +337,8 @@ public class YamlDeserializer
             final EntityDeserializer entityDeserializer = new EntityDeserializer(this, loadContext, module, name);
             entityDeserializer.deserialize();
             return entityDeserializer.getEntity();
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             throw e.attachElement(module);
         }
@@ -348,7 +352,8 @@ public class YamlDeserializer
         try
         {
             new StaticPagesDeserializer(this, loadContext, getFileSystem().getStaticPagesFile(), target).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e.attachElement(target));
         }
@@ -362,7 +367,8 @@ public class YamlDeserializer
         try
         {
             new SecurityDeserializer(loadContext, getFileSystem().getSecurityFile(), target).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e.attachElement(target));
         }
@@ -376,10 +382,12 @@ public class YamlDeserializer
         try
         {
             new CustomizationDeserializer(this, loadContext, getFileSystem().getCustomizationFile(), target).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e.attachElement(target));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             loadContext.addWarning(new ReadException(e, target, getFileSystem().getCustomizationFile()));
         }
@@ -414,7 +422,8 @@ public class YamlDeserializer
                 {
                     type = "";
                     domain = splitted.get(0);
-                } else
+                }
+                else
                 {
                     type = splitted.get(splitted.size() - 1);
                     splitted.remove(splitted.size() - 1);
@@ -426,7 +435,8 @@ public class YamlDeserializer
                 customization.setOriginModuleName(project.getProjectOrigin());
                 DataElementUtils.saveQuiet(customization);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             loadContext.addWarning(new ReadException(e, target, project.getLocation()));
         }
@@ -440,7 +450,8 @@ public class YamlDeserializer
         try
         {
             new DaemonsDeserializer(loadContext, getFileSystem().getDaemonsFile(), daemonCollection).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e);
         }
@@ -451,7 +462,8 @@ public class YamlDeserializer
         try
         {
             new MassChangesDeserializer(loadContext, getFileSystem().getMassChangesFile(), massChangeCollection).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e.attachElement(massChangeCollection));
         }
@@ -464,7 +476,8 @@ public class YamlDeserializer
             try
             {
                 readConnectionProfiles(type, target);
-            } catch (final ReadException e)
+            }
+            catch (final ReadException e)
             {
                 loadContext.addWarning(e);
             }
@@ -492,7 +505,8 @@ public class YamlDeserializer
         try
         {
             new FormsDeserializer(loadContext, getFileSystem().getJavaScriptFormsFile(), formCollection).deserialize();
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e);
         }
@@ -505,7 +519,8 @@ public class YamlDeserializer
             try
             {
                 new LocalizationDeserializer(loadContext, lang, getFileSystem().getLocalizationFile(lang), localizations).deserialize();
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(localizations));
             }
@@ -531,7 +546,8 @@ public class YamlDeserializer
                     script.getTemplateCode();
                 }
                 DataElementUtils.saveQuiet(script);
-            } catch (final Exception e)
+            }
+            catch (final Exception e)
             {
                 loadContext.addWarning(new ReadException(e, macroFiles.getCompletePath().getChildPath(scriptName), macroFile));
             }

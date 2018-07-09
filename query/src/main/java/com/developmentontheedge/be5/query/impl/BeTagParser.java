@@ -115,7 +115,8 @@ public class BeTagParser
                 }
             }
 
-        } catch (Tokenizer.ParseException e)
+        }
+        catch (Tokenizer.ParseException e)
         {
             throw new IllegalArgumentException(e.getMessage(), e);
         }

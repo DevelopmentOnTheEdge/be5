@@ -42,12 +42,14 @@ public class ErrorModelHelper
             if (e instanceof Be5Exception && e.getCause() != null)
             {
                 e.getCause().printStackTrace(new PrintWriter(sw));
-            } else
+            }
+            else
             {
                 e.printStackTrace(new PrintWriter(sw));
             }
             return sw.toString();
-        } else
+        }
+        else
         {
             return null;
         }
@@ -69,7 +71,8 @@ public class ErrorModelHelper
                     exceptionAsString(e),
                     links
             );
-        } else
+        }
+        else
         {
             return new ErrorModel(e.getHttpStatusCode(), userAwareMeta.getLocalizedBe5ErrorMessage(e), links);
         }
@@ -130,7 +133,8 @@ public class ErrorModelHelper
             if (lineID == i + 1)
             {
                 sb.append("<span style=\"color: #e00000;\">").append(lineNumber).append(lines[i]).append("</span>\n");
-            } else
+            }
+            else
             {
                 sb.append(lineNumber).append(lines[i]).append("\n");
             }

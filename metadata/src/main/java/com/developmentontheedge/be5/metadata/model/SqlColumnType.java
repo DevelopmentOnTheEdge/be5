@@ -93,14 +93,16 @@ public class SqlColumnType
                 }
                 Collections.sort(values);
                 enumValues = values.toArray(new String[values.size()]);
-            } else
+            }
+            else
             {
                 if (fields.length > 0)
                 {
                     try
                     {
                         size = Integer.parseInt(fields[0].trim());
-                    } catch (NumberFormatException e)
+                    }
+                    catch (NumberFormatException e)
                     {
                     }
                 }
@@ -109,12 +111,14 @@ public class SqlColumnType
                     try
                     {
                         precision = Integer.parseInt(fields[1].trim());
-                    } catch (NumberFormatException e)
+                    }
+                    catch (NumberFormatException e)
                     {
                     }
                 }
             }
-        } else
+        }
+        else
         {
             typeName = type;
         }

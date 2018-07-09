@@ -25,9 +25,9 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         super(theClass);
     }
 
-    public final static class AttributeAccessor extends GroovyObjectSupport
+    public static final class AttributeAccessor extends GroovyObjectSupport
     {
-        final private DynamicProperty dp;
+        private final DynamicProperty dp;
 
         private AttributeAccessor(DynamicProperty dp)
         {

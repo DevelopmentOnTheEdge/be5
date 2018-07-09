@@ -9,7 +9,6 @@ import java.util.Objects;
  * This object is read-only; any changes will generate new object
  * Note that DataElement represented by path may not exist
  * To construct the path object use DataElementPath.create method
- * <p>
  * If element name contains /, it will be replaced in path with \s
  * If element name contains \, it will be replaced in path with \\
  * Use escapeName/unescapeName static methods for these transformations
@@ -22,8 +21,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     public static final String PATH_SEPARATOR = "/";
     public static final DataElementPath EMPTY_PATH = new DataElementPath("", null);
     protected final String path;
-    transient protected String name;
-    transient protected DataElementPath parentPath;
+    protected transient String name;
+    protected transient DataElementPath parentPath;
     /** Path delimiter for complete names of data collections. */
 
     /**
@@ -174,7 +173,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
                 if (name.isEmpty())
                     result = EMPTY_PATH;
                 result = new DataElementPath(escapeName(name), EMPTY_PATH);
-            } else
+            }
+            else
                 result = new DataElementPath(result.path + PATH_SEPARATOR + escapeName(name), result);
         }
         return result;
@@ -279,7 +279,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
             if (pos != -1)
             {
                 name = unescapeName(path.substring(pos + 1));
-            } else
+            }
+            else
                 name = unescapeName(path);
         }
         return name;
@@ -381,7 +382,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
                 }
                 result[j++] = '\\';
                 result[j++] = curChar == '/' ? 's' : '\\';
-            } else if (result != null) result[j++] = curChar;
+            }
+            else if (result != null) result[j++] = curChar;
         }
         return result == null ? name : new String(result, 0, j);
     }
@@ -412,7 +414,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
                     char nextChar = escapedName.charAt(i);
                     result[j++] = nextChar == 's' ? '/' : nextChar;
                 }
-            } else if (result != null) result[j++] = curChar;
+            }
+            else if (result != null) result[j++] = curChar;
         }
         return result == null ? escapedName : new String(result, 0, j);
     }

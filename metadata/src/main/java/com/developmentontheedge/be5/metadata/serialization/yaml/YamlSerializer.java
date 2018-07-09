@@ -237,7 +237,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeDaemonsFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(daemons, e);
             }
@@ -273,7 +274,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeMassChangesFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(massChanges, e);
             }
@@ -310,7 +312,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeStaticPagesFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(pages, e);
             }
@@ -321,7 +324,8 @@ public class YamlSerializer
             try
             {
                 return toString(pages, false);
-            } catch (WriteException e)
+            }
+            catch (WriteException e)
             {
                 throw new AssertionError();
             }
@@ -371,7 +375,8 @@ public class YamlSerializer
                 {
                     if (saveReferencedFiles)
                         fileSystem.writeStaticPageFile(page.getFileName(), page.getContent());
-                } catch (final IOException e)
+                }
+                catch (final IOException e)
                 {
                     throw new WriteException(page, e);
                 }
@@ -394,7 +399,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeCustomizationFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(application, e);
             }
@@ -587,7 +593,8 @@ public class YamlSerializer
                     return tableRef.getTableTo();
 
                 return tableRef.getTableTo() + "." + tableRef.getColumnsTo();
-            } else
+            }
+            else
             {
                 final String[] permittedTables = tableRef.getPermittedTables() == null ? Strings2.EMPTY : tableRef.getPermittedTables();
                 return list(permittedTables);
@@ -606,7 +613,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeJavaScriptFormsFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(forms, e);
             }
@@ -617,7 +625,8 @@ public class YamlSerializer
             try
             {
                 return toString(forms, false);
-            } catch (WriteException e)
+            }
+            catch (WriteException e)
             {
                 throw new AssertionError();
             }
@@ -641,7 +650,8 @@ public class YamlSerializer
                     {
                         if (saveReferencedFiles)
                             form.save();
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         throw new WriteException(form, e);
                     }
@@ -667,7 +677,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeLocalizationFile(language, string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(localizations, e);
             }
@@ -748,7 +759,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeSecurityFile(string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(securityCollection, e);
             }
@@ -798,7 +810,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeConnectionProfilesFile(type, string);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(profiles, e);
             }
@@ -845,7 +858,8 @@ public class YamlSerializer
             try
             {
                 fileSystem.writeEntityFile(module.getName(), entity.getName(), newContent);
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 throw new WriteException(entity, e);
             }
@@ -862,7 +876,8 @@ public class YamlSerializer
             try
             {
                 return serializeToString(entity, false);
-            } catch (WriteException e)
+            }
+            catch (WriteException e)
             {
                 throw new AssertionError(); // no write operations should be called
             }
@@ -1029,14 +1044,16 @@ public class YamlSerializer
                             final String oldContent = fileSystem.readJavaScriptQuery(query.getFileName());
                             if (oldContent.equals(newContent))
                                 break write;
-                        } catch (ReadException e)
+                        }
+                        catch (ReadException e)
                         {
                             // ignore
                         }
                     }
 
                     fileSystem.writeJavaScriptQuery(query.getFileName(), query.getQuery());
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     throw new WriteException(query, e);
                 }
@@ -1068,14 +1085,16 @@ public class YamlSerializer
                             final String oldContent = fileSystem.readGroovyQuery(query.getFileName());
                             if (oldContent.equals(newContent))
                                 break write;
-                        } catch (ReadException e)
+                        }
+                        catch (ReadException e)
                         {
                             // ignore
                         }
                     }
 
                     fileSystem.writeGroovyQuery(query.getFileName(), query.getQuery());
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     throw new WriteException(query, e);
                 }
@@ -1215,7 +1234,8 @@ public class YamlSerializer
             try
             {
                 icon.save();
-            } catch (final IOException e)
+            }
+            catch (final IOException e)
             {
                 e.printStackTrace();
             }
@@ -1342,13 +1362,13 @@ public class YamlSerializer
 //        return new FormsSerializer().toString( forms );
 //    }
 //
-//    public void serialize( final StaticPages pages ) throws WriteException
+//    public void serialize( static final Pages pages ) throws WriteException
 //    {
 //        this.fileSystem = new ProjectFileSystem( pages.getProject() );
 //        new StaticPagesSerializer().serialize( pages );
 //    }
 //
-//    public String toString( final StaticPages pages )
+//    public String toString( static final Pages pages )
 //    {
 //        this.fileSystem = new ProjectFileSystem( pages.getProject() );
 //        return new StaticPagesSerializer().toString( pages );
@@ -1381,7 +1401,8 @@ public class YamlSerializer
         try
         {
             new ProjectFileSystem(project).writeProject(string);
-        } catch (final IOException e)
+        }
+        catch (final IOException e)
         {
             throw new WriteException(project, e);
         }
@@ -1448,7 +1469,8 @@ public class YamlSerializer
                     try
                     {
                         fileSystem.writeSelectedProfileFile(project.getConnectionProfileName());
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         throw new WriteException(project, e);
                     }
@@ -1564,7 +1586,8 @@ public class YamlSerializer
                     script.setLinkedFile(scriptFile);
                 }
                 paths.add(relativePath);
-            } catch (final Exception e)
+            }
+            catch (final Exception e)
             {
                 throw new WriteException(script, e);
             }
@@ -1586,8 +1609,9 @@ public class YamlSerializer
                 if (newSource.equals(oldSource))
                     return;
             }
-        } catch (Throwable e)
-        { /* skip this action to fallback to the default behavior */}
+        }
+        catch (Throwable e)
+        { /* skip this action to fallback to the default behavior */ }
 
         Files.write(scriptFile, script.getSource().getBytes(StandardCharsets.UTF_8));
     }
@@ -1625,7 +1649,8 @@ public class YamlSerializer
                 {
                     fileSystem.writeSourceFile(collection.getName(), file.getName(), file.getSource());
                     file.setLinkedFile(fileSystem.getNameSpaceFile(collection.getName(), file.getName()));
-                } catch (final IOException e)
+                }
+                catch (final IOException e)
                 {
                     throw new WriteException(file, e);
                 }
@@ -1764,7 +1789,8 @@ public class YamlSerializer
                     else
                         target.put(field.name, String.valueOf(fieldValue));
                 }
-            } catch (final Exception e)
+            }
+            catch (final Exception e)
             {
                 throw new RuntimeException("Unexpected error when serializing '" + field.name + "' of " + model.getCompletePath(), e);
             }

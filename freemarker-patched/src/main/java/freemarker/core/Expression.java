@@ -97,7 +97,8 @@ abstract public class Expression extends TemplateObject
             try
             {
                 constantValue = _eval(null);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 // deliberately ignore.
             }
@@ -146,7 +147,8 @@ abstract public class Expression extends TemplateObject
         if (model instanceof TemplateNumberModel)
         {
             return EvalUtil.modelToNumber((TemplateNumberModel) model, this);
-        } else
+        }
+        else
         {
             throw new NonNumericalException(this, model, env);
         }
@@ -163,10 +165,12 @@ abstract public class Expression extends TemplateObject
         if (model instanceof TemplateBooleanModel)
         {
             return ((TemplateBooleanModel) model).getAsBoolean();
-        } else if (env.isClassicCompatible())
+        }
+        else if (env.isClassicCompatible())
         {
             return model != null && !isEmpty(model);
-        } else
+        }
+        else
         {
             throw new NonBooleanException(this, model, env);
         }
@@ -203,28 +207,35 @@ abstract public class Expression extends TemplateObject
         if (model instanceof BeanModel)
         {
             return ((BeanModel) model).isEmpty();
-        } else if (model instanceof TemplateSequenceModel)
+        }
+        else if (model instanceof TemplateSequenceModel)
         {
             return ((TemplateSequenceModel) model).size() == 0;
-        } else if (model instanceof TemplateScalarModel)
+        }
+        else if (model instanceof TemplateScalarModel)
         {
             String s = ((TemplateScalarModel) model).getAsString();
             return (s == null || s.length() == 0);
-        } else if (model == null)
+        }
+        else if (model == null)
         {
             return true;
-        } else if (model instanceof TemplateCollectionModel)
+        }
+        else if (model instanceof TemplateCollectionModel)
         {
             return !((TemplateCollectionModel) model).iterator().hasNext();
-        } else if (model instanceof TemplateHashModel)
+        }
+        else if (model instanceof TemplateHashModel)
         {
             return ((TemplateHashModel) model).isEmpty();
-        } else if (model instanceof TemplateNumberModel
+        }
+        else if (model instanceof TemplateNumberModel
                 || model instanceof TemplateDateModel
                 || model instanceof TemplateBooleanModel)
         {
             return false;
-        } else
+        }
+        else
         {
             return true;
         }

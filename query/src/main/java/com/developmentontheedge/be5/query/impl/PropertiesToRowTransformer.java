@@ -45,7 +45,7 @@ class PropertiesToRowTransformer
 
         if (idObject != null)
         {
-            return String.valueOf(idObject);//MapParamHelper.mapNameOut( String.valueOf( idObject ) );
+            return String.valueOf(idObject); //MapParamHelper.mapNameOut( String.valueOf( idObject ) );
         }
 
         throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");

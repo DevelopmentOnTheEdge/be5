@@ -9,12 +9,14 @@ import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import javax.inject.Inject
 import java.sql.Date
 
-class TestGroovyOp extends GOperationSupport implements Operation {
+class TestGroovyOp extends GOperationSupport implements Operation
+{
     @Inject
     private UserAwareMeta userAwareMeta
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         if (!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
 
         params << [
@@ -87,7 +89,8 @@ class TestGroovyOp extends GOperationSupport implements Operation {
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", params.$name, params.$beginDate, params.$reason)
     }
 

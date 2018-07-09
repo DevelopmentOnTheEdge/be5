@@ -316,7 +316,8 @@ public class ProjectFileSystem
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .collect(Collectors.toList());
-        } catch (IOException | UncheckedIOException e)
+        }
+        catch (IOException | UncheckedIOException e)
         {
             return Collections.emptyList();
         }
@@ -461,7 +462,8 @@ public class ProjectFileSystem
                 return null;
 
             return read(file);
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             return null;
         }
@@ -573,32 +575,41 @@ public class ProjectFileSystem
         if (element instanceof LanguageLocalizations)
         {
             return Fn.languageLocalizationsPath((LanguageLocalizations) element);
-        } else if (element instanceof Entity)
+        }
+        else if (element instanceof Entity)
         {
             // TODO remove some old code and use this case
             return null;
-        } else if (element instanceof BeConnectionProfiles)
+        }
+        else if (element instanceof BeConnectionProfiles)
         {
             return Fn.connectionProfilesPath((BeConnectionProfiles) element);
-        } else if (element instanceof SecurityCollection)
+        }
+        else if (element instanceof SecurityCollection)
         {
             return Fn.securityPath();
-        } else if (element instanceof MassChanges)
+        }
+        else if (element instanceof MassChanges)
         {
             return Fn.massChangesPath();
-        } else if (element instanceof PageCustomizations && element.getOrigin() instanceof Module)
+        }
+        else if (element instanceof PageCustomizations && element.getOrigin() instanceof Module)
         {
             return Fn.customizationsPath();
-        } else if (element instanceof Daemons)
+        }
+        else if (element instanceof Daemons)
         {
             return Fn.daemonsPath();
-        } else if (element instanceof JavaScriptForms)
+        }
+        else if (element instanceof JavaScriptForms)
         {
             return Fn.formsPath();
-        } else if (element instanceof StaticPages)
+        }
+        else if (element instanceof StaticPages)
         {
             return Fn.staticPagesPath();
-        } else if (element instanceof LanguageStaticPages)
+        }
+        else if (element instanceof LanguageStaticPages)
         {
             return Fn.staticPagesPath();
         }
@@ -635,7 +646,8 @@ public class ProjectFileSystem
             if (nullAble)
             {
                 return null;
-            } else
+            }
+            else
             {
                 throw new ReadException(file, ReadException.LEE_NOT_FOUND);
             }
@@ -648,7 +660,8 @@ public class ProjectFileSystem
         try
         {
             bytes = readBytes(file);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ReadException(e, file, ReadException.LEE_UNREADABLE);
         }
@@ -666,10 +679,12 @@ public class ProjectFileSystem
             result = decoder.flush(decoded);
             if (!result.isUnderflow())
                 result.throwException();
-        } catch (UnmappableCharacterException e)
+        }
+        catch (UnmappableCharacterException e)
         {
             throw new ReadException(new Exception("Unmappable character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
-        } catch (CharacterCodingException e)
+        }
+        catch (CharacterCodingException e)
         {
             throw new ReadException(new Exception("Malformed character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
         }
@@ -697,14 +712,16 @@ public class ProjectFileSystem
             try
             {
                 return Files.readAllBytes(file);
-            } catch (ClosedByInterruptException e)
+            }
+            catch (ClosedByInterruptException e)
             {
                 if (lastAttempt)
                     throw e;
                 try
                 {
                     Thread.sleep(100);
-                } catch (InterruptedException e1)
+                }
+                catch (InterruptedException e1)
                 {
                     continue;
                 }
@@ -727,7 +744,8 @@ public class ProjectFileSystem
             {
                 row++;
                 col = 1;
-            } else
+            }
+            else
                 col++;
         }
         return "row " + row + ", column " + col;

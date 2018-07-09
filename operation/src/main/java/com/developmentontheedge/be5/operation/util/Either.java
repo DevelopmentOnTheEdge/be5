@@ -67,7 +67,8 @@ public class Either<T, U>
         if (isFirst())
         {
             f.accept(first);
-        } else
+        }
+        else
         {
             g.accept(second);
         }

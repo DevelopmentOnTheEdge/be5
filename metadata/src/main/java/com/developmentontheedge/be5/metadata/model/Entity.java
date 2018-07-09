@@ -155,7 +155,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
                 return "";
 
             return typeValue.getHumanReadableName();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return "";
         }
@@ -237,7 +238,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
             {
                 if (otherScheme != null)
                     return debugEquals("scheme");
-            } else if (!scheme.equals(otherScheme))
+            }
+            else if (!scheme.equals(otherScheme))
                 return debugEquals("scheme");
         }
         if (!equalTableReferences(getAllReferences(), other.getAllReferences()))

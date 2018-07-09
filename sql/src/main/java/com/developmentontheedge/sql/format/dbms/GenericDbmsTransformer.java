@@ -26,7 +26,7 @@ import com.developmentontheedge.sql.model.SimpleNode;
 
 import java.util.function.Predicate;
 
-abstract public class GenericDbmsTransformer implements DbmsTransformer
+public abstract class GenericDbmsTransformer implements DbmsTransformer
 {
     protected ParserContext parserContext;
 
@@ -169,7 +169,8 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
             if (df == null)
                 throw new IllegalArgumentException("Unknown date format: " + formatString);
             transformDateFormat(node, df);
-        } else
+        }
+        else
             throw new IllegalArgumentException("Date format is not a String");
     }
 
@@ -225,7 +226,7 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
         node.replaceWith(getDateTimeDiff(startDate, endDate, format));
     }
 
-    abstract protected SimpleNode getDateTimeDiff(SimpleNode startDate, SimpleNode endDate, String format);
+    protected abstract SimpleNode getDateTimeDiff(SimpleNode startDate, SimpleNode endDate, String format);
 
     protected void transformLastDay(AstFunNode node)
     {
@@ -343,19 +344,22 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
                 }
                 toReplace.replaceWith(getDateTimeDiff(child.child(1), child.child(0), dateField));
 
-            } else if ("MONTH".equals(dateField) && AstFunNode.isFunction("+").test(parent)
+            }
+            else if ("MONTH".equals(dateField) && AstFunNode.isFunction("+").test(parent)
                     && AstFunNode.isFunction("*").test(parent.child(1))
                     && parent.child(1).children().anyMatch(AstExtract.isExtract("YEAR")))
             {
                 parent.jjtGetParent().replaceWith(getDateTimeDiff(child.child(1), child.child(0), dateField));
             }
-        } else if (child instanceof AstParenthesis && AstFunNode.isFunction("-").test(child.child(0))
+        }
+        else if (child instanceof AstParenthesis && AstFunNode.isFunction("-").test(child.child(0))
                 && ("DAY".equals(dateField) || "EPOCH".equals(dateField)))
         {
             AstFunNode date = (AstFunNode) child.child(0);
             extract.replaceWith(getDateTimeDiff(date.child(1), date.child(0), "EPOCH".equals(dateField) ? "SECOND"
                     : "DAY"));
-        } else
+        }
+        else
             transformExtract(extract);
     }
 

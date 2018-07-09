@@ -191,7 +191,8 @@ public class WatchDir
             try
             {
                 key = watcher.take();
-            } catch (InterruptedException x)
+            }
+            catch (InterruptedException x)
             {
                 return;
             }
@@ -256,7 +257,8 @@ public class WatchDir
                             // TODO: register only interesting new directories
                             registerAll(child);
                         }
-                    } catch (IOException x)
+                    }
+                    catch (IOException x)
                     {
                         // ignore to keep sample readable
                     }

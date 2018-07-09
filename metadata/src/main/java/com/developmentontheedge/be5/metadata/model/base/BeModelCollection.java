@@ -51,10 +51,8 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
      * Query operations on the returned list "read through" to the internal name list,
      * and attempts to modify the returned list, whether direct or via its iterator,
      * result in an <code>UnsupportedOperationException</code>.
-     * <p>
      * The returned list is backed by the data collection,
      * so changes to the data collection are reflected in the returned list.
-     * <p>
      * The name list can be sorted or unsorted depending on the DataCollection
      * implementing class.
      *

@@ -135,7 +135,8 @@ public class RoleSet extends InheritableStringSet
             if (allRoles)
             {
                 this.includedValues = Collections.singleton('@' + SpecialRoleGroup.ALL_ROLES_GROUP);
-            } else if (allRolesExceptGuest)
+            }
+            else if (allRolesExceptGuest)
             {
                 this.includedValues = Collections.singleton('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP);
             }
@@ -191,14 +192,16 @@ public class RoleSet extends InheritableStringSet
                     if (dependentGroups.isEmpty())
                     {
                         newDependentGroups = Collections.singleton(groupName);
-                    } else
+                    }
+                    else
                     {
                         newDependentGroups = new HashSet<>(dependentGroups);
                         newDependentGroups.add(groupName);
                     }
                     result.addAll(group.getRoleSet().getFinalRoles(newDependentGroups));
                 }
-            } else
+            }
+            else
             {
                 if (projectRoles.contains(role))
                 {

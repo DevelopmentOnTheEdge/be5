@@ -164,12 +164,12 @@ public class MonthlyDate extends java.sql.Date
         return this.compareTo(MonthlyDate) <= 0;
     }
 
-    static public MonthlyDate min(MonthlyDate a, MonthlyDate b)
+    public static MonthlyDate min(MonthlyDate a, MonthlyDate b)
     {
         return b.compareTo(a) < 0 ? b : a;
     }
 
-    static public MonthlyDate max(MonthlyDate a, MonthlyDate b)
+    public static MonthlyDate max(MonthlyDate a, MonthlyDate b)
     {
         return a.compareTo(b) < 0 ? b : a;
     }

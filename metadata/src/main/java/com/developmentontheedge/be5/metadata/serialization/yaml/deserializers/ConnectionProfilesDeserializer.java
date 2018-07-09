@@ -57,7 +57,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
                 final BeConnectionProfile connectionProfile = deserializeConnectionProfile(profileName, serializedProfileBody);
 
                 save(connectionProfile);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(target));
             }

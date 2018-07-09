@@ -146,11 +146,13 @@ public class Icon
         {
             setSource(SOURCE_BE);
             setName(path.substring("be:".length()).trim());
-        } else if (path.startsWith("project:"))
+        }
+        else if (path.startsWith("project:"))
         {
             setSource(SOURCE_PROJECT);
             setName(path.substring("project:".length()).trim());
-        } else
+        }
+        else
         {
             setSource(SOURCE_NONE);
         }
@@ -194,7 +196,8 @@ public class Icon
                 this.source = SOURCE_BE;
                 return;
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
         }
         this.source = SOURCE_PROJECT;
@@ -246,7 +249,8 @@ public class Icon
                 default:
                     data = null;
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new ReadException(e, getOwner(), iconsFile, "Unable to load icon");
         }

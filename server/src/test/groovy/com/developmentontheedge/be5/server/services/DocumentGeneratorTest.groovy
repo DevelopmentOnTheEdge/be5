@@ -18,7 +18,8 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
 @TypeChecked
-class DocumentGeneratorTest extends TestTableQueryDBTest {
+class DocumentGeneratorTest extends TestTableQueryDBTest
+{
     @Inject
     private Meta meta
     @Inject
@@ -27,13 +28,15 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     private OperationExecutor operationExecutor
 
     @Before
-    void setUp() {
+    void setUp()
+    {
         initGuest()
         ServerTestResponse.newMock()
     }
 
     @Test
-    void getTablePresentation() {
+    void getTablePresentation()
+    {
         TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "All records"), new HashMap<>())
 
@@ -48,7 +51,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void testLinkQuick() {
+    void testLinkQuick()
+    {
         TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "LinkQuick"), new HashMap<>())
 
@@ -63,7 +67,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void testTableWithFilter() {
+    void testTableWithFilter()
+    {
         initUserWithRoles("SystemDeveloper")
 
         def query = meta.getQuery("testtable", "TableWithFilter")
@@ -91,7 +96,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void testNullInSubQuery() {
+    void testNullInSubQuery()
+    {
         db.update("DELETE FROM testtableAdmin")
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11)
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null)
@@ -112,7 +118,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void getQueryJsonApiForUser() {
+    void getQueryJsonApiForUser()
+    {
         JsonApiModel queryJsonApiForUser = documentGenerator.
                 queryJsonApiFor("testtable", "All records", Collections.emptyMap());
 
@@ -121,7 +128,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void accessDenied() {
+    void accessDenied()
+    {
         JsonApiModel queryJsonApiForUser = documentGenerator.
                 queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
 
@@ -131,7 +139,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void accessAllowed() {
+    void accessAllowed()
+    {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
         JsonApiModel queryJsonApiForUser = documentGenerator.
@@ -142,7 +151,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void error() {
+    void error()
+    {
         JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtable", "Query with error", Collections.emptyMap());
 
         assertEquals(null, queryJsonApiForUser.getData());

@@ -130,7 +130,7 @@ public class Fields
     private static final String CONNECION_PROFILE_PROVIDER_ID = "providerId";
     private static final String CONNECION_PROFILE_DRIVER_DEFINITION = "driverDefinition";
 
-    private static final List<Field> CONNECTION_PROFILE = Collections.unmodifiableList(Arrays.asList( // removed providerId and driverDefinition from this list
+    private static final List<Field> CONNECTION_PROFILE = Collections.unmodifiableList(Arrays.asList(// removed providerId and driverDefinition from this list
             new Field("connectionUrl", ""),
             new Field("username"),
             new Field("password"),

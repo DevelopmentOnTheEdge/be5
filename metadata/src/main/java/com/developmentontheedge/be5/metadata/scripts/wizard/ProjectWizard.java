@@ -78,7 +78,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             wizard();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -95,13 +96,41 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
             try
             {
                 Serialization.save(projectGenerator.generate(), projectPath.toPath());
-            } catch (ProjectSaveException e)
+            }
+            catch (ProjectSaveException e)
             {
                 e.printStackTrace();
             }
         });
 
-        final MenuAction[] actions = new MenuAction[]{
+        final MenuAction[] actions = getActions(parameters, finishAction);
+
+        selectProjectName(parameters);
+
+        while (true)
+        {
+            out.println("Current state:");
+            print(parameters);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Actions:\n");
+            for (int i = 0; i < actions.length; i++)
+            {
+                String aString = "" + (i + 1) + ". " + actions[i].getTitle() + "\n";
+                sb.append(aString);
+            }
+
+            final int iAction = readInt(sb.toString(), 1, actions.length);
+            actions[iAction - 1].run();
+
+            if (actions[iAction - 1] == finishAction)
+                break;
+        }
+    }
+
+    private MenuAction[] getActions(Parameters parameters, MenuAction finishAction)
+    {
+        return new MenuAction[]{
                 new MenuAction("Change project name.", new Runnable()
                 {
                     @Override
@@ -162,28 +191,6 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //            } ),
                 finishAction
         };
-
-        selectProjectName(parameters);
-
-        while (true)
-        {
-            out.println("Current state:");
-            print(parameters);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Actions:\n");
-            for (int i = 0; i < actions.length; i++)
-            {
-                String aString = "" + (i + 1) + ". " + actions[i].getTitle() + "\n";
-                sb.append(aString);
-            }
-
-            final int iAction = readInt(sb.toString(), 1, actions.length);
-            actions[iAction - 1].run();
-
-            if (actions[iAction - 1] == finishAction)
-                break;
-        }
     }
 
     private void selectProjectName(final Parameters parameters)
@@ -440,7 +447,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                 {
                     final String message = strategy.validate(item);
                     out.println(message);
-                } else
+                }
+                else
                 {
                     newItems.add(item);
                     strategy.apply(Iterables.toArray(newItems, String.class));
@@ -517,7 +525,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             return bufferedReader.readLine();
-        } catch (IOException e1)
+        }
+        catch (IOException e1)
         {
             throw new AssertionError();
         }
@@ -545,7 +554,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                 }
 
                 return integer;
-            } catch (NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
                 out.println("An integer is expected. Write again:");
             }
@@ -557,7 +567,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
         try
         {
             this.inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }

@@ -60,7 +60,8 @@ public class CompiledLocalizations
         if (createdInThisLoopLocalizations == null)
         {
             all.put(language, entityName, new CompiledEntityLocalizations(targetEntityLocalizations));
-        } else
+        }
+        else
         {
             createdInThisLoopLocalizations.entityLocalizations.putAll(targetEntityLocalizations);
         }

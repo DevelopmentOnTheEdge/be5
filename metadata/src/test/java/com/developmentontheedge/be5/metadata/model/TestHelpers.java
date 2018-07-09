@@ -23,14 +23,16 @@ class TestHelpers
                 assertNotEquals(prop, e1, e2);
                 Beans.setBeanPropertyValue(e2, prop, oldValue);
                 assertEquals(prop, e1, e2);
-            } else if (type == boolean.class)
+            }
+            else if (type == boolean.class)
             {
                 boolean oldValue = (boolean) Beans.getBeanPropertyValue(e2, prop);
                 Beans.setBeanPropertyValue(e2, prop, !oldValue);
                 assertNotEquals(prop, e1, e2);
                 Beans.setBeanPropertyValue(e2, prop, oldValue);
                 assertEquals(prop, e1, e2);
-            } else if (type == int.class)
+            }
+            else if (type == int.class)
             {
                 int oldValue = (int) Beans.getBeanPropertyValue(e2, prop);
                 Beans.setBeanPropertyValue(e2, prop, oldValue + 1);

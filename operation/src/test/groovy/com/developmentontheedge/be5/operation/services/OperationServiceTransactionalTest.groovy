@@ -9,9 +9,11 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
 
-class OperationServiceTransactionalTest extends OperationBe5ProjectDBTest {
+class OperationServiceTransactionalTest extends OperationBe5ProjectDBTest
+{
     @Test
-    void generateErrorTransactional() {
+    void generateErrorTransactional()
+    {
         try {
             def operation = createOperation("testtableAdmin", "All records",
                     "ErrorProcessingTransactional", "")

@@ -51,7 +51,8 @@ public class StaticPagesDeserializer extends FileDeserializer
                 if (serializedContent instanceof String)
                 {
                     content = (String) serializedContent;
-                } else if (serializedContent instanceof Map)
+                }
+                else if (serializedContent instanceof Map)
                 {
                     // a. file: <fileName>
                     // b. code: file: <fileName>
@@ -65,7 +66,8 @@ public class StaticPagesDeserializer extends FileDeserializer
                         final String fileName = (String) mapPageContent.get("file");
                         page.setFileName(fileName);
                         content = readStaticPageFileContent(fileName);
-                    } else
+                    }
+                    else
                     {
                         final Object codeObj = mapPageContent.get(SerializationConstants.TAG_CODE);
 
@@ -76,12 +78,14 @@ public class StaticPagesDeserializer extends FileDeserializer
                             final String fileName = ((Map<String, String>) codeObj).get("file");
                             page.setFileName(fileName);
                             content = readStaticPageFileContent(fileName);
-                        } else
+                        }
+                        else
                             content = "";
 
                         yamlDeserializer.readCustomizations(mapPageContent, page, false);
                     }
-                } else
+                }
+                else
                 {
                     content = "";
                 }
@@ -102,7 +106,8 @@ public class StaticPagesDeserializer extends FileDeserializer
         try
         {
             return yamlDeserializer.getFileSystem().readStaticPageFileContent(fileName);
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e);
         }

@@ -30,7 +30,8 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
         try
         {
             generate(fileName.replace(".", "/") + "GroovyDSL");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }
@@ -55,7 +56,8 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
         try
         {
             createDSL(fileName, cfg);
-        } catch (ProjectLoadException e)
+        }
+        catch (ProjectLoadException e)
         {
             e.printStackTrace();
         }
@@ -80,7 +82,7 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
         for (Entity entity : entities)
         {
             if (entity.getName().startsWith("_")) continue;
-            if (entity.getName().equals("properties")) continue;//groovy have getProperties()
+            if (entity.getName().equals("properties")) continue; //groovy have getProperties()
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);

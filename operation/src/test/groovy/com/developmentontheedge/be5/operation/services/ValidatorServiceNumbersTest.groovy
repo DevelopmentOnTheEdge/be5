@@ -13,19 +13,22 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
+class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
+{
     @Inject
     Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
-    void initDps() {
+    void initDps()
+    {
         setStaticUserInfo(RoleType.ROLE_GUEST)
         dps = new GDynamicPropertySetSupport()
     }
 
     @Test(expected = Be5Exception.class)
-    void Long1() {
+    void Long1()
+    {
         dps.add("test") {
             TYPE = Long
             value = '10000000000000000000000'
@@ -35,7 +38,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void Long2() {
+    void Long2()
+    {
         dps.add("test") {
             TYPE = Long
             value = '-10000000000000000000000'
@@ -45,7 +49,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void int1() {
+    void int1()
+    {
         dps.add("test") {
             TYPE = Integer
             value = '3000000000'
@@ -55,7 +60,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void int2() {
+    void int2()
+    {
         dps.add("test") {
             TYPE = Integer
             value = '-3000000000'
@@ -65,7 +71,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void short1() {
+    void short1()
+    {
         dps.add("test") {
             TYPE = Short
             value = '100000'
@@ -75,7 +82,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void short2() {
+    void short2()
+    {
         dps.add("test") {
             TYPE = Short
             value = '-100000'
@@ -85,7 +93,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void short3WithDot() {
+    void short3WithDot()
+    {
         dps.add("test") {
             TYPE = Short
             value = '100.000'
@@ -95,7 +104,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = Be5Exception.class)
-    void short3WithСomma() {
+    void short3WithСomma()
+    {
         dps.add("test") {
             TYPE = Short
             value = '100,000'
@@ -104,7 +114,8 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest {
         checkMessage("Здесь должно быть целое число.")
     }
 
-    void checkMessage(String msg) {
+    void checkMessage(String msg)
+    {
         try {
             validator.checkErrorAndCast(dps)
         } catch (RuntimeException e) {

@@ -19,7 +19,8 @@ public class ColumnsApplier
         if (selectList.isAllColumns())
         {
             throw new IllegalStateException("All columns not support " + selectList.getNodeContent());
-        } else
+        }
+        else
         {
             for (int i = selectList.jjtGetNumChildren() - 1; i >= 0; i--)
             {

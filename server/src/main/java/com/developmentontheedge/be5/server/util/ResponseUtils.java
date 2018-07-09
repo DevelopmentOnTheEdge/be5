@@ -21,7 +21,8 @@ public class ResponseUtils
         if (download)
         {
             response.setHeader("Content-disposition", "attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        } else
+        }
+        else
         {
             response.setHeader("Content-disposition", "filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
         }
@@ -30,7 +31,8 @@ public class ResponseUtils
         {
             ByteStreams.copy(in, response.getOutputStream());
             in.close();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }

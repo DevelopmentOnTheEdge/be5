@@ -82,7 +82,8 @@ public class RequestImpl implements Request
             if (value != null)
             {
                 return new String[]{value};
-            } else
+            }
+            else
             {
                 return new String[]{};
             }
@@ -173,7 +174,8 @@ public class RequestImpl implements Request
                 sb.append("\n");
                 sb.append(str);
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }

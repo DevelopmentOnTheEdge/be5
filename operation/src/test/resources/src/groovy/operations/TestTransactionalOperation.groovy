@@ -8,12 +8,14 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 import javax.inject.Inject
 
-class TestTransactionalOperation extends TestOperationSupport implements TransactionalOperation {
+class TestTransactionalOperation extends TestOperationSupport implements TransactionalOperation
+{
     @Inject
     private ConnectionService connectionService
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         if (presetValues.get("nullValues") != null) {
             return null
         } else {
@@ -24,7 +26,8 @@ class TestTransactionalOperation extends TestOperationSupport implements Transac
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
         if (connectionService.getCurrentTxConn() == null) throw Be5Exception.internal("not in transactionWithResult")
     }
 

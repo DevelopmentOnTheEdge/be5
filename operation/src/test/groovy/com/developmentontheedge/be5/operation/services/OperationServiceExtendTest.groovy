@@ -14,7 +14,8 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class OperationServiceExtendTest extends OperationsSqlMockProjectTest {
+class OperationServiceExtendTest extends OperationsSqlMockProjectTest
+{
     @Inject
     UserAwareMeta userAwareMeta
     @Inject
@@ -23,12 +24,14 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest {
     ProjectProvider projectProvider
 
     @Before
-    void setUp() {
+    void setUp()
+    {
         setStaticUserInfo(RoleType.ROLE_SYSTEM_DEVELOPER)
     }
 
     @Test
-    void getSuperOperationSimpleNameTest() {
+    void getSuperOperationSimpleNameTest()
+    {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
 
         assertEquals("CustomOperation", groovyOperationLoader.getSimpleSuperClassName(operation))
@@ -39,7 +42,8 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void getSuperOperationCanonicalNameTest() {
+    void getSuperOperationCanonicalNameTest()
+    {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals("testtableAdmin.CustomOperation.groovy",
                 groovyOperationLoader.getCanonicalSuperClassName(operation))
@@ -50,7 +54,8 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testLoadSuperOperation() {
+    void testLoadSuperOperation()
+    {
         projectProvider.reloadProject()
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")

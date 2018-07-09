@@ -69,7 +69,8 @@ public class AstDerivedColumn extends SimpleNode
         if (jjtGetNumChildren() == 1)
         {
             addChild(new AstIdentifierConstant(alias, true));
-        } else
+        }
+        else
         {
             ((AstIdentifierConstant) child(1)).setValue(alias);
         }

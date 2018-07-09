@@ -58,7 +58,8 @@ class SchemeDeserializer extends BaseDeserializer
         try
         {
             serializedReferences = asMapOrEmpty(serializedEntityBody.get(TAG_REFERENCES));
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(entity));
             return;
@@ -102,7 +103,8 @@ class SchemeDeserializer extends BaseDeserializer
         if (schemeContent.get(TAG_VIEW_DEFINITION) instanceof String)
         {
             save(readViewDef(schemeContent, entity));
-        } else
+        }
+        else
         {
             save(readTableDef(schemeContent, entity));
         }
@@ -137,7 +139,8 @@ class SchemeDeserializer extends BaseDeserializer
                     save(index);
                 }
             }
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(indices));
         }
@@ -158,7 +161,8 @@ class SchemeDeserializer extends BaseDeserializer
                     save(column);
                 }
             }
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(columns));
         }
@@ -255,7 +259,8 @@ class SchemeDeserializer extends BaseDeserializer
 
                 return tableRef;
             }
-        } else if (content instanceof List)
+        }
+        else if (content instanceof List)
         {
             final List<?> tablesRaw = (List<?>) content;
             final List<String> tables2 = new ArrayList<>();
@@ -268,7 +273,8 @@ class SchemeDeserializer extends BaseDeserializer
             tableRef.permittedTables = tables2.toArray(new String[tables2.size()]);
 
             return tableRef;
-        } else if (content instanceof Map)
+        }
+        else if (content instanceof Map)
         {
             final Map<?, ?> map = (Map<?, ?>) content;
             final Object view = map.get("view");
@@ -303,7 +309,8 @@ class SchemeDeserializer extends BaseDeserializer
 
                     return tableRef;
                 }
-            } else
+            }
+            else
             {
                 final List<?> tablesRaw = (to instanceof List) ? (List<?>) to : new ArrayList<>();
                 final List<String> tables2 = new ArrayList<>();

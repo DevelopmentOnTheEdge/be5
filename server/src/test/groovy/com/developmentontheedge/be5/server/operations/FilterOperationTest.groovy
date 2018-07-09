@@ -14,9 +14,11 @@ import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS
 import static com.developmentontheedge.be5.server.FrontendActions.UPDATE_PARENT_DOCUMENT
 import static org.junit.Assert.assertEquals
 
-class FilterOperationTest extends SqlMockOperationTest {
+class FilterOperationTest extends SqlMockOperationTest
+{
     @Test
-    void generate() {
+    void generate()
+    {
         def operation = createOperation("testtable", "All records", "Filter", "")
         Either<Object, OperationResult> generate = generateOperation(operation, [:])
 
@@ -32,7 +34,8 @@ class FilterOperationTest extends SqlMockOperationTest {
     }
 
     @Test
-    void generateWithOperationParams() {
+    void generateWithOperationParams()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtable", "All records", "Filter", "", [name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
@@ -48,7 +51,8 @@ class FilterOperationTest extends SqlMockOperationTest {
     }
 
     @Test
-    void execute() {
+    void execute()
+    {
         Either<Object, OperationResult> execute = executeOperation(
                 "testtable", "All records", "Filter", "", [name: "test"])
 
@@ -65,7 +69,8 @@ class FilterOperationTest extends SqlMockOperationTest {
     }
 
     @Test
-    void executeOldRedirectFilter() {
+    void executeOldRedirectFilter()
+    {
         Either<Object, OperationResult> execute = executeOperation(
                 "testtable", "All records", "OldRedirectFilter", "", [name: "test"])
 

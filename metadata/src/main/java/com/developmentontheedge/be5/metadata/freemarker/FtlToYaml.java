@@ -54,7 +54,8 @@ public class FtlToYaml
             try
             {
                 result.add(ftlToObject(model.get(i)));
-            } catch (TemplateModelException e)
+            }
+            catch (TemplateModelException e)
             {
                 throw new TemplateModelException("[" + i + "]: " + e.getMessage(), e);
             }
@@ -79,7 +80,8 @@ public class FtlToYaml
             try
             {
                 result.put(key, ftlToObject(value));
-            } catch (TemplateModelException e)
+            }
+            catch (TemplateModelException e)
             {
                 throw new TemplateModelException(key + ": " + e.getMessage(), e);
             }

@@ -87,7 +87,8 @@ public class Projects
                 FreemarkerScript freemarkerScript = (FreemarkerScript) scriptOrCatalog;
                 if (freemarkerScript.getLinkedFile() != null && freemarkerScript.getLinkedFile().equals(path))
                     return freemarkerScript;
-            } else
+            }
+            else
             {
                 FreemarkerScript freemarkerScript = searchIn((FreemarkerCatalog) scriptOrCatalog, path);
                 if (freemarkerScript != null)

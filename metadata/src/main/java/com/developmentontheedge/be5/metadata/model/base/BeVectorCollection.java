@@ -143,10 +143,12 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
             if (element instanceof BeModelCollection && otherElement instanceof BeModelCollection)
             {
                 ((BeModelCollection<?>) element).merge((BeModelCollection) otherElement, ignoreMyItems, inherit);
-            } else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
+            }
+            else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
             {
                 ((BeModelElementSupport) element).mergeThis(otherElement, inherit);
-            } else if (element == null)
+            }
+            else if (element == null)
             {
                 // Do not merge EntityItems with the same origin as our project:
                 // Probably it's some element we deleted from project, but
@@ -165,7 +167,8 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
         if (element instanceof BeModelElementSupport)
         {
             clone = ((BeModelElementSupport) element).clone(this, element.getName(), inherit);
-        } else
+        }
+        else
         {
             clone = element.clone(this, element.getName());
         }

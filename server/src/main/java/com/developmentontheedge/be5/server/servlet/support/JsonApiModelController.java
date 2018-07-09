@@ -25,7 +25,8 @@ public abstract class JsonApiModelController extends ApiControllerSupport
                 jsonApiModel.setMeta(getDefaultMeta(req));
             }
             res.sendAsJson(jsonApiModel);
-        } else
+        }
+        else
         {
             res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }

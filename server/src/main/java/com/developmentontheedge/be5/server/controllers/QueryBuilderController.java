@@ -85,7 +85,8 @@ public class QueryBuilderController extends JsonApiModelController
             if (req.getAttribute(QUERY_BUILDER_HISTORY) != null)
             {
                 history = (List<String>) req.getAttribute(QUERY_BUILDER_HISTORY);
-            } else
+            }
+            else
             {
                 history = new ArrayList<>();
             }
@@ -95,11 +96,13 @@ public class QueryBuilderController extends JsonApiModelController
                 if (!history.isEmpty())
                 {
                     sql = history.get(history.size() - 1);
-                } else
+                }
+                else
                 {
                     sql = "select * from users";
                 }
-            } else
+            }
+            else
             {
                 if (history.isEmpty() || !history.get(history.size() - 1).equals(sql))
                 {
@@ -121,7 +124,8 @@ public class QueryBuilderController extends JsonApiModelController
                 if (type == SqlType.SELECT)
                 {
                     select(sql, req);
-                } else
+                }
+                else
                 {
                     if (execute)
                     {
@@ -141,7 +145,8 @@ public class QueryBuilderController extends JsonApiModelController
                         }
                     }
                 }
-            } catch (Throwable e)
+            }
+            catch (Throwable e)
             {
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
@@ -151,7 +156,8 @@ public class QueryBuilderController extends JsonApiModelController
                     errorModelList.toArray(new ErrorModel[0]),
                     includedData.toArray(new ResourceData[0])
             );
-        } else
+        }
+        else
         {
             return error(errorModelHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
                     Collections.singletonMap(SELF_LINK, "queryBuilder")));
@@ -217,7 +223,8 @@ public class QueryBuilderController extends JsonApiModelController
                     ),
                     null
             ));
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
@@ -231,7 +238,8 @@ public class QueryBuilderController extends JsonApiModelController
             document.getData().setId("result");
             includedData.add(document.getData());
             includedData.addAll(Arrays.asList(document.getIncluded()));
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));

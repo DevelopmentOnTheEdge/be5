@@ -44,7 +44,8 @@ public class PostgreSqlTransformer extends GenericDbmsTransformer
             {
                 cond = new AstNullPredicate(0);
                 cond.addChild(node.child(0));
-            } else
+            }
+            else
             {
                 cond = DefaultParserContext.FUNC_EQ.node(node.child(0), node.child(i));
             }

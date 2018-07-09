@@ -67,7 +67,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
         if (entity != null)
         {
             setOriginModuleName(entity.getModule().getName());
-        } else
+        }
+        else
         {
             setOriginModuleName(getProject().getProjectOrigin());
         }
@@ -80,7 +81,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
         if (owner instanceof EntityItem)
         {
             location = ((EntityItem) owner).getEntity().getName() + "." + owner.getName() + "." + type;
-        } else if (owner instanceof Entity || owner instanceof StaticPage)
+        }
+        else if (owner instanceof Entity || owner instanceof StaticPage)
         {
             location = owner.getName() + "." + type;
         }
@@ -206,13 +208,15 @@ public class PageCustomization extends BeModelElementSupport implements Template
         {
             if (other.code != null)
                 return false;
-        } else if (!code.equals(other.code))
+        }
+        else if (!code.equals(other.code))
             return false;
         if (type == null)
         {
             if (other.type != null)
                 return false;
-        } else if (!type.equals(other.type))
+        }
+        else if (!type.equals(other.type))
             return false;
         if (!domain.equals(other.domain))
             return false;
@@ -234,7 +238,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
         {
             if (other.type != null)
                 return debugEquals("type");
-        } else if (!type.equals(other.type))
+        }
+        else if (!type.equals(other.type))
             return debugEquals("type");
         if (!getName().equals(other.getName()))
             return debugEquals("name");
@@ -284,14 +289,16 @@ public class PageCustomization extends BeModelElementSupport implements Template
         try
         {
             ModelValidationUtils.checkValueInSet(this, "domain", domain, getDomains());
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }
         try
         {
             ModelValidationUtils.checkValueInSet(this, "type", type, TYPES);
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }

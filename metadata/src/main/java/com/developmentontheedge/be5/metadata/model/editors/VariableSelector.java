@@ -43,7 +43,8 @@ public class VariableSelector extends StringTagEditor
         if (pos >= 0)
         {
             value = text.substring(0, pos).trim();
-        } else
+        }
+        else
         {
             value = text.trim();
         }

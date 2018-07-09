@@ -21,12 +21,12 @@ public class TestProjectProvider implements ProjectProvider
         {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
             BaseTestUtils.addH2Profile(project);
-        } catch (ProjectLoadException e)
+        }
+        catch (ProjectLoadException e)
         {
             throw new RuntimeException(e);
         }
     }
-
 
 
     @Override

@@ -35,7 +35,8 @@ public class AstUpdate extends SimpleNode
         if (oldWhere == null)
         {
             addChild(where);
-        } else
+        }
+        else
         {
             oldWhere.replaceWith(where);
         }

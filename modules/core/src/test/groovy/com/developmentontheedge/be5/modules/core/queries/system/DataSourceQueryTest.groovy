@@ -6,8 +6,10 @@ import org.junit.Test
 
 import javax.inject.Inject
 
-class DataSourceQueryTest extends CoreBe5ProjectDBTest {
-    @Inject Meta meta
+class DataSourceQueryTest extends CoreBe5ProjectDBTest
+{
+    @Inject
+    Meta meta
 
     @Test
     void get()

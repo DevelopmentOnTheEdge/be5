@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 import static org.junit.Assert.*
 
-class DpsHelperTest extends ServerBe5ProjectDBTest {
+class DpsHelperTest extends ServerBe5ProjectDBTest
+{
     @Inject
     DpsHelper dpsHelper
     @Inject
@@ -25,24 +26,28 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     DynamicPropertySet dps
 
     @Before
-    void setUpTestUtils() {
+    void setUpTestUtils()
+    {
         initGuest()
     }
 
     @Before
-    void before() {
+    void before()
+    {
         dps = new DynamicPropertySetSupport()
     }
 
     @Test
-    void getDpsWithoutAutoIncrementTest() {
+    void getDpsWithoutAutoIncrementTest()
+    {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"), [:])
         assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
-    void getDynamicPropertyTest() {
+    void getDynamicPropertyTest()
+    {
         DynamicProperty property = dpsHelper.getDynamicProperty(meta.getColumn(meta.getEntity("testTags"), "CODE"))
         assertEquals "CODE", property.getName()
         assertEquals String.class, property.getType()
@@ -50,7 +55,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpForColumnsBase() {
+    void addDpForColumnsBase()
+    {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
         assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
@@ -58,7 +64,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpForColumnsBase_with_values() {
+    void addDpForColumnsBase_with_values()
+    {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
         assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
@@ -66,7 +73,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpForColumnsWithoutTags() {
+    void addDpForColumnsWithoutTags()
+    {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
         assertEquals "{'values':{'admlevel':'Regional'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
@@ -74,7 +82,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpForColumnsWithoutTags_with_values() {
+    void addDpForColumnsWithoutTags_with_values()
+    {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
         assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
@@ -82,7 +91,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDynamicPropertyLocalizationTest() {
+    void getDynamicPropertyLocalizationTest()
+    {
         def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
         DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
         dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags"))
@@ -91,7 +101,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDynamicPropertyLocalizationForQueryTest() {
+    void getDynamicPropertyLocalizationForQueryTest()
+    {
         def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
         DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
         dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getQueries().get("TestLocalizQuery"))
@@ -100,7 +111,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDynamicPropertyLocalizationForOperationTest() {
+    void getDynamicPropertyLocalizationForOperationTest()
+    {
         def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
 
         DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
@@ -110,7 +122,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDpsForValuesTest() {
+    void getDpsForValuesTest()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals 2, dps.size()
@@ -127,7 +140,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDpsForValuesTestOnlyForSpecifiedColumns() {
+    void getDpsForValuesTestOnlyForSpecifiedColumns()
+    {
         dps.add(new DynamicProperty("payable", String.class))
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE"], [:])
 
@@ -141,7 +155,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDynamicPropertiesTest() {
+    void addDynamicPropertiesTest()
+    {
         dpsHelper.addDynamicProperties(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals 2, dps.size()
@@ -159,14 +174,16 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
      * without SQLException - Column "TESTTAGS.FILTERCOLUMN" not found
      */
     @Test
-    void addTagsFilterOnlyForTableModel() {
+    void addTagsFilterOnlyForTableModel()
+    {
         dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ["referenceTest"])
 
         dpsHelper.addTags(dps, meta.getEntity("testTags"), ["referenceTest"], [filterColumn: "value", "_search_": "true"])
     }
 
     @Test
-    void getDpsForColumnsTestWithValues() {
+    void getDpsForColumnsTestWithValues()
+    {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], presetValues, [:])
 
@@ -187,27 +204,31 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getDpsForColumnsTestSpecial() {
+    void getDpsForColumnsTestSpecial()
+    {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
         dpsHelper.addDpForColumns(dps, meta.getEntity("meters"), ["name"], presetValues)
 
     }
 
     @Test
-    void getValuesTest() {
+    void getValuesTest()
+    {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         dps.setValue("name", "TestName")
         assertArrayEquals([null, "TestName", null] as Object[], dpsHelper.getValues(dps))
     }
 
     @Test
-    void getColumnsWithoutSpecialTest() {
+    void getColumnsWithoutSpecialTest()
+    {
         assertEquals(["ID", "name", "value"] as Set,
                 dpsHelper.getColumnsWithoutSpecial(meta.getEntity("meters")).keySet())
     }
 
     @Test
-    void getDpsTest() {
+    void getDpsTest()
+    {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         assertNotNull dps.getProperty("value")
 
@@ -217,7 +238,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpExcludeColumns_operationParams() {
+    void addDpExcludeColumns_operationParams()
+    {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         assertNotNull dps.getProperty("value")
 
@@ -227,7 +249,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void addDpExcludeColumns_operationParams_not_affected() {
+    void addDpExcludeColumns_operationParams_not_affected()
+    {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         assertNotNull dps.getProperty("value")
 
@@ -237,7 +260,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getLabelAndGetLabelRawTest() {
+    void getLabelAndGetLabelRawTest()
+    {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addLabel(dps, "test")
         assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
@@ -258,7 +282,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getAsMapTest() {
+    void getAsMapTest()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals([CODE: null, payable: "yes", test: 2], dpsHelper.getAsMap(dps) << [test: 2])
@@ -267,7 +292,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void setOperationParamsTest() {
+    void setOperationParamsTest()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         dpsHelper.setOperationParams(dps, [payable: "no"])
@@ -278,7 +304,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void testInt() {
+    void testInt()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testInt"], [:])
         assertEquals "{'/testInt':{'displayName':'testInt','type':'Integer','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'}," +
@@ -287,7 +314,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void testBigInt() {
+    void testBigInt()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testBigInt"], [:])
         assertEquals "{'/testBigInt':{'displayName':'testBigInt','type':'Long','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'9223372036854775807','min':'-9223372036854775808'},'type':'range'}," +
@@ -296,7 +324,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void testTypesCURRENCY() {
+    void testTypesCURRENCY()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["payment"], [:])
         assertEquals "{'/payment':{'displayName':'payment','type':'Double','validationRules':[" +
                 "{'attr':{'max':'1000000000000000000','min':'-1000000000000000000'},'type':'range'}," +
@@ -305,7 +334,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void testTypesDECIMAL() {
+    void testTypesDECIMAL()
+    {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["decimal"], [:])
         assertEquals "{'/decimal':{'displayName':'decimal','type':'Double','validationRules':[" +
                 "{'attr':{'max':'10000000000','min':'-10000000000'},'type':'range'}," +
@@ -314,7 +344,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getRangeTest() {
+    void getRangeTest()
+    {
         assertEquals "{'attr':{'max':'1000000000','min':'0'},'type':'range'}",
                 oneQuotes(jsonb.toJson(dpsHelper.getRange(9, true)))
 
@@ -326,7 +357,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void getPrecisionTest() {
+    void getPrecisionTest()
+    {
         assertEquals "1", dpsHelper.getPrecision(0)
         assertEquals "0.1", dpsHelper.getPrecision(1)
         assertEquals "0.01", dpsHelper.getPrecision(2)

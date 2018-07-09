@@ -90,7 +90,8 @@ public class IndexColumnDef extends BeModelElementSupport
         try
         {
             ModelValidationUtils.checkValueInSet(this, "transform", getTransform(), ColumnFunction.TRANSFORMS);
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }

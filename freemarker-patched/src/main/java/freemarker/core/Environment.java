@@ -110,11 +110,9 @@ import java.util.TimeZone;
  * This object stores the set of temporary variables created by the template,
  * the value of settings set by the template, the reference to the data model root,
  * etc. Everything that is needed to fulfill the template processing job.
- *
  * <p>Data models that need to access the <tt>Environment</tt>
  * object that represents the template processing on the current thread can use
  * the {@link #getCurrentEnvironment()} method.
- *
  * <p>If you need to modify or read this object before or after the <tt>process</tt>
  * call, use {@link Template#createProcessingEnvironment(Object rootMap, Writer out, ObjectWrapper wrapper)}
  *
@@ -254,12 +252,14 @@ public final class Environment extends Configurable
                 {
                     out.flush();
                 }
-            } finally
+            }
+            finally
             {
                 // It's just to allow the GC to free memory...
                 clearCachedValues();
             }
-        } finally
+        }
+        finally
         {
             threadEnv.set(savedEnv);
         }
@@ -275,10 +275,12 @@ public final class Environment extends Configurable
         try
         {
             element.accept(this);
-        } catch (TemplateException te)
+        }
+        catch (TemplateException te)
         {
             handleTemplateException(te);
-        } finally
+        }
+        finally
         {
             popElement();
         }
@@ -298,10 +300,12 @@ public final class Environment extends Configurable
         try
         {
             element.accept(this);
-        } catch (TemplateException te)
+        }
+        catch (TemplateException te)
         {
             handleTemplateException(te);
-        } finally
+        }
+        finally
         {
             replaceTopElement(parent);
         }
@@ -322,7 +326,8 @@ public final class Environment extends Configurable
         if (element == null)
         {
             nested = null;
-        } else
+        }
+        else
         {
             nested = new TemplateDirectiveBody()
             {
@@ -333,7 +338,8 @@ public final class Environment extends Configurable
                     try
                     {
                         Environment.this.visit(element);
-                    } finally
+                    }
+                    finally
                     {
                         out = prevOut;
                     }
@@ -344,7 +350,8 @@ public final class Environment extends Configurable
         if (bodyParameterNames == null || bodyParameterNames.isEmpty())
         {
             outArgs = NO_OUT_ARGS;
-        } else
+        }
+        else
         {
             outArgs = new TemplateModel[bodyParameterNames.size()];
         }
@@ -367,7 +374,8 @@ public final class Environment extends Configurable
         try
         {
             directiveModel.execute(this, args, outArgs, nested);
-        } finally
+        }
+        finally
         {
             if (outArgs.length > 0)
             {
@@ -413,39 +421,48 @@ public final class Environment extends Configurable
                         }
                     } while (tc != null && tc.afterBody() == TransformControl.REPEAT_EVALUATION);
                 }
-            } catch (Throwable t)
+            }
+            catch (Throwable t)
             {
                 try
                 {
                     if (tc != null)
                     {
                         tc.onError(t);
-                    } else
+                    }
+                    else
                     {
                         throw t;
                     }
-                } catch (TemplateException e)
+                }
+                catch (TemplateException e)
                 {
                     throw e;
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     throw e;
-                } catch (RuntimeException e)
+                }
+                catch (RuntimeException e)
                 {
                     throw e;
-                } catch (Error e)
+                }
+                catch (Error e)
                 {
                     throw e;
-                } catch (Throwable e)
+                }
+                catch (Throwable e)
                 {
                     throw new UndeclaredThrowableException(e);
                 }
-            } finally
+            }
+            finally
             {
                 out = prevOut;
                 tw.close();
             }
-        } catch (TemplateException te)
+        }
+        catch (TemplateException te)
         {
             handleTemplateException(te);
         }
@@ -467,10 +484,12 @@ public final class Environment extends Configurable
         {
             inAttemptBlock = true;
             visitByHiddingParent(attemptBlock);
-        } catch (TemplateException te)
+        }
+        catch (TemplateException te)
         {
             thrownException = te;
-        } finally
+        }
+        finally
         {
             inAttemptBlock = lastInAttemptBlock;
             setFastInvalidReferenceExceptions(lastFIRE);
@@ -487,11 +506,13 @@ public final class Environment extends Configurable
             {
                 recoveredErrorStack.add(thrownException);
                 visit(recoveryBlock);
-            } finally
+            }
+            finally
             {
                 recoveredErrorStack.remove(recoveredErrorStack.size() - 1);
             }
-        } else
+        }
+        else
         {
             out.write(sw.toString());
         }
@@ -538,7 +559,8 @@ public final class Environment extends Configurable
             try
             {
                 visit(body);
-            } finally
+            }
+            finally
             {
                 if (invokingMacroContext.bodyParameterNames != null)
                 {
@@ -562,12 +584,15 @@ public final class Environment extends Configurable
         try
         {
             ictxt.runLoop(this);
-        } catch (BreakInstruction.Break br)
+        }
+        catch (BreakInstruction.Break br)
         {
-        } catch (TemplateException te)
+        }
+        catch (TemplateException te)
         {
             handleTemplateException(te);
-        } finally
+        }
+        finally
         {
             popLocalContext();
         }
@@ -602,10 +627,12 @@ public final class Environment extends Configurable
             if (macroOrTransform instanceof Macro)
             {
                 visit((Macro) macroOrTransform, null, null, null, null);
-            } else if (macroOrTransform instanceof TemplateTransformModel)
+            }
+            else if (macroOrTransform instanceof TemplateTransformModel)
             {
                 visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null);
-            } else
+            }
+            else
             {
                 String nodeType = node.getNodeType();
                 if (nodeType != null)
@@ -614,7 +641,8 @@ public final class Environment extends Configurable
                     if ((nodeType.equals("text") && node instanceof TemplateScalarModel))
                     {
                         out.write(((TemplateScalarModel) node).getAsString());
-                    } else if (nodeType.equals("document"))
+                    }
+                    else if (nodeType.equals("document"))
                     {
                         recurse(node, namespaces);
                     }
@@ -627,13 +655,15 @@ public final class Environment extends Configurable
                         throw new _MiscTemplateException(
                                 this, noNodeHandlerDefinedDescription(node, node.getNodeNamespace(), nodeType));
                     }
-                } else
+                }
+                else
                 {
                     throw new _MiscTemplateException(
                             this, noNodeHandlerDefinedDescription(node, node.getNodeNamespace(), "default"));
                 }
             }
-        } finally
+        }
+        finally
         {
             this.currentVisitorNode = prevVisitorNode;
             this.nodeNamespaceIndex = prevNodeNamespaceIndex;
@@ -653,11 +683,13 @@ public final class Environment extends Configurable
             if (ns.length() > 0)
             {
                 nsPrefix = " and namespace ";
-            } else
+            }
+            else
             {
                 nsPrefix = " and no namespace";
             }
-        } else
+        }
+        else
         {
             nsPrefix = "";
             ns = "";
@@ -673,7 +705,8 @@ public final class Environment extends Configurable
         if (macroOrTransform instanceof Macro)
         {
             visit((Macro) macroOrTransform, null, null, null, null);
-        } else if (macroOrTransform instanceof TemplateTransformModel)
+        }
+        else if (macroOrTransform instanceof TemplateTransformModel)
         {
             visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null);
         }
@@ -719,18 +752,21 @@ public final class Environment extends Configurable
                         if (hasVar)
                         {
                             mc.setLocalVar(varName, value);
-                        } else
+                        }
+                        else
                         {
                             ((SimpleHash) unknownVars).put(varName, value);
                         }
-                    } else
+                    }
+                    else
                     {
                         throw new _MiscTemplateException(this, new Object[]{
                                 "Macro ", new _DelayedJQuote(macro.getName()), " has no such argument: ",
                                 varName});
                     }
                 }
-            } else if (positionalArgs != null)
+            }
+            else if (positionalArgs != null)
             {
                 if (catchAll != null)
                     unknownVars = new SimpleSequence();
@@ -752,11 +788,13 @@ public final class Environment extends Configurable
                         {
                             String argName = argumentNames[i];
                             mc.setLocalVar(argName, argModel);
-                        } else
+                        }
+                        else
                         {
                             ((SimpleSequence) unknownVars).add(argModel);
                         }
-                    } catch (RuntimeException re)
+                    }
+                    catch (RuntimeException re)
                     {
                         throw new _MiscTemplateException(re, this);
                     }
@@ -775,19 +813,23 @@ public final class Environment extends Configurable
             try
             {
                 mc.runMacro(this);
-            } catch (ReturnInstruction.Return re)
+            }
+            catch (ReturnInstruction.Return re)
             {
-            } catch (TemplateException te)
+            }
+            catch (TemplateException te)
             {
                 handleTemplateException(te);
-            } finally
+            }
+            finally
             {
                 currentMacroContext = previousMacroContext;
                 localContextStack = prevLocalContextStack;
                 currentNamespace = prevNamespace;
                 setParent(prevParent);
             }
-        } finally
+        }
+        finally
         {
             popElement();
         }
@@ -1105,16 +1147,20 @@ public final class Environment extends Configurable
                 if ("number".equals(pattern))
                 {
                     format = NumberFormat.getNumberInstance(locale);
-                } else if ("currency".equals(pattern))
+                }
+                else if ("currency".equals(pattern))
                 {
                     format = NumberFormat.getCurrencyInstance(locale);
-                } else if ("percent".equals(pattern))
+                }
+                else if ("percent".equals(pattern))
                 {
                     format = NumberFormat.getPercentInstance(locale);
-                } else if ("computer".equals(pattern))
+                }
+                else if ("computer".equals(pattern))
                 {
                     format = getCNumberFormat();
-                } else
+                }
+                else
                 {
                     format = new DecimalFormat(pattern, new DecimalFormatSymbols(getLocale()));
                 }
@@ -1240,7 +1286,8 @@ public final class Environment extends Configurable
                     try
                     {
                         format = new SimpleDateFormat(pattern, locale);
-                    } catch (IllegalArgumentException e)
+                    }
+                    catch (IllegalArgumentException e)
                     {
                         throw new _TemplateModelException(e, new Object[]{
                                 "Can't parse ", new _DelayedJQuote(pattern), " to a date format, because:\n", e});
@@ -1317,7 +1364,8 @@ public final class Environment extends Configurable
         if (tm instanceof TemplateTransformModel)
         {
             ttm = (TemplateTransformModel) tm;
-        } else if (exp instanceof Identifier)
+        }
+        else if (exp instanceof Identifier)
         {
             tm = getConfiguration().getSharedVariable(exp.toString());
             if (tm instanceof TemplateTransformModel)
@@ -1527,7 +1575,8 @@ public final class Environment extends Configurable
                 pw.print(i == 0 ? "==> " : "    ");
                 pw.println(instructionStackItemToString(stackEl));
             }
-        } else
+        }
+        else
         {
             pw.println("[the stack was empty]");
         }
@@ -1580,7 +1629,8 @@ public final class Environment extends Configurable
         {
             sb.append(MessageUtil.formatLocationForEvaluationError(
                     enclosingMacro, stackEl.beginLine, stackEl.beginColumn));
-        } else
+        }
+        else
         {
             sb.append(MessageUtil.formatLocationForEvaluationError(
                     stackEl.getTemplate(), stackEl.beginLine, stackEl.beginColumn));
@@ -1632,7 +1682,8 @@ public final class Environment extends Configurable
         if (loadedLibs != null)
         {
             return (Namespace) loadedLibs.get(name);
-        } else
+        }
+        else
         {
             return null;
         }
@@ -1829,7 +1880,8 @@ public final class Environment extends Configurable
             try
             {
                 ns = (Namespace) nodeNamespaces.get(i);
-            } catch (ClassCastException cce)
+            }
+            catch (ClassCastException cce)
             {
                 throw new _MiscTemplateException(this,
                         "A \"using\" clause should contain a sequence of namespaces or strings that indicate the "
@@ -1858,7 +1910,8 @@ public final class Environment extends Configurable
             {
                 result = null;
             }
-        } else
+        }
+        else
         {
             Template template = ns.getTemplate();
             String prefix = template.getPrefixForNamespace(nsURI);
@@ -1875,7 +1928,8 @@ public final class Environment extends Configurable
                 {
                     result = null;
                 }
-            } else
+            }
+            else
             {
                 if (nsURI.length() == 0)
                 {
@@ -1909,7 +1963,6 @@ public final class Environment extends Configurable
     /**
      * Emulates <code>include</code> directive, except that <code>name</code> must be tempate
      * root relative.
-     *
      * <p>It's the same as <code>include(getTemplateForInclusion(name, encoding, parse))</code>.
      * But, you may want to separately call these two methods, so you can determine the source of
      * exceptions more precisely, and thus achieve more intelligent error handling.
@@ -1969,7 +2022,8 @@ public final class Environment extends Configurable
         try
         {
             visit(includedTemplate.getRootTreeNode());
-        } finally
+        }
+        finally
         {
             setParent(prevTemplate);
         }
@@ -1978,7 +2032,6 @@ public final class Environment extends Configurable
     /**
      * Emulates <code>import</code> directive, except that <code>name</code> must be tempate
      * root relative.
-     *
      * <p>It's the same as <code>importLib(getTemplateForImporting(name), namespace)</code>.
      * But, you may want to separately call these two methods, so you can determine the source of
      * exceptions more precisely, and thus achieve more intelligent error handling.
@@ -2029,7 +2082,8 @@ public final class Environment extends Configurable
             {
                 setVariable(namespace, existingNamespace);
             }
-        } else
+        }
+        else
         {
             Namespace newNamespace = new Namespace(loadedTemplate);
             if (namespace != null)
@@ -2048,7 +2102,8 @@ public final class Environment extends Configurable
             try
             {
                 include(loadedTemplate);
-            } finally
+            }
+            finally
             {
                 this.out = prevOut;
                 this.currentNamespace = prevNamespace;
@@ -2066,7 +2121,8 @@ public final class Environment extends Configurable
             this.out = sw;
             visit(te);
             return sw.toString();
-        } finally
+        }
+        finally
         {
             this.out = prevOut;
         }

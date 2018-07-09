@@ -68,7 +68,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 }
                 info.setPrecision(rs.getInt(6 /* "data_scale" */));
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -110,7 +111,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 if ("'auto-identity'".equals(defaultValue))
                 {
                     column.setAutoIncrement(true);
-                } else
+                }
+                else
                 {
                     column.setDefaultValue(defaultValue);
                 }
@@ -176,7 +178,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                         }
                     }
                     while (st.hasMoreTokens());
-                } catch (NoSuchElementException ignore)
+                }
+                catch (NoSuchElementException ignore)
                 {
                 }
                 if (values.size() > 0)
@@ -184,7 +187,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     column.setEnumValues(values.toArray(new String[values.size()]));
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -215,7 +219,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     column.setDefaultValue(new ColumnFunction(targetName, ColumnFunction.TRANSFORM_GENERIC).toString());
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -248,7 +253,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 String tableName = rs.getString(1 /*"table_name"*/);
                 result.put(tableName.toLowerCase(), "TABLE");
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -261,7 +267,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 String viewName = rs.getString(1 /*"view_name"*/);
                 result.put(viewName.toLowerCase(), "VIEW");
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -304,7 +311,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"column_name"*/);
                 curIndex.addColumn(column);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -341,7 +349,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     }
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }

@@ -53,12 +53,14 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                             || type.startsWith("char"))
                     {
                         defaultValue = "'" + defaultValue + "'";
-                    } else if (type.startsWith("date") || type.startsWith("time"))
+                    }
+                    else if (type.startsWith("date") || type.startsWith("time"))
                     {
                         if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP"))
                         {
                             defaultValue = "NOW()";
-                        } else
+                        }
+                        else
                         {
                             defaultValue = "'" + defaultValue + "'";
                         }
@@ -87,7 +89,8 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 info.setType(type.toUpperCase(Locale.ENGLISH));
                 controller.setProgress(0); // Just to check for interrupts
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -127,7 +130,8 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"column_name"*/);
                 curIndex.addColumn(column);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }

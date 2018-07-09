@@ -113,19 +113,22 @@ public class QuickFilter extends BeModelElementSupport
         {
             if (other.filteringClass != null)
                 return debugEquals("filteringClass");
-        } else if (!filteringClass.equals(other.filteringClass))
+        }
+        else if (!filteringClass.equals(other.filteringClass))
             return debugEquals("filteringClass");
         if (queryParam == null)
         {
             if (other.queryParam != null)
                 return debugEquals("queryParam");
-        } else if (!queryParam.equals(other.queryParam))
+        }
+        else if (!queryParam.equals(other.queryParam))
             return debugEquals("queryParam");
         if (targetQueryName == null)
         {
             if (other.targetQueryName != null)
                 return debugEquals("targetQueryName");
-        } else if (!targetQueryName.equals(other.targetQueryName))
+        }
+        else if (!targetQueryName.equals(other.targetQueryName))
             return debugEquals("targetQueryName");
         return true;
     }

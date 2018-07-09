@@ -18,7 +18,8 @@ public class RoleMultiSelector extends GenericMultiSelectEditor
             Project project = ((RoleSet) bean).getProject();
             List<String> roleList = project.getRolesWithGroups();
             return roleList.toArray(new String[roleList.size()]);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

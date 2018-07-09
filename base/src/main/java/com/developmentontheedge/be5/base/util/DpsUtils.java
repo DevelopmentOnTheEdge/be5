@@ -82,7 +82,8 @@ public class DpsUtils
                     property.setValue(SqlUtils.getSqlValue(property.getType(), resultSet, i));
                 }
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw Be5Exception.internal(e);
         }

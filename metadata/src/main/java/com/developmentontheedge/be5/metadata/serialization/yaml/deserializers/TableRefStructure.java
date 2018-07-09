@@ -19,7 +19,8 @@ class TableRefStructure
             // no warnings, but the field will be empty
             // and it will be interpreted as a primary key
             tableRef.setColumnsTo("");
-        } else
+        }
+        else
         {
             tableRef.setColumnsTo(columnTo);
         }

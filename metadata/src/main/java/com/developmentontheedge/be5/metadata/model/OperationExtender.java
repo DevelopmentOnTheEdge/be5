@@ -102,7 +102,8 @@ public class OperationExtender extends BeModelElementSupport
         {
             if (other.className != null)
                 return debugEquals("className");
-        } else if (!className.equals(other.className))
+        }
+        else if (!className.equals(other.className))
             return debugEquals("className");
         if (invokeOrder != other.invokeOrder)
             return debugEquals("invokeOrder");

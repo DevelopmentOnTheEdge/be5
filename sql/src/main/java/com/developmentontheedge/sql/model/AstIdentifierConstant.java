@@ -55,11 +55,13 @@ public class AstIdentifierConstant extends SimpleNode
         {
             this.value = value.substring(1, value.length() - 1);
             this.symbol = QuoteSymbol.DOUBLE_QUOTE;
-        } else if (value.startsWith("`") && value.endsWith("`"))
+        }
+        else if (value.startsWith("`") && value.endsWith("`"))
         {
             this.value = value.substring(1, value.length() - 1);
             this.symbol = QuoteSymbol.BACKTICK;
-        } else
+        }
+        else
         {
             this.value = value;
             this.symbol = QuoteSymbol.NONE;

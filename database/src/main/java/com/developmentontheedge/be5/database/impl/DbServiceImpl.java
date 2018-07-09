@@ -131,11 +131,13 @@ public class DbServiceImpl implements DbService
         {
             conn = (txConn != null) ? txConn : connectionService.getConnection(isReadOnly);
             return executor.run(conn);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             log.log(Level.SEVERE, "", e);
             throw new RuntimeException(e);
-        } finally
+        }
+        finally
         {
             if (txConn == null)
             {

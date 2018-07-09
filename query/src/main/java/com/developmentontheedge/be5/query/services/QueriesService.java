@@ -88,14 +88,11 @@ public class QueriesService
 //    }
 
     /**
-     * <p>
      * Creates a list of options by a specified table name. An entity with a
      * table definition for this table must be defined. A "selection view" query
      * of the entity must be defined too. Roles and visibility of the query are
      * ignored.
      * </p>
-     *
-     * <p>
      * A "selection view" query is a query with name "*** Selection view ***"
      * that selects rows with two fields: an identifier and a displayed text.
      * Names of columns are ignored, only the order matters.
@@ -182,7 +179,8 @@ public class QueriesService
         if (query.getType() == QueryType.GROOVY)
         {
             tableModel = tableModelService.getTableModel(query, parameters);
-        } else
+        }
+        else
         {
             tableModel = tableModelService.builder(query, parameters)
                     .limit(Integer.MAX_VALUE)

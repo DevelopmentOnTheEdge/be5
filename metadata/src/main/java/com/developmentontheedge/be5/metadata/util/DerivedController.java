@@ -28,7 +28,8 @@ public class DerivedController implements ProcessController
         if (operation != null)
         {
             primary.setOperationName(operation + ": " + name);
-        } else
+        }
+        else
         {
             primary.setOperationName(name);
         }

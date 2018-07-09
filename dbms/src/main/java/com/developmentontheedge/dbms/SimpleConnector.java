@@ -23,7 +23,8 @@ public class SimpleConnector implements DbmsConnector
         try
         {
             this.connection = DriverManager.getConnection(connectionUrl, username, password);
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw propagate(e);
         }
@@ -83,20 +84,23 @@ public class SimpleConnector implements DbmsConnector
         try
         {
             st = rs.getStatement();
-        } catch (SQLException e1)
+        }
+        catch (SQLException e1)
         {
         }
         try
         {
             rs.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
         }
         try
         {
             if (st != null)
                 st.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
         }
     }

@@ -18,7 +18,7 @@ import java.util.Objects;
  *
  * @author ruslan
  */
-final public class DatabaseModel implements EntityAccess
+public final class DatabaseModel implements EntityAccess
 {
     static
     {

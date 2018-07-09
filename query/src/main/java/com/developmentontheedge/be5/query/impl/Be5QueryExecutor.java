@@ -171,7 +171,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             try
             {
                 return db.list(getFinalSql(), parser);
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 throw Be5Exception.internalInQuery(query, e);
             }
@@ -203,7 +204,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             ast = SqlQuery.parse(queryText);
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
@@ -260,7 +262,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                     return DpsRecordAdapter.createSchema(ps.getMetaData());
                 }
             });
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             log.log(Level.FINE, "fail getSchema, return empty", e);
             return new DynamicProperty[]{};
@@ -276,7 +279,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             try
             {
                 categoryId = Long.parseLong(categoryString);
-            } catch (NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
                 throw Be5Exception.internalInQuery(query,
                         new IllegalArgumentException("Invalid category: " + categoryString, e));
@@ -380,7 +384,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             dynamicPropertySets = db.list(finalSql, DpsRecordAdapter::createDps);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             //TODO only for Document presentation, for operations must be error throw
             Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);

@@ -28,14 +28,16 @@ public class SqlTypeUtils
             if ("java.lang.Long".equals(className))
             {
                 return Long.valueOf((String) value);
-            } else if ("java.lang.Integer".equals(className))
+            }
+            else if ("java.lang.Integer".equals(className))
             {
                 return Integer.valueOf((String) value);
             }
             if ("java.lang.Short".equals(className))
             {
                 return Short.valueOf((String) value);
-            } else if ("java.lang.Double".equals(className))
+            }
+            else if ("java.lang.Double".equals(className))
             {
                 return Double.valueOf((String) value);
             }

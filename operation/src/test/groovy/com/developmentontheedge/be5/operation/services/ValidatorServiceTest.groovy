@@ -14,18 +14,21 @@ import javax.inject.Inject
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
-class ValidatorServiceTest extends OperationsSqlMockProjectTest {
+class ValidatorServiceTest extends OperationsSqlMockProjectTest
+{
     @Inject
     Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
-    void initDps() {
+    void initDps()
+    {
         dps = new GDynamicPropertySetSupport()
     }
 
     @Test
-    void test() {
+    void test()
+    {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
         validator.checkErrorAndCast(property)
         assertEquals 2L, property.getValue()
@@ -36,7 +39,8 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void canBeNull() {
+    void canBeNull()
+    {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, null)
         property.setCanBeNull(true)
         validator.checkErrorAndCast(property)
@@ -49,7 +53,8 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testMulti() {
+    void testMulti()
+    {
         String[] initValue = ["val", "val2"] as String[]
 
         def property = dps.add {
@@ -70,7 +75,8 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void testMultiCanNotBeNull() {
+    void testMultiCanNotBeNull()
+    {
         String[] initValue = [] as String[]
 
         def property = dps.add {
@@ -85,7 +91,8 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testMultiLong() {
+    void testMultiLong()
+    {
         String[] value = ["1", "3"] as String[]
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, value)
         property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true)
@@ -96,13 +103,15 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = NumberFormatException.class)
-    void testError() {
+    void testError()
+    {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, "a")
         validator.checkErrorAndCast(property)
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void testString() {
+    void testString()
+    {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, 2)
         validator.checkErrorAndCast(property)
     }
@@ -110,7 +119,8 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest {
     @Ignore
 //TODO
     @Test(expected = NumberFormatException.class)
-    void name() {
+    void name()
+    {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, "a")
         property << [VALIDATION_RULES: baseRule(digits)]
 

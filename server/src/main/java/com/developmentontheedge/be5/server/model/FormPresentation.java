@@ -15,7 +15,7 @@ public class FormPresentation
     private final String entity;
     private final String query;
     private final String operation;
-    private final String title;//todo change to 'Здания - Добавить'
+    private final String title; //todo change to 'Здания - Добавить'
     private final String selectedRows;
     private final Map<String, Object> operationParams;
     private final JsonObject bean;

@@ -36,10 +36,12 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
         try
         {
             generate(req, ServletUtils.getResponse(request, response));
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in controller", e);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             log.log(Level.SEVERE, "Error in controller", e);
         }
@@ -51,7 +53,8 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
         try
         {
             generate(req, res, getApiSubUrl(req));
-        } catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             res.sendErrorAsJson(e.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +73,8 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
         if (subIndex != -1)
         {
             return requestUri.substring(subIndex + 1, requestUri.length());
-        } else
+        }
+        else
         {
             return "";
         }

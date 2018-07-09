@@ -22,7 +22,8 @@ public class RecordModelMetaClass extends DynamicPropertySetMetaClass
         if (rec.getProperty(propertyName) != null)
         {
             rec.update(propertyName, value);
-        } else
+        }
+        else
         {
             throw new IllegalArgumentException("Property " + propertyName + " not found!");
         }

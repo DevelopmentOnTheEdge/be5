@@ -8,7 +8,7 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     private String fileName = getOperation().getEntity().getName() + " - " + getOperation().getName() + " - " + getName() + getFileExtension();
     private SourceFile file;
 
-    abstract public String getFileExtension();
+    public abstract String getFileExtension();
 
     public SourceFileOperationExtender(Operation owner, String module)
     {
@@ -88,7 +88,8 @@ public abstract class SourceFileOperationExtender extends OperationExtender
         if (file == null)
         {
             getProject().getApplication().addSourceFile(namespace, fileName, code);
-        } else
+        }
+        else
         {
             file.setSource(code);
         }

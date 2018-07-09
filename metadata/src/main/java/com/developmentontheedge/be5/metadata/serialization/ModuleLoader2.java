@@ -73,7 +73,8 @@ public class ModuleLoader2
                 if (project != null)
                 {
                     throw new RuntimeException("Several projects were found: " + project + ", " + module);
-                } else
+                }
+                else
                 {
                     project = module.getValue();
                 }
@@ -121,7 +122,8 @@ public class ModuleLoader2
 
             urls.addAll(additionalUrls);
             loadAllProjects(urls);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -145,15 +147,17 @@ public class ModuleLoader2
                     Path path = Paths.get(url.toURI()).getParent();
                     module = Serialization.load(path, loadContext);
                     log.fine("Load module from dir: " + path);
-                } else // war or jar file
+                }
+                else // war or jar file
                 {
                     String jar = ext.substring(0, ext.indexOf('!'));
-                    FileSystem fs;// = FileSystems.getFileSystem(URI.create(jar));
+                    FileSystem fs;
 
                     try
                     {
                         fs = FileSystems.newFileSystem(URI.create(jar), Collections.emptyMap());
-                    } catch (FileSystemAlreadyExistsException e)
+                    }
+                    catch (FileSystemAlreadyExistsException e)
                     {
                         fs = FileSystems.getFileSystem(URI.create(jar));
                         log.fine("Get exists FileSystem after exception");
@@ -167,7 +171,8 @@ public class ModuleLoader2
                 loadContext.check();
                 modulesMap.put(module.getAppName(), module);
             }
-        } catch (ProjectLoadException | IOException | URISyntaxException e)
+        }
+        catch (ProjectLoadException | IOException | URISyntaxException e)
         {
             e.printStackTrace();
         }
@@ -216,7 +221,8 @@ public class ModuleLoader2
             {
                 Project moduleProject = modulesMap.get(module.getName());
                 result.add(moduleProject);
-            } else
+            }
+            else
             {
                 throw new RuntimeException("Module project not found: '" + module.getName() + "'");
             }
@@ -239,7 +245,8 @@ public class ModuleLoader2
         try
         {
             ModuleLoader2.mergeAllModules(be5Project, logger, loadContext);
-        } catch (ProjectLoadException e)
+        }
+        catch (ProjectLoadException e)
         {
             throw new ProjectLoadException("Merge modules", e);
         }
@@ -328,7 +335,8 @@ public class ModuleLoader2
         if (project.isModuleProject())
         {
             sb.append("Module      : ");
-        } else
+        }
+        else
         {
             sb.append("Project     : ");
         }
@@ -382,7 +390,8 @@ public class ModuleLoader2
             }
             sb.append("\n");
             if (started) log.info(sb.toString());
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -443,7 +452,8 @@ public class ModuleLoader2
                 if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
                 {
                     pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
-                } else
+                }
+                else
                 {
                     log.severe("Error path in dev.yaml for " + entry.getKey());
                 }

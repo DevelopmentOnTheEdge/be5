@@ -36,7 +36,6 @@ public class MetadataUtils
     /**
      * Surround specified collection values ( "(", ",", ")" ) for putting them into IN clause.
      * <br/>Example: SELECT * FROM some_table WHERE some_column IN (values[0], values[1], ...)
-     * <p>
      * <br/><br/><b>Attention!!!</b> Values (except numeric values) in the collection must be already formatted for SQL syntax.
      * If collection contains numeric data, you must set isNumeric parameter to true.
      *
@@ -66,7 +65,8 @@ public class MetadataUtils
                     {
                         Double.parseDouble(v.toString());
                     }
-                } catch (NumberFormatException exc)
+                }
+                catch (NumberFormatException exc)
                 {
                     log.log(Level.WARNING, "toInClause: Bad numeric value '" + v + "'");
                     continue;
@@ -81,7 +81,8 @@ public class MetadataUtils
             if (first)
             {
                 first = false;
-            } else
+            }
+            else
             {
                 clause.append(',');
             }
@@ -89,13 +90,15 @@ public class MetadataUtils
             if (isNumeric)
             {
                 clause.append(prefix).append(v);
-            } else
+            }
+            else
             {
                 String val = v.toString();
                 if (val.startsWith("'") && val.endsWith("'"))
                 {
                     clause.append(val);
-                } else
+                }
+                else
                 {
                     clause.append("'").append(prefix).append(val).append("'");
                 }

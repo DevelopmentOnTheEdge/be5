@@ -13,9 +13,11 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.verify
 
-class GroovyOperationTest extends OperationsSqlMockProjectTest {
+class GroovyOperationTest extends OperationsSqlMockProjectTest
+{
     @Test
-    void emptyValues() {
+    void emptyValues()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestGroovyOp", "0", [:])
 
@@ -24,7 +26,8 @@ class GroovyOperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void getParametersTest() {
+    void getParametersTest()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestGroovyOp", "0",
                 ['beginDate': '2017-12-20', 'name': 'testValue', 'reason': 'fired', 'reasonMulti': ['fired', 'other'] as String[]])
@@ -34,7 +37,8 @@ class GroovyOperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void execute() {
+    void execute()
+    {
         Operation operation = createOperation("testtableAdmin", "All records", "TestGroovyOp", "0")
         Either<Object, OperationResult> generate = executeOperation(operation,
                 ['beginDate': '2017-12-20', 'name': 'testValue', 'reason': 'fired', 'reasonMulti': ['fired', 'other'] as String[]])

@@ -39,12 +39,14 @@ public class Templates
             try (InputStream is = url.openStream())
             {
                 content = new Yaml().compose(new InputStreamReader(is, StandardCharsets.UTF_8));
-            } catch (MarkedYAMLException e)
+            }
+            catch (MarkedYAMLException e)
             {
                 throw new ReadException(
                         new Exception((e.getProblemMark().getLine() + 1) + ":" + (e.getProblemMark().getColumn() + 1) + ": "
                                 + e.getMessage()), getPath(url), ReadException.LEE_INVALID_STRUCTURE);
-            } catch (YAMLException | IOException e)
+            }
+            catch (YAMLException | IOException e)
             {
                 throw new ReadException(new Exception(e.getMessage()), getPath(url), ReadException.LEE_INVALID_STRUCTURE);
             }
@@ -56,7 +58,8 @@ public class Templates
                 @SuppressWarnings("unchecked")
                 Map<String, Object> entityContent = (Map<String, Object>) root.get(template);
                 DataElementUtils.saveQuiet(YamlDeserializer.readEntity(lc, template, entityContent, prj.getApplication()));
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 throw new ReadException(e, getPath(url), ReadException.LEE_INTERNAL_ERROR);
             }
@@ -70,7 +73,8 @@ public class Templates
         try
         {
             return Paths.get(url.toURI());
-        } catch (URISyntaxException | FileSystemNotFoundException e)
+        }
+        catch (URISyntaxException | FileSystemNotFoundException e)
         {
             return Paths.get("internal", url.getPath());
         }

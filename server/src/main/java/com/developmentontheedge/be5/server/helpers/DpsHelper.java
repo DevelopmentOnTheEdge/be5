@@ -261,7 +261,8 @@ public class DpsHelper
                 DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
                 addMeta(dynamicProperty, columnDef, modelElements);
                 dps.add(dynamicProperty);
-            } else
+            }
+            else
             {
                 throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
             }
@@ -294,7 +295,8 @@ public class DpsHelper
             {
                 DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
                 dps.add(dynamicProperty);
-            } else
+            }
+            else
             {
                 throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
             }
@@ -309,7 +311,8 @@ public class DpsHelper
         try
         {
             ast = SqlQuery.parse(meta.getQueryCode(query));
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
@@ -331,13 +334,15 @@ public class DpsHelper
                     modelElements.getName(),
                     columnDef.getName()
             ));
-        } else if (modelElements.getClass() == Entity.class)
+        }
+        else if (modelElements.getClass() == Entity.class)
         {
             dp.setDisplayName(userAwareMeta.getColumnTitle(
                     columnDef.getEntity().getName(),
                     columnDef.getName()
             ));
-        } else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
+        }
+        else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
             dp.setDisplayName(userAwareMeta.getLocalizedOperationField(
                     columnDef.getEntity().getName(),
@@ -435,7 +440,8 @@ public class DpsHelper
         if (size <= 18)
         {
             return range(unsigned ? 0 : -LongMath.pow(10, size), LongMath.pow(10, size));
-        } else
+        }
+        else
         {
             return range(unsigned ? 0 : -Math.pow(10, size), Math.pow(10, size));
         }
@@ -446,10 +452,12 @@ public class DpsHelper
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
-        } else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
+        }
+        else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
-        } else if (columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null)
+        }
+        else if (columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     queries.getTagsFromSelectionView(columnDef.getTableTo(),
@@ -563,13 +571,16 @@ public class DpsHelper
         if (modelElements.getClass() == Entity.class)
         {
             return (Entity) modelElements;
-        } else if (modelElements.getClass() == Query.class)
+        }
+        else if (modelElements.getClass() == Query.class)
         {
             return ((Query) modelElements).getEntity();
-        } else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
+        }
+        else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
             return ((Operation) modelElements).getEntity();
-        } else
+        }
+        else
         {
             throw new RuntimeException("not supported modelElements");
         }

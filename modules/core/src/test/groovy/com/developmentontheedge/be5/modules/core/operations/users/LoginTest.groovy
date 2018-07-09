@@ -22,17 +22,20 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.when
 
-class LoginTest extends CoreBe5ProjectDbMockTest {
+class LoginTest extends CoreBe5ProjectDbMockTest
+{
     @Inject
     UserInfoProvider userInfoProvider
 
     @Before
-    void init() {
+    void init()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST)
     }
 
     @Test
-    void generate() {
+    void generate()
+    {
         def first = generateOperation(createOperation("users", "All records", "Login", "")).getFirst()
 
         assertEquals("{'values':{'user_name':'','user_pass':''},'meta':{'/user_name':{'displayName':'Логин','columnSize':'100'},'/user_pass':{'displayName':'Пароль','passwordField':true,'columnSize':'50'}},'order':['/user_name','/user_pass']}",
@@ -40,7 +43,8 @@ class LoginTest extends CoreBe5ProjectDbMockTest {
     }
 
     @Test
-    void execute() {
+    void execute()
+    {
 //        def request = mock(Request.class)
 //        UserInfoHolder.setRequest(request)
 //
@@ -84,7 +88,8 @@ class LoginTest extends CoreBe5ProjectDbMockTest {
 
     @Test
     @Ignore
-    void loginAccessDenied() {
+    void loginAccessDenied()
+    {
 //        String testPass = "testPass"
 //        Response response = mock(Response.class)
 //        Request request = getMockRequest("")
@@ -103,7 +108,8 @@ class LoginTest extends CoreBe5ProjectDbMockTest {
 
     @Test
     @Ignore
-    void error() {
+    void error()
+    {
 //        Response response = mock(Response.class)
 //
 //        component.generate(getMockRequest(""), response, injector)

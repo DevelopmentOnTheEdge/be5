@@ -123,7 +123,8 @@ public class MoreStrings
         try
         {
             return URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             throw Be5Exception.internal(e);
         }
@@ -134,7 +135,8 @@ public class MoreStrings
         try
         {
             return URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             throw Be5Exception.internal(e);
         }

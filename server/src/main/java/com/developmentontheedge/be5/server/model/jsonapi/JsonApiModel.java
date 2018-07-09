@@ -4,15 +4,11 @@ import java.util.Arrays;
 
 /**
  * http://jsonapi.org
- * <p>
  * A document MUST contain at least one of the following top-level members:
- * <p>
  * data: the document’s “primary data”
  * errors: an array of error objects
  * meta: a meta object that contains non-standard meta-information.
- * <p>
  * A document MAY contain any of these top-level members:
- * <p>
  * links: a links object related to the primary data.
  * included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
  */

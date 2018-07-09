@@ -68,7 +68,8 @@ class LocalizationDeserializer extends FileDeserializer
             try
             {
                 readBlock(entityName, asMap(serializedBlock));
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(target));
             }

@@ -7,19 +7,22 @@ import com.developmentontheedge.beans.DynamicPropertySet
 
 import javax.inject.Inject
 
-class OldRedirectFilter extends GOperationSupport implements TransactionalOperation {
+class OldRedirectFilter extends GOperationSupport implements TransactionalOperation
+{
     @Inject
     private FilterHelper filterHelper
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         dpsHelper.addDpExcludeAutoIncrement(params, getInfo().getEntity(), context.getOperationParams())
 
         return filterHelper.processFilterParams(params, presetValues, context.getOperationParams())
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
         redirectToTable(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters))
     }
 

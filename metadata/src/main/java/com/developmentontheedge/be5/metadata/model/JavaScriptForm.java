@@ -55,7 +55,8 @@ public class JavaScriptForm extends SourceFile
         try
         {
             setLinkedFile(ModuleLoader2.getFileSystem(getProject(), module).getJavaScriptFormsFolder().resolve(relativePath));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             setLinkedFile(null);
         }

@@ -49,13 +49,15 @@ public class SqlUtils
             }
 
             return clazz.cast(object);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             String name = "";
             try
             {
                 name = rs.getMetaData().getColumnName(idx);
-            } catch (SQLException ignore)
+            }
+            catch (SQLException ignore)
             {
 
             }

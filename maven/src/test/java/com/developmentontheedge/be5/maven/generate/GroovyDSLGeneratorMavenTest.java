@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.maven.generate;
 
-import com.developmentontheedge.be5.maven.TestUtils;
+import com.developmentontheedge.be5.maven.TestMavenUtils;
 import org.junit.Test;
 
 import java.io.IOException;
 
 
-public class GroovyDSLGeneratorTest extends TestUtils
+public class GroovyDSLGeneratorMavenTest extends TestMavenUtils
 {
     @Test
     public void test() throws IOException

@@ -12,9 +12,9 @@ public abstract class SourceFileOperation extends Operation
         super(name, type, entity);
     }
 
-    abstract public String getFileNameSpace();
+    public abstract String getFileNameSpace();
 
-    abstract public String getFileExtension();
+    public abstract String getFileExtension();
 
     protected String getDefaultFileName()
     {
@@ -81,7 +81,8 @@ public abstract class SourceFileOperation extends Operation
         if (file == null)
         {
             this.file = getProject().getApplication().addSourceFile(getFileNameSpace(), fileName, code);
-        } else
+        }
+        else
         {
             file.setSource(code);
         }

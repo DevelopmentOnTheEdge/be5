@@ -10,14 +10,16 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport
 import javax.inject.Inject
 import java.sql.Date
 
-class TestGroovyOp extends TestOperationSupport implements Operation {
+class TestGroovyOp extends TestOperationSupport implements Operation
+{
     @Inject
     private UserAwareMeta userAwareMeta
 
     DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         if (!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
 
         dps << [
@@ -90,7 +92,8 @@ class TestGroovyOp extends TestOperationSupport implements Operation {
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
     }
 

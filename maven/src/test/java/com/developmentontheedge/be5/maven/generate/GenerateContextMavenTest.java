@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.maven.generate;
 
-import com.developmentontheedge.be5.maven.TestUtils;
+import com.developmentontheedge.be5.maven.TestMavenUtils;
 import org.junit.Test;
 
 import java.nio.file.Path;
 
 
-public class GenerateContextTest extends TestUtils
+public class GenerateContextMavenTest extends TestMavenUtils
 {
     @Test
     public void execute() throws Exception

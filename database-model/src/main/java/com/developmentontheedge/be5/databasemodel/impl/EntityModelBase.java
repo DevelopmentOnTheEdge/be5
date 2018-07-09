@@ -213,7 +213,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    final public <R> R add(DynamicPropertySet dps)
+    public final <R> R add(DynamicPropertySet dps)
     {
         Objects.requireNonNull(dps);
 
@@ -293,7 +293,8 @@ public class EntityModelBase<T> implements EntityModel<T>
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
-        } else
+        }
+        else
         {
             return sqlHelper.deleteIn(entity.getName(), columnName, ids);
         }
@@ -315,7 +316,8 @@ public class EntityModelBase<T> implements EntityModel<T>
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.update(entity.getName(), conditions, values);
-        } else
+        }
+        else
         {
             return sqlHelper.delete(entity.getName(), conditions);
         }

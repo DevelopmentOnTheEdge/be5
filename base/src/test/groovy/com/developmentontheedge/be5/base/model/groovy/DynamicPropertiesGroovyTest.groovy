@@ -9,16 +9,19 @@ import static com.developmentontheedge.beans.BeanInfoConstants.*
 import static org.junit.Assert.*
 
 
-class DynamicPropertiesGroovyTest extends RegisterMetaClass {
+class DynamicPropertiesGroovyTest extends RegisterMetaClass
+{
     @Test
-    void testSetValue() {
+    void testSetValue()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps["property"] = "value"
         assertEquals "value", dps.getValue("property")
     }
 
     @Test
-    void testGetValue() {
+    void testGetValue()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("property", String.class).value("value")
 
@@ -26,7 +29,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetProperty() {
+    void testGetProperty()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("property", String.class).value("value")
 
@@ -35,20 +39,23 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetMissingValue() {
+    void testGetMissingValue()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         assertNull dps.$property
     }
 
     @Test
-    void testPropertyAccess() {
+    void testPropertyAccess()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("property", String.class).value("value")
         assertEquals "value", dps._property.value
     }
 
     @Test
-    void testGetMissingValueWithoutAccessor() {
+    void testGetMissingValueWithoutAccessor()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         boolean assertException = false
         try {
@@ -61,7 +68,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testCreateProperty() {
+    void testCreateProperty()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         dps << [
                 name            : "testProperty",
@@ -87,7 +95,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testAddProperty() {
+    void testAddProperty()
+    {
         DynamicPropertySet dps = [a: "a", b: "b"] as DynamicPropertySetSupport
         DynamicProperty property = new DynamicProperty("d", String, "d")
         assertTrue((dps << property).hasProperty("d"))
@@ -95,7 +104,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetAttribute() {
+    void testGetAttribute()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("test", String.class).attr(INPUT_SIZE_ATTR, "10")
 
@@ -103,7 +113,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetAttributeStringConstant() {
+    void testGetAttributeStringConstant()
+    {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("test", String.class).attr(INPUT_SIZE_ATTR, "10")
 
@@ -112,7 +123,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testSetAttribute() {
+    void testSetAttribute()
+    {
         def DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("test", String.class)
 
@@ -121,7 +133,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testSetAttributeStringConstant() {
+    void testSetAttributeStringConstant()
+    {
         def DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build("test", String.class)
 
@@ -130,7 +143,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetAt() {
+    void testGetAt()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         dps << [
                 name : "testProperty",
@@ -143,7 +157,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGStringImplConvertToString() {
+    void testGStringImplConvertToString()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         def test = "1"
         dps << [
@@ -157,7 +172,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
     }
 
     @Test
-    void testGetAtWithoutAccessor() {
+    void testGetAtWithoutAccessor()
+    {
         def dps = new DynamicPropertySetSupport()
         dps << [
                 name : "testProperty",
@@ -168,7 +184,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
 
 
     @Test
-    void testDynamicPropertySetPlus() {
+    void testDynamicPropertySetPlus()
+    {
         def dps1 = [a: "a", b: "b", c: "c"] as DynamicPropertySetSupport
         def dps2 = [d: "d", e: "e", f: "f"] as DynamicPropertySetSupport
 
@@ -182,7 +199,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass {
 
 
     @Test
-    void testSetWith() {
+    void testSetWith()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
         dps << [name: "testProperty", value: 1]
         dps << [name: "testProperty2", value: 1]

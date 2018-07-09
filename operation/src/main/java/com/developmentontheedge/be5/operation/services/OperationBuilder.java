@@ -29,7 +29,8 @@ public interface OperationBuilder
         {
             setRecords(records);
             return execute();
-        } else
+        }
+        else
         {
             return null;
         }

@@ -69,7 +69,8 @@ public class Db2SchemaReader extends DefaultSchemaReader
                     }
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -119,7 +120,8 @@ public class Db2SchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"COLNAMES"*/);
                 curIndex.addColumn(column);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -163,7 +165,8 @@ public class Db2SchemaReader extends DefaultSchemaReader
                     }
                 }
                 while (st.hasMoreTokens());
-            } catch (NoSuchElementException ignore)
+            }
+            catch (NoSuchElementException ignore)
             {
             }
 

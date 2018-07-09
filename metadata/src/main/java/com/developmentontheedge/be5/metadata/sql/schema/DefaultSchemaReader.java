@@ -22,7 +22,8 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
             Connection connection = connector.getConnection();
 
             return connection.getMetaData().getUserName();
-        } catch (SQLException ex)
+        }
+        catch (SQLException ex)
         {
             throw new ExtendedSqlException(connector.getConnectString(), "getMetaData().getUserName()", ex);
         }
@@ -44,7 +45,8 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
                 String type = rs.getString(4 /*"TABLE_TYPE"*/);
                 result.put(name, type);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }

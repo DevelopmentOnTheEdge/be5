@@ -98,7 +98,8 @@ public class CellFormatter
                     }
                 }
                 cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
-            } catch (Throwable e)
+            }
+            catch (Throwable e)
             {
                 throw Be5Exception.internalInQuery(query,
                         new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
@@ -139,7 +140,8 @@ public class CellFormatter
                 cell.options.put("link", link);
             }
             return StreamEx.of(formattedParts).map(this::print).joining();
-        } else
+        }
+        else
         {
             return cell.content;
         }
@@ -153,14 +155,16 @@ public class CellFormatter
         if (formattedPart instanceof String)
         {
             return (String) formattedPart;
-        } else if (formattedPart instanceof List)
+        }
+        else if (formattedPart instanceof List)
         {
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
             return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
                     .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
-        } else
+        }
+        else
         {
             throw new AssertionError(formattedPart.getClass().getName());
         }
@@ -214,7 +218,7 @@ public class CellFormatter
         public String resolve(String varName)
         {
             String value = dps.getValueAsString(varName);
-            return value;// != null ? value : varName;
+            return value; // != null ? value : varName;
         }
 
     }

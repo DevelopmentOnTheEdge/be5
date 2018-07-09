@@ -71,7 +71,8 @@ public class OracleTransformer extends GenericDbmsTransformer
         {
             orderBy = (AstOrderBy) node.child(node.jjtGetNumChildren() - 1);
             node.removeChild(node.jjtGetNumChildren() - 1);
-        } else
+        }
+        else
         {
             orderBy = new AstOrderBy(new AstOrderingElement(node.child(0)));
         }
@@ -260,7 +261,8 @@ public class OracleTransformer extends GenericDbmsTransformer
             {
                 AstSelect newSelect = new AstSelect(new AstSelectList(), from, where);
                 parent.jjtAddChild(newSelect, idx);
-            } else
+            }
+            else
             {
                 AstSelectList list = new AstSelectList();
                 list.addChild(new AstFieldReference(new AstIdentifierConstant("tmp"), new AstIdentifierConstant("*,")));

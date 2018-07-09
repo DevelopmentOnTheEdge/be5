@@ -64,7 +64,8 @@ public class OperationServiceImpl implements OperationService
             try
             {
                 validator.checkErrorAndCast(parameters);
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 if (userInfoProvider.isSystemDeveloper())
                 {
@@ -99,7 +100,8 @@ public class OperationServiceImpl implements OperationService
             try
             {
                 validator.isError(parameters);
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 log.log(Level.INFO, "error on execute in parameters", e);
                 //remove duplicate operation.setResult(OperationResult.error(e));
@@ -145,7 +147,8 @@ public class OperationServiceImpl implements OperationService
                 if (property.getValue() == null)
                 {
                     property.setValue("");
-                } else if (property.getValue().getClass() != String.class &&
+                }
+                else if (property.getValue().getClass() != String.class &&
                         property.getValue().getClass() != Boolean.class &&
                         !(property.getValue() instanceof Object[]))
                 {

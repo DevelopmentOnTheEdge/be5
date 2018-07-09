@@ -73,7 +73,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(0, active0);
             return 1;
@@ -97,7 +98,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(1, active0);
             return 2;
@@ -121,7 +123,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(2, active0);
             return 3;
@@ -143,7 +146,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(3, active0);
             return 4;
@@ -169,7 +173,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(4, active0);
             return 5;
@@ -191,7 +196,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(5, active0);
             return 6;
@@ -213,7 +219,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(6, active0);
             return 7;
@@ -235,7 +242,8 @@ public class ParserTokenManager implements ParserConstants
         try
         {
             curChar = input_stream.readChar();
-        } catch (java.io.IOException e)
+        }
+        catch (java.io.IOException e)
         {
             jjStopStringLiteralDfa_0(7, active0);
             return 8;
@@ -285,27 +293,34 @@ public class ParserTokenManager implements ParserConstants
                                 {
                                     jjCheckNAddStates(0, 2);
                                 }
-                            } else if (curChar == 44)
+                            }
+                            else if (curChar == 44)
                             {
                                 if (kind > 15)
                                     kind = 15;
-                            } else if (curChar == 61)
+                            }
+                            else if (curChar == 61)
                             {
                                 if (kind > 14)
                                     kind = 14;
-                            } else if (curChar == 42)
+                            }
+                            else if (curChar == 42)
                             {
                                 jjCheckNAdd(54);
-                            } else if (curChar == 36)
+                            }
+                            else if (curChar == 36)
                             {
                                 jjCheckNAdd(54);
-                            } else if (curChar == 39)
+                            }
+                            else if (curChar == 39)
                             {
                                 jjCheckNAddStates(3, 5);
-                            } else if (curChar == 34)
+                            }
+                            else if (curChar == 34)
                             {
                                 jjCheckNAddStates(6, 8);
-                            } else if (curChar == 45)
+                            }
+                            else if (curChar == 45)
                             {
                                 jjAddStates(9, 10);
                             }
@@ -679,7 +694,8 @@ public class ParserTokenManager implements ParserConstants
                             break;
                     }
                 } while (i != startsAt);
-            } else if (curChar < 128)
+            }
+            else if (curChar < 128)
             {
                 long l = 1L << (curChar & 077);
                 do
@@ -694,10 +710,12 @@ public class ParserTokenManager implements ParserConstants
                                 {
                                     jjCheckNAddTwoStates(2, 3);
                                 }
-                            } else if (curChar == 92)
+                            }
+                            else if (curChar == 92)
                             {
                                 jjCheckNAddTwoStates(4, 15);
-                            } else if (curChar == 94)
+                            }
+                            else if (curChar == 94)
                                 jjstateSet[jjnewStateCnt++] = 54;
                             break;
                         case 1:
@@ -955,7 +973,8 @@ public class ParserTokenManager implements ParserConstants
                             break;
                     }
                 } while (i != startsAt);
-            } else
+            }
+            else
             {
                 int hiByte = (curChar >> 8);
                 int i1 = hiByte >> 6;
@@ -1010,7 +1029,8 @@ public class ParserTokenManager implements ParserConstants
             try
             {
                 curChar = input_stream.readChar();
-            } catch (java.io.IOException e)
+            }
+            catch (java.io.IOException e)
             {
                 return curPos;
             }
@@ -1096,7 +1116,8 @@ public class ParserTokenManager implements ParserConstants
             try
             {
                 curChar = input_stream.BeginToken();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 jjmatchedKind = 0;
                 jjmatchedPos = -1;
@@ -1126,7 +1147,8 @@ public class ParserTokenManager implements ParserConstants
             {
                 input_stream.readChar();
                 input_stream.backup(1);
-            } catch (java.io.IOException e1)
+            }
+            catch (java.io.IOException e1)
             {
                 EOFSeen = true;
                 error_after = curPos <= 1 ? "" : input_stream.GetImage();
@@ -1134,7 +1156,8 @@ public class ParserTokenManager implements ParserConstants
                 {
                     error_line++;
                     error_column = 0;
-                } else
+                }
+                else
                     error_column++;
             }
             if (!EOFSeen)

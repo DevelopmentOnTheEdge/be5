@@ -60,7 +60,8 @@ public class TableModelServiceImpl implements TableModelService
                 default:
                     throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
             }
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw Be5Exception.internalInQuery(query, e);
         }
@@ -111,7 +112,8 @@ public class TableModelServiceImpl implements TableModelService
                 {
                     tableBuilder = (TableBuilder) Class.forName(query.getQuery()).newInstance();
                     break;
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
                     throw Be5Exception.internalInQuery(query, e);
                 }
@@ -125,11 +127,13 @@ public class TableModelServiceImpl implements TableModelService
                     {
                         tableBuilder = (TableBuilder) aClass.newInstance();
                         break;
-                    } else
+                    }
+                    else
                     {
                         throw Be5Exception.internal("Class " + query.getQuery() + " is null.");
                     }
-                } catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                }
+                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                 {
                     throw new UnsupportedOperationException("Groovy feature has been excluded", e);
                 }

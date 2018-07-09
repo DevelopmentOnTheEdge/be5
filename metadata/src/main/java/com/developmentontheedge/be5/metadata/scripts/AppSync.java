@@ -100,7 +100,8 @@ public class AppSync extends ScriptSupport<AppSync>
                 logger.setOperationName("[>] Schema");
                 sqlExecutor.executeMultiple(ddlString);
                 sqlExecutor.startSection(null);
-            } else
+            }
+            else
             {
                 logger.error("The following statements should be executed to update database scheme:");
                 logger.error(ddlString);
@@ -109,19 +110,23 @@ public class AppSync extends ScriptSupport<AppSync>
 
             checkSynchronizationStatus();
             logger.setOperationName("Finished");
-        } catch (FreemarkerSqlException | ExtendedSqlException | SQLException e) //ReadException | ProjectLoadException | SQLException e )
+        }
+        catch (FreemarkerSqlException | ExtendedSqlException | SQLException e) //ReadException | ProjectLoadException | SQLException e )
         {
             if (debug)
                 throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
             throw new ScriptException("Synchronisation error: " + e.getMessage());
-        } catch (IOException | ProcessInterruptedException e)
+        }
+        catch (IOException | ProcessInterruptedException e)
         {
             throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             t.printStackTrace();
             throw new ScriptException("Synchronisation error: " + t.getMessage(), t);
-        } finally
+        }
+        finally
         {
             if (ps != null)
             {
@@ -301,7 +306,8 @@ public class AppSync extends ScriptSupport<AppSync>
                     continue;
 
                 createTable = rs.getString(2);
-            } finally
+            }
+            finally
             {
                 sqlExecutor.getConnector().close(rs);
             }
@@ -326,13 +332,15 @@ public class AppSync extends ScriptSupport<AppSync>
             if (isBool(enumValues))
             {
                 type.setTypeName(SqlColumnType.TYPE_BOOL);
-            } else
+            }
+            else
             {
                 type.setTypeName(SqlColumnType.TYPE_ENUM);
                 Arrays.sort(enumValues);
                 type.setEnumValues(enumValues);
             }
-        } else
+        }
+        else
         {
             type.setTypeName(info.getType());
             type.setSize(info.getSize());
@@ -423,7 +431,8 @@ public class AppSync extends ScriptSupport<AppSync>
 
                 sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
                         : newScheme.getDiffDdl(oldScheme, sqlExecutor));
-            } else
+            }
+            else
             {
                 logger.info("Skip table with schema: " + newScheme.getEntityName());
             }

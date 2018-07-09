@@ -7,7 +7,6 @@ package com.developmentontheedge.be5.metadata.model.selectors.parser;
  * You can explicitly create objects of this exception type by
  * calling the method generateParseException in the generated
  * parser.
- * <p>
  * You can modify this class to customize your error reporting
  * mechanisms so long as you retain the public fields.
  */
@@ -141,12 +140,14 @@ public class ParseException extends Exception
         if (expectedTokenSequences.length == 0)
         {
             // Nothing to add here
-        } else
+        }
+        else
         {
             if (expectedTokenSequences.length == 1)
             {
                 retval += "Was expecting:" + EOL + "    ";
-            } else
+            }
+            else
             {
                 retval += "Was expecting one of:" + EOL + "    ";
             }
@@ -199,7 +200,8 @@ public class ParseException extends Exception
                     {
                         String s = "0000" + Integer.toString(ch, 16);
                         retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-                    } else
+                    }
+                    else
                     {
                         retval.append(ch);
                     }

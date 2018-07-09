@@ -164,8 +164,9 @@ public class EntityLocalizations extends BeModelElementSupport
                 {
                     out.add(new LocalizationRow(subTopic, element.getKey(), element.getValue()));
                 }
-            } else if (topic.startsWith("@Op:"))
-            {// Starts with "@Op:": add only if such operation exists
+            }
+            else if (topic.startsWith("@Op:"))
+            { // Starts with "@Op:": add only if such operation exists
                 String operationName = topic.substring(4);
                 if (entity != null && entity.getOperations().contains(operationName))
                 {

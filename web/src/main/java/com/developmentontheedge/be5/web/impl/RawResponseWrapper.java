@@ -68,7 +68,8 @@ public class RawResponseWrapper
             try
             {
                 out = raw.getWriter();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new RuntimeException(e);
             }

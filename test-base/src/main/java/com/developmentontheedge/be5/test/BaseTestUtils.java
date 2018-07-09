@@ -126,7 +126,8 @@ public abstract class BaseTestUtils
                     list.add("null");
                 }
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -153,7 +154,8 @@ public abstract class BaseTestUtils
         try
         {
             return new Date(df.parse(stringDate).getTime());
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             throw new RuntimeException(e);
         }
@@ -174,7 +176,8 @@ public abstract class BaseTestUtils
         try
         {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
-        } catch (ProjectLoadException e)
+        }
+        catch (ProjectLoadException e)
         {
             throw new RuntimeException(e);
         }
@@ -187,7 +190,8 @@ public abstract class BaseTestUtils
         try
         {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
-        } catch (ProjectLoadException e)
+        }
+        catch (ProjectLoadException e)
         {
             throw new RuntimeException(e);
         }
@@ -208,7 +212,8 @@ public abstract class BaseTestUtils
                     .setLogger(new JULLogger(log))
                     .setBe5Project(project)
                     .execute();
-        } else
+        }
+        else
         {
             log.warning("Fail set '" + profileForIntegrationTests + "' profile, maybe DatabaseService already initialized.");
         }
@@ -222,7 +227,8 @@ public abstract class BaseTestUtils
         try
         {
             connector.executeUpdate("DROP ALL OBJECTS");
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }

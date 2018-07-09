@@ -21,7 +21,8 @@ public class GDynamicPropertySetMetaClass<T extends DynamicPropertySet> extends 
         try
         {
             return super.getProperty(object, property);
-        } catch (MissingPropertyException e)
+        }
+        catch (MissingPropertyException e)
         {
             if (PropertyAccessHelper.isPropertyAccess(property))
             {

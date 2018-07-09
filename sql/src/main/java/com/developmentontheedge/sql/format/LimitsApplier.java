@@ -37,7 +37,8 @@ public class LimitsApplier
             AstLimit limit = new AstLimit();
             limit.setLimit(offset, count);
             select.addChild(limit);
-        } else
+        }
+        else
         {
             AstTableRef tableRef = new AstTableRef(new AstParenthesis(query.clone()), new AstIdentifierConstant("tmp"));
             AstSelect select = new AstSelect(new AstSelectList(), new AstFrom(tableRef));

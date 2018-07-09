@@ -48,7 +48,8 @@ class SecurityDeserializer extends FileDeserializer
             try
             {
                 readRole(serializedRole);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(target.getRoleCollection()));
             }
@@ -73,7 +74,8 @@ class SecurityDeserializer extends FileDeserializer
             try
             {
                 readGroup(serializedGroup);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(target.getRoleGroupCollection()));
             }

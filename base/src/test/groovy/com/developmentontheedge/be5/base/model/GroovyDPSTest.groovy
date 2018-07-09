@@ -8,15 +8,18 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class GroovyDPSTest {
+class GroovyDPSTest
+{
     private GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport()
 
-    private static String getNewValue() {
+    private static String getNewValue()
+    {
         return "newValue"
     }
 
     @Test
-    void test() {
+    void test()
+    {
         dps.add {
             name = "reasonMulti"
             TYPE = Integer
@@ -69,7 +72,8 @@ class GroovyDPSTest {
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 
-    protected static String oneQuotes(Object s) {
+    protected static String oneQuotes(Object s)
+    {
         return s.toString().replace("\"", "'");
     }
 }

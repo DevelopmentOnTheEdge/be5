@@ -6,7 +6,6 @@ import com.developmentontheedge.sql.model.ParserContext;
 
 /**
  * Interface to process DB specific issues.
- * <p>
  * For this purpose DB specific transformers modifies AST.
  */
 public interface DbmsTransformer

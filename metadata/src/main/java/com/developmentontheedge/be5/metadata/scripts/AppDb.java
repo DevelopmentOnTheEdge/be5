@@ -54,7 +54,8 @@ public class AppDb extends ScriptSupport<AppDb>
                     throw new ScriptException("Module '" + moduleName + "' not found!");
                 }
                 createDb(module);
-            } else
+            }
+            else
             {
                 for (Module module : be5Project.getModules())
                 {
@@ -64,17 +65,21 @@ public class AppDb extends ScriptSupport<AppDb>
                 createDb(be5Project.getApplication());
             }
             logger.info("Created tables: " + createdTables + ", created views: " + createdViews);
-        } catch (ScriptException e)
+        }
+        catch (ScriptException e)
         {
             throw e;
-        } catch (ProjectElementException | FreemarkerSqlException e)
+        }
+        catch (ProjectElementException | FreemarkerSqlException e)
         {
             throw new ScriptException("Setup db error", e);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             throw new ScriptException("Setup db error", e);
-        } finally
+        }
+        finally
         {
             if (ps != null)
             {
@@ -110,7 +115,8 @@ public class AppDb extends ScriptSupport<AppDb>
                     }
                     processDdl(scheme);
                     createdTables++;
-                } else
+                }
+                else
                 {
                     logger.setOperationName("Skip table with schema: " + scheme.getEntityName());
                 }
@@ -131,7 +137,8 @@ public class AppDb extends ScriptSupport<AppDb>
                     }
                     processDdl(scheme);
                     createdViews++;
-                } else
+                }
+                else
                 {
                     logger.setOperationName("Skip table with schema: " + scheme.getEntityName());
                 }
@@ -145,7 +152,8 @@ public class AppDb extends ScriptSupport<AppDb>
         {
             final String generatedQuery = tableDef.getDdl();
             sql.executeMultiple(generatedQuery);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ProjectElementException(tableDef, e);
         }

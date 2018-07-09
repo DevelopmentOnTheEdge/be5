@@ -71,7 +71,8 @@ public class DpsRecordAdapter
                 dps.add(property);
             }
             return dps;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw Be5Exception.internal(e);
         }
@@ -115,7 +116,8 @@ public class DpsRecordAdapter
                 schema[i - 1] = dp;
             }
             return schema;
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw Be5Exception.internal(e);
         }

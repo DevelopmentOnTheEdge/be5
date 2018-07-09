@@ -16,9 +16,11 @@ import static org.junit.Assert.*
 import static org.mockito.Mockito.verify
 
 
-class OperationTest extends OperationsSqlMockProjectTest {
+class OperationTest extends OperationsSqlMockProjectTest
+{
     @Test
-    void testOperation() {
+    void testOperation()
+    {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of("name", "testName", "value", "1"))
 
@@ -40,7 +42,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void withOperationParams() {
+    void withOperationParams()
+    {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
                 ImmutableMap.of("name", "testName", "value", "1")).getSecond()
@@ -48,14 +51,16 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationParameters() {
+    void testOperationParameters()
+    {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0", [:])
 
         assertEquals("{'name':'','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
-    void testReloadOnChange() {
+    void testReloadOnChange()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
@@ -67,7 +72,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testReloadOnChangeError() {
+    void testReloadOnChangeError()
+    {
         Either<Object, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
                         "name", "testName",
@@ -84,7 +90,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationParametersErrorInvoke() {
+    void testOperationParametersErrorInvoke()
+    {
         assertNotNull(generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ['name': 'testName', 'value': 'ab']).getFirst())
 
@@ -99,7 +106,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationInvoke() {
+    void testOperationInvoke()
+    {
         executeOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ['name': 'testName', 'value': 3L])
 
@@ -108,7 +116,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testPropertyInvokeInit() {
+    void testPropertyInvokeInit()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [:])
 
@@ -121,7 +130,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testManualAndAutomaticSettingOfParameterValues() {
+    void testManualAndAutomaticSettingOfParameterValues()
+    {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [
                 "simple"            : "testName",
@@ -142,7 +152,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
 
     @Test
     @Ignore
-    void testOperationInvokeNullInsteadEmptyString() {
+    void testOperationInvokeNullInsteadEmptyString()
+    {
         executeOperation("testTags", "All records", "Insert", "",
                 ['CODE': '01', 'referenceTest': '', 'payable': 'yes', 'admlevel': 'Regional']).getSecond()
 
@@ -152,7 +163,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOp() {
+    void testOperationInvokeNullInsteadEmptyStringCustomOp()
+    {
         OperationResult second = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
                 ['CODE': '01', 'referenceTest': '', 'testLong': '']).getSecond()
@@ -161,7 +173,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOpSpace() {
+    void testOperationInvokeNullInsteadEmptyStringCustomOpSpace()
+    {
         OperationResult second = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
                 ['CODE': '01', 'referenceTest': ' ', 'testLong': '']).getSecond()
@@ -170,7 +183,8 @@ class OperationTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong() {
+    void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong()
+    {
         Object first = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
                 ['CODE': '01', 'referenceTest': '', 'testLong': ' ']).getFirst()

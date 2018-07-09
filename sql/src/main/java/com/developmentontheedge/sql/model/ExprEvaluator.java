@@ -42,7 +42,8 @@ public class ExprEvaluator
                 {
                     return true;
                 }
-            } else if (notEqualsMatcher.find())
+            }
+            else if (notEqualsMatcher.find())
             {
                 String paramName = notEqualsMatcher.group(1);
                 String val = notEqualsMatcher.group(2);
@@ -50,14 +51,16 @@ public class ExprEvaluator
                 {
                     return true;
                 }
-            } else if (notExistsMatcher.matches())
+            }
+            else if (notExistsMatcher.matches())
             {
                 String paramName = notExistsMatcher.group(1);
                 if (values.get(paramName) == null)
                 {
                     return true;
                 }
-            } else if (existMatcher.matches())
+            }
+            else if (existMatcher.matches())
             {
                 String paramName = existMatcher.group(1);
                 if (values.get(paramName) != null)
@@ -86,7 +89,8 @@ public class ExprEvaluator
                 {
                     return false;
                 }
-            } else if (notEqualsMatcher.find())
+            }
+            else if (notEqualsMatcher.find())
             {
                 String paramName = notEqualsMatcher.group(1);
                 String val = notEqualsMatcher.group(2);
@@ -94,14 +98,16 @@ public class ExprEvaluator
                 {
                     return false;
                 }
-            } else if (notExistsMatcher.matches())
+            }
+            else if (notExistsMatcher.matches())
             {
                 String paramName = notExistsMatcher.group(1);
                 if (values.get(paramName) != null)
                 {
                     return false;
                 }
-            } else if (existMatcher.matches())
+            }
+            else if (existMatcher.matches())
             {
                 String paramName = existMatcher.group(1);
                 if (values.get(paramName) == null)

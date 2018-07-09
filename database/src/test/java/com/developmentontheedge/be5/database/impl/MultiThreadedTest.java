@@ -33,7 +33,8 @@ public class MultiThreadedTest extends DatabaseTest
         try
         {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }

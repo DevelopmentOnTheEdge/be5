@@ -98,7 +98,8 @@ public class SqlTableBuilder
         if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
         {
             totalNumberOfRows = (long) rows.size();
-        } else
+        }
+        else
         {
             totalNumberOfRows = queryService.build(query, parameters).count();
         }
@@ -185,9 +186,10 @@ public class SqlTableBuilder
                     if (row.getCells().get(i).content instanceof List)
                     {
                         add = Double.parseDouble((String) ((List) ((List) row.getCells().get(i).content).get(0)).get(0));
-                    } else
+                    }
+                    else
                     {
-                        add = (double) row.getCells().get(i).content;//todo test aggregate
+                        add = (double) row.getCells().get(i).content; //todo test aggregate
                     }
                     if ("Number".equals(aggregate.get("type")))
                     {
@@ -203,7 +205,8 @@ public class SqlTableBuilder
                             default:
                                 throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                         }
-                    } else
+                    }
+                    else
                     {
                         throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                     }
@@ -228,7 +231,8 @@ public class SqlTableBuilder
                         default:
                             throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                     }
-                } else
+                }
+                else
                 {
                     throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
                 }
@@ -245,7 +249,8 @@ public class SqlTableBuilder
                 content = resD[i];
                 options.put("css", Collections.singletonMap("class", aggregate.getOrDefault("cssClass", "")));
                 options.put("format", Collections.singletonMap("mask", aggregate.getOrDefault("format", "")));
-            } else
+            }
+            else
             {
                 if (i == 0)
                 {

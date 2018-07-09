@@ -359,7 +359,8 @@ public class SimpleNode implements Node, Cloneable
                 clone.children.add(childClone);
             }
             return clone;
-        } catch (CloneNotSupportedException e)
+        }
+        catch (CloneNotSupportedException e)
         {
             throw new InternalError();
         }

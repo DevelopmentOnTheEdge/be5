@@ -59,7 +59,8 @@ public class WatchDirTest
             while (modify[0]);
 
             assertFalse(modify[0]);
-        } finally
+        }
+        finally
         {
             if (watcher != null) watcher.stop();
         }

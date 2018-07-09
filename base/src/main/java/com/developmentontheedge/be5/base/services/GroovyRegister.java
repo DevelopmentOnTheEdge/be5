@@ -89,13 +89,15 @@ public class GroovyRegister
             try
             {
                 metaClass = constructor.newInstance(clazz);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+            }
+            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
             {
                 throw new RuntimeException(e);
             }
             metaClass.initialize();
             InvokerHelper.getMetaRegistry().setMetaClass(clazz, metaClass);
-        } catch (NoSuchMethodException e)
+        }
+        catch (NoSuchMethodException e)
         {
             throw new RuntimeException(e);
         }

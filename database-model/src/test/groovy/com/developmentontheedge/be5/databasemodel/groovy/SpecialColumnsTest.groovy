@@ -19,7 +19,8 @@ import java.util.stream.StreamSupport
 
 import static org.junit.Assert.*
 
-class SpecialColumnsTest extends DatabaseModelProjectDbTest {
+class SpecialColumnsTest extends DatabaseModelProjectDbTest
+{
     @Inject
     private DatabaseModel database
     @Inject
@@ -29,20 +30,23 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     String tableName
 
     @Before
-    void beforeClass() {
+    void beforeClass()
+    {
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
         StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1")
     }
 
     @Before
-    void before() {
+    void before()
+    {
         table = database.meters
         tableName = table.getEntityName()
         db.update("DELETE FROM $tableName")
     }
 
     @Test
-    void testInsert() {
+    void testInsert()
+    {
         def id = table << [
                 name : "test",
                 value: (Short) 1
@@ -58,7 +62,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testPropertyNamesFromYaml() {
+    void testPropertyNamesFromYaml()
+    {
         def id = table << [
                 "name" : "test",
                 "value": (Short) 1]
@@ -72,7 +77,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void useGetDpsWithoutSelectingTags() {
+    void useGetDpsWithoutSelectingTags()
+    {
         def id = table << [
                 "name" : "test",
                 "value": (Short) 1]
@@ -81,7 +87,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testDelete() {
+    void testDelete()
+    {
         def id = table << [
                 "name" : "test",
                 "value": (Short) 1]
@@ -118,7 +125,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
 //    }
 
     @Test
-    void testDeleteAll() {
+    void testDeleteAll()
+    {
         table << ["name": "TestName", "value": (Short) 1]
         table << ["name": "TestName", "value": (Short) 2]
         table << ["name": "TestName2", "value": (Short) 2]
@@ -132,7 +140,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testEdit() {
+    void testEdit()
+    {
         def id = table << [
                 "name" : "test",
                 "value": (Short) 1
@@ -163,7 +172,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest {
     public ExpectedException expectedEx = ExpectedException.none()
 
     @Test
-    void checkDpsColumnsTest() {
+    void checkDpsColumnsTest()
+    {
         expectedEx.expect(Be5Exception.class)
         expectedEx.expectMessage("Dps columns errors for modelElements 'meters'\n" +
                 "Dps not contain notNull column 'value'\n" +

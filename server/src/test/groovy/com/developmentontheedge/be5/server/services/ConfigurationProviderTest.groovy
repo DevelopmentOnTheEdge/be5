@@ -5,10 +5,12 @@ import org.junit.Ignore
 import org.junit.Test
 
 
-class ConfigurationProviderTest extends ServerBe5ProjectDBTest {
+class ConfigurationProviderTest extends ServerBe5ProjectDBTest
+{
     @Test
     @Ignore
-    void test() {
+    void test()
+    {
         //todo add ConfigurationProvider test
     }
 }

@@ -90,7 +90,8 @@ public abstract class AbstractParser implements Parser
         {
             ReInit(new StringReader(expression));
             astStart = Start();
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             error(t.toString());
             astStart = new AstStart(SqlParserTreeConstants.JJTSTART);
@@ -142,7 +143,8 @@ public abstract class AbstractParser implements Parser
             operator = new DbSpecificFunction(name, -1);
             context.declareFunction(operator);
             node.setWithinDbmsTransform(true);
-        } else if (operator == null)
+        }
+        else if (operator == null)
         {
             error("Unknown operator '" + name + "'");
             operator = new UndeclaredFunction(name, -1);

@@ -21,13 +21,15 @@ public class QuerySelector extends StringTagEditor
             {
                 query = (Query) getBean();
                 queries.add("");
-            } else
+            }
+            else
             {
                 query = ((QuickFilter) getBean()).getQuery();
             }
             queries.addAll(query.getEntity().getQueries().getNameList());
             return queries.toArray(new String[queries.size()]);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

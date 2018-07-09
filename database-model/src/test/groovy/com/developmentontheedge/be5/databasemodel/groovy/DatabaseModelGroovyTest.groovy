@@ -12,17 +12,20 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
+class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
+{
     EntityModel testtableAdmin
 
     @Before
-    void before() {
+    void before()
+    {
         testtableAdmin = database["testtableAdmin"]
         db.update("DELETE FROM testtableAdmin")
     }
 
     @Test
-    void test() {
+    void test()
+    {
         assertEquals(null, db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def id = testtableAdmin << [
@@ -43,7 +46,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testGroovyCount() {
+    void testGroovyCount()
+    {
         assertEquals 0, testtableAdmin.count()
 
         testtableAdmin << [
@@ -54,7 +58,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void getColumnsByTest() {
+    void getColumnsByTest()
+    {
         testtableAdmin << ["name": "TestName", "value": "1"]
 
         RecordModel rec = testtableAdmin.getColumnsBy(["value"],
@@ -66,7 +71,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void getColumnsTest() {
+    void getColumnsTest()
+    {
         def id = testtableAdmin << ["name": "TestName", "value": "1"]
 
         RecordModel rec = testtableAdmin.getColumns(["value"], id)
@@ -76,7 +82,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testInsert() {
+    void testInsert()
+    {
         testtableAdmin << [
                 "name" : "InsertName",
                 "value": "2"]
@@ -85,7 +92,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testInsertDps() {
+    void testInsertDps()
+    {
         testtableAdmin.add(getDpsS("name": "foo", "value": 3))
 
         assertEquals 1, db.oneLong("SELECT count(1) FROM testtableAdmin " +
@@ -93,7 +101,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testInsertWithCanBeNullOrDefaultValue() {
+    void testInsertWithCanBeNullOrDefaultValue()
+    {
         database.testTags << [
                 CODE         : "12",
                 payable      : "yes",
@@ -108,14 +117,16 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test(expected = RuntimeException.class)
-    void testInsertError() {
+    void testInsertError()
+    {
         testtableAdmin << [
                 "name" : "InsertName",
                 "value": "asd"]
     }
 
     @Test
-    void testIsEmpty() {
+    void testIsEmpty()
+    {
         assertTrue(testtableAdmin.empty)
 
         testtableAdmin << [
@@ -132,7 +143,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testIsEmptyWithConditions() {
+    void testIsEmptyWithConditions()
+    {
         assertTrue testtableAdmin.empty
 
         testtableAdmin << [
@@ -145,12 +157,14 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void isEmptyTest() {
+    void isEmptyTest()
+    {
         assertTrue testtableAdmin.empty
     }
 
     @Test
-    void metaTest() {
+    void metaTest()
+    {
         assertEquals "testtableAdmin", testtableAdmin.entityName
         assertEquals "ID", testtableAdmin.primaryKeyName
         assertEquals EntityType.TABLE, testtableAdmin.entity.getType()
@@ -179,7 +193,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
 //    }
 
     @Test
-    void testDeleteIn() {
+    void testDeleteIn()
+    {
         def id = testtableAdmin << [
                 "name" : "TestName1",
                 "value": 1]
@@ -201,7 +216,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void removeByTest() {
+    void removeByTest()
+    {
         def id = testtableAdmin << ["name": "TestName", "value": 1]
         def id2 = testtableAdmin << ["name": "TestName2", "value": 1]
 
@@ -212,7 +228,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void removeAllTest() {
+    void removeAllTest()
+    {
         testtableAdmin << ["name": "TestName", "value": 1]
         testtableAdmin << ["name": "TestName2", "value": 1]
 
@@ -222,7 +239,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testDeleteSeveralId() {
+    void testDeleteSeveralId()
+    {
         def id = testtableAdmin << ["name": "TestName1", "value": 1]
         def id2 = testtableAdmin << ["name": "TestName2", "value": 1]
         def id3 = testtableAdmin << ["name": "TestName3", "value": 1]
@@ -235,7 +253,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate()
+    {
         def id = testtableAdmin << [
                 "name" : "TestName",
                 "value": 1]
@@ -262,7 +281,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testFindRecord() {
+    void testFindRecord()
+    {
         testtableAdmin << [
                 "name" : "TestName2",
                 "value": "123"]
@@ -276,7 +296,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void toStringTest() {
+    void toStringTest()
+    {
         def id = testtableAdmin << [
                 "name" : "TestName2",
                 "value": "123"]
@@ -288,7 +309,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
     }
 
     @Test
-    void testGetRecord() {
+    void testGetRecord()
+    {
         def id = testtableAdmin << [
                 "name" : "TestName2",
                 "value": "123"]
@@ -310,7 +332,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
 //    }
 
     @Test
-    void testGetList() {
+    void testGetList()
+    {
         testtableAdmin << [
                 "name" : "TestName",
                 "value": "1"]
@@ -576,7 +599,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
 //        }
 //    }
 
-    private static boolean listContains(List<DynamicPropertySet> recs, String propertyName, String value) {
+    private static boolean listContains(List<DynamicPropertySet> recs, String propertyName, String value)
+    {
         for (DynamicPropertySet rec : recs) {
             if (rec.getValueAsString(propertyName).equals(value)) {
                 return true
@@ -585,7 +609,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest {
         return false
     }
 
-    private static boolean arrayContains(DynamicPropertySet[] recs, String propertyName, String value) {
+    private static boolean arrayContains(DynamicPropertySet[] recs, String propertyName, String value)
+    {
         for (DynamicPropertySet rec : recs) {
             if (rec.getValueAsString(propertyName).equals(value)) {
                 return true

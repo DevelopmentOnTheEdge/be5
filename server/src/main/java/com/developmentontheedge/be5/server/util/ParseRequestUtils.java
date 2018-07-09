@@ -44,7 +44,8 @@ public class ParseRequestUtils
             if (entry.getValue() instanceof JsonNull)
             {
                 fieldValues.put(name, null);
-            } else if (entry.getValue() instanceof JsonArray)
+            }
+            else if (entry.getValue() instanceof JsonArray)
             {
                 JsonArray value = (JsonArray) entry.getValue();
 
@@ -55,7 +56,8 @@ public class ParseRequestUtils
                 }
 
                 fieldValues.put(name, arrValues);
-            } else if (entry.getValue() instanceof JsonObject)
+            }
+            else if (entry.getValue() instanceof JsonObject)
             {
                 JsonObject jsonObject = ((JsonObject) entry.getValue());
                 String type = jsonObject.get("type").getAsString();
@@ -73,15 +75,18 @@ public class ParseRequestUtils
                         byte[] decoded = Base64.getDecoder().decode(bytes);
 
                         fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(), decoded, mimeTypes));
-                    } catch (UnsupportedEncodingException e)
+                    }
+                    catch (UnsupportedEncodingException e)
                     {
                         throw Be5Exception.internal(e);
                     }
-                } else
+                }
+                else
                 {
                     fieldValues.put(name, jsonObject.toString());
                 }
-            } else if (entry.getValue() instanceof JsonPrimitive)
+            }
+            else if (entry.getValue() instanceof JsonPrimitive)
             {
                 fieldValues.put(name, ((JsonPrimitive) entry.getValue()).getAsString());
             }

@@ -37,7 +37,8 @@ public final class FreemarkerUtils
         try
         {
             Logger.selectLoggerLibrary(Logger.LIBRARY_NONE);
-        } catch (ClassNotFoundException e)
+        }
+        catch (ClassNotFoundException e)
         {
             // Ignore
         }
@@ -69,7 +70,8 @@ public final class FreemarkerUtils
         try
         {
             configTemplate.setSharedVariable("null", NULL);
-        } catch (TemplateModelException e)
+        }
+        catch (TemplateModelException e)
         {
             // Ignore
         }
@@ -107,7 +109,8 @@ public final class FreemarkerUtils
         try
         {
             config.setSharedVariable("project", project);
-        } catch (TemplateModelException e)
+        }
+        catch (TemplateModelException e)
         {
             throw new RuntimeException("Unexpected error: " + e, e);
         }
@@ -183,7 +186,8 @@ public final class FreemarkerUtils
                     if (element == null)
                     {
                         element = project;
-                    } else
+                    }
+                    else
                     {
                         if (!(element instanceof BeModelCollection))
                         {
@@ -278,7 +282,8 @@ public final class FreemarkerUtils
                         filteredBuf = new char[len];
                         System.arraycopy(cbuf, off, filteredBuf, 0, i);
                     }
-                } else if (filteredBuf != null)
+                }
+                else if (filteredBuf != null)
                 {
                     filteredBuf[i - skipped] = cbuf[i + off];
                 }
@@ -286,7 +291,8 @@ public final class FreemarkerUtils
             if (filteredBuf != null)
             {
                 sb.append(filteredBuf, 0, len - skipped);
-            } else
+            }
+            else
             {
                 sb.append(cbuf, off, len);
             }
@@ -363,7 +369,8 @@ public final class FreemarkerUtils
                         name = name.substring(0, propertyPos);
                     }
                     result = new ProjectElementException(DataElementPath.create(name), property, row, column, result);
-                } catch (NumberFormatException e)
+                }
+                catch (NumberFormatException e)
                 {
                     // Ignore
                 }
@@ -372,13 +379,15 @@ public final class FreemarkerUtils
             {
                 return (ProjectElementException) result;
             }
-        } else if (ex instanceof ParseException)
+        }
+        else if (ex instanceof ParseException)
         {
             result = new Exception(ex.getMessage());
             row = ((ParseException) ex).getLineNumber();
             column = ((ParseException) ex).getColumnNumber();
             templateName = ((ParseException) ex).getTemplateName();
-        } else
+        }
+        else
         {
             result = new Exception(ex.getMessage(), ex.getCause());
         }
@@ -403,13 +412,16 @@ public final class FreemarkerUtils
             ResultWriter out = new ResultWriter();
             template.process(context, out);
             return out.toString();
-        } catch (TemplateException e)
+        }
+        catch (TemplateException e)
         {
             throw FreemarkerUtils.translateException(name, e);
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             throw FreemarkerUtils.translateException(name, e);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new InternalError("Unexpected IOException: " + e);
         }
@@ -422,13 +434,16 @@ public final class FreemarkerUtils
             final Template template = configuration.getTemplate(name);
             template.process(context, out);
             out.close();
-        } catch (TemplateException e)
+        }
+        catch (TemplateException e)
         {
             throw FreemarkerUtils.translateException(name, e);
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             throw FreemarkerUtils.translateException(name, e);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new InternalError("Unexpected IOException: " + e);
         }

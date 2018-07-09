@@ -65,7 +65,8 @@ public class FilterApplier
                 where = select.getWhere();
             else
                 select.where(where);
-        } else
+        }
+        else
         {
             AstTableRef tableRef = new AstTableRef(new AstParenthesis(query.clone()), new AstIdentifierConstant("tmp"));
             AstSelect select = new AstSelect(new AstSelectList(), new AstFrom(tableRef));
@@ -98,11 +99,13 @@ public class FilterApplier
                 where.addChild(and);
             }
             setConditions(where.child(0), conditions);
-        } else if (conditions.size() > 1)
+        }
+        else if (conditions.size() > 1)
         {
             where.addChild(DefaultParserContext.FUNC_AND.node());
             setConditions(where.child(0), conditions);
-        } else
+        }
+        else
             setConditions(where, conditions);
     }
 
@@ -115,7 +118,8 @@ public class FilterApplier
             if (parameter.size() == 1)
             {
                 node = DefaultParserContext.FUNC_EQ.node(entry.getKey().asNode(), toNode(parameter.get(0)));
-            } else
+            }
+            else
             {
                 List<SimpleNode> nodes = parameter.stream().map(this::toNode).collect(toList());
                 node = DefaultParserContext.FUNC_IN.node(entry.getKey().asNode(), AstInValueList.of(nodes));

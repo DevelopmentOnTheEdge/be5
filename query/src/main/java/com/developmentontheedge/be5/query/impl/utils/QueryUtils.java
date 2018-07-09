@@ -93,11 +93,13 @@ public class QueryUtils
                 {
                     table = split[0];
                     column = split[1];
-                } else if (split.length == 3)
+                }
+                else if (split.length == 3)
                 {
                     table = split[0] + "." + split[1];
                     column = split[2];
-                } else
+                }
+                else
                 {
                     return;
                 }
@@ -205,7 +207,8 @@ public class QueryUtils
             new ColumnAdder().addColumn(ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
                     DatabaseConstants.ID_COLUMN_LABEL);
             dql.log("With ID column", ast);
-        } else
+        }
+        else
         {
             dql.log("Without ID column", ast);
         }

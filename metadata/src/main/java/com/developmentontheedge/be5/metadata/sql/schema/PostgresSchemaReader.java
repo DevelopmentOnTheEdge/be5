@@ -98,7 +98,8 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 info.setEnumValues(vals.toArray(new String[vals.size()]));
                 controller.setProgress(0); // Just to check for interrupts
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -121,10 +122,12 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 return search_path.split(",")[1].trim();
             else
                 return search_path.trim();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw new RuntimeException(e);
-        } finally
+        }
+        finally
         {
             if (connector != null) connector.close(rs);
         }
@@ -150,7 +153,8 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 }
                 result.put(tableName, type);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -206,7 +210,8 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 curIndex.addColumn(column);
                 controller.setProgress(0);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }

@@ -17,7 +17,8 @@ public class BlobUtils
                 return clob.getSubString(1, (int) clob.length());
             }
             return (String) value;
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw Be5Exception.internal(e);
         }

@@ -16,8 +16,10 @@ import static org.junit.Assert.assertTrue
 
 class QueriesTest extends CoreBe5ProjectDBTest
 {
-    @Inject DocumentGenerator documentGenerator
-    @Inject Meta meta
+    @Inject
+    DocumentGenerator documentGenerator
+    @Inject
+    Meta meta
 
     @Before
     void setUp()

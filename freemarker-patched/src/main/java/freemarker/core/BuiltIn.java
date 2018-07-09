@@ -275,7 +275,8 @@ public abstract class BuiltIn extends Expression implements Cloneable
             builtins.put("groups", instantiateBI("freemarker.core._RegexBuiltins$groupsBI"));
             builtins.put("replace", instantiateBI("freemarker.core._RegexBuiltins$replace_reBI"));
             builtins.put("split", instantiateBI("freemarker.core._RegexBuiltins$split_reBI"));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             logger.debug("Regular expression built-ins won't be avilable", e);
         }
@@ -333,7 +334,8 @@ public abstract class BuiltIn extends Expression implements Cloneable
         try
         {
             bi = (BuiltIn) bi.clone();
-        } catch (CloneNotSupportedException e)
+        }
+        catch (CloneNotSupportedException e)
         {
             throw new InternalError();
         }
@@ -403,7 +405,8 @@ public abstract class BuiltIn extends Expression implements Cloneable
         if (!(arg instanceof TemplateScalarModel))
         {
             throw MessageUtil.newMethodArgMustBeStringException("?" + key, argIdx, arg);
-        } else
+        }
+        else
         {
             return EvalUtil.modelToString((TemplateScalarModel) arg, null, null);
         }
@@ -419,7 +422,8 @@ public abstract class BuiltIn extends Expression implements Cloneable
         if (!(arg instanceof TemplateNumberModel))
         {
             throw MessageUtil.newMethodArgMustBeNumberException("?" + key, argIdx, arg);
-        } else
+        }
+        else
         {
             return EvalUtil.modelToNumber((TemplateNumberModel) arg, null);
         }
@@ -433,7 +437,8 @@ public abstract class BuiltIn extends Expression implements Cloneable
             BuiltIn clone = (BuiltIn) clone();
             clone.target = target.deepCloneWithIdentifierReplaced(replacedIdentifier, replacement, replacementState);
             return clone;
-        } catch (CloneNotSupportedException e)
+        }
+        catch (CloneNotSupportedException e)
         {
             throw new RuntimeException("Internal error: " + e);
         }

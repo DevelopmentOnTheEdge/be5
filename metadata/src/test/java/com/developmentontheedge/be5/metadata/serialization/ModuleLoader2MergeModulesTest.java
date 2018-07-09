@@ -71,7 +71,8 @@ public class ModuleLoader2MergeModulesTest
         if (entityOwner == null)
         {
             entity = ProjectTestUtils.createEntity(moduleProject, "moduleEntity", "ID");
-        } else
+        }
+        else
         {
             Module appModule = new Module(entityOwner.getName(), moduleProject.getModules());
             DataElementUtils.save(appModule);

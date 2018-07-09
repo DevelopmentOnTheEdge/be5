@@ -30,7 +30,8 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransactionService.testMethod();
-        } catch (RuntimeException ignore)
+        }
+        catch (RuntimeException ignore)
         {
         }
 
@@ -43,7 +44,8 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransactionService.testMethodWithTransactional();
-        } catch (RuntimeException ignore)
+        }
+        catch (RuntimeException ignore)
         {
         }
 
@@ -56,7 +58,8 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransaction2Service.testMethodWithTransactional();
-        } catch (RuntimeException ignore)
+        }
+        catch (RuntimeException ignore)
         {
         }
 

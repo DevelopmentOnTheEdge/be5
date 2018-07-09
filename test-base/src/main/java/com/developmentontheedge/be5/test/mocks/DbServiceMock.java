@@ -87,7 +87,8 @@ public class DbServiceMock implements DbService
         try
         {
             return executor.run(null);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw Be5Exception.internal(e);
         }
@@ -99,7 +100,8 @@ public class DbServiceMock implements DbService
         try
         {
             executor.run(null);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw Be5Exception.internal(e);
         }

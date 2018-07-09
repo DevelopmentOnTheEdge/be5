@@ -36,7 +36,8 @@ public class PostgresTypeManager extends DefaultTypeManager
                 if (type.getPrecision() != 0)
                 {
                     type.setTypeName(SqlColumnType.TYPE_DECIMAL);
-                } else
+                }
+                else
                 {
                     if (type.getSize() > 7)
                         type.setTypeName(SqlColumnType.TYPE_BIGINT);

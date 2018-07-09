@@ -302,7 +302,8 @@ public abstract class ServerTestUtils extends BaseTestUtils
             if (OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType()))
             {
                 return ".groovy";
-            } else
+            }
+            else
             {
                 return ".java";
             }

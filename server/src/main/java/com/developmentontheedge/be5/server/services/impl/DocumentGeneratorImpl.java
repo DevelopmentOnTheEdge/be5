@@ -140,7 +140,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         if (categoryID != null)
         {
             return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
-        } else
+        }
+        else
         {
             return categoriesService.getRootCategory(entityName);
         }
@@ -241,7 +242,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             TableModel tableModel = tableModelService.getTableModel(query, parameters);
 
             return getJsonApiModel(query, parameters, tableModel);
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
             log.log(e.getLogLevel(), "Error in table: " + url.toString(), e);
@@ -266,7 +268,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     tableModel.getTotalNumberOfRows().intValue(),
                     new MoreRowsBuilder(tableModel).build()
             ), links), null);
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in table: " + url, e);
             return JsonApiModel.error(errorModelHelper.

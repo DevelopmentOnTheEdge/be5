@@ -39,7 +39,8 @@ public class AstWhere extends SimpleNode
         if (valueObj == null)
         {
             astFunNode = new AstNullPredicate(true, new AstFieldReference(entry.getKey()));
-        } else if (valueObj.getClass().isArray())
+        }
+        else if (valueObj.getClass().isArray())
         {
             function = DefaultParserContext.FUNC_IN;
 
@@ -47,32 +48,40 @@ public class AstWhere extends SimpleNode
             if (valueObj.getClass() == int[].class)
             {
                 len = ((int[]) valueObj).length;
-            } else if (valueObj.getClass() == long[].class)
+            }
+            else if (valueObj.getClass() == long[].class)
             {
                 len = ((long[]) valueObj).length;
-            } else if (valueObj.getClass() == short[].class)
+            }
+            else if (valueObj.getClass() == short[].class)
             {
                 len = ((short[]) valueObj).length;
-            } else if (valueObj.getClass() == char[].class)
+            }
+            else if (valueObj.getClass() == char[].class)
             {
                 len = ((char[]) valueObj).length;
-            } else if (valueObj.getClass() == byte[].class)
+            }
+            else if (valueObj.getClass() == byte[].class)
             {
                 len = ((byte[]) valueObj).length;
-            } else if (valueObj.getClass() == float[].class)
+            }
+            else if (valueObj.getClass() == float[].class)
             {
                 len = ((float[]) valueObj).length;
-            } else if (valueObj.getClass() == double[].class)
+            }
+            else if (valueObj.getClass() == double[].class)
             {
                 len = ((double[]) valueObj).length;
-            } else
+            }
+            else
             {
                 len = ((Object[]) valueObj).length;
             }
 
             astFunNode = function.node(new AstFieldReference(entry.getKey()),
                     AstInValueList.withReplacementParameter(len));
-        } else if (valueObj instanceof String)
+        }
+        else if (valueObj instanceof String)
         {
             String value = (String) valueObj;
             if (value.equals("null") || value.equals("notNull"))
@@ -81,7 +90,8 @@ public class AstWhere extends SimpleNode
 //            можно сделать какой-нибудь хак (ID IS NULL OR ( null = ? ) )
                 throw new RuntimeException("todo, not supported");
                 //astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
-            } else if (value.endsWith("%") || value.startsWith("%"))
+            }
+            else if (value.endsWith("%") || value.startsWith("%"))
             {
                 function = DefaultParserContext.FUNC_LIKE;
             }
@@ -92,7 +102,8 @@ public class AstWhere extends SimpleNode
         if (iterator.hasNext())
         {
             return new AstBooleanTerm(astFunNode, addAstFunNode(iterator));
-        } else
+        }
+        else
         {
             return astFunNode;
         }

@@ -9,9 +9,11 @@ import groovy.transform.TypeChecked
 import static org.junit.Assert.assertEquals
 
 @TypeChecked
-class ServerErrorProcessing extends GOperationSupport implements Operation {
+class ServerErrorProcessing extends GOperationSupport implements Operation
+{
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         dpsHelper.addDpForColumns(params, getInfo().getEntity(), ["name"], context.getOperationParams(), presetValues)
 
         def name = params.getProperty("name")
@@ -24,7 +26,8 @@ class ServerErrorProcessing extends GOperationSupport implements Operation {
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
 
     }
 

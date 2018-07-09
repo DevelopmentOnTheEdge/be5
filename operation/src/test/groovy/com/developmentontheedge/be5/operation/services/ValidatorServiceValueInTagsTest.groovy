@@ -12,18 +12,21 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNull
 
-class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest {
+class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
+{
     @Inject
     Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
-    void initDps() {
+    void initDps()
+    {
         dps = new GDynamicPropertySetSupport()
     }
 
     @Test
-    void checkValueInTags() {
+    void checkValueInTags()
+    {
         dps.add {
             name = "test"
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
@@ -35,7 +38,8 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void checkValueInTagsLong() {
+    void checkValueInTagsLong()
+    {
         dps.add {
             name = "test"
             TYPE = Long
@@ -48,7 +52,8 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void checkValueInTagsError() {
+    void checkValueInTagsError()
+    {
         dps.add {
             name = "test"
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
@@ -66,7 +71,8 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void checkValueInTagsMultipleErrorStringValue() {
+    void checkValueInTagsMultipleErrorStringValue()
+    {
         dps.add {
             name = "test"
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
@@ -80,7 +86,8 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void checkValueInTagsMultipleError() {
+    void checkValueInTagsMultipleError()
+    {
         dps.add {
             name = "test"
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]

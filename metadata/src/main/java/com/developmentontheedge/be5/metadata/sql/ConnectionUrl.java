@@ -54,7 +54,8 @@ public class ConnectionUrl implements BeElementWithProperties
             if (portNum.isEmpty())
             {
                 port = rdbms.getDefaultPort();
-            } else
+            }
+            else
             {
                 port = Integer.parseInt(portNum);
             }
@@ -71,7 +72,8 @@ public class ConnectionUrl implements BeElementWithProperties
             if (portNum.isEmpty())
             {
                 port = rdbms.getDefaultPort();
-            } else
+            }
+            else
             {
                 port = Integer.parseInt(portNum);
             }
@@ -84,7 +86,8 @@ public class ConnectionUrl implements BeElementWithProperties
         if (uri.getPort() > 0)
         {
             port = uri.getPort();
-        } else
+        }
+        else
         {
             port = rdbms.getDefaultPort();
         }
@@ -100,7 +103,8 @@ public class ConnectionUrl implements BeElementWithProperties
             setProperties(matcher.group(2));
             if (uri.getQuery() != null)
                 setProperties("?" + uri.getQuery());
-        } else
+        }
+        else
         {
             // TODO: enhance algorithm to support port, service, etc.
             // see http://www.orafaq.com/wiki/JDBC#Thin_driver

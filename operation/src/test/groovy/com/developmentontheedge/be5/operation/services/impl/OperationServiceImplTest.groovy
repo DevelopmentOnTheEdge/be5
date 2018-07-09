@@ -7,9 +7,11 @@ import org.junit.Test
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
-class OperationServiceImplTest extends OperationsSqlMockProjectTest {
+class OperationServiceImplTest extends OperationsSqlMockProjectTest
+{
     @Test
-    void replaceValuesToStringDigitsAndDate() {
+    void replaceValuesToStringDigitsAndDate()
+    {
         def dps = getDps(new DynamicPropertySetSupport(), [
                 test1: "1",
                 test2: 1,
@@ -29,7 +31,8 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest {
     }
 
     @Test
-    void replaceValuesToString() {
+    void replaceValuesToString()
+    {
         def dps = getDps(new DynamicPropertySetSupport(), [
                 test6: (["1", "2"] as String[]),
         ])

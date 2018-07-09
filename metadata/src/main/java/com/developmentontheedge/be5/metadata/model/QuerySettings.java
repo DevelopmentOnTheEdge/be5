@@ -192,13 +192,15 @@ public class QuerySettings extends BeModelElementSupport
         {
             if (other.beautifier != null)
                 return false;
-        } else if (!beautifier.equals(other.beautifier))
+        }
+        else if (!beautifier.equals(other.beautifier))
             return false;
         if (colorSchemeID == null)
         {
             if (other.colorSchemeID != null)
                 return false;
-        } else if (!colorSchemeID.equals(other.colorSchemeID))
+        }
+        else if (!colorSchemeID.equals(other.colorSchemeID))
             return false;
         if (maxRecordsInDynamicDropDown != other.maxRecordsInDynamicDropDown)
             return false;

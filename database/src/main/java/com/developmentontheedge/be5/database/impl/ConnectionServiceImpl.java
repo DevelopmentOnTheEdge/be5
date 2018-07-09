@@ -39,7 +39,8 @@ public class ConnectionServiceImpl implements ConnectionService
         if (conn != null)
         {
             return conn;
-        } else
+        }
+        else
         {
             conn = databaseService.getDataSource().getConnection();
             conn.setAutoCommit(false);
@@ -67,7 +68,8 @@ public class ConnectionServiceImpl implements ConnectionService
             try
             {
                 txConnection.commit();
-            } finally
+            }
+            finally
             {
                 returnConnection(txConnection);
                 TRANSACT_CONN.set(null);
@@ -87,11 +89,13 @@ public class ConnectionServiceImpl implements ConnectionService
                 txConnection.rollback();
             }
             return returnRuntimeExceptionOrWrap(e);
-        } catch (SQLException se)
+        }
+        catch (SQLException se)
         {
             log.log(Level.SEVERE, "Unable to rollback transaction", se);
             return returnRuntimeExceptionOrWrap(e);
-        } finally
+        }
+        finally
         {
             returnConnection(txConnection);
             TRANSACT_CONN.set(null);
@@ -113,7 +117,8 @@ public class ConnectionServiceImpl implements ConnectionService
             T res = executor.run(conn);
             endTransaction();
             return res;
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw rollbackTransaction(e);
         }
@@ -168,7 +173,8 @@ public class ConnectionServiceImpl implements ConnectionService
 
                     conn.close();
                 }
-            } catch (SQLException e)
+            }
+            catch (SQLException e)
             {
                 throw new RuntimeException(e);
             }

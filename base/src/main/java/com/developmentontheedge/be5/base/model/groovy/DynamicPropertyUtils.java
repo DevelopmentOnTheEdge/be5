@@ -29,7 +29,8 @@ public class DynamicPropertyUtils
                 {
                     beanInfoConstants.put(f.getName(),
                             BeanInfoConstants.class.getDeclaredField(f.getName()).get(null).toString());
-                } catch (Exception exc)
+                }
+                catch (Exception exc)
                 {
                     throw new RuntimeException(exc);
                 }
@@ -66,7 +67,8 @@ public class DynamicPropertyUtils
             if (attributeName != null)
             {
                 dp.setAttribute(attributeName, map.get(key));
-            } else
+            }
+            else
             {
                 log.warning("Not found attribute: " + key + " in BeanInfoConstants");
             }
@@ -83,7 +85,8 @@ public class DynamicPropertyUtils
         if (map.containsKey(element))
         {
             return map.remove(element);
-        } else
+        }
+        else
         {
             return null;
         }

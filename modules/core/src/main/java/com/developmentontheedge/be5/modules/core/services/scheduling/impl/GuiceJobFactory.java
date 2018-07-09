@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class GuiceJobFactory implements JobFactory
 {
-    private final static Logger log = Logger.getLogger(GuiceJobFactory.class.getName());
+    private static final Logger log = Logger.getLogger(GuiceJobFactory.class.getName());
 
     private final Injector guice;
 
@@ -35,7 +35,8 @@ public class GuiceJobFactory implements JobFactory
             log.fine("Producing instance of Job '" + jobDetail.getKey() + "', class=" + jobClass.getName());
 
             return guice.getInstance(bundle.getJobDetail().getJobClass());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new SchedulerException("Problem instantiating class '" + jobDetail.getJobClass().getName() + "'", e);
         }

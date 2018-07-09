@@ -22,14 +22,17 @@ public class Utils
             try
             {
                 template.process(input, fileWriter);
-            } catch (TemplateException e)
+            }
+            catch (TemplateException e)
             {
                 e.printStackTrace();
-            } finally
+            }
+            finally
             {
                 fileWriter.close();
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }

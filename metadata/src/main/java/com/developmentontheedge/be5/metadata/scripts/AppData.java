@@ -65,7 +65,8 @@ public class AppData extends ScriptSupport<AppData>
                             scripts.add(script);
                         }
                         continue;
-                    } else
+                    }
+                    else
                     {
                         Module module = be5Project.getModule(moduleName);
                         if (module == null)
@@ -74,7 +75,8 @@ public class AppData extends ScriptSupport<AppData>
                             {
                                 logger.error("Warning: module '" + moduleName + "' not found");
                                 continue;
-                            } else
+                            }
+                            else
                                 throw new ScriptException("Module '" + moduleName + "' not found");
                         }
                         scriptsCatalog = module.getFreemarkerScripts();
@@ -87,7 +89,8 @@ public class AppData extends ScriptSupport<AppData>
                     {
                         logger.error("Warning: FTL script '" + scriptName + "' not found");
                         continue;
-                    } else
+                    }
+                    else
                         throw new ScriptException("FTL script '" + scriptName + "' not found");
                 }
                 scripts.add(freemarkerScript);
@@ -98,13 +101,16 @@ public class AppData extends ScriptSupport<AppData>
                 executeScript(sqlExecutor, freemarkerScript);
             }
             DatabaseUtils.clearAllCache(sqlExecutor);
-        } catch (ProjectElementException | FreemarkerSqlException e)
+        }
+        catch (ProjectElementException | FreemarkerSqlException e)
         {
             throw new ScriptException(e.getMessage(), e);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ScriptException(e.getMessage(), e);
-        } finally
+        }
+        finally
         {
             if (ps != null)
             {

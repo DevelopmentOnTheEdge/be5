@@ -53,10 +53,12 @@ public class AppTools extends ScriptSupport<AppTools>
                     {
                         rs = connector.executeQuery(statement);
                         format(rs, System.err, 20);
-                    } catch (SQLException e)
+                    }
+                    catch (SQLException e)
                     {
                         throw new ExtendedSqlException(connector, statement, e);
-                    } finally
+                    }
+                    finally
                     {
                         connector.close(rs);
                     }
@@ -83,7 +85,8 @@ public class AppTools extends ScriptSupport<AppTools>
                 if (result.getResult() != null)
                 {
                     logger.info("SQL> " + result.getResult());
-                } else
+                }
+                else
                 {
                     logger.info("ERROR> " + result.getError());
                     continue;
@@ -91,12 +94,14 @@ public class AppTools extends ScriptSupport<AppTools>
                 try
                 {
                     sql.executeScript(fs, log);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     logger.info("ERROR> " + e.getMessage());
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ScriptException("Console error: " + e.getMessage(), e);
         }
@@ -154,7 +159,8 @@ public class AppTools extends ScriptSupport<AppTools>
         try
         {
             this.inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }

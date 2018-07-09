@@ -12,19 +12,22 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 
 
-class RecordModelTest extends DatabaseModelProjectDbTest {
+class RecordModelTest extends DatabaseModelProjectDbTest
+{
     @Inject
     private DatabaseModel database
     private EntityModel<Long> testtableAdmin
 
     @Before
-    void before() {
+    void before()
+    {
         testtableAdmin = database.getEntity("testtableAdmin")
         db.update("DELETE FROM testtableAdmin")
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate()
+    {
         Long id = testtableAdmin.add([
                 "name" : "TestName",
                 "value": 1
@@ -56,7 +59,8 @@ class RecordModelTest extends DatabaseModelProjectDbTest {
     }
 
     @Test(expected = IllegalAccessError.class)
-    void errorOnSetValue() {
+    void errorOnSetValue()
+    {
         Long id = testtableAdmin.add(["name": "TestName", "value": 1])
         RecordModel<Long> record = testtableAdmin.get(id)
 
@@ -64,7 +68,8 @@ class RecordModelTest extends DatabaseModelProjectDbTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void propertyNotFound() {
+    void propertyNotFound()
+    {
         Long id = testtableAdmin.add(["name": "TestName", "value": 1])
         RecordModel<Long> record = testtableAdmin.get(id)
 

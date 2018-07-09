@@ -27,7 +27,8 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
         if ("getAt".equals(methodName))
         {
             return getAt((DynamicPropertySet) object, (String) args[0]);
-        } else
+        }
+        else
         {
             return super.invokeMethod(object, methodName, args);
         }
@@ -95,7 +96,8 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
                     value
             );
             dps.add(dp);
-        } else
+        }
+        else
         {
             if (type != null) dp.setType(type);
             if (isContainName) dp.setValue(value);
@@ -114,7 +116,8 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
             try
             {
                 clonedDps.add(DynamicPropertySetSupport.cloneProperty(dp));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new RuntimeException(e);
             }

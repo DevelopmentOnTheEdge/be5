@@ -11,7 +11,7 @@ public class ServletUtils
 {
     static Response getResponse(HttpServletRequest request, HttpServletResponse response)
     {
-        String origin = request.getHeader("Origin");// TODO test origin
+        String origin = request.getHeader("Origin"); // TODO test origin
 
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.addHeader("Access-Control-Allow-Origin", origin);

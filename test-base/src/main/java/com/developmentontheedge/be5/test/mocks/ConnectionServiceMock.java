@@ -27,7 +27,8 @@ public class ConnectionServiceMock implements ConnectionService
         try
         {
             return executor.run(null);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw new RuntimeException(e);
         }
@@ -39,7 +40,8 @@ public class ConnectionServiceMock implements ConnectionService
         try
         {
             executor.run(null);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             throw new RuntimeException(e);
         }

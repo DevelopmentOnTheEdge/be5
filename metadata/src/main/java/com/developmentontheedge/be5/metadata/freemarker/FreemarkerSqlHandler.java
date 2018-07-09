@@ -85,7 +85,8 @@ public class FreemarkerSqlHandler implements SqlHandler
         try
         {
             sqlExecutor.executeSingle(statement);
-        } catch (ExtendedSqlException e)
+        }
+        catch (ExtendedSqlException e)
         {
             if (!debug)
             {
@@ -191,7 +192,8 @@ public class FreemarkerSqlHandler implements SqlHandler
                 {
                     lineOffset++;
                     columnOffset = 0;
-                } else if (cbuf[i] != '\r')
+                }
+                else if (cbuf[i] != '\r')
                     columnOffset++;
             }
         }

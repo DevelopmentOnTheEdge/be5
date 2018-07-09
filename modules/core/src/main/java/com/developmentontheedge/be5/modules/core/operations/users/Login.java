@@ -50,11 +50,13 @@ public class Login extends GOperationSupport
             {
                 setResult(OperationResult.finished(null,
                         CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
-            } else
+            }
+            else
             {
                 setResult(OperationResult.finished());
             }
-        } else
+        }
+        else
         {
             setResult(OperationResult.error(userAwareMeta
                     .getLocalizedExceptionMessage("Incorrect username or password.")));

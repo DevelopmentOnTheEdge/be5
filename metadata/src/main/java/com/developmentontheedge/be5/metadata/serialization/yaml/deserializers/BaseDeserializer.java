@@ -64,7 +64,8 @@ class BaseDeserializer
                     Beans.setBeanPropertyValue(target, field.name, value);
 
                 target.customizeProperty(field.name);
-            } catch (final Exception e)
+            }
+            catch (final Exception e)
             {
                 loadContext.addWarning(new ReadException(e, target, path, "Error reading field " + field.name));
             }
@@ -88,7 +89,8 @@ class BaseDeserializer
         try
         {
             return castValue(klass, value);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
         {
             throw new AssertionError();
         }
@@ -180,7 +182,8 @@ class BaseDeserializer
                 icon.setOriginModuleName(icon.getOwner().getProject().getProjectOrigin());
                 ((BeModelCollection<?>) icon.getOwner()).customizeProperty("icon");
             }
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             loadContext.addWarning(e);
         }
@@ -357,7 +360,8 @@ class BaseDeserializer
             if (!(rootObject instanceof Map))
                 throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be a map");
             return (Map<String, Object>) rootObject;
-        } catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             throw new ReadException(path, e.getMessage());
         }
@@ -386,10 +390,12 @@ class BaseDeserializer
             if (allowedField instanceof Field)
             {
                 allowed.add(((Field) allowedField).name);
-            } else if (allowedField instanceof Collection)
+            }
+            else if (allowedField instanceof Collection)
             {
                 allowed.addAll(getAllowedFields(((Collection<?>) allowedField).toArray()));
-            } else
+            }
+            else
                 allowed.add(allowedField.toString());
         }
 

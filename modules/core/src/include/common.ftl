@@ -29,8 +29,8 @@ WHERE e.name = ${tableTo?str}</@_selectRow>;
 DELETE FROM jsprograms WHERE publicId = '${name}';
 INSERT INTO jsprograms ( publicId, type, code )
 VALUES (${name?str}, 'library',
-<#assign nested><#nested></#assign>
-${nested?str}
+        <#assign nested><#nested></#assign>
+        ${nested?str}
 );
 </#macro>
 
@@ -38,31 +38,31 @@ ${nested?str}
 DELETE FROM javaScriptHandlers WHERE CODE = '${code}';
 INSERT INTO javaScriptHandlers ( CODE, name, algorithmCode )
 VALUES (${code?str}, ${name?str},
-<#assign nested><#nested></#assign>
-${nested?str}
+    <#assign nested><#nested></#assign>
+    ${nested?str}
 );
 </#macro>
 
 
 <@_sqlMacro>
 MACRO PERSON_NAME(persons, default='')
-  COALESCE((COALESCE(persons.lastName, '') || ' ' || persons.firstName ||
-    CASE WHEN persons.middleName IS NULL
-          THEN ''
-          ELSE (' ' || persons.middleName)
-    END), default)
+COALESCE((COALESCE(persons.lastName, '') || ' ' || persons.firstName ||
+CASE WHEN persons.middleName IS NULL
+THEN ''
+ELSE (' ' || persons.middleName)
+END), default)
 END
 
 MACRO NAME(table)
-  COALESCE(table.shortName, table.name)
+COALESCE(table.shortName, table.name)
 END
 </@>
 
 <#function PERSON_NAME persons default=''>
 <#return coalesce(concat('${persons}.lastName'?orEmpty, ' '?str, '${persons}.firstName',
-    'CASE WHEN ${persons}.middleName IS NULL '+
-          'THEN \'\' '+
-          'ELSE '+concat(' '?str, '${persons}.middleName')+' END'), default?str)/>
+'CASE WHEN ${persons}.middleName IS NULL '+
+'THEN \'\' '+
+'ELSE '+concat(' '?str, '${persons}.middleName')+' END'), default?str)/>
 </#function>
 
 <#function NAME table>
@@ -72,27 +72,27 @@ END
 <#function MONTH_RU monthNum>
 <#assign result>
 CASE WHEN ${monthNum}= 1 THEN 'январь'
-     WHEN ${monthNum}= 2 THEN 'февраль'
-     WHEN ${monthNum}= 3 THEN 'март'
-     WHEN ${monthNum}= 4 THEN 'апрель'
-     WHEN ${monthNum}= 5 THEN 'май'
-     WHEN ${monthNum}= 6 THEN 'июнь'
-     WHEN ${monthNum}= 7 THEN 'июль'
-     WHEN ${monthNum}= 8 THEN 'август'
-     WHEN ${monthNum}= 9 THEN 'сентябрь'
-     WHEN ${monthNum}= 10 THEN 'октябрь'
-     WHEN ${monthNum}= 11 THEN 'ноябрь'
-     WHEN ${monthNum}= 12 THEN 'декабрь'
+    WHEN ${monthNum}= 2 THEN 'февраль'
+    WHEN ${monthNum}= 3 THEN 'март'
+    WHEN ${monthNum}= 4 THEN 'апрель'
+    WHEN ${monthNum}= 5 THEN 'май'
+    WHEN ${monthNum}= 6 THEN 'июнь'
+    WHEN ${monthNum}= 7 THEN 'июль'
+    WHEN ${monthNum}= 8 THEN 'август'
+    WHEN ${monthNum}= 9 THEN 'сентябрь'
+    WHEN ${monthNum}= 10 THEN 'октябрь'
+    WHEN ${monthNum}= 11 THEN 'ноябрь'
+    WHEN ${monthNum}= 12 THEN 'декабрь'
 END
 </#assign>
 <#return result>
 </#function>
 
 <#macro IS_ACTIVE_NOT_NULL table date=''>
-      (
-          ${table}.activeFrom <= <#if date == ''>${TIME_MACHINE_DATETIME()}<#else>${date}</#if>
-      AND ${table}.activeTo > <#if date == ''>${TIME_MACHINE_DATETIME()}<#else>${date}</#if>
-      )
+(
+    ${table}.activeFrom <= <#if date == ''>${TIME_MACHINE_DATETIME()}<#else>${date}</#if>
+    AND ${table}.activeTo > <#if date == ''>${TIME_MACHINE_DATETIME()}<#else>${date}</#if>
+)
 </#macro>
 
 

@@ -9,9 +9,11 @@ import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
-class DynamicPropertyMetaClassTest extends RegisterMetaClass {
+class DynamicPropertyMetaClassTest extends RegisterMetaClass
+{
     @Test
-    void leftShift() {
+    void leftShift()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
@@ -37,7 +39,8 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass {
     }
 
     @Test
-    void leftShiftChangeValue() {
+    void leftShiftChangeValue()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
@@ -53,7 +56,8 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass {
     }
 
     @Test
-    void setProperty() {
+    void setProperty()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps.testField = [
@@ -72,7 +76,8 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass {
     }
 
     @Test
-    void setPropertyNull() {
+    void setPropertyNull()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps.testField = null

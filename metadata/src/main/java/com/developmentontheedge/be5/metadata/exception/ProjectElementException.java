@@ -141,7 +141,8 @@ public class ProjectElementException extends Exception implements Formattable
             final String string = bytes.toString(StandardCharsets.UTF_8.name());
 
             return string;
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             throw new AssertionError("", e);
         }

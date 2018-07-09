@@ -5,10 +5,10 @@ import com.developmentontheedge.beans.util.Beans;
 
 public class AttributeRule implements SelectorRule
 {
-    public final static String OP_EQUALS = "";
-    public final static String OP_CONTAINS = "*";
-    public final static String OP_STARTS = "^";
-    public final static String OP_ENDS = "$";
+    public static final String OP_EQUALS = "";
+    public static final String OP_CONTAINS = "*";
+    public static final String OP_STARTS = "^";
+    public static final String OP_ENDS = "$";
 
     private final String attribute;
     private final String value;
@@ -67,7 +67,8 @@ public class AttributeRule implements SelectorRule
                 if (test(val))
                     return true;
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
         }
         return false;

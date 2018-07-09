@@ -151,7 +151,8 @@ public class FilterApplierTest
         if (parameter instanceof List)
         {
             return (List<Object>) parameter;
-        } else
+        }
+        else
         {
             return Collections.singletonList(parameter);
         }

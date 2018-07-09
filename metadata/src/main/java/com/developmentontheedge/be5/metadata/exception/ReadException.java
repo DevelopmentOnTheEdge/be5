@@ -77,7 +77,8 @@ public class ReadException extends Exception implements Formattable
             if (msg == null)
             {
                 msg = getCause().getMessage();
-            } else
+            }
+            else
             {
                 msg += ": " + getCause().getMessage();
             }

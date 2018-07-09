@@ -40,7 +40,8 @@ class FormsDeserializer extends FileDeserializer
             try
             {
                 readForm(serializedForm);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(target));
             }
@@ -59,12 +60,14 @@ class FormsDeserializer extends FileDeserializer
         if (file == null)
         {
             loadContext.addWarning(new ReadException(form, path, "File cannot be resolved for module " + form.getModuleName()));
-        } else
+        }
+        else
         {
             try
             {
                 form.load();
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(form));
             }

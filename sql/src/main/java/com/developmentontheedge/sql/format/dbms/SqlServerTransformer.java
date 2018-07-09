@@ -65,7 +65,8 @@ public class SqlServerTransformer extends GenericDbmsTransformer
             {
                 cond = new AstNullPredicate(0);
                 cond.addChild(node.child(0));
-            } else
+            }
+            else
             {
                 cond = DefaultParserContext.FUNC_EQ.node(node.child(0), node.child(i));
             }
@@ -368,7 +369,8 @@ public class SqlServerTransformer extends GenericDbmsTransformer
             {
                 limit.setShape("TOP", null);
                 select.moveToFront(limit);
-            } else
+            }
+            else
             {
                 if (select.getOrderBy() == null)
                     throw new IllegalStateException("The ranking function \"ROW_NUMBER\" must have an ORDER BY clause");

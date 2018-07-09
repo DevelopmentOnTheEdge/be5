@@ -55,12 +55,14 @@ public class LoginServiceImpl implements LoginService
         if (defaultAction == null)
         {
             log.severe("Default Action must not be null");
-        } else
+        }
+        else
         {
             if (defaultAction.getName().equals("call"))
             {
                 defaultRouteCall = defaultAction.getArg();
-            } else
+            }
+            else
             {
                 log.severe("Default Action type must be 'call'");
             }
@@ -104,7 +106,8 @@ public class LoginServiceImpl implements LoginService
         if (savedRoles != null)
         {
             currentRoles = getAvailableCurrentRoles(parseRoles(savedRoles), availableRoles);
-        } else
+        }
+        else
         {
             currentRoles = availableRoles;
         }

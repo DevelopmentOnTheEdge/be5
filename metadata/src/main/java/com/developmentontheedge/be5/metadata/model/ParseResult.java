@@ -57,7 +57,8 @@ public class ParseResult
         {
             if (other.result != null)
                 return false;
-        } else if (!result.equals(other.result))
+        }
+        else if (!result.equals(other.result))
             return false;
         return true;
     }

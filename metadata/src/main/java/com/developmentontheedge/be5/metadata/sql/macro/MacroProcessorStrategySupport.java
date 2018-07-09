@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.metadata.sql.macro;
 
 
-abstract public class MacroProcessorStrategySupport implements IMacroProcessorStrategy
+public abstract class MacroProcessorStrategySupport implements IMacroProcessorStrategy
 {
     protected String quoteIdentifier(String id)
     {

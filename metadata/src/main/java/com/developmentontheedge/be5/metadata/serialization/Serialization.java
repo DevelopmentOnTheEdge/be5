@@ -52,7 +52,8 @@ public class Serialization
         try
         {
             new YamlSerializer().serializeProjectTo(project, root);
-        } catch (final WriteException e)
+        }
+        catch (final WriteException e)
         {
             throw new ProjectSaveException(root, e);
         }
@@ -205,10 +206,12 @@ public class Serialization
         try
         {
             return new YamlDeserializer(loadContext == null ? new LoadContext() : loadContext, fuseTemplates).readProject(root);
-        } catch (final ReadException e)
+        }
+        catch (final ReadException e)
         {
             throw new ProjectLoadException(root, e);
-        } finally
+        }
+        finally
         {
             turnOnAutomaticSerialization();
         }
@@ -369,7 +372,8 @@ public class Serialization
             try
             {
                 new YamlDeserializer(new LoadContext()).loadMacroFiles(module);
-            } finally
+            }
+            finally
             {
                 turnOnAutomaticSerialization();
             }
@@ -387,7 +391,8 @@ public class Serialization
                 result.put(derepresent(pair.getKeyNode()), derepresent(pair.getValueNode()));
 
             return result;
-        } else if (node instanceof SequenceNode)
+        }
+        else if (node instanceof SequenceNode)
         {
             final List<Node> value = ((SequenceNode) node).getValue();
             final ArrayList<Object> result = new ArrayList<>();
@@ -396,7 +401,8 @@ public class Serialization
                 result.add(derepresent(child));
 
             return result;
-        } else if (node instanceof ScalarNode)
+        }
+        else if (node instanceof ScalarNode)
         {
             return ((ScalarNode) node).getValue();
         }

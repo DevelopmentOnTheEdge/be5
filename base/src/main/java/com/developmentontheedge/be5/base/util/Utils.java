@@ -210,7 +210,8 @@ public class Utils
                 try
                 {
                     parsed = df.parse(val);
-                } catch (ParseException pe)
+                }
+                catch (ParseException pe)
                 {
                     parsed = parseDateWithOtherLocales(val, DATE_PARSING_MODE_DATE);
                 }
@@ -224,7 +225,8 @@ public class Utils
                 try
                 {
                     parsed = df.parse(val);
-                } catch (ParseException pe)
+                }
+                catch (ParseException pe)
                 {
                     parsed = parseDateWithOtherLocales(val, DATE_PARSING_MODE_DATE);
                 }
@@ -239,7 +241,8 @@ public class Utils
                 try
                 {
                     parsed = df.parse(val);
-                } catch (ParseException pe)
+                }
+                catch (ParseException pe)
                 {
                     parsed = parseDateWithOtherLocales(val, DATE_PARSING_MODE_TIME);
                 }
@@ -262,18 +265,21 @@ public class Utils
                 try
                 {
                     parsed = df.parse(val);
-                } catch (ParseException pe)
+                }
+                catch (ParseException pe)
                 {
                     try
                     {
                         parsed = parseDateWithOtherLocales(val, DATE_PARSING_MODE_DATETIME);
-                    } catch (ParseException pe2)
+                    }
+                    catch (ParseException pe2)
                     {
                         df = DateFormat.getDateInstance(DateFormat.DEFAULT);
                         try
                         {
                             parsed = df.parse(val);
-                        } catch (ParseException pe3)
+                        }
+                        catch (ParseException pe3)
                         {
                             parsed = parseDateWithOtherLocales(val, DATE_PARSING_MODE_DATE);
                         }
@@ -306,7 +312,7 @@ public class Utils
         if (val.getClass().isArray() && valClass.isArray() &&
                 !val.getClass().getComponentType().equals(valClass.getComponentType()))
         {
-            return changeArrayItemTypes((Object[])val, valClass);
+            return changeArrayItemTypes((Object[]) val, valClass);
         }
 
         if (java.util.Date.class.equals(valClass))
@@ -339,7 +345,8 @@ public class Utils
                     GregorianCalendar gc = new GregorianCalendar();
                     gc.setTime((java.util.Date) val);
                     return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-                } catch (DatatypeConfigurationException e)
+                }
+                catch (DatatypeConfigurationException e)
                 {
                     throw new IllegalArgumentException(e);
                 }
@@ -349,7 +356,8 @@ public class Utils
                 try
                 {
                     return DatatypeConverter.parseDateTime((String) val);
-                } catch (IllegalArgumentException e)
+                }
+                catch (IllegalArgumentException e)
                 {
                     throw new IllegalArgumentException(e);
                 }
@@ -428,7 +436,8 @@ public class Utils
                 //return when parsed successfully
                 java.util.Date parsed = df.parse(val);
                 return parsed;
-            } catch (ParseException pe)
+            }
+            catch (ParseException pe)
             {
                 //could not parse, continue with other locales.
                 lastException = pe;
@@ -459,7 +468,8 @@ public class Utils
             try
             {
                 return sdf.parse(val);
-            } catch (ParseException pe)
+            }
+            catch (ParseException pe)
             {
                 //could not parse, continue with other patterns.
                 lastException = pe;
@@ -494,7 +504,8 @@ public class Utils
             try
             {
                 Long.valueOf(number);
-            } catch (NumberFormatException nfe)
+            }
+            catch (NumberFormatException nfe)
             {
                 if (number.endsWith(".0"))
                 {

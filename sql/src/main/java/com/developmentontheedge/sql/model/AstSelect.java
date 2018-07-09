@@ -68,7 +68,8 @@ public class AstSelect extends SimpleNode
                 children.remove(idx + 1);
             else
                 children.set(idx + 1, from);
-        } else
+        }
+        else
         {
             if (from != null)
                 children.add(idx + 1, from);
@@ -105,7 +106,8 @@ public class AstSelect extends SimpleNode
             if (prev == null)
                 prev = getSelectList();
             prev.appendSibling(where);
-        } else
+        }
+        else
         {
             oldWhere.replaceWith(where);
         }
@@ -128,7 +130,8 @@ public class AstSelect extends SimpleNode
         if (oldLimit != null)
         {
             oldLimit.replaceWith(limit);
-        } else
+        }
+        else
         {
             addChild(limit);
         }

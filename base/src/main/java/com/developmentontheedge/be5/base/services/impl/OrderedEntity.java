@@ -44,7 +44,8 @@ class OrderedEntity implements Comparable<OrderedEntity>
         try
         {
             return Integer.parseInt(order);
-        } catch (NumberFormatException e)
+        }
+        catch (NumberFormatException e)
         {
             return defaultValue;
         }

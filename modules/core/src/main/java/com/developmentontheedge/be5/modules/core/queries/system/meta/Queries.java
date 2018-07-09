@@ -20,7 +20,8 @@ public class Queries extends TableBuilderSupport
         if (selectEntity != null)
         {
             addQueries(selectEntity);
-        } else
+        }
+        else
         {
             meta.getOrderedEntities(userInfo.getLanguage()).forEach(
                     e -> addQueries(e.getName())

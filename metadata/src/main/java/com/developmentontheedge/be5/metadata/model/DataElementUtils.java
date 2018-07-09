@@ -38,7 +38,8 @@ public class DataElementUtils
         try
         {
             collection.put(element);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -62,7 +63,8 @@ public class DataElementUtils
         try
         {
             collection.remove(element.getName());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -86,7 +88,8 @@ public class DataElementUtils
         try
         {
             collection.put(element);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -99,7 +102,8 @@ public class DataElementUtils
         try
         {
             collection.remove(element);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -110,7 +114,8 @@ public class DataElementUtils
         try
         {
             collection.put(element);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }

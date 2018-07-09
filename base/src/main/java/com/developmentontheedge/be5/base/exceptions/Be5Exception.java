@@ -181,7 +181,8 @@ public class Be5Exception extends RuntimeException
         if (e instanceof Be5Exception)
         {
             return e.getClass().getSimpleName() + ": " + e.getMessage() + "\n";
-        } else
+        }
+        else
         {
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }

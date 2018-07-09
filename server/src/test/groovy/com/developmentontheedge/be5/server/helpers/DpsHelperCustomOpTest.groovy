@@ -14,44 +14,51 @@ import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
 
-class DpsHelperCustomOpTest extends ServerBe5ProjectTest {
+class DpsHelperCustomOpTest extends ServerBe5ProjectTest
+{
     @Inject
     DpsHelper dpsHelper
 
     @Before
-    void setUp() {
+    void setUp()
+    {
         initGuest()
     }
 
     @Test
-    void simple() {
+    void simple()
+    {
         def res = getResult([name: "a", value: "1"], [:])
 
         assertEquals("{name=a, value=1}", oneQuotes(res))
     }
 
     @Test
-    void opParams() {
+    void opParams()
+    {
         def res = getResult([name: "a", value: "1"], [name: "b"])
 
         assertEquals("{name=b, value=1}", oneQuotes(res))
     }
 
     @Test
-    void filterParam() {
+    void filterParam()
+    {
         def res = getResult([name: "a", value: "1"], [name: "b", (SEARCH_PARAM): "true"])
 
         assertEquals("{name=a, value=1}", oneQuotes(res))
     }
 
     @Test
-    void filterAndOpParamParam() {
+    void filterAndOpParamParam()
+    {
         def res = getResult([name: "a", value: "1"], [name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
         assertEquals("{name=b, value=1}", oneQuotes(res))
     }
 
-    private String getResult(Map<String, Object> presetValues, Map<String, String> operationParams) {
+    private String getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
+    {
 //        def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
 //                new OperationContext([] as String[], "All records", operationParams))
 //

@@ -63,7 +63,8 @@ public class QueryServiceImpl implements QueryService
         if (parameter instanceof List)
         {
             return (List<String>) parameter;
-        } else
+        }
+        else
         {
             return Collections.singletonList(parameter.toString());
         }

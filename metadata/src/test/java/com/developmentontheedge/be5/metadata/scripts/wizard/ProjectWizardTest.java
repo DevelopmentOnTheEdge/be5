@@ -82,7 +82,7 @@ public class ProjectWizardTest
         {
             return Serialization.load(tpmProjectPath.toAbsolutePath());
         }
-        catch(ProjectLoadException e)
+        catch (ProjectLoadException e)
         {
             throw new RuntimeException(e);
         }

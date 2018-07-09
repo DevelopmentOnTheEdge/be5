@@ -13,7 +13,8 @@ public class HtmlUtils
                 out.append("&#");
                 out.append((int) c);
                 out.append(';');
-            } else
+            }
+            else
             {
                 out.append(c);
             }

@@ -22,7 +22,8 @@ public class ExtensionMethodsMetaClass extends DelegatingMetaClass
         try
         {
             return InvokerHelper.invokeMethod(getClass(), methodName, ObjectArrays.concat(object, args));
-        } catch (MissingMethodException e)
+        }
+        catch (MissingMethodException e)
         { /*missing method in meta-class*/ }
 
         return super.invokeMethod(object, methodName, args);

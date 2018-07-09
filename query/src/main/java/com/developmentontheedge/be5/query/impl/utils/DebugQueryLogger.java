@@ -26,7 +26,8 @@ public class DebugQueryLogger
             if (lastQuery == null)
             {
                 sb.append(query);
-            } else
+            }
+            else
             {
                 String prefix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonPrefix());
                 String suffix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonSuffix());

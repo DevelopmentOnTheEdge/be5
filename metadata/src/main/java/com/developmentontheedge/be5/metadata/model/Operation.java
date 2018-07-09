@@ -295,7 +295,8 @@ public class Operation extends EntityItem
         {
             if (other.getLogging() != null)
                 return debugEquals("logging");
-        } else if (!getLogging().equals(other.getLogging()))
+        }
+        else if (!getLogging().equals(other.getLogging()))
             return debugEquals("logging");
         if (getRecords() != other.getRecords())
             return debugEquals("records");
@@ -303,7 +304,8 @@ public class Operation extends EntityItem
         {
             if (other.type != null)
                 return debugEquals("type");
-        } else if (!type.equals(other.type))
+        }
+        else if (!type.equals(other.type))
             return debugEquals("type");
         if (!DataElementUtils.equals(getExtenders(), other.getExtenders()))
             return debugEquals("extenders");
@@ -317,14 +319,16 @@ public class Operation extends EntityItem
         try
         {
             ModelValidationUtils.checkValueInSet(this, "logging", logging, OPERATION_LOGGING);
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }
         try
         {
             ModelValidationUtils.checkValueInSet(this, "records", records, VISIBILITY_OPTIONS);
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }

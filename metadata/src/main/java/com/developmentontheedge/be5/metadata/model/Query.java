@@ -421,13 +421,15 @@ public class Query extends EntityItem implements TemplateElement
         {
             if (other.getMessageWhenEmpty() != null)
                 return debugEquals("messageWhenEmpty");
-        } else if (!getMessageWhenEmpty().equals(other.getMessageWhenEmpty()))
+        }
+        else if (!getMessageWhenEmpty().equals(other.getMessageWhenEmpty()))
             return debugEquals("messageWhenEmpty");
         if (getNewDataCheckQuery() == null)
         {
             if (other.getNewDataCheckQuery() != null)
                 return debugEquals("newDataCheckQuery");
-        } else if (!getNewDataCheckQuery().equals(other.getNewDataCheckQuery()))
+        }
+        else if (!getNewDataCheckQuery().equals(other.getNewDataCheckQuery()))
             return debugEquals("newDataCheckQuery");
         if (!getParametrizingOperationName().equals(other.getParametrizingOperationName()))
             return debugEquals("parametrizingOperation");
@@ -439,7 +441,8 @@ public class Query extends EntityItem implements TemplateElement
         {
             if (other.getShortDescription() != null)
                 return debugEquals("shortDescription");
-        } else if (!getShortDescription().equals(other.getShortDescription()))
+        }
+        else if (!getShortDescription().equals(other.getShortDescription()))
             return debugEquals("shortDescription");
         if (isSlow() != other.isSlow())
             return debugEquals("slow");
@@ -447,13 +450,15 @@ public class Query extends EntityItem implements TemplateElement
         {
             if (other.getTitleName() != null)
                 return debugEquals("titleName");
-        } else if (!getTitleName().equals(other.getTitleName()))
+        }
+        else if (!getTitleName().equals(other.getTitleName()))
             return debugEquals("titleName");
         if (getType() == null)
         {
             if (other.getType() != null)
                 return debugEquals("type");
-        } else if (!getType().equals(other.getType()))
+        }
+        else if (!getType().equals(other.getType()))
             return debugEquals("type");
         if (!getOperationNames().equals(other.getOperationNames()))
             return debugEquals("operationNames");
@@ -474,7 +479,8 @@ public class Query extends EntityItem implements TemplateElement
         try
         {
             ModelValidationUtils.checkValueInSet(this, "type", getType().getName(), getQueryTypes());
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             result.add(e);
         }
@@ -511,7 +517,8 @@ public class Query extends EntityItem implements TemplateElement
         if (clone.prototype == null)
         {
             clone.operations = new OperationSet(clone, operations);
-        } else
+        }
+        else
         {
             clone.operations = new OperationSet(clone);
             clone.operations.setPrototype(true, ((Query) clone.prototype).operations);
@@ -572,7 +579,8 @@ public class Query extends EntityItem implements TemplateElement
         if (inherit)
         {
             this.operations.setPrototype(false, ((Query) other).operations);
-        } else
+        }
+        else
         {
             this.operations.addInclusionAll(((Query) other).operations.getAllIncludedValues());
             this.operations.addExclusionAll(((Query) other).operations.getAllExcludedValues());

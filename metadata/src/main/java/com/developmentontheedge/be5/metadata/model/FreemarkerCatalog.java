@@ -67,7 +67,8 @@ public class FreemarkerCatalog extends BeVectorCollection<FreemarkerScriptOrCata
             if (scriptOrCatalog instanceof FreemarkerScript)
             {
                 result.add((FreemarkerScript) scriptOrCatalog);
-            } else
+            }
+            else
             {
                 result.addAll(((FreemarkerCatalog) scriptOrCatalog).getScripts());
             }

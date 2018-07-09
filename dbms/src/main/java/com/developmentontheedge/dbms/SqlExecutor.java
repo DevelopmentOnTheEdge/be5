@@ -81,13 +81,15 @@ public class SqlExecutor
         {
             log(sql);
             connector.executeUpdate(sql);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             comment("Warning: SQL error " + e.getMessage() + " trying again...", false);
             try
             {
                 connector.executeUpdate(sql);
-            } catch (SQLException e1)
+            }
+            catch (SQLException e1)
             {
                 throw handleError(sql, e);
             }
@@ -136,7 +138,8 @@ public class SqlExecutor
                 }
             }
             connector.executeUpdate(statement);
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             if ((statement.startsWith("DROP INDEX ")) && platform == DbmsType.DB2)
             {
@@ -165,7 +168,8 @@ public class SqlExecutor
         {
             log(sql);
             return connector.executeQuery(sql);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ExtendedSqlException(connector, sql, e);
         }
@@ -280,11 +284,13 @@ public class SqlExecutor
                 if (rs.next())
                     return rs.getString(1);
                 return null;
-            } finally
+            }
+            finally
             {
                 connector.close(rs);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new ExtendedSqlException(connector, sql, e);
         }
@@ -494,13 +500,16 @@ public class SqlExecutor
                     if (arg == null)
                     {
                         st.setNull(i + 1, Types.VARCHAR);
-                    } else if (arg instanceof Boolean)
+                    }
+                    else if (arg instanceof Boolean)
                     {
                         st.setString(i + 1, ((Boolean) arg) ? YES : NO);
-                    } else if (arg instanceof byte[])
+                    }
+                    else if (arg instanceof byte[])
                     {
                         st.setBytes(i + 1, (byte[]) arg);
-                    } else
+                    }
+                    else
                     {
                         st.setString(i + 1, arg.toString());
                     }
@@ -516,7 +525,8 @@ public class SqlExecutor
                 }
                 return null;
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw handleError(sql, e);
         }

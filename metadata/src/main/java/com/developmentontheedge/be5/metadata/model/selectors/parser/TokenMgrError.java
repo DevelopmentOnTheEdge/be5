@@ -86,7 +86,8 @@ public class TokenMgrError extends Error
                     {
                         String s = "0000" + Integer.toString(ch, 16);
                         retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-                    } else
+                    }
+                    else
                     {
                         retval.append(ch);
                     }
@@ -122,9 +123,7 @@ public class TokenMgrError extends Error
      * You can also modify the body of this method to customize your error messages.
      * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not
      * of end-users concern, so you can return something like :
-     * <p>
      * "Internal Error : Please file a bug report .... "
-     * <p>
      * from this method for such cases in the release version of your parser.
      */
     public String getMessage()

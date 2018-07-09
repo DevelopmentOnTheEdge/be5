@@ -40,7 +40,8 @@ public class StaticPageController extends JsonApiModelController
                     "",
                     userAwareMeta.getStaticPageContent(requestSubUrl)),
                     Collections.singletonMap(SELF_LINK, url)));
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in static page: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));

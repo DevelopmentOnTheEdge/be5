@@ -163,7 +163,8 @@ public class FormGeneratorImpl implements FormGenerator
         if (execute)
         {
             result = operationService.execute(operation, (Map<String, Object>) values);
-        } else
+        }
+        else
         {
             result = operationService.generate(operation, (Map<String, Object>) values);
         }
@@ -188,7 +189,8 @@ public class FormGeneratorImpl implements FormGenerator
                     resultForFrontend(operation.getResult()),
                     errorModel
             ));
-        } else
+        }
+        else
         {
             return Either.second(resultForFrontend(result.getSecond()));
         }
@@ -199,7 +201,8 @@ public class FormGeneratorImpl implements FormGenerator
         if (result.getStatus() == OperationStatus.ERROR)
         {
             return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()), null);
-        } else
+        }
+        else
         {
             return result;
         }

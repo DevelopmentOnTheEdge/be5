@@ -75,7 +75,8 @@ public class MySqlTransformer extends GenericDbmsTransformer
             {
                 cond = new AstNullPredicate(0);
                 cond.addChild(node.child(0));
-            } else
+            }
+            else
             {
                 cond = DefaultParserContext.FUNC_EQ.node(node.child(0), node.child(i));
             }
@@ -239,7 +240,8 @@ public class MySqlTransformer extends GenericDbmsTransformer
             if (string.isEscape())
             {
                 string.setEscape(false);
-            } else
+            }
+            else
             {
                 child.setContent(child.getContent().replace("\\", "\\\\"), true);
             }

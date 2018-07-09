@@ -338,7 +338,8 @@ public class Parser implements ParserConstants
         try
         {
             jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);
-        } catch (java.io.UnsupportedEncodingException e)
+        }
+        catch (java.io.UnsupportedEncodingException e)
         {
             throw new RuntimeException(e);
         }
@@ -365,7 +366,8 @@ public class Parser implements ParserConstants
         try
         {
             jj_input_stream.ReInit(stream, encoding, 1, 1);
-        } catch (java.io.UnsupportedEncodingException e)
+        }
+        catch (java.io.UnsupportedEncodingException e)
         {
             throw new RuntimeException(e);
         }
@@ -397,7 +399,8 @@ public class Parser implements ParserConstants
         if (jj_input_stream == null)
         {
             jj_input_stream = new SimpleCharStream(stream, 1, 1);
-        } else
+        }
+        else
         {
             jj_input_stream.ReInit(stream, 1, 1);
         }

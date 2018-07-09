@@ -10,17 +10,20 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 
 
-class DpsRecordAdapterTest extends ServerBe5ProjectDBTest {
+class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
+{
     @Inject
     DatabaseModel database
 
     @Before
-    void before() {
+    void before()
+    {
         db.update("DELETE FROM testtableAdmin")
     }
 
     @Test
-    void simple() {
+    void simple()
+    {
         def id = database.testtableAdmin << [
                 name : "test",
                 value: 1
@@ -34,7 +37,8 @@ class DpsRecordAdapterTest extends ServerBe5ProjectDBTest {
     }
 
     @Test
-    void nullInLongColumn() {
+    void nullInLongColumn()
+    {
         def id = database.testtableAdmin << [
                 name : "test",
                 value: null

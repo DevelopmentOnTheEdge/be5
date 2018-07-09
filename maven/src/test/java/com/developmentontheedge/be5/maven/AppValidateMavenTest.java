@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.maven;
 import org.junit.Test;
 
 
-public class AppValidateTest extends TestUtils
+public class AppValidateMavenTest extends TestMavenUtils
 {
     @Test
     public void validate() throws Exception

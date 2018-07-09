@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.maven;
 import org.junit.Test;
 
 
-public class AppDbTest extends TestUtils
+public class AppDbMavenTest extends TestMavenUtils
 {
     @Test
     public void createDb() throws Exception

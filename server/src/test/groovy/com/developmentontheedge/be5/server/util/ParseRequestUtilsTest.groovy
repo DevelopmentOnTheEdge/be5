@@ -10,9 +10,11 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 
-class ParseRequestUtilsTest {
+class ParseRequestUtilsTest
+{
     @Test
-    void selectedRowsTest() {
+    void selectedRowsTest()
+    {
         assertTrue(Arrays.equals(["1", "2", "3"] as String[], OperationUtils.selectedRows("1,2,3")))
 
         assertTrue(Arrays.equals(["1"] as String[], OperationUtils.selectedRows("1")))
@@ -21,19 +23,22 @@ class ParseRequestUtilsTest {
     }
 
     @Test
-    void setOperationParamsTest() {
+    void setOperationParamsTest()
+    {
         assertEquals([payable: "no"], FilterUtil.getOperationParamsWithoutFilter([payable: "no"]))
     }
 
     @Test
-    void setOperationParamsTestWithSearchParams() {
+    void setOperationParamsTestWithSearchParams()
+    {
         def map = [payable: "no", (SEARCH_PARAM): "true"]
 
         assertEquals([:], FilterUtil.getOperationParamsWithoutFilter(map))
     }
 
     @Test
-    void setOperationParamsTestWithSearchParamsContain() {
+    void setOperationParamsTestWithSearchParamsContain()
+    {
         def map = [payable: "no", CODE: "123", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "payable,CODE"]
 
         assertEquals([CODE: "123", payable: "no"], FilterUtil.getOperationParamsWithoutFilter(map))

@@ -62,16 +62,19 @@ public class DatabaseFunctions
             if (arg instanceof TemplateNumberModel)
             {
                 stringArgs.add(((TemplateNumberModel) arg).getAsNumber().toString());
-            } else if (arg instanceof TemplateScalarModel)
+            }
+            else if (arg instanceof TemplateScalarModel)
             {
                 stringArgs.add(((TemplateScalarModel) arg).getAsString());
-            } else if (arg instanceof TemplateSequenceModel)
+            }
+            else if (arg instanceof TemplateSequenceModel)
             {
                 for (int i = 0; i < ((TemplateSequenceModel) arg).size(); i++)
                 {
                     convertArguments(stringArgs, ((TemplateSequenceModel) arg).get(i));
                 }
-            } else
+            }
+            else
                 throw new TemplateModelException("Invalid argument: " + arg);
         }
 
@@ -328,7 +331,8 @@ public class DatabaseFunctions
                 columnDef = YamlDeserializer.readColumnDef(context, project, columnName, columnContent);
                 if (!context.getWarnings().isEmpty())
                     throw context.getWarnings().get(0);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 throw new TemplateModelException("columnDef: " + e.getMessage(), e);
             }
@@ -375,7 +379,8 @@ public class DatabaseFunctions
                 tableDef = YamlDeserializer.readTableDef(context, project, tableName, tableDefHash);
                 if (!context.getWarnings().isEmpty())
                     throw context.getWarnings().get(0);
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 throw new TemplateModelException("tableDef: " + e.getMessage(), e);
             }

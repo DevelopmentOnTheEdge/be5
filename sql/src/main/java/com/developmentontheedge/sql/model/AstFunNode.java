@@ -63,7 +63,6 @@ public class AstFunNode extends SimpleNode
 
     /**
      * Sets the function for a node.
-     * <p>
      * It is parser responsibility to check the function validness.
      */
     public void setFunction(Function function)
@@ -79,7 +78,8 @@ public class AstFunNode extends SimpleNode
             this.nodePrefix = function.getName() + "(";
             this.childrenDelimiter = ",";
             this.nodeSuffix = ")";
-        } else
+        }
+        else
         {
             this.nodePrefix = null;
             this.nodeSuffix = null;

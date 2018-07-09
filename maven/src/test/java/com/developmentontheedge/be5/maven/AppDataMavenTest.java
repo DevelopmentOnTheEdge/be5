@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.maven;
 
 import org.junit.Test;
 
-public class AppDataTest extends TestUtils
+public class AppDataMavenTest extends TestMavenUtils
 {
     @Test
     public void data() throws Exception

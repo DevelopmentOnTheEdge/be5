@@ -25,7 +25,8 @@ public class EntitiesFactory
         try
         {
             return new Entity(name, module, type);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new RuntimeException("Can't create " + name, e);
         }

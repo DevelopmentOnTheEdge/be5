@@ -74,7 +74,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
                 String column = rs.getString(3 /*"column_name"*/);
                 curIndex.addColumn(column);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -166,7 +167,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
                     }
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
@@ -191,7 +193,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
                 }
                 result.put(tableName, type);
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }

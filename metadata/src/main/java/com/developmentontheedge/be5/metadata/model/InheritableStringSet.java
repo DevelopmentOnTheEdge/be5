@@ -70,10 +70,12 @@ public class InheritableStringSet
             if (value.startsWith("-"))
             {
                 excluded.add(value.substring(1));
-            } else if (value.startsWith("+") && !value.startsWith("+/")) // exception for inputs like "+/- Category"
+            }
+            else if (value.startsWith("+") && !value.startsWith("+/")) // exception for inputs like "+/- Category"
             {
                 included.add(value.substring(1));
-            } else
+            }
+            else
             {
                 included.add(value);
                 usePrototype = false;

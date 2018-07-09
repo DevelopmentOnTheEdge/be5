@@ -18,7 +18,8 @@ public class SourceFileSelector extends StringTagEditor
         {
             return ((BeModelElement) getBean()).getProject().getApplication().getSourceFiles()
                     .get(getDescriptor().getValue(NAMESPACE_PROPERTY).toString()).names().toArray(String[]::new);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

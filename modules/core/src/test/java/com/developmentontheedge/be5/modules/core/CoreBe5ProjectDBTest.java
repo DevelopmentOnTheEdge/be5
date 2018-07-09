@@ -12,7 +12,8 @@ import com.google.inject.util.Modules;
 
 public abstract class CoreBe5ProjectDBTest extends TestUtils
 {
-    static {
+    static
+    {
         initDb();
     }
 

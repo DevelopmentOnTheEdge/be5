@@ -61,7 +61,8 @@ public class Validator
             if (property.isCanBeNull())
             {
                 return;
-            } else
+            }
+            else
             {
                 String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
                 setError(property, msg);
@@ -89,12 +90,14 @@ public class Validator
                 checkValueInTags(property, resValues[i]);
             }
             property.setValue(resValues);
-        } else
+        }
+        else
         {
             if (property.getValue() instanceof String && property.getType() != String.class)
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
-            } else if (property.getType() != property.getValue().getClass())
+            }
+            else if (property.getType() != property.getValue().getClass())
             {
                 String msg = "Error, value must be a " + property.getType().getName();
                 setError(property, msg);
@@ -118,7 +121,8 @@ public class Validator
                 setError(property, "Value is not contained in tags: " + value.toString());
                 throw new IllegalArgumentException("Value is not contained in tags" + toStringProperty(property));
             }
-        } else if (tagsObject instanceof Object[])
+        }
+        else if (tagsObject instanceof Object[])
         {
             Object[] tags = (Object[]) tagsObject;
 
@@ -166,7 +170,8 @@ public class Validator
             if (type == Short.class) return Short.parseShort(value);
             if (type == Integer.class) return Integer.parseInt(value);
             if (type == Long.class) return Long.parseLong(value);
-        } catch (NumberFormatException e)
+        }
+        catch (NumberFormatException e)
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please specify an integer number.");
 
@@ -178,7 +183,8 @@ public class Validator
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
                         msg += " <= " + Long.MAX_VALUE;
-                    } else
+                    }
+                    else
                     {
                         msg += " >= " + Long.MIN_VALUE;
                     }
@@ -188,7 +194,8 @@ public class Validator
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
                         msg += " <= " + Integer.MAX_VALUE;
-                    } else
+                    }
+                    else
                     {
                         msg += " >= " + Integer.MIN_VALUE;
                     }
@@ -198,12 +205,14 @@ public class Validator
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
                         msg += " <= " + Short.MAX_VALUE;
-                    } else
+                    }
+                    else
                     {
                         msg += " >= " + Short.MIN_VALUE;
                     }
                 }
-            } catch (RuntimeException ignore)
+            }
+            catch (RuntimeException ignore)
             {
             }
 
@@ -215,7 +224,8 @@ public class Validator
         {
             if (type == Float.class) return Float.parseFloat(value);
             if (type == Double.class) return Double.parseDouble(value);
-        } catch (NumberFormatException e)
+        }
+        catch (NumberFormatException e)
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid number.");
             //добавить информацию о конкресном типе - ограничения type.getName();
@@ -230,7 +240,8 @@ public class Validator
         {
             if (type == Date.class) return Date.valueOf(value);
             if (type == Timestamp.class) return Timestamp.valueOf(value);
-        } catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date.");
             setError(property, msg);

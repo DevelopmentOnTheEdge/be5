@@ -48,10 +48,12 @@ public class DatabaseUtils
         if (baseURL.endsWith(";"))
         {
             return String.format("%s;user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
-        } else if (baseURL.contains("?"))
+        }
+        else if (baseURL.contains("?"))
         {
             return String.format("%s;user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
-        } else
+        }
+        else
         {
             return String.format("%s?user=%s;password=%s%s", baseURL, user, correctedPassword, additionalOptions);
         }
@@ -69,7 +71,8 @@ public class DatabaseUtils
         {
             sql.startSection("Clear all caches");
             setSystemSetting(sql, "system", "CACHES_TO_CLEAR", "metadata_*,localizedMessagesCache");
-        } catch (ExtendedSqlException e)
+        }
+        catch (ExtendedSqlException e)
         {
             // ignore
         }
@@ -81,7 +84,8 @@ public class DatabaseUtils
         {
             sql.startSection("Clear all caches");
             setSystemSetting(sql, "system", "CACHES_TO_CLEAR", "all");
-        } catch (ExtendedSqlException e)
+        }
+        catch (ExtendedSqlException e)
         {
             // ignore
         }

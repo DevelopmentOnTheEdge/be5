@@ -173,7 +173,8 @@ public class Files2
         try
         {
             return Arrays.equals(content.getBytes(StandardCharsets.UTF_8), Files.readAllBytes(path));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             return false;
         }

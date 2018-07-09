@@ -63,7 +63,8 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
         try
         {
             createFile();
-        } catch (IOException | ProjectLoadException e)
+        }
+        catch (IOException | ProjectLoadException e)
         {
             e.printStackTrace();
         }

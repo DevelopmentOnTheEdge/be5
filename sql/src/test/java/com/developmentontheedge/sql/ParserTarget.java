@@ -64,7 +64,8 @@ public class ParserTarget extends Target
                 if (childs.item(i) instanceof Element)
                     processChild((Element) childs.item(i));
             }
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             test.getResult().addError(test, t);
         }

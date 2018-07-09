@@ -32,7 +32,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class DaemonStarterImpl implements DaemonStarter
 {
-    private final static Logger log = Logger.getLogger(DaemonStarterImpl.class.getName());
+    private static final Logger log = Logger.getLogger(DaemonStarterImpl.class.getName());
 
     public static final String DAEMONS_GROUP = "Daemons";
     public static final String DAEMON_STATUS_WORKING = "working";
@@ -124,7 +124,7 @@ public class DaemonStarterImpl implements DaemonStarter
         {
             scheduler.shutdown();
         }
-        catch(SchedulerException se)
+        catch (SchedulerException se)
         {
             log.log(Level.SEVERE, "Error in scheduler", se);
         }
@@ -132,7 +132,7 @@ public class DaemonStarterImpl implements DaemonStarter
 
     private void initQuartzDaemons()
     {
-        for(Daemon daemon : meta.getDaemons())
+        for (Daemon daemon : meta.getDaemons())
         {
             reInitQuartzDaemon(daemon, false);
         }
@@ -175,69 +175,69 @@ public class DaemonStarterImpl implements DaemonStarter
     }
 
 
-    private long getPeriod( String config )
+    private long getPeriod(String config)
     {
         long mills = 0;
         long secs = 0;
         long mins = 0;
         long hours = 0;
-        String sPeriod = coreUtils.getSystemSettingInSection( config, "PERIOD" );
-        String[] timeParts = sPeriod.split( "\\." );
-        if( timeParts.length == 0 || timeParts.length > 2 )
+        String sPeriod = coreUtils.getSystemSettingInSection(config, "PERIOD");
+        String[] timeParts = sPeriod.split("\\.");
+        if (timeParts.length == 0 || timeParts.length > 2)
         {
-            throw new RuntimeException( "incorrect period parameter '" + sPeriod + "'" );
+            throw new RuntimeException("incorrect period parameter '" + sPeriod + "'");
         }
-        String[] time = timeParts[ 0 ].split( ":" );
-        if( timeParts.length == 1 )
+        String[] time = timeParts[0].split(":");
+        if (timeParts.length == 1)
         {
-            if( time.length == 1 )
+            if (time.length == 1)
             {
-                mills = Long.parseLong( time[ 0 ] );
+                mills = Long.parseLong(time[0]);
             }
         }
         else
         {
-            mills = Long.parseLong( timeParts[ 1 ] );
-            if( time.length == 1 )
+            mills = Long.parseLong(timeParts[1]);
+            if (time.length == 1)
             {
-                secs = Long.parseLong( time[ 0 ] );
+                secs = Long.parseLong(time[0]);
             }
         }
 
-        if( time.length == 2 )
+        if (time.length == 2)
         {
-            secs = Long.parseLong( time[ 1 ] );
-            mins = Long.parseLong( time[ 0 ] );
+            secs = Long.parseLong(time[1]);
+            mins = Long.parseLong(time[0]);
         }
-        else if( time.length == 3 )
+        else if (time.length == 3)
         {
-            secs = Long.parseLong( time[ 2 ] );
-            mins = Long.parseLong( time[ 1 ] );
-            hours = Long.parseLong( time[ 0 ] );
+            secs = Long.parseLong(time[2]);
+            mins = Long.parseLong(time[1]);
+            hours = Long.parseLong(time[0]);
         }
-        if( !( timeParts.length == 1 && time.length == 1 ) && ( mills > 999 || secs > 59 || mins > 59 ) )
+        if (!(timeParts.length == 1 && time.length == 1) && (mills > 999 || secs > 59 || mins > 59))
         {
-            throw new IllegalArgumentException( "incorrect period parameter '" + sPeriod + "'" );
+            throw new IllegalArgumentException("incorrect period parameter '" + sPeriod + "'");
         }
-        return mills + ( secs + ( mins + hours * 60 ) * 60 ) * 1000;
+        return mills + (secs + (mins + hours * 60) * 60) * 1000;
     }
 
-    private int getOffset( String config )
+    private int getOffset(String config)
     {
         try
         {
-            String sOffset = coreUtils.getSystemSettingInSection( config, "START_OFFSET" );
-            return Integer.parseInt( sOffset );
+            String sOffset = coreUtils.getSystemSettingInSection(config, "START_OFFSET");
+            return Integer.parseInt(sOffset);
         }
-        catch( Exception e )
+        catch (Exception e)
         {
             return 0;
         }
     }
 
-    private String getCronMask( String config )
+    private String getCronMask(String config)
     {
-        return coreUtils.getSystemSettingInSection( config, "CRON_MASK" );
+        return coreUtils.getSystemSettingInSection(config, "CRON_MASK");
     }
 
 //    public static void interruptQuartzDaemon( String daemonId, UserInfo ui ) throws Exception
@@ -286,7 +286,7 @@ public class DaemonStarterImpl implements DaemonStarter
         String name = daemon.getName();
 
         String config = daemon.getConfigSection();
-        if( Utils.isEmpty( config ) )
+        if (Utils.isEmpty(config))
         {
             config = name;
         }
@@ -295,7 +295,7 @@ public class DaemonStarterImpl implements DaemonStarter
         Class<? extends Process> cls;
         try
         {
-            cls = (Class<? extends Process>)Class.forName(daemon.getClassName());
+            cls = (Class<? extends Process>) Class.forName(daemon.getClassName());
         }
         catch (ClassNotFoundException e)
         {
@@ -306,17 +306,17 @@ public class DaemonStarterImpl implements DaemonStarter
                 .withIdentity(name, DAEMONS_GROUP)
                 .build();
 
-        fillJobDataMap( job, name, config, Collections.emptyMap() );
+        fillJobDataMap(job, name, config, Collections.emptyMap());
 
         try
         {
-            scheduler.deleteJob( job.getKey());
-            if( isEnabled( config ) && ( !"manual".equals( type ) || initManualDaemon ) )
+            scheduler.deleteJob(job.getKey());
+            if (isEnabled(config) && (!"manual".equals(type) || initManualDaemon))
             {
-                scheduler.scheduleJob( job, getTrigger(name, config, type) );
+                scheduler.scheduleJob(job, getTrigger(name, config, type));
             }
         }
-        catch(SchedulerException se)
+        catch (SchedulerException se)
         {
             log.log(Level.SEVERE, "Error in delete or add job", se);
             throw Be5Exception.internal(se);
@@ -325,21 +325,21 @@ public class DaemonStarterImpl implements DaemonStarter
 
     private Trigger getTrigger(String name, String config, String type)
     {
-        if( "periodic".equals( type ) )
+        if ("periodic".equals(type))
         {
             return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
-                    .startAt(new Date( System.currentTimeMillis() + getOffset( config )))
+                    .startAt(new Date(System.currentTimeMillis() + getOffset(config)))
                     .withSchedule(simpleSchedule()
                             .withIntervalInMilliseconds(getPeriod(config))
                             .repeatForever())
                     .build();
         }
-        else if( "manual".equals( type ) )
+        else if ("manual".equals(type))
         {
             return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
-                    .startAt(new Date( System.currentTimeMillis() + getOffset( config )))
+                    .startAt(new Date(System.currentTimeMillis() + getOffset(config)))
                     .withSchedule(simpleSchedule()
                             .withIntervalInMilliseconds(PERIOD_FOREVER)
                             .withRepeatCount(0))
@@ -349,7 +349,7 @@ public class DaemonStarterImpl implements DaemonStarter
         {
             return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
-                    .withSchedule(cronSchedule(getCronMask( config )))
+                    .withSchedule(cronSchedule(getCronMask(config)))
                     .build();
         }
     }
@@ -410,7 +410,7 @@ public class DaemonStarterImpl implements DaemonStarter
     @Override
     public boolean isEnabled(String section)
     {
-        return "enabled".equals( coreUtils.getSystemSettingInSection( section, "STATUS", "disabled" ) );
+        return "enabled".equals(coreUtils.getSystemSettingInSection(section, "STATUS", "disabled"));
     }
 
     /**
@@ -421,14 +421,14 @@ public class DaemonStarterImpl implements DaemonStarter
      * @param name
      * @param config
      */
-    private static void fillJobDataMap( JobDetail job, String name, String config, Map<? extends String, ?> extra )
+    private static void fillJobDataMap(JobDetail job, String name, String config, Map<? extends String, ?> extra)
     {
         JobDataMap map = job.getJobDataMap();
 
-        map.put( JOB_PARAM_NAME, name );
-        map.put( JOB_PARAM_CONFIG_SECTION, config );
+        map.put(JOB_PARAM_NAME, name);
+        map.put(JOB_PARAM_CONFIG_SECTION, config);
 
-        map.putAll( extra );
+        map.putAll(extra);
     }
 
 }

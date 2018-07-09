@@ -70,7 +70,8 @@ public class AddRemoveCategory extends GOperationSupport
                             "WHERE e." + pk + " IN " + Utils.inClause(context.getRecords().length) +
                             "  AND c.ID     IN " + Utils.inClause(categories.size()),
                     ObjectArrays.concat(context.getRecords(), categories.toArray(), Object.class));
-        } else
+        }
+        else
         {
             List<Long> categories = categoriesHelper.getChildCategories(categoryID);
 

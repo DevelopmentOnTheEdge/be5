@@ -19,7 +19,8 @@ public class OperationUtils
             if ("".equals(entry.getValue()))
             {
                 map.put(entry.getKey(), null);
-            } else
+            }
+            else
             {
                 map.put(entry.getKey(), entry.getValue());
             }

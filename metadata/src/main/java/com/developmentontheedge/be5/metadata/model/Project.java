@@ -184,7 +184,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                 return;
             }
             setDatabaseSystem(connectionProfile.getRdbms());
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             setDatabaseSystem(null);
         }
@@ -356,16 +357,20 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (parent instanceof PageCustomization)
             {
                 context.put("customization", parent);
-            } else if (parent instanceof Query)
+            }
+            else if (parent instanceof Query)
             {
                 context.put("query", parent);
-            } else if (parent instanceof Operation)
+            }
+            else if (parent instanceof Operation)
             {
                 context.put("operation", parent);
-            } else if (parent instanceof Entity)
+            }
+            else if (parent instanceof Entity)
             {
                 context.put("entity", parent);
-            } else if (parent instanceof Module)
+            }
+            else if (parent instanceof Module)
             {
                 context.put("module", parent);
             }
@@ -400,7 +405,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                 freemarkerConfiguration.setSharedVariable("currentDate", macroProcessorStrategy.currentDate());
                 freemarkerConfiguration.setSharedVariable("fromFakeTable", macroProcessorStrategy.fromFakeTable());
             }
-        } catch (TemplateModelException e)
+        }
+        catch (TemplateModelException e)
         {
             throw new AssertionError("Unexpected exception in reconfigureFreemarker", e);
         }
@@ -420,13 +426,16 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (besql)
                 enterSQL();
             return new ParseResult(besql ? translateSQL(merged) : merged);
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             return new ParseResult(e);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             return new ParseResult(new ProjectElementException(getCompletePath(), "source", e));
-        } finally
+        }
+        finally
         {
             beSQL = 0;
             sqlMacros.clear();
@@ -459,7 +468,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                 return null;
             }
             return value.toString();
-        } catch (IOException | TemplateException e)
+        }
+        catch (IOException | TemplateException e)
         {
             throw new RuntimeException("Unexpected exception in getVariableValue: " + e);
         }
@@ -492,7 +502,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                 }
             }
             return result;
-        } catch (IOException | TemplateException e)
+        }
+        catch (IOException | TemplateException e)
         {
             throw new RuntimeException("Unexpected exception in getVariableNames: " + e);
         }
@@ -611,7 +622,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
                 {
                     varName = value.substring(0, pos);
                     varValue = value.substring(pos + 1);
-                } else
+                }
+                else
                 {
                     varName = value;
                     varValue = null;
@@ -694,7 +706,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (de instanceof BeModelCollection)
             {
                 dump((BeModelCollection<?>) de, msg, newPrefix, shift);
-            } else
+            }
+            else
             {
                 msg.append(newPrefix + de.getName() + nl);
             }

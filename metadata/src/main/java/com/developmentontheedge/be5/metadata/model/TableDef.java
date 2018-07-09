@@ -403,7 +403,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                 {
                     sb.append(typeManager.getAlterColumnStatements(column, columnWithDefault));
                 }
-            } else
+            }
+            else
             {
                 if (!dangerousOnly)
                 {
@@ -515,7 +516,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         try
         {
             startValue = getStartId();
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Unable to calculate start value"));
         }
@@ -524,7 +526,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             try
             {
                 Long.parseLong(startValue);
-            } catch (NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
                 errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Invalid start id value (must be number): "
                         + startValue));
@@ -591,7 +594,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             if (!ddl.equals(otherDdl) && !getDiffDdl(other, null).isEmpty())
                 return debugEquals("ddl: old = " + otherDdl.replaceAll("\n", System.lineSeparator()));
-        } catch (ExtendedSqlException e)
+        }
+        catch (ExtendedSqlException e)
         {
             throw new InternalError("Unexpected " + e);
         }

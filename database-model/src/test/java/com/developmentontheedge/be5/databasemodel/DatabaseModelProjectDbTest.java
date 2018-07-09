@@ -20,7 +20,8 @@ public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
             Modules.override(new BaseModule()).with(new DatabaseModelDbTestModule())
     );
 
-    static {
+    static
+    {
         initDb();
     }
 

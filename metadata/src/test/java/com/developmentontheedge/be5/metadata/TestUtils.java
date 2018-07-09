@@ -58,7 +58,8 @@ public class TestUtils
                         break;
                     }
                     Assert.fail(cleanMessage + "Different line count");
-                } else
+                }
+                else
                 {
                     if (b == null)
                     {

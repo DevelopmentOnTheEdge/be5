@@ -264,7 +264,8 @@ public class MetaImpl implements Meta
                 return new Locale(languages.get(0));
             else
                 return Locale.US;
-        } else
+        }
+        else
         {
             return locale;
         }
@@ -296,7 +297,8 @@ public class MetaImpl implements Meta
             if (getProject().findOperation(entityName, name) != null)
             {
                 throw Be5Exception.operationNotAssignedToQuery(entityName, queryName, name);
-            } else
+            }
+            else
             {
                 throw Be5Exception.unknownOperation(entityName, name);
             }
@@ -355,7 +357,8 @@ public class MetaImpl implements Meta
             {
                 return query.getQueryCompiled().validate().trim();
             }
-        } catch (ProjectElementException e)
+        }
+        catch (ProjectElementException e)
         {
             throw Be5Exception.internalInQuery(query, e);
         }
@@ -428,7 +431,8 @@ public class MetaImpl implements Meta
             return StreamSupport.stream(columns.spliterator(), false).collect(
                     Utils.toLinkedMap(ColumnDef::getName, Function.identity())
             );
-        } else
+        }
+        else
         {
             return Collections.emptyMap();
         }

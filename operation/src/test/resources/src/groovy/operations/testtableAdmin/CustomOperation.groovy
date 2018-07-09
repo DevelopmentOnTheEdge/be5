@@ -4,11 +4,13 @@ import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport
 
-class CustomOperation extends BaseOperationSupport implements Operation {
+class CustomOperation extends BaseOperationSupport implements Operation
+{
     GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport()
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         //dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], context.getOperationParams(), presetValues)
         dps.add("name")
         dps.add("value")
@@ -24,7 +26,8 @@ class CustomOperation extends BaseOperationSupport implements Operation {
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
 
     }
 

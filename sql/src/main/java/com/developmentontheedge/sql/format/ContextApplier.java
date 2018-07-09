@@ -133,7 +133,8 @@ public class ContextApplier
             if (child instanceof AstBeSqlVar)
             {
                 valueSetter.accept((AstBeSqlVar) child);
-            } else if (level == 1 || !(child instanceof AstBeSqlSubQuery))
+            }
+            else if (level == 1 || !(child instanceof AstBeSqlSubQuery))
             {
                 applyFirstLevelVars(level + 1, child, valueSetter);
             }
@@ -150,7 +151,8 @@ public class ContextApplier
         if (varNode.jjtGetParent() instanceof AstBeSqlSubQuery && value != null && !"".equals(value.trim()))
         {
             constant = SqlQuery.parse(value).getQuery();
-        } else
+        }
+        else
         {
             if (value == null)
             {
@@ -192,7 +194,8 @@ public class ContextApplier
             {
                 applyConditionChain((AstBeConditionChain) child);
                 i--;
-            } else if (child instanceof AstBeSql)
+            }
+            else if (child instanceof AstBeSql)
                 applySqlTag((AstBeSql) child);
 
             else if (child instanceof AstBeDictionary)
@@ -217,7 +220,8 @@ public class ContextApplier
         {
             beautifiers = Arrays.asList("com.beanexplorer.web.html.SqlInClauseQuotedBeautifier",
                     "com.beanexplorer.web.html.SqlInClauseBeautifier");
-        } else
+        }
+        else
         {
             List<String> inValueAttr = Arrays.asList("entity", "queryName", "filterKeyProperty", "filterKey", "filterValProperty", "filterVal", "outColumns");
             for (String attr : inValueAttr)
@@ -238,7 +242,8 @@ public class ContextApplier
         if (chain.jjtGetNumChildren() == 0)
         {
             chain.remove();
-        } else
+        }
+        else
         {
             if (chain.jjtGetNumChildren() == 0)
                 throw new InternalError("Unexpected number of chldren inside AstBeConditionChain: " + chain.jjtGetNumChildren() + "\nNode: " + chain.format());
@@ -330,14 +335,16 @@ public class ContextApplier
                 if (child.getDefault() != null)
                 {
                     value = SqlTypeUtils.parseValue(child.getDefault(), child.getType());
-                } else
+                }
+                else
                 {
                     value = "";
                 }
             }
 
             child.replaceWith(applySessionParameters(child, value));
-        } else
+        }
+        else
         {
             if (child.jjtGetParent() instanceof AstInValueList)
             {
@@ -351,7 +358,8 @@ public class ContextApplier
                     {
                         objects[i] = applySessionParameters(child, list.get(i));
                     }
-                } else
+                }
+                else
                 {
                     objects = (Arrays.stream((Object[]) value))
                             .map(val -> applySessionParameters(child, val))
@@ -383,12 +391,14 @@ public class ContextApplier
         if (node.jjtGetParent() instanceof AstStringConstant)
         {
             return new AstStringPart(value.toString());
-        } else
+        }
+        else
         {
             if (SqlTypeUtils.isNumber(value.getClass()))
             {
                 return AstNumericConstant.of((Number) value);
-            } else
+            }
+            else
             {
                 return new AstStringConstant(value.toString());
             }
@@ -404,7 +414,8 @@ public class ContextApplier
             AstInValueList list = new AstInValueList(SqlParserTreeConstants.JJTINVALUELIST);
             context.roles().map(AstStringConstant::new).forEach(list::addChild);
             replacement = list;
-        } else
+        }
+        else
         {
             String rawResult;
             switch (ph)
@@ -457,7 +468,8 @@ public class ContextApplier
             }
 
             replacement = applyParameters(paramNode, value, tableRefAddend);
-        } else
+        }
+        else
         {
             if (newTree instanceof AstInValueList)
             {
@@ -488,7 +500,8 @@ public class ContextApplier
             AstTableRef tableRef = (AstTableRef) newTree;
             tableRef.setTable(tableRef.getTable() + replacement.format());
             tableRef.removeChild(i);
-        } else
+        }
+        else
         {
             newTree.jjtAddChild(replacement, i);
         }
@@ -533,28 +546,34 @@ public class ContextApplier
         if (paramNode.jjtGetParent() instanceof AstStringConstant)
         {
             constant = new AstStringPart(value);
-        } else if (type != null)
+        }
+        else if (type != null)
         {
             if (SqlTypeUtils.isNumber(type))
             {
                 if (!value.equals(""))
                 {
                     constant = AstNumericConstant.of((Number) SqlTypeUtils.parseValue(value, type));
-                } else
+                }
+                else
                 {
                     constant = new AstIdentifierConstant(value);
                 }
-            } else
+            }
+            else
             {
                 constant = new AstStringConstant(value);
             }
-        } else if (!safeStr)
+        }
+        else if (!safeStr)
         {
             constant = new AstIdentifierConstant(value);
-        } else if (paramNode.jjtGetParent() instanceof AstOrderingElement)
+        }
+        else if (paramNode.jjtGetParent() instanceof AstOrderingElement)
         {
             constant = new AstIdentifierConstant(value, false);
-        } else
+        }
+        else
         {
             constant = new AstStringConstant(value);
         }
@@ -577,7 +596,8 @@ public class ContextApplier
                     i--;
                 }
                 break;
-            } else if (child instanceof AstBeThen && !correct)
+            }
+            else if (child instanceof AstBeThen && !correct)
             {
                 newTree.removeChild(condNode);
                 i--;
@@ -597,7 +617,8 @@ public class ContextApplier
                 newTree.removeChild(condNode);
                 i--;
             }
-        } else if (correct)
+        }
+        else if (correct)
         {
             newTree.removeChild(condNode);
             i--;
@@ -617,7 +638,8 @@ public class ContextApplier
         {
             String value = node.getValue();
             return value != null ? context.getSessionVariable(session).equals(value) : context.getSessionVariable(session) != null;
-        } else
+        }
+        else
         {
             String parameter = node.getKey();
             String value = node.getValue();

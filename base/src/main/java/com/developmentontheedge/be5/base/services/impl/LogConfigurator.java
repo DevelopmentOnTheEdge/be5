@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 public class LogConfigurator
 {
-    private final static Logger log = Logger.getLogger(LogConfigurator.class.getName());
-    private final static String path = "/logging.properties";
+    private static final Logger log = Logger.getLogger(LogConfigurator.class.getName());
+    private static final String path = "/logging.properties";
 
     public LogConfigurator()
     {
@@ -21,11 +21,13 @@ public class LogConfigurator
             if (resourceAsStream == null)
             {
                 log.info("File not found: " + path + ", log not configured.");
-            } else
+            }
+            else
             {
                 LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw Be5Exception.internal(e);
         }

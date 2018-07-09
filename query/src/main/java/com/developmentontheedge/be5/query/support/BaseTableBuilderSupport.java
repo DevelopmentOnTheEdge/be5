@@ -56,7 +56,8 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
             if (currentCell instanceof CellModel)
             {
                 columns.add((CellModel) currentCell);
-            } else
+            }
+            else
             {
                 columns.add(new CellModel(currentCell, new HashMap<>()));
             }

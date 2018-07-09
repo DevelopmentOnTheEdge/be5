@@ -41,7 +41,8 @@ public class MassChange extends BeModelElementSupport
         try
         {
             rule = UnionSelectorRule.create(name);
-        } catch (ParseException | TokenMgrError e)
+        }
+        catch (ParseException | TokenMgrError e)
         {
             ex = e;
         }
@@ -97,7 +98,8 @@ public class MassChange extends BeModelElementSupport
                 DataElementUtils.saveQuiet(newQuery);
                 newQuery.merge(oldQuery, false, true);
                 newQuery.setOriginModuleName(oldQuery.getOriginModuleName());
-            } else if (element instanceof Operation)
+            }
+            else if (element instanceof Operation)
             {
                 Operation oldOperation = (Operation) element;
                 Map<String, Object> realData = data;
@@ -111,7 +113,8 @@ public class MassChange extends BeModelElementSupport
                 DataElementUtils.saveQuiet(newOperation);
                 newOperation.merge(oldOperation, false, true);
                 newOperation.setOriginModuleName(oldOperation.getOriginModuleName());
-            } else if (element instanceof Entity)
+            }
+            else if (element instanceof Entity)
             {
                 Entity oldEntity = (Entity) element;
                 Map<String, Object> realData = data;
@@ -128,7 +131,8 @@ public class MassChange extends BeModelElementSupport
                     o.setOriginModuleName(oldEntity.getModule().getName());
                 DataElementUtils.saveQuiet(newEntity);
                 newEntity.merge(oldEntity, false, true);
-            } else
+            }
+            else
             {
                 loadContext.addWarning(new ReadException(element, null, "Mass change is not supported for type " + element.getClass().getSimpleName()));
                 continue;

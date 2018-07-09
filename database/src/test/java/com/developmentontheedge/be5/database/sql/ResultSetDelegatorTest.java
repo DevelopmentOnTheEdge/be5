@@ -103,7 +103,8 @@ public class ResultSetDelegatorTest
                     try
                     {
                         wrapperMethod.invoke(wrapper, arguments);
-                    } catch (IllegalArgumentException e)
+                    }
+                    catch (IllegalArgumentException e)
                     {
                         e.printStackTrace();
                     }

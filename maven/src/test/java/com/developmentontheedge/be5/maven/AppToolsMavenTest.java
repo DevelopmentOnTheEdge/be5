@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 
-public class AppToolsTest extends TestUtils
+public class AppToolsMavenTest extends TestMavenUtils
 {
     private AppToolsMojo mojo;
 
@@ -37,7 +37,8 @@ public class AppToolsTest extends TestUtils
         try
         {
             return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             throw new RuntimeException(e);
         }

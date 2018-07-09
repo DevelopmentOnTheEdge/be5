@@ -22,11 +22,13 @@ public class ColumnFunction
         {
             transform = TRANSFORM_UPPER;
             columnName = columnName.substring("upper(".length(), columnName.length() - ")".length());
-        } else if (columnName.startsWith("lower(") && columnName.endsWith(")"))
+        }
+        else if (columnName.startsWith("lower(") && columnName.endsWith(")"))
         {
             transform = TRANSFORM_LOWER;
             columnName = columnName.substring("lower(".length(), columnName.length() - ")".length());
-        } else if (columnName.startsWith("generic(") && columnName.endsWith(")"))
+        }
+        else if (columnName.startsWith("generic(") && columnName.endsWith(")"))
         {
             transform = TRANSFORM_GENERIC;
             columnName = columnName.substring("generic(".length(), columnName.length() - ")".length());
@@ -62,10 +64,12 @@ public class ColumnFunction
         if (ColumnFunction.TRANSFORM_GENERIC.equals(getTransform()))
         {
             definition = databaseSystem.getMacroProcessorStrategy().genericRefLowLevel(entity, definition);
-        } else if (ColumnFunction.TRANSFORM_UPPER.equals(getTransform()))
+        }
+        else if (ColumnFunction.TRANSFORM_UPPER.equals(getTransform()))
         {
             definition = databaseSystem.getMacroProcessorStrategy().upper(definition);
-        } else if (ColumnFunction.TRANSFORM_LOWER.equals(getTransform()))
+        }
+        else if (ColumnFunction.TRANSFORM_LOWER.equals(getTransform()))
         {
             definition = databaseSystem.getMacroProcessorStrategy().lower(definition);
         }

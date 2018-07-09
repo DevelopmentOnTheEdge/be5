@@ -116,7 +116,8 @@ public class DefaultTypeManager implements DbmsTypeManager
                     sb.append(' ').append(getGeneratedPrefix()).append(' ')
                             .append(function.getDefinition(column.getProject().getDatabaseSystem(), column.getEntity().getName()));
                 }
-            } else
+            }
+            else
             {
                 sb.append(' ').append("DEFAULT ").append(defaultValue);
             }
@@ -230,7 +231,8 @@ public class DefaultTypeManager implements DbmsTypeManager
             if (Strings2.isNullOrEmpty(column.getDefaultValue()))
             {
                 sb.append(prefix).append("DROP DEFAULT;");
-            } else
+            }
+            else
             {
                 sb.append(prefix).append("SET DEFAULT ").append(column.getDefaultValue()).append(";");
             }

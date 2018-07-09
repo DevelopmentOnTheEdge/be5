@@ -39,7 +39,6 @@ public class MultiSqlParser
 
     /**
      * Normalizes multiple SQL statements.
-     * <p>
      * After normalization the following changes will be applied:
      * - Each statement will start from the new line and end at the end of the line
      * - Empty statements removed

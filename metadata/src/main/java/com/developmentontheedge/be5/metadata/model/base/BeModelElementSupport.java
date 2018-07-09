@@ -348,7 +348,8 @@ public abstract class BeModelElementSupport implements BeModelElement
             {
                 internalCustomizeProperty(propertyName);
             }
-        } finally
+        }
+        finally
         {
             this.customizing = false;
         }
@@ -366,7 +367,8 @@ public abstract class BeModelElementSupport implements BeModelElement
         if (inherit)
         {
             this.prototype = other;
-        } else
+        }
+        else
         {
             this.prototype = null;
             Set<String> customizableProperties = new HashSet<>(getCustomizableProperties());
@@ -385,7 +387,8 @@ public abstract class BeModelElementSupport implements BeModelElement
                             property.setValue(value);
                         }
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new RuntimeException(e);
                 }
@@ -407,7 +410,8 @@ public abstract class BeModelElementSupport implements BeModelElement
             clone = (BeModelElementSupport) super.clone();
             clone.name = name;
             clone.origin = origin;
-        } catch (CloneNotSupportedException e)
+        }
+        catch (CloneNotSupportedException e)
         {
             throw new AssertionError("Unexpected exception", e);
         }

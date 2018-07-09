@@ -16,7 +16,8 @@ public class LayoutUtils
                     new HashMap<String, Object>()
                     {
                     }.getClass().getGenericSuperclass());
-        } else
+        }
+        else
         {
             return new HashMap<>();
         }

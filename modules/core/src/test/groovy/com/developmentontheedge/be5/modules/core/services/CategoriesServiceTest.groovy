@@ -10,12 +10,14 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class CategoriesServiceTest extends CoreBe5ProjectDBTest {
+class CategoriesServiceTest extends CoreBe5ProjectDBTest
+{
     @Inject
     CategoriesService categoriesService
 
     @Before
-    void setUp() {
+    void setUp()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
 
         db.update("DELETE FROM categories")
@@ -27,13 +29,15 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest {
     }
 
     @Test
-    void empty() {
+    void empty()
+    {
         def docTypes = categoriesService.getCategoriesForest("docTypes", false)
         assertEquals(0, docTypes.size())
     }
 
     @Test
-    void test() {
+    void test()
+    {
         database.categories.add([
                 entity: "docTypes",
                 name  : "Root"
@@ -45,7 +49,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest {
     }
 
     @Test
-    void snapshot() {
+    void snapshot()
+    {
         def rootID = database.categories.add([
                 entity: "docTypes",
                 name  : "Root"
@@ -79,7 +84,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest {
     }
 
     @Test
-    void testhideEmpty() {
+    void testhideEmpty()
+    {
         def rootID = database.categories.add([
                 entity: "docTypes",
                 name  : "Root"
@@ -105,7 +111,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest {
     }
 
     @Test
-    void getCategoryNavigationTest() {
+    void getCategoryNavigationTest()
+    {
         Long rootID = database.categories.add([
                 entity: "docTypes",
                 name  : "Root"

@@ -39,7 +39,8 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
                 throw new RuntimeException("test rollback");
             });
             Assert.fail("Should have thrown Be5Exception");
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             Assert.assertTrue(true);
             assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));
@@ -61,7 +62,8 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
                 throw new RuntimeException("test rollback");
             });
             Assert.fail("Should have thrown Be5Exception");
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             Assert.assertTrue(true);
             assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));
@@ -82,7 +84,8 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
                 });
             });
             Assert.fail("Should have thrown Be5Exception");
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             Assert.assertTrue(true);
             assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));

@@ -51,10 +51,12 @@ public class DataSourceServiceImpl implements DataSourceService
             type = Rdbms.getRdbms(connectUrl);
 
             configInfo = "xml context : " + "'jdbc/" + project.getAppName() + "'";
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             throw Be5Exception.internal("When fetching datasource", e);
-        } catch (NamingException ignore)
+        }
+        catch (NamingException ignore)
         {
             BeConnectionProfile profile = project.getConnectionProfile();
             if (profile == null)
@@ -77,14 +79,16 @@ public class DataSourceServiceImpl implements DataSourceService
 
             dataSource = bds;
             configInfo = "connection profile form 'profile.local' - " + profile.getName();
-        } finally
+        }
+        finally
         {
             if (conn != null)
             {
                 try
                 {
                     conn.close();
-                } catch (SQLException e)
+                }
+                catch (SQLException e)
                 {
                     throw Be5Exception.internal("When close conn after fetching datasource", e);
                 }

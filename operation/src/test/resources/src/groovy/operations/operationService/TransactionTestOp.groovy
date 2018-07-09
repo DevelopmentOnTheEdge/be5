@@ -4,14 +4,17 @@ import com.developmentontheedge.be5.operation.model.TransactionalOperation
 import com.developmentontheedge.be5.operation.support.TestOperationSupport
 
 
-class TransactionTestOp extends TestOperationSupport implements TransactionalOperation {
+class TransactionTestOp extends TestOperationSupport implements TransactionalOperation
+{
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception {
+    Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
         return null
     }
 
     @Override
-    void invoke(Object parameters) throws Exception {
+    void invoke(Object parameters) throws Exception
+    {
         database.testtableAdmin << [name: "test", value: 1]
 
 

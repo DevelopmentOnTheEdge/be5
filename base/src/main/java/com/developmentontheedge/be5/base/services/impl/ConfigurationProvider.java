@@ -33,7 +33,8 @@ public class ConfigurationProvider
             @SuppressWarnings("unchecked")
             Configurable<Object> configurable = (Configurable<Object>) object;
             return getConfiguration(object.getClass(), configurable.getConfigurationClass());
-        } else
+        }
+        else
         {
             throw Be5Exception.internal("Class must implement Configurable: " + object.getClass().getCanonicalName());
         }
@@ -95,7 +96,8 @@ public class ConfigurationProvider
             }
 
             return configurations;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }
@@ -106,7 +108,8 @@ public class ConfigurationProvider
         try
         {
             return Class.forName(path);
-        } catch (ClassNotFoundException e)
+        }
+        catch (ClassNotFoundException e)
         {
             throw new RuntimeException("ClassNotFoundException by path='" + path + "' in " + CONFIG_FILE, e);
         }

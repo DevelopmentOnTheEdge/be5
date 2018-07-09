@@ -41,7 +41,8 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
             try
             {
                 setSource(ProjectFileSystem.read(file));
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 throw new RuntimeException(e);
             }

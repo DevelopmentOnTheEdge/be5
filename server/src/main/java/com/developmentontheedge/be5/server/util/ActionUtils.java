@@ -13,23 +13,27 @@ import java.util.regex.Pattern;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ALL_RECORDS_VIEW;
 
 
-final public class ActionUtils
+public final class ActionUtils
 {
     public static Action toAction(Query query)
     {
         if (isExternalRef(query))
         {
             return Action.open(query.getQuery());
-        } else if (isViewBlob(query))
+        }
+        else if (isViewBlob(query))
         {
             return Action.open(new HashUrl("api", "download", query.getEntity().getName(), query.getName()).toString());
-        } else if (isAction(query))
+        }
+        else if (isAction(query))
         {
             return Action.call(query.getQuery());
-        } else if (isStaticPage(query))
+        }
+        else if (isStaticPage(query))
         {
             return Action.call(new HashUrl("static", query.getQuery()));
-        } else
+        }
+        else
         {
             if (query.getType() == QueryType.STATIC)
             {
@@ -51,18 +55,22 @@ final public class ActionUtils
                             String[] paramsVal = parts[1].replace("?", "").split("&");
 
                             params = getParams(paramsVal);
-                        } else
+                        }
+                        else
                         {
                             params = new HashMap<>();
                         }
                         entityName = parts[0];
-                    } else if (query.getQuery().startsWith("q?"))
+                    }
+                    else if (query.getQuery().startsWith("q?"))
                     {
                         params = getParams(query.getQuery().replaceFirst("q\\?", "").split("&"));
-                    } else if (query.getQuery().startsWith("o?"))
+                    }
+                    else if (query.getQuery().startsWith("o?"))
                     {
                         params = getParams(query.getQuery().replaceFirst("o\\?", "").split("&"));
-                    } else
+                    }
+                    else
                     {
                         params = new HashMap<>();
                     }
@@ -79,7 +87,8 @@ final public class ActionUtils
                     if (params.get("_on_") != null)
                     {
                         hashUrl = new HashUrl("form", entityName, qn, params.remove("_on_"));
-                    } else
+                    }
+                    else
                     {
                         hashUrl = new HashUrl("table", entityName, qn);
                     }

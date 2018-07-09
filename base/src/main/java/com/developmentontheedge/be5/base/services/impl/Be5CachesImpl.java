@@ -79,7 +79,8 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
         if (config != null)
         {
             return config.cacheSizes.getOrDefault(name, config.cacheSizes.getOrDefault("defaultSize", 1000));
-        } else
+        }
+        else
         {
             return 1000;
         }

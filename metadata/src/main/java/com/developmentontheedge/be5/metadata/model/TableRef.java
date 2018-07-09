@@ -183,19 +183,22 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
         {
             if (other.getColumnsFrom() != null)
                 return debugEquals("columnsFrom");
-        } else if (!columnsFrom.equalsIgnoreCase(other.getColumnsFrom()))
+        }
+        else if (!columnsFrom.equalsIgnoreCase(other.getColumnsFrom()))
             return debugEquals("columnsFrom");
         if (getColumnsTo() == null)
         {
             if (other.getColumnsTo() != null)
                 return debugEquals("columnsTo");
-        } else if (!getColumnsTo().equalsIgnoreCase(other.getColumnsTo()))
+        }
+        else if (!getColumnsTo().equalsIgnoreCase(other.getColumnsTo()))
             return debugEquals("columnsTo");
         if (tableTo == null)
         {
             if (other.getTableTo() != null)
                 return debugEquals("tableTo");
-        } else if (!tableTo.equalsIgnoreCase(other.getTableTo()))
+        }
+        else if (!tableTo.equalsIgnoreCase(other.getTableTo()))
             return debugEquals("tableTo");
         if (tableTo != null)
         {
@@ -203,7 +206,8 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
             {
                 if (other.getViewName() != null)
                     return debugEquals("viewName");
-            } else if (!viewName.equals(other.getViewName()))
+            }
+            else if (!viewName.equals(other.getViewName()))
                 return debugEquals("viewName");
         }
         if (tableTo == null && !Arrays.equals(permittedTables, other.getPermittedTables()))

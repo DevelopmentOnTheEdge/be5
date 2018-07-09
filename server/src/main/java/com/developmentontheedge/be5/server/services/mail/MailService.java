@@ -41,7 +41,6 @@ public class MailService
 
     /**
      * Send email with parameter type="text/plain".
-     * <p>
      * <br/><br/>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
@@ -60,7 +59,6 @@ public class MailService
 
     /**
      * Send email with parameter type="text/html".
-     * <p>
      * <br/><br/>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
@@ -308,7 +306,8 @@ public class MailService
         if (!Utils.isEmpty(fromName))
         {
             message.setFrom(new InternetAddress(fromAddr, fromName, "UTF-8"));
-        } else
+        }
+        else
         {
             message.setFrom(new InternetAddress(fromAddr));
         }

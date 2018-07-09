@@ -590,10 +590,12 @@ public class DateUtils
             if ("YYYY".equalsIgnoreCase(formatParts[i]))
             {
                 year = Integer.parseInt(parts[i]);
-            } else if ("MM".equalsIgnoreCase(formatParts[i]))
+            }
+            else if ("MM".equalsIgnoreCase(formatParts[i]))
             {
                 month = Integer.parseInt(parts[i]);
-            } else if ("DD".equalsIgnoreCase(formatParts[i]))
+            }
+            else if ("DD".equalsIgnoreCase(formatParts[i]))
             {
                 day = Integer.parseInt(parts[i]);
             }
@@ -607,10 +609,12 @@ public class DateUtils
         if (null != activeTo1 && null != activeTo2 && (!activeFrom2.before(activeTo1) || !activeTo2.after(activeFrom1)))
         {
             return false;
-        } else if (null != activeTo1 && null == activeTo2 && (activeFrom2.after(activeTo1)))
+        }
+        else if (null != activeTo1 && null == activeTo2 && (activeFrom2.after(activeTo1)))
         {
             return false;
-        } else if (null == activeTo1 && null != activeTo2 && (activeFrom1.after(activeTo2)))
+        }
+        else if (null == activeTo1 && null != activeTo2 && (activeFrom1.after(activeTo2)))
         {
             return false;
         }

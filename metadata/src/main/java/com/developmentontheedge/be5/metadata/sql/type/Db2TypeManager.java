@@ -155,7 +155,8 @@ public class Db2TypeManager extends DefaultTypeManager
         try
         {
             startId = Long.parseLong(column.getTable().getStartId());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Ignore
         }

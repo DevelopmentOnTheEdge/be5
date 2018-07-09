@@ -73,7 +73,8 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
         if (userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
         {
             setResult(OperationResult.finished(out.toString()));
-        } else
+        }
+        else
         {
             setResult(OperationResult.finished());
         }

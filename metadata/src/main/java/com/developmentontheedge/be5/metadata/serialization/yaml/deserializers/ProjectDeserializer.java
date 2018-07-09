@@ -171,7 +171,8 @@ public class ProjectDeserializer extends FileDeserializer
             try
             {
                 modules.add(readModuleReference(name, asMap(serializedModule.getValue()), project));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 loadContext.addWarning(new ReadException(e, name == null ? modulesPath : modulesPath.getChildPath(name), path));
             }
@@ -229,7 +230,8 @@ public class ProjectDeserializer extends FileDeserializer
 
             EntitiesFactory.addToModule(entity, module);
             entity.getProject().getAutomaticDeserializationService().registerFile(file, ManagedFileType.ENTITY);
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(module));
         }
@@ -276,7 +278,8 @@ public class ProjectDeserializer extends FileDeserializer
                     script.setLinkedFile(scriptsFile);
                 }
                 DataElementUtils.saveQuiet(script);
-            } catch (final Exception e)
+            }
+            catch (final Exception e)
             {
                 loadContext.addWarning(new ReadException(e, scripts.getCompletePath().getChildPath(scriptName), scriptsFile));
             }

@@ -83,7 +83,8 @@ public abstract class ScriptSupport<T>
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
             logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
-        } else
+        }
+        else
         {
             throw new ScriptException(
                     "Please specify connection profile: create "
@@ -106,7 +107,8 @@ public abstract class ScriptSupport<T>
             try
             {
                 be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath());
-            } catch (ProjectLoadException | MalformedURLException e)
+            }
+            catch (ProjectLoadException | MalformedURLException e)
             {
                 e.printStackTrace();
             }
@@ -139,7 +141,8 @@ public abstract class ScriptSupport<T>
         try
         {
             LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             logger.error("Could not setup logger configuration: " + e.toString());
         }
@@ -154,7 +157,8 @@ public abstract class ScriptSupport<T>
             {
                 sqlFile = new File(sqlPath, name);
                 return new PrintStream(sqlFile, "UTF-8");
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new RuntimeException(e);
             }
@@ -184,7 +188,8 @@ public abstract class ScriptSupport<T>
                 if (debug)
                 {
                     exception.printStackTrace();
-                } else
+                }
+                else
                 {
                     logger.error("Error: " + exception.getMessage());
                 }

@@ -12,14 +12,14 @@ public abstract class Process implements Job
     {
         try
         {
-            doWork( context );
+            doWork(context);
             //updateLastExecutionResult( ok );
         }
-        catch( Exception e )
+        catch (Exception e)
         {
             //updateLastExecutionResult( error );
             //journal( "Exception in doWork(): " + e.getMessage(), e );
-            throw new JobExecutionException( e );
+            throw new JobExecutionException(e);
         }
     }
 

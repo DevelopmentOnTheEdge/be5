@@ -222,7 +222,8 @@ public class DB2Transformer extends GenericDbmsTransformer
             cast.setDataType("CHAR");
             if (cast.getSize() == -1)
                 cast.setSize(254);
-        } else if (cast.getDataType().equalsIgnoreCase("KEY"))
+        }
+        else if (cast.getDataType().equalsIgnoreCase("KEY"))
             cast.setDataType("BIGINT");
     }
 

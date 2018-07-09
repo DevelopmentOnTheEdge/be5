@@ -47,7 +47,8 @@ public interface DbService
         if (!(number instanceof Long))
         {
             res = Long.parseLong(number.toString());
-        } else
+        }
+        else
         {
             res = (Long) number;
         }

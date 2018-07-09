@@ -28,12 +28,14 @@ abstract class FileDeserializer extends BaseDeserializer
         try
         {
             this.content = new Yaml().compose(new StringReader(content));
-        } catch (MarkedYAMLException e)
+        }
+        catch (MarkedYAMLException e)
         {
             throw new ReadException(
                     new Exception((e.getProblemMark().getLine() + 1) + ":" + (e.getProblemMark().getColumn() + 1) + ": "
                             + e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
-        } catch (YAMLException e)
+        }
+        catch (YAMLException e)
         {
             throw new ReadException(new Exception(e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
         }

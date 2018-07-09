@@ -38,7 +38,8 @@ public class TableRefBeanInfo extends BeanInfoEx
                 String[] names = nameList.toArray(new String[nameList.size()]);
                 Arrays.sort(names);
                 return names;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Strings2.EMPTY;
             }
@@ -54,7 +55,8 @@ public class TableRefBeanInfo extends BeanInfoEx
             {
                 TableRef tableRef = (TableRef) getBean();
                 return tableRef.getProject().getEntity(tableRef.getTableTo()).getQueries().names().prepend("").toArray(String[]::new);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Strings2.EMPTY;
             }

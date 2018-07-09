@@ -36,7 +36,8 @@ public class DataSource extends TableBuilderSupport
                 addRow(cells(entry.getKey(), entry.getValue() != null ? entry.getValue() : ""));
             }
 
-        } else
+        }
+        else
         {
             try
             {
@@ -64,7 +65,8 @@ public class DataSource extends TableBuilderSupport
 
                 }
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -7,14 +7,16 @@ import org.junit.Before
 
 import javax.inject.Inject
 
-abstract class TestTableQueryDBTest extends ServerBe5ProjectDBTest {
+abstract class TestTableQueryDBTest extends ServerBe5ProjectDBTest
+{
     @Inject
     public DbService db
     @Inject
     public ProjectProvider projectProvider
 
     @Before
-    void testTableQueryDBTestBefore() {
+    void testTableQueryDBTestBefore()
+    {
         db.update("delete from testtable")
         db.insert("insert into testtable (name, value) VALUES (?, ?)", "tableModelTest", "1")
 

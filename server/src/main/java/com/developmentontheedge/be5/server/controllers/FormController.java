@@ -70,7 +70,8 @@ public class FormController extends JsonApiModelController
                 default:
                     return null;
             }
-        } catch (Be5Exception e)
+        }
+        catch (Be5Exception e)
         {
             String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
             log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);

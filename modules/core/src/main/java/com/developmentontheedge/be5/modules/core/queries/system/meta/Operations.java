@@ -19,7 +19,8 @@ public class Operations extends TableBuilderSupport
         if (selectEntity != null)
         {
             addOperations(selectEntity);
-        } else
+        }
+        else
         {
             meta.getOrderedEntities(userInfo.getLanguage()).forEach(
                     e -> addOperations(e.getName())

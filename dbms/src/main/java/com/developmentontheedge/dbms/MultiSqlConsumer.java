@@ -2,7 +2,6 @@ package com.developmentontheedge.dbms;
 
 /**
  * A consumer which produces separate SQL statements from the source
- * <p>
  * TODO support MySQL-specific escaping (like "\'")
  */
 public class MultiSqlConsumer implements CharConsumer
@@ -79,12 +78,14 @@ public class MultiSqlConsumer implements CharConsumer
                     {
                         token.append(c);
                         prevChar = 0;
-                    } else
+                    }
+                    else
                     {
                         finishToken();
                         symbol(c);
                     }
-                } else
+                }
+                else
                 {
                     if (c == '\'')
                         prevChar = c;

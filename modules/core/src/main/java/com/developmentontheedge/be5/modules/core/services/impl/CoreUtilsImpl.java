@@ -87,7 +87,6 @@ public class CoreUtilsImpl implements CoreUtils
 
     /**
      * Set system settings parameter to the specified value, and saves it to the DB.
-     * <p>
      * All of the parameters (section, param, value) must be already passed through the method
      *
      * @param section system settings section name

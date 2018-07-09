@@ -68,13 +68,16 @@ public class OracleTypeManager extends DefaultTypeManager
                 if (type.getPrecision() > 0)
                 {
                     type.setTypeName(SqlColumnType.TYPE_DECIMAL);
-                } else if (type.getSize() > 10)
+                }
+                else if (type.getSize() > 10)
                 {
                     type.setTypeName(SqlColumnType.TYPE_BIGINT);
-                } else if (type.getSize() > 5)
+                }
+                else if (type.getSize() > 5)
                 {
                     type.setTypeName(SqlColumnType.TYPE_INT);
-                } else
+                }
+                else
                 {
                     type.setTypeName(SqlColumnType.TYPE_SMALLINT);
                 }

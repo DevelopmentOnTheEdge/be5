@@ -18,7 +18,8 @@ public class DynamicPropertyMeta
         if (info != null)
         {
             return (Map<String, Map<String, String>>) property.getAttribute(META_INFO_PROPERTY);
-        } else
+        }
+        else
         {
             return Collections.emptyMap();
         }
@@ -36,7 +37,8 @@ public class DynamicPropertyMeta
         if (oldTags instanceof Map)
         {
             ((Map<String, Map<String, String>>) oldTags).putAll(meta);
-        } else
+        }
+        else
         {
             property.setAttribute(META_INFO_PROPERTY, new HashMap<>(meta));
         }

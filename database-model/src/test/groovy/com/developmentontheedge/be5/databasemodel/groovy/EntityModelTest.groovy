@@ -17,17 +17,20 @@ import static org.mockito.Matchers.*
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
-class EntityModelTest extends DatabaseModelSqlMockProjectTest {
+class EntityModelTest extends DatabaseModelSqlMockProjectTest
+{
     @Inject
     private DatabaseModel database
 
     @Before
-    void before() {
+    void before()
+    {
         DbServiceMock.clearMock()
     }
 
     @Test
-    void testAdd() {
+    void testAdd()
+    {
         EntityModel entity = database.getEntity("testtableAdmin")
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
@@ -41,7 +44,8 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest {
     }
 
     @Test
-    void testAddAll() {
+    void testAddAll()
+    {
         EntityModel entity = database.getEntity("testtableAdmin")
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
@@ -68,7 +72,8 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest {
     }
 
     @Test
-    void testReturnValue() {
+    void testReturnValue()
+    {
         EntityModel entity = database.getEntity("testtableAdmin")
 
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
@@ -87,7 +92,8 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest {
     }
 
     @Test
-    void simpleMockTestExample() throws Exception {
+    void simpleMockTestExample() throws Exception
+    {
         when(DbServiceMock.mock.select(anyString(),
                 Matchers.<ResultSetParser<DynamicPropertySet>> any(), eq(4444L))).thenReturn(getDpsS([
                 ID   : 4444L,

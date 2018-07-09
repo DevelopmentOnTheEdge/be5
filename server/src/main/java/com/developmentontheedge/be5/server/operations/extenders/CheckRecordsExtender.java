@@ -87,7 +87,8 @@ public class CheckRecordsExtender extends OperationExtenderSupport
                 message = "Cannot execute operation " + op.getInfo().getName() + ": the following records are not found or not accessible: " + disabledRecords;
                 return true;
             }
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             message = "Cannot execute operation " + op.getInfo().getName() + ": " + e.getMessage();
             return true;

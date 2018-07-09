@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.maven;
 import org.junit.Test;
 
 
-public class AppSyncTest extends TestUtils
+public class AppSyncMavenTest extends TestMavenUtils
 {
     @Test
     public void sync() throws Exception

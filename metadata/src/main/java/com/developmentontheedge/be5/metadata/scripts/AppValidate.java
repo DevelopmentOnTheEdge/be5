@@ -62,14 +62,16 @@ public class AppValidate extends ScriptSupport<AppValidate>
             try
             {
                 line = new BufferedReader(new InputStreamReader(System.in)).readLine();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 // ignore
             }
             if (be5Project.getConnectionProfileName().equals(line))
             {
                 unlockProtectedProfile = true;
-            } else
+            }
+            else
             {
                 throw new ScriptException("Aborted");
             }
@@ -93,7 +95,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
         if (skipValidation)
         {
             logger.info("Validation skipped");
-        } else
+        }
+        else
         {
             logger.info("Validating...");
             errors.addAll(be5Project.getErrors());
@@ -151,7 +154,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
             {
                 logger.info("Saving...");
                 Serialization.save(be5Project, be5Project.getLocation());
-            } catch (ProjectSaveException e)
+            }
+            catch (ProjectSaveException e)
             {
                 throw new ScriptException("Can not save project.", e);
             }
@@ -213,7 +217,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
             {
                 queryName = new String(queryName.getBytes("CP866"), "CP1251");
                 query = entity.getQueries().get(queryName);
-            } catch (UnsupportedEncodingException e)
+            }
+            catch (UnsupportedEncodingException e)
             {
                 throw new ScriptException("Can not load query, path=" + queryPath, e);
             }

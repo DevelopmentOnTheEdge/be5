@@ -31,7 +31,8 @@ public class DataSourceServiceTestImpl implements DataSourceService
 
             statement.close();
             connection.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }

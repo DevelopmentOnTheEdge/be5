@@ -29,10 +29,12 @@ public class SelectorUtils
                     || (digit && i > 0 && (i > 1 || result.charAt(0) != '-') || (hyphen && (i != 1 || result.charAt(0) != '-'))))
             {
                 result.append(c);
-            } else if (digit)
+            }
+            else if (digit)
             {
                 result.append("\\3").append(c).append(' ');
-            } else
+            }
+            else
             {
                 result.append('\\').append(c);
             }

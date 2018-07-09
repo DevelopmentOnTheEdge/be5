@@ -45,7 +45,8 @@ public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVec
             if (element instanceof BeModelCollection && otherElement instanceof BeModelCollection)
             {
                 ((BeModelCollection<?>) element).merge((BeModelCollection) otherElement, ignoreMyItems, inherit);
-            } else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
+            }
+            else if (element instanceof BeModelElementSupport && otherElement instanceof BeModelElementSupport)
             {
                 ((BeModelElementSupport) element).mergeThis(otherElement, inherit);
             }
@@ -57,7 +58,8 @@ public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVec
                         && ((BeElementWithOriginModule) otherElement).getOriginModuleName().equals(getProject().getProjectOrigin()))
                     continue;
                 saveClone(otherElement, inherit);
-            } else
+            }
+            else
             {
                 DataElementUtils.saveQuiet(element);
             }

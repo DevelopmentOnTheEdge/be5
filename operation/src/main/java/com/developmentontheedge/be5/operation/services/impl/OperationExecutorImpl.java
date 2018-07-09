@@ -67,7 +67,8 @@ public class OperationExecutorImpl implements OperationExecutor
         try
         {
             return operation.getParameters(presetValues);
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
             //operation.setResult(OperationResult.error(be5Exception));
@@ -88,7 +89,8 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 return parameters;
             });
-        } else
+        }
+        else
         {
             return callOperation(operation, presetValues);
         }
@@ -106,7 +108,8 @@ public class OperationExecutorImpl implements OperationExecutor
         try
         {
             validator.checkErrorAndCast(parameters);
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             log.log(Level.INFO, "error on execute in validate parameters", e);
             operation.setResult(OperationResult.error(e.getMessage(), e));
@@ -130,7 +133,8 @@ public class OperationExecutorImpl implements OperationExecutor
             try
             {
                 validator.isError(parameters);
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 //to do: change message - error state in parameter
                 log.log(Level.INFO, "error on execute in parameters", e);
@@ -139,7 +143,8 @@ public class OperationExecutorImpl implements OperationExecutor
             }
 
             return null;
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
             operation.setResult(OperationResult.error(be5Exception));
@@ -157,7 +162,8 @@ public class OperationExecutorImpl implements OperationExecutor
         {
             op.invoke(parameters);
             invokeExtenders("postInvoke", op, operationExtenders, parameters);
-        } else
+        }
+        else
         {
             if (OperationStatus.EXECUTE == op.getStatus())
             {
@@ -194,25 +200,30 @@ public class OperationExecutorImpl implements OperationExecutor
                     if (aClass != null)
                     {
                         operationExtender = (OperationExtender) aClass.newInstance();
-                    } else
+                    }
+                    else
                     {
                         throw Be5Exception.internalInOperationExtender(groovyExtender,
                                 new RuntimeException("Class " + groovyExtender.getCode() + " is null."));
                     }
-                } catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                }
+                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                 {
                     throw new UnsupportedOperationException("Groovy feature has been excluded", e);
-                } catch (Throwable e)
+                }
+                catch (Throwable e)
                 {
                     throw Be5Exception.internalInOperationExtender(groovyExtender, e);
                 }
-            } else
+            }
+            else
             {
                 try
                 {
                     operationExtender =
                             (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
                     throw Be5Exception.internalInOperationExtender(operationExtenderModel, e);
                 }
@@ -284,15 +295,18 @@ public class OperationExecutorImpl implements OperationExecutor
                     if (aClass != null)
                     {
                         operation = (Operation) aClass.newInstance();
-                    } else
+                    }
+                    else
                     {
                         throw Be5Exception.internalInOperation(operationInfo.getModel(),
                                 new Error("Class " + operationInfo.getCode() + " is null."));
                     }
-                } catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                }
+                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                 {
                     throw new UnsupportedOperationException("Groovy feature has been excluded", e);
-                } catch (Throwable e)
+                }
+                catch (Throwable e)
                 {
                     throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
                 }
@@ -302,7 +316,8 @@ public class OperationExecutorImpl implements OperationExecutor
                 {
                     operation = (Operation) Class.forName(operationInfo.getCode()).newInstance();
                     break;
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
                     throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
                 }

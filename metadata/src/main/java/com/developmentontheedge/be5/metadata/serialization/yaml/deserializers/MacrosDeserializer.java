@@ -44,7 +44,8 @@ class MacrosDeserializer extends FileDeserializer
         if (serializedPfs == null)
         {
             project.setProjectFileStructure(new ProjectFileStructure(project));
-        } else
+        }
+        else
         {
             project.setProjectFileStructure(yamlDeserializer.readProjectFileStructure(this, asMap(serializedPfs), project));
         }

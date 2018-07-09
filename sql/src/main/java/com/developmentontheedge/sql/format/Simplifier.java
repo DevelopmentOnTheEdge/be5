@@ -37,23 +37,28 @@ public class Simplifier
         if (node instanceof AstBooleanTerm)
         {
             simplifyAnd(node);
-        } else if (node instanceof AstBooleanExpression)
+        }
+        else if (node instanceof AstBooleanExpression)
         {
             simplifyOr(node);
-        } else if (node instanceof AstBooleanNot)
+        }
+        else if (node instanceof AstBooleanNot)
         {
             simplifyNot((AstBooleanNot) node);
-        } else if (node instanceof AstFunNode)
+        }
+        else if (node instanceof AstFunNode)
         {
             simplifyFunc((AstFunNode) node);
-        } else if (node instanceof AstParenthesis)
+        }
+        else if (node instanceof AstParenthesis)
         {
             simplifyBoolean(node.child(0));
             if (node.child(0) instanceof AstIdentifierConstant)
             {
                 node.replaceWith(node.child(0));
             }
-        } else if (node instanceof AstInPredicate)
+        }
+        else if (node instanceof AstInPredicate)
         {
             AstInPredicate in = (AstInPredicate) node;
             SimpleNode val = node.child(0);
@@ -74,16 +79,19 @@ public class Simplifier
             {
                 fun.replaceWith(new AstIdentifierConstant("TRUE"));
             }
-        } else if (fun.getFunction().getName().equals("<>"))
+        }
+        else if (fun.getFunction().getName().equals("<>"))
         {
             if (fun.child(0).format().trim().equals(fun.child(1).format().trim()))
             {
                 fun.replaceWith(new AstIdentifierConstant("FALSE"));
             }
-        } else if (fun.getFunction().getName().equals("AND"))
+        }
+        else if (fun.getFunction().getName().equals("AND"))
         {
             simplifyAnd(fun);
-        } else if (fun.getFunction().getName().equals("OR"))
+        }
+        else if (fun.getFunction().getName().equals("OR"))
         {
             simplifyOr(fun);
         }

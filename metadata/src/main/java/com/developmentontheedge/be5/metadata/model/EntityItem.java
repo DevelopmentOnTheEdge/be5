@@ -36,7 +36,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         return (Entity) (getOrigin().getOrigin());
     }
 
-    abstract public String getEntityItemType();
+    public abstract String getEntityItemType();
 
     @PropertyName("Icon")
     public Icon getIcon()
@@ -155,33 +155,38 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         {
             if (other.getLayout() != null)
                 return debugEquals("layout");
-        } else if (!getLayout().equals(other.getLayout()))
+        }
+        else if (!getLayout().equals(other.getLayout()))
             return debugEquals("layout");
 
         if (getWellKnownName() == null)
         {
             if (other.getWellKnownName() != null)
                 return debugEquals("wellKnownName");
-        } else if (!getWellKnownName().equals(other.getWellKnownName()))
+        }
+        else if (!getWellKnownName().equals(other.getWellKnownName()))
             return debugEquals("wellKnownName");
 
         if (getNotSupported() == null)
         {
             if (other.getNotSupported() != null)
                 return debugEquals("notSupported");
-        } else if (!getNotSupported().equals(other.getNotSupported()))
+        }
+        else if (!getNotSupported().equals(other.getNotSupported()))
             return debugEquals("notSupported");
         if (getCategoryID() == null)
         {
             if (other.getCategoryID() != null)
                 return debugEquals("categoryID");
-        } else if (!getCategoryID().equals(other.getCategoryID()))
+        }
+        else if (!getCategoryID().equals(other.getCategoryID()))
             return debugEquals("categoryID");
         if (getContextID() == null)
         {
             if (other.getContextID() != null)
                 return debugEquals("contextID");
-        } else if (!getContextID().equals(other.getContextID()))
+        }
+        else if (!getContextID().equals(other.getContextID()))
             return debugEquals("contextID");
         if (isSecure() != other.isSecure())
             return debugEquals("isSecure");
@@ -221,7 +226,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         if (inherit)
         {
             this.roles.setPrototype(false, ((EntityItem) other).roles);
-        } else
+        }
+        else
         {
             this.roles.addInclusionAll(((EntityItem) other).roles.getAllIncludedValues());
             this.roles.addExclusionAll(((EntityItem) other).roles.getAllExcludedValues());
@@ -237,7 +243,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         if (clone.prototype == null)
         {
             clone.roles = new RoleSet(clone, roles);
-        } else
+        }
+        else
         {
             clone.roles = new RoleSet(clone);
             clone.roles.setPrototype(true, ((EntityItem) clone.prototype).roles);

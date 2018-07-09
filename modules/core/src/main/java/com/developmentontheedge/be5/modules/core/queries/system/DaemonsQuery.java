@@ -25,12 +25,12 @@ public class DaemonsQuery extends TableBuilderSupport
         for (Daemon daemon : daemons)
         {
             addRow(daemon.getName(), cells(
-                daemon.getName(),
-                daemon.getDaemonType(),
-                Boolean.valueOf(daemonStarter.isJobRunning(daemon.getName())).toString(),
-                daemon.getConfigSection(),
-                daemon.getDescription(),
-                daemon.getClassName()
+                    daemon.getName(),
+                    daemon.getDaemonType(),
+                    Boolean.valueOf(daemonStarter.isJobRunning(daemon.getName())).toString(),
+                    daemon.getConfigSection(),
+                    daemon.getDescription(),
+                    daemon.getClassName()
             ));
         }
 

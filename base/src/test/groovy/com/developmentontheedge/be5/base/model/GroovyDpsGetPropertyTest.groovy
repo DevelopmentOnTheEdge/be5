@@ -4,11 +4,13 @@ import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
-class GroovyDpsGetPropertyTest {
+class GroovyDpsGetPropertyTest
+{
     private GDynamicPropertySetSupport dps
 
     @Test
-    void test() {
+    void test()
+    {
         dps = new GDynamicPropertySetSupport()
 
         dps.add("input2") {

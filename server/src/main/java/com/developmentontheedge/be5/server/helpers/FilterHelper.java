@@ -49,7 +49,8 @@ public class FilterHelper
                             .map(Map.Entry::getKey)
                             .collect(Collectors.toList())
             );
-        } else
+        }
+        else
         {
             if (filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
             {
@@ -61,7 +62,7 @@ public class FilterHelper
         {
             if (!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {
-                property.setValue(null);//remove defaultValue
+                property.setValue(null); //remove defaultValue
             }
         }
 

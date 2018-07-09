@@ -106,7 +106,8 @@ class EntityDeserializer extends FileDeserializer
             if (templateEntity == null)
             {
                 loadContext.addWarning(new ReadException(entity, path, "Unknown template name specified: " + template));
-            } else if (!isFromApp)
+            }
+            else if (!isFromApp)
             {
                 loadContext.addWarning(new ReadException(entity, path, "Cannot use template with non-application entity"));
                 templateEntity = null;
@@ -120,13 +121,15 @@ class EntityDeserializer extends FileDeserializer
             {
                 loadContext.addWarning(new ReadException(entity, path, "Entity has no type"));
             }
-        } else
+        }
+        else
         {
             EntityType entityType = EntityType.forSqlName(type);
             if (entityType == null)
             {
                 loadContext.addWarning(new ReadException(entity, path, "Entity type is invalid: " + type));
-            } else
+            }
+            else
             {
                 entity.setType(entityType);
             }
@@ -155,7 +158,8 @@ class EntityDeserializer extends FileDeserializer
                 try
                 {
                     save(readOperation(operationPair.getKey(), asMap(operationPair.getValue()), entity));
-                } catch (ReadException e)
+                }
+                catch (ReadException e)
                 {
                     Operation operation = Operation.createOperation(operationPair.getKey(), Operation.OPERATION_TYPE_JAVA, entity);
                     save(operation);
@@ -195,7 +199,8 @@ class EntityDeserializer extends FileDeserializer
                         continue;
                     }
                     save(readQuery(queryPair.getKey(), asMap(queryPair.getValue()), entity));
-                } catch (ReadException e)
+                }
+                catch (ReadException e)
                 {
                     Query query = new Query(queryPair.getKey(), entity);
                     save(query);
@@ -237,21 +242,24 @@ class EntityDeserializer extends FileDeserializer
                 }
                 fileOperation.setFileName(sourceFile.getName());
                 fileOperation.customizeProperty("code");
-            } else
+            }
+            else
             {
                 if (operation.getType().equals(Operation.OPERATION_TYPE_GROOVY))
                 {
                     throw new ReadException(path, "Groovy operation required 'file' attribute.");
                 }
             }
-        } else
+        }
+        else
         {
             String text = (String) operationElement.get(TAG_CODE);
             if (!Strings2.isNullOrEmpty(text))
             {
                 operation.setCode(text);
                 operation.customizeProperty("code");
-            } else
+            }
+            else
             {
                 if (operation.getType().equals(Operation.OPERATION_TYPE_JAVA) &&
                         operationElement.containsKey(ATTR_FILEPATH))
@@ -279,7 +287,8 @@ class EntityDeserializer extends FileDeserializer
             {
                 extender = new OperationExtender(operation, getProjectOrigin());
                 extender.setClassName((String) extenderElement.get(ATTR_CLASS_NAME));
-            } else
+            }
+            else
             {
                 final String filepath = (String) extenderElement.get(ATTR_FILEPATH);
 
@@ -295,7 +304,8 @@ class EntityDeserializer extends FileDeserializer
                     if (filepath.endsWith(".js"))
                     {
                         fileExtender = new JavaScriptOperationExtender(operation, getProjectOrigin());
-                    } else
+                    }
+                    else
                     {
                         fileExtender = new GroovyOperationExtender(operation, getProjectOrigin());
                     }
@@ -311,7 +321,8 @@ class EntityDeserializer extends FileDeserializer
 
                     fileExtender.setFileName(sourceFile.getName());
                     extender = fileExtender;
-                } else
+                }
+                else
                 {
                     loadContext.addWarning(new ReadException(path, "Not supported file extention.").attachElement(operation));
                     continue;
@@ -350,7 +361,8 @@ class EntityDeserializer extends FileDeserializer
                 {
                     text = (String) queryElement.get(TAG_CODE);
                     query.setFileName(classPathToFileName(query.getName().replace(':', '_') + ".groovy", ".groovy"));
-                } else
+                }
+                else
                 {
                     text = yamlDeserializer.getFileSystem().readGroovyQuery(classPathToFileName(groovyFileName.replace(':', '_'), ".groovy"));
                     query.setFileName(groovyFileName);
@@ -364,7 +376,8 @@ class EntityDeserializer extends FileDeserializer
                 {
                     text = (String) queryElement.get(TAG_CODE);
                     query.setFileName(query.getName().replace(':', '_') + ".js");
-                } else
+                }
+                else
                 {
                     text = yamlDeserializer.getFileSystem().readJavaScriptQuery(jsFileName.replace(':', '_'));
                     query.setFileName(jsFileName);
@@ -434,7 +447,8 @@ class EntityDeserializer extends FileDeserializer
                     if (roles.isEmpty())
                     {
                         settings.getRoles().parseRoles(allRoles);
-                    } else
+                    }
+                    else
                     {
                         settings.getRoles().parseRoles(roles);
                     }
@@ -442,7 +456,8 @@ class EntityDeserializer extends FileDeserializer
                     result.add(settings);
                 }
             }
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(query));
         }
@@ -456,7 +471,8 @@ class EntityDeserializer extends FileDeserializer
         try
         {
             filterElements = asMapOrEmpty(queryElement.get("quickFilters"));
-        } catch (ReadException e)
+        }
+        catch (ReadException e)
         {
             loadContext.addWarning(e.attachElement(query));
             return;
@@ -468,7 +484,8 @@ class EntityDeserializer extends FileDeserializer
             try
             {
                 readFields(filter, asMap(filterElement.getValue()), Fields.quickFilter());
-            } catch (ReadException e)
+            }
+            catch (ReadException e)
             {
                 loadContext.addWarning(e.attachElement(filter));
             }

@@ -15,7 +15,8 @@ import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION
 import static org.junit.Assert.assertEquals
 
 
-class FormGeneratorTest extends TestTableQueryDBTest {
+class FormGeneratorTest extends TestTableQueryDBTest
+{
     @Inject
     private Meta meta
     @Inject
@@ -24,12 +25,14 @@ class FormGeneratorTest extends TestTableQueryDBTest {
     private OperationExecutor operationExecutor
 
     @Before
-    void setUp() {
+    void setUp()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
     }
 
     @Test
-    void generateForm() {
+    void generateForm()
+    {
         ResourceData result = formGenerator.generate("testtable", "All records", "Insert",
                 [] as String[], [:], [name: "test1", value: "2"])
 
@@ -43,7 +46,8 @@ class FormGeneratorTest extends TestTableQueryDBTest {
     }
 
     @Test
-    void executeWithGenerateErrorInProperty() {
+    void executeWithGenerateErrorInProperty()
+    {
         ResourceData result = formGenerator
                 .execute("testtableAdmin", "All records", "ServerErrorProcessing",
                 [] as String[], [:], ['name': 'generateErrorInProperty'])

@@ -44,7 +44,8 @@ public class MenuHelper
             if (rootNode.action != null)
             {
                 if (rootNode.isDefault) return rootNode.action;
-            } else if (rootNode.children != null)
+            }
+            else if (rootNode.children != null)
             {
                 for (QueryNode node : rootNode.children)
                 {
@@ -58,7 +59,8 @@ public class MenuHelper
             if (rootNode.action != null)
             {
                 return rootNode.action;
-            } else if (rootNode.children != null)
+            }
+            else if (rootNode.children != null)
             {
                 for (QueryNode node : rootNode.children)
                 {
@@ -120,7 +122,8 @@ public class MenuHelper
             }
 
             out.add(RootNode.action(id, title, isDefault, action, operations));
-        } else
+        }
+        else
         {
             // No query in the root, just inner queries.
             List<QueryNode> children = generateEntityQueries(permittedQueries, language, meta, withIds);

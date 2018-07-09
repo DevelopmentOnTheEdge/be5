@@ -81,9 +81,9 @@ public enum Be5ErrorCode
         }
     }
 
-    private final static String HTTP_CODE_404 = "404";
-    private final static String HTTP_CODE_403 = "403";
-    private final static String HTTP_CODE_500 = "500";
+    private static final String HTTP_CODE_404 = "404";
+    private static final String HTTP_CODE_403 = "403";
+    private static final String HTTP_CODE_500 = "500";
 
     public String getHttpStatus()
     {

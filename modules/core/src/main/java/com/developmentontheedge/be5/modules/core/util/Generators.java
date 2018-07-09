@@ -46,7 +46,8 @@ public class Generators
             if (isRoot.test(item))
             {
                 forest.add(item);
-            } else
+            }
+            else
             {
                 T parent = index.get(getParentId.apply(item));
                 requireNonNull(parent);
