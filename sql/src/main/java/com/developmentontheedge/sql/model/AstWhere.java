@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
+    public static final String NOT_NULL = "NOT_NULL";
+
     public static AstWhere withReplacementParameter(String columnName, int count)
     {
         AstWhere astWhere = new AstWhere(SqlParserTreeConstants.JJTWHERE);
@@ -28,9 +30,8 @@ public class AstWhere extends SimpleNode
     private SimpleNode addAstFunNode(Iterator<? extends Map.Entry<String, ?>> iterator)
     {
 //        TODO add !=, NOT LIKE
-//        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"
-//        } );
+
         Map.Entry<String, ?> entry = iterator.next();
         Object valueObj = entry.getValue();
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;
@@ -84,19 +85,15 @@ public class AstWhere extends SimpleNode
         else if (valueObj instanceof String)
         {
             String value = (String) valueObj;
-            if (value.equals("null") || value.equals("notNull"))
+            if (value.equals(NOT_NULL))
             {
-//            todo null, notNull - not work: wrong number of parameters 1, expect 0
-//            можно сделать какой-нибудь хак (ID IS NULL OR ( null = ? ) )
-                throw new RuntimeException("todo, not supported");
-                //astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
+                astFunNode = new AstNullPredicate(false, new AstFieldReference(entry.getKey()));
             }
             else if (value.endsWith("%") || value.startsWith("%"))
             {
                 function = DefaultParserContext.FUNC_LIKE;
+                astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
             }
-
-            astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
         }
 
         if (iterator.hasNext())

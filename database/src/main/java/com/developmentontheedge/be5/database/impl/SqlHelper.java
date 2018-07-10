@@ -6,10 +6,13 @@ import com.google.common.collect.ObjectArrays;
 
 import javax.inject.Inject;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import static com.developmentontheedge.sql.model.AstWhere.NOT_NULL;
 
 
 public class SqlHelper
@@ -50,7 +53,7 @@ public class SqlHelper
 
     public int delete(String tableName, Map<String, ? super Object> conditions)
     {
-        return db.update(generateDeleteSql(tableName, conditions), conditions.values().toArray());
+        return db.update(generateDeleteSql(tableName, conditions), getWithoutConstants(conditions));
     }
 
     public int deleteIn(String tableName, String columnName, Object[] values)
@@ -89,6 +92,14 @@ public class SqlHelper
     private String generateDeleteInSql(String tableName, String columnName, int count)
     {
         return Ast.delete(tableName).whereInPredicate(columnName, count).format();
+    }
+
+    public Object[] getWithoutConstants(Map<String, ? super Object> conditions)
+    {
+        List<? super Object> list = conditions.values().stream()
+                .filter(x -> x != null && !NOT_NULL.equals(x))
+                .collect(Collectors.toList());
+        return list.toArray();
     }
 
     private static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(

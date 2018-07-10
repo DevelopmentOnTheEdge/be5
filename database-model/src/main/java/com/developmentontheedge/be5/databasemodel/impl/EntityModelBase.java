@@ -85,7 +85,7 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .where(conditions).format();
 
         DynamicPropertySetSupport dps = db.select(sql,
-                rs -> DpsUtils.setValues(getDps(), rs), conditions.values().toArray());
+                rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions));
 
         return getRecordModel(dps);
     }
@@ -109,7 +109,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
 
-        return db.list(sql, this::getRecordModel, conditions.values().toArray());
+        return db.list(sql, this::getRecordModel, sqlHelper.getWithoutConstants(conditions));
     }
 
     @Override
@@ -176,7 +176,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
 
-        return db.oneLong(sql, conditions.values().toArray());
+        return db.oneLong(sql, sqlHelper.getWithoutConstants(conditions));
     }
 
     @Override

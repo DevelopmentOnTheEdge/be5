@@ -9,7 +9,12 @@ import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.*
+import static com.developmentontheedge.sql.model.AstWhere.NOT_NULL
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertNull
+import static org.junit.Assert.assertTrue
 
 
 class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
@@ -225,6 +230,23 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         assertEquals 1, testtableAdmin.removeBy(["name": "TestName2"])
         assertNotNull testtableAdmin[id]
         assertNull testtableAdmin[id2]
+    }
+
+    @Test
+    void removeByNotNull()
+    {
+        testtableAdmin << ["name": "TestName", "value": 1]
+        def id2 = testtableAdmin << ["name": "TestName2", "value": null]
+
+        assertFalse testtableAdmin.empty
+        assertEquals 1, testtableAdmin.removeBy(["value": NOT_NULL])
+        assertNotNull testtableAdmin[id2]
+
+        def id = testtableAdmin << ["name": "TestName", "value": 1]
+        assertEquals 1, testtableAdmin.removeBy(["value": null])
+        assertNotNull testtableAdmin[id]
+
+        assertEquals(1, testtableAdmin.count())
     }
 
     @Test
