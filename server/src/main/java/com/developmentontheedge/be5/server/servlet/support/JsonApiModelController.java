@@ -18,9 +18,9 @@ public abstract class JsonApiModelController extends ApiControllerSupport
     protected final void generate(Request req, Response res, String subUrl)
     {
         JsonApiModel jsonApiModel = generate(req, subUrl);
-        if(jsonApiModel != null)
+        if (jsonApiModel != null)
         {
-            if(jsonApiModel.getMeta() == null)
+            if (jsonApiModel.getMeta() == null)
             {
                 jsonApiModel.setMeta(getDefaultMeta(req));
             }

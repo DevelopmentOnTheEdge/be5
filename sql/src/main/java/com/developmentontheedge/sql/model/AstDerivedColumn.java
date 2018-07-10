@@ -9,20 +9,20 @@ public class AstDerivedColumn extends SimpleNode
 
     public AstDerivedColumn(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstDerivedColumn(SimpleNode expression)
     {
         this(SqlParserTreeConstants.JJTDERIVEDCOLUMN);
-        addChild( expression );
+        addChild(expression);
     }
-    
+
     public AstDerivedColumn(SimpleNode expression, String alias)
     {
         this(SqlParserTreeConstants.JJTDERIVEDCOLUMN);
-        addChild( expression );
-        setAlias( alias );
+        addChild(expression);
+        setAlias(alias);
     }
 
     private boolean prefixComma = false, suffixComma = false, asToken = false;
@@ -31,58 +31,64 @@ public class AstDerivedColumn extends SimpleNode
     {
         return prefixComma;
     }
+
     public AstDerivedColumn setPrefixComma(boolean prefixComma)
     {
         this.prefixComma = prefixComma;
         this.nodePrefix = prefixComma ? "," : null;
         return this;
     }
+
     public boolean isAsToken()
     {
         return asToken;
     }
+
     public AstDerivedColumn setAsToken(boolean asToken)
     {
         this.asToken = asToken;
         this.childrenDelimiter = asToken ? "AS" : null;
         return this;
     }
+
     public boolean isSuffixComma()
     {
         return suffixComma;
     }
+
     public AstDerivedColumn setSuffixComma(boolean suffixComma)
     {
         this.suffixComma = suffixComma;
         this.nodeSuffix = suffixComma ? "," : null;
         return this;
     }
-    
+
     public void setAlias(String alias)
     {
         setAsToken(true);
-        if( jjtGetNumChildren() == 1 )
+        if (jjtGetNumChildren() == 1)
         {
-            addChild( new AstIdentifierConstant( alias, true ) );
-        } else
+            addChild(new AstIdentifierConstant(alias, true));
+        }
+        else
         {
-            ( (AstIdentifierConstant)child( 1 ) ).setValue( alias );
+            ((AstIdentifierConstant) child(1)).setValue(alias);
         }
     }
 
     public String getAlias()
     {
-        if( jjtGetNumChildren() == 1 )
+        if (jjtGetNumChildren() == 1)
             return null;
-        return ( (AstIdentifierConstant)child( 1 ) ).getNodeContent();
+        return ((AstIdentifierConstant) child(1)).getNodeContent();
     }
-    
+
     public String getColumn()
     {
-        if( children.get( 0 ) instanceof AstFieldReference )
-            return ( (AstFieldReference)child( 0 ) ).getValue();
-        else if( children.get( 0 ) instanceof AstAllColumnRef )
-            return ( (AstAllColumnRef)child( 0 ) ).getValue();
+        if (children.get(0) instanceof AstFieldReference)
+            return ((AstFieldReference) child(0)).getValue();
+        else if (children.get(0) instanceof AstAllColumnRef)
+            return ((AstAllColumnRef) child(0)).getValue();
         return null;
     }
 }

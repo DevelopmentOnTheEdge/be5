@@ -39,7 +39,7 @@ public enum Be5ErrorCode
 
     public boolean isInternal()
     {
-        switch(this)
+        switch (this)
         {
             case INTERNAL_ERROR:
             case INTERNAL_ERROR_IN_OPERATION:
@@ -55,7 +55,7 @@ public enum Be5ErrorCode
 
     public boolean isAccessDenied()
     {
-        switch(this)
+        switch (this)
         {
             case ACCESS_DENIED:
             case ACCESS_DENIED_TO_OPERATION:
@@ -69,7 +69,7 @@ public enum Be5ErrorCode
 
     public boolean isNotFound()
     {
-        switch(this)
+        switch (this)
         {
             case UNKNOWN_ENTITY:
             case UNKNOWN_OPERATION:
@@ -81,14 +81,14 @@ public enum Be5ErrorCode
         }
     }
 
-    private final static String HTTP_CODE_404 = "404";
-    private final static String HTTP_CODE_403 = "403";
-    private final static String HTTP_CODE_500 = "500";
+    private static final String HTTP_CODE_404 = "404";
+    private static final String HTTP_CODE_403 = "403";
+    private static final String HTTP_CODE_500 = "500";
 
     public String getHttpStatus()
     {
-        if(isNotFound()) return HTTP_CODE_404;
-        if(isAccessDenied()) return HTTP_CODE_403;
+        if (isNotFound()) return HTTP_CODE_404;
+        if (isAccessDenied()) return HTTP_CODE_403;
         return HTTP_CODE_500;
     }
 }

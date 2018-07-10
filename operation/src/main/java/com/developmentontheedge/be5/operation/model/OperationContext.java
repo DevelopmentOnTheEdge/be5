@@ -26,13 +26,13 @@ public class OperationContext
 
     public <T> T[] getRecords()
     {
-        return (T[])records;
+        return (T[]) records;
     }
 
     public <T> T getRecord()
     {
-        if(records.length != 1)throw new IllegalStateException("Expected one record");
-        return (T)records[0];
+        if (records.length != 1) throw new IllegalStateException("Expected one record");
+        return (T) records[0];
     }
 
     public String getQueryName()
@@ -52,7 +52,7 @@ public class OperationContext
 
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId
 
-    
+
     /* AppInfo getAppInfo();
     interface SessionAdapter extends Serializable
     {
@@ -83,5 +83,5 @@ public class OperationContext
     String getCrumbID();
     void setCrumbID( String ID );
 
-*/    
+*/
 }

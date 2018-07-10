@@ -12,7 +12,8 @@ import static org.junit.Assert.assertEquals
 
 class CategoriesServiceTest extends CoreBe5ProjectDBTest
 {
-    @Inject CategoriesService categoriesService
+    @Inject
+    CategoriesService categoriesService
 
     @Before
     void setUp()
@@ -22,8 +23,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
         db.update("DELETE FROM categories")
 
         database.categories.add([
-                entity  : "anotherCategory",
-                name    : "another root"
+                entity: "anotherCategory",
+                name  : "another root"
         ])
     }
 
@@ -38,8 +39,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     void test()
     {
         database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
 
         def docTypes = categoriesService.getCategoriesForest("docTypes", false)
@@ -51,8 +52,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     void snapshot()
     {
         def rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
         def p1ID = database.categories.add([
                 entity  : "docTypes",
@@ -73,12 +74,12 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
 
         assertEquals("[" +
                 "{'children':[" +
-                    "{'children':[" +
-                        "{'children':[" +
-                        "],'id':${c1ID},'name':'c1'}" +
-                    "],'id':${p1ID},'name':'p1'}," +
-                    "{'children':[" +
-                    "],'id':${p2ID},'name':'p2'}" +
+                "{'children':[" +
+                "{'children':[" +
+                "],'id':${c1ID},'name':'c1'}" +
+                "],'id':${p1ID},'name':'p1'}," +
+                "{'children':[" +
+                "],'id':${p2ID},'name':'p2'}" +
                 "],'id':${rootID},'name':'Root'}]", oneQuotes(jsonb.toJson(docTypes)))
     }
 
@@ -86,8 +87,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     void testhideEmpty()
     {
         def rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
         database.categories.add([
                 entity  : "docTypes",
@@ -100,7 +101,7 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
 
         database.classifications.add([
                 categoryID: rootID,
-                recordID: "docTypes.1"
+                recordID  : "docTypes.1"
         ])
 
         docTypes = categoriesService.getCategoriesForest("docTypes", true)
@@ -113,8 +114,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     void getCategoryNavigationTest()
     {
         Long rootID = database.categories.add([
-                entity  : "docTypes",
-                name    : "Root"
+                entity: "docTypes",
+                name  : "Root"
         ])
 
         Long p1ID = database.categories.add([

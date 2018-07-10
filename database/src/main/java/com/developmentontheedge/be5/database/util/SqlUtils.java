@@ -15,36 +15,37 @@ public class SqlUtils
 {
     public static <T> T getSqlValue(Class<T> clazz, ResultSet rs, int idx)
     {
-        try{
+        try
+        {
             Object object = rs.getObject(idx);
-            if(object == null)
+            if (object == null)
             {
                 return null;
             }
 
-            if(clazz == Double.class && object.getClass() == BigDecimal.class)
+            if (clazz == Double.class && object.getClass() == BigDecimal.class)
             {
-                return (T) (Double) ((BigDecimal)object).doubleValue();
+                return (T) (Double) ((BigDecimal) object).doubleValue();
             }
 
-            if(clazz == Long.class && object.getClass() == BigInteger.class)
+            if (clazz == Long.class && object.getClass() == BigInteger.class)
             {
-                return (T) (Long) ((BigInteger)object).longValue();
+                return (T) (Long) ((BigInteger) object).longValue();
             }
 
-            if(clazz == Short.class && object.getClass() == Integer.class)
+            if (clazz == Short.class && object.getClass() == Integer.class)
             {
-                return (T) (Short) ((Integer)object).shortValue();
+                return (T) (Short) ((Integer) object).shortValue();
             }
 
-            if(clazz == Integer.class && object.getClass() == Long.class)
+            if (clazz == Integer.class && object.getClass() == Long.class)
             {
-                return (T) (Integer) ((Long)object).intValue();
+                return (T) (Integer) ((Long) object).intValue();
             }
 
-            if(clazz == String.class && object.getClass() == byte[].class)
+            if (clazz == String.class && object.getClass() == byte[].class)
             {
-                return (T) new String((byte[])object);
+                return (T) new String((byte[]) object);
             }
 
             return clazz.cast(object);
@@ -56,7 +57,8 @@ public class SqlUtils
             {
                 name = rs.getMetaData().getColumnName(idx);
             }
-            catch (SQLException ignore){
+            catch (SQLException ignore)
+            {
 
             }
 
@@ -66,7 +68,7 @@ public class SqlUtils
 
     public static Class<?> getTypeClass(int columnType)
     {
-        switch( columnType )
+        switch (columnType)
         {
             case Types.BIGINT:
                 return Long.class;

@@ -15,12 +15,12 @@ public class JavaScriptForm extends SourceFile
 {
     private String module;
     private String relativePath;
-    
-    public JavaScriptForm( String name, BeModelCollection<? extends SourceFile> origin )
+
+    public JavaScriptForm(String name, BeModelCollection<? extends SourceFile> origin)
     {
-        super( name, origin );
+        super(name, origin);
         this.module = getProject().getProjectOrigin();
-        this.relativePath = makeSafeFileName( name )+".js";
+        this.relativePath = makeSafeFileName(name) + ".js";
         updateLocation();
     }
 
@@ -30,7 +30,7 @@ public class JavaScriptForm extends SourceFile
         return module;
     }
 
-    public void setModule( String module )
+    public void setModule(String module)
     {
         this.module = module;
         updateLocation();
@@ -43,7 +43,7 @@ public class JavaScriptForm extends SourceFile
         return relativePath;
     }
 
-    public void setRelativePath( String relativePath )
+    public void setRelativePath(String relativePath)
     {
         this.relativePath = relativePath;
         updateLocation();
@@ -54,56 +54,56 @@ public class JavaScriptForm extends SourceFile
     {
         try
         {
-            setLinkedFile( ModuleLoader2.getFileSystem(getProject(), module).getJavaScriptFormsFolder().resolve( relativePath ) );
+            setLinkedFile(ModuleLoader2.getFileSystem(getProject(), module).getJavaScriptFormsFolder().resolve(relativePath));
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            setLinkedFile( null );
+            setLinkedFile(null);
         }
     }
 
     public void load() throws ReadException
     {
         updateLocation();
-        if(getLinkedFile() == null)
+        if (getLinkedFile() == null)
         {
-            throw new IllegalStateException( "File is not set" );
+            throw new IllegalStateException("File is not set");
         }
-        setSource( ProjectFileSystem.read( getLinkedFile() ) );
+        setSource(ProjectFileSystem.read(getLinkedFile()));
     }
-    
+
     public void save() throws IOException
     {
         updateLocation();
-        if(getLinkedFile() == null)
+        if (getLinkedFile() == null)
         {
-            throw new IllegalStateException( "File is not set" );
+            throw new IllegalStateException("File is not set");
         }
-        Files.createDirectories( getLinkedFile().getParent() );
-        Files.write( getLinkedFile(), getSource().getBytes(StandardCharsets.UTF_8) );
+        Files.createDirectories(getLinkedFile().getParent());
+        Files.write(getLinkedFile(), getSource().getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hashCode( relativePath );
+        return Objects.hashCode(relativePath);
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        JavaScriptForm other = ( JavaScriptForm ) obj;
-        return getSource().equals( other.getSource() );
+        JavaScriptForm other = (JavaScriptForm) obj;
+        return getSource().equals(other.getSource());
     }
-    
+
     @Override
     protected void fireChanged()
     {
-        if ( getOrigin().get( getName() ) == this )
+        if (getOrigin().get(getName()) == this)
             getOrigin().fireCodeChanged();
     }
 }

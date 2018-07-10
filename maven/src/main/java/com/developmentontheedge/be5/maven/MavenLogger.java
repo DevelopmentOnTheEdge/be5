@@ -14,7 +14,7 @@ public class MavenLogger implements ProcessController
     }
 
     @Override
-    public void setOperationName( String name )
+    public void setOperationName(String name)
     {
         log.info("Operation started: " + name);
     }
@@ -22,7 +22,7 @@ public class MavenLogger implements ProcessController
     @Override
     public void setProgress(double progress)
     {
-        log.info("  progress: " + progress*100 + "%");
+        log.info("  progress: " + progress * 100 + "%");
     }
 
     @Override

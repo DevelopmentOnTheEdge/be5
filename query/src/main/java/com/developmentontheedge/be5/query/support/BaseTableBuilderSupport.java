@@ -34,7 +34,7 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
     public void addColumns(String firstName, String... columnNames)
     {
         columns.add(new ColumnModel(firstName, firstName));
-        if(columnNames != null)
+        if (columnNames != null)
         {
             for (String columnName : columnNames)
             {
@@ -53,13 +53,13 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
 
         for (Object currentCell : allCells)
         {
-            if(currentCell instanceof CellModel)
+            if (currentCell instanceof CellModel)
             {
-                columns.add((CellModel)currentCell);
+                columns.add((CellModel) currentCell);
             }
             else
             {
-                columns.add(new CellModel(currentCell, new HashMap<>() ));
+                columns.add(new CellModel(currentCell, new HashMap<>()));
             }
         }
 
@@ -115,7 +115,7 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
                                       boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
-                            0, Integer.MAX_VALUE, -1, "asc");
+                0, Integer.MAX_VALUE, -1, "asc");
     }
 
 }

@@ -14,29 +14,29 @@ import one.util.streamex.StreamEx;
 
 /**
  * Represents comma-separated several hierarchy rules
- * @author lan
  *
+ * @author lan
  */
 public class UnionSelectorRule implements SelectorRule
 {
     private final List<HierarchySelectorRule> rules;
-    
+
     public UnionSelectorRule(List<HierarchySelectorRule> rules)
     {
-        this.rules = Collections.unmodifiableList( new ArrayList<>(rules) );
+        this.rules = Collections.unmodifiableList(new ArrayList<>(rules));
     }
-    
+
     public UnionSelectorRule(HierarchySelectorRule... rules)
     {
-        this( Arrays.asList( rules ) );
+        this(Arrays.asList(rules));
     }
 
     @Override
-    public boolean matches( BeModelElement element )
+    public boolean matches(BeModelElement element)
     {
-        for(HierarchySelectorRule rule : rules)
+        for (HierarchySelectorRule rule : rules)
         {
-            if(rule.matches( element ))
+            if (rule.matches(element))
                 return true;
         }
         return false;
@@ -47,9 +47,9 @@ public class UnionSelectorRule implements SelectorRule
     {
         return StreamEx.of(rules).joining(", ");
     }
-    
+
     public static UnionSelectorRule create(String input) throws ParseException
     {
-        return ( UnionSelectorRule ) new Parser( new StringReader(input) ).parse();
+        return (UnionSelectorRule) new Parser(new StringReader(input)).parse();
     }
 }

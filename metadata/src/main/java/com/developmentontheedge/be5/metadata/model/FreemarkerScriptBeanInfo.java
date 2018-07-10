@@ -13,8 +13,8 @@ public class FreemarkerScriptBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add(new PropertyDescriptorEx( "name", beanClass, "getName", null ));
-        add(new PropertyDescriptorEx( "path", beanClass, "getFilePath", null ));
-        add(new PropertyDescriptorEx( "errors", beanClass, "hasErrors", null ));
+        add(new PropertyDescriptorEx("name", beanClass, "getName", null));
+        add(new PropertyDescriptorEx("path", beanClass, "getFilePath", null));
+        add(new PropertyDescriptorEx("errors", beanClass, "hasErrors", null));
     }
 }

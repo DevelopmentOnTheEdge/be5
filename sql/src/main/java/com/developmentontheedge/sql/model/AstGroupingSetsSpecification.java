@@ -6,7 +6,7 @@ public class AstGroupingSetsSpecification extends SimpleNode
 {
     public AstGroupingSetsSpecification(int id)
     {
-        super( id );
+        super(id);
         nodePrefix = "GROUPING SETS (";
         nodeSuffix = ")";
         childrenDelimiter = ",";

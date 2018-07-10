@@ -33,11 +33,11 @@ public class RequestImpl implements Request
     {
         return raw.getAttribute(name);
     }
-    
+
     @Override
     public void setAttribute(String name, Object value)
     {
-    	raw.setAttribute(name, value);
+        raw.setAttribute(name, value);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class RequestImpl implements Request
     public Session getSession(boolean create)
     {
         HttpSession rawSession = raw.getSession(create);
-        if(rawSession == null)return null;
+        if (rawSession == null) return null;
         return new SessionImpl(rawSession);
     }
 
@@ -76,30 +76,33 @@ public class RequestImpl implements Request
     public String[] getParameterValues(String name)
     {
         String[] values = raw.getParameterValues(name + "[]");
-        if(values == null)
+        if (values == null)
         {
             String value = raw.getParameter(name);
-            if(value != null){
+            if (value != null)
+            {
                 return new String[]{value};
-            }else{
+            }
+            else
+            {
                 return new String[]{};
             }
         }
         return values;
     }
 
-	@Override
+    @Override
     public Map<String, String[]> getParameters()
     {
         return Collections.unmodifiableMap((Map<String, String[]>) raw.getParameterMap());
     }
-    
-	@Override
+
+    @Override
     public String getRequestUri()
     {
         return raw.getRequestURI();
     }
-    
+
     @Override
     public String getRemoteAddr()
     {
@@ -119,10 +122,10 @@ public class RequestImpl implements Request
     }
 
     @Override
-	public HttpServletRequest getRawRequest()
+    public HttpServletRequest getRawRequest()
     {
-		return raw;
-	}
+        return raw;
+    }
 
     @Override
     public HttpSession getRawSession()
@@ -157,15 +160,16 @@ public class RequestImpl implements Request
     {
         StringBuilder sb = new StringBuilder();
 
-        try(BufferedReader br = raw.getReader()){
+        try (BufferedReader br = raw.getReader())
+        {
             String str;
 
-            if((str = br.readLine()) != null)
+            if ((str = br.readLine()) != null)
             {
                 sb.append(str);
             }
 
-            while( (str = br.readLine()) != null )
+            while ((str = br.readLine()) != null)
             {
                 sb.append("\n");
                 sb.append(str);
@@ -181,24 +185,30 @@ public class RequestImpl implements Request
 
     /**
      * https://stackoverflow.com/a/15323776
+     *
      * @return remote address of a client
      */
     private String getClientIpAddr(HttpServletRequest request)
     {
         String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
             ip = request.getRemoteAddr();
         }
         return ip;

@@ -24,6 +24,6 @@ class PrintParamsCustomOp extends BaseOperationSupport
     @Override
     void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.finished(((DynamicPropertySet)parameters).asMap().toString()))
+        setResult(OperationResult.finished(((DynamicPropertySet) parameters).asMap().toString()))
     }
 }

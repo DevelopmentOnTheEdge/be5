@@ -5,11 +5,11 @@ import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 
 public class LanguageStaticPages extends BeVectorCollection<StaticPage>
 {
-    
-    public LanguageStaticPages( String name, BeModelCollection<?> parent )
+
+    public LanguageStaticPages(String name, BeModelCollection<?> parent)
     {
-        super( name, StaticPage.class, parent );
+        super(name, StaticPage.class, parent);
         propagateCodeChange();
     }
-    
+
 }

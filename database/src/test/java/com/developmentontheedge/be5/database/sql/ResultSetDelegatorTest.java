@@ -23,7 +23,7 @@ public class ResultSetDelegatorTest
         // For each method in the Foo class...
         for (Method fooMethod : ResultSet.class.getDeclaredMethods())
         {
-            if(fooMethod.getName().equals("next"))continue;
+            if (fooMethod.getName().equals("next")) continue;
             boolean methodCalled = false;
 
             // Find matching method in wrapper class and call it
@@ -32,25 +32,70 @@ public class ResultSetDelegatorTest
                 Class<?>[] fooParameterTypes = fooMethod.getParameterTypes();
                 Class<?>[] parameterTypes = wrapperMethod.getParameterTypes();
                 if (fooMethod.getName().equals(wrapperMethod.getName()) &&
-                        Arrays.equals(fooParameterTypes, parameterTypes)) {
+                        Arrays.equals(fooParameterTypes, parameterTypes))
+                {
 
                     Object[] arguments = new Object[parameterTypes.length];
                     for (int j = 0; j < arguments.length; j++)
                     {
-                        if(parameterTypes[j] == long.class){arguments[j] = 1L; continue;}
-                        if(parameterTypes[j] == int.class){arguments[j] = 2; continue;}
-                        if(parameterTypes[j] == short.class){arguments[j] = (short)2; continue;}
-                        if(parameterTypes[j] == double.class){arguments[j] = 1.1; continue;}
-                        if(parameterTypes[j] == float.class){arguments[j] = 1.2f; continue;}
-                        if(parameterTypes[j] == boolean.class){arguments[j] = true; continue;}
-                        if(parameterTypes[j] == char.class){arguments[j] = 'c'; continue;}
-                        if(parameterTypes[j] == byte.class){arguments[j] = (byte) 3; continue;}
+                        if (parameterTypes[j] == long.class)
+                        {
+                            arguments[j] = 1L;
+                            continue;
+                        }
+                        if (parameterTypes[j] == int.class)
+                        {
+                            arguments[j] = 2;
+                            continue;
+                        }
+                        if (parameterTypes[j] == short.class)
+                        {
+                            arguments[j] = (short) 2;
+                            continue;
+                        }
+                        if (parameterTypes[j] == double.class)
+                        {
+                            arguments[j] = 1.1;
+                            continue;
+                        }
+                        if (parameterTypes[j] == float.class)
+                        {
+                            arguments[j] = 1.2f;
+                            continue;
+                        }
+                        if (parameterTypes[j] == boolean.class)
+                        {
+                            arguments[j] = true;
+                            continue;
+                        }
+                        if (parameterTypes[j] == char.class)
+                        {
+                            arguments[j] = 'c';
+                            continue;
+                        }
+                        if (parameterTypes[j] == byte.class)
+                        {
+                            arguments[j] = (byte) 3;
+                            continue;
+                        }
 
-                        if(parameterTypes[j] == byte[].class){arguments[j] = new byte[]{(byte) 3}; continue;}
+                        if (parameterTypes[j] == byte[].class)
+                        {
+                            arguments[j] = new byte[]{(byte) 3};
+                            continue;
+                        }
 
-                        if(parameterTypes[j] == String.class){arguments[j] = "test"; continue;}
+                        if (parameterTypes[j] == String.class)
+                        {
+                            arguments[j] = "test";
+                            continue;
+                        }
 
-                        if(parameterTypes[j] == Class.class){arguments[j] = String.class; continue;}
+                        if (parameterTypes[j] == Class.class)
+                        {
+                            arguments[j] = String.class;
+                            continue;
+                        }
                         arguments[j] = Mockito.mock(parameterTypes[j]);
                     }
 
@@ -58,7 +103,9 @@ public class ResultSetDelegatorTest
                     try
                     {
                         wrapperMethod.invoke(wrapper, arguments);
-                    }catch (IllegalArgumentException e){
+                    }
+                    catch (IllegalArgumentException e)
+                    {
                         e.printStackTrace();
                     }
                     // Ensure method was called on delegate exactly once with the correct arguments

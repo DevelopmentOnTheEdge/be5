@@ -14,11 +14,13 @@ import static org.junit.Assert.assertNull
 
 class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
 {
-    @Inject Validator validator
+    @Inject
+    Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
-    void initDps(){
+    void initDps()
+    {
         dps = new GDynamicPropertySetSupport()
     }
 
@@ -26,9 +28,9 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
     void checkValueInTags()
     {
         dps.add {
-            name          = "test"
-            TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
-            value         = "2"
+            name = "test"
+            TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
+            value = "2"
         }
         validator.checkErrorAndCast(dps)
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
@@ -39,10 +41,10 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
     void checkValueInTagsLong()
     {
         dps.add {
-            name          = "test"
-            TYPE          = Long
-            TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
-            value         = 2L
+            name = "test"
+            TYPE = Long
+            TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
+            value = 2L
         }
         validator.checkErrorAndCast(dps)
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
@@ -53,14 +55,14 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
     void checkValueInTagsError()
     {
         dps.add {
-            name          = "test"
-            TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
-            value         = "3"
+            name = "test"
+            TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
+            value = "3"
         }
 
         try {
             validator.checkErrorAndCast(dps)
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
             throw e
@@ -72,9 +74,9 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
     void checkValueInTagsMultipleErrorStringValue()
     {
         dps.add {
-            name          = "test"
-            TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
-            value         = ["1","3"] as Object[]
+            name = "test"
+            TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
+            value = ["1", "3"] as Object[]
             MULTIPLE_SELECTION_LIST = true
         }
 
@@ -87,15 +89,15 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
     void checkValueInTagsMultipleError()
     {
         dps.add {
-            name          = "test"
-            TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
-            value         = [1,3] as Object[]
+            name = "test"
+            TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
+            value = [1, 3] as Object[]
             MULTIPLE_SELECTION_LIST = true
         }
 
         try {
             validator.checkErrorAndCast(dps)
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
             throw e

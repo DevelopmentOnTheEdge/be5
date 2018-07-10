@@ -6,7 +6,7 @@ public class AstFrameBetween extends SimpleNode
 {
     public AstFrameBetween(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "BETWEEN";
         this.childrenDelimiter = "AND";
     }

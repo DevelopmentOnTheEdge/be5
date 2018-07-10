@@ -6,7 +6,7 @@ public class Position
     private final String elementType;
     private final int fromLine, fromColumn, toLine, toColumn;
 
-    public Position( String path, String elementType, int fromLine, int fromColumn, int toLine, int toColumn )
+    public Position(String path, String elementType, int fromLine, int fromColumn, int toLine, int toColumn)
     {
         super();
         this.path = path;
@@ -46,16 +46,16 @@ public class Position
     {
         return toColumn;
     }
-    
+
     public String toString()
     {
-        return path+"["+fromLine+","+fromColumn+"]-["+toLine+","+toColumn+"]";
+        return path + "[" + fromLine + "," + fromColumn + "]-[" + toLine + "," + toColumn + "]";
     }
 
-    public boolean inside( Position position )
+    public boolean inside(Position position)
     {
-        return position.path.equals( path )
-            && ( fromLine > position.fromLine || fromLine == position.fromLine && fromColumn >= position.fromColumn )
-            && ( toLine < position.toLine || toLine == position.toLine && toColumn <= position.toColumn );
+        return position.path.equals(path)
+                && (fromLine > position.fromLine || fromLine == position.fromLine && fromColumn >= position.fromColumn)
+                && (toLine < position.toLine || toLine == position.toLine && toColumn <= position.toColumn);
     }
 }

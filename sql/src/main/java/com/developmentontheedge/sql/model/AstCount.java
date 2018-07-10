@@ -4,18 +4,19 @@ package com.developmentontheedge.sql.model;
 
 public class AstCount extends SimpleNode
 {
-    static enum Mode {
+    static enum Mode
+    {
         NORMAL, ANY, DISTINCT
     }
-    
+
     public AstCount(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "COUNT(";
         this.nodeSuffix = ")";
         this.childrenDelimiter = ",";
     }
-    
+
     public AstCount()
     {
         this(SqlParserTreeConstants.JJTCOUNT);
@@ -23,7 +24,7 @@ public class AstCount extends SimpleNode
     }
 
     Mode mode = Mode.NORMAL;
-    
+
     public void setAny()
     {
         this.mode = Mode.ANY;
@@ -35,6 +36,6 @@ public class AstCount extends SimpleNode
         this.mode = Mode.DISTINCT;
         this.nodeContent = "DISTINCT";
     }
-    
+
 }
 /* JavaCC - OriginalChecksum=6f00e2a710279d58b11dcaa7f954f54a (do not edit this line) */

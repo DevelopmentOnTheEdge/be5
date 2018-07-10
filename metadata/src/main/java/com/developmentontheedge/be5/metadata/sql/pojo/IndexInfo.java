@@ -14,7 +14,7 @@ public class IndexInfo
         return name;
     }
 
-    public void setName( String name )
+    public void setName(String name)
     {
         this.name = name;
     }
@@ -24,14 +24,14 @@ public class IndexInfo
         return unique;
     }
 
-    public void setUnique( boolean unique )
+    public void setUnique(boolean unique)
     {
         this.unique = unique;
     }
 
-    public void addColumn( String col )
+    public void addColumn(String col)
     {
-        columns.add( col );
+        columns.add(col);
     }
 
     public List<String> getColumns()

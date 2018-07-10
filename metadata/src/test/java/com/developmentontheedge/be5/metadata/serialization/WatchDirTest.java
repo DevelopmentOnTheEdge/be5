@@ -25,21 +25,23 @@ public class WatchDirTest
     {
         Path path = tmp.newFolder().toPath();
         Project project = getProject("test");
-        Serialization.save( project, path );
+        Serialization.save(project, path);
 
         boolean modify[] = new boolean[]{false};
 
         WatchDir watcher = null;
-        try{
+        try
+        {
             watcher = new WatchDir(Collections.singletonMap("main", project))
-                    .onModify( onModify -> modify[0] = true)
+                    .onModify(onModify -> modify[0] = true)
                     .start();
 
-            while (!modify[0]){
+            while (!modify[0])
+            {
                 Thread.sleep(100);
 
-                createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" + new Random().nextInt());
-                Serialization.save( project, path );
+                createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" + new Random().nextInt());
+                Serialization.save(project, path);
 
                 System.out.println(modify[0]);
             }
@@ -47,11 +49,12 @@ public class WatchDirTest
             assertTrue(modify[0]);
             watcher.stop();
 
-            do{
+            do
+            {
                 Thread.sleep(100);
 
                 modify[0] = false;
-                Serialization.save( project, path );
+                Serialization.save(project, path);
             }
             while (modify[0]);
 
@@ -59,7 +62,7 @@ public class WatchDirTest
         }
         finally
         {
-            if(watcher != null)watcher.stop();
+            if (watcher != null) watcher.stop();
         }
     }
 }

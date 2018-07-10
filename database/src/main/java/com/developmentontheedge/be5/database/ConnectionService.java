@@ -23,5 +23,5 @@ public interface ConnectionService
 
     void transaction(SqlExecutorVoid executor);
 
-    void releaseConnection( java.sql.Connection conn );
+    void releaseConnection(java.sql.Connection conn);
 }

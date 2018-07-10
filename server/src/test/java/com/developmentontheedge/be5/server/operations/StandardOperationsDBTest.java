@@ -27,10 +27,10 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     @Test
     public void editOperationGenerate()
     {
-        Object first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(),"{}").getFirst();
+        Object first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(), "{}").getFirst();
 
         assertEquals("{'name':'TestName','value':'1'}",
-        oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
     @Test

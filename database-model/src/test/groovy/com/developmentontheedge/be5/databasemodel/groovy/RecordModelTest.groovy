@@ -14,7 +14,8 @@ import static org.junit.Assert.assertEquals
 
 class RecordModelTest extends DatabaseModelProjectDbTest
 {
-    @Inject private DatabaseModel database
+    @Inject
+    private DatabaseModel database
     private EntityModel<Long> testtableAdmin
 
     @Before
@@ -28,7 +29,7 @@ class RecordModelTest extends DatabaseModelProjectDbTest
     void testUpdate()
     {
         Long id = testtableAdmin.add([
-                "name": "TestName",
+                "name" : "TestName",
                 "value": 1
         ])
 
@@ -41,26 +42,26 @@ class RecordModelTest extends DatabaseModelProjectDbTest
         Long id2 = record.getPrimaryKey()
         assertEquals(Long.class, id2.getClass())
 
-        assertEquals( "TestName2", record.getValue("name"))
-        assertEquals( "TestName2", testtableAdmin.get(id).getValue("name"))
+        assertEquals("TestName2", record.getValue("name"))
+        assertEquals("TestName2", testtableAdmin.get(id).getValue("name"))
 
-        record.update( [ "name": "TestName3" ])
+        record.update(["name": "TestName3"])
 
-        assertEquals( "TestName3", record.getValue("name"))
+        assertEquals("TestName3", record.getValue("name"))
 
         record.update("name", "TestName4")
 
-        assertEquals( "TestName4", record.getValue("name"))
+        assertEquals("TestName4", record.getValue("name"))
 
         record.name = "TestName5"
 
-        assertEquals( "TestName5", record.getValue("name"))
+        assertEquals("TestName5", record.getValue("name"))
     }
 
     @Test(expected = IllegalAccessError.class)
     void errorOnSetValue()
     {
-        Long id = testtableAdmin.add([ "name": "TestName", "value": 1 ])
+        Long id = testtableAdmin.add(["name": "TestName", "value": 1])
         RecordModel<Long> record = testtableAdmin.get(id)
 
         record.setValue("name", "123")
@@ -69,7 +70,7 @@ class RecordModelTest extends DatabaseModelProjectDbTest
     @Test(expected = IllegalArgumentException.class)
     void propertyNotFound()
     {
-        Long id = testtableAdmin.add([ "name": "TestName", "value": 1 ])
+        Long id = testtableAdmin.add(["name": "TestName", "value": 1])
         RecordModel<Long> record = testtableAdmin.get(id)
 
         record.foo = "123"

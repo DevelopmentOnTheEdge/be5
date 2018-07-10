@@ -9,11 +9,10 @@ class SelectionView extends TableBuilderSupport
     @Override
     TableModel getTableModel()
     {
-        addColumns("Code","Name")
+        addColumns("Code", "Name")
 
-        for (Entity entity : meta.getOrderedEntities(userInfo.getLanguage()))
-        {
-            addRow(cells( entity.getName(), entity.getName() ))
+        for (Entity entity : meta.getOrderedEntities(userInfo.getLanguage())) {
+            addRow(cells(entity.getName(), entity.getName()))
         }
 
         return table(columns, rows)

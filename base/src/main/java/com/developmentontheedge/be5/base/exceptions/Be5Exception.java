@@ -153,15 +153,15 @@ public class Be5Exception extends RuntimeException
         Throwable e = err;
         StringBuilder out = new StringBuilder(getThrowableMessage(e));
 
-        while(e instanceof Be5Exception && e.getCause() != null)
+        while (e instanceof Be5Exception && e.getCause() != null)
         {
             e = e.getCause();
             out.append(getThrowableMessage(e));
         }
-        if(e.getClass() == NullPointerException.class)
+        if (e.getClass() == NullPointerException.class)
         {
             StackTraceElement[] stackTrace = e.getStackTrace();
-            for(int i = 0; i < Math.min(stackTrace.length, 2); i++)
+            for (int i = 0; i < Math.min(stackTrace.length, 2); i++)
             {
                 out.append(getFullStackTraceLine(stackTrace[i])).append("\n");
             }
@@ -178,10 +178,11 @@ public class Be5Exception extends RuntimeException
 
     private static String getThrowableMessage(Throwable e)
     {
-        if(e instanceof Be5Exception)
+        if (e instanceof Be5Exception)
         {
             return e.getClass().getSimpleName() + ": " + e.getMessage() + "\n";
-        } else
+        }
+        else
         {
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }
@@ -194,7 +195,7 @@ public class Be5Exception extends RuntimeException
 
     public Level getLogLevel()
     {
-        if(getCode().isInternal()) return Level.SEVERE;
+        if (getCode().isInternal()) return Level.SEVERE;
         else return Level.FINE;
     }
 }

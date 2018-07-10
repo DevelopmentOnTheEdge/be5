@@ -11,12 +11,12 @@ public class ModuleSelector extends StringTagEditor
     {
         try
         {
-            Project project = ( ( BeModelElement ) getBean() ).getProject();
-            return project.allModules().toArray( String[]::new );
+            Project project = ((BeModelElement) getBean()).getProject();
+            return project.allModules().toArray(String[]::new);
         }
-        catch( Exception e )
+        catch (Exception e)
         {
-            return new String[] {Project.APPLICATION};
+            return new String[]{Project.APPLICATION};
         }
     }
 }

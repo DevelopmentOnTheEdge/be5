@@ -14,7 +14,8 @@ import static org.junit.Assert.assertEquals;
 
 public class ActionHelperTest extends ServerBe5ProjectTest
 {
-    @Inject private Meta meta;
+    @Inject
+    private Meta meta;
 
     @Test
     public void legacyUrlTest()

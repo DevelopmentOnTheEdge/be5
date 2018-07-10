@@ -37,20 +37,20 @@ public abstract class ScriptTestUtils
     {
         tpmProjectPath = tmp.newFolder().toPath();
         project = ProjectTestUtils.getProject("test");
-        Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
-        ProjectTestUtils.createScheme( entity );
-        ProjectTestUtils.createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
-        ProjectTestUtils.createScript( project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')" );
+        Entity entity = ProjectTestUtils.createEntity(project, "entity", "ID");
+        ProjectTestUtils.createScheme(entity);
+        ProjectTestUtils.createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')");
+        ProjectTestUtils.createScript(project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')");
         ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
 
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
-        query.getOperationNames().setValues( Collections.singleton( "op" ) );
+        query.getOperationNames().setValues(Collections.singleton("op"));
 
-        ProjectTestUtils.createOperation( entity, "op" );
+        ProjectTestUtils.createOperation(entity, "op");
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);
-        Serialization.save( project, tpmProjectPath);
+        Serialization.save(project, tpmProjectPath);
 
 
         ArrayList<URL> urls = new ArrayList<>();
@@ -60,20 +60,20 @@ public abstract class ScriptTestUtils
 
 
         LoadContext ctx = new LoadContext();
-        ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject ), ctx );
+        ModuleLoader2.mergeAllModules(project, Collections.singletonList(moduleProject), ctx);
     }
 
     private Project createModule(Project project, String moduleName, Path path) throws Exception
     {
-        Project module = new Project( moduleName, true);
-        Entity entity = ProjectTestUtils.createEntity( module, "moduleEntity", "ID" );
-        ProjectTestUtils.createScheme( entity );
-        ProjectTestUtils.createScript( module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')" );
-        Serialization.save( module, path );
+        Project module = new Project(moduleName, true);
+        Entity entity = ProjectTestUtils.createEntity(module, "moduleEntity", "ID");
+        ProjectTestUtils.createScheme(entity);
+        ProjectTestUtils.createScript(module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')");
+        Serialization.save(module, path);
 
-        Module appModule = new Module( moduleName, project.getModules() );
-        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
-        DataElementUtils.save( appModule );
+        Module appModule = new Module(moduleName, project.getModules());
+        project.setRoles(Arrays.asList("Administrator", "Guest", "User", "Operator"));
+        DataElementUtils.save(appModule);
 
         return module;
     }

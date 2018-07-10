@@ -14,9 +14,9 @@ public class StaticPage extends BeVectorCollection<BeModelElement>
     private long id;    // now used internally for synchronization
     private String fileName = "";
 
-    public StaticPage( String name, BeModelCollection<?> parent )
+    public StaticPage(String name, BeModelCollection<?> parent)
     {
-        super( name, BeModelElement.class, parent );
+        super(name, BeModelElement.class, parent);
         propagateCodeChange();
     }
 
@@ -26,20 +26,20 @@ public class StaticPage extends BeVectorCollection<BeModelElement>
         return content;
     }
 
-    public void setContent( String content )
+    public void setContent(String content)
     {
         this.content = content;
         fireCodeChanged();
     }
-    
+
     @PropertyName("File name")
     @PropertyDescription("Leave this field empty if the page should be saved to the main static pages file.")
     public String getFileName()
     {
         return fileName;
     }
-    
-    public void setFileName( String fileName )
+
+    public void setFileName(String fileName)
     {
         this.fileName = fileName;
         fireCodeChanged();
@@ -48,18 +48,18 @@ public class StaticPage extends BeVectorCollection<BeModelElement>
     @Override
     public int hashCode()
     {
-        return Objects.hashCode( content );
+        return Objects.hashCode(content);
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        StaticPage other = ( StaticPage ) obj;
-        return Objects.equals( content, other.content );
+        StaticPage other = (StaticPage) obj;
+        return Objects.equals(content, other.content);
     }
 
     public long getId()
@@ -67,7 +67,7 @@ public class StaticPage extends BeVectorCollection<BeModelElement>
         return id;
     }
 
-    public void setId( long id )
+    public void setId(long id)
     {
         this.id = id;
         fireCodeChanged();

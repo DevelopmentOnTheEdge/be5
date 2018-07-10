@@ -15,7 +15,8 @@ import static org.junit.Assert.assertNull;
 
 public class MenuHelperTest extends ServerBe5ProjectTest
 {
-    @Inject private MenuHelper menuHelper;
+    @Inject
+    private MenuHelper menuHelper;
 
     @Test
     public void testGenerateSimpleMenu()
@@ -39,6 +40,20 @@ public class MenuHelperTest extends ServerBe5ProjectTest
         assertEquals("Добавить", nodes.get(1).getOperations().get(0).title);
         assertEquals(new Action("call", "form/dateTime/All records/Insert"),
                 nodes.get(1).getOperations().get(0).action);
+
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Test
+    public void testRootMenu()
+    {
+        initUserWithRoles("TestUser2");
+
+        List<MenuHelper.RootNode> nodes = menuHelper.collectEntities(false, EntityType.TABLE);
+
+        assertEquals(new Action("call", "table/rootMenu/Test1"),
+                nodes.get(1).getAction());
+        assertEquals(null, nodes.get(1).getChildren());
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

@@ -12,7 +12,8 @@ import static org.junit.Assert.assertEquals
 
 class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
 {
-    @Inject DatabaseModel database
+    @Inject
+    DatabaseModel database
 
     @Before
     void before()

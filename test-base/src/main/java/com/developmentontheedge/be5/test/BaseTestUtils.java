@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -10,15 +11,19 @@ import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.test.mocks.TestMailService;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -61,11 +66,15 @@ public abstract class BaseTestUtils
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
-    @Inject protected Meta meta;
-    @Inject protected UserAwareMeta userAwareMeta;
-    @Inject protected DbService db;
+    @Inject
+    protected Meta meta;
+    @Inject
+    protected UserAwareMeta userAwareMeta;
+    @Inject
+    protected DbService db;
 
-    @Inject protected UserInfoProvider userInfoProvider;
+    @Inject
+    protected UserInfoProvider userInfoProvider;
 
     protected static final String TEST_USER = "testUser";
     //protected static final Jsonb jsonb = JsonbBuilder.create();
@@ -73,7 +82,7 @@ public abstract class BaseTestUtils
     @Before
     public void setUpBaseTestUtils()
     {
-        if(getInjector() != null)
+        if (getInjector() != null)
         {
             getInjector().injectMembers(this);
         }
@@ -105,17 +114,23 @@ public abstract class BaseTestUtils
         return s.toString().replace("'", "\"");
     }
 
-    public static String resultSetToString(ResultSet rs) {
+    public static String resultSetToString(ResultSet rs)
+    {
         List<String> list = new ArrayList<>();
-        try {
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                if(rs.getObject(i) != null)
+        try
+        {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
+            {
+                if (rs.getObject(i) != null)
                     list.add(rs.getObject(i).toString());
-                else{
+                else
+                {
                     list.add("null");
                 }
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
         }
         return list.stream().collect(Collectors.joining(","));
@@ -128,7 +143,7 @@ public abstract class BaseTestUtils
 
     public static <T extends DynamicPropertySet> T getDps(T dps, Map<String, ?> nameValues)
     {
-        for(Map.Entry<String, ?> entry : nameValues.entrySet())
+        for (Map.Entry<String, ?> entry : nameValues.entrySet())
         {
             dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
         }
@@ -157,11 +172,38 @@ public abstract class BaseTestUtils
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 
-    protected static void initDb(Injector injector)
+    protected static void initDb()
     {
-        Project project = injector.getInstance(ProjectProvider.class).get();
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        }
+        catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
+        initDb(project);
+    }
 
-        if(project.getConnectionProfileName() != null &&
+    protected static void addH2ProfileAndCreateDb()
+    {
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        }
+        catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
+        addH2Profile(project);
+        initDb(project);
+    }
+
+    protected static void initDb(Project project)
+    {
+        if (project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
             log.info(JULLogger.infoBlock("Execute be5:create-db"));
@@ -175,7 +217,7 @@ public abstract class BaseTestUtils
         }
         else
         {
-            log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
+            log.warning("Fail set '" + profileForIntegrationTests + "' profile, maybe DatabaseService already initialized.");
         }
     }
 
@@ -188,10 +230,20 @@ public abstract class BaseTestUtils
         {
             connector.executeUpdate("DROP ALL OBJECTS");
         }
-        catch(SQLException e)
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public static void addH2Profile(Project project)
+    {
+        if (project.getConnectionProfile() == null ||
+                !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
+        {
+            ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
+        }
+        project.setConnectionProfileName(profileForIntegrationTests);
     }
 
     public static class BaseDbMockTestModule extends AbstractModule
@@ -205,6 +257,7 @@ public abstract class BaseTestUtils
             bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
+            bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
         }
     }
 
@@ -215,6 +268,7 @@ public abstract class BaseTestUtils
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
+            bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
         }
     }
 

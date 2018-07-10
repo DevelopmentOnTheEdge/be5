@@ -1,8 +1,6 @@
 <#include 'dict/languages'/>
 <#include 'dict/mimeTypes'/>
 <#include 'dict/systemSettings'/>
-<#include 'dict/countries'/>
-<#include 'dict/provinces'/>
 
 -- DELETE FROM users WHERE user_name = 'Administrator';
 -- DELETE FROM user_roles WHERE user_name = 'Administrator';

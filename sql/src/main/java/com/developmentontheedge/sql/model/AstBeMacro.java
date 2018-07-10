@@ -4,11 +4,12 @@ public class AstBeMacro extends SimpleNode
 {
     public AstBeMacro(int id)
     {
-        super( id );
+        super(id);
         this.nodeSuffix = "END";
     }
 
     private String functionName;
+
     public String getFunctionName()
     {
         return functionName;

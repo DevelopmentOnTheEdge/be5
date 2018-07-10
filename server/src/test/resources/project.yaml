@@ -12,11 +12,11 @@ testProject:
   - testCollection
   - testGenCollection
   - atest
+  - rootMenu
   - meters
   - persons
   - propertyTypes
   - testTags
-  - filterTestTable
   scripts:
   - Post-db
   - dictionaries

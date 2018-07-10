@@ -17,7 +17,8 @@ import static org.junit.Assert.assertEquals;
 public class UserInfoTest extends ServerBe5ProjectTest
 {
     private static UserInfo ui;
-    @Inject private UserHelper userHelper;
+    @Inject
+    private UserHelper userHelper;
 
     @Before
     public void setUpTestUser()

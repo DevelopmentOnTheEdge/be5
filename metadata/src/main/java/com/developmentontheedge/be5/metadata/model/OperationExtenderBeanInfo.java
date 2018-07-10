@@ -8,9 +8,9 @@ public class OperationExtenderBeanInfo extends BeanInfoEx
 {
     public OperationExtenderBeanInfo()
     {
-        super( OperationExtender.class );
+        super(OperationExtender.class);
     }
-    
+
     public OperationExtenderBeanInfo(Class<? extends OperationExtender> clazz)
     {
         super(clazz);

@@ -14,25 +14,25 @@ public class AstIdentifierConstant extends SimpleNode
 
     public AstIdentifierConstant(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstIdentifierConstant(String value)
     {
         this(SqlParserTreeConstants.JJTIDENTIFIERCONSTANT);
-        setValue( value );
+        setValue(value);
     }
-    
+
     public AstIdentifierConstant(String value, boolean quote)
     {
         this(SqlParserTreeConstants.JJTIDENTIFIERCONSTANT);
-        setValue( value );
-        setQuoteSymbol( quote ? QuoteSymbol.DOUBLE_QUOTE : QuoteSymbol.NONE );
+        setValue(value);
+        setQuoteSymbol(quote ? QuoteSymbol.DOUBLE_QUOTE : QuoteSymbol.NONE);
     }
-    
+
     private String value;
     private QuoteSymbol symbol = QuoteSymbol.NONE;
-    
+
     public String getValue()
     {
         return value;
@@ -46,19 +46,19 @@ public class AstIdentifierConstant extends SimpleNode
 
     public void setQuoteSymbol(QuoteSymbol symbol)
     {
-        this.symbol = Objects.requireNonNull( symbol );
+        this.symbol = Objects.requireNonNull(symbol);
     }
 
     public void setValue(String value)
     {
-        if( value.startsWith( "\"" ) && value.endsWith( "\"" ) )
+        if (value.startsWith("\"") && value.endsWith("\""))
         {
-            this.value = value.substring( 1, value.length() - 1 );
+            this.value = value.substring(1, value.length() - 1);
             this.symbol = QuoteSymbol.DOUBLE_QUOTE;
         }
-        else if( value.startsWith( "`" ) && value.endsWith( "`" ) )
+        else if (value.startsWith("`") && value.endsWith("`"))
         {
-            this.value = value.substring( 1, value.length() - 1 );
+            this.value = value.substring(1, value.length() - 1);
             this.symbol = QuoteSymbol.BACKTICK;
         }
         else
@@ -72,7 +72,7 @@ public class AstIdentifierConstant extends SimpleNode
     public String getNodeContent()
     {
         String qs;
-        switch( symbol )
+        switch (symbol)
         {
             case BACKTICK:
                 qs = "`";
@@ -92,7 +92,7 @@ public class AstIdentifierConstant extends SimpleNode
     @Override
     public String toString()
     {
-        return super.toString()+": "+getNodeContent();
+        return super.toString() + ": " + getNodeContent();
     }
 }
 /* JavaCC - OriginalChecksum=e7bda9ba6e8f37120bae64bff0edb499 (do not edit this line) */

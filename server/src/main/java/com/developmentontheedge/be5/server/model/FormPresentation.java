@@ -15,12 +15,12 @@ public class FormPresentation
     private final String entity;
     private final String query;
     private final String operation;
-    private final String title;//todo change to 'Здания - Добавить'
+    private final String title; //todo change to 'Здания - Добавить'
     private final String selectedRows;
     private final Map<String, Object> operationParams;
     private final JsonObject bean;
     private final Object layout;
-    private final OperationResult operationResult;//todo remove
+    private final OperationResult operationResult;
     private final ErrorModel errorModel;
 
     public FormPresentation(OperationInfo operationInfo, OperationContext context, String title,

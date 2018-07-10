@@ -27,6 +27,8 @@ public abstract class ServerBe5ProjectTest extends ServerTestUtils
         {
             install(new BaseDbMockTestModule());
             install(new ServerWebTestModule());
+
+            //bind(DaemonStarter.class).to(DaemonStarterForTest.class).in(Scopes.SINGLETON);
         }
     }
 }

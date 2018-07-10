@@ -11,11 +11,13 @@ import java.util.List;
 public abstract class AbstractParser implements Parser
 {
     protected ParserContext context = new DefaultParserContext();
+
     @Override
     public ParserContext getContext()
     {
         return context;
     }
+
     @Override
     public void setContext(ParserContext context)
     {
@@ -31,13 +33,13 @@ public abstract class AbstractParser implements Parser
 
     public void warning(String warningStr)
     {
-        messages.add( "Warning: " + warningStr + "." );
+        messages.add("Warning: " + warningStr + ".");
         status |= STATUS_WARNING;
     }
 
     public void error(String errorStr)
     {
-        messages.add( "Error: " + errorStr + "." );
+        messages.add("Error: " + errorStr + ".");
         status |= STATUS_ERROR;
     }
 
@@ -54,24 +56,24 @@ public abstract class AbstractParser implements Parser
     protected AstStart astStart;
     protected boolean squashed;
     private Function fn;
-    
+
     private void squash()
     {
-        if(squashed)
+        if (squashed)
             return;
         astStart.tree().filter(Squasheable.class::isInstance)
-            .remove( node -> node.jjtGetParent() instanceof AstBeNode )
-            .filter( node -> node.jjtGetNumChildren() == 1 )
-            .forEach( node -> {
-                SimpleNode child = node.child( 0 );
-                if(child.specialPrefix == null)
-                    child.specialPrefix = node.specialPrefix;
-                if(child.specialSuffix == null)
-                    child.specialSuffix = node.specialSuffix;
-                node.replaceWith( child );
-            } );
+                .remove(node -> node.jjtGetParent() instanceof AstBeNode)
+                .filter(node -> node.jjtGetNumChildren() == 1)
+                .forEach(node -> {
+                    SimpleNode child = node.child(0);
+                    if (child.specialPrefix == null)
+                        child.specialPrefix = node.specialPrefix;
+                    if (child.specialSuffix == null)
+                        child.specialSuffix = node.specialSuffix;
+                    node.replaceWith(child);
+                });
     }
-    
+
     @Override
     public AstStart getStartNode()
     {
@@ -86,10 +88,10 @@ public abstract class AbstractParser implements Parser
 
         try
         {
-            ReInit( new StringReader(expression) );
+            ReInit(new StringReader(expression));
             astStart = Start();
         }
-        catch(Throwable t)
+        catch (Throwable t)
         {
             error(t.toString());
             astStart = new AstStart(SqlParserTreeConstants.JJTSTART);
@@ -102,8 +104,9 @@ public abstract class AbstractParser implements Parser
     }
 
     public abstract void ReInit(Reader reader);
+
     public abstract AstStart Start() throws ParseException;
-    
+
     protected void reinit()
     {
         status = 0;
@@ -119,73 +122,76 @@ public abstract class AbstractParser implements Parser
      */
     protected void setMacro(String name, int minNumberOfParams, int maxNumberOfParams, AstBeMacro node)
     {
-        BeMacroFunction op = new BeMacroFunction( name, minNumberOfParams, maxNumberOfParams );
-        context.declareFunction( op );
-        op.setMacro( node );
+        BeMacroFunction op = new BeMacroFunction(name, minNumberOfParams, maxNumberOfParams);
+        context.declareFunction(op);
+        op.setMacro(node);
     }
-    
+
     protected void setDbmsTransform(AstBeDbmsTransform node, String name, int numberOfParams)
     {
-        DbSpecificFunction op = new DbSpecificFunction( name, numberOfParams );
-        context.declareFunction( op );
-        node.setFunction( op );
+        DbSpecificFunction op = new DbSpecificFunction(name, numberOfParams);
+        context.declareFunction(op);
+        node.setFunction(op);
     }
-    
+
     protected void setOperator(AstFunNode node, String name)
     {
-        Function operator = context.getFunction( name.trim() );
+        Function operator = context.getFunction(name.trim());
 
-        if( operator == null && getMode() == Mode.DBMS_TRANSFORM )
+        if (operator == null && getMode() == Mode.DBMS_TRANSFORM)
         {
-            operator = new DbSpecificFunction( name, -1 );
-            context.declareFunction( operator );
+            operator = new DbSpecificFunction(name, -1);
+            context.declareFunction(operator);
             node.setWithinDbmsTransform(true);
         }
-        else if( operator == null )
+        else if (operator == null)
         {
-            error( "Unknown operator '" + name + "'" );
-            operator = new UndeclaredFunction( name, -1 );
+            error("Unknown operator '" + name + "'");
+            operator = new UndeclaredFunction(name, -1);
         }
 
         AstFunNode funNode = node;
-        funNode.setFunction( operator );
+        funNode.setFunction(operator);
     }
 
     protected void setOperator(AstFunNode node, Token op)
     {
-        node.setOperator( op );
-        setOperator( node, op.image );
+        node.setOperator(op);
+        setOperator(node, op.image);
     }
-    
+
     protected void setFunction(Function fn)
     {
         this.fn = fn;
     }
-    
+
     protected Function getFunction()
     {
         return fn;
     }
 
-    private final Deque<Mode> modes = new ArrayDeque<>( Arrays.asList( Mode.DEFAULT ) );
+    private final Deque<Mode> modes = new ArrayDeque<>(Arrays.asList(Mode.DEFAULT));
+
     public Mode getMode()
     {
         return modes.peek();
     }
+
     public void pushMode(Mode mode)
     {
-        modes.push( mode );
+        modes.push(mode);
     }
+
     public void popMode(Mode mode)
     {
         Mode curMode = modes.poll();
-        if( mode != curMode )
-            throw new InternalError( "Invalid mode: "+curMode+" (expected: "+mode+")" );
+        if (mode != curMode)
+            throw new InternalError("Invalid mode: " + curMode + " (expected: " + mode + ")");
     }
 
     public boolean popModeOptional(Mode mode)
     {
-        if(modes.peek() != mode)
+        if (modes.peek() != mode)
             return false;
         modes.poll();
         return true;

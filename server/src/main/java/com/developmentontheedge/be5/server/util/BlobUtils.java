@@ -7,10 +7,11 @@ import java.sql.SQLException;
 
 public class BlobUtils
 {
-    public static String getAsString(Object value){
+    public static String getAsString(Object value)
+    {
         try
         {
-            if(value instanceof Clob)
+            if (value instanceof Clob)
             {
                 Clob clob = (Clob) value;
                 return clob.getSubString(1, (int) clob.length());

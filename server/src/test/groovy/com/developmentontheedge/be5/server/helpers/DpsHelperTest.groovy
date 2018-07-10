@@ -18,8 +18,10 @@ import static org.junit.Assert.*
 
 class DpsHelperTest extends ServerBe5ProjectDBTest
 {
-    @Inject DpsHelper dpsHelper
-    @Inject Meta meta
+    @Inject
+    DpsHelper dpsHelper
+    @Inject
+    Meta meta
 
     DynamicPropertySet dps
 
@@ -40,7 +42,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"), [:])
         assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
-            oneQuotes(JsonFactory.dpsMeta(dps).toString())
+                oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
@@ -242,7 +244,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         assertNotNull dps.getProperty("value")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["value":"1"], ["value":"2"])
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["value": "1"], ["value": "2"])
         assertEquals "1", dps.getValue("value")
     }
 
@@ -253,7 +255,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         assertNotNull dps.getProperty("value")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["CODE":"1"], ["value":"2"])
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["CODE": "1"], ["value": "2"])
         assertEquals "2", dps.getValue("value")
     }
 
@@ -284,9 +286,9 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
-        assertEquals([CODE:null, payable:"yes", test: 2], dpsHelper.getAsMap(dps) << [test: 2])
+        assertEquals([CODE: null, payable: "yes", test: 2], dpsHelper.getAsMap(dps) << [test: 2])
 
-        assertEquals([CODE:"12", payable:"yes"], dpsHelper.getAsMap(dps, [CODE:"12"]))
+        assertEquals([CODE: "12", payable: "yes"], dpsHelper.getAsMap(dps, [CODE: "12"]))
     }
 
     @Test
@@ -294,9 +296,9 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
-        dpsHelper.setOperationParams(dps, [payable:"no"])
+        dpsHelper.setOperationParams(dps, [payable: "no"])
 
-        assertEquals([CODE:null, payable:"no"], dpsHelper.getAsMap(dps))
+        assertEquals([CODE: null, payable: "no"], dpsHelper.getAsMap(dps))
 
         assertTrue dps.getProperty("payable").getBooleanAttribute(BeanInfoConstants.READ_ONLY)
     }
@@ -361,7 +363,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         assertEquals "0.1", dpsHelper.getPrecision(1)
         assertEquals "0.01", dpsHelper.getPrecision(2)
         assertEquals "0.001", dpsHelper.getPrecision(3)
-        for (int i=4; i<=18;i++){
+        for (int i = 4; i <= 18; i++) {
             assertEquals "1.0E-${i}".toString(), dpsHelper.getPrecision(i)
         }
         assertEquals "1.0E-300", dpsHelper.getPrecision(300)

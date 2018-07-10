@@ -18,8 +18,7 @@ class ServerErrorProcessing extends GOperationSupport implements Operation
 
         def name = params.getProperty("name")
 
-        if(name.getValue() == "generateErrorInProperty")
-        {
+        if (name.getValue() == "generateErrorInProperty") {
             validator.setError(name, "Error in property (getParameters)")
         }
 

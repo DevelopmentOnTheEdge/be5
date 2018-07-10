@@ -57,7 +57,8 @@ public class DbServiceImpl implements DbService
     {
         return execute(true, conn -> query(conn, sql, rs -> {
             List<T> rows = new ArrayList<>();
-            while (rs.next()) {
+            while (rs.next())
+            {
                 rows.add(parser.parse(rs));
             }
             return rows;
@@ -98,7 +99,7 @@ public class DbServiceImpl implements DbService
     {
         sql = format(sql);
         log.fine(sql + Arrays.toString(params));
-        return queryRunner.query(conn, sql , rsh, params);
+        return queryRunner.query(conn, sql, rsh, params);
     }
 
     private int update(Connection conn, String sql, Object... params) throws SQLException
@@ -138,7 +139,7 @@ public class DbServiceImpl implements DbService
         }
         finally
         {
-            if(txConn == null)
+            if (txConn == null)
             {
                 connectionService.releaseConnection(conn);
             }

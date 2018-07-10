@@ -8,6 +8,6 @@ public class ProjectSaveException extends Exception
 
     public ProjectSaveException(Path path, Throwable cause)
     {
-        super("Unable to save project from "+path, cause);
+        super("Unable to save project from " + path, cause);
     }
 }

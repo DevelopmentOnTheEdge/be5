@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.scripts.wizard;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.google.common.collect.ImmutableList;
@@ -33,7 +34,7 @@ public class ProjectWizardTest
     }
 
     @Test
-    public void simple() throws Exception
+    public void simple()
     {
         projectWizard
                 .setInputStream("test-name\n5\n5\n")
@@ -43,7 +44,7 @@ public class ProjectWizardTest
     }
 
     @Test
-    public void roles() throws Exception
+    public void roles()
     {
         projectWizard
                 .setInputStream("test-name\n2\n1\n2\n2\nNewRole\n5")
@@ -54,7 +55,7 @@ public class ProjectWizardTest
     }
 
     @Test
-    public void languages() throws Exception
+    public void languages()
     {
         projectWizard
                 .setInputStream("test-name\n3\n1\nen\n5")
@@ -65,18 +66,25 @@ public class ProjectWizardTest
     }
 
     @Test
-    public void modules() throws Exception
+    public void modules()
     {
         projectWizard
-                .setInputStream("test-name\n4\n3\ntest-module\n5")
+                .setInputStream("test-name\n4\n2\ntest-module\n5")
                 .execute();
 
-        assertEquals(ImmutableList.of("core", "system", "test-module"),
+        assertEquals(ImmutableList.of("core", "test-module"),
                 getProject().getModules().names().toList());
     }
 
-    private Project getProject() throws Exception
+    private Project getProject()
     {
-        return Serialization.load(tpmProjectPath.toAbsolutePath());
+        try
+        {
+            return Serialization.load(tpmProjectPath.toAbsolutePath());
+        }
+        catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

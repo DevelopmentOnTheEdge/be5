@@ -31,7 +31,7 @@ public class EditOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        database.getEntity(getInfo().getEntityName()).set(context.getRecord(), (DynamicPropertySet)parameters);
+        database.getEntity(getInfo().getEntityName()).set(context.getRecord(), (DynamicPropertySet) parameters);
 
         setResult(OperationResult.finished());
     }

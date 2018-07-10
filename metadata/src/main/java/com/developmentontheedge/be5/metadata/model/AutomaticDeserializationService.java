@@ -8,33 +8,33 @@ public class AutomaticDeserializationService
 {
 
     private final Map<Path, ManagedFileType> managedFiles = new HashMap<>();
-    
+
     public AutomaticDeserializationService()
     {
     }
-    
-    public void registerFile( final Path file, final ManagedFileType type )
+
+    public void registerFile(final Path file, final ManagedFileType type)
     {
-        managedFiles.put( file, type );
-    }
-    
-    public void unregisterFile( final Path file )
-    {
-        managedFiles.remove( file );
+        managedFiles.put(file, type);
     }
 
-    public boolean isRegistered( final Path file )
+    public void unregisterFile(final Path file)
     {
-        return managedFiles.containsKey( file );
+        managedFiles.remove(file);
     }
-    
+
+    public boolean isRegistered(final Path file)
+    {
+        return managedFiles.containsKey(file);
+    }
+
     /**
      * Returns a type of the given file if the file is registered,
      * or null otherwise.
      */
-    public ManagedFileType getTypeOrNull( final Path file )
+    public ManagedFileType getTypeOrNull(final Path file)
     {
-        return managedFiles.get( file );
+        return managedFiles.get(file);
     }
-    
+
 }

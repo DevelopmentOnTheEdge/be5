@@ -15,7 +15,7 @@ public class InsertOperation extends OperationSupport
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(),
-                                context.getOperationParams(), presetValues);
+                context.getOperationParams(), presetValues);
 
         return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }
@@ -23,7 +23,7 @@ public class InsertOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet)parameters);
+        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet) parameters);
 
         setResult(OperationResult.finished());
     }

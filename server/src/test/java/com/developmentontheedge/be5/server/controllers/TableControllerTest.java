@@ -17,7 +17,8 @@ import static org.junit.Assert.assertEquals;
 
 public class TableControllerTest extends ServerBe5ProjectTest
 {
-    @Inject private TableController tableController;
+    @Inject
+    private TableController tableController;
 
     @Before
     public void setUp()
@@ -30,11 +31,11 @@ public class TableControllerTest extends ServerBe5ProjectTest
     public void generate()
     {
         JsonApiModel jsonApiModel = tableController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
-                RestApiConstants.ENTITY,"testtable",
-                RestApiConstants.QUERY,"All records",
-                RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime())), "");
+                RestApiConstants.ENTITY, "testtable",
+                RestApiConstants.QUERY, "All records",
+                RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), "");
 
-        assertEquals("testtable: All records", ((TablePresentation)jsonApiModel.getData().getAttributes()).getTitle());
+        assertEquals("testtable: All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getTitle());
     }
 
 }

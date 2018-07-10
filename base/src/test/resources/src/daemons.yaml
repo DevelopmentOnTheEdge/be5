@@ -1,1 +1,6 @@
-daemons: {}
+daemons:
+  TestDeamon:
+    className: path.to.Daemon
+    configSection: MetaTestDaemon
+    daemonType: periodic
+    description: Meta test daemon

@@ -15,11 +15,11 @@ public class RoleMultiSelector extends GenericMultiSelectEditor
         try
         {
             Object bean = getBean();
-            Project project = ((RoleSet)bean).getProject();
+            Project project = ((RoleSet) bean).getProject();
             List<String> roleList = project.getRolesWithGroups();
-            return roleList.toArray( new String[roleList.size()] );
+            return roleList.toArray(new String[roleList.size()]);
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

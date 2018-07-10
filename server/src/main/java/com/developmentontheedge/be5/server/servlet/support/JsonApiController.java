@@ -12,7 +12,7 @@ public abstract class JsonApiController extends ApiControllerSupport
     protected final void generate(Request req, Response res, String subUrl)
     {
         Object object = generate(req, subUrl);
-        if(object != null)
+        if (object != null)
         {
             res.sendAsJson(object);
         }

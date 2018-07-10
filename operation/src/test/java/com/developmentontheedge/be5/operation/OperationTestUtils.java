@@ -31,9 +31,12 @@ public class OperationTestUtils extends BaseTestUtils
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
-    @Inject protected Meta meta;
-    @Inject private OperationService operationService;
-    @Inject private OperationExecutor operationExecutor;
+    @Inject
+    protected Meta meta;
+    @Inject
+    private OperationService operationService;
+    @Inject
+    private OperationExecutor operationExecutor;
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -108,7 +111,7 @@ public class OperationTestUtils extends BaseTestUtils
 
         String[] stringSelectedRows = selectedRows(selectedRowsParam);
         Object[] selectedRows = stringSelectedRows;
-        if(!operationInfo.getEntityName().startsWith("_"))
+        if (!operationInfo.getEntityName().startsWith("_"))
         {
             Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
             selectedRows = Utils.changeTypes(stringSelectedRows, primaryKeyColumnType);
@@ -138,7 +141,7 @@ public class OperationTestUtils extends BaseTestUtils
         @Override
         protected void failed(Throwable e, Description description)
         {
-            if(!operations.isEmpty())
+            if (!operations.isEmpty())
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Created operations:");
@@ -153,9 +156,12 @@ public class OperationTestUtils extends BaseTestUtils
 
         private String extension(Operation o)
         {
-            if(OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType())){
+            if (OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType()))
+            {
                 return ".groovy";
-            } else {
+            }
+            else
+            {
                 return ".java";
             }
         }

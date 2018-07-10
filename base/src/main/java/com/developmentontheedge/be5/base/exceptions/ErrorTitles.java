@@ -42,7 +42,7 @@ public class ErrorTitles
         TITLES.put(NOT_INITIALIZED, "Server is not properly initialized: try again later");
         TITLES.put(INVALID_STATE, "Invalid state: $1");
 
-        if(TITLES.size() < Be5ErrorCode.values().length)
+        if (TITLES.size() < Be5ErrorCode.values().length)
         {
             throw new InternalError("Not all error codes have messages!");
         }
@@ -60,7 +60,7 @@ public class ErrorTitles
 
     public static String formatTitle(String title, List<String> parameters)
     {
-        for(int i = 0; i < parameters.size(); i++)
+        for (int i = 0; i < parameters.size(); i++)
         {
             title = title.replace("$" + (i + 1), parameters.get(i));
         }

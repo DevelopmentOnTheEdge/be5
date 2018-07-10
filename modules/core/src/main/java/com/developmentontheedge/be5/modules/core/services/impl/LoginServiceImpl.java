@@ -52,15 +52,18 @@ public class LoginServiceImpl implements LoginService
         Action defaultAction = menuHelper.getDefaultAction();
         String defaultRouteCall = "";
 
-        if(defaultAction == null)
+        if (defaultAction == null)
         {
             log.severe("Default Action must not be null");
         }
         else
         {
-            if(defaultAction.getName().equals("call")){
+            if (defaultAction.getName().equals("call"))
+            {
                 defaultRouteCall = defaultAction.getArg();
-            }else{
+            }
+            else
+            {
                 log.severe("Default Action type must be 'call'");
             }
         }
@@ -100,7 +103,7 @@ public class LoginServiceImpl implements LoginService
         String savedRoles = coreUtils.getUserSetting(username, DatabaseConstants.CURRENT_ROLE_LIST);
 
         List<String> currentRoles;
-        if(savedRoles != null)
+        if (savedRoles != null)
         {
             currentRoles = getAvailableCurrentRoles(parseRoles(savedRoles), availableRoles);
         }
@@ -129,24 +132,24 @@ public class LoginServiceImpl implements LoginService
     private List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
     {
         return roles.stream()
-                    .filter(availableRoles::contains)
-                    .collect(Collectors.toList());
+                .filter(availableRoles::contains)
+                .collect(Collectors.toList());
     }
 
-    protected List<String> parseRoles( String roles )
+    protected List<String> parseRoles(String roles)
     {
         TreeSet<String> rolesList = new TreeSet<>();
-        if( roles == null || "()".equals( roles ) )
+        if (roles == null || "()".equals(roles))
         {
             return Collections.emptyList();
         }
-        roles = roles.substring( 1, roles.length() - 1 ); // drop starting and trailing '(' ')'
-        StringTokenizer st = new StringTokenizer( roles, "," );
-        while( st.hasMoreTokens() )
+        roles = roles.substring(1, roles.length() - 1); // drop starting and trailing '(' ')'
+        StringTokenizer st = new StringTokenizer(roles, ",");
+        while (st.hasMoreTokens())
         {
-            rolesList.add( st.nextToken().trim().replaceAll( "'", "" ) );
+            rolesList.add(st.nextToken().trim().replaceAll("'", ""));
         }
-        return new ArrayList<>( rolesList );
+        return new ArrayList<>(rolesList);
     }
 
 }

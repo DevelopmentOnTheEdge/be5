@@ -18,9 +18,12 @@ import static com.developmentontheedge.beans.BeanInfoConstants.PASSWORD_FIELD;
 
 public class Login extends GOperationSupport
 {
-    @Inject protected LoginService loginService;
-    @Inject protected CoreUtils coreUtils;
-    @Inject protected UserAwareMeta userAwareMeta;
+    @Inject
+    protected LoginService loginService;
+    @Inject
+    protected CoreUtils coreUtils;
+    @Inject
+    protected UserAwareMeta userAwareMeta;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
@@ -43,10 +46,13 @@ public class Login extends GOperationSupport
             loginService.saveUser(username, request);
             postLogin(parameters);
 
-            if(context.getOperationParams().get("withoutUpdateUserInfo") == null){
+            if (context.getOperationParams().get("withoutUpdateUserInfo") == null)
+            {
                 setResult(OperationResult.finished(null,
                         CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
-            }else{
+            }
+            else
+            {
                 setResult(OperationResult.finished());
             }
         }
@@ -57,7 +63,7 @@ public class Login extends GOperationSupport
         }
     }
 
-    public void postLogin( Object parameters )
+    public void postLogin(Object parameters)
     {
 
     }

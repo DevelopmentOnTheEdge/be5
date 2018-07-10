@@ -19,13 +19,13 @@ public class ColumnDefBeanInfo extends BeanInfoEx
         addHidden("type");
         add("typeString");
         add("canBeNull");
-        property( "primaryKey" ).readOnly().add();
+        property("primaryKey").readOnly().add();
         addHidden("autoIncrement", "isAutoIncrementHidden");
         add("defaultValue");
         add("oldNames");
         add("usedInExtras");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
-        
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
+
         add("tableTo", ProjectTableSelector.class);
         add("columnsTo");
         add("viewName", ProjectTableViewSelector.class);

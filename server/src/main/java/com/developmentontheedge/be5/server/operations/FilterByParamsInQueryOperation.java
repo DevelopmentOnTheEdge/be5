@@ -10,7 +10,8 @@ import java.util.Map;
 
 public class FilterByParamsInQueryOperation extends FilterOperation
 {
-    @Inject private FilterHelper filterHelper;
+    @Inject
+    private FilterHelper filterHelper;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception

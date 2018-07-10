@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,7 @@ public class MetaImpl implements Meta
     {
 
         private static final Predicate<LocalizationElement> TOPICS_CONTAIN_DISPLAY_NAME = topicsContain("displayName");
-        private static final Predicate<LocalizationElement> TOPICS_CONTAIN_VIEW_NAME    = Pr.topicsContain("viewName");
+        private static final Predicate<LocalizationElement> TOPICS_CONTAIN_VIEW_NAME = Pr.topicsContain("viewName");
 
         private static Predicate<LocalizationElement> topicsContain(final String topic)
         {
@@ -228,7 +230,7 @@ public class MetaImpl implements Meta
     }
 
     private String getLocalization(Project project, String language, String entity,
-            Predicate<LocalizationElement> accept)
+                                   Predicate<LocalizationElement> accept)
     {
         for (Module module : project.getModulesAndApplication())
         {
@@ -256,10 +258,10 @@ public class MetaImpl implements Meta
     {
         List<String> languages = getProject().getApplication().getLocalizations().names().toList();
 
-        if(locale == null || !languages.contains(locale.getLanguage()))
+        if (locale == null || !languages.contains(locale.getLanguage()))
         {
-            if(languages.size() > 0)
-                return new Locale( languages.get(0) );
+            if (languages.size() > 0)
+                return new Locale(languages.get(0));
             else
                 return Locale.US;
         }
@@ -292,7 +294,7 @@ public class MetaImpl implements Meta
         Operation operation = getProject().findOperation(entityName, queryName, name);
         if (operation == null)
         {
-            if(getProject().findOperation(entityName, name) != null)
+            if (getProject().findOperation(entityName, name) != null)
             {
                 throw Be5Exception.operationNotAssignedToQuery(entityName, queryName, name);
             }
@@ -351,12 +353,12 @@ public class MetaImpl implements Meta
     {
         try
         {
-            synchronized(query.getProject())
+            synchronized (query.getProject())
             {
                 return query.getQueryCompiled().validate().trim();
             }
         }
-        catch( ProjectElementException e )
+        catch (ProjectElementException e)
         {
             throw Be5Exception.internalInQuery(query, e);
         }
@@ -366,7 +368,7 @@ public class MetaImpl implements Meta
     public Query getQuery(String entityName, String queryName)
     {
         Entity entity = getEntity(entityName);
-        if(entity == null)
+        if (entity == null)
         {
             throw Be5Exception.unknownEntity(entityName);
         }
@@ -420,9 +422,9 @@ public class MetaImpl implements Meta
     public Map<String, ColumnDef> getColumns(Entity entity)
     {
         BeModelElement scheme = entity.getAvailableElement("Scheme");
-        if(scheme == null) return new HashMap<>();
+        if (scheme == null) return new HashMap<>();
 
-        if(scheme instanceof TableDef)
+        if (scheme instanceof TableDef)
         {
             BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
 
@@ -453,9 +455,9 @@ public class MetaImpl implements Meta
 
         ColumnDef columnDef = getColumns(entity).get(columnName);
 
-        if(columnDef == null)
+        if (columnDef == null)
         {
-            throw Be5Exception.internal("Column '"+columnName+"' not found in '" + entity.getName() + "'");
+            throw Be5Exception.internal("Column '" + columnName + "' not found in '" + entity.getName() + "'");
         }
 
         return getColumns(entity).get(columnName);
@@ -473,7 +475,7 @@ public class MetaImpl implements Meta
     @Override
     public Class<?> getColumnType(ColumnDef columnDef)
     {
-        switch( columnDef.getType().getTypeName() )
+        switch (columnDef.getType().getTypeName())
         {
             case SqlColumnType.TYPE_BIGINT:
             case SqlColumnType.TYPE_UBIGINT:
@@ -550,14 +552,20 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public List<Daemon> getDaemons()
+    {
+        return getProject().getAllDaemons();
+    }
+
+    @Override
     public Query createQueryFromSql(String sql)
     {
-        Entity e = new Entity( "be5DynamicQueries", getProject().getApplication(), EntityType.TABLE );
-        e.setBesql( true );
-        DataElementUtils.save( e );
-        Query query = new Query( "query", e );
-        DataElementUtils.save( query );
-        query.setQuery( sql );
+        Entity e = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);
+        e.setBesql(true);
+        DataElementUtils.save(e);
+        Query query = new Query("query", e);
+        DataElementUtils.save(query);
+        query.setQuery(sql);
         return query;
     }
 }

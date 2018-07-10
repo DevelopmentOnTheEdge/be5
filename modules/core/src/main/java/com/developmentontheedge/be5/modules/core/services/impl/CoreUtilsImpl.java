@@ -36,13 +36,13 @@ public class CoreUtilsImpl implements CoreUtils
      * with parameter defValue = null
      *
      * @param section system settings section name
-     * @param param parameter name
+     * @param param   parameter name
      * @return section parameter value
      */
     @Override
-    public String getSystemSettingInSection( String section, String param )
+    public String getSystemSettingInSection(String section, String param)
     {
-        return getSystemSettingInSection( section, param, null );
+        return getSystemSettingInSection(section, param, null);
     }
 
     /**
@@ -50,9 +50,8 @@ public class CoreUtilsImpl implements CoreUtils
      * executing query throws any exception, then method will return defValue.
      * <br/>Results of method call are cached.
      *
-     *
-     * @param section system settings section name
-     * @param param parameter name
+     * @param section  system settings section name
+     * @param param    parameter name
      * @param defValue default value for return, if there isn't such section or parameter
      * @return section parameter value
      */
@@ -62,21 +61,22 @@ public class CoreUtilsImpl implements CoreUtils
     @Override
     public String getSystemSettingInSection(String section, String param, String defValue)
     {
-        Objects.requireNonNull(section); Objects.requireNonNull(param);
+        Objects.requireNonNull(section);
+        Objects.requireNonNull(param);
 
         String key = section + "." + param;
 
-        Object value = systemSettingsCache.get(key, (k)->{
+        Object value = systemSettingsCache.get(key, (k) -> {
             String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
             return BlobUtils.getAsString(db.one(sql, param, section));
         });
 
-        if( MISSING_SETTING_VALUE.equals( value ) )
+        if (MISSING_SETTING_VALUE.equals(value))
         {
             return defValue;
         }
 
-        if(value == null)
+        if (value == null)
         {
             systemSettingsCache.put(key, MISSING_SETTING_VALUE);
             return defValue;
@@ -87,26 +87,26 @@ public class CoreUtilsImpl implements CoreUtils
 
     /**
      * Set system settings parameter to the specified value, and saves it to the DB.
-     *
      * All of the parameters (section, param, value) must be already passed through the method
      *
      * @param section system settings section name
-     * @param param parameter name
-     * @param value parameter value
+     * @param param   parameter name
+     * @param value   parameter value
      */
     @Override
     public void setSystemSettingInSection(String section, String param, String value)
     {
-        Objects.requireNonNull(section); Objects.requireNonNull(param);
+        Objects.requireNonNull(section);
+        Objects.requireNonNull(param);
 
         String queryUpdate = "UPDATE systemSettings SET setting_value = ?" +
-                             " WHERE section_name= ? AND setting_name = ?";
+                " WHERE section_name= ? AND setting_name = ?";
 
-        if ( 0 == db.update( queryUpdate, value, section, param) )
+        if (0 == db.update(queryUpdate, value, section, param))
         {
             String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value )" +
                     " VALUES ( ?, ?, ?)";
-            db.insert( queryInsert, section, param, value );
+            db.insert(queryInsert, section, param, value);
         }
         String key = section + "." + param;
         systemSettingsCache.put(key, value);
@@ -144,38 +144,38 @@ public class CoreUtilsImpl implements CoreUtils
     @Override
     public String getSystemSetting(String param)
     {
-        return getSystemSettingInSection( "system", param, null );
+        return getSystemSettingInSection("system", param, null);
     }
 
     /**
      * Takes parameter param from the section "system", using the method with 3 parameters
      * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
-     * @param param parameter name
+     * @param param    parameter name
      * @param defValue this value is returned, when such parameter does not exists in DB
      * @return parameter value
      */
     @Override
     public String getSystemSetting(String param, String defValue)
     {
-        return getSystemSettingInSection( "system", param, defValue );
+        return getSystemSettingInSection("system", param, defValue);
     }
 
     @Override
     public boolean getBooleanSystemSetting(String param, boolean defValue)
     {
-        String check = getSystemSetting( param, null );
-        if( check == null )
+        String check = getSystemSetting(param, null);
+        if (check == null)
         {
             return defValue;
         }
-        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
+        return Arrays.asList("TRUE", "YES", "1", "ON").contains(check.toUpperCase());
     }
 
     @Override
     public boolean getBooleanSystemSetting(String param)
     {
-        return getBooleanSystemSetting( param, false );
+        return getBooleanSystemSetting(param, false);
     }
 
     /**
@@ -185,28 +185,28 @@ public class CoreUtilsImpl implements CoreUtils
      * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
      * @param module module name
-     * @param param parameter name
+     * @param param  parameter name
      * @return module parameter value
      */
     @Override
     public String getModuleSetting(String module, String param)
     {
-        return getModuleSetting( module, param, null );
+        return getModuleSetting(module, param, null);
     }
 
     /**
      * Takes parameter param from the section "module + '_module'", using the method with 3 parameters
-     * {@link #setSystemSettingInSection( String, String, String) setSystemSettingInSection} method.
+     * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
-     * @param module module name
-     * @param param parameter name
+     * @param module   module name
+     * @param param    parameter name
      * @param defValue default value for return, if there isn't such section or parameter
      * @return module parameter value
      */
     @Override
     public String getModuleSetting(String module, String param, String defValue)
     {
-        return getSystemSettingInSection( module.toUpperCase() + "_module", param, defValue );
+        return getSystemSettingInSection(module.toUpperCase() + "_module", param, defValue);
     }
 
 //    public <T> T getModuleSettingByType( String module, String param, T defValue, Class<T> clazz )
@@ -220,31 +220,32 @@ public class CoreUtilsImpl implements CoreUtils
     @Override
     public boolean getBooleanModuleSetting(String module, String param, boolean defValue)
     {
-        String check = getModuleSetting( module, param, null );
-        if( check == null )
+        String check = getModuleSetting(module, param, null);
+        if (check == null)
         {
             return defValue;
         }
-        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
+        return Arrays.asList("TRUE", "YES", "1", "ON").contains(check.toUpperCase());
     }
 
     @Override
     public boolean getBooleanModuleSetting(String module, String param)
     {
-        return getBooleanModuleSetting( module, param, false );
+        return getBooleanModuleSetting(module, param, false);
     }
 
     /**
      * Retrieves specific user parameter from table user_prefs.
      *
-     * @param user user name
+     * @param user  user name
      * @param param parameter name
      * @return parameter value
      */
     @Override
     public String getUserSetting(String user, String param)
     {
-        Objects.requireNonNull(user); Objects.requireNonNull(param);
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(param);
 
         String key = user + "." + param;
         Object value = userSettingsCache.get(key, k -> {
@@ -252,12 +253,12 @@ public class CoreUtilsImpl implements CoreUtils
             return BlobUtils.getAsString(db.one(sql, param, user));
         });
 
-        if(MISSING_SETTING_VALUE.equals(value))
+        if (MISSING_SETTING_VALUE.equals(value))
         {
             return null;
         }
 
-        if(value == null)
+        if (value == null)
         {
             userSettingsCache.put(key, MISSING_SETTING_VALUE);
             return null;
@@ -270,21 +271,22 @@ public class CoreUtilsImpl implements CoreUtils
      * Set`s up specified user parameter.
      * Some of the parameters are passed to {@link #removeUserSetting(String, String)}
      *
-     * @param user user name
+     * @param user  user name
      * @param param parameter name
      * @param value parameter value
      */
     @Override
     public void setUserSetting(String user, String param, String value)
     {
-        Objects.requireNonNull(user); Objects.requireNonNull(param);
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(param);
 
-        final String sql =  "UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?";
+        final String sql = "UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?";
         final String sql2 = "INSERT INTO user_prefs VALUES( ?, ?, ? )";
 
-        if( db.update( sql, value, param, user) == 0 )
+        if (db.update(sql, value, param, user) == 0)
         {
-            db.insert( sql2, user, param, value );
+            db.insert(sql2, user, param, value);
         }
         userSettingsCache.put(user + "." + param, value);
     }
@@ -292,13 +294,14 @@ public class CoreUtilsImpl implements CoreUtils
     /**
      * Removes specified user settings parameter.
      *
-     * @param user user name
+     * @param user  user name
      * @param param parameter name
      */
     @Override
     public void removeUserSetting(String user, String param)
     {
-        Objects.requireNonNull(user); Objects.requireNonNull(param);
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(param);
 
         db.update("DELETE FROM user_prefs WHERE pref_name = ? AND user_name = ?", param, user);
         userSettingsCache.invalidate(user + "." + param);

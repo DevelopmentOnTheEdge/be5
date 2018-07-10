@@ -45,7 +45,7 @@ public class Validator
 
         if (parameters instanceof DynamicPropertySet)
         {
-            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
                 checkErrorAndCast(property);
             }
@@ -54,9 +54,9 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
-        if(property.getValue() == null
-                || ( property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
-                     && ((Object[]) property.getValue()).length == 0))
+        if (property.getValue() == null
+                || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
+                && ((Object[]) property.getValue()).length == 0))
         {
             if (property.isCanBeNull())
             {
@@ -70,9 +70,9 @@ public class Validator
             }
         }
 
-        if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+        if (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
-            if(!(property.getValue() instanceof Object[]))
+            if (!(property.getValue() instanceof Object[]))
             {
                 setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
                 throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST)" + toStringProperty(property));
@@ -83,8 +83,8 @@ public class Validator
 
             for (int i = 0; i < values.length; i++)
             {
-                if(values[i] instanceof String)
-                    resValues[i] = parseFrom(property, (String)values[i]);
+                if (values[i] instanceof String)
+                    resValues[i] = parseFrom(property, (String) values[i]);
                 else
                     resValues[i] = values[i];
                 checkValueInTags(property, resValues[i]);
@@ -93,7 +93,7 @@ public class Validator
         }
         else
         {
-            if(property.getValue() instanceof String && property.getType() != String.class)
+            if (property.getValue() instanceof String && property.getType() != String.class)
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
             }
@@ -114,9 +114,9 @@ public class Validator
         Object tagsObject = property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
         if (tagsObject instanceof Object[][])
         {
-            Object[][] tags = (Object[][])tagsObject;
+            Object[][] tags = (Object[][]) tagsObject;
 
-            if(Arrays.stream(tags).noneMatch(item -> (item)[0].toString().equals(value.toString())))
+            if (Arrays.stream(tags).noneMatch(item -> (item)[0].toString().equals(value.toString())))
             {
                 setError(property, "Value is not contained in tags: " + value.toString());
                 throw new IllegalArgumentException("Value is not contained in tags" + toStringProperty(property));
@@ -124,9 +124,9 @@ public class Validator
         }
         else if (tagsObject instanceof Object[])
         {
-            Object[] tags = (Object[])tagsObject;
+            Object[] tags = (Object[]) tagsObject;
 
-            if(Arrays.stream(tags).noneMatch(item -> item.toString().equals(value.toString())))
+            if (Arrays.stream(tags).noneMatch(item -> item.toString().equals(value.toString())))
             {
                 setError(property, "Value is not contained in tags: " + value.toString());
                 throw new IllegalArgumentException("Value is not contained in tags" + toStringProperty(property));
@@ -141,26 +141,26 @@ public class Validator
 
     public void setSuccess(DynamicPropertySet dps, String name, String message)
     {
-        dps.getProperty(name).setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
-        dps.getProperty(name).setAttribute( BeanInfoConstants.MESSAGE, message );
+        dps.getProperty(name).setAttribute(BeanInfoConstants.STATUS, SUCCESS.toString());
+        dps.getProperty(name).setAttribute(BeanInfoConstants.MESSAGE, message);
     }
 
     public void setError(DynamicProperty property, String message)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
-        property.setAttribute( BeanInfoConstants.MESSAGE, message );
+        property.setAttribute(BeanInfoConstants.STATUS, ERROR.toString());
+        property.setAttribute(BeanInfoConstants.MESSAGE, message);
     }
 
     public void setError(DynamicPropertySet dps, String name, String message)
     {
-        dps.getProperty(name).setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
-        dps.getProperty(name).setAttribute( BeanInfoConstants.MESSAGE, message );
+        dps.getProperty(name).setAttribute(BeanInfoConstants.STATUS, ERROR.toString());
+        dps.getProperty(name).setAttribute(BeanInfoConstants.MESSAGE, message);
     }
 
     @Deprecated
     public Object parseFrom(DynamicProperty property, String value)
     {
-        if(value == null) return null;
+        if (value == null) return null;
 
         Class<?> type = property.getType();
 
@@ -175,30 +175,46 @@ public class Validator
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please specify an integer number.");
 
-            try{
+            try
+            {
                 BigInteger bigInteger = new BigInteger(value);
-                if(type == Long.class){
-                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                if (type == Long.class)
+                {
+                    if (bigInteger.compareTo(BigInteger.ZERO) > 0)
+                    {
                         msg += " <= " + Long.MAX_VALUE;
-                    }else{
+                    }
+                    else
+                    {
                         msg += " >= " + Long.MIN_VALUE;
                     }
                 }
-                if(type == Integer.class){
-                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                if (type == Integer.class)
+                {
+                    if (bigInteger.compareTo(BigInteger.ZERO) > 0)
+                    {
                         msg += " <= " + Integer.MAX_VALUE;
-                    }else{
+                    }
+                    else
+                    {
                         msg += " >= " + Integer.MIN_VALUE;
                     }
                 }
-                if(type == Short.class){
-                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                if (type == Short.class)
+                {
+                    if (bigInteger.compareTo(BigInteger.ZERO) > 0)
+                    {
                         msg += " <= " + Short.MAX_VALUE;
-                    }else{
+                    }
+                    else
+                    {
                         msg += " >= " + Short.MIN_VALUE;
                     }
                 }
-            }catch (RuntimeException ignore){}
+            }
+            catch (RuntimeException ignore)
+            {
+            }
 
             setError(property, msg);
             throw new NumberFormatException(msg + toStringProperty(property));
@@ -217,12 +233,13 @@ public class Validator
             throw new NumberFormatException(msg + toStringProperty(property));
         }
 
-        if (type == Boolean.class)  return Boolean.parseBoolean(value);
+        if (type == Boolean.class) return Boolean.parseBoolean(value);
 
         //todo move to DateRule
-        try{
-            if (type == Date.class)     return Date.valueOf(value);
-            if (type == Timestamp.class)return Timestamp.valueOf(value);
+        try
+        {
+            if (type == Date.class) return Date.valueOf(value);
+            if (type == Timestamp.class) return Timestamp.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
@@ -238,7 +255,7 @@ public class Validator
     {
         if (parameters instanceof DynamicPropertySet)
         {
-            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
                 if (isError(property))
                 {

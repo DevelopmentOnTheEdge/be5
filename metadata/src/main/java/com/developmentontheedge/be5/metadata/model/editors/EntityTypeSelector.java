@@ -10,7 +10,7 @@ public class EntityTypeSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        return EnumsWithHumanReadableName.namesArray( EntityType.values() );
+        return EnumsWithHumanReadableName.namesArray(EntityType.values());
     }
 
 }

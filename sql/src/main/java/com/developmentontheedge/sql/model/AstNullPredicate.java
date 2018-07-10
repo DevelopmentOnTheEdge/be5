@@ -9,22 +9,22 @@ public class AstNullPredicate extends SimpleNode
 
     public AstNullPredicate(boolean isNullboolean, SimpleNode node)
     {
-        this( SqlParserTreeConstants.JJTNULLPREDICATE );
+        this(SqlParserTreeConstants.JJTNULLPREDICATE);
         this.nodeSuffix = isNullboolean ? isNull : isNotNull;
         addChild(node);
     }
 
     public AstNullPredicate(int id)
     {
-        super( id );
+        super(id);
         this.nodeSuffix = isNull;
     }
 
     Token isToken, notToken, nullToken;
-    
+
     public SimpleNode getPredicand()
     {
-        return child( 0 );
+        return child(0);
     }
 
     public Token getIsToken()

@@ -120,28 +120,33 @@ public class ValidationRules
 
     public static class Range
     {
-        String min,max;
+        String min, max;
 
-        Range(long min, long max) {
+        Range(long min, long max)
+        {
             this.min = Long.toString(min);
             this.max = Long.toString(max);
         }
 
-        Range(double min, double max) {
+        Range(double min, double max)
+        {
             this.min = Double.toString(min);
             this.max = Double.toString(max);
         }
 
-        Range(String min, String max) {
+        Range(String min, String max)
+        {
             this.min = min;
             this.max = max;
         }
 
-        public String getMin() {
+        public String getMin()
+        {
             return min;
         }
 
-        public String getMax() {
+        public String getMax()
+        {
             return max;
         }
     }
@@ -151,7 +156,8 @@ public class ValidationRules
         String tableName;
         String columnName;
 
-        Unique(String tableName) {
+        Unique(String tableName)
+        {
             this.tableName = tableName;
         }
 
@@ -161,7 +167,8 @@ public class ValidationRules
             this.columnName = columnName;
         }
 
-        public String getTableName() {
+        public String getTableName()
+        {
             return tableName;
         }
 

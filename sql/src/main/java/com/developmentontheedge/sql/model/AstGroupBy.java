@@ -6,7 +6,7 @@ public class AstGroupBy extends SimpleNode
 {
     public AstGroupBy(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "GROUP BY";
     }
 }

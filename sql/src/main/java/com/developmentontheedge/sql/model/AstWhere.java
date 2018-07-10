@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
+    public static final String NOT_NULL = "NOT_NULL";
+
     public static AstWhere withReplacementParameter(String columnName, int count)
     {
         AstWhere astWhere = new AstWhere(SqlParserTreeConstants.JJTWHERE);
@@ -17,7 +19,7 @@ public class AstWhere extends SimpleNode
     public AstWhere(Map<String, ?> conditions)
     {
         this(SqlParserTreeConstants.JJTWHERE);
-        if(conditions.size() > 0 )
+        if (conditions.size() > 0)
         {
             Iterator<? extends Map.Entry<String, ?>> iterator = conditions.entrySet().iterator();
             iterator.hasNext();
@@ -28,63 +30,73 @@ public class AstWhere extends SimpleNode
     private SimpleNode addAstFunNode(Iterator<? extends Map.Entry<String, ?>> iterator)
     {
 //        TODO add !=, NOT LIKE
-//        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"
-//        } );
+
         Map.Entry<String, ?> entry = iterator.next();
         Object valueObj = entry.getValue();
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;
         SimpleNode astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
 
-        if(valueObj == null)
+        if (valueObj == null)
         {
             astFunNode = new AstNullPredicate(true, new AstFieldReference(entry.getKey()));
         }
-        else if(valueObj.getClass().isArray())
+        else if (valueObj.getClass().isArray())
         {
             function = DefaultParserContext.FUNC_IN;
 
             int len;
-            if(valueObj.getClass() == int[].class){
-                len = ((int[])valueObj).length;
-            }else if(valueObj.getClass() == long[].class){
-                len = ((long[])valueObj).length;
-            }else if(valueObj.getClass() == short[].class){
-                len = ((short[])valueObj).length;
-            }else if(valueObj.getClass() == char[].class){
-                len = ((char[])valueObj).length;
-            }else if(valueObj.getClass() == byte[].class){
-                len = ((byte[])valueObj).length;
-            }else if(valueObj.getClass() == float[].class){
-                len = ((float[])valueObj).length;
-            }else if(valueObj.getClass() == double[].class){
-                len = ((double[])valueObj).length;
-            }else{
-                len = ((Object[])valueObj).length;
+            if (valueObj.getClass() == int[].class)
+            {
+                len = ((int[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == long[].class)
+            {
+                len = ((long[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == short[].class)
+            {
+                len = ((short[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == char[].class)
+            {
+                len = ((char[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == byte[].class)
+            {
+                len = ((byte[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == float[].class)
+            {
+                len = ((float[]) valueObj).length;
+            }
+            else if (valueObj.getClass() == double[].class)
+            {
+                len = ((double[]) valueObj).length;
+            }
+            else
+            {
+                len = ((Object[]) valueObj).length;
             }
 
             astFunNode = function.node(new AstFieldReference(entry.getKey()),
                     AstInValueList.withReplacementParameter(len));
         }
-        else if(valueObj instanceof String)
+        else if (valueObj instanceof String)
         {
-            String value = (String)valueObj;
-            if (value.equals("null") || value.equals("notNull"))
+            String value = (String) valueObj;
+            if (value.equals(NOT_NULL))
             {
-//            todo null, notNull - not work: wrong number of parameters 1, expect 0
-//            можно сделать какой-нибудь хак (ID IS NULL OR ( null = ? ) )
-                throw new RuntimeException("todo, not supported");
-                //astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
+                astFunNode = new AstNullPredicate(false, new AstFieldReference(entry.getKey()));
             }
             else if (value.endsWith("%") || value.startsWith("%"))
             {
                 function = DefaultParserContext.FUNC_LIKE;
+                astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
             }
-
-            astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
         }
 
-        if(iterator.hasNext())
+        if (iterator.hasNext())
         {
             return new AstBooleanTerm(astFunNode, addAstFunNode(iterator));
         }
@@ -96,7 +108,7 @@ public class AstWhere extends SimpleNode
 
     public AstWhere(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "WHERE";
     }
 

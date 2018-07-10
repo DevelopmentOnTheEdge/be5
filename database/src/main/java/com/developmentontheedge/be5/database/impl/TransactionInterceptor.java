@@ -8,7 +8,8 @@ import javax.inject.Inject;
 
 public class TransactionInterceptor implements MethodInterceptor
 {
-    @Inject private ConnectionService connectionService;
+    @Inject
+    private ConnectionService connectionService;
 
     @Override
     public Object invoke(MethodInvocation invocation)

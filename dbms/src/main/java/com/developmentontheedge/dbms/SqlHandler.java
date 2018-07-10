@@ -9,9 +9,10 @@ public interface SqlHandler
      * Called when new SQL statement is started in MultiSqlConsumer input stream
      */
     void startStatement();
-    
+
     /**
      * Called when SQL statement is completed
+     *
      * @param statement parsed statement
      */
     void endStatement(String statement);

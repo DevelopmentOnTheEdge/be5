@@ -8,6 +8,7 @@ queryTestProject:
   - testtableAdmin
   - testSubQuery
   - testTags
+  - filterTestTable
   scripts:
   - Post-db
   - dictionaries

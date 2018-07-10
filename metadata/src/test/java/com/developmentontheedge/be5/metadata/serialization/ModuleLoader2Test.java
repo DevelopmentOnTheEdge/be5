@@ -29,7 +29,7 @@ public class ModuleLoader2Test
     public void setUp() throws Exception
     {
         path = tmp.newFolder().toPath();
-        Serialization.save( ProjectTestUtils.getProject("test"), path );
+        Serialization.save(ProjectTestUtils.getProject("test"), path);
     }
 
     @Test
@@ -41,9 +41,9 @@ public class ModuleLoader2Test
     @Test
     public void loadAllProjectsTestWithDev() throws IOException, ProjectSaveException, ProjectLoadException
     {
-        try( PrintWriter out = new PrintWriter( path.resolve("dev.yaml").toFile() ) )
+        try (PrintWriter out = new PrintWriter(path.resolve("dev.yaml").toFile()))
         {
-            out.println( "paths:" + "\n    test: " + path.toAbsolutePath() );
+            out.println("paths:" + "\n    test: " + path.toAbsolutePath());
         }
 
         ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));

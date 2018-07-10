@@ -44,7 +44,7 @@ public class ConfigurationProvider
     {
         Object config = configurations.get(clazz);
 
-        if(config == null)
+        if (config == null)
         {
             return null;
         }
@@ -76,9 +76,9 @@ public class ConfigurationProvider
 
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONFIG_FILE));
 
-            if(urls.size() > 1)throw new RuntimeException("must be one config");
+            if (urls.size() > 1) throw new RuntimeException("must be one config");
 
-            if(urls.size() == 0)
+            if (urls.size() == 0)
             {
                 return configurations;
             }
@@ -87,7 +87,7 @@ public class ConfigurationProvider
 
             Map<String, Object> config = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
 
-            if(config != null)
+            if (config != null)
             {
                 for (Map.Entry<String, Object> entry : config.entrySet())
                 {
@@ -103,7 +103,8 @@ public class ConfigurationProvider
         }
     }
 
-    private Class<?> loadClass(String path){
+    private Class<?> loadClass(String path)
+    {
         try
         {
             return Class.forName(path);

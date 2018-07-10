@@ -8,19 +8,21 @@ public class AstUnion extends SimpleNode
 {
     public AstUnion(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "UNION";
     }
 
     private SetQuantifier setQuantifier = SetQuantifier.DEFAULT;
+
     public SetQuantifier getQuantifier()
     {
         return setQuantifier;
     }
+
     public void setQuantifier(SetQuantifier setQuantifier)
     {
-        this.setQuantifier = Objects.requireNonNull( setQuantifier );
-        if(setQuantifier == SetQuantifier.DEFAULT)
+        this.setQuantifier = Objects.requireNonNull(setQuantifier);
+        if (setQuantifier == SetQuantifier.DEFAULT)
             this.nodeContent = null;
         else
             this.nodeContent = setQuantifier.toString();

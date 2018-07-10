@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ALL_RECORDS_VIEW;
 
 
-final public class ActionUtils
+public final class ActionUtils
 {
-    public static Action toAction(Query query) 
+    public static Action toAction(Query query)
     {
         if (isExternalRef(query))
         {
@@ -35,11 +35,11 @@ final public class ActionUtils
         }
         else
         {
-            if( query.getType() == QueryType.STATIC )
+            if (query.getType() == QueryType.STATIC)
             {
                 //move to static LegacyUrlParser
                 //mspReceiverCategories.redir
-                if(query.getQuery().contains(".redir")
+                if (query.getQuery().contains(".redir")
                         || query.getQuery().startsWith("q?")
                         || query.getQuery().startsWith("o?"))
                 {
@@ -47,24 +47,26 @@ final public class ActionUtils
                     String entityName = "_";
                     Map<String, String> params;
 
-                    if(query.getQuery().contains(".redir"))
+                    if (query.getQuery().contains(".redir"))
                     {
                         String[] parts = query.getQuery().split(".redir");
-                        if(parts.length>1)
+                        if (parts.length > 1)
                         {
                             String[] paramsVal = parts[1].replace("?", "").split("&");
 
                             params = getParams(paramsVal);
-                        }else{
+                        }
+                        else
+                        {
                             params = new HashMap<>();
                         }
                         entityName = parts[0];
                     }
-                    else if(query.getQuery().startsWith("q?"))
+                    else if (query.getQuery().startsWith("q?"))
                     {
                         params = getParams(query.getQuery().replaceFirst("q\\?", "").split("&"));
                     }
-                    else if(query.getQuery().startsWith("o?"))
+                    else if (query.getQuery().startsWith("o?"))
                     {
                         params = getParams(query.getQuery().replaceFirst("o\\?", "").split("&"));
                     }
@@ -73,16 +75,16 @@ final public class ActionUtils
                         params = new HashMap<>();
                     }
 
-                    if(params.get("_t_") != null)
+                    if (params.get("_t_") != null)
                     {
                         entityName = params.remove("_t_");
                     }
 
                     String qn = params.remove("_qn_");
-                    if(qn == null) qn = ALL_RECORDS_VIEW;
+                    if (qn == null) qn = ALL_RECORDS_VIEW;
 
                     HashUrl hashUrl;
-                    if(params.get("_on_") != null)
+                    if (params.get("_on_") != null)
                     {
                         hashUrl = new HashUrl("form", entityName, qn, params.remove("_on_"));
                     }
@@ -125,35 +127,35 @@ final public class ActionUtils
         return params;
     }
 
-    public static Action toAction(String query, Operation operation) 
+    public static Action toAction(String query, Operation operation)
     {
         String entityName = operation.getEntity().getName();
         HashUrl hashUrl = new HashUrl("form", entityName, query, operation.getName());
-        
+
         return Action.call(hashUrl);
     }
-    
+
     // TODO move me to Query
-    public static boolean isStaticPage(Query query) 
+    public static boolean isStaticPage(Query query)
     {
         return query.getType() == QueryType.STATIC && query.getQuery().endsWith(".be");
     }
-    
+
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");
 
-    private static boolean isExternalRef(Query query) 
+    private static boolean isExternalRef(Query query)
     {
         return query.getType() == QueryType.STATIC && (query.getQuery().startsWith("http://") || query.getQuery().startsWith("https://"));
     }
-    
-    private static boolean isAction(Query query) 
+
+    private static boolean isAction(Query query)
     {
         return query.getType() == QueryType.STATIC && ACTION_PATTERN.matcher(query.getQuery()).matches();
     }
-    
-    private static boolean isViewBlob(Query query) 
+
+    private static boolean isViewBlob(Query query)
     {
-        return query.getType() == QueryType.STATIC && (query.getQuery() != null && query.getQuery().startsWith("viewBlob?")); 
+        return query.getType() == QueryType.STATIC && (query.getQuery() != null && query.getQuery().startsWith("viewBlob?"));
     }
-    
+
 }

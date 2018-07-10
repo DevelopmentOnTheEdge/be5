@@ -15,11 +15,13 @@ import static org.junit.Assert.assertEquals
 
 class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
 {
-    @Inject Validator validator
+    @Inject
+    Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
-    void initDps(){
+    void initDps()
+    {
         setStaticUserInfo(RoleType.ROLE_GUEST)
         dps = new GDynamicPropertySetSupport()
     }
@@ -28,7 +30,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void Long1()
     {
         dps.add("test") {
-            TYPE  = Long
+            TYPE = Long
             value = '10000000000000000000000'
         }
 
@@ -39,7 +41,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void Long2()
     {
         dps.add("test") {
-            TYPE  = Long
+            TYPE = Long
             value = '-10000000000000000000000'
         }
 
@@ -50,7 +52,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void int1()
     {
         dps.add("test") {
-            TYPE  = Integer
+            TYPE = Integer
             value = '3000000000'
         }
 
@@ -61,7 +63,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void int2()
     {
         dps.add("test") {
-            TYPE  = Integer
+            TYPE = Integer
             value = '-3000000000'
         }
 
@@ -72,7 +74,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void short1()
     {
         dps.add("test") {
-            TYPE  = Short
+            TYPE = Short
             value = '100000'
         }
 
@@ -83,7 +85,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void short2()
     {
         dps.add("test") {
-            TYPE  = Short
+            TYPE = Short
             value = '-100000'
         }
 
@@ -94,7 +96,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void short3WithDot()
     {
         dps.add("test") {
-            TYPE  = Short
+            TYPE = Short
             value = '100.000'
         }
 
@@ -105,7 +107,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void short3WithСomma()
     {
         dps.add("test") {
-            TYPE  = Short
+            TYPE = Short
             value = '100,000'
         }
 
@@ -116,7 +118,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     {
         try {
             validator.checkErrorAndCast(dps)
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals(msg,
                     JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))

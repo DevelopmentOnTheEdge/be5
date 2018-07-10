@@ -65,7 +65,8 @@ public class SessionImpl implements Session
         Map<String, Object> map = new HashMap<>();
 
         Enumeration<String> enumeration = raw.getAttributeNames();
-        while (enumeration.hasMoreElements()) {
+        while (enumeration.hasMoreElements())
+        {
             String name = enumeration.nextElement();
             map.put(name, get(name));
         }

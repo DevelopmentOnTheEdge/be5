@@ -2,12 +2,13 @@ package com.developmentontheedge.be5.query.model;
 
 import java.util.List;
 
-public class MoreRows {
+public class MoreRows
+{
 
     private final int recordsTotal;
     private final int recordsFiltered;
     private final List<List<Object>> data; // rows
-    
+
     public MoreRows(int recordsTotal, int recordsFiltered, List<List<Object>> data)
     {
         this.recordsTotal = recordsTotal;

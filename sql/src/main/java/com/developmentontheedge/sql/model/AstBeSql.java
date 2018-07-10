@@ -10,45 +10,45 @@ public class AstBeSql extends AstBeNode
 
     public AstBeSql(int id)
     {
-        super( id );
+        super(id);
         allowedParameters = ALLOWED_PARAMETERS;
         this.tagName = "sql";
     }
 
     public AstQuery getQuery()
     {
-        return this.children().select( AstQuery.class ).findFirst().orElse( null );
+        return this.children().select(AstQuery.class).findFirst().orElse(null);
     }
 
     public Integer getLimit()
     {
-        String limit = getParameter( "limit" );
-        return limit == null ? null : Integer.valueOf( limit );
+        String limit = getParameter("limit");
+        return limit == null ? null : Integer.valueOf(limit);
     }
-    
+
     public String getExec()
     {
-        return getParameter( "exec" ) == null ? "" : getParameter( "exec" );
+        return getParameter("exec") == null ? "" : getParameter("exec");
     }
 
     public String getQueryName()
     {
-        return getParameter( "queryName" );
+        return getParameter("queryName");
     }
 
     public String getEntityName()
     {
-        return getParameter( "entity" );
+        return getParameter("entity");
     }
-    
+
     public String getBeautifier()
     {
-        return getParameter( "beautifier" ) == null ? "" : getParameter( "beautifier" );
+        return getParameter("beautifier") == null ? "" : getParameter("beautifier");
     }
-    
+
     public String getDistinct()
     {
-        return getParameter( "distinct" ) == null ? "" : getParameter( "distinct" );
+        return getParameter("distinct") == null ? "" : getParameter("distinct");
     }
 }
 /* JavaCC - OriginalChecksum=45e233ad5e92f21b98f767335a562cfe (do not edit this line) */

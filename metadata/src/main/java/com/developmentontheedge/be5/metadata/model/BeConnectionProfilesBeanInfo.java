@@ -6,6 +6,6 @@ public class BeConnectionProfilesBeanInfo extends BeanInfoEx
 {
     public BeConnectionProfilesBeanInfo()
     {
-        super( BeConnectionProfiles.class );
+        super(BeConnectionProfiles.class);
     }
 }

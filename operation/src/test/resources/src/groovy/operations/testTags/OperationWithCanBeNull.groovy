@@ -15,8 +15,8 @@ class OperationWithCanBeNull extends TestOperationSupport implements Operation
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-                name       : "CODE",
-                value      : presetValues.get("CODE")
+                name : "CODE",
+                value: presetValues.get("CODE")
         ]
 
         dps << [
@@ -38,7 +38,7 @@ class OperationWithCanBeNull extends TestOperationSupport implements Operation
     @Override
     void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.finished(((DynamicPropertySet)parameters).getValueAsString("referenceTest")))
+        setResult(OperationResult.finished(((DynamicPropertySet) parameters).getValueAsString("referenceTest")))
     }
 
 }

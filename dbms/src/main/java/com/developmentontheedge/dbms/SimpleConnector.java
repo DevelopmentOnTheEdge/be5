@@ -22,7 +22,7 @@ public class SimpleConnector implements DbmsConnector
         this.connectionUrl = connectionUrl;
         try
         {
-            this.connection = DriverManager.getConnection( connectionUrl, username, password );
+            this.connection = DriverManager.getConnection(connectionUrl, username, password);
         }
         catch (SQLException e)
         {
@@ -50,57 +50,57 @@ public class SimpleConnector implements DbmsConnector
     }
 
     @Override
-    public int executeUpdate( String query ) throws SQLException
+    public int executeUpdate(String query) throws SQLException
     {
-        try(Statement st = connection.createStatement())
+        try (Statement st = connection.createStatement())
         {
-            return st.executeUpdate( query );
+            return st.executeUpdate(query);
         }
     }
 
     @Override
-    public ResultSet executeQuery( String sql ) throws SQLException
+    public ResultSet executeQuery(String sql) throws SQLException
     {
-        return connection.createStatement().executeQuery( sql );
+        return connection.createStatement().executeQuery(sql);
     }
 
     @Override
-    public String executeInsert( String sql ) throws SQLException
+    public String executeInsert(String sql) throws SQLException
     {
-        try(Statement st = connection.createStatement())
+        try (Statement st = connection.createStatement())
         {
-            st.execute( sql );
+            st.execute(sql);
         }
         // TODO support return of insert key
         return null;
     }
 
     @Override
-    public void close( ResultSet rs )
+    public void close(ResultSet rs)
     {
-        if(rs == null)
+        if (rs == null)
             return;
         Statement st = null;
         try
         {
             st = rs.getStatement();
         }
-        catch( SQLException e1 )
+        catch (SQLException e1)
         {
         }
         try
         {
             rs.close();
         }
-        catch ( SQLException e )
+        catch (SQLException e)
         {
         }
         try
         {
-            if(st != null)
+            if (st != null)
                 st.close();
         }
-        catch ( SQLException e )
+        catch (SQLException e)
         {
         }
     }
@@ -139,7 +139,8 @@ public class SimpleConnector implements DbmsConnector
 //        returnConnection(conn);
 //    }
 
-    private RuntimeException propagate(SQLException e) {
+    private RuntimeException propagate(SQLException e)
+    {
         log.log(Level.SEVERE, e.getMessage(), e);
         return new RuntimeException(e);
     }

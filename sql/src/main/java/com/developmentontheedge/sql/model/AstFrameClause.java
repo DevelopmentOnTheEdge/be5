@@ -6,9 +6,9 @@ public class AstFrameClause extends SimpleNode
 {
     public AstFrameClause(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public void setUnit(String prefix)
     {
         this.nodePrefix = prefix;

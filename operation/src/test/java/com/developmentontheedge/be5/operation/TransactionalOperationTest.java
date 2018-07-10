@@ -25,7 +25,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
     {
         Either<Object, OperationResult> result = executeOperation(
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
-                ImmutableMap.of("name","test", "value", 5));
+                ImmutableMap.of("name", "test", "value", 5));
 
         Assert.assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
                 BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(result.getSecond())));
@@ -36,7 +36,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
     {
         Either<Object, OperationResult> result = generateOperation(
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
-                        ImmutableMap.of("nullValues", "yes"));
+                ImmutableMap.of("nullValues", "yes"));
 
         Assert.assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
                 BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(result.getSecond())));

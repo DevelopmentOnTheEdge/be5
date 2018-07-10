@@ -6,21 +6,21 @@ import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 public class MySqlTypeManager extends DefaultTypeManager
 {
     @Override
-    public String getRenameColumnStatements( ColumnDef column, String newName )
+    public String getRenameColumnStatements(ColumnDef column, String newName)
     {
         StringBuilder sb = new StringBuilder();
-        ColumnDef newColumn = ( ColumnDef ) column.clone( column.getOrigin(), newName );
-        sb.append( "ALTER TABLE " ).append( normalizeIdentifier( column.getTable().getEntityName() ) ).append( " CHANGE COLUMN " )
-                .append( normalizeIdentifier( column.getName() ) ).append( ' ' ).append( getColumnDefinitionClause( newColumn ) ).append( ';' );
+        ColumnDef newColumn = (ColumnDef) column.clone(column.getOrigin(), newName);
+        sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" CHANGE COLUMN ")
+                .append(normalizeIdentifier(column.getName())).append(' ').append(getColumnDefinitionClause(newColumn)).append(';');
         // TODO: check whether it's necessary to update existing null values
         return sb.toString();
     }
 
     @Override
-    public String getAlterColumnStatements( ColumnDef newColumn, ColumnDef oldColumn )
+    public String getAlterColumnStatements(ColumnDef newColumn, ColumnDef oldColumn)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(normalizeIdentifier( newColumn.getTable().getEntityName() )).append(" MODIFY COLUMN ").append( getColumnDefinitionClause( newColumn )).append(';');
+        sb.append("ALTER TABLE ").append(normalizeIdentifier(newColumn.getTable().getEntityName())).append(" MODIFY COLUMN ").append(getColumnDefinitionClause(newColumn)).append(';');
         // TODO: check whether it's necessary to update existing null values
         return sb.toString();
     }
@@ -32,61 +32,62 @@ public class MySqlTypeManager extends DefaultTypeManager
     }
 
     @Override
-    public String getConstraintClause( ColumnDef column )
+    public String getConstraintClause(ColumnDef column)
     {
         return "";
     }
 
     @Override
-    public void correctType( SqlColumnType type )
+    public void correctType(SqlColumnType type)
     {
-        switch(type.getTypeName())
+        switch (type.getTypeName())
         {
-        case "DOUBLE":
-            type.setTypeName( SqlColumnType.TYPE_DECIMAL );
-            if(type.getSize() == 22 && type.getPrecision() == 0)
-            {
-                type.setPrecision( 10 );
-            }
-            break;
-        case "SET":
-            type.setTypeName( SqlColumnType.TYPE_VARCHAR );
-            break;
+            case "DOUBLE":
+                type.setTypeName(SqlColumnType.TYPE_DECIMAL);
+                if (type.getSize() == 22 && type.getPrecision() == 0)
+                {
+                    type.setPrecision(10);
+                }
+                break;
+            case "SET":
+                type.setTypeName(SqlColumnType.TYPE_VARCHAR);
+                break;
         }
-        super.correctType( type );
+        super.correctType(type);
     }
 
     @Override
-    public String getTypeClause( SqlColumnType type )
+    public String getTypeClause(SqlColumnType type)
     {
-        switch(type.getTypeName())
+        switch (type.getTypeName())
         {
-        case SqlColumnType.TYPE_BIGTEXT:
-            return "TEXT";
-        case SqlColumnType.TYPE_BLOB:
-            return "MEDIUMBLOB";
-        case SqlColumnType.TYPE_DECIMAL:
-            if(type.getSize() == 22 && type.getPrecision() == 10) {
-                return "DOUBLE";
-            }
-            return super.getTypeClause( type );
-        case SqlColumnType.TYPE_VARCHAR:
-            if(type.getSize()>255)
-            {
+            case SqlColumnType.TYPE_BIGTEXT:
                 return "TEXT";
-            }
-            return super.getTypeClause( type );
-        case SqlColumnType.TYPE_BOOL:
-            return "ENUM('no','yes')";
-        default:
-            return super.getTypeClause( type );
+            case SqlColumnType.TYPE_BLOB:
+                return "MEDIUMBLOB";
+            case SqlColumnType.TYPE_DECIMAL:
+                if (type.getSize() == 22 && type.getPrecision() == 10)
+                {
+                    return "DOUBLE";
+                }
+                return super.getTypeClause(type);
+            case SqlColumnType.TYPE_VARCHAR:
+                if (type.getSize() > 255)
+                {
+                    return "TEXT";
+                }
+                return super.getTypeClause(type);
+            case SqlColumnType.TYPE_BOOL:
+                return "ENUM('no','yes')";
+            default:
+                return super.getTypeClause(type);
         }
     }
 
     @Override
-    public String normalizeIdentifier( String identifier )
+    public String normalizeIdentifier(String identifier)
     {
-        if(identifier == null)
+        if (identifier == null)
             return null;
         return '`' + identifier + '`';
     }
@@ -98,21 +99,21 @@ public class MySqlTypeManager extends DefaultTypeManager
     }
 
     @Override
-    public String getStartingIncrementDefinition( String table, String column, long startValue )
+    public String getStartingIncrementDefinition(String table, String column, long startValue)
     {
-        return "ALTER TABLE "+normalizeIdentifier( table )+" AUTO_INCREMENT="+startValue+";\n";
+        return "ALTER TABLE " + normalizeIdentifier(table) + " AUTO_INCREMENT=" + startValue + ";\n";
     }
 
     @Override
-    public String getDropIndexClause( String index, String table )
+    public String getDropIndexClause(String index, String table)
     {
-        return "DROP INDEX "+normalizeIdentifier( index )+" ON "+normalizeIdentifier( table );
+        return "DROP INDEX " + normalizeIdentifier(index) + " ON " + normalizeIdentifier(table);
     }
 
     @Override
-    public String getDropTableStatements( String table )
+    public String getDropTableStatements(String table)
     {
-        return "DROP TABLE IF EXISTS "+normalizeIdentifier( table )+";\n"+
-                "DROP VIEW IF EXISTS "+normalizeIdentifier( table )+";\n";
+        return "DROP TABLE IF EXISTS " + normalizeIdentifier(table) + ";\n" +
+                "DROP VIEW IF EXISTS " + normalizeIdentifier(table) + ";\n";
     }
 }

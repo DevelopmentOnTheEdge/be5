@@ -9,7 +9,7 @@ public class ColumnModel
 
     public ColumnModel(String name, String title)
     {
-        Objects.requireNonNull( title );
+        Objects.requireNonNull(title);
         this.title = title;
         this.name = name;
     }

@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 
 public class Action
 {
-    
+
     public final String name;
     public final String arg;
 
@@ -25,7 +25,7 @@ public class Action
     }
 
     /**
-     * Generates an action that should be interpreted as client-side action via a hash URL. 
+     * Generates an action that should be interpreted as client-side action via a hash URL.
      */
     public static Action call(HashUrl hashUrl)
     {
@@ -33,7 +33,7 @@ public class Action
     }
 
     /**
-     * Generates an action that should be interpreted as client-side action via a hash URL. 
+     * Generates an action that should be interpreted as client-side action via a hash URL.
      */
     public static Action call(String link)
     {
@@ -66,7 +66,8 @@ public class Action
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (arg != null ? arg.hashCode() : 0);
         return result;

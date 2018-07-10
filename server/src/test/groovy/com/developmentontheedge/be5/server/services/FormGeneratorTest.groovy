@@ -17,9 +17,12 @@ import static org.junit.Assert.assertEquals
 
 class FormGeneratorTest extends TestTableQueryDBTest
 {
-    @Inject private Meta meta
-    @Inject private FormGenerator formGenerator
-    @Inject private OperationExecutor operationExecutor
+    @Inject
+    private Meta meta
+    @Inject
+    private FormGenerator formGenerator
+    @Inject
+    private OperationExecutor operationExecutor
 
     @Before
     void setUp()
@@ -38,7 +41,7 @@ class FormGeneratorTest extends TestTableQueryDBTest
         //result.getAttributes()
 
         assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +
-            "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}",
+                "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}",
                 oneQuotes(jsonb.toJson(result.attributes)))
     }
 
@@ -47,7 +50,7 @@ class FormGeneratorTest extends TestTableQueryDBTest
     {
         ResourceData result = formGenerator
                 .execute("testtableAdmin", "All records", "ServerErrorProcessing",
-                        [] as String[], [:], ['name': 'generateErrorInProperty'])
+                [] as String[], [:], ['name': 'generateErrorInProperty'])
         def formPresentation = (FormPresentation) result.getAttributes()
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString())
@@ -55,5 +58,7 @@ class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals OperationStatus.ERROR, formPresentation.getOperationResult().getStatus()
         assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 formPresentation.getOperationResult().getMessage()
+
+        assertEquals null, formPresentation.getOperationResult().getDetails()
     }
 }

@@ -17,8 +17,9 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
             new CoreModuleForTest()
     );
 
-    static {
-        initDb(injector);
+    static
+    {
+        initDb();
     }
 
     @Override

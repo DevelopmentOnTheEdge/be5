@@ -18,26 +18,27 @@ import static com.developmentontheedge.beans.BeanInfoConstants.TAG_LIST_ATTR;
 
 public class AddRemoveCategory extends GOperationSupport
 {
-    @Inject CategoriesHelper categoriesHelper;
+    @Inject
+    CategoriesHelper categoriesHelper;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        if( context.getRecords().length == 0 )
+        if (context.getRecords().length == 0)
             return null;
 
-        DynamicProperty prop = new DynamicProperty( "categoryID", "Category", Long.class );
-        prop.setAttribute( TAG_LIST_ATTR, queries.getTagsFromSelectionView(
-                "categories", Collections.singletonMap( "entity", getInfo().getEntityName() )) );
-        params.add( prop );
+        DynamicProperty prop = new DynamicProperty("categoryID", "Category", Long.class);
+        prop.setAttribute(TAG_LIST_ATTR, queries.getTagsFromSelectionView(
+                "categories", Collections.singletonMap("entity", getInfo().getEntityName())));
+        params.add(prop);
 
-        prop = new DynamicProperty( "operationType", "Operation", String.class );
+        prop = new DynamicProperty("operationType", "Operation", String.class);
 
-        prop.setAttribute( TAG_LIST_ATTR, new String[][]{
+        prop.setAttribute(TAG_LIST_ATTR, new String[][]{
                 {"Add", "Add to this category and parents"},
-                {"Remove", "Remove from this category and children"} } );
+                {"Remove", "Remove from this category and children"}});
         prop.setValue("Add");
-        params.add( prop );
+        params.add(prop);
 
         return DpsUtils.setValues(params, presetValues);
     }
@@ -45,29 +46,29 @@ public class AddRemoveCategory extends GOperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        if( context.getRecords().length == 0 )
+        if (context.getRecords().length == 0)
         {
             setResult(OperationResult.error("No records were selected"));
             return;
         }
 
-        Long categoryID = params.getValueAsLong( "categoryID" );
+        Long categoryID = params.getValueAsLong("categoryID");
 
 
         String entity = getInfo().getEntityName();
         String pk = getInfo().getPrimaryKey();
 
-        if( "Add".equals( params.getValue( "operationType" ) ) )
+        if ("Add".equals(params.getValue("operationType")))
         {
             List<Long> categories = categoriesHelper.getParentCategories(categoryID);
 
             delete(entity, categories);
 
             db.insert("INSERT INTO classifications (recordID, categoryID)" +
-                    "SELECT CONCAT('"+entity+".', e."+pk+"), c.ID " +
-                    "FROM "+entity+" e, categories c " +
-                    "WHERE e."+pk+" IN " + Utils.inClause(context.getRecords().length) +
-                    "  AND c.ID     IN " + Utils.inClause(categories.size()),
+                            "SELECT CONCAT('" + entity + ".', e." + pk + "), c.ID " +
+                            "FROM " + entity + " e, categories c " +
+                            "WHERE e." + pk + " IN " + Utils.inClause(context.getRecords().length) +
+                            "  AND c.ID     IN " + Utils.inClause(categories.size()),
                     ObjectArrays.concat(context.getRecords(), categories.toArray(), Object.class));
         }
         else

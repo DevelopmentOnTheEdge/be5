@@ -15,7 +15,8 @@ import static org.junit.Assert.assertEquals;
 
 public class UserAwareMetaImplTest extends BaseTest
 {
-    @Inject private UserAwareMeta userAwareMeta;
+    @Inject
+    private UserAwareMeta userAwareMeta;
 
     @Before
     public void setUp()

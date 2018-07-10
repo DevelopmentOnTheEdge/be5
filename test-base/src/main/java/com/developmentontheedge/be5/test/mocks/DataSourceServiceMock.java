@@ -15,7 +15,8 @@ public class DataSourceServiceMock implements DataSourceService
     }
 
     @Override
-    public Dbms getDbms() {
+    public Dbms getDbms()
+    {
         return Dbms.H2;
     }
 

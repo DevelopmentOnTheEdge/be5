@@ -8,6 +8,6 @@ public class LanguageSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        return ((BeModelElement)getBean()).getProject().getApplication().getLocalizations().names().toArray( String[]::new );
+        return ((BeModelElement) getBean()).getProject().getApplication().getLocalizations().names().toArray(String[]::new);
     }
 }

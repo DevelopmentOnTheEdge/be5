@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ConnectedBugtracker
 {
-    
+
     private final Project project;
     private String name = "";
     private String projectId = "";
@@ -17,47 +17,47 @@ public class ConnectedBugtracker
     {
         this.project = null;
     }
-    
-    public ConnectedBugtracker( Project project, String name, String projectId, Map<String, String> bugtrackers )
+
+    public ConnectedBugtracker(Project project, String name, String projectId, Map<String, String> bugtrackers)
     {
         this.project = project;
         this.name = name;
         this.projectId = projectId;
         this.bugtrackers = bugtrackers;
     }
-    
-    @PropertyName( "Bugtracker name" )
+
+    @PropertyName("Bugtracker name")
     public String getName()
     {
         return name;
     }
-    
-    public void setName( String name )
+
+    public void setName(String name)
     {
-        if ( this.bugtrackers.containsKey( this.name ) )
-            this.bugtrackers.remove( this.name );
-        
+        if (this.bugtrackers.containsKey(this.name))
+            this.bugtrackers.remove(this.name);
+
         this.name = name;
-        this.bugtrackers.put( this.name, this.projectId );
+        this.bugtrackers.put(this.name, this.projectId);
         fireChanged();
     }
-    
-    @PropertyName( "Project identifier" )
+
+    @PropertyName("Project identifier")
     public String getProjectId()
     {
         return projectId;
     }
-    
-    public void setProjectId( String projectId )
+
+    public void setProjectId(String projectId)
     {
         this.projectId = projectId;
-        this.bugtrackers.put( this.name, this.projectId );
+        this.bugtrackers.put(this.name, this.projectId);
         fireChanged();
     }
 
     private void fireChanged()
     {
-        if ( project != null )
+        if (project != null)
             project.fireCodeChanged();
     }
 

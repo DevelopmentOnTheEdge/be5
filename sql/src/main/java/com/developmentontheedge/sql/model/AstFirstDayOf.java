@@ -6,14 +6,14 @@ public class AstFirstDayOf extends SimpleNode
 {
     public AstFirstDayOf(int id)
     {
-        super( id );
+        super(id);
     }
 
     public AstFirstDayOf(SimpleNode node, String type)
     {
-        this( 0 );
+        this(0);
         this.nodeSuffix = type.toUpperCase();
-        addChild( node );
+        addChild(node);
     }
 }
 

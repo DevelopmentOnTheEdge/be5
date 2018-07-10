@@ -17,7 +17,8 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CompiledLocalizations {
+public class CompiledLocalizations
+{
 
     public static CompiledLocalizations from(Project project)
     {
@@ -32,14 +33,16 @@ public class CompiledLocalizations {
         return new CompiledLocalizations(all);
     }
 
-    private static void collectLocalizations(Module module, Table<String, String, CompiledEntityLocalizations> all) {
+    private static void collectLocalizations(Module module, Table<String, String, CompiledEntityLocalizations> all)
+    {
         for (LanguageLocalizations languageLocalizations : module.getLocalizations())
         {
             collectLocalizations(languageLocalizations, all);
         }
     }
 
-    private static void collectLocalizations(LanguageLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all) {
+    private static void collectLocalizations(LanguageLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all)
+    {
         String language = localizations.getName();
 
         for (EntityLocalizations entityLocalizations : localizations)
@@ -48,7 +51,8 @@ public class CompiledLocalizations {
         }
     }
 
-    private static void collectLocalizations(String language, EntityLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all) {
+    private static void collectLocalizations(String language, EntityLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all)
+    {
         String entityName = localizations.getName();
         Table<String, String, String> targetEntityLocalizations = toTable(localizations);
         CompiledEntityLocalizations createdInThisLoopLocalizations = all.get(language, entityName);
@@ -63,7 +67,8 @@ public class CompiledLocalizations {
         }
     }
 
-    private static Table<String, String, String> toTable(EntityLocalizations entityLocalizations) {
+    private static Table<String, String, String> toTable(EntityLocalizations entityLocalizations)
+    {
         Table<String, String, String> targetEntityLocalizations = HashBasedTable.create();
 
         for (LocalizationRow row : entityLocalizations.getRawRows()) // XXX this can be incorrect: getRows()?
@@ -74,27 +79,33 @@ public class CompiledLocalizations {
         return targetEntityLocalizations;
     }
 
-    private static class CompiledEntityLocalizations {
+    private static class CompiledEntityLocalizations
+    {
         // topic -> key -> value
         final Table<String, String, String> entityLocalizations;
 
-        public CompiledEntityLocalizations(Table<String, String, String> entityLocalizations) {
+        public CompiledEntityLocalizations(Table<String, String, String> entityLocalizations)
+        {
             this.entityLocalizations = entityLocalizations;
         }
 
-        public static Function<CompiledEntityLocalizations, String> fnGetFirstByTopic(final String topic) {
+        public static Function<CompiledEntityLocalizations, String> fnGetFirstByTopic(final String topic)
+        {
             return entityLocalizations -> entityLocalizations.getFirstByTopic(topic);
         }
 
-        public static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(final String topic, final String key) {
+        public static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(final String topic, final String key)
+        {
             return entityLocalizations -> entityLocalizations.getByTopicAndKey(topic, key);
         }
 
-        String getByTopicAndKey(String topic, String key) {
+        String getByTopicAndKey(String topic, String key)
+        {
             return entityLocalizations.get(topic, key);
         }
 
-        String getFirstByTopic(String topic) {
+        String getFirstByTopic(String topic)
+        {
             Map<String, String> pairs = entityLocalizations.row(topic);
             return Iterables.getFirst(pairs.values(), null);
         }
@@ -108,14 +119,16 @@ public class CompiledLocalizations {
         this.all = all;
     }
 
-    public Optional<String> getEntityTitle(String language, final String entityName) {
+    public Optional<String> getEntityTitle(String language, final String entityName)
+    {
         checkNotNull(language);
         checkNotNull(entityName);
         return findLocalization(language, entityName,
                 CompiledEntityLocalizations.fnGetFirstByTopic(DatabaseConstants.L10N_TOPIC_DISPLAY_NAME));
     }
 
-    public String getOperationTitle(String language, String entityName, final String name) {
+    public String getOperationTitle(String language, String entityName, final String name)
+    {
         checkNotNull(language);
         checkNotNull(entityName);
         checkNotNull(name);
@@ -127,7 +140,8 @@ public class CompiledLocalizations {
                 .orElse(name));
     }
 
-    public String getQueryTitle(String language, String entityName, final String queryName) {
+    public String getQueryTitle(String language, String entityName, final String queryName)
+    {
         checkNotNull(language);
         checkNotNull(entityName);
         checkNotNull(queryName);
@@ -143,7 +157,8 @@ public class CompiledLocalizations {
     {
         Optional<String> title = get(language, entityName, operationName, name);
 
-        if(!title.isPresent()){
+        if (!title.isPresent())
+        {
             title = get(language, entityName, queryName, name);
         }
 
@@ -155,7 +170,8 @@ public class CompiledLocalizations {
         return get(language, entityName, operationName, name);
     }
 
-    public Optional<String> get(String language, String entityName, String queryName, String content) {
+    public Optional<String> get(String language, String entityName, String queryName, String content)
+    {
         checkNotNull(language);
         checkNotNull(entityName);
         checkNotNull(queryName);
@@ -164,19 +180,19 @@ public class CompiledLocalizations {
         Optional<String> localization = findLocalization(language, entityName,
                 CompiledEntityLocalizations.fnGetByTopicAndKey(queryName, content));
 
-        if(!localization.isPresent())
+        if (!localization.isPresent())
         {
             localization = findLocalization(language, "query.jsp",
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
 
-        if(!localization.isPresent())
+        if (!localization.isPresent())
         {
             localization = findLocalization(language, "index.jsp",
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
 
-        if(!localization.isPresent())
+        if (!localization.isPresent())
         {
             localization = findLocalization(language, "operation.jsp",
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
@@ -192,7 +208,8 @@ public class CompiledLocalizations {
         return localization;
     }
 
-    private Optional<String> findLocalization(String language, String entityName, Function<CompiledEntityLocalizations, String> continuation) {
+    private Optional<String> findLocalization(String language, String entityName, Function<CompiledEntityLocalizations, String> continuation)
+    {
         CompiledEntityLocalizations entityLocalizations = all.get(language.toLowerCase(Locale.US), entityName);
 
         if (entityLocalizations == null)

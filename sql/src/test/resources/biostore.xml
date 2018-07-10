@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <testSuite name="biostore">
- <description>Тесты из BioStore</description>
+  <description>Тесты из BioStore</description>
 
- <test name="current_role_list">
-  <parser>
-   <query><![CDATA[select
+  <test name="current_role_list">
+    <parser>
+      <query><![CDATA[select
          s.ID,
          s.name
      from servers s
      LEFT JOIN server_administrators sa ON sa.serverID=s.ID
      WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ GROUP BY s.ID
      order by 2]]></query>
-   <applyContext>
-    <userName name='testUser' />
-    <role name='User' />
-    <role name='GroupAdmin' />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext>
+        <userName name='testUser'/>
+        <role name='User'/>
+        <role name='GroupAdmin'/>
+      </applyContext>
+      <format dbms="oracle"><![CDATA[SELECT
          s.ID,
          s.name
      FROM servers s
      LEFT JOIN server_administrators sa ON sa.serverID = s.ID
      WHERE 'Administrator' IN ('User', 'GroupAdmin') OR sa.personID ='testUser' GROUP BY s.ID
      ORDER BY 2]]></format>
-  </parser>
- </test>
- <test name="complex-case">
-  <parser>
-   <query><![CDATA[SELECT ID AS "Code", CASE WHEN LENGTH(name ) > 60 THEN CONCAT( SUBSTRING(name,1,60 ),'...') ELSE name END AS "Name" FROM attributeGroups]]></query>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", CASE WHEN LENGTH(name ) > 60 THEN  SUBSTR(name, 1, 60 )||'...' ELSE name END AS "Name" FROM attributeGroups]]></format>
-  </parser>
- </test>
- <test name="biostore-failed-if">
-  <parser>
-   <query><![CDATA[SELECT 
+    </parser>
+  </test>
+  <test name="complex-case">
+    <parser>
+      <query>
+        <![CDATA[SELECT ID AS "Code", CASE WHEN LENGTH(name ) > 60 THEN CONCAT( SUBSTRING(name,1,60 ),'...') ELSE name END AS "Name" FROM attributeGroups]]></query>
+      <format dbms="oracle">
+        <![CDATA[SELECT ID AS "Code", CASE WHEN LENGTH(name ) > 60 THEN  SUBSTR(name, 1, 60 )||'...' ELSE name END AS "Name" FROM attributeGroups]]></format>
+    </parser>
+  </test>
+  <test name="biostore-failed-if">
+    <parser>
+      <query><![CDATA[SELECT
  <if parameter="personID"> 
      COALESCE( c.shortName,c.name       )  
         AS "Организация", 
@@ -51,7 +53,7 @@
      INNER JOIN companies c ON c.ID = e.companyID 
         LEFT JOIN corporateTitles ct ON ct.ID = e.titleID 
      INNER JOIN persons p ON p.ID = e.personID]]></query>
-   <format dbms="mysql"><![CDATA[SELECT 
+      <format dbms="mysql"><![CDATA[SELECT
  <if parameter="personID"> 
      COALESCE( c.shortName, c.name       )  
         AS "Организация", 
@@ -68,11 +70,11 @@
      INNER JOIN companies c ON c.ID = e.companyID 
         LEFT JOIN corporateTitles ct ON ct.ID = e.titleID 
      INNER JOIN persons p ON p.ID = e.personID]]></format>
-  </parser>
- </test>
- <test name="free-servers">
-  <parser>
-   <query><![CDATA[select
+    </parser>
+  </test>
+  <test name="free-servers">
+    <parser>
+      <query><![CDATA[select
          s.ID,
          CONCAT( s.name,' (',tt.payment,')' )
      from servers s
@@ -84,7 +86,7 @@
          on (t.typeID=tt.ID)
      where type='web server' and tt.payment in ('free', 'trial') and t.status='open'
      order by 2]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
+      <format dbms="mysql"><![CDATA[SELECT
          s.ID,
          CONCAT( s.name, ' (', tt.payment, ')' )
      FROM servers s
@@ -96,30 +98,30 @@
          ON (t.typeID = tt.ID)
      WHERE type ='web server' AND tt.payment IN ('free', 'trial') AND t.status ='open'
      ORDER BY 2]]></format>
-  </parser>
- </test>
- <test name="join-using">
-  <parser>
-   <query><![CDATA[select
+    </parser>
+  </test>
+  <test name="join-using">
+    <parser>
+      <query><![CDATA[select
          p.ID,
          c.name
      from providers p
      join companies c using(ID)
      WHERE 'Administrator' IN @@current-role-list@@ OR 'ServerAdmin' IN @@current-role-list@@
  order by 2]]></query>
-   <applyContext/>
-   <format dbms="oracle"><![CDATA[SELECT
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT
          p.ID,
          c.name
      FROM providers p
      INNER JOIN companies c USING (ID)
      WHERE 'Administrator' IN ('Guest') OR 'ServerAdmin' IN ('Guest')
  ORDER BY 2]]></format>
-  </parser>
- </test>
- <test name="product_subscriptions">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="product_subscriptions">
+    <parser>
+      <query><![CDATA[SELECT
        ss.ID AS "___id",
        IF(st.type='offline',s.name,CONCAT( '<a href="serverRedirect?serverID=',CAST(s.id AS CHAR) ,'" target=_blank>' ,s.name ,'</a>'                  )) AS "Server",
        pr.name AS "Product",
@@ -135,7 +137,7 @@
          LEFT JOIN server_types st ON s.serverTypeID=st.ID
     WHERE p.userName=@@username@@ AND t.status!='disabled'
     ORDER BY 2,3]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
+      <format dbms="mysql"><![CDATA[SELECT
        ss.ID AS "___id",
        IF(st.type ='offline', s.name, CONCAT( '<a href="serverRedirect?serverID=', CAST(s.id AS CHAR) , '" target=_blank>' , s.name , '</a>'                  )) AS "Server",
        pr.name AS "Product",
@@ -151,27 +153,27 @@
          LEFT JOIN server_types st ON s.serverTypeID = st.ID
     WHERE p.userName =@@username@@ AND t.status <>'disabled'
     ORDER BY 2, 3]]></format>
-  </parser>
- </test>
- <!-- test name="long-downloads">
-  <parser>
-   <query><![CDATA[SELECT DISTINCT c.name
-   FROM downloads d
-   JOIN servers s ON (s.ID=d.serverID)
-   JOIN companies c ON (c.ID=s.providerID)
-   LEFT JOIN server_administrators sa ON sa.serverID=s.ID
-   WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat('groups.',ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat('persons.',@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid='valid' and start<now() and `end`>now() and t.status != 'disabled' union distinct select distinct p.ID from products p where p.availability='free' ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,'/') )]]></query>
-   <format dbms="mysql"><![CDATA[SELECT DISTINCT c.name
-   FROM downloads d
-   JOIN servers s ON (s.ID=d.serverID)
-   JOIN companies c ON (c.ID=s.providerID)
-   LEFT JOIN server_administrators sa ON sa.serverID=s.ID
-   WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat('groups.',ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat('persons.',@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid='valid' and start<now() and `end`>now() and t.status != 'disabled' union distinct select distinct p.ID from products p where p.availability='free' ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,'/') )]]></format>
-  </parser>
- </test-->
- <test name="download_history">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <!-- test name="long-downloads">
+   <parser>
+    <query><![CDATA[SELECT DISTINCT c.name
+    FROM downloads d
+    JOIN servers s ON (s.ID=d.serverID)
+    JOIN companies c ON (c.ID=s.providerID)
+    LEFT JOIN server_administrators sa ON sa.serverID=s.ID
+    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat('groups.',ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat('persons.',@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid='valid' and start<now() and `end`>now() and t.status != 'disabled' union distinct select distinct p.ID from products p where p.availability='free' ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,'/') )]]></query>
+    <format dbms="mysql"><![CDATA[SELECT DISTINCT c.name
+    FROM downloads d
+    JOIN servers s ON (s.ID=d.serverID)
+    JOIN companies c ON (c.ID=s.providerID)
+    LEFT JOIN server_administrators sa ON sa.serverID=s.ID
+    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat('groups.',ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat('persons.',@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid='valid' and start<now() and `end`>now() and t.status != 'disabled' union distinct select distinct p.ID from products p where p.availability='free' ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,'/') )]]></format>
+   </parser>
+  </test-->
+  <test name="download_history">
+    <parser>
+      <query><![CDATA[SELECT
      dh.id AS "___ID",
      dh.personID AS "___pid",
  <unless parameter="personID">
@@ -191,7 +193,7 @@
    LEFT JOIN server_administrators sa ON sa.serverID = s.ID
    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID =@@username@@
    GROUP BY dh.id ORDER BY dh.start DESC]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
+      <format dbms="mysql"><![CDATA[SELECT
      dh.id AS "___ID",
      dh.personID AS "___pid",
  <unless parameter="personID">
@@ -211,11 +213,11 @@
    LEFT JOIN server_administrators sa ON sa.serverID = s.ID
    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID =@@username@@
    GROUP BY dh.id ORDER BY dh.start DESC]]></format>
-  </parser>
- </test>
- <test name="downloads-control">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="downloads-control">
+    <parser>
+      <query><![CDATA[SELECT
      d.id AS "___ID",
      CONCAT( '<a href=''download?serverID=',CAST(s.id AS CHAR),'&path=',d.path,'''><img src=''icons/download.png'' title=''Download''></a>',' <a href=''q?_t_=download_history&downloadID=',CAST(d.id AS CHAR),'''>History</a>' ) AS "Actions;<nosort/>",
  <unless parameter="serverID">
@@ -237,7 +239,7 @@
    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@
    GROUP BY d.ID ORDER BY s.name,d.path
 ]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
+      <format dbms="mysql"><![CDATA[SELECT
      d.id AS "___ID",
      CONCAT( '<a href=''download?serverID=', CAST(s.id AS CHAR), '&path=', d.path, '''><img src=''icons/download.png'' title=''Download''></a>', ' <a href=''q?_t_=download_history&downloadID=', CAST(d.id AS CHAR), '''>History</a>' ) AS "Actions;<nosort/>",
  <unless parameter="serverID">
@@ -259,55 +261,55 @@
    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID =@@username@@
    GROUP BY d.ID ORDER BY s.name, d.path
 ]]></format>
-  </parser>
- </test>
- <!-- test name="downloads-advanced">
-  <parser>
-   <query><![CDATA[SELECT
- d.id AS "___ID",
- CONCAT( '<center><b>',c.name ,'</b></center>' ) AS "Provider;<grouping/>",
-     CONCAT( '<a href=''q?_t_=downloads&_qn_=One record&ID=',CAST(d.id AS CHAR),'''>',REPLACE(REVERSE(SUBSTRING(REVERSE(d.path),INSTR(REVERSE(d.path),'/')+1)), '/', ': '),'</a>' ) AS "Product",
- d.version AS "Version;<blankNulls/>",
- CONCAT( '<img src=''icons/type-',d.type,'.png'' title=''',d.type,'''>','<img src=''icons/availability-',d.availability,'.png'' title=''',d.availability,'''>' ) AS "Type",
-     d.description AS "Description;<blankNulls/>",
-     d.requirements AS "Requirements;<blankNulls/>",
- CASE WHEN (d.urls IS NULL) OR (d.urls='') THEN '' ELSE CONCAT( '<a target=_blank href=''',REPLACE(d.urls,CHAR(13),'''>Click</a>, <a target=_blank href='''),'''>Click</a>' ) END AS "Related URLs;<blankNulls/>",
-     d.downloadsCount AS "Stats",
-     CONCAT( '<img src=''icons/download.png'' title=''Download''> <a href=''download?serverID=',CAST(s.id AS CHAR),'&path=',d.path,'''>',SUBSTRING_INDEX(d.path,'/',-1),'</a> (',CASE WHEN d.fileSize < 1024 THEN CONCAT( CAST(d.fileSize AS CHAR),' b' ) ELSE CASE WHEN d.fileSize < 1048576 THEN CONCAT( CAST(TRUNCATE(d.fileSize/1024,2) AS CHAR), kb ) ELSE CONCAT( CAST(TRUNCATE(d.fileSize/1048576,2) AS CHAR), Mb ) END END,')' ) AS "Download;<nosort/>",
-     d.comment AS "Comments;<blankNulls/>",
-     d.releaseNotes AS "Release notes;<blankNulls/>"
-   FROM downloads d
-   JOIN servers s ON (s.ID=d.serverID)
-   JOIN companies c ON (c.ID=s.providerID)
-   LEFT JOIN server_administrators sa ON sa.serverID=s.ID
-   WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat("groups.",ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat("persons.",@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid="valid" and start<now() and end>now() and t.status != "disabled" union distinct select distinct p.ID from products p where p.availability="free" ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,"/") )
-   GROUP BY d.ID ORDER BY s.name,d.path
-]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
- d.id AS "___ID",
- CONCAT( '<center><b>',c.name ,'</b></center>' ) AS "Provider;<grouping/>",
-     CONCAT( '<a href=''q?_t_=downloads&_qn_=One record&ID=',CAST(d.id AS CHAR),'''>',REPLACE(REVERSE(SUBSTRING(REVERSE(d.path),INSTR(REVERSE(d.path),'/')+1)), '/', ': '),'</a>' ) AS "Product",
- d.version AS "Version;<blankNulls/>",
- CONCAT( '<img src=''icons/type-',d.type,'.png'' title=''',d.type,'''>','<img src=''icons/availability-',d.availability,'.png'' title=''',d.availability,'''>' ) AS "Type",
-     d.description AS "Description;<blankNulls/>",
-     d.requirements AS "Requirements;<blankNulls/>",
- CASE WHEN (d.urls IS NULL) OR (d.urls='') THEN '' ELSE CONCAT( '<a target=_blank href=''',REPLACE(d.urls,CHAR(13),'''>Click</a>, <a target=_blank href='''),'''>Click</a>' ) END AS "Related URLs;<blankNulls/>",
-     d.downloadsCount AS "Stats",
-     CONCAT( '<img src=''icons/download.png'' title=''Download''> <a href=''download?serverID=',CAST(s.id AS CHAR),'&path=',d.path,'''>',SUBSTRING_INDEX(d.path,'/',-1),'</a> (',CASE WHEN d.fileSize < 1024 THEN CONCAT( CAST(d.fileSize AS CHAR),' b' ) ELSE CASE WHEN d.fileSize < 1048576 THEN CONCAT( CAST(TRUNCATE(d.fileSize/1024,2) AS CHAR), kb ) ELSE CONCAT( CAST(TRUNCATE(d.fileSize/1048576,2) AS CHAR), Mb ) END END,')' ) AS "Download;<nosort/>",
-     d.comment AS "Comments;<blankNulls/>",
-     d.releaseNotes AS "Release notes;<blankNulls/>"
-   FROM downloads d
-   JOIN servers s ON (s.ID=d.serverID)
-   JOIN companies c ON (c.ID=s.providerID)
-   LEFT JOIN server_administrators sa ON sa.serverID=s.ID
-   WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat("groups.",ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat("persons.",@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid="valid" and start<now() and end>now() and t.status != "disabled" union distinct select distinct p.ID from products p where p.availability="free" ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,"/") )
-   GROUP BY d.ID ORDER BY s.name,d.path
-]]></format>
-  </parser>
- </test -->
- <test name="order-by-case">
-  <parser>
-   <query><![CDATA[SELECT 
+    </parser>
+  </test>
+  <!-- test name="downloads-advanced">
+   <parser>
+    <query><![CDATA[SELECT
+  d.id AS "___ID",
+  CONCAT( '<center><b>',c.name ,'</b></center>' ) AS "Provider;<grouping/>",
+      CONCAT( '<a href=''q?_t_=downloads&_qn_=One record&ID=',CAST(d.id AS CHAR),'''>',REPLACE(REVERSE(SUBSTRING(REVERSE(d.path),INSTR(REVERSE(d.path),'/')+1)), '/', ': '),'</a>' ) AS "Product",
+  d.version AS "Version;<blankNulls/>",
+  CONCAT( '<img src=''icons/type-',d.type,'.png'' title=''',d.type,'''>','<img src=''icons/availability-',d.availability,'.png'' title=''',d.availability,'''>' ) AS "Type",
+      d.description AS "Description;<blankNulls/>",
+      d.requirements AS "Requirements;<blankNulls/>",
+  CASE WHEN (d.urls IS NULL) OR (d.urls='') THEN '' ELSE CONCAT( '<a target=_blank href=''',REPLACE(d.urls,CHAR(13),'''>Click</a>, <a target=_blank href='''),'''>Click</a>' ) END AS "Related URLs;<blankNulls/>",
+      d.downloadsCount AS "Stats",
+      CONCAT( '<img src=''icons/download.png'' title=''Download''> <a href=''download?serverID=',CAST(s.id AS CHAR),'&path=',d.path,'''>',SUBSTRING_INDEX(d.path,'/',-1),'</a> (',CASE WHEN d.fileSize < 1024 THEN CONCAT( CAST(d.fileSize AS CHAR),' b' ) ELSE CASE WHEN d.fileSize < 1048576 THEN CONCAT( CAST(TRUNCATE(d.fileSize/1024,2) AS CHAR), kb ) ELSE CONCAT( CAST(TRUNCATE(d.fileSize/1048576,2) AS CHAR), Mb ) END END,')' ) AS "Download;<nosort/>",
+      d.comment AS "Comments;<blankNulls/>",
+      d.releaseNotes AS "Release notes;<blankNulls/>"
+    FROM downloads d
+    JOIN servers s ON (s.ID=d.serverID)
+    JOIN companies c ON (c.ID=s.providerID)
+    LEFT JOIN server_administrators sa ON sa.serverID=s.ID
+    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat("groups.",ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat("persons.",@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid="valid" and start<now() and end>now() and t.status != "disabled" union distinct select distinct p.ID from products p where p.availability="free" ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,"/") )
+    GROUP BY d.ID ORDER BY s.name,d.path
+ ]]></query>
+    <format dbms="mysql"><![CDATA[SELECT
+  d.id AS "___ID",
+  CONCAT( '<center><b>',c.name ,'</b></center>' ) AS "Provider;<grouping/>",
+      CONCAT( '<a href=''q?_t_=downloads&_qn_=One record&ID=',CAST(d.id AS CHAR),'''>',REPLACE(REVERSE(SUBSTRING(REVERSE(d.path),INSTR(REVERSE(d.path),'/')+1)), '/', ': '),'</a>' ) AS "Product",
+  d.version AS "Version;<blankNulls/>",
+  CONCAT( '<img src=''icons/type-',d.type,'.png'' title=''',d.type,'''>','<img src=''icons/availability-',d.availability,'.png'' title=''',d.availability,'''>' ) AS "Type",
+      d.description AS "Description;<blankNulls/>",
+      d.requirements AS "Requirements;<blankNulls/>",
+  CASE WHEN (d.urls IS NULL) OR (d.urls='') THEN '' ELSE CONCAT( '<a target=_blank href=''',REPLACE(d.urls,CHAR(13),'''>Click</a>, <a target=_blank href='''),'''>Click</a>' ) END AS "Related URLs;<blankNulls/>",
+      d.downloadsCount AS "Stats",
+      CONCAT( '<img src=''icons/download.png'' title=''Download''> <a href=''download?serverID=',CAST(s.id AS CHAR),'&path=',d.path,'''>',SUBSTRING_INDEX(d.path,'/',-1),'</a> (',CASE WHEN d.fileSize < 1024 THEN CONCAT( CAST(d.fileSize AS CHAR),' b' ) ELSE CASE WHEN d.fileSize < 1048576 THEN CONCAT( CAST(TRUNCATE(d.fileSize/1024,2) AS CHAR), kb ) ELSE CONCAT( CAST(TRUNCATE(d.fileSize/1048576,2) AS CHAR), Mb ) END END,')' ) AS "Download;<nosort/>",
+      d.comment AS "Comments;<blankNulls/>",
+      d.releaseNotes AS "Release notes;<blankNulls/>"
+    FROM downloads d
+    JOIN servers s ON (s.ID=d.serverID)
+    JOIN companies c ON (c.ID=s.providerID)
+    LEFT JOIN server_administrators sa ON sa.serverID=s.ID
+    WHERE 'Administrator' IN @@current-role-list@@ OR sa.personID=@@username@@ OR exists( select 1 from ( select p.serverID,pp.module,pp.permission from products p join ( select distinct t.productID from product_subscriptions ps join ( select concat("groups.",ug.groupID) custID from user_groups ug where ug.personID=@@username@@ union select concat("persons.",@@username@@) ) c on c.custID=ps.custID join tariffs t on t.ID=ps.tariffID where valid="valid" and start<now() and end>now() and t.status != "disabled" union distinct select distinct p.ID from products p where p.availability="free" ) ap on ap.productID=p.ID join product_permissions pp on pp.productID=p.ID union select gp.serverID,gp.module,gp.permission from group_permissions gp join user_groups ug where ug.personID=@@username@@ ) ppp where d.serverID=ppp.serverID and permission&3=3 and substring(d.path,1,length(ppp.module)+1)=concat(ppp.module,"/") )
+    GROUP BY d.ID ORDER BY s.name,d.path
+ ]]></format>
+   </parser>
+  </test -->
+  <test name="order-by-case">
+    <parser>
+      <query><![CDATA[SELECT
       c.`___ownerID` AS "toId", 
       ea.address AS "toAddr", 
       CONCAT( p.firstName, ' ', p.lastName ) AS "toName", 
@@ -319,8 +321,8 @@
      LEFT JOIN emailAddresses ea ON ea.ownerID IN ( c.`___ownerID`, p.`___ownerID` ) 
  ORDER BY CASE WHEN ea.ownerID LIKE 'persons.%' THEN 1 ELSE 2 END
 ]]></query>
-   <applyContext/>
-   <format dbms="oracle"><![CDATA[SELECT 
+      <applyContext/>
+      <format dbms="oracle"><![CDATA[SELECT
       c."___ownerID" AS "toId", 
       ea.address AS "toAddr", 
        p.firstName || ' '|| p.lastName  AS "toName", 
@@ -332,7 +334,7 @@
      LEFT JOIN emailAddresses ea ON ea.ownerID IN ( c."___ownerID", p."___ownerID" ) 
  ORDER BY CASE WHEN ea.ownerID LIKE 'persons.%' THEN 1 ELSE 2 END
 ]]></format>
-   <format dbms="mysql"><![CDATA[SELECT 
+      <format dbms="mysql"><![CDATA[SELECT
       c.`___ownerID` AS "toId", 
       ea.address AS "toAddr", 
       CONCAT( p.firstName, ' ', p.lastName ) AS "toName", 
@@ -344,12 +346,12 @@
      LEFT JOIN emailAddresses ea ON ea.ownerID IN ( c.`___ownerID`, p.`___ownerID` ) 
  ORDER BY CASE WHEN ea.ownerID LIKE 'persons.%' THEN 1 ELSE 2 END
 ]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 
- <test name="some-meta-query">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="some-meta-query">
+    <parser>
+      <query><![CDATA[SELECT
          'operationName' AS "___opername",
          o.table_name AS "___tname",
          o.name AS "___name",
@@ -389,7 +391,7 @@
  WHERE qv.table_name = 'operations_per_role' AND qv.name = 'Role list'
  GROUP BY o.table_name, o.name, o.type, CAST(o.code AS CHAR), o.ID, qv.ID, i.ID
  ORDER BY o.name]]></query>
-   <format dbms="mysql"><![CDATA[SELECT
+      <format dbms="mysql"><![CDATA[SELECT
          'operationName' AS "___opername",
          o.table_name AS "___tname",
          o.name AS "___name",
@@ -429,6 +431,6 @@
  WHERE qv.table_name = 'operations_per_role' AND qv.name = 'Role list'
  GROUP BY o.table_name, o.name, o.type, CAST(o.code AS CHAR), o.ID, qv.ID, i.ID
  ORDER BY o.name]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 </testSuite>

@@ -8,9 +8,9 @@ import java.util.Locale;
 
 /**
  * Request injected to components.
- * 
- * @see Controller
+ *
  * @author asko
+ * @see Controller
  */
 public interface Request extends SessionAccess, ParametersAccess
 {
@@ -33,17 +33,17 @@ public interface Request extends SessionAccess, ParametersAccess
 //     */
 //    <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception;
 
-	/**
+    /**
      * Returns a remaining part of the request URI after the component ID.
      */
     String getRequestUri();
-    
+
     /**
      * Returns the IP address of the client or last proxy that sent the request.
      */
     String getRemoteAddr();
-    
-	/**
+
+    /**
      * Low-level request.
      */
     HttpServletRequest getRawRequest();

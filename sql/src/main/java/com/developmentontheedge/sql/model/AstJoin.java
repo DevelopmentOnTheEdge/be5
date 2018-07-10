@@ -7,30 +7,30 @@ public class AstJoin extends SimpleNode
 {
     public AstJoin(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstJoin(JoinType type, String table, SimpleNode spec)
     {
-        this( SqlParserTreeConstants.JJTJOIN );
-        addChild( new AstJoinType( type ) );
-        addChild( new AstTableRef( table ) );
-        addChild( new AstJoinSpecification( spec ) );
+        this(SqlParserTreeConstants.JJTJOIN);
+        addChild(new AstJoinType(type));
+        addChild(new AstTableRef(table));
+        addChild(new AstJoinSpecification(spec));
     }
 
     public AstJoinType getJoinType()
     {
-        return (AstJoinType)child( 0 );
+        return (AstJoinType) child(0);
     }
-    
+
     public AstTableRef getTable()
     {
-        return (AstTableRef)child( 1 );
+        return (AstTableRef) child(1);
     }
-    
+
     public AstJoinSpecification getJoinSpecification()
     {
-        return (AstJoinSpecification)child( 2 );
+        return (AstJoinSpecification) child(2);
     }
 }
 /* JavaCC - OriginalChecksum=a21e17b01fbb1c847d434cf2d41fcaa5 (do not edit this line) */

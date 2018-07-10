@@ -13,7 +13,9 @@ public class LayoutUtils
         if (!entityItem.getLayout().isEmpty())
         {
             return JsonFactory.jsonb.fromJson(entityItem.getLayout(),
-                    new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
+                    new HashMap<String, Object>()
+                    {
+                    }.getClass().getGenericSuperclass());
         }
         else
         {

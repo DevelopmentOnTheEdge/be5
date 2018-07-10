@@ -19,16 +19,16 @@ import static org.junit.Assert.assertNotNull
 
 class LoadTest extends CoreBe5ProjectDbMockTest
 {
-    @Inject ProjectProvider projectProvider
+    @Inject
+    ProjectProvider projectProvider
 
     @Test
     void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
-        assertEquals("core", projectProvider.get().getAppName())
+        assertEquals("testProject", projectProvider.get().getAppName())
 
         BeModelCollection<Module> modules = projectProvider.get().getModules()
-        assertEquals(1, modules.getSize())
-        assertNotNull(modules.get("system"))
+        assertNotNull(modules.get("core"))
     }
 
     @Test
@@ -43,23 +43,23 @@ class LoadTest extends CoreBe5ProjectDbMockTest
         def project = projectProvider.get()
 
         Map<String, Object> dataModel = new HashMap<>()
-        dataModel.put( "project", project )
-        Entity entity = new Entity( "myTable", project.getApplication(), EntityType.TABLE )
-        DataElementUtils.saveQuiet( entity )
+        dataModel.put("project", project)
+        Entity entity = new Entity("myTable", project.getApplication(), EntityType.TABLE)
+        DataElementUtils.saveQuiet(entity)
 
-        Query query = new Query( "All records", entity )
-        DataElementUtils.saveQuiet( query )
-        query.setQuery( "SELECT * FROM ${entity.getName()}" )
+        Query query = new Query("All records", entity)
+        DataElementUtils.saveQuiet(query)
+        query.setQuery("SELECT * FROM ${entity.getName()}")
         Query query2 = new Query("Copy", entity)
-        DataElementUtils.saveQuiet( query2 )
+        DataElementUtils.saveQuiet(query2)
 
-        query2.setQuery( "<@_copyAllRecordsQuery/>" )
+        query2.setQuery("<@_copyAllRecordsQuery/>")
         assertEquals("SELECT * FROM myTable", query2.getQueryCompiled().validate())
 
-        query2.setQuery( "SELECT <@_bold>name</@_bold> FROM myTable" )
+        query2.setQuery("SELECT <@_bold>name</@_bold> FROM myTable")
         assertEquals("SELECT ( '<b>' || name || '</b>' ) FROM myTable", query2.getQueryCompiled().validate())
 
-        query2.setQuery( "SELECT <@_bold><@_italic>name</@></@> FROM myTable" )
+        query2.setQuery("SELECT <@_bold><@_italic>name</@></@> FROM myTable")
         assertEquals("SELECT ( '<b>' || ( '<i>' || name || '</i>' ) || '</b>' ) FROM myTable",
                 query2.getQueryCompiled().validate())
     }

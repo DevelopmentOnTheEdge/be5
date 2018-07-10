@@ -1,5 +1,0 @@
-security:
-  roles:
-    Administrator: {}
-    SystemDeveloper: {}
-  groups: {}

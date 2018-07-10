@@ -17,11 +17,11 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-            name: "testField",
-            DISPLAY_NAME: "Test Field",
-            value: 1L,
-            TYPE: Long,
-            GROUP_ID: 1
+                name        : "testField",
+                DISPLAY_NAME: "Test Field",
+                value       : 1L,
+                TYPE        : Long,
+                GROUP_ID    : 1
         ]
 
         DynamicPropertyMetaClass.leftShift(dps.getProperty("testField"), ImmutableMap.of(
@@ -44,7 +44,7 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
         dps << [
-                name: "testField",
+                name : "testField",
                 value: 1L
         ]
 
@@ -62,9 +62,9 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
 
         dps.testField = [
                 DISPLAY_NAME: "Test Field",
-                value: 1L,
-                TYPE: Long,
-                GROUP_ID: 1
+                value       : 1L,
+                TYPE        : Long,
+                GROUP_ID    : 1
         ]
 
         DynamicProperty testField = dps.getProperty("testField")

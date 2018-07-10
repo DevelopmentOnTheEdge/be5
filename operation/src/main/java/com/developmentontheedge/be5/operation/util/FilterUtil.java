@@ -24,7 +24,7 @@ public class FilterUtil
             return Collections.emptyMap();
         }
 
-        List<String> notFilterParams = Arrays.asList(((String)operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
 
         return operationParams.entrySet()
                 .stream()

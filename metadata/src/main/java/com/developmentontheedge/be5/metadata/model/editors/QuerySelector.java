@@ -17,19 +17,19 @@ public class QuerySelector extends StringTagEditor
         {
             List<String> queries = new ArrayList<>();
             Query query;
-            if ( getBean() instanceof Query )
+            if (getBean() instanceof Query)
             {
-                query = ( Query ) getBean();
-                queries.add( "" );
+                query = (Query) getBean();
+                queries.add("");
             }
             else
             {
-                query = ( ( QuickFilter ) getBean() ).getQuery();
+                query = ((QuickFilter) getBean()).getQuery();
             }
             queries.addAll(query.getEntity().getQueries().getNameList());
             return queries.toArray(new String[queries.size()]);
         }
-        catch( Exception e )
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

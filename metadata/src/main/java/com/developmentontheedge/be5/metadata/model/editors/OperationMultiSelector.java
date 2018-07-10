@@ -11,9 +11,9 @@ public class OperationMultiSelector extends GenericMultiSelectEditor
     {
         try
         {
-            return ((OperationSet)getBean()).getOwner().getEntity().getOperations().names().toArray( String[]::new );
+            return ((OperationSet) getBean()).getOwner().getEntity().getOperations().names().toArray(String[]::new);
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             return Strings2.EMPTY;
         }

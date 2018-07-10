@@ -12,8 +12,10 @@ import javax.inject.Inject;
 
 public abstract class SqlMockOperationTest extends ServerBe5ProjectTest
 {
-    @Inject protected DpsHelper dpsHelper;
-    @Inject protected Meta meta;
+    @Inject
+    protected DpsHelper dpsHelper;
+    @Inject
+    protected Meta meta;
 
     @Before
     public void beforeSqlMockOperationTest()

@@ -18,31 +18,31 @@ import java.io.PrintStream;
 public class BeSqlExecutor extends SqlExecutor
 {
 
-    public BeSqlExecutor( DbmsConnector connector ) throws IOException
+    public BeSqlExecutor(DbmsConnector connector) throws IOException
     {
-        this( connector, null );
+        this(connector, null);
     }
 
-    public BeSqlExecutor( DbmsConnector connector, PrintStream log ) throws IOException
+    public BeSqlExecutor(DbmsConnector connector, PrintStream log) throws IOException
     {
-        super(connector, log, BeSqlExecutor.class.getResource( "sql.properties" ));
+        super(connector, log, BeSqlExecutor.class.getResource("sql.properties"));
     }
 
     public void executeScript(FreemarkerScript script, ProcessController log) throws ProjectElementException, FreemarkerSqlException
     {
-        if ( script == null || script.getSource().trim().isEmpty() )
+        if (script == null || script.getSource().trim().isEmpty())
             return;
         try
         {
-            new FreemarkerSqlHandler( this, false, log ).execute( script );
+            new FreemarkerSqlHandler(this, false, log).execute(script);
         }
-        catch ( ProjectElementException | FreemarkerSqlException e )
+        catch (ProjectElementException | FreemarkerSqlException e)
         {
             throw e;
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            throw new ProjectElementException( script, e );
+            throw new ProjectElementException(script, e);
         }
     }
 

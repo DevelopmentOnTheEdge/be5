@@ -22,14 +22,15 @@ public class ProjectTopologicalSort
 
     private List<Project> ans = new ArrayList<>();
 
-    private void dfs (String v) {
+    private void dfs(String v)
+    {
         used.put(v, true);
 
-        for(Module module : g.get(v).getModules())
+        for (Module module : g.get(v).getModules())
         {
             if (!used.getOrDefault(module.getName(), false))
             {
-                if(!g.containsKey(module.getName()))
+                if (!g.containsKey(module.getName()))
                 {
                     throw new RuntimeException("Module " + module.getName() +
                             " not found, required for " + v + ". Add module to classpath.");
@@ -41,13 +42,14 @@ public class ProjectTopologicalSort
         ans.add(g.get(v));
     }
 
-    private void topological_sort() {
+    private void topological_sort()
+    {
         projects.forEach(project -> used.put(project.getAppName(), false));
         ans.clear();
 
-        for (Map.Entry<String, Boolean> entry: used.entrySet())
+        for (Map.Entry<String, Boolean> entry : used.entrySet())
             if (!entry.getValue())
-                dfs (entry.getKey());
+                dfs(entry.getKey());
         Collections.reverse(ans);
     }
 
@@ -56,7 +58,7 @@ public class ProjectTopologicalSort
     public ProjectTopologicalSort(Collection<Project> projects)
     {
         Objects.requireNonNull(projects);
-        if(projects.size() == 0)throw new RuntimeException("Project not found.");
+        if (projects.size() == 0) throw new RuntimeException("Project not found.");
 
         this.projects = projects;
 

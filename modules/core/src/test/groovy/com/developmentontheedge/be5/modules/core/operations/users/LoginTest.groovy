@@ -24,10 +24,12 @@ import static org.mockito.Mockito.when
 
 class LoginTest extends CoreBe5ProjectDbMockTest
 {
-    @Inject UserInfoProvider userInfoProvider
+    @Inject
+    UserInfoProvider userInfoProvider
 
     @Before
-    void init(){
+    void init()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST)
     }
 
@@ -55,7 +57,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
         when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
-                Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
+                Matchers.<ResultSetParser<String>> any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
         when(DbServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),

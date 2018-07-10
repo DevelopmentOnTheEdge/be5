@@ -28,7 +28,7 @@ public class Jaxb
             throw new RuntimeException();
         }
     }
-    
+
     public static <T> String toXml(Class<T> klass, T object)
     {
         StringWriter out = new StringWriter();

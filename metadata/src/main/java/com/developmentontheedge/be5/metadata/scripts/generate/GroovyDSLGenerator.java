@@ -45,13 +45,13 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
 
         File file = Paths.get(fileName + ".gdsl").toFile();
 
-        if(file.exists() && !file.isDirectory())
+        if (file.exists() && !file.isDirectory())
         {
             log.info("Generate skipped, file exists: " + fileName);
             return;
         }
 
-        log.info("File '"+file.toString()+"' not found, generate...");
+        log.info("File '" + file.toString() + "' not found, generate...");
 
         try
         {
@@ -79,10 +79,10 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
 
         List<String> entityNames = new ArrayList<>();
         entityCount = entities.size();
-        for(Entity entity : entities)
+        for (Entity entity : entities)
         {
-            if(entity.getName().startsWith("_"))continue;
-            if(entity.getName().equals("properties"))continue;//groovy have getProperties()
+            if (entity.getName().startsWith("_")) continue;
+            if (entity.getName().equals("properties")) continue; //groovy have getProperties()
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);
@@ -95,7 +95,9 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
         return this;
     }
 
-    @Override public GroovyDSLGenerator me() {
+    @Override
+    public GroovyDSLGenerator me()
+    {
         return this;
     }
 }

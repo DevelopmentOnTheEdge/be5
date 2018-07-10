@@ -18,8 +18,9 @@ public abstract class OperationBe5ProjectDBTest extends OperationTestUtils
             new OperationModule()
     );
 
-    static {
-        initDb(injector);
+    static
+    {
+        initDb();
     }
 
     @Override

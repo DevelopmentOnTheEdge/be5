@@ -29,13 +29,13 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     {
         int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.getRecords());
 
-        out.append( "" + updateCount + " " + ( "records were deleted from" ) + " <i>" + getInfo().getEntityName() + "</i><br />" );
+        out.append("" + updateCount + " " + ("records were deleted from") + " <i>" + getInfo().getEntityName() + "</i><br />");
 
         List<TableReference> collectionRefs = meta.getTableReferences(COLLECTION);
 
         for (TableReference reference : collectionRefs)
         {
-            if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
+            if (getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
             {
                 int updateCount1 = database.getEntity(reference.getTableFrom())
                         .removeWhereColumnIn(reference.getColumnsFrom(), context.getRecords());
@@ -49,13 +49,13 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             }
         }
 
-        if( !GENERIC_COLLECTION.equals( getInfo().getEntity().getType() ) )
+        if (!GENERIC_COLLECTION.equals(getInfo().getEntity().getType()))
         {
             List<TableReference> genericCollectionRefs = meta.getTableReferences(GENERIC_COLLECTION);
 
             for (TableReference reference : genericCollectionRefs)
             {
-                if(reference.getColumnsTo() == null)
+                if (reference.getColumnsTo() == null)
                 {
                     int updateCount1 = database.getEntity(reference.getTableFrom())
                             .removeWhereColumnIn(reference.getColumnsFrom(),
@@ -70,7 +70,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             }
         }
 
-        if(userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
+        if (userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
         {
             setResult(OperationResult.finished(out.toString()));
         }

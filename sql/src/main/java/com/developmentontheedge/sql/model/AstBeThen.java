@@ -7,15 +7,17 @@ public class AstBeThen extends AstBeNode
 {
     public AstBeThen(int id)
     {
-        super( id );
+        super(id);
         this.tagName = "then";
     }
 
     private boolean implicit;
+
     public boolean isImplicit()
     {
         return implicit;
     }
+
     public void setImplicit(boolean implicit)
     {
         this.implicit = implicit;

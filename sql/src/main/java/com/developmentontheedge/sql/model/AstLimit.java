@@ -6,15 +6,17 @@ public class AstLimit extends SimpleNode
 {
     public AstLimit(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "LIMIT";
     }
 
-    public static AstLimit of(int count){
+    public static AstLimit of(int count)
+    {
         return new AstLimit().setLimit(0, count);
     }
 
-    public static AstLimit of(int offset, int count){
+    public static AstLimit of(int offset, int count)
+    {
         return new AstLimit().setLimit(offset, count);
     }
 
@@ -30,21 +32,21 @@ public class AstLimit extends SimpleNode
     {
         return limit;
     }
-    
+
     public Integer getOffset()
     {
         return offset;
     }
-    
+
     public AstLimit setLimit(int offset, int count)
     {
         this.limit = count;
         this.offset = offset;
-        if( offset != 0 )
-            this.nodePrefix += " " + String.valueOf( offset ) + ", ";
+        if (offset != 0)
+            this.nodePrefix += " " + String.valueOf(offset) + ", ";
         return this;
     }
-    
+
     public void setShape(String prefix, String suffix)
     {
         this.nodePrefix = prefix;

@@ -34,8 +34,8 @@ public class EntityModelBase<T> implements EntityModel<T>
 {
     static
     {
-        GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
-        GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
+        GroovyRegister.registerMetaClass(EntityModelMetaClass.class, EntityModelBase.class);
+        GroovyRegister.registerMetaClass(RecordModelMetaClass.class, RecordModelBase.class);
     }
 
     private final DbService db;
@@ -57,25 +57,25 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> getBy(Map<String, ? super Object> conditions )
+    public RecordModel<T> getBy(Map<String, ? super Object> conditions)
     {
         return getColumnsBy(Collections.emptyList(), conditions);
     }
 
     @Override
-    public RecordModel<T> get( T id )
+    public RecordModel<T> get(T id)
     {
         return getBy(Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
-    public RecordModel<T> getColumns( List<String> columns, T id )
+    public RecordModel<T> getColumns(List<String> columns, T id)
     {
         return getColumnsBy(columns, Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
-    public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ? super Object> conditions )
+    public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
@@ -85,7 +85,7 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .where(conditions).format();
 
         DynamicPropertySetSupport dps = db.select(sql,
-                rs -> DpsUtils.setValues(getDps(), rs), conditions.values().toArray());
+                rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions));
 
         return getRecordModel(dps);
     }
@@ -93,40 +93,40 @@ public class EntityModelBase<T> implements EntityModel<T>
     @Override
     public List<RecordModel<T>> toList()
     {
-        return toList( emptyMap() );
+        return toList(emptyMap());
     }
 
     @Override
     public RecordModel<T>[] toArray()
     {
-        return toArray( emptyMap() );
+        return toArray(emptyMap());
     }
 
     @Override
-    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
+    public List<RecordModel<T>> toList(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
 
         String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
 
-        return db.list(sql, this::getRecordModel, conditions.values().toArray());
+        return db.list(sql, this::getRecordModel, sqlHelper.getWithoutConstants(conditions));
     }
 
     @Override
-    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
+    public RecordModel<T>[] toArray(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
 
         List<RecordModel<T>> recordModels = toList(conditions);
         RecordModel<T>[] arr = new RecordModel[recordModels.size()];
-        return recordModels.toArray( arr );
+        return recordModels.toArray(arr);
     }
 
     private DynamicPropertySetSupport getDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        for (Map.Entry<String, ColumnDef> column : columns.entrySet())
         {
             dps.add(getDynamicProperty(column.getValue()));
         }
@@ -140,11 +140,11 @@ public class EntityModelBase<T> implements EntityModel<T>
 
     private RecordModel<T> getRecordModel(DynamicPropertySet dps)
     {
-        if(dps == null)return null;
+        if (dps == null) return null;
 
-        T primaryKey = (T)dps.getProperty(getPrimaryKeyName()).getValue();
+        T primaryKey = (T) dps.getProperty(getPrimaryKeyName()).getValue();
 
-        return new RecordModelBase<>(primaryKey, this, dps );
+        return new RecordModelBase<>(primaryKey, this, dps);
     }
 
     private RecordModel<T> getRecordModel(ResultSet rs)
@@ -155,7 +155,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
     {
         List<String> columnsWithPK = columns;
-        if(columns.size() > 0 && !columns.contains(getPrimaryKeyName()))
+        if (columns.size() > 0 && !columns.contains(getPrimaryKeyName()))
         {
             columnsWithPK = new ArrayList<>(columns);
             columnsWithPK.add(getPrimaryKeyName());
@@ -166,17 +166,17 @@ public class EntityModelBase<T> implements EntityModel<T>
     @Override
     public long count()
     {
-        return count( Collections.emptyMap() );
+        return count(Collections.emptyMap());
     }
 
     @Override
-    public long count( Map<String, ? super Object> conditions )
+    public long count(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
 
         String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
 
-        return db.oneLong(sql, conditions.values().toArray());
+        return db.oneLong(sql, sqlHelper.getWithoutConstants(conditions));
     }
 
     @Override
@@ -186,20 +186,20 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public boolean contains( Map<String, ? super Object> conditions )
+    public boolean contains(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
         return count(conditions) != 0;
     }
 
     @Override
-    public boolean containsAll( Collection<Map<String, ? super Object>> c )
+    public boolean containsAll(Collection<Map<String, ? super Object>> c)
     {
-        return c.stream().allMatch( this::contains );
+        return c.stream().allMatch(this::contains);
     }
 
     @Override
-    public <R> R add( Map<String, ? super Object> values )
+    public <R> R add(Map<String, ? super Object> values)
     {
         Objects.requireNonNull(values);
 
@@ -213,7 +213,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    final public <R> R add( DynamicPropertySet dps )
+    public final <R> R add(DynamicPropertySet dps)
     {
         Objects.requireNonNull(dps);
 
@@ -221,27 +221,27 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public <R> List<R> addAll( final Collection<Map<String, ? super Object>> c )
+    public <R> List<R> addAll(final Collection<Map<String, ? super Object>> c)
     {
-        final List<R> keys = new ArrayList<>( c.size() );
-        for( Map<String, ? super Object> values : c )
+        final List<R> keys = new ArrayList<>(c.size());
+        for (Map<String, ? super Object> values : c)
         {
-            keys.add( add( values ) );
+            keys.add(add(values));
         }
         return keys;
     }
 
     @Override
-    public int set( T id, String propertyName, Object value )
+    public int set(T id, String propertyName, Object value)
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
         Objects.requireNonNull(value);
-        return this.set( id, Collections.singletonMap( propertyName, value ) );
+        return this.set(id, Collections.singletonMap(propertyName, value));
     }
 
     @Override
-    public int set( T id, Map<String, ? super Object> values )
+    public int set(T id, Map<String, ? super Object> values)
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -256,7 +256,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set(T id, DynamicPropertySet dps )
+    public int set(T id, DynamicPropertySet dps)
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
@@ -269,11 +269,11 @@ public class EntityModelBase<T> implements EntityModel<T>
     public final int remove(T id)
     {
         Objects.requireNonNull(id);
-        return removeWhereColumnIn(getPrimaryKeyName(), (T[])new Object[]{id});
+        return removeWhereColumnIn(getPrimaryKeyName(), (T[]) new Object[]{id});
     }
 
     @Override
-    public int remove( T[] ids )
+    public int remove(T[] ids)
     {
         return removeWhereColumnIn(getPrimaryKeyName(), ids);
     }
@@ -283,13 +283,13 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);
-        if(ids.length == 0)return 0;
+        if (ids.length == 0) return 0;
 
-        if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
+        if (columnName.equals(getPrimaryKeyName())) checkPrimaryKey(ids);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
-        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
@@ -312,7 +312,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(conditions);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.update(entity.getName(), conditions, values);
@@ -371,14 +371,16 @@ public class EntityModelBase<T> implements EntityModel<T>
 
     private void checkPrimaryKey(Map<String, ? super Object> conditions)
     {
-        for (Map.Entry<String, ? super Object> entry : conditions.entrySet()) {
-            if(entry.getKey().equalsIgnoreCase(getPrimaryKeyName())) checkPrimaryKey((T)entry.getValue());
+        for (Map.Entry<String, ? super Object> entry : conditions.entrySet())
+        {
+            if (entry.getKey().equalsIgnoreCase(getPrimaryKeyName())) checkPrimaryKey((T) entry.getValue());
         }
     }
 
     private void checkPrimaryKey(T[] ids)
     {
-        for (T id : ids) {
+        for (T id : ids)
+        {
             checkPrimaryKey(id);
         }
     }
@@ -387,7 +389,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Class<?> primaryKeyColumnType = meta.getColumnType(entity, getPrimaryKeyName());
 
-        if(id.getClass() != primaryKeyColumnType)
+        if (id.getClass() != primaryKeyColumnType)
         {
             throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName() + " instead " + id.getClass().getSimpleName());
         }

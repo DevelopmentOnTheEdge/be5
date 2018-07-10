@@ -28,13 +28,13 @@ public class AstFunNode extends SimpleNode
 
     public AstFunNode(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstFunNode(Function fn)
     {
         this(SqlParserTreeConstants.JJTFUNNODE);
-        setFunction( fn );
+        setFunction(fn);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -43,16 +43,19 @@ public class AstFunNode extends SimpleNode
 
     // to preserve formatting
     private Token operator;
+
     public Token getOperator()
     {
         return operator;
     }
+
     public void setOperator(Token operator)
     {
         this.operator = operator;
     }
 
     private Function function;
+
     public Function getFunction()
     {
         return function;
@@ -60,7 +63,6 @@ public class AstFunNode extends SimpleNode
 
     /**
      * Sets the function for a node.
-     *
      * It is parser responsibility to check the function validness.
      */
     public void setFunction(Function function)
@@ -68,9 +70,10 @@ public class AstFunNode extends SimpleNode
         this.function = function;
         updateContent();
     }
+
     private void updateContent()
     {
-        if( function.getPriority() == Function.FUNCTION_PRIORITY || function.getPriority() == Function.AGGREGATE_FUNCTION_PRIORITY )
+        if (function.getPriority() == Function.FUNCTION_PRIORITY || function.getPriority() == Function.AGGREGATE_FUNCTION_PRIORITY)
         {
             this.nodePrefix = function.getName() + "(";
             this.childrenDelimiter = ",";
@@ -80,25 +83,28 @@ public class AstFunNode extends SimpleNode
         {
             this.nodePrefix = null;
             this.nodeSuffix = null;
-            this.childrenDelimiter = function.getName().equals( "u-" ) ? "-" : function.getName();
+            this.childrenDelimiter = function.getName().equals("u-") ? "-" : function.getName();
         }
     }
+
     private boolean distinct;
+
     public void setDistinct(boolean distinct)
     {
-        if( distinct )
+        if (distinct)
             this.nodePrefix += "DISTINCT";
         this.distinct = distinct;
     }
+
     public boolean isDistinct()
     {
         return distinct;
     }
-    
+
     @Override
     public String getChildrenDelimiter(SimpleNode prev, SimpleNode next)
     {
-        return next instanceof AstOrderBy ? null : "group_concat".equalsIgnoreCase( function.getName() ) ? "SEPARATOR" : childrenDelimiter;
+        return next instanceof AstOrderBy ? null : "group_concat".equalsIgnoreCase(function.getName()) ? "SEPARATOR" : childrenDelimiter;
     }
 
     @Override
@@ -116,27 +122,28 @@ public class AstFunNode extends SimpleNode
     {
         return function == null ? "Unknown function" : "Function \"" + function.getName() + "\"";
     }
-    
+
     @SafeVarargs
     public static Predicate<SimpleNode> isFunction(String fnName, Predicate<SimpleNode>... childConditions)
     {
-        return isFunction( fnName ).and( node -> childConditions.length == node.jjtGetNumChildren()
-                && !StreamEx.zip( Arrays.asList( childConditions ), node.children, Predicate::test ).has( false ) );
+        return isFunction(fnName).and(node -> childConditions.length == node.jjtGetNumChildren()
+                && !StreamEx.zip(Arrays.asList(childConditions), node.children, Predicate::test).has(false));
     }
-    
+
     private boolean withinDbmsTransform;
+
     public void setWithinDbmsTransform(boolean within)
     {
         this.withinDbmsTransform = within;
     }
-    
+
     public boolean withinDbmsTransform()
     {
         return withinDbmsTransform;
     }
-    
+
     public static Predicate<SimpleNode> isFunction(String fnName)
     {
-        return node -> node instanceof AstFunNode && ( (AstFunNode)node ).getFunction().getName().equalsIgnoreCase( fnName );
+        return node -> node instanceof AstFunNode && ((AstFunNode) node).getFunction().getName().equalsIgnoreCase(fnName);
     }
 }

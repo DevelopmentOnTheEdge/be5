@@ -22,7 +22,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     @Test
     void opParams()
     {
-        def op = getOperation([name:"b"])
+        def op = getOperation([name: "b"])
 
         assertEquals("[name:b]", op.getRedirectParams().toString())
     }
@@ -30,7 +30,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     @Test
     void filterParam()
     {
-        def op = getOperation([name:"b", (SEARCH_PARAM): "true"])
+        def op = getOperation([name: "b", (SEARCH_PARAM): "true"])
 
         assertEquals("[name:b, _search_:true]", op.getRedirectParams().toString())
     }
@@ -38,7 +38,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     @Test
     void filterAndOpParamParam()
     {
-        def op = getOperation([name:"b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
+        def op = getOperation([name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
         assertEquals("[_search_presets_:name, name:b, _search_:true]", op.getRedirectParams().toString())
     }
@@ -46,8 +46,8 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     @Test
     void opParamsAndRemoveRedirectParam()
     {
-        def op = getOperation([name:"b"])
-        op.addRedirectParams([name:""])
+        def op = getOperation([name: "b"])
+        op.addRedirectParams([name: ""])
 
         assertEquals("[:]", op.getRedirectParams().toString())
     }
@@ -55,10 +55,10 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     @Test
     void opParamsAndSetRedirectParam()
     {
-        def op = getOperation([name:"b"])
+        def op = getOperation([name: "b"])
 
         op.addRedirectParam("name", "a")
-        op.addRedirectParams([test:"c"])
+        op.addRedirectParams([test: "c"])
 
         assertEquals("[test:c, name:a]", op.getRedirectParams().toString())
     }
@@ -66,7 +66,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     private Operation getOperation(Map<String, String> operationParams)
     {
         return createOperation("testtableAdmin", "PrintParamsCustomOp",
-            new OperationContext([] as String[], "All records", operationParams))
+                new OperationContext([] as String[], "All records", operationParams))
     }
 }
 

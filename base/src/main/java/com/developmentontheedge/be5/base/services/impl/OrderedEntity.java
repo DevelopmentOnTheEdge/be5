@@ -11,7 +11,7 @@ class OrderedEntity implements Comparable<OrderedEntity>
 {
 
     public final Entity entity;
-    public final int    order;
+    public final int order;
     public final String title;
 
     public OrderedEntity(Entity entity, String title)
@@ -36,7 +36,7 @@ class OrderedEntity implements Comparable<OrderedEntity>
 
     private static int softParseInt(String order, int defaultValue)
     {
-        if ( order == null || order.trim().length() == 0 )
+        if (order == null || order.trim().length() == 0)
         {
             return defaultValue;
         }
@@ -44,7 +44,7 @@ class OrderedEntity implements Comparable<OrderedEntity>
         try
         {
             return Integer.parseInt(order);
-        } 
+        }
         catch (NumberFormatException e)
         {
             return defaultValue;

@@ -11,18 +11,18 @@ import java.util.Set;
 
 public class RoleGroup extends BeModelElementSupport
 {
-    private final RoleSet roles = new RoleSet( this );
-    
-    public RoleGroup( String name, BeModelCollection<RoleGroup> origin )
+    private final RoleSet roles = new RoleSet(this);
+
+    public RoleGroup(String name, BeModelCollection<RoleGroup> origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
-    
+
     private SecurityCollection getSecurityCollection()
     {
-        return ( SecurityCollection ) getOrigin().getOrigin();
+        return (SecurityCollection) getOrigin().getOrigin();
     }
-    
+
     public boolean isPredefined()
     {
         return false;
@@ -33,18 +33,19 @@ public class RoleGroup extends BeModelElementSupport
     {
         return roles;
     }
-    
+
     /**
      * @return comma-separated list of final roles in current group
      * Can be used from query templates to use the group in &lt;roles&gt; clause
      */
     public String getList()
     {
-        return String.join( ",", getRoleSet().getFinalRoles() );
+        return String.join(",", getRoleSet().getFinalRoles());
     }
-    
+
     /**
      * Stub method necessary for bean info
+     *
      * @param roles roles to set (ignored)
      */
     public void setRoleSet(RoleSet roles)
@@ -56,18 +57,18 @@ public class RoleGroup extends BeModelElementSupport
     public List<ProjectElementException> getErrors()
     {
         Set<String> missingRoles = roles.getMissingEntries();
-        if(!(missingRoles.isEmpty()))
+        if (!(missingRoles.isEmpty()))
         {
             return Collections
-                    .singletonList( new ProjectElementException( this, "Group contains unknown roles/subgroups: " + missingRoles ) );
+                    .singletonList(new ProjectElementException(this, "Group contains unknown roles/subgroups: " + missingRoles));
         }
         return Collections.emptyList();
     }
-    
+
     @Override
     protected void fireChanged()
     {
-        if ( getOrigin().get( getName() ) == this )
+        if (getOrigin().get(getName()) == this)
             getSecurityCollection().fireCodeChanged();
     }
 }

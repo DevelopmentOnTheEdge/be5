@@ -17,26 +17,25 @@ import java.util.TreeSet;
 public class EntityLocalizations extends BeModelElementSupport
 {
     public static final String DISPLAY_NAME_TOPIC = "displayName";
-    
+
     Set<LocalizationElement> elements = new TreeSet<>();
-    
-    public EntityLocalizations( String name, LanguageLocalizations origin )
+
+    public EntityLocalizations(String name, LanguageLocalizations origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
-    
+
     private LanguageLocalizations getLanguageLocalizations()
     {
-        return ( LanguageLocalizations ) getOrigin();
+        return (LanguageLocalizations) getOrigin();
     }
-    
+
     public Set<LocalizationElement> elements()
     {
-        return Collections.unmodifiableSet( elements );
+        return Collections.unmodifiableSet(elements);
     }
-    
+
     /**
-     * 
      * @param topics
      * @param key
      * @param value
@@ -44,134 +43,134 @@ public class EntityLocalizations extends BeModelElementSupport
      */
     public boolean add(java.util.Collection<String> topics, String key, String value)
     {
-        final boolean added = elements.add( new LocalizationElement( topics, key, value ) );
+        final boolean added = elements.add(new LocalizationElement(topics, key, value));
         fireChanged();
-        
+
         return added;
     }
-    
-    public boolean remove( String key, Set<String> topics )
+
+    public boolean remove(String key, Set<String> topics)
     {
         Set<LocalizationElement> newElements = new TreeSet<>();
         boolean changed = false;
         Iterator<LocalizationElement> iterator = elements.iterator();
-        while ( iterator.hasNext() )
+        while (iterator.hasNext())
         {
             LocalizationElement el = iterator.next();
-            if ( el.getKey().equals( key ) )
+            if (el.getKey().equals(key))
             {
                 List<String> oldTopics = new ArrayList<>(el.getTopics());
-                oldTopics.removeAll( topics );
-                if(oldTopics.size() <= el.getTopics().size())
+                oldTopics.removeAll(topics);
+                if (oldTopics.size() <= el.getTopics().size())
                 {
                     iterator.remove();
                     changed = true;
-                    if(!oldTopics.isEmpty())
+                    if (!oldTopics.isEmpty())
                     {
-                        newElements.add( new LocalizationElement( oldTopics, el.getKey(), el.getValue() ) );
+                        newElements.add(new LocalizationElement(oldTopics, el.getKey(), el.getValue()));
                     }
                 }
             }
         }
-        if(changed)
+        if (changed)
         {
-            elements.addAll( newElements );
+            elements.addAll(newElements);
             fireChanged();
             return true;
         }
         return false;
     }
-    
-    public void set( final String key, final String value, final Set<String> topics )
+
+    public void set(final String key, final String value, final Set<String> topics)
     {
-        remove( key, topics );
-        elements.add( new LocalizationElement( topics, key, value ) );
+        remove(key, topics);
+        elements.add(new LocalizationElement(topics, key, value));
         fireChanged();
     }
-    
-    public void change( String topic, String key, String value )
+
+    public void change(String topic, String key, String value)
     {
         Iterator<LocalizationElement> iterator = elements.iterator();
-        while ( iterator.hasNext() )
+        while (iterator.hasNext())
         {
             LocalizationElement el = iterator.next();
-            if ( el.key.equals( key ) && el.topics.contains( topic ) )
+            if (el.key.equals(key) && el.topics.contains(topic))
             {
                 iterator.remove();
-                elements.add( new LocalizationElement( el.topics, el.key, value ) );
+                elements.add(new LocalizationElement(el.topics, el.key, value));
                 fireChanged();
                 return;
             }
         }
-        
+
         // not found: add
-        elements.add( new LocalizationElement( Collections.singletonList( topic ), key, value ) );
+        elements.add(new LocalizationElement(Collections.singletonList(topic), key, value));
         fireChanged();
     }
-    
+
     @PropertyName("Localization messages")
     public String[] getPairs()
     {
         Set<String> result = new TreeSet<>();
-        for(LocalizationElement element : elements)
+        for (LocalizationElement element : elements)
         {
-            result.add( element.getKey()+" -> "+element.getValue() );
+            result.add(element.getKey() + " -> " + element.getValue());
         }
-        return result.toArray( new String[result.size()] );
+        return result.toArray(new String[result.size()]);
     }
-    
+
     public Set<LocalizationRow> getRows()
     {
-        Entity entity = getProject().getEntity( getName() );
+        Entity entity = getProject().getEntity(getName());
         Set<LocalizationRow> rows = new LinkedHashSet<>();
-        for(LocalizationElement element : elements)
+        for (LocalizationElement element : elements)
         {
             List<String> topics = element.getTopics();
-            if(topics.size() == 1 && topics.get( 0 ).equals( DISPLAY_NAME_TOPIC ))
+            if (topics.size() == 1 && topics.get(0).equals(DISPLAY_NAME_TOPIC))
             {
                 String key = element.getKey();
-                if(entity != null)
+                if (entity != null)
                 {
                     key = entity.getSqlDisplayName();
                 }
-                rows.add( new LocalizationRow( topics.get( 0 ), key, element.getValue() ) );
+                rows.add(new LocalizationRow(topics.get(0), key, element.getValue()));
                 continue;
             }
-            collectRows( element, entity, rows );
+            collectRows(element, entity, rows);
         }
         return rows;
     }
-    
+
     public Set<LocalizationRow> getRawRows()
     {
-        Entity entity = getProject().getEntity( getName() );
+        Entity entity = getProject().getEntity(getName());
         Set<LocalizationRow> rows = new HashSet<>();
-        
-        for(LocalizationElement element : elements)
-            collectRows( element, entity, rows );
-        
+
+        for (LocalizationElement element : elements)
+            collectRows(element, entity, rows);
+
         return rows;
     }
 
-    private void collectRows( LocalizationElement element, Entity entity, Set<LocalizationRow> out )
+    private void collectRows(LocalizationElement element, Entity entity, Set<LocalizationRow> out)
     {
         List<String> topics = element.getTopics();
-        for(String topic : topics)
+        for (String topic : topics)
         {
-            SpecialTopic specialTopic = LocalizationElement.SPECIAL_TOPICS.get( topic );
-            if ( specialTopic != null )
+            SpecialTopic specialTopic = LocalizationElement.SPECIAL_TOPICS.get(topic);
+            if (specialTopic != null)
             {
-                for ( String subTopic : specialTopic.getTopics( getName(), getProject() ) )
+                for (String subTopic : specialTopic.getTopics(getName(), getProject()))
                 {
-                    out.add( new LocalizationRow( subTopic, element.getKey(), element.getValue() ) );
+                    out.add(new LocalizationRow(subTopic, element.getKey(), element.getValue()));
                 }
             }
-            else if(topic.startsWith( "@Op:" ))
-            {// Starts with "@Op:": add only if such operation exists
-                String operationName = topic.substring( 4 );
-                if(entity != null && entity.getOperations().contains( operationName ))
+            else if (topic.startsWith("@Op:"))
+            { // Starts with "@Op:": add only if such operation exists
+                String operationName = topic.substring(4);
+                if (entity != null && entity.getOperations().contains(operationName))
                 {
-                    out.add( new LocalizationRow( operationName, element.getKey(), element.getValue() ) );
+                    out.add(new LocalizationRow(operationName, element.getKey(), element.getValue()));
                 }
             }
 // for default localization
@@ -194,29 +193,29 @@ public class EntityLocalizations extends BeModelElementSupport
             }*/
             else
             {
-                out.add( new LocalizationRow( topic, element.getKey(), element.getValue() ) );
+                out.add(new LocalizationRow(topic, element.getKey(), element.getValue()));
             }
         }
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        EntityLocalizations other = ( EntityLocalizations ) obj;
-        return getRows().equals( other.getRows() );
+        EntityLocalizations other = (EntityLocalizations) obj;
+        return getRows().equals(other.getRows());
     }
-    
+
     public static class LocalizationRow
     {
         final String topic;
         final String key;
         final String value;
 
-        public LocalizationRow( String topic, String key, String value )
+        public LocalizationRow(String topic, String key, String value)
         {
             super();
             this.topic = topic;
@@ -227,16 +226,16 @@ public class EntityLocalizations extends BeModelElementSupport
         @Override
         public int hashCode()
         {
-            return Objects.hash( key, topic, value );
+            return Objects.hash(key, topic, value);
         }
 
         @Override
-        public boolean equals( Object obj )
+        public boolean equals(Object obj)
         {
-            if ( this == obj )
+            if (this == obj)
                 return true;
-            LocalizationRow other = ( LocalizationRow ) obj;
-            return key.equals( other.key ) && topic.equals( other.topic ) && value.equals( other.value );
+            LocalizationRow other = (LocalizationRow) obj;
+            return key.equals(other.key) && topic.equals(other.topic) && value.equals(other.value);
         }
 
         public String getTopic()
@@ -254,11 +253,11 @@ public class EntityLocalizations extends BeModelElementSupport
             return value;
         }
     }
-    
+
     @Override
     protected void fireChanged()
     {
         getLanguageLocalizations().fireCodeChanged();
     }
-    
+
 }

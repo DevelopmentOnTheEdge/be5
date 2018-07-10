@@ -6,7 +6,7 @@ public class AstBeParameterList extends SimpleNode
 {
     public AstBeParameterList(int id)
     {
-        super( id );
+        super(id);
     }
 }
 /* JavaCC - OriginalChecksum=02ee7abfc037a6743c06b962cd204a4b (do not edit this line) */

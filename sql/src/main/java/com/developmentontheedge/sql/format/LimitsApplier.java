@@ -20,32 +20,32 @@ public class LimitsApplier
         this.offset = offset;
         this.count = count;
     }
-    
+
     public boolean transform(AstStart ast)
     {
         AstQuery query = ast.getQuery();
-        return transformQuery( query );
+        return transformQuery(query);
     }
 
     public boolean transformQuery(AstQuery query)
     {
-        if( query.jjtGetNumChildren() == 1 )
+        if (query.jjtGetNumChildren() == 1)
         {
-            AstSelect select = (AstSelect)query.child( 0 );
-            if( select.getLimit() != null )
+            AstSelect select = (AstSelect) query.child(0);
+            if (select.getLimit() != null)
                 return false;
             AstLimit limit = new AstLimit();
-            limit.setLimit( offset, count );
-            select.addChild( limit );
+            limit.setLimit(offset, count);
+            select.addChild(limit);
         }
         else
         {
-            AstTableRef tableRef = new AstTableRef( new AstParenthesis( query.clone() ), new AstIdentifierConstant( "tmp" ) );
-            AstSelect select = new AstSelect( new AstSelectList(), new AstFrom( tableRef ) );
+            AstTableRef tableRef = new AstTableRef(new AstParenthesis(query.clone()), new AstIdentifierConstant("tmp"));
+            AstSelect select = new AstSelect(new AstSelectList(), new AstFrom(tableRef));
             AstLimit limit = new AstLimit();
-            limit.setLimit( offset, count );
-            select.addChild( limit );
-            query.replaceWith( new AstQuery( select ) );
+            limit.setLimit(offset, count);
+            select.addChild(limit);
+            query.replaceWith(new AstQuery(select));
         }
         // TODO: support offset, union, etc.
         return true;

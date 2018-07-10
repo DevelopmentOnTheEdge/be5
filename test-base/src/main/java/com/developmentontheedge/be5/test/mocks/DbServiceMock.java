@@ -84,9 +84,12 @@ public class DbServiceMock implements DbService
     @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        try {
+        try
+        {
             return executor.run(null);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw Be5Exception.internal(e);
         }
     }
@@ -94,9 +97,12 @@ public class DbServiceMock implements DbService
     @Override
     public void transaction(SqlExecutorVoid executor)
     {
-        try {
+        try
+        {
             executor.run(null);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw Be5Exception.internal(e);
         }
     }

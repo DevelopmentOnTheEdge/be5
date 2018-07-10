@@ -9,7 +9,7 @@ public class OperationVisibilityOptionsSelector extends GenericComboBoxEditor
     public OperationVisibilityOptionsSelector()
     {
     }
-    
+
     @Override
     protected Object[] getAvailableValues()
     {

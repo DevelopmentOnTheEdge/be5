@@ -16,13 +16,18 @@ import static org.junit.Assert.assertEquals
 
 class CoreUtilsTest extends CoreBe5ProjectDBTest
 {
-    @Inject DatabaseModel database
-    @Inject DbService db
-    @Inject CoreUtils utils
-    @Inject Be5Caches be5Caches
+    @Inject
+    DatabaseModel database
+    @Inject
+    DbService db
+    @Inject
+    CoreUtils utils
+    @Inject
+    Be5Caches be5Caches
 
     @Before
-    void before(){
+    void before()
+    {
         db.update("DELETE FROM systemSettings")
         db.update("DELETE FROM user_prefs")
         be5Caches.clearAll()
@@ -31,7 +36,7 @@ class CoreUtilsTest extends CoreBe5ProjectDBTest
     @Test
     void getSystemSettingInSection() throws Exception
     {
-        database.systemSettings << [ section_name: "system", setting_name: "app_name", setting_value: "Test App" ]
+        database.systemSettings << [section_name: "system", setting_name: "app_name", setting_value: "Test App"]
         assertEquals "Test App", utils.
                 getSystemSettingInSection("system", "app_name", "Be5 Application")
     }
@@ -81,7 +86,7 @@ class CoreUtilsTest extends CoreBe5ProjectDBTest
                 be5Caches.getCache("System settings").getIfPresent("system.is_active")
         assertEquals true, utils.getBooleanSystemSetting("is_active", true)
 
-        database.systemSettings << [ section_name: "system", setting_name: "is_active", setting_value: "true" ]
+        database.systemSettings << [section_name: "system", setting_name: "is_active", setting_value: "true"]
         be5Caches.clearAll()
 
         assertEquals true, utils.getBooleanSystemSetting("is_active")
@@ -96,7 +101,7 @@ class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals null, utils.getModuleSetting("core", "is_active")
         assertEquals "false", utils.getModuleSetting("core", "is_active", "false")
 
-        database.systemSettings << [ section_name: "CORE_module", setting_name: "is_active", setting_value: "true" ]
+        database.systemSettings << [section_name: "CORE_module", setting_name: "is_active", setting_value: "true"]
         be5Caches.clearAll()
 
         assertEquals true, utils.getBooleanModuleSetting("core", "is_active")
@@ -111,7 +116,7 @@ class CoreUtilsTest extends CoreBe5ProjectDBTest
 
         assertEquals null, utils.getUserSetting("testName", "companyID")
 
-        database.user_prefs << [ user_name: "testName", pref_name: "companyID", pref_value: "123" ]
+        database.user_prefs << [user_name: "testName", pref_name: "companyID", pref_value: "123"]
         be5Caches.clearAll()
 
         assertEquals "123", utils.getUserSetting("testName", "companyID")
@@ -144,12 +149,14 @@ class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test(expected = NullPointerException)
-    void getUserSettingNullParams() throws Exception {
+    void getUserSettingNullParams() throws Exception
+    {
         assertEquals null, utils.getUserSetting(null, "test")
     }
 
     @Test(expected = NullPointerException)
-    void getUserSettingNullParams2() throws Exception {
+    void getUserSettingNullParams2() throws Exception
+    {
         assertEquals null, utils.getUserSetting("test", null)
     }
 }

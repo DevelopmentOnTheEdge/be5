@@ -137,7 +137,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private List<Category> getCategoryNavigation(String entityName, String categoryID)
     {
-        if(categoryID != null)
+        if (categoryID != null)
         {
             return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
         }
@@ -173,8 +173,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         for (String operationName : operationNames.getFinalValues())
         {
             Operation op = query.getEntity().getOperations().get(operationName);
-            if ( op != null )
-                queryOperations.add( op );
+            if (op != null)
+                queryOperations.add(op);
         }
 
         return queryOperations;
@@ -187,7 +187,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         boolean requiresConfirmation = operation.isConfirm();
         boolean isClientSide = Operation.OPERATION_TYPE_JAVASCRIPT.equals(operation.getType());
         String action = null;
-        if(isClientSide){
+        if (isClientSide)
+        {
             action = operation.getCode();
         }
 
@@ -209,12 +210,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         List<ResourceData> included = new ArrayList<>();
 
         String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
-        if(topForm != null)
+        if (topForm != null)
         {
             Optional<TableOperationPresentation> topFormOperationPresentation =
                     data.getOperations().stream().filter(x -> x.getName().equals(topForm)).findAny();
 
-            if(topFormOperationPresentation.isPresent())
+            if (topFormOperationPresentation.isPresent())
             {
                 ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters, Collections.emptyMap());
                 operationResourceData.setId("topForm");

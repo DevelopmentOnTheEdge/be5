@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 public class LogConfigurator
 {
-    private final static Logger log = Logger.getLogger(LogConfigurator.class.getName());
-    private final static String path = "/logging.properties";
+    private static final Logger log = Logger.getLogger(LogConfigurator.class.getName());
+    private static final String path = "/logging.properties";
 
     public LogConfigurator()
     {

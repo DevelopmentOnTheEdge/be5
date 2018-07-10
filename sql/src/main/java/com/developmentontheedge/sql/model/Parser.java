@@ -8,27 +8,38 @@ import java.util.List;
 public interface Parser
 {
     public ParserContext getContext();
+
     public void setContext(ParserContext context);
 
     ///////////////////////////////////////////////////////////////////
     // Parsing conventions
     //
 
-    /** The expression was parsed successfully without any errors or wornings. */
+    /**
+     * The expression was parsed successfully without any errors or wornings.
+     */
     public static final int STATUS_OK = 0;
 
-    /** There were some warnings during expression parser. */
+    /**
+     * There were some warnings during expression parser.
+     */
     public static final int STATUS_WARNING = 1;
 
-    /** There were some errors during expression parser. */
+    /**
+     * There were some errors during expression parser.
+     */
     public static final int STATUS_ERROR = 2;
 
     public int parse(String expression);
 
-    /** Returs root of the AST tree. */
+    /**
+     * Returs root of the AST tree.
+     */
     public AstStart getStartNode();
 
-    /** Returns list of warning and error messages. */
+    /**
+     * Returns list of warning and error messages.
+     */
     public List<String> getMessages();
 
     public static enum Mode

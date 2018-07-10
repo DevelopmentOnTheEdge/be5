@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class OldRedirectFilter extends GOperationSupport implements TransactionalOperation
 {
-    @Inject private FilterHelper filterHelper
+    @Inject
+    private FilterHelper filterHelper
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception

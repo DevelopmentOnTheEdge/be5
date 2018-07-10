@@ -12,8 +12,8 @@ public class LocalizationTest extends CoreBe5ProjectDbMockTest
     {
         assertEquals("Произошла внутренняя ошибка в операции: users.Login",
                 userAwareMeta.getLocalizedBe5ErrorMessage(
-                    Be5Exception.internalInOperation(
-                            meta.getOperation("users", "Login"), new RuntimeException("test"))));
+                        Be5Exception.internalInOperation(
+                                meta.getOperation("users", "Login"), new RuntimeException("test"))));
     }
 
 }

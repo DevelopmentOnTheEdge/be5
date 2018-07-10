@@ -8,7 +8,7 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     private String fileName = getOperation().getEntity().getName() + " - " + getOperation().getName() + " - " + getName() + getFileExtension();
     private SourceFile file;
 
-    abstract public String getFileExtension();
+    public abstract String getFileExtension();
 
     public SourceFileOperationExtender(Operation owner, String module)
     {
@@ -42,13 +42,13 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     public String getFileName()
     {
         SourceFile sourceFile = getSourceFile();
-        if(sourceFile != null)
+        if (sourceFile != null)
             return sourceFile.getName();
-        if(getProject().getProjectOrigin().equals( getOriginModuleName() ))
+        if (getProject().getProjectOrigin().equals(getOriginModuleName()))
             return fileName;
         return "(module code)";
     }
-    
+
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
@@ -64,36 +64,36 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     public SourceFile getSourceFile()
     {
         Project project = getProject();
-        Module module = project.getModule( getOriginModuleName() );
-        SourceFile sourceFile = module == null ? null : module.getSourceFile( namespace, fileName );
-        if(sourceFile != null)
+        Module module = project.getModule(getOriginModuleName());
+        SourceFile sourceFile = module == null ? null : module.getSourceFile(namespace, fileName);
+        if (sourceFile != null)
             return sourceFile;
-        if(file == null && module != project.getApplication())
-            file = new SourceFile( "(module code)", null );
+        if (file == null && module != project.getApplication())
+            file = new SourceFile("(module code)", null);
         return file;
     }
 
-    public void setCode( String code )
+    public void setCode(String code)
     {
         SourceFile file = getSourceFile();
-        if(file == null)
+        if (file == null)
         {
-            String newFileName = SourceFile.extractFileNameFromCode( code );
-            if(newFileName != null)
+            String newFileName = SourceFile.extractFileNameFromCode(code);
+            if (newFileName != null)
             {
                 fileName = newFileName;
             }
             file = getSourceFile();
         }
-        if(file == null)
+        if (file == null)
         {
-            getProject().getApplication().addSourceFile( namespace, fileName, code );
+            getProject().getApplication().addSourceFile(namespace, fileName, code);
         }
         else
         {
-            file.setSource( code );
+            file.setSource(code);
         }
-        
+
         fireChanged();
     }
 
@@ -103,14 +103,14 @@ public abstract class SourceFileOperationExtender extends OperationExtender
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( !super.equals( obj ) || getClass() != obj.getClass() )
+        if (!super.equals(obj) || getClass() != obj.getClass())
             return false;
         SourceFileOperationExtender other = (SourceFileOperationExtender) obj;
-        return getCode().equals( other.getCode() );
+        return getCode().equals(other.getCode());
     }
 
 //

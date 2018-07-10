@@ -13,6 +13,6 @@ public class JavaOperationBeanInfo extends OperationBeanInfo
     public void initProperties() throws Exception
     {
         super.initProperties();
-        findPropertyDescriptor( "code" ).setPropertyEditorClass( ClassSelector.class );
+        findPropertyDescriptor("code").setPropertyEditorClass(ClassSelector.class);
     }
 }

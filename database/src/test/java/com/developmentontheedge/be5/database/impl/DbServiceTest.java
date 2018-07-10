@@ -20,13 +20,13 @@ import static org.junit.Assert.assertTrue;
 public class DbServiceTest extends DatabaseTest
 {
     private static final ResultSetParser<TestPerson> parser = rs ->
-            new TestPerson(rs.getLong("id"),rs.getString("name"),
-                    rs.getString("password"),rs.getString("email"));
+            new TestPerson(rs.getLong("id"), rs.getString("name"),
+                    rs.getString("password"), rs.getString("email"));
 
     @Before
     public void setUp()
     {
-        db.update("DELETE FROM persons" );
+        db.update("DELETE FROM persons");
 
         int update = db.update("INSERT INTO persons (name, password) VALUES (?,?)",
                 "user1", "pass1");
@@ -44,30 +44,35 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testSelectScalar() {
+    public void testSelectScalar()
+    {
         String password = db.one("SELECT password FROM persons WHERE name = ?", "user2");
 
         assertEquals("pass2", password);
     }
 
     @Test
-    public void testCount() {
-        assertEquals((Long)0L, db.oneLong("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser"));
+    public void testCount()
+    {
+        assertEquals((Long) 0L, db.oneLong("SELECT COUNT(id) FROM persons WHERE name = ?", "notContainUser"));
     }
 
     @Test
-    public void testSelectString() {
+    public void testSelectString()
+    {
         assertEquals("pass2", db.oneString("SELECT password FROM persons WHERE name = ?",
                 "user2"));
     }
 
     @Test
-    public void testGetNullIfNotContain() {
+    public void testGetNullIfNotContain()
+    {
         assertEquals(null, db.oneLong("SELECT id FROM persons WHERE name = ?", "notContainUser"));
     }
 
     @Test
-    public void testBeanHandlerSelect() {
+    public void testBeanHandlerSelect()
+    {
         TestPerson testPerson = db.query("SELECT * FROM persons WHERE name = ?", TestPerson.beanHandler
                 , "user2");
 
@@ -76,7 +81,8 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testResultSetParser() {
+    public void testResultSetParser()
+    {
         TestPerson testPerson = db.select("SELECT * FROM persons WHERE name = ?", parser
                 , "user2");
 
@@ -85,44 +91,50 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testBeanHandlerGetNullIfNotContain() {
+    public void testBeanHandlerGetNullIfNotContain()
+    {
         TestPerson id = db.query("SELECT id FROM persons WHERE name = ?",
                 TestPerson.beanHandler, "notContainUser");
         assertEquals(null, id);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testBeanHandlerError() {
+    public void testBeanHandlerError()
+    {
         TestPerson id = db.query("SELECT id FROM2 persons WHERE name = ?",
                 TestPerson.beanHandler, "notContainUser");
         assertEquals(null, id);
     }
 
     @Test
-    public void testGetNullIfNotContainCustomObject() {
+    public void testGetNullIfNotContainCustomObject()
+    {
         String email = db.select("SELECT email FROM persons WHERE name = ?", rs ->
                 rs.getString("email"), "notContainUser");
         assertEquals(null, email);
     }
 
     @Test
-    public void testGetNullCustomObject() {
+    public void testGetNullCustomObject()
+    {
         String email = db.select("SELECT email FROM persons WHERE name = ?", rs ->
                 rs.getString("email"), "user1");
         assertEquals(null, email);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetNullCustomObjectErrorCallNext() {
+    public void testGetNullCustomObjectErrorCallNext()
+    {
         String email = db.select("SELECT email FROM persons WHERE name = ?", rs -> {
-                rs.next();
-                return rs.getString("email");
+            rs.next();
+            return rs.getString("email");
         }, "user1");
         assertEquals(null, email);
     }
 
     @Test
-    public void testSelectListBeanHandler() {
+    public void testSelectListBeanHandler()
+    {
         List<TestPerson> persons = db.query("SELECT * FROM persons", TestPerson.beanListHandler);
 
         assertTrue(persons.size() >= 2);
@@ -131,7 +143,8 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testSelectListResultSetParser() {
+    public void testSelectListResultSetParser()
+    {
         List<TestPerson> persons = db.list("SELECT * FROM persons", parser);
 
         assertTrue(persons.size() >= 2);
@@ -176,7 +189,8 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testSelectListLambda() {
+    public void testSelectListLambda()
+    {
         List<String> strings = db.list("SELECT * FROM persons", rs ->
                 rs.getString("name") + " "
                         + rs.getString("password")
@@ -188,7 +202,8 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void testGetInsertId() {
+    public void testGetInsertId()
+    {
         String uniqueName = "testGetInsertId";
         Long id = db.insert("INSERT INTO persons (name, password) VALUES (?,?)",
                 uniqueName, "pass");
@@ -210,7 +225,7 @@ public class DbServiceTest extends DatabaseTest
             }
         });
 
-        assertEquals(-5, (int)metaData.get("ID"));
-        assertEquals(12, (int)metaData.get("NAME"));
+        assertEquals(-5, (int) metaData.get("ID"));
+        assertEquals(12, (int) metaData.get("NAME"));
     }
 }

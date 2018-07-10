@@ -20,4 +20,12 @@ public abstract class Be5GuiceServletContextListener extends GuiceServletContext
         log.info("Stage: " + stage);
         return stage;
     }
+//
+//    @Override
+//    public void contextDestroyed(ServletContextEvent servletContextEvent)
+//    {
+//        getInjector().getInstance(DaemonStarterImpl.class).shutdown();
+//
+//        super.contextDestroyed(servletContextEvent);
+//    }
 }

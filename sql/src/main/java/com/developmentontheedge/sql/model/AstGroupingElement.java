@@ -6,14 +6,14 @@ public class AstGroupingElement extends SimpleNode
 {
     public AstGroupingElement(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public void setPrefixComma(boolean prefixComma)
     {
         this.nodePrefix = prefixComma ? "," : null;
     }
-    
+
     public void setSuffixComma(boolean suffixComma)
     {
         this.nodeSuffix = suffixComma ? "," : null;

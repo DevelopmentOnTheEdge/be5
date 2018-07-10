@@ -16,7 +16,7 @@ public class QuickFilterBeanInfo extends BeanInfoEx
     @Override
     protected void initProperties() throws Exception
     {
-        add( new PropertyDescriptor( "name", beanClass, "getName", null ) );
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("queryParam");
         add("targetQueryName", QuerySelector.class);
         add("filteringClass");

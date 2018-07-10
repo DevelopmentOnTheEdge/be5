@@ -16,7 +16,8 @@ import static org.junit.Assert.assertEquals
 
 class DpsHelperCustomOpTest extends ServerBe5ProjectTest
 {
-    @Inject DpsHelper dpsHelper
+    @Inject
+    DpsHelper dpsHelper
 
     @Before
     void setUp()
@@ -27,7 +28,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
     @Test
     void simple()
     {
-        def res = getResult([name:"a", value:"1"], [:])
+        def res = getResult([name: "a", value: "1"], [:])
 
         assertEquals("{name=a, value=1}", oneQuotes(res))
     }
@@ -35,7 +36,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
     @Test
     void opParams()
     {
-        def res = getResult([name:"a", value:"1"], [name:"b"])
+        def res = getResult([name: "a", value: "1"], [name: "b"])
 
         assertEquals("{name=b, value=1}", oneQuotes(res))
     }
@@ -43,7 +44,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
     @Test
     void filterParam()
     {
-        def res = getResult([name:"a", value:"1"], [name:"b", (SEARCH_PARAM): "true"])
+        def res = getResult([name: "a", value: "1"], [name: "b", (SEARCH_PARAM): "true"])
 
         assertEquals("{name=a, value=1}", oneQuotes(res))
     }
@@ -51,7 +52,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
     @Test
     void filterAndOpParamParam()
     {
-        def res = getResult([name:"a", value:"1"], [name:"b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
+        def res = getResult([name: "a", value: "1"], [name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
         assertEquals("{name=b, value=1}", oneQuotes(res))
     }

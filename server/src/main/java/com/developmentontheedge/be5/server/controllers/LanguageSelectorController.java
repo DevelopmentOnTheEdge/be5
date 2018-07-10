@@ -89,7 +89,7 @@ public class LanguageSelectorController extends JsonApiController implements Con
     @Override
     public Object generate(Request req, String requestSubUrl)
     {
-        switch(requestSubUrl)
+        switch (requestSubUrl)
         {
             case "":
                 return getInitialData();
@@ -121,22 +121,22 @@ public class LanguageSelectorController extends JsonApiController implements Con
 
         String selectedLanguage = userInfoProvider.get().getLanguage().toUpperCase();
         Map<String, String> messages = readMessages(project, selectedLanguage);
-        
+
         return new LanguageSelectorResponse(languages, selectedLanguage, messages);
     }
 
     private Map<String, String> readMessages(Project project, String language)
     {
         Map<String, String> messages = new HashMap<>();
-        
+
         StreamEx.of(project.getModulesAndApplication())
-            .map( m -> m.getLocalizations().get( language.toLowerCase() )).nonNull()
-            .map( ll -> ll.get( "frontend.l10n" ) ).nonNull()
-            .flatMap( el -> el.getRows().stream() )
-            .filter( row -> row.getTopic().equals( DatabaseConstants.L10N_TOPIC_PAGE ) )
-            .forEach( row -> messages.put( row.getKey(), row.getValue() ) );
-        
+                .map(m -> m.getLocalizations().get(language.toLowerCase())).nonNull()
+                .map(ll -> ll.get("frontend.l10n")).nonNull()
+                .flatMap(el -> el.getRows().stream())
+                .filter(row -> row.getTopic().equals(DatabaseConstants.L10N_TOPIC_PAGE))
+                .forEach(row -> messages.put(row.getKey(), row.getValue()));
+
         return messages;
     }
-    
+
 }

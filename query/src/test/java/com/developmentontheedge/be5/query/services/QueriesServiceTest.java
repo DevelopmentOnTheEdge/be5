@@ -23,7 +23,8 @@ import static org.junit.Assert.assertEquals;
 
 public class QueriesServiceTest extends QueryBe5ProjectDBTest
 {
-    @Inject private QueriesService queries;
+    @Inject
+    private QueriesService queries;
 
     @Before
     public void setUpTestUtils()
@@ -35,7 +36,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromEnum()
     {
-        String[][] strings = new String[][]{ {"Federal", "Федеральный"},{"Municipal", "Муниципальный"},{"Regional", "Региональный"} };
+        String[][] strings = new String[][]{{"Federal", "Федеральный"}, {"Municipal", "Муниципальный"}, {"Regional", "Региональный"}};
 
         String[][] tagsFromEnum = queries.getTagsFromEnum("testTags", "admlevel");
         assertArrayEquals(strings, tagsFromEnum);
@@ -44,7 +45,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromEnumNoYes()
     {
-        String[][] strings = new String[][]{ {"no", "нет"}, {"yes", "да"} };
+        String[][] strings = new String[][]{{"no", "нет"}, {"yes", "да"}};
 
         String[][] tagsFromEnum = queries.getTagsFromEnum("testTags", "payable");
 
@@ -54,7 +55,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromSelectionView()
     {
-        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
 
         String[][] tagsFromEnum = queries.getTagsFromSelectionView("testTags");
 
@@ -64,7 +65,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromCustomSelectionViewTest()
     {
-        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
 
         String[][] tagsFromEnum = queries.getTagsFromCustomSelectionView("testTags", "With parameter");
 
@@ -74,10 +75,10 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromCustomSelectionViewWithParamTest()
     {
-        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} };
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}};
 
         String[][] tagsFromEnum = queries.getTagsFromCustomSelectionView("testTags", "With parameter",
-                ImmutableMap.of("payable","yes"));
+                ImmutableMap.of("payable", "yes"));
 
         assertArrayEquals(strings, tagsFromEnum);
     }
@@ -85,7 +86,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromCustomSelectionViewWithParamTestNull()
     {
-        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
 
         HashMap<String, Object> stringStringHashMap = new HashMap<>();
         stringStringHashMap.put("payable", null);
@@ -99,7 +100,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsYesNo()
     {
-        String[][] strings = new String[][]{ {"yes", "да"}, {"no", "нет"} };
+        String[][] strings = new String[][]{{"yes", "да"}, {"no", "нет"}};
 
         String[][] tagsFromEnum = queries.getTagsYesNo();
 
@@ -109,7 +110,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsNoYes()
     {
-        String[][] strings = new String[][]{ {"no", "нет"}, {"yes", "да"} };
+        String[][] strings = new String[][]{{"no", "нет"}, {"yes", "да"}};
 
         String[][] tagsFromEnum = queries.getTagsNoYes();
 
@@ -119,7 +120,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsFromQueryTest()
     {
-        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
+        String[][] strings = new String[][]{{"01", "Regional"}, {"02", "Municipal"}, {"03", "Federal"}, {"04", "Regional"}};
 
         String[][] tagsFromEnum = queries.getTagsFromQuery("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
@@ -129,18 +130,18 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void localizeTags()
     {
-        String[][] tags = queries.localizeTags("testTags", new String[][]{ {"01", "Regional"},{"02", "Municipal"} });
+        String[][] tags = queries.localizeTags("testTags", new String[][]{{"01", "Regional"}, {"02", "Municipal"}});
 
-        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+        assertArrayEquals(new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}},
                 tags);
     }
 
     @Test
     public void localizeForQueryTags()
     {
-        String[][] tags = queries.localizeTags("testTags", "All records", new String[][]{ {"01", "Regional"},{"02", "Municipal"} });
+        String[][] tags = queries.localizeTags("testTags", "All records", new String[][]{{"01", "Regional"}, {"02", "Municipal"}});
 
-        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+        assertArrayEquals(new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}},
                 tags);
     }
 
@@ -152,7 +153,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
                 ImmutableList.of("02", "Municipal")
         ));
 
-        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+        assertArrayEquals(new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}},
                 tags);
     }
 
@@ -171,7 +172,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void getTagsTest()
     {
-        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
 
         String[][] tagsFromEnum = queries.getTags("testTags", "code", "admlevel");
 
@@ -183,10 +184,10 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     {
         List<DynamicPropertySet> list = queries.readAsRecords("SELECT code, admlevel FROM testTags");
 
-        assertEquals("01",        list.get(0).getValue("code"));
-        assertEquals("Regional",  list.get(0).getValue("admlevel"));
+        assertEquals("01", list.get(0).getValue("code"));
+        assertEquals("Regional", list.get(0).getValue("admlevel"));
 
-        assertEquals("02",        list.get(1).getValue("code"));
+        assertEquals("02", list.get(1).getValue("code"));
         assertEquals("Municipal", list.get(1).getValue("admlevel"));
 
         assertEquals(4, list.size());
@@ -198,8 +199,8 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
         List<DynamicPropertySet> list = queries.readAsRecordsFromQuery("testTags", "With parameter",
                 Collections.emptyMap());
 
-        assertEquals("01",        list.get(0).getValue("ID"));
-        assertEquals("Regional",  list.get(0).getValue("Name"));
+        assertEquals("01", list.get(0).getValue("ID"));
+        assertEquals("Regional", list.get(0).getValue("Name"));
 
         assertEquals(4, list.size());
     }
@@ -209,15 +210,15 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     {
         QRec qRec = queries.readOneRecord("testTags", "With parameter", Collections.emptyMap());
 
-        assertEquals("01",        qRec.getValue("ID"));
-        assertEquals("Regional",  qRec.getValue("Name"));
+        assertEquals("01", qRec.getValue("ID"));
+        assertEquals("Regional", qRec.getValue("Name"));
     }
 
     @Test
     public void readAsRecordsFromQuerySqlTest()
     {
         List<DynamicPropertySet> list = queries.readAsRecordsFromQuery(
-                        "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
+                "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
                         "        FROM testTags\n" +
                         "        WHERE 1=1\n" +
                         "        <if parameter=\"payable\">\n" +
@@ -225,8 +226,8 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
                         "        </if>",
                 Collections.emptyMap());
 
-        assertEquals("01",        list.get(0).getValue("ID"));
-        assertEquals("Regional",  list.get(0).getValue("Name"));
+        assertEquals("01", list.get(0).getValue("ID"));
+        assertEquals("Regional", list.get(0).getValue("Name"));
 
         assertEquals(4, list.size());
     }
@@ -236,10 +237,10 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     {
         List<List<Object>> lists = queries.readAsList("SELECT code, admlevel FROM testTags");
 
-        assertEquals("01",        lists.get(0).get(0));
-        assertEquals("Regional",  lists.get(0).get(1));
+        assertEquals("01", lists.get(0).get(0));
+        assertEquals("Regional", lists.get(0).get(1));
 
-        assertEquals("02",        lists.get(1).get(0));
+        assertEquals("02", lists.get(1).get(0));
         assertEquals("Municipal", lists.get(1).get(1));
 
         assertEquals(4, lists.size());
@@ -284,10 +285,10 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
 
         //use db and DpsRecordAdapter.createDps
         assertEquals("TestName", db.oneString("SELECT name FROM testtableAdmin WHERE id = ?", id));
-        assertEquals(123, (int)db.oneInteger("SELECT value FROM testtableAdmin WHERE id = ?", id));
+        assertEquals(123, (int) db.oneInteger("SELECT value FROM testtableAdmin WHERE id = ?", id));
 
         DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", DpsRecordAdapter::createDps, id);
-        if(dps != null)
+        if (dps != null)
         {
             assertEquals("TestName", dps.getValue("name"));
             assertEquals(123, Integer.parseInt(dps.getValue("value").toString()));

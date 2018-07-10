@@ -19,8 +19,9 @@ public abstract class QueryBe5ProjectDBTest extends BaseTestUtils
             new QueryModule()
     );
 
-    static {
-        initDb(injector);
+    static
+    {
+        initDb();
     }
 
     @Override

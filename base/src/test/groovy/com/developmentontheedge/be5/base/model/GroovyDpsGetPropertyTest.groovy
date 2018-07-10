@@ -17,11 +17,11 @@ class GroovyDpsGetPropertyTest
             value = "value2"
         }
 
-        assertEquals("value2", dps["input2"] )
+        assertEquals("value2", dps["input2"])
 
-        assertEquals("value2", dps.input2.getValue() )// not TypeChecked
+        assertEquals("value2", dps.input2.getValue())// not TypeChecked
 
-        assertEquals("value2", dps.$input2 )// not TypeChecked
+        assertEquals("value2", dps.$input2)// not TypeChecked
     }
 
 }

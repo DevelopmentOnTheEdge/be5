@@ -11,7 +11,8 @@ import static org.junit.Assert.assertEquals;
 
 public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
 {
-    @Inject private CategoriesController component;
+    @Inject
+    private CategoriesController component;
 
     @Test
     public void generate()

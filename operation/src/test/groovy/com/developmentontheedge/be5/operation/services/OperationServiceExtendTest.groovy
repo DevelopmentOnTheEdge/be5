@@ -16,9 +16,12 @@ import static org.junit.Assert.assertEquals
 @TypeChecked
 class OperationServiceExtendTest extends OperationsSqlMockProjectTest
 {
-    @Inject UserAwareMeta userAwareMeta
-    @Inject GroovyOperationLoader groovyOperationLoader
-    @Inject ProjectProvider projectProvider
+    @Inject
+    UserAwareMeta userAwareMeta
+    @Inject
+    GroovyOperationLoader groovyOperationLoader
+    @Inject
+    ProjectProvider projectProvider
 
     @Before
     void setUp()

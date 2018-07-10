@@ -12,21 +12,21 @@ public abstract class Be5Mojo extends AbstractMojo
 {
     protected ProcessController logger = new MavenLogger(getLog());
 
-    @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
+    @Parameter(property = "BE5_PROJECT_PATH", defaultValue = "./")
     public File projectPath;
 
-    @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
+    @Parameter(property = "BE5_UNLOCK_PROTECTED_PROFILE")
     protected boolean unlockProtectedProfile = false;
 
-    @Parameter (property = "BE5_DEBUG")
+    @Parameter(property = "BE5_DEBUG")
     protected boolean debug = false;
 
-    @Parameter (property = "BE5_LOG_PATH")
+    @Parameter(property = "BE5_LOG_PATH")
     protected File logPath = Paths.get("target/sql").toFile();
 
-    @Parameter (property = "BE5_PROFILE")
+    @Parameter(property = "BE5_PROFILE")
     public String connectionProfileName;
 
-    @Parameter (property = "DB_PASSWORD")
+    @Parameter(property = "DB_PASSWORD")
     protected String connectionPassword;
 }

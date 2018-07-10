@@ -70,7 +70,8 @@ public class QueriesService
         );
         String[][] stockArr = new String[tags.size()][2];
 
-        for (int i = 0; i < tags.size(); i++) {
+        for (int i = 0; i < tags.size(); i++)
+        {
             stockArr[i] = new String[]{tags.get(i)[0], userAwareMeta.getColumnTitle(tableName, tags.get(i)[1])};
         }
 
@@ -87,21 +88,18 @@ public class QueriesService
 //    }
 
     /**
-     * <p>
      * Creates a list of options by a specified table name. An entity with a
      * table definition for this table must be defined. A "selection view" query
      * of the entity must be defined too. Roles and visibility of the query are
      * ignored.
      * </p>
-     *
-     * <p>
      * A "selection view" query is a query with name "*** Selection view ***"
      * that selects rows with two fields: an identifier and a displayed text.
      * Names of columns are ignored, only the order matters.
      * </p>
      *
      * @throws IllegalArgumentException when an entity or a query is not defined
-     * @throws Error if a found query cannot be compiled
+     * @throws Error                    if a found query cannot be compiled
      */
     public String[][] getTagsFromSelectionView(String tableName)
     {
@@ -126,7 +124,7 @@ public class QueriesService
     public String[][] getTagsFromCustomSelectionView(Query query, Map<String, ?> parameters)
     {
         String entityName = query.getEntity().getName();
-        if(query.isCacheable())
+        if (query.isCacheable())
         {
             return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() +
                             parameters.toString() + userInfoProvider.get().getLanguage(),
@@ -150,7 +148,7 @@ public class QueriesService
         return tags.toArray(stockArr);
     }
 
-    public Map<String, String> readAsMap( String query, Object... params )
+    public Map<String, String> readAsMap(String query, Object... params)
     {
         Map<String, String> values = new LinkedHashMap<>();
         db.query(query, rs -> {
@@ -178,16 +176,16 @@ public class QueriesService
         String entityName = query.getEntity().getName();
 
         TableModel tableModel;
-        if(query.getType() == QueryType.GROOVY)
+        if (query.getType() == QueryType.GROOVY)
         {
             tableModel = tableModelService.getTableModel(query, parameters);
         }
         else
         {
             tableModel = tableModelService.builder(query, parameters)
-                .limit(Integer.MAX_VALUE)
-                .selectable(false)
-                .build();
+                    .limit(Integer.MAX_VALUE)
+                    .selectable(false)
+                    .build();
         }
 
         String[][] stockArr = new String[tableModel.getRows().size()][2];
@@ -203,7 +201,7 @@ public class QueriesService
         return stockArr;
     }
 
-    public String[][] localizeTags(String tableName, List<List<String> > tags)
+    public String[][] localizeTags(String tableName, List<List<String>> tags)
     {
         String[][] stockArr = new String[tags.size()][2];
         tags.stream().map(tag -> new String[]{tag.get(0), tag.get(1)}).collect(Collectors.toList()).toArray(stockArr);
@@ -537,12 +535,12 @@ public class QueriesService
 //    }
 
     //todo use Be5QueryExecutor?
-    public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
+    public List<DynamicPropertySet> readAsRecords(String sql, Object... params)
     {
         return db.list(sql, DpsRecordAdapter::createDps, params);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, Object> parameters )
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String sql, Map<String, Object> parameters)
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
@@ -585,7 +583,7 @@ public class QueriesService
 //        //return withCache( sql, null );
 //    }
 
-    public List<List<Object>> readAsList( String sql, Object... params )
+    public List<List<Object>> readAsList(String sql, Object... params)
     {
         List<List<Object>> vals = new ArrayList<>();
         List<DynamicPropertySet> list = readAsRecords(sql, params);
@@ -593,7 +591,8 @@ public class QueriesService
         for (int i = 0; i < list.size(); i++)
         {
             List<Object> propertyList = new ArrayList<>();
-            for (DynamicProperty property : list.get(i)) {
+            for (DynamicProperty property : list.get(i))
+            {
                 propertyList.add(property.getValue());
             }
             vals.add(propertyList);
@@ -607,7 +606,7 @@ public class QueriesService
         Map<String, String> newTags = new LinkedHashMap<>();
 
         newTags.putAll(before);
-        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0],tag[1]));
+        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0], tag[1]));
 
         return toTagsArray(newTags);
     }
@@ -617,7 +616,7 @@ public class QueriesService
         Map<String, String> newTags = new LinkedHashMap<>();
 
         newTags.putAll(before);
-        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0],tag[1]));
+        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0], tag[1]));
         newTags.putAll(after);
 
         return toTagsArray(newTags);

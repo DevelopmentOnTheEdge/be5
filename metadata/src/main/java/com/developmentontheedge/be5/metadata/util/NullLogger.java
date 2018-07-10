@@ -6,14 +6,14 @@ public class NullLogger implements ProcessController
     public NullLogger()
     {
     }
-    
+
     @Override
-    public void setOperationName( String name )
+    public void setOperationName(String name)
     {
     }
 
     @Override
-    public void setProgress( double progress )
+    public void setProgress(double progress)
     {
     }
 

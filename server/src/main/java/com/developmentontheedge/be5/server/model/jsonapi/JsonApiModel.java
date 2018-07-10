@@ -3,20 +3,14 @@ package com.developmentontheedge.be5.server.model.jsonapi;
 import java.util.Arrays;
 
 /**
- http://jsonapi.org
-
- A document MUST contain at least one of the following top-level members:
-
-     data: the document’s “primary data”
-     errors: an array of error objects
-     meta: a meta object that contains non-standard meta-information.
-
- A document MAY contain any of these top-level members:
-
-     links: a links object related to the primary data.
-     included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
-
-
+ * http://jsonapi.org
+ * A document MUST contain at least one of the following top-level members:
+ * data: the document’s “primary data”
+ * errors: an array of error objects
+ * meta: a meta object that contains non-standard meta-information.
+ * A document MAY contain any of these top-level members:
+ * links: a links object related to the primary data.
+ * included: an array of resource objects that are related to the primary data and/or each other (“included resources”).
  */
 public class JsonApiModel
 {
@@ -94,25 +88,25 @@ public class JsonApiModel
     public String toString()
     {
         return "JsonApiModel{" +
-                (data!=null ? "data=" + data : "") +
-                (errors!=null ? "errors=" + Arrays.toString(errors) : "") +
-                (meta!=null ? ", meta=" + meta : "") +
-                (included!=null ? ", included=" + Arrays.toString(included) : "") +
-        '}';
+                (data != null ? "data=" + data : "") +
+                (errors != null ? "errors=" + Arrays.toString(errors) : "") +
+                (meta != null ? ", meta=" + meta : "") +
+                (included != null ? ", included=" + Arrays.toString(included) : "") +
+                '}';
     }
 
     @Override
     public boolean equals(Object o)
     {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         JsonApiModel that = (JsonApiModel) o;
 
-        if(data != null ? !data.equals(that.data) : that.data != null) return false;
+        if (data != null ? !data.equals(that.data) : that.data != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if(!Arrays.equals(errors, that.errors)) return false;
-        if(meta != null ? !meta.equals(that.meta) : that.meta != null) return false;
+        if (!Arrays.equals(errors, that.errors)) return false;
+        if (meta != null ? !meta.equals(that.meta) : that.meta != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return Arrays.equals(included, that.included);
     }

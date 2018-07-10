@@ -6,22 +6,22 @@ public class Field
 {
     public final String name;
     public final Object defaultValue;
-    
-    public Field( final String name, final Object defaultValue )
+
+    public Field(final String name, final Object defaultValue)
     {
-        this.name = Objects.requireNonNull( name );
+        this.name = Objects.requireNonNull(name);
         this.defaultValue = defaultValue;
     }
-    
-    public Field( final String name )
+
+    public Field(final String name)
     {
-        this( name, null );
+        this(name, null);
     }
-    
+
     @Override
     public String toString()
     {
-        return "Field["+name+"="+defaultValue+"]";
+        return "Field[" + name + "=" + defaultValue + "]";
     }
-    
+
 }

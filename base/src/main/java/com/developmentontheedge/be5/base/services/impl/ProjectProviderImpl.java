@@ -45,29 +45,29 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public synchronized Project get()
     {
-    	if(dirty || project == null)
-    	{
-    	    Project oldProject = project;
-			project = loadProject();
+        if (dirty || project == null)
+        {
+            Project oldProject = project;
+            project = loadProject();
 
-            if(oldProject != null)
+            if (oldProject != null)
             {
                 callOnReload.forEach(Runnable::run);
             }
         }
 
-    	return project;
+        return project;
     }
 
-    private Project loadProject() 
+    private Project loadProject()
     {
         try
         {
-            if(watcher != null)watcher.stop();
+            if (watcher != null) watcher.stop();
 
             try
             {
-                return ModuleLoader2.findAndLoadProjectWithModules(true);
+                return ModuleLoader2.findAndLoadProjectWithModules(dirty);
             }
             catch (RuntimeException e)
             {
@@ -81,16 +81,16 @@ public class ProjectProviderImpl implements ProjectProvider
             {
                 if (stage == Stage.DEVELOPMENT)
                 {
-                    if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
+                    if (initModulesMap == null) initModulesMap = ModuleLoader2.getModulesMap();
                     watcher = new WatchDir(initModulesMap)
-                            .onModify( onModify -> dirty = true)
+                            .onModify(onModify -> dirty = true)
                             .start();
                 }
             }
         }
-        catch(ProjectLoadException | IOException e)
+        catch (ProjectLoadException | IOException e)
         {
-        	throw Be5Exception.internal("Can not load project", e);
+            throw Be5Exception.internal("Can not load project", e);
         }
         finally
         {

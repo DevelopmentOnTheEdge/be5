@@ -1,17 +1,18 @@
 package com.developmentontheedge.be5.base.model.groovy;
 
-public class PropertyAccessHelper {
+public class PropertyAccessHelper
+{
 
-    private final static String PROPERTY_PREFIX = "_";
-    private final static String VALUE_PREFIX = "$";
+    private static final String PROPERTY_PREFIX = "_";
+    private static final String VALUE_PREFIX = "$";
 
-    public static boolean isPropertyAccess( String v )
+    public static boolean isPropertyAccess(String v)
     {
-        return v != null && v.startsWith( PROPERTY_PREFIX );
+        return v != null && v.startsWith(PROPERTY_PREFIX);
     }
-    
-    public static boolean isValueAccess( String v )
+
+    public static boolean isValueAccess(String v)
     {
-        return v != null && ( v.startsWith( VALUE_PREFIX ) );
+        return v != null && (v.startsWith(VALUE_PREFIX));
     }
 }

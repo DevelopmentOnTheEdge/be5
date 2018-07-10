@@ -14,14 +14,14 @@ class OperationServiceTransactionalTest extends OperationBe5ProjectDBTest
     @Test
     void generateErrorTransactional()
     {
-        try{
+        try {
             def operation = createOperation("testtableAdmin", "All records",
                     "ErrorProcessingTransactional", "")
-            executeOperation(operation, ['name':'generateError'])
+            executeOperation(operation, ['name': 'generateError'])
             fail()
-        }catch (Throwable e){
+        } catch (Throwable e) {
             assertTrue(e instanceof Be5Exception)
-            assertEquals(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, ((Be5Exception)e).code)
+            assertEquals(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, ((Be5Exception) e).code)
         }
     }
 }

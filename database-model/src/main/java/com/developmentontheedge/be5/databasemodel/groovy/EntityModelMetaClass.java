@@ -10,18 +10,18 @@ import java.util.Map;
 
 public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 {
-    public EntityModelMetaClass( Class<? extends EntityModel> theClass )
+    public EntityModelMetaClass(Class<? extends EntityModel> theClass)
     {
-        super( theClass );
+        super(theClass);
     }
 
     @Override
-    public Object getProperty( Object object, String property )
+    public Object getProperty(Object object, String property)
     {
-        return getPropertyImpl( ( EntityModel )object, property );
+        return getPropertyImpl((EntityModel) object, property);
     }
 
-    private Object getPropertyImpl( EntityModel entityModel, String property )
+    private Object getPropertyImpl(EntityModel entityModel, String property)
     {
 //        if( "array".equals( property ) )
 //        {
@@ -31,7 +31,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        {
 //            return entityModel.toList();
 //        }
-        return super.getProperty( entityModel, property );
+        return super.getProperty(entityModel, property);
     }
 //
 //    @Override
@@ -74,9 +74,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        return operation.invoke();
 //    }
 
-    public static <R> R leftShift(EntityModel<R> self, Map<String, ? super Object> values )
+    public static <R> R leftShift(EntityModel<R> self, Map<String, ? super Object> values)
     {
-        return (R) self.add( values );
+        return (R) self.add(values);
     }
 
 //    public static List list( EntityModel self )
@@ -111,37 +111,37 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        return (R) ( ( EntityModel<R> )object ).add( values );
 //    }
 
-    public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
+    public static RecordModel call(EntityModel self, Map<String, ? super Object> values)
     {
-        return self.getBy( values );
+        return self.getBy(values);
     }
 
-    public static RecordModel getAt( EntityModel self, String id )
-    {
-        return self.get(id);
-    }
-
-    public static RecordModel getAt( EntityModel self, Long id )
+    public static RecordModel getAt(EntityModel self, String id)
     {
         return self.get(id);
     }
 
-    public static void putAt( EntityModel self, String id, Map<String, ? super Object> values )
+    public static RecordModel getAt(EntityModel self, Long id)
+    {
+        return self.get(id);
+    }
+
+    public static void putAt(EntityModel self, String id, Map<String, ? super Object> values)
     {
         self.set(id, values);
     }
 
-    public static void putAt( EntityModel self, String id, DynamicPropertySet dps )
+    public static void putAt(EntityModel self, String id, DynamicPropertySet dps)
     {
         self.set(id, dps);
     }
 
-    public static void putAt( EntityModel self, Long id, Map<String, ? super Object> values )
+    public static void putAt(EntityModel self, Long id, Map<String, ? super Object> values)
     {
         self.set(id, values);
     }
 
-    public static void putAt( EntityModel self, Long id, DynamicPropertySet dps )
+    public static void putAt(EntityModel self, Long id, DynamicPropertySet dps)
     {
         self.set(id, dps);
     }

@@ -56,7 +56,7 @@ class RequestTest extends ServerTestUtils
         String frontendEncoded = "data:application/vnd.oasis.opendocument.text;base64," + Base64.getEncoder().encodeToString(text.getBytes("UTF-8"))
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'base64':{'type':'Base64File','data':'${frontendEncoded}','name':'test.txt'}}")
-        Base64File base64File = (Base64File)ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
+        Base64File base64File = (Base64File) ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
 
         assertEquals(text, new String(base64File.data))
         assertEquals("application/vnd.oasis.opendocument.text", new String(base64File.mimeTypes))

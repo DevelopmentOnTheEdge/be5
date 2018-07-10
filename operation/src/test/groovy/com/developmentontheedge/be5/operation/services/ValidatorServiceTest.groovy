@@ -16,7 +16,8 @@ import static org.junit.Assert.assertEquals
 
 class ValidatorServiceTest extends OperationsSqlMockProjectTest
 {
-    @Inject Validator validator
+    @Inject
+    Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
@@ -57,14 +58,14 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         String[] initValue = ["val", "val2"] as String[]
 
         def property = dps.add {
-            name          = "name"
-            TYPE          = String
-            value         = initValue
+            name = "name"
+            TYPE = String
+            value = initValue
             MULTIPLE_SELECTION_LIST = true
         }
         validator.checkErrorAndCast(dps)
 
-        assertArrayEquals(initValue, (Object[])property.getValue())
+        assertArrayEquals(initValue, (Object[]) property.getValue())
 
         property.setValue(null)
         property.setCanBeNull(true)
@@ -79,14 +80,14 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         String[] initValue = [] as String[]
 
         def property = dps.add {
-            name          = "name"
-            TYPE          = String
-            value         = initValue
+            name = "name"
+            TYPE = String
+            value = initValue
             MULTIPLE_SELECTION_LIST = true
         }
         validator.checkErrorAndCast(dps)
 
-        assertArrayEquals(initValue, (Object[])property.getValue())
+        assertArrayEquals(initValue, (Object[]) property.getValue())
     }
 
     @Test
@@ -98,7 +99,7 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
 
         validator.checkErrorAndCast(property)
 
-        assertArrayEquals([1L, 3L] as Long[], (Object[])property.getValue())
+        assertArrayEquals([1L, 3L] as Long[], (Object[]) property.getValue())
     }
 
     @Test(expected = NumberFormatException.class)
@@ -115,12 +116,13 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         validator.checkErrorAndCast(property)
     }
 
-    @Ignore//TODO
+    @Ignore
+//TODO
     @Test(expected = NumberFormatException.class)
     void name()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, "a")
-        property << [ VALIDATION_RULES: baseRule(digits) ]
+        property << [VALIDATION_RULES: baseRule(digits)]
 
         validator.checkErrorAndCast(property)
     }

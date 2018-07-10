@@ -30,7 +30,7 @@ public class MonthlyDateTest
         assertTrue(date.lessOrEqual(java.sql.Date.valueOf(LocalDate.MIN)));
 
         assertEquals(new MonthlyDate(2099, 12), MonthlyDate.MAX_VALUE);
-        assertEquals(new MonthlyDate(1900, 1 ), MonthlyDate.MIN_VALUE);
+        assertEquals(new MonthlyDate(1900, 1), MonthlyDate.MIN_VALUE);
 
         assertEquals(new MonthlyDate(dateFormat.parse("2018-06-01")), date);
 

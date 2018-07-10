@@ -1,0 +1,37 @@
+filterTestTable:
+  type: table
+  displayName: filterTestTable
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: INT
+        canBeNull: true
+  queries:
+  - Simple:
+      roles: Administrator
+      code: |2-
+        SELECT ft.name, ft.value
+        FROM filterTestTable ft
+  - With Where:
+      roles: Administrator
+      code: |2-
+        SELECT ft.name, ft.value
+        FROM filterTestTable ft
+        WHERE ft.name = <session:user-personID />
+  - With Parameter:
+      roles: Administrator
+      code: |2-
+        SELECT ft.name, ft.value
+        FROM filterTestTable ft
+        WHERE (1=1)
+        <if parameter="name">
+          AND ft.name LIKE <parameter:name />
+        </if>

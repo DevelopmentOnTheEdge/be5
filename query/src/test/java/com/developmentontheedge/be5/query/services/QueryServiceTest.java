@@ -23,9 +23,12 @@ import static org.junit.Assert.assertTrue;
 
 public class QueryServiceTest extends QueryBe5ProjectDBTest
 {
-    @Inject private ProjectProvider projectProvider;
-    @Inject private DbService db;
-    @Inject private QueryService queryService;
+    @Inject
+    private ProjectProvider projectProvider;
+    @Inject
+    private DbService db;
+    @Inject
+    private QueryService queryService;
 
     private Query query;
 
@@ -98,7 +101,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                    build(query, Collections.singletonMap("name", "test")).getFinalSql());
+                build(query, Collections.singletonMap("name", "test")).getFinalSql());
     }
 
     @Test

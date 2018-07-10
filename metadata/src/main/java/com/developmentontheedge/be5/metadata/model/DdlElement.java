@@ -11,21 +11,22 @@ import java.util.List;
 public interface DdlElement extends BeModelElement
 {
     public String getEntityName();
-    
+
     @PropertyName("DDL")
     public String getDdl();
 
     public String getCreateDdl();
-    
+
     public String getDropDdl();
-    
+
     public String getDiffDdl(DdlElement other, SqlExecutor sql) throws ExtendedSqlException;
-    
+
     public String getDangerousDiffStatements(DdlElement other, SqlExecutor sql) throws ExtendedSqlException;
-    
+
     public List<ProjectElementException> getWarnings();
 
-    public default boolean withoutDbScheme(){
+    public default boolean withoutDbScheme()
+    {
         return !getEntityName().contains(".");
     }
 }

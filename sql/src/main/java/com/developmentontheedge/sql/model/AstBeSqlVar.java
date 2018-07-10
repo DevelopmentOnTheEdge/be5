@@ -8,16 +8,17 @@ import java.util.Set;
 
 public class AstBeSqlVar extends AstBeNode
 {
-    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of( "refColumn", "safestr", "default", "type", "prefix" ).toSet();
-    
+    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of("refColumn", "safestr", "default", "type", "prefix").toSet();
+
     public AstBeSqlVar(int id)
     {
-        super( id );
+        super(id);
         this.tagName = "var";
         this.allowedParameters = ALLOWED_PARAMETERS;
     }
 
-    public AstBeSqlVar(String name){
+    public AstBeSqlVar(String name)
+    {
         this(SqlParserTreeConstants.JJTBESQLVAR);
         setName(name);
     }
@@ -37,12 +38,12 @@ public class AstBeSqlVar extends AstBeNode
     @Override
     public String getParametersString()
     {
-        return ":"+getName()+super.getParametersString();
+        return ":" + getName() + super.getParametersString();
     }
-    
+
     public String getDefault()
     {
-        return getParameter( "default" );
+        return getParameter("default");
     }
 }
 /* JavaCC - OriginalChecksum=0c52b5c1679c73b9b6d22f6c19dbcb6a (do not edit this line) */

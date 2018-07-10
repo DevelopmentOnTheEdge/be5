@@ -18,8 +18,8 @@ public class QuerySettingsBeanInfo extends BeanInfoEx
         add("maxRecordsPerPage");
         add("maxRecordsPerPrintPage");
         add("maxRecordsInDynamicDropDown");
-        PropertyDescriptorEx pde = new PropertyDescriptorEx( "colorSchemeID", beanClass );
-        pde.setCanBeNull( true );
+        PropertyDescriptorEx pde = new PropertyDescriptorEx("colorSchemeID", beanClass);
+        pde.setCanBeNull(true);
         add(pde);
         add("autoRefresh");
         add("beautifier", ClassSelector.class);

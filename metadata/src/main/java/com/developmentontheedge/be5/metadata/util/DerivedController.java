@@ -16,28 +16,29 @@ public class DerivedController implements ProcessController
         this.to = to;
         this.operation = operation;
     }
-    
+
     public DerivedController(ProcessController primary, double from, double to)
     {
         this(primary, from, to, null);
     }
 
     @Override
-    public void setOperationName( String name )
+    public void setOperationName(String name)
     {
-        if(operation != null)
+        if (operation != null)
         {
-            primary.setOperationName( operation+": "+name );
-        } else
+            primary.setOperationName(operation + ": " + name);
+        }
+        else
         {
-            primary.setOperationName( name );
+            primary.setOperationName(name);
         }
     }
 
     @Override
-    public void setProgress( double progress ) throws ProcessInterruptedException
+    public void setProgress(double progress) throws ProcessInterruptedException
     {
-        primary.setProgress( progress*(to-from)+from );
+        primary.setProgress(progress * (to - from) + from);
     }
 
     @Override

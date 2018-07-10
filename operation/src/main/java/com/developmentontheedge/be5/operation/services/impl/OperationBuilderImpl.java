@@ -19,7 +19,7 @@ public class OperationBuilderImpl implements OperationBuilder
     private OperationExecutor operationExecutor;
     private Meta meta;
 
-    private Object[] records = new Object[]{ };
+    private Object[] records = new Object[]{};
 
     private String entityName;
     private String queryName;
@@ -59,21 +59,21 @@ public class OperationBuilderImpl implements OperationBuilder
 //    }
 
     @Override
-    public OperationBuilder setRecords(Object[] records )
+    public OperationBuilder setRecords(Object[] records)
     {
         this.records = records;
         return this;
     }
 
     @Override
-    public OperationBuilder setPresetValues(Map<String, ?> presetValues )
+    public OperationBuilder setPresetValues(Map<String, ?> presetValues)
     {
         this.presetValues = presetValues;
         return this;
     }
 
     @Override
-    public OperationBuilder setOperationParams(Map<String, Object> operationParams )
+    public OperationBuilder setOperationParams(Map<String, Object> operationParams)
     {
         this.operationParams = operationParams;
         return this;
@@ -85,7 +85,7 @@ public class OperationBuilderImpl implements OperationBuilder
         Operation operation = operationExecutor.create(getOperationInfo(), getOperationContext());
         operation.setResult(OperationResult.generate());
 
-        return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
+        return operationExecutor.generate(operation, (Map<String, Object>) presetValues);
     }
 
     @Override

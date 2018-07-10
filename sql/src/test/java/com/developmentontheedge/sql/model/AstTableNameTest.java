@@ -7,13 +7,15 @@ import static org.junit.Assert.assertEquals;
 public class AstTableNameTest
 {
     @Test
-    public void table() throws Exception {
+    public void table() throws Exception
+    {
         assertEquals("users",
                 new AstTableName("users").toString());
     }
 
     @Test
-    public void withSchema() throws Exception {
+    public void withSchema() throws Exception
+    {
         assertEquals("public.users",
                 new AstTableName("public", "users").toString());
 
@@ -22,7 +24,8 @@ public class AstTableNameTest
     }
 
     @Test
-    public void testSetValue() throws Exception {
+    public void testSetValue() throws Exception
+    {
         assertEquals("public.users",
                 new AstTableName("users").setValue("public.users").toString());
 
@@ -31,7 +34,8 @@ public class AstTableNameTest
     }
 
     @Test(expected = AssertionError.class)
-    public void testSetValueException() throws Exception {
+    public void testSetValueException() throws Exception
+    {
         new AstTableName("users").setValue("public.users.table");
     }
 

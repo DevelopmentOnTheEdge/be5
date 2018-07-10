@@ -11,25 +11,25 @@ public class OperationSetBeanInfo extends BeanInfoEx
     public OperationSetBeanInfo()
     {
         super(OperationSet.class);
-        setSubstituteByChild( true );
+        setSubstituteByChild(true);
     }
 
     @Override
     protected void initProperties() throws Exception
     {
-        addArrayProperty( "valuesArray" );
-        addArrayProperty( "excludedValuesArray" );
+        addArrayProperty("valuesArray");
+        addArrayProperty("excludedValuesArray");
         addHidden("usePrototype", "isPrototypeHidden");
-        addHidden( new PropertyDescriptorEx( "prototypeValues", beanClass, "getPrototypeValues", null ), "isPrototypeHidden" );
-        add( new PropertyDescriptorEx( "finalValues", beanClass, "getFinalValuesString", null ));
+        addHidden(new PropertyDescriptorEx("prototypeValues", beanClass, "getPrototypeValues", null), "isPrototypeHidden");
+        add(new PropertyDescriptorEx("finalValues", beanClass, "getFinalValuesString", null));
     }
 
-    private void addArrayProperty( final String name ) throws IntrospectionException
+    private void addArrayProperty(final String name) throws IntrospectionException
     {
-        PropertyDescriptorEx pde = new PropertyDescriptorEx( name, beanClass );
-        pde.setPropertyEditorClass( OperationMultiSelector.class );
-        pde.setHideChildren( true );
-        pde.setSimple( true );
+        PropertyDescriptorEx pde = new PropertyDescriptorEx(name, beanClass);
+        pde.setPropertyEditorClass(OperationMultiSelector.class);
+        pde.setHideChildren(true);
+        pde.setSimple(true);
         add(pde);
     }
 }

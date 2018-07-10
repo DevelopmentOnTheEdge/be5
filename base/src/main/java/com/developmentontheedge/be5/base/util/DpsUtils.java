@@ -18,10 +18,10 @@ public class DpsUtils
 {
     public static Map<String, Object> toLinkedHashMap(DynamicPropertySet dps)
     {
-        Map<String, Object> map = new LinkedHashMap<>( dps.size() );
-        for(DynamicProperty property : dps )
+        Map<String, Object> map = new LinkedHashMap<>(dps.size());
+        for (DynamicProperty property : dps)
         {
-            map.put( property.getName(), property.getValue() );
+            map.put(property.getName(), property.getValue());
         }
 
         return map;
@@ -34,7 +34,7 @@ public class DpsUtils
             DynamicProperty property = dps.getProperty(name);
             Objects.requireNonNull(property);
             String[][] tags = (String[][]) property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
-            if(tags.length == 1 && !property.isCanBeNull())
+            if (tags.length == 1 && !property.isCanBeNull())
             {
                 property.setValue(tags[0][0]);
             }
@@ -43,10 +43,10 @@ public class DpsUtils
 
     public static <T extends DynamicPropertySet> T setValues(T dps, DynamicPropertySet values)
     {
-        for(DynamicProperty valueProperty : values)
+        for (DynamicProperty valueProperty : values)
         {
             DynamicProperty property = dps.getProperty(valueProperty.getName());
-            if(property != null)
+            if (property != null)
             {
                 property.setValue(valueProperty.getValue());
             }
@@ -59,7 +59,7 @@ public class DpsUtils
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
-            if(property != null && !property.isReadOnly())
+            if (property != null && !property.isReadOnly())
             {
                 dps.setValue(entry.getKey(), entry.getValue());
             }
@@ -77,7 +77,8 @@ public class DpsUtils
                 String name = metaData.getColumnName(i);
 
                 DynamicProperty property = dps.getProperty(name);
-                if(property != null) {
+                if (property != null)
+                {
                     property.setValue(SqlUtils.getSqlValue(property.getType(), resultSet, i));
                 }
             }

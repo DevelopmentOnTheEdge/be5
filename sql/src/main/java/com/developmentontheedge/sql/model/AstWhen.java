@@ -6,11 +6,11 @@ public class AstWhen extends SimpleNode
 {
     public AstWhen(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "WHEN";
         this.childrenDelimiter = "THEN";
     }
-    
+
     public AstWhen(SimpleNode condition, SimpleNode thenBranch)
     {
         this(SqlParserTreeConstants.JJTWHEN);
@@ -32,12 +32,12 @@ public class AstWhen extends SimpleNode
 
     public SimpleNode getCondition()
     {
-        return child( 0 );
+        return child(0);
     }
-    
+
     public SimpleNode getValue()
     {
-        return child( 1 );
+        return child(1);
     }
 }
 /* JavaCC - OriginalChecksum=0f01073218da3bc6b2bdb82344b3e499 (do not edit this line) */

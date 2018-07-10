@@ -26,9 +26,9 @@ public abstract class FilterSupport implements Filter
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException
     {
-        Request req = new RequestImpl((HttpServletRequest)servletRequest);
+        Request req = new RequestImpl((HttpServletRequest) servletRequest);
 
-        filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse)servletResponse), filterChain);
+        filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse) servletResponse), filterChain);
     }
 
     @Override

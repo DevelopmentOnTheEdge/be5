@@ -7,7 +7,7 @@ public class AstBeElse extends AstBeNode
 {
     public AstBeElse(int id)
     {
-        super( id );
+        super(id);
         tagName = "else";
     }
 }

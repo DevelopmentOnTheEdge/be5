@@ -28,7 +28,7 @@ public class BasicQueryContext implements QueryContext
     }
 
     private BasicQueryContext(Map<String, List<String>> parameters, Map<String, Object> sessionVariables, String userName,
-            List<String> roles, QueryResolver queryResolver)
+                              List<String> roles, QueryResolver queryResolver)
     {
         this.parameters = parameters;
         this.sessionVariables = sessionVariables;
@@ -46,36 +46,36 @@ public class BasicQueryContext implements QueryContext
     @Override
     public List<String> getListParameter(String name)
     {
-        return parameters.get( name );
+        return parameters.get(name);
     }
 
     @Override
     public String getParameter(String name)
     {
-        if( parameters.get( name ) == null )
+        if (parameters.get(name) == null)
             return null;
-        if( parameters.get( name ).size() != 1 )
-            throw new IllegalStateException( name+ " contains more than one value" );
+        if (parameters.get(name).size() != 1)
+            throw new IllegalStateException(name + " contains more than one value");
         else
-            return parameters.get( name ).get( 0 );
+            return parameters.get(name).get(0);
     }
 
     @Override
     public Map<String, String> asMap()
     {
-        return StreamEx.ofKeys( parameters ).toMap( this::getParameter );
+        return StreamEx.ofKeys(parameters).toMap(this::getParameter);
     }
 
     @Override
     public Object getSessionVariable(String name)
     {
-        return sessionVariables.get( name );
+        return sessionVariables.get(name);
     }
 
     @Override
     public StreamEx<String> roles()
     {
-        return StreamEx.of( roles );
+        return StreamEx.of(roles);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BasicQueryContext implements QueryContext
     @Override
     public String resolveQuery(String entity, String name)
     {
-        return queryResolver.resolve( entity, name );
+        return queryResolver.resolve(entity, name);
     }
 
     public static class Builder
@@ -102,21 +102,21 @@ public class BasicQueryContext implements QueryContext
         {
         }
 
-        public Builder roles(String ... roles)
+        public Builder roles(String... roles)
         {
-            this.roles.addAll( Arrays.asList( roles ) );
+            this.roles.addAll(Arrays.asList(roles));
             return this;
         }
 
         public Builder parameter(String name, String value)
         {
-            if( parameters.containsKey( name ) )
-                parameters.get( name ).add( value );
+            if (parameters.containsKey(name))
+                parameters.get(name).add(value);
             else
             {
                 List<String> list = new ArrayList<String>();
-                list.add( value );
-                parameters.put( name, list );
+                list.add(value);
+                parameters.put(name, list);
             }
             return this;
         }
@@ -129,7 +129,7 @@ public class BasicQueryContext implements QueryContext
 
         public Builder sessionVar(String name, Object value, String className)
         {
-            sessionVariables.put( name, SqlTypeUtils.parseValue(value, className) );
+            sessionVariables.put(name, SqlTypeUtils.parseValue(value, className));
 
             return this;
         }
@@ -139,17 +139,17 @@ public class BasicQueryContext implements QueryContext
             this.userName = name;
             return this;
         }
-        
+
         public Builder queryResolver(QueryResolver queryResolver)
         {
-            this.queryResolver = Objects.requireNonNull( queryResolver );
+            this.queryResolver = Objects.requireNonNull(queryResolver);
             return this;
         }
 
         public QueryContext build()
         {
-            return new BasicQueryContext( parameters, sessionVariables, userName, roles.isEmpty() ? Collections.singletonList( "Guest" )
-                    : roles, queryResolver );
+            return new BasicQueryContext(parameters, sessionVariables, userName, roles.isEmpty() ? Collections.singletonList("Guest")
+                    : roles, queryResolver);
         }
     }
 

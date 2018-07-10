@@ -6,15 +6,15 @@ public class AstCase extends SimpleNode
 {
     public AstCase(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "CASE";
         this.nodeSuffix = "END";
     }
-    
+
     public AstCase(SimpleNode... children)
     {
         this(SqlParserTreeConstants.JJTCASE);
-        for(SimpleNode child : children)
+        for (SimpleNode child : children)
             addChild(child);
     }
 }

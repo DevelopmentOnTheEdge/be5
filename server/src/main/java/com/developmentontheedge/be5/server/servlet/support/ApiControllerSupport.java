@@ -54,7 +54,7 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
         {
             generate(req, res, getApiSubUrl(req));
         }
-        catch(IllegalArgumentException e)
+        catch (IllegalArgumentException e)
         {
             res.sendErrorAsJson(e.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +70,7 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
 
         int subIndex = requestUri.indexOf('/', apiWithContext.length());
 
-        if(subIndex != -1)
+        if (subIndex != -1)
         {
             return requestUri.substring(subIndex + 1, requestUri.length());
         }

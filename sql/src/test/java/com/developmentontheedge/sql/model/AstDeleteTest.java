@@ -11,7 +11,7 @@ public class AstDeleteTest
     public void testAll()
     {
         String query = "DELETE FROM Customers";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test
@@ -19,27 +19,27 @@ public class AstDeleteTest
     {
         String query = "DELETE FROM Customers " +
                 "WHERE CustomerName = \"Alfreds Futterkiste\"";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test
     public void testWhereReplacementParameter()
     {
         String query = "DELETE FROM Customers WHERE CustomerName = ?";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test
     public void testWhereReplacementParameterIn()
     {
         String query = "DELETE FROM Customers WHERE CustomerName IN (?)";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testError()
     {
         String query = "DELETE FROM WHERE CustomerName = ?";
-        assertEquals(query, SqlQuery.parse( query ).format());
+        assertEquals(query, SqlQuery.parse(query).format());
     }
 }

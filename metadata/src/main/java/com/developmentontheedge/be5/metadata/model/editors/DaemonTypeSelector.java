@@ -9,7 +9,7 @@ public class DaemonTypeSelector extends StringTagEditor
     public DaemonTypeSelector()
     {
     }
-    
+
     @Override
     public String[] getTags()
     {

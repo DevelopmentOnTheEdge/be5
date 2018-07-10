@@ -6,19 +6,19 @@ public class AstQuery extends SimpleNode
 {
     public AstQuery(int id)
     {
-        super( id );
+        super(id);
     }
-    
+
     public AstQuery(AstSelect select)
     {
-        this( SqlParserTreeConstants.JJTQUERY );
-        addChild( select );
+        this(SqlParserTreeConstants.JJTQUERY);
+        addChild(select);
     }
 
     @Override
     public AstQuery clone()
     {
-        return (AstQuery)super.clone();
+        return (AstQuery) super.clone();
     }
 }
 /* JavaCC - OriginalChecksum=5a6b9311007d985e86eefc0f42f7e7d3 (do not edit this line) */

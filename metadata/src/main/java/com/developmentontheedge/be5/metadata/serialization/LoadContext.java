@@ -10,26 +10,25 @@ import java.util.List;
 public class LoadContext
 {
     private final List<ReadException> warnings = new ArrayList<>();
-    
+
     public void addWarning(ReadException ex)
     {
         throw new RuntimeException(ex);
     }
-    
+
     public List<ReadException> getWarnings()
     {
-        return Collections.unmodifiableList( warnings );
+        return Collections.unmodifiableList(warnings);
     }
 
     /**
      * fail fast used
      */
-    @Deprecated
     public void check()
     {
-        if(!warnings.isEmpty())
+        if (!warnings.isEmpty())
         {
-            throw new IllegalStateException( "There are " + warnings.size() + " errors:\n" + StreamEx.of( warnings ).joining( "\n" ) );
+            throw new IllegalStateException("There are " + warnings.size() + " errors:\n" + StreamEx.of(warnings).joining("\n"));
         }
     }
 }

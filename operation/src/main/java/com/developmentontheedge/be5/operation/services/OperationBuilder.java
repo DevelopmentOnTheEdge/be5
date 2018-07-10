@@ -25,7 +25,7 @@ public interface OperationBuilder
 
     default Operation executeIfNotEmptyRecords(Object[] records)
     {
-        if(records.length > 0)
+        if (records.length > 0)
         {
             setRecords(records);
             return execute();

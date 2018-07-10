@@ -44,7 +44,8 @@ public class MenuHelper
             if (rootNode.action != null)
             {
                 if (rootNode.isDefault) return rootNode.action;
-            } else if (rootNode.children != null)
+            }
+            else if (rootNode.children != null)
             {
                 for (QueryNode node : rootNode.children)
                 {
@@ -58,7 +59,8 @@ public class MenuHelper
             if (rootNode.action != null)
             {
                 return rootNode.action;
-            } else if (rootNode.children != null)
+            }
+            else if (rootNode.children != null)
             {
                 for (QueryNode node : rootNode.children)
                 {
@@ -106,7 +108,7 @@ public class MenuHelper
             operations = null;
         }
 
-        if (canBeMovedToRoot(permittedQueries, title, language, meta))
+        if (permittedQueries.size() == 1)
         {
             // Query in the root, contains an action.
             Id id = null;
@@ -120,7 +122,8 @@ public class MenuHelper
             }
 
             out.add(RootNode.action(id, title, isDefault, action, operations));
-        } else
+        }
+        else
         {
             // No query in the root, just inner queries.
             List<QueryNode> children = generateEntityQueries(permittedQueries, language, meta, withIds);
@@ -180,13 +183,13 @@ public class MenuHelper
         return operations;
     }
 
-    /**
-     * If the entity contains only one query, that's named "All records" or as the entity itself.
-     */
-    private boolean canBeMovedToRoot(List<Query> queries, String entityTitle, String language, Meta meta)
-    {
-        return getTitleOfRootQuery(queries, entityTitle, language, meta) != null;
-    }
+//    /**
+//     * If the entity contains only one query, that's named "All records" or as the entity itself.
+//     */
+//    private boolean canBeMovedToRoot(List<Query> queries, String entityTitle, String language, Meta meta)
+//    {
+//        return getTitleOfRootQuery(queries, entityTitle, language, meta) != null;
+//    }
 
     private String getTitleOfRootQuery(List<Query> queries, String entityTitle, String language, Meta meta)
     {

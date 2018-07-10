@@ -2,7 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
-public class AstInPredicate extends SimpleNode 
+public class AstInPredicate extends SimpleNode
 {
     public static AstInPredicate withReplacementParameter(String columnName, int count)
     {
@@ -24,7 +24,7 @@ public class AstInPredicate extends SimpleNode
         super(id);
         this.childrenDelimiter = "IN";
     }
-    
+
     private boolean inversed = false;
 
     public boolean isInversed()
@@ -37,6 +37,6 @@ public class AstInPredicate extends SimpleNode
         this.inversed = inversed;
         this.childrenDelimiter = inversed ? "NOT IN" : "IN";
     }
-    
+
 }
 /* JavaCC - OriginalChecksum=1c711b45901e0bd36d05f152936b4665 (do not edit this line) */

@@ -33,34 +33,34 @@ public class ModuleUtilsTest
 
     private Project getProject() throws ProjectSaveException
     {
-        Project app = new Project( "app" );
-        Module appModule = new Module( "module", app.getModules() );
-        DataElementUtils.save( appModule );
-        Entity appEntity = new Entity( "mentity", appModule, EntityType.DICTIONARY );
-        DataElementUtils.save( appEntity );
-        Query appQ1 = new Query( "q1", appEntity );
-        appQ1.setQuery( "QUERY1 customized" );
-        DataElementUtils.save( appQ1 );
-        Query appQ3 = new Query( "q3", appEntity );
-        appQ3.setQuery( "QUERY3" );
-        appQ3.setTitleName( "Query3 title" );
-        DataElementUtils.save( appQ3 );
+        Project app = new Project("app");
+        Module appModule = new Module("module", app.getModules());
+        DataElementUtils.save(appModule);
+        Entity appEntity = new Entity("mentity", appModule, EntityType.DICTIONARY);
+        DataElementUtils.save(appEntity);
+        Query appQ1 = new Query("q1", appEntity);
+        appQ1.setQuery("QUERY1 customized");
+        DataElementUtils.save(appQ1);
+        Query appQ3 = new Query("q3", appEntity);
+        appQ3.setQuery("QUERY3");
+        appQ3.setTitleName("Query3 title");
+        DataElementUtils.save(appQ3);
         return app;
     }
 
     private Project getModule() throws ProjectSaveException
     {
-        Project module = new Project( "module", true );
-        Entity entity = new Entity( "mentity", module.getApplication(), EntityType.TABLE );
-        DataElementUtils.save( entity );
-        Query q1 = new Query( "q1", entity );
-        q1.setQuery( "QUERY1" );
-        q1.setTitleName( "Query1 title" );
-        DataElementUtils.save( q1 );
-        Query q2 = new Query( "q2", entity );
-        q2.setQuery( "QUERY2" );
-        q2.setTitleName( "Query2 title" );
-        DataElementUtils.save( q2 );
+        Project module = new Project("module", true);
+        Entity entity = new Entity("mentity", module.getApplication(), EntityType.TABLE);
+        DataElementUtils.save(entity);
+        Query q1 = new Query("q1", entity);
+        q1.setQuery("QUERY1");
+        q1.setTitleName("Query1 title");
+        DataElementUtils.save(q1);
+        Query q2 = new Query("q2", entity);
+        q2.setQuery("QUERY2");
+        q2.setTitleName("Query2 title");
+        DataElementUtils.save(q2);
         return module;
     }
 
@@ -71,17 +71,17 @@ public class ModuleUtilsTest
         Project app = getProject();
 
         LoadContext ctx = new LoadContext();
-        ModuleLoader2.mergeAllModules( app, Collections.singletonList( module ), ctx );
+        ModuleLoader2.mergeAllModules(app, Collections.singletonList(module), ctx);
         ctx.check();
-        assertEquals( Collections.singleton( "mentity" ), app.getEntityNames() );
-        assertEquals( EntityType.DICTIONARY, app.getEntity( "mentity" ).getType() );
-        BeModelCollection<Query> queries = app.getEntity( "mentity" ).getQueries();
-        assertEquals( "QUERY1 customized", queries.get( "q1" ).getQuery() );
-        assertEquals( "Query1 title", queries.get( "q1" ).getTitleName() );
-        assertEquals( "QUERY2", queries.get( "q2" ).getQuery() );
-        assertEquals( "Query2 title", queries.get( "q2" ).getTitleName() );
-        assertEquals( "QUERY3", queries.get( "q3" ).getQuery() );
-        assertEquals( "Query3 title", queries.get( "q3" ).getTitleName() );
+        assertEquals(Collections.singleton("mentity"), app.getEntityNames());
+        assertEquals(EntityType.DICTIONARY, app.getEntity("mentity").getType());
+        BeModelCollection<Query> queries = app.getEntity("mentity").getQueries();
+        assertEquals("QUERY1 customized", queries.get("q1").getQuery());
+        assertEquals("Query1 title", queries.get("q1").getTitleName());
+        assertEquals("QUERY2", queries.get("q2").getQuery());
+        assertEquals("Query2 title", queries.get("q2").getTitleName());
+        assertEquals("QUERY3", queries.get("q3").getQuery());
+        assertEquals("Query3 title", queries.get("q3").getTitleName());
     }
 
     @Test
@@ -91,10 +91,10 @@ public class ModuleUtilsTest
         Path tpmModulePath = tmp.newFolder().toPath();
 
         Project module = getModule();
-        Serialization.save( module, tpmModulePath );
+        Serialization.save(module, tpmModulePath);
 
         Project app = getProject();
-        Serialization.save( app, tpmProjectPath );
+        Serialization.save(app, tpmProjectPath);
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(tpmModulePath.resolve("project.yaml").toUri().toURL());
@@ -104,17 +104,17 @@ public class ModuleUtilsTest
         assertNotNull(ModuleLoader2.getModulePath("app").resolve("project.yaml"));
 
         app = ModuleLoader2.getModulesMap().get("app");
-        ModuleLoader2.mergeModules( app, new NullLogger() );
+        ModuleLoader2.mergeModules(app, new NullLogger());
 
-        assertEquals( Collections.singleton( "mentity" ), app.getEntityNames() );
-        assertEquals( EntityType.DICTIONARY, app.getEntity( "mentity" ).getType() );
-        BeModelCollection<Query> queries = app.getEntity( "mentity" ).getQueries();
-        assertEquals( "QUERY1 customized", queries.get( "q1" ).getQuery() );
-        assertEquals( "Query1 title", queries.get( "q1" ).getTitleName() );
-        assertEquals( "QUERY2", queries.get( "q2" ).getQuery() );
-        assertEquals( "Query2 title", queries.get( "q2" ).getTitleName() );
-        assertEquals( "QUERY3", queries.get( "q3" ).getQuery() );
-        assertEquals( "Query3 title", queries.get( "q3" ).getTitleName() );
+        assertEquals(Collections.singleton("mentity"), app.getEntityNames());
+        assertEquals(EntityType.DICTIONARY, app.getEntity("mentity").getType());
+        BeModelCollection<Query> queries = app.getEntity("mentity").getQueries();
+        assertEquals("QUERY1 customized", queries.get("q1").getQuery());
+        assertEquals("Query1 title", queries.get("q1").getTitleName());
+        assertEquals("QUERY2", queries.get("q2").getQuery());
+        assertEquals("Query2 title", queries.get("q2").getTitleName());
+        assertEquals("QUERY3", queries.get("q3").getQuery());
+        assertEquals("Query3 title", queries.get("q3").getTitleName());
     }
 
     @Test

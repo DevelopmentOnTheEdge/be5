@@ -7,11 +7,11 @@ import com.developmentontheedge.be5.metadata.serialization.Serialization;
 
 public class ModuleUtils
 {
-    public static void addModuleScripts( Project project ) throws ReadException
+    public static void addModuleScripts(Project project) throws ReadException
     {
-        for ( Module module : project.getModules() )
+        for (Module module : project.getModules())
         {
-            Serialization.loadModuleMacros( module );
+            Serialization.loadModuleMacros(module);
         }
     }
 }

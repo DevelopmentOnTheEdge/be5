@@ -3,7 +3,6 @@ package com.developmentontheedge.sql.format;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstWhere;
 import com.google.common.collect.ImmutableList;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -116,30 +115,9 @@ public class AstTest
     @Test
     public void limitWithOffset()
     {
-        AstSelect users = Ast.selectAll().from("users").limit(20,10);
+        AstSelect users = Ast.selectAll().from("users").limit(20, 10);
         assertEquals("SELECT * FROM users LIMIT 20, 10",
                 users.format());
-    }
-
-    /**
-     * todo можно сделать какой-нибудь хак (ID IS NULL OR ( null = ? ) )
-     */
-    @Test
-    @Ignore
-    public void selectWhereNotNull()
-    {
-        Map<String, ? super Object> names = new HashMap<>();
-        names.put("name", "null");
-        AstSelect users = Ast.selectCount().from("users").where(names);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NULL",
-                users.format());
-
-        names.clear();
-        names.put("name", "notNull");
-
-        AstSelect users2 = Ast.selectCount().from("users").where(names);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NOT NULL",
-                users2.format());
     }
 
 }

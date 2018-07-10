@@ -18,12 +18,14 @@ public interface Session
 
     /**
      * Retrieves named attribute from the session
+     *
      * @param name an attribute name
      * @return an attribute value stored in the session
      */
     Object get(String name);
 
-    default Object getOrDefault(String name, Object defaultValue) {
+    default Object getOrDefault(String name, Object defaultValue)
+    {
         Object v;
         return ((v = get(name)) != null)
                 ? v
@@ -32,7 +34,8 @@ public interface Session
 
     /**
      * Stores named attribute into the session
-     * @param name an attribute name
+     *
+     * @param name  an attribute name
      * @param value an attribute value
      */
     void set(String name, Object value);

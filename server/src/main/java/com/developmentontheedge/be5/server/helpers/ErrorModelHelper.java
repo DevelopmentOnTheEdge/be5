@@ -36,18 +36,21 @@ public class ErrorModelHelper
 
     private String exceptionAsString(Throwable e)
     {
-        if(userInfoProvider.isSystemDeveloper())
+        if (userInfoProvider.isSystemDeveloper())
         {
             StringWriter sw = new StringWriter();
             if (e instanceof Be5Exception && e.getCause() != null)
             {
                 e.getCause().printStackTrace(new PrintWriter(sw));
-            } else
+            }
+            else
             {
                 e.printStackTrace(new PrintWriter(sw));
             }
             return sw.toString();
-        }else{
+        }
+        else
+        {
             return null;
         }
     }
@@ -59,7 +62,7 @@ public class ErrorModelHelper
 
     public ErrorModel getErrorModel(Be5Exception e, Map<String, String> links)
     {
-        if(userInfoProvider.isSystemDeveloper())
+        if (userInfoProvider.isSystemDeveloper())
         {
             return new ErrorModel(
                     e.getHttpStatusCode(),
@@ -96,7 +99,7 @@ public class ErrorModelHelper
             StackTraceElement[] stackTrace = err.getStackTrace();
             for (int i = 0; i < stackTrace.length; i++)
             {
-                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy")
+                if (stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy")
                         && !printedGroovyClasses.contains(stackTrace[i].getFileName()))
                 {
                     printedGroovyClasses.add(stackTrace[i].getFileName());
@@ -126,10 +129,13 @@ public class ErrorModelHelper
         sb.append("\n\n<code>");
         for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
         {
-            String lineNumber = String.format("%4d", i+1)+" | ";
-            if(lineID == i+1){
+            String lineNumber = String.format("%4d", i + 1) + " | ";
+            if (lineID == i + 1)
+            {
                 sb.append("<span style=\"color: #e00000;\">").append(lineNumber).append(lines[i]).append("</span>\n");
-            }else{
+            }
+            else
+            {
                 sb.append(lineNumber).append(lines[i]).append("\n");
             }
         }

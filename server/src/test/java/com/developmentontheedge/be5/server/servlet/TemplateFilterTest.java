@@ -29,7 +29,8 @@ import static org.mockito.Mockito.when;
 
 public class TemplateFilterTest extends ServerBe5ProjectTest
 {
-    @Inject private TemplateFilter templateFilter;
+    @Inject
+    private TemplateFilter templateFilter;
 
     private ServletContext servletContext;
 
@@ -65,7 +66,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
 
         templateFilter.filter(req, res, filterChain);
 
-        assertEquals(RoleType.ROLE_GUEST, ((UserInfo)session.get(SessionConstants.USER_INFO)).getUserName());
+        assertEquals(RoleType.ROLE_GUEST, ((UserInfo) session.get(SessionConstants.USER_INFO)).getUserName());
         verify(filterChain, only()).doFilter(any(), any());
     }
 

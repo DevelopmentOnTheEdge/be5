@@ -10,18 +10,16 @@ import javax.inject.Inject
 
 class TestTransactionalOperation extends TestOperationSupport implements TransactionalOperation
 {
-    @Inject private ConnectionService connectionService
+    @Inject
+    private ConnectionService connectionService
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        if(presetValues.get("nullValues") != null)
-        {
+        if (presetValues.get("nullValues") != null) {
             return null
-        }
-        else
-        {
-            if(connectionService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
+        } else {
+            if (connectionService.getCurrentTxConn() == null) throw Be5Exception.internal("not in transactionWithResult")
 
             return new DynamicPropertySetSupport()
         }
@@ -30,7 +28,7 @@ class TestTransactionalOperation extends TestOperationSupport implements Transac
     @Override
     void invoke(Object parameters) throws Exception
     {
-        if(connectionService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
+        if (connectionService.getCurrentTxConn() == null) throw Be5Exception.internal("not in transactionWithResult")
     }
 
 }

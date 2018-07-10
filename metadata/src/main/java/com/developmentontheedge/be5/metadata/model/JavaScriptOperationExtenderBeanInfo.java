@@ -8,14 +8,14 @@ public class JavaScriptOperationExtenderBeanInfo extends BeanInfoEx
 {
     public JavaScriptOperationExtenderBeanInfo()
     {
-        super( JavaScriptOperationExtender.class );
+        super(JavaScriptOperationExtender.class);
     }
 
     @Override
     protected void initProperties() throws Exception
     {
         add("invokeOrder");
-        add(SourceFileSelector.register( "fileName", beanClass, SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER ));
+        add(SourceFileSelector.register("fileName", beanClass, SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER));
         add("originModuleName", ModuleSelector.class);
     }
 }

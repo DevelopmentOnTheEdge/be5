@@ -20,12 +20,12 @@ public class QRec extends DynamicPropertySetSupport
 {
     static
     {
-        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
+        GroovyRegister.registerMetaClass(DynamicPropertySetMetaClass.class, QRec.class);
     }
 
     public static QRec fromList(List<DynamicPropertySet> dpsList)
     {
-        if(dpsList.size() == 0)
+        if (dpsList.size() == 0)
         {
             return null;
         }
@@ -70,7 +70,8 @@ public class QRec extends DynamicPropertySetSupport
                 return new String(((Blob) val).getBytes(1, (int) ((Blob) val).length()));
             if (val instanceof byte[])
                 return new String((byte[]) val, "UTF-8");
-        } catch (UnsupportedEncodingException | SQLException e)
+        }
+        catch (UnsupportedEncodingException | SQLException e)
         {
             return null;
         }
@@ -156,7 +157,8 @@ public class QRec extends DynamicPropertySetSupport
         if (val == null)
         {
             return null;
-        } else if (val instanceof byte[])
+        }
+        else if (val instanceof byte[])
         {
             return new ByteArrayInputStream((byte[]) val);
         }
@@ -170,7 +172,8 @@ public class QRec extends DynamicPropertySetSupport
         if (val == null)
         {
             return null;
-        } else if (val instanceof byte[])
+        }
+        else if (val instanceof byte[])
         {
             return new ByteArrayInputStream((byte[]) val);
         }
@@ -265,12 +268,15 @@ public class QRec extends DynamicPropertySetSupport
                         }
                     }
                 }
-            } catch (NoSuchMethodException ignore)
+            }
+            catch (NoSuchMethodException ignore)
             {
-            } catch (Exception exc)
+            }
+            catch (Exception exc)
             {
                 throw new IOException(exc.getMessage(), exc);
-            } finally
+            }
+            finally
             {
                 isClosed = true;
                 blob = null;

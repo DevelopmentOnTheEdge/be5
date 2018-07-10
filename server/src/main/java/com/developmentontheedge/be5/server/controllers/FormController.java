@@ -47,7 +47,7 @@ public class FormController extends JsonApiModelController
     public JsonApiModel generate(Request req, String requestSubUrl)
     {
         //todo move to filter
-        if(stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
+        if (stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
         {
             userHelper.initGuest();
         }
@@ -61,7 +61,7 @@ public class FormController extends JsonApiModelController
 
         try
         {
-            switch(requestSubUrl)
+            switch (requestSubUrl)
             {
                 case "":
                     return data(formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values));
@@ -71,7 +71,7 @@ public class FormController extends JsonApiModelController
                     return null;
             }
         }
-        catch(Be5Exception e)
+        catch (Be5Exception e)
         {
             String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
             log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);

@@ -14,19 +14,19 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
     {
         def dps = getDps(new DynamicPropertySetSupport(), [
                 test1: "1",
-            test2: 1,
-            test3: 1L,
-            test4: 1.1,
-            test5: new java.sql.Date(123123123123)
+                test2: 1,
+                test3: 1L,
+                test4: 1.1,
+                test5: new java.sql.Date(123123123123)
         ])
 
         OperationServiceImpl.replaceValuesToString(dps)
         assertEquals([
                 test1: "1",
-            test2: "1",
-            test3: "1",
-            test4: "1.1",
-            test5: new java.sql.Date(123123123123).toString()
+                test2: "1",
+                test3: "1",
+                test4: "1.1",
+                test5: new java.sql.Date(123123123123).toString()
         ], dps.asMap())
     }
 

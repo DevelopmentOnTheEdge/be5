@@ -14,9 +14,12 @@ import static org.junit.Assert.assertEquals
 
 class OperationExecutorTest extends OperationBe5ProjectDBTest
 {
-    @Inject OperationsFactory operations
-    @Inject OperationExecutor operationExecutor
-    @Inject Meta meta
+    @Inject
+    OperationsFactory operations
+    @Inject
+    OperationExecutor operationExecutor
+    @Inject
+    Meta meta
 
     @Test
     void execute()

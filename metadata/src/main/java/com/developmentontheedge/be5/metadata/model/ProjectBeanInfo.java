@@ -12,15 +12,15 @@ public class ProjectBeanInfo extends BeanInfoEx
     {
         super(Project.class);
     }
-    
+
     @Override
     public void initProperties() throws Exception
     {
         super.initProperties();
-        add( new PropertyDescriptor( "name", beanClass, "getName", null ) );
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("connectionProfileName", ConnectionProfileNameSelector.class);
         add("featuresArray", FeaturesSelector.class);
         add("projectFileStructure");
         add("connectedBugtrackersArray");
-    }   
+    }
 }

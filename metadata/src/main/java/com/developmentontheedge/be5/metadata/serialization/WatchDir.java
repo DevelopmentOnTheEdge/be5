@@ -34,22 +34,25 @@ public class WatchDir
     private static final Logger log = Logger.getLogger(WatchDir.class.getName());
 
     private final WatchService watcher;
-    private final Map<WatchKey,Path> keys;
+    private final Map<WatchKey, Path> keys;
     private final boolean recursive;
     private volatile boolean stopped = false;
-    private Consumer<Path> onModify = path -> {};
+    private Consumer<Path> onModify = path -> {
+    };
     // need no weak links as we work with limited amount of files
     private final Map<Path, Long> lastModifiedByPath = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    static <T> WatchEvent<T> cast(WatchEvent<?> event) {
-        return (WatchEvent<T>)event;
+    static <T> WatchEvent<T> cast(WatchEvent<?> event)
+    {
+        return (WatchEvent<T>) event;
     }
 
     /**
      * Register the given directory with the WatchService
      */
-    private void register(Path dir) throws IOException {
+    private void register(Path dir) throws IOException
+    {
         //System.out.println("Registering watcher on "+dir);
         WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         keys.put(key, dir);
@@ -59,42 +62,53 @@ public class WatchDir
      * Register the given directory, and all its sub-directories, with the
      * WatchService.
      */
-    private void registerAll(final Path start) throws IOException {
+    private void registerAll(final Path start) throws IOException
+    {
         // register directory and sub-directories
-        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>()
+        {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
                 // ignore some folders
-                if (!dir.getFileName().toString().equals(".git")) {
+                if (!dir.getFileName().toString().equals(".git"))
+                {
                     register(dir);
                 }
                 return FileVisitResult.CONTINUE;
             }
+
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
                 lastModifiedByPath.put(file, file.toFile().lastModified());
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
-    private void registerAll(final ProjectFileSystem fs) throws IOException {
+    private void registerAll(final ProjectFileSystem fs) throws IOException
+    {
         Path start = fs.getRoot();
         NavigableMap<Path, Boolean> map = fs.getPaths();
         // register directory and sub-directories
-        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>()
+        {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                Path parent = StreamEx.iterate( dir, Path::getParent ).takeWhile( Objects::nonNull )
-                    .findFirst( map::containsKey ).orElse( null );
-                boolean hasChildren = StreamEx.ofKeys(map).anyMatch( path -> path.startsWith( dir ) );
-                if ( parent == null || !map.get( parent ) && !parent.equals( dir ) )
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+            {
+                Path parent = StreamEx.iterate(dir, Path::getParent).takeWhile(Objects::nonNull)
+                        .findFirst(map::containsKey).orElse(null);
+                boolean hasChildren = StreamEx.ofKeys(map).anyMatch(path -> path.startsWith(dir));
+                if (parent == null || !map.get(parent) && !parent.equals(dir))
                     return hasChildren ? FileVisitResult.CONTINUE : FileVisitResult.SKIP_SUBTREE;
                 register(dir);
                 return FileVisitResult.CONTINUE;
             }
+
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+            {
                 lastModifiedByPath.put(file, file.toFile().lastModified());
                 return FileVisitResult.CONTINUE;
             }
@@ -127,16 +141,18 @@ public class WatchDir
 //        registerAll(new ProjectFileSystem( project ));
 //    }
 
-    public WatchDir(Map<String, Project> modulesMap) throws IOException {
+    public WatchDir(Map<String, Project> modulesMap) throws IOException
+    {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<>();
         this.recursive = true;
 
         List<String> watchProject = new ArrayList<>();
-        for (Map.Entry<String, Project> entry : modulesMap.entrySet()){
+        for (Map.Entry<String, Project> entry : modulesMap.entrySet())
+        {
             ProjectFileSystem projectFileSystem = new ProjectFileSystem(entry.getValue());
 
-            if(projectFileSystem.getRoot().toString().length() > 3 &&
+            if (projectFileSystem.getRoot().toString().length() > 3 &&
                     Files.exists(projectFileSystem.getRoot()))
             {
                 watchProject.add(entry.getKey());
@@ -145,53 +161,65 @@ public class WatchDir
         }
         log.info("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
-    
-    public WatchDir onModify(Consumer<Path> onModify) {
+
+    public WatchDir onModify(Consumer<Path> onModify)
+    {
         this.onModify = onModify;
         return this;
     }
-    
-    public WatchDir start() {
-        new Thread( this::processEvents, "Watch service for BeanExplorer project" ).start();
+
+    public WatchDir start()
+    {
+        new Thread(this::processEvents, "Watch service for BeanExplorer project").start();
         return this;
     }
-    
-    public void stop() {
+
+    public void stop()
+    {
         this.stopped = true;
     }
 
     /**
      * Process all events for keys queued to the watcher
      */
-    private void processEvents() {
-        while (!stopped) {
+    private void processEvents()
+    {
+        while (!stopped)
+        {
             // wait for key to be signalled
             WatchKey key;
-            try {
+            try
+            {
                 key = watcher.take();
-            } catch (InterruptedException x) {
+            }
+            catch (InterruptedException x)
+            {
                 return;
             }
-            
+
             if (stopped)
                 return;
 
             Path dir = keys.get(key);
-            if (dir == null) {
+            if (dir == null)
+            {
                 // WatchKey not recognized
                 continue;
             }
 
             final List<WatchEvent<?>> events = key.pollEvents();
-            for (WatchEvent<?> event: events) {
-                if (stopped) {
+            for (WatchEvent<?> event : events)
+            {
+                if (stopped)
+                {
                     return;
                 }
-                
+
                 WatchEvent.Kind<?> kind = event.kind();
 
                 // TBD - provide example of how OVERFLOW event is handled
-                if (kind == OVERFLOW) {
+                if (kind == OVERFLOW)
+                {
                     continue;
                 }
 
@@ -201,12 +229,15 @@ public class WatchDir
                 Path child = dir.resolve(name);
 
                 // handle
-                if (kind == ENTRY_MODIFY) {
+                if (kind == ENTRY_MODIFY)
+                {
                     // skip timestamp modification
-                    if (Files.isRegularFile(child)) {
+                    if (Files.isRegularFile(child))
+                    {
                         Long previouslyModified = lastModifiedByPath.get(child);
                         long lastModified = child.toFile().lastModified();
-                        if (previouslyModified != null && (lastModified - previouslyModified) > 100) {
+                        if (previouslyModified != null && (lastModified - previouslyModified) > 100)
+                        {
                             lastModifiedByPath.put(child, lastModified);
                             continue;
                         }
@@ -217,13 +248,18 @@ public class WatchDir
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
-                if (recursive && (kind == ENTRY_CREATE)) {
-                    try {
-                        if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
+                if (recursive && (kind == ENTRY_CREATE))
+                {
+                    try
+                    {
+                        if (Files.isDirectory(child, NOFOLLOW_LINKS))
+                        {
                             // TODO: register only interesting new directories
                             registerAll(child);
                         }
-                    } catch (IOException x) {
+                    }
+                    catch (IOException x)
+                    {
                         // ignore to keep sample readable
                     }
                 }
@@ -231,11 +267,13 @@ public class WatchDir
 
             // reset key and remove from set if directory no longer accessible
             boolean valid = key.reset();
-            if (!valid) {
+            if (!valid)
+            {
                 keys.remove(key);
 
                 // all directories are inaccessible
-                if (keys.isEmpty()) {
+                if (keys.isEmpty())
+                {
                     break;
                 }
             }

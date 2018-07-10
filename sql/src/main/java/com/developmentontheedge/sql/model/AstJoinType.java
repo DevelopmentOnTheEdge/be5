@@ -6,15 +6,15 @@ public class AstJoinType extends SimpleNode
 {
     public AstJoinType(int id)
     {
-        super( id );
+        super(id);
         this.nodeContent = "JOIN";
         this.nodePrefix = type.name();
     }
-    
+
     public AstJoinType(JoinType type)
     {
         this(SqlParserTreeConstants.JJTJOINTYPE);
-        setType( type );
+        setType(type);
     }
 
     private JoinType type = JoinType.INNER;
@@ -23,10 +23,10 @@ public class AstJoinType extends SimpleNode
     {
         return type;
     }
-    
+
     public void setType(String type)
     {
-        setType(JoinType.valueOf( type ));
+        setType(JoinType.valueOf(type));
     }
 
     public void setType(JoinType type)

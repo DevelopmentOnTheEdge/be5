@@ -160,19 +160,19 @@ public class FormGeneratorImpl implements FormGenerator
                                                                   Map<String, ?> values, boolean execute)
     {
         Either<Object, OperationResult> result;
-        if(execute)
+        if (execute)
         {
-            result = operationService.execute(operation, (Map<String, Object>)values);
+            result = operationService.execute(operation, (Map<String, Object>) values);
         }
         else
         {
-            result = operationService.generate(operation, (Map<String, Object>)values);
+            result = operationService.generate(operation, (Map<String, Object>) values);
         }
 
-        if(result.isFirst())
+        if (result.isFirst())
         {
             ErrorModel errorModel = null;
-            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            if (operation.getResult().getStatus() == OperationStatus.ERROR)
             {
                 if (userInfoProvider.isSystemDeveloper())
                 {
@@ -198,9 +198,9 @@ public class FormGeneratorImpl implements FormGenerator
 
     private OperationResult resultForFrontend(OperationResult result)
     {
-        if(result.getStatus() == OperationStatus.ERROR)
+        if (result.getStatus() == OperationStatus.ERROR)
         {
-            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()));
+            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()), null);
         }
         else
         {

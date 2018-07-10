@@ -26,12 +26,14 @@ public class DpsRecordAdapter
     public static DynamicPropertySet createDps(ResultSet resultSet)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        return addDp(dps, resultSet, (a,b)->{});
+        return addDp(dps, resultSet, (a, b) -> {
+        });
     }
 
     public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet)
     {
-        return addDp(dps, resultSet, (a,b)->{});
+        return addDp(dps, resultSet, (a, b) -> {
+        });
     }
 
 //    public static DynamicPropertySet createDps(ResultSet resultSet, MetaProcessor metaProcessor)
@@ -42,45 +44,53 @@ public class DpsRecordAdapter
 
     public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet, MetaProcessor metaProcessor)
     {
-        try {
+        try
+        {
             DynamicProperty[] schema = createSchema(resultSet.getMetaData());
-            for( int i = 0; i < schema.length; i++ )
+            for (int i = 0; i < schema.length; i++)
             {
                 DynamicProperty dp = schema[i];
                 Object refIdxObj = dp.getAttribute(COLUMN_REF_IDX_PROPERTY);
-                if(refIdxObj instanceof Integer) {
+                if (refIdxObj instanceof Integer)
+                {
                     int refIdx = (int) refIdxObj;
-                    if(refIdx >= 0) {
+                    if (refIdx >= 0)
+                    {
                         Map<String, Map<String, String>> tags = new TreeMap<>();
-                        BeTagParser.parseTags(tags, resultSet.getString(i+1));
+                        BeTagParser.parseTags(tags, resultSet.getString(i + 1));
                         DynamicPropertyMeta.add(schema[refIdx], tags);
                         dp.setAttribute(COLUMN_REF_IDX_PROPERTY, -1);
                     }
                     continue;
                 }
-                Object val = SqlUtils.getSqlValue( dp.getType(), resultSet, i + 1 );
+                Object val = SqlUtils.getSqlValue(dp.getType(), resultSet, i + 1);
                 //todo test Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
                 //metaProcessor.process(val, metaInfo);
-                DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
-                property.setValue( val );
-                dps.add( property );
+                DynamicProperty property = DynamicPropertySetSupport.cloneProperty(dp);
+                property.setValue(val);
+                dps.add(property);
             }
             return dps;
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             throw Be5Exception.internal(e);
         }
     }
 
     public static DynamicProperty[] createSchema(ResultSetMetaData metaData)
     {
-        try {
+        try
+        {
             int count = metaData.getColumnCount();
             DynamicProperty[] schema = new DynamicProperty[count];
             Set<String> names = new HashSet<>();
             // TODO: support ";ColumnName" declarations
-            for (int i = 1; i <= count; i++) {
+            for (int i = 1; i <= count; i++)
+            {
                 String columnLabel = metaData.getColumnLabel(i);
-                if (columnLabel.startsWith(";")) {
+                if (columnLabel.startsWith(";"))
+                {
                     String refName = columnLabel.substring(1);
                     int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
                             .findAny().orElseThrow(() -> Be5Exception.internal("no previous column with name " + refName));
@@ -94,7 +104,8 @@ public class DpsRecordAdapter
                 String name = getUniqueName(names, parts[0]);
                 Class<?> clazz = SqlUtils.getTypeClass(metaData.getColumnType(i));
                 DynamicProperty dp = new DynamicProperty(name, clazz);
-                if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX)) {
+                if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX))
+                {
                     dp.setHidden(true);
                 }
                 Map<String, Map<String, String>> tags = new TreeMap<>();
@@ -105,7 +116,9 @@ public class DpsRecordAdapter
                 schema[i - 1] = dp;
             }
             return schema;
-        }catch (SQLException e){
+        }
+        catch (SQLException e)
+        {
             throw Be5Exception.internal(e);
         }
     }
@@ -114,9 +127,9 @@ public class DpsRecordAdapter
     {
         String name = baseName;
         int i = 0;
-        while( names.contains( name ) )
+        while (names.contains(name))
         {
-            name = baseName + " (" + ( ++i ) + ")";
+            name = baseName + " (" + (++i) + ")";
         }
         return name;
     }

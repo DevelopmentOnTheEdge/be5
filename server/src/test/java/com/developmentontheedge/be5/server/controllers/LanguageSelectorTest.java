@@ -19,12 +19,13 @@ import static org.junit.Assert.assertEquals;
 
 public class LanguageSelectorTest extends ServerBe5ProjectTest
 {
-    @Inject private LanguageSelectorController component;
+    @Inject
+    private LanguageSelectorController component;
 
     private static final LanguageSelectorController.LanguageSelectorResponse languageSelectorResponse =
             new LanguageSelectorController.LanguageSelectorResponse(
                     Collections.singletonList("RU"), "RU", ImmutableMap.of(
-                    "fio","Ф.И.О.","no","нет","yes","да"));
+                    "fio", "Ф.И.О.", "no", "нет", "yes", "да"));
 
     @Before
     public void init()
@@ -57,9 +58,10 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     @Test
     public void generateSelect()
     {
-        Request request = getSpyMockRequest("/api/languageSelector/select", ImmutableMap.of("language", "RU") );
+        Request request = getSpyMockRequest("/api/languageSelector/select", ImmutableMap.of("language", "RU"));
 
-        assertEquals(new LanguageSelectorResponse(Collections.singletonList("RU"), "RU", new HashMap<String, String>(){{
+        assertEquals(new LanguageSelectorResponse(Collections.singletonList("RU"), "RU", new HashMap<String, String>()
+        {{
             put("no", "нет");
             put("yes", "да");
             put("fio", "Ф.И.О.");

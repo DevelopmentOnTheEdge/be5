@@ -10,7 +10,7 @@ public class IOUtils
 {
     /**
      * @param inputStream input stream
-     * @param charset {@link java.nio.charset.StandardCharsets}
+     * @param charset     {@link java.nio.charset.StandardCharsets}
      * @return String
      * @throws IOException
      */
@@ -19,7 +19,8 @@ public class IOUtils
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = inputStream.read(buffer)) != -1) {
+        while ((length = inputStream.read(buffer)) != -1)
+        {
             result.write(buffer, 0, length);
         }
 

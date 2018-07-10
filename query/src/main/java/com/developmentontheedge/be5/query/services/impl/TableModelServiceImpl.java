@@ -47,7 +47,8 @@ public class TableModelServiceImpl implements TableModelService
     @Override
     public TableModel getTableModel(Query query, Map<String, ?> parameters)
     {
-        try{
+        try
+        {
             switch (query.getType())
             {
                 case D1:
@@ -60,7 +61,7 @@ public class TableModelServiceImpl implements TableModelService
                     throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
             }
         }
-        catch(Throwable e)
+        catch (Throwable e)
         {
             throw Be5Exception.internalInQuery(query, e);
         }
@@ -76,7 +77,7 @@ public class TableModelServiceImpl implements TableModelService
     {
         int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
         String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
-        int offset      = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
+        int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
         int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
         parameters.remove(ORDER_COLUMN);
@@ -86,7 +87,7 @@ public class TableModelServiceImpl implements TableModelService
 
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
-        if(limit == Integer.MAX_VALUE)
+        if (limit == Integer.MAX_VALUE)
         {
             //todo move defaultPageLimit, to getQuerySettings(query)
             limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
@@ -122,26 +123,27 @@ public class TableModelServiceImpl implements TableModelService
                     Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
                             query.getQuery(), query.getFileName());
 
-                    if(aClass != null)
+                    if (aClass != null)
                     {
                         tableBuilder = (TableBuilder) aClass.newInstance();
                         break;
                     }
                     else
                     {
-                        throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
+                        throw Be5Exception.internal("Class " + query.getQuery() + " is null.");
                     }
                 }
-                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                 {
-                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                    throw new UnsupportedOperationException("Groovy feature has been excluded", e);
                 }
-            default: throw Be5Exception.internal("Not support operation type: " + query.getType());
+            default:
+                throw Be5Exception.internal("Not support operation type: " + query.getType());
         }
 
-        if(tableBuilder == null)
+        if (tableBuilder == null)
         {
-            throw Be5Exception.internal("TableBuilder " + query.getQuery() + " is null." );
+            throw Be5Exception.internal("TableBuilder " + query.getQuery() + " is null.");
         }
 
         injector.injectMembers(tableBuilder);

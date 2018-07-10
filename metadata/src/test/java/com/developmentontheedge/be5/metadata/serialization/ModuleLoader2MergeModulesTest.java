@@ -45,13 +45,13 @@ public class ModuleLoader2MergeModulesTest
         //ProjectTestUtils.createOperation( entity );
 
         Path modulePath = tmp.newFolder().toPath();
-        Project moduleProject1 = createModuleWithQueryRoles(project, null,"testModule1", "testQuery1","testRole1", modulePath);
+        Project moduleProject1 = createModuleWithQueryRoles(project, null, "testModule1", "testQuery1", "testRole1", modulePath);
 
         Path modulePath2 = tmp.newFolder().toPath();
-        Project moduleProject2 = createModuleWithQueryRoles(project, moduleProject1,"testModule2", "testQuery2", "testRole2", modulePath2);
+        Project moduleProject2 = createModuleWithQueryRoles(project, moduleProject1, "testModule2", "testQuery2", "testRole2", modulePath2);
 
         project.setRoles(Arrays.asList("testRole1", "testRole2"));
-        Serialization.save( project, tpmProjectPath );
+        Serialization.save(project, tpmProjectPath);
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(modulePath.resolve("project.yaml").toUri().toURL());
@@ -60,37 +60,37 @@ public class ModuleLoader2MergeModulesTest
         ModuleLoader2.loadAllProjects(urls);
 
         LoadContext ctx = new LoadContext();
-        ModuleLoader2.mergeAllModules( project, Arrays.asList( moduleProject1, moduleProject2 ), ctx );
+        ModuleLoader2.mergeAllModules(project, Arrays.asList(moduleProject1, moduleProject2), ctx);
     }
 
     private Project createModuleWithQueryRoles(Project project, Project entityOwner, String moduleName, String queryName, String roleName, Path path) throws Exception
     {
-        Project moduleProject = new Project( moduleName, true);
+        Project moduleProject = new Project(moduleName, true);
 
         Entity entity;
-        if(entityOwner == null)
+        if (entityOwner == null)
         {
-            entity = ProjectTestUtils.createEntity( moduleProject, "moduleEntity", "ID" );
+            entity = ProjectTestUtils.createEntity(moduleProject, "moduleEntity", "ID");
         }
         else
         {
-            Module appModule = new Module( entityOwner.getName(), moduleProject.getModules() );
-            DataElementUtils.save( appModule );
-            entity = new Entity( "moduleEntity", appModule, EntityType.TABLE );
-            DataElementUtils.save( entity );
+            Module appModule = new Module(entityOwner.getName(), moduleProject.getModules());
+            DataElementUtils.save(appModule);
+            entity = new Entity("moduleEntity", appModule, EntityType.TABLE);
+            DataElementUtils.save(entity);
         }
 
-        ProjectTestUtils.createScheme( entity );
+        ProjectTestUtils.createScheme(entity);
 
         ProjectTestUtils.createQuery(entity, queryName, Collections.singletonList('@' + roleName));
 
         moduleProject.setRoles(Collections.singletonList(roleName));
         setRoleGroups(moduleProject, roleName);
 
-        Module appModule = new Module( moduleName, project.getModules() );
-        DataElementUtils.save( appModule );
+        Module appModule = new Module(moduleName, project.getModules());
+        DataElementUtils.save(appModule);
 
-        Serialization.save( moduleProject, path );
+        Serialization.save(moduleProject, path);
 
         return moduleProject;
     }
@@ -98,9 +98,9 @@ public class ModuleLoader2MergeModulesTest
     private void setRoleGroups(Project project, String name)
     {
         BeModelCollection<RoleGroup> groups = project.getRoleGroups();
-        RoleGroup management = new RoleGroup( name, groups );
+        RoleGroup management = new RoleGroup(name, groups);
         management.getRoleSet().addInclusionAll(Collections.singletonList(name));
-        DataElementUtils.save( management );
+        DataElementUtils.save(management);
 
         project.fireCodeChanged();
     }

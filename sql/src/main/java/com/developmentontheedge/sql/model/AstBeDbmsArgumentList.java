@@ -4,7 +4,7 @@ public class AstBeDbmsArgumentList extends SimpleNode
 {
     public AstBeDbmsArgumentList(int id)
     {
-        super( id );
+        super(id);
         this.nodePrefix = "(";
         this.childrenDelimiter = ",";
         this.nodeSuffix = ")";

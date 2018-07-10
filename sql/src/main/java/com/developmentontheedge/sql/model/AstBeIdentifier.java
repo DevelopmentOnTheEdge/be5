@@ -6,7 +6,7 @@ public class AstBeIdentifier extends SimpleNode
 {
     public AstBeIdentifier(int id)
     {
-        super( id );
+        super(id);
     }
 
     public void setValue(String value)
@@ -17,7 +17,7 @@ public class AstBeIdentifier extends SimpleNode
     @Override
     public String toString()
     {
-        return super.toString()+": "+getNodeContent();
+        return super.toString() + ": " + getNodeContent();
     }
 
 }

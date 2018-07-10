@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <testSuite name="realty">
- <description>Тестирование реальных запросов из модуля realty</description>
+  <description>Тестирование реальных запросов из модуля realty</description>
 
- <test name="extendedPropAttributes">
-  <parser>
-   <query><![CDATA[SELECT
+  <test name="extendedPropAttributes">
+    <parser>
+      <query><![CDATA[SELECT
         epa.ID AS "ID;<hidden/>",
         epa.plumbingSize AS "plumbingSize",
         epa.sewerageSize AS "sewerageSize",
@@ -17,7 +17,7 @@
         epa.plumbingGasHeatingSize AS "plumbingGasHeatingSize"
         FROM extendedPropAttributes epa
         WHERE epa.propertyID = <parameter:propertyID refColumn="properties.ID"/>]]></query>
-   <format dbms="oracle"><![CDATA[SELECT
+      <format dbms="oracle"><![CDATA[SELECT
         epa.ID AS "ID;<hidden/>",
         epa.plumbingSize AS "plumbingSize",
         epa.sewerageSize AS "sewerageSize",
@@ -29,11 +29,11 @@
         epa.plumbingGasHeatingSize AS "plumbingGasHeatingSize"
         FROM extendedPropAttributes epa
         WHERE epa.propertyID = <parameter:propertyID refColumn="properties.ID"/>]]></format>
-  </parser>
- </test>
- <test name="buildingNoByKladrStreetCode">
-  <parser>
-   <query><![CDATA[SELECT
+    </parser>
+  </test>
+  <test name="buildingNoByKladrStreetCode">
+    <parser>
+      <query><![CDATA[SELECT
    b.ID AS "Code",
    CASE
     WHEN b.buildingNo IS NULL THEN ''
@@ -72,8 +72,8 @@
 FROM buildings b
 WHERE b.kladrStreetCode IS NULL
 ORDER BY sortCol, b.wing]]>
-   </query>
-   <format dbms="oracle"><![CDATA[SELECT
+      </query>
+      <format dbms="oracle"><![CDATA[SELECT
    b.ID AS "Code",
    CASE
     WHEN b.buildingNo IS NULL THEN ''
@@ -112,6 +112,6 @@ ORDER BY sortCol, b.wing]]>
 FROM buildings b
 WHERE b.kladrStreetCode IS NULL
 ORDER BY sortCol, b.wing]]></format>
-  </parser>
- </test>
+    </parser>
+  </test>
 </testSuite>

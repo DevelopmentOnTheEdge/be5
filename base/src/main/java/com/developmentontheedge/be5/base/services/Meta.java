@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityType;
@@ -9,6 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -87,9 +89,9 @@ public interface Meta
 
     ColumnDef getColumn(Entity entity, String columnName);
 
-    default boolean columnExists( String entity, String column )
+    default boolean columnExists(String entity, String column)
     {
-        return getColumn( entity, column ) == null;
+        return getColumn(entity, column) == null;
     }
 
     default String getColumnDefaultValue(Entity entity, String columnName)
@@ -99,12 +101,12 @@ public interface Meta
 
     default String getColumnDefaultValue(ColumnDef column)
     {
-        if(column == null) return null;
+        if (column == null) return null;
 
         String defaultValue = column.getDefaultValue();
         if (defaultValue != null && defaultValue.startsWith("'") && defaultValue.endsWith("'"))
         {
-            defaultValue = defaultValue.substring(1,defaultValue.length()-1);
+            defaultValue = defaultValue.substring(1, defaultValue.length() - 1);
         }
         return defaultValue;
     }
@@ -116,6 +118,7 @@ public interface Meta
 //    boolean isNumericColumn(String entityName, String columnName);
 //
 //    boolean isNumericColumn(Entity entity, String columnName);
+
     /**
      * Returns a localized title. Takes into consideration its display name.
      */
@@ -132,6 +135,8 @@ public interface Meta
     boolean isParametrizedTable(Query query);
 
     Set<String> getProjectRoles();
+
+    List<Daemon> getDaemons();
 
     Query createQueryFromSql(String sql);
 

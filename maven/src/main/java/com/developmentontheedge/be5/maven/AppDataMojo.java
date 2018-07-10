@@ -6,7 +6,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 
-@Mojo( name = "data")
+@Mojo(name = "data")
 public class AppDataMojo extends Be5Mojo
 {
     @Parameter(property = "BE5_SCRIPT")

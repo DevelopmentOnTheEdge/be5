@@ -3,14 +3,13 @@ package com.developmentontheedge.be5.databasemodel;
 
 /**
  * Interface to access object-wrapped representation of the entity.
- * 
- * @author ruslan
  *
+ * @author ruslan
  */
-public interface EntityAccess {
-    
+public interface EntityAccess
+{
+
     /**
-     * 
      * @param entityName entity name
      * @return EntityModel
      */

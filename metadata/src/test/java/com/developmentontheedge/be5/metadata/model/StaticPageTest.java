@@ -14,6 +14,6 @@ public class StaticPageTest
         Project proj = new Project("test");
         createStaticPage(proj, "en", "page", "Content");
 
-        assertEquals("Content", proj.getStaticPageContent( "en", "page" ));
+        assertEquals("Content", proj.getStaticPageContent("en", "page"));
     }
 }
