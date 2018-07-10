@@ -4,8 +4,6 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.util.Utils;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.inject.Inject;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -14,14 +12,9 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.UnknownServiceException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -95,84 +88,51 @@ public class MailServiceImpl implements MailService
         String enc = "UTF-8";
         MimeMessage2 message = createMimeMessage();
 
-
-        StringWriter writer = new StringWriter();
-        //LocalizingWriter lWriter = new LocalizingWriter( locale, writer, locMessages );
-
-//        if( subject != null && subject.indexOf( LOC_MSG_PREFIX ) >= 0 )
-//        {
-//            writer.write( subject );
-//            writer.flush();
-//            writer.close();
-//            subject = writer.getBuffer().toString();
-//
-//            writer = new StringWriter();
-//            lWriter = new LocalizingWriter( locale, writer, locMessages );
-//        }
-//        else
-//        {
-//            subject = Utils.getMessage( locMessages, subject );
-//        }
-
-//        lWriter.write( body );
-//        lWriter.flush();
-//        lWriter.close();
-
-        if (from != null)
-        {
-            message.setFrom(from);
-        }
-
-        message.setContent(body, "text/html;charset=UTF-8");
-
-        message.setSubject(subject, enc);
+        if (from != null)message.setFrom(from);
         message.addRecipients(Message.RecipientType.TO, to);
 
-        message.setDataHandler(
-                getEmailBodyDataHandler(
-                        writer.getBuffer().toString().getBytes(enc),
-                        type + "; charset=" + enc)
-        );
+        message.setSubject(subject, enc);
+        message.setContent(body, "text/html;charset=UTF-8");
 
         Transport.send(message);
     }
-
-    /**
-     * Retrieves data handler for the Mime message.
-     *
-     * @param bodyBytes message body, as byte array
-     * @param mimeType  body text parameter
-     */
-    private static DataHandler getEmailBodyDataHandler(final byte[] bodyBytes, final String mimeType)
-    {
-        return new DataHandler(
-                new DataSource()
-                {
-                    @Override
-                    public String getContentType()
-                    {
-                        return mimeType;
-                    }
-
-                    @Override
-                    public String getName()
-                    {
-                        return "";
-                    }
-
-                    @Override
-                    public OutputStream getOutputStream() throws IOException
-                    {
-                        throw new UnknownServiceException();
-                    }
-
-                    @Override
-                    public InputStream getInputStream()
-                    {
-                        return new ByteArrayInputStream(bodyBytes);
-                    }
-                });
-    }
+//
+//    /**
+//     * Retrieves data handler for the Mime message.
+//     *
+//     * @param bodyBytes message body, as byte array
+//     * @param mimeType  body text parameter
+//     */
+//    private static DataHandler getEmailBodyDataHandler(final byte[] bodyBytes, final String mimeType)
+//    {
+//        return new DataHandler(
+//                new DataSource()
+//                {
+//                    @Override
+//                    public String getContentType()
+//                    {
+//                        return mimeType;
+//                    }
+//
+//                    @Override
+//                    public String getName()
+//                    {
+//                        return "";
+//                    }
+//
+//                    @Override
+//                    public OutputStream getOutputStream() throws IOException
+//                    {
+//                        throw new UnknownServiceException();
+//                    }
+//
+//                    @Override
+//                    public InputStream getInputStream()
+//                    {
+//                        return new ByteArrayInputStream(bodyBytes);
+//                    }
+//                });
+//    }
 
     static class SmtpAuthenticator extends Authenticator
     {
