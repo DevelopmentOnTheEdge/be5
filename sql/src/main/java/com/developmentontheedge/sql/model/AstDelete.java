@@ -19,7 +19,7 @@ public class AstDelete extends SimpleNode
         this.nodePrefix = "DELETE FROM";
     }
 
-    public AstDelete where(Map<String, ? super Object> conditions)
+    public AstDelete where(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
         if (!conditions.isEmpty()) where(new AstWhere(conditions));

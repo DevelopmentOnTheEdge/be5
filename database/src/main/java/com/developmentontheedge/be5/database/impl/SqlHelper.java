@@ -25,12 +25,12 @@ public class SqlHelper
         this.db = db;
     }
 
-    public <T> T insert(String tableName, Map<String, ? super Object> values)
+    public <T> T insert(String tableName, Map<String, ?> values)
     {
         return db.insert(generateInsertSql(tableName, values), values.values().toArray());
     }
 
-    public int update(String tableName, Map<String, ? super Object> conditions, Map<String, ? super Object> values)
+    public int update(String tableName, Map<String, ?> conditions, Map<String, ?> values)
     {
         Map<String, String> conditionsPlaceholders = conditions.entrySet().stream()
                 .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
@@ -42,7 +42,7 @@ public class SqlHelper
                 ObjectArrays.concat(values.values().toArray(), conditions.values().toArray(), Object.class));
     }
 
-    public int updateIn(String tableName, String primaryKeyName, Object[] primaryKeyValue, Map<String, ? super Object> values)
+    public int updateIn(String tableName, String primaryKeyName, Object[] primaryKeyValue, Map<String, ?> values)
     {
         Map<String, String> valuePlaceholders = values.entrySet().stream()
                 .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
@@ -51,7 +51,7 @@ public class SqlHelper
                 ObjectArrays.concat(values.values().toArray(), primaryKeyValue, Object.class));
     }
 
-    public int delete(String tableName, Map<String, ? super Object> conditions)
+    public int delete(String tableName, Map<String, ?> conditions)
     {
         return db.update(generateDeleteSql(tableName, conditions), getWithoutConstants(conditions));
     }
@@ -61,7 +61,7 @@ public class SqlHelper
         return db.update(generateDeleteInSql(tableName, columnName, values.length), values);
     }
 
-    private String generateInsertSql(String tableName, Map<String, ? super Object> values)
+    private String generateInsertSql(String tableName, Map<String, ?> values)
     {
         Object[] columns = values.keySet().toArray();
 
@@ -84,7 +84,7 @@ public class SqlHelper
                 .whereInWithReplacementParameter(primaryKeyName, count).format();
     }
 
-    private String generateDeleteSql(String tableName, Map<String, ? super Object> conditions)
+    private String generateDeleteSql(String tableName, Map<String, ?> conditions)
     {
         return Ast.delete(tableName).where(conditions).format();
     }
@@ -94,9 +94,9 @@ public class SqlHelper
         return Ast.delete(tableName).whereInPredicate(columnName, count).format();
     }
 
-    public Object[] getWithoutConstants(Map<String, ? super Object> conditions)
+    public Object[] getWithoutConstants(Map<String, ?> conditions)
     {
-        List<? super Object> list = conditions.values().stream()
+        List<?> list = conditions.values().stream()
                 .filter(x -> x != null && !NOT_NULL.equals(x))
                 .collect(Collectors.toList());
         return list.toArray();
