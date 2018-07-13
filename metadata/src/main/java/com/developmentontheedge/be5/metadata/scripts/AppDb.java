@@ -14,6 +14,9 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class AppDb extends ScriptSupport<AppDb>
@@ -101,11 +104,23 @@ public class AppDb extends ScriptSupport<AppDb>
     private void execute(final Module module) throws ProjectElementException
     {
         boolean started = false;
-        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements())
+        List<Entity> entities = new ArrayList<>(module.getOrCreateEntityCollection().getAvailableElements());
+        entities.sort(Comparator.comparing(this::tablesFirstViews));
+
+        for (Entity entity : entities)
         {
             DdlElement scheme = entity.getScheme();
-            if (scheme instanceof TableDef)
+            if (scheme instanceof TableDef || scheme instanceof ViewDef)
             {
+                if (scheme instanceof TableDef)
+                {
+                    createdTables++;
+                }
+                else
+                {
+                    createdViews++;
+                }
+
                 if (scheme.withoutDbScheme())
                 {
                     if (!started)
@@ -114,7 +129,6 @@ public class AppDb extends ScriptSupport<AppDb>
                         started = true;
                     }
                     processDdl(scheme);
-                    createdTables++;
                 }
                 else
                 {
@@ -122,27 +136,20 @@ public class AppDb extends ScriptSupport<AppDb>
                 }
             }
         }
-        // Define views after tables as there might be dependencies
-        for (Entity entity : module.getOrCreateEntityCollection().getAvailableElements())
+    }
+
+    /**
+     * Define views after tables as there might be dependencies
+     */
+    private Integer tablesFirstViews(Entity entity)
+    {
+        if (entity.getScheme() instanceof TableDef)
         {
-            DdlElement scheme = entity.getScheme();
-            if (scheme instanceof ViewDef)
-            {
-                if (scheme.withoutDbScheme())
-                {
-                    if (!started)
-                    {
-                        logger.setOperationName("[A] " + module.getCompletePath());
-                        started = true;
-                    }
-                    processDdl(scheme);
-                    createdViews++;
-                }
-                else
-                {
-                    logger.setOperationName("Skip table with schema: " + scheme.getEntityName());
-                }
-            }
+            return 0;
+        }
+        else
+        {
+            return 1;
         }
     }
 
