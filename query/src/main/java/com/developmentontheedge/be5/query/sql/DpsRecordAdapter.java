@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.query.impl.BeTagParser;
 import com.developmentontheedge.be5.query.impl.DynamicPropertyMeta;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -26,23 +27,16 @@ public class DpsRecordAdapter
     public static DynamicPropertySet createDps(ResultSet resultSet)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        return addDp(dps, resultSet, (a, b) -> {
-        });
+        return addDp(dps, resultSet);
+    }
+
+    public static QRec qRec(ResultSet resultSet)
+    {
+        QRec dps = new QRec();
+        return addDp(dps, resultSet);
     }
 
     public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet)
-    {
-        return addDp(dps, resultSet, (a, b) -> {
-        });
-    }
-
-//    public static DynamicPropertySet createDps(ResultSet resultSet, MetaProcessor metaProcessor)
-//    {
-//        DynamicPropertySet dps = new DynamicPropertySetSupport();
-//        return addDp(dps, resultSet, metaProcessor);
-//    }
-
-    public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet, MetaProcessor metaProcessor)
     {
         try
         {

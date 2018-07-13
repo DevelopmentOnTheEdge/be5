@@ -47,6 +47,8 @@ public interface QueryExecutor
      */
     <T> List<T> execute(ResultSetParser<T> parser);
 
+    <T> T getRow(ResultSetParser<T> parser);
+
     /**
      * Counts the number of resulting rows.
      */

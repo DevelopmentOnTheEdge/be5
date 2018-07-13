@@ -182,6 +182,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
+    public <T> T getRow(ResultSetParser<T> parser)
+    {
+        List<T> list = execute(parser);
+        if (list.size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return list.get(0);
+        }
+    }
+
+    @Override
     public List<String> getColumnNames() throws Be5Exception
     {
         if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
@@ -364,7 +378,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public DynamicPropertySet getRow()
     {
-        return execute(DpsRecordAdapter::createDps).get(0);
+        return getRow(DpsRecordAdapter::createDps);
     }
 
     @Override
