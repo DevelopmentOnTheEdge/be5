@@ -9,7 +9,8 @@ public class PredefinedFunction implements Function
     {
         this.name = name;
         this.priority = priority;
-        this.minNumberOfParams = this.maxNumberOfParams = numberOfParameters;
+        this.minNumberOfParams = numberOfParameters;
+        this.maxNumberOfParams = numberOfParameters;
     }
 
     public PredefinedFunction(String name, int priority, int minNumberOfParams, int maxNumberOfParams)

@@ -376,7 +376,8 @@ public class ModuleLoader2
                     String name = getProjectName(urls.get(i));
                     if (name.equals(moduleSource.getKey()))
                     {
-                        used = started = true;
+                        used = true;
+                        started = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
                         sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i)).append(" - replace");
                     }
