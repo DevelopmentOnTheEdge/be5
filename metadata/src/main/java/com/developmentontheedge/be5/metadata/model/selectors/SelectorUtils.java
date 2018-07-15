@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model.selectors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectorUtils
 {

@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.io.IOException;

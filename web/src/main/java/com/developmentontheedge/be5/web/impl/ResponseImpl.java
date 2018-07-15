@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 public class ResponseImpl implements Response

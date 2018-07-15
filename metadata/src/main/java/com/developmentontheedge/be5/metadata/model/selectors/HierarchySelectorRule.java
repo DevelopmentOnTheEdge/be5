@@ -1,13 +1,12 @@
 package com.developmentontheedge.be5.metadata.model.selectors;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-
-import one.util.streamex.StreamEx;
 
 /**
  * Represents hierarchical selector like 'Entity#blahblah Query[type="1D"]'

@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.operations.support.OperationExtenderSupport;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Arrays;
 import java.util.Collections;
