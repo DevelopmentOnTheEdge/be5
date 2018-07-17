@@ -401,27 +401,16 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     private static String getProjectName(URL url) throws IOException
     {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-        Map<String, Object> module = new Yaml().load(reader);
-        return module.entrySet().iterator().next().getKey();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+        {
+            Map<String, Object> module = new Yaml().load(reader);
+            return module.entrySet().iterator().next().getKey();
+        }
     }
 
     private static void readDevPathsToSourceProjects() throws IOException
     {
         ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
-        readDevPathsToSourceProjects(urls);
-    }
-
-    /**
-     * dev.yaml example:
-     * paths:
-     * testBe5app: /home/uuinnk/workspace/github/testBe5app
-     *
-     * @return Map name -> source path of modules
-     */
-    @SuppressWarnings("unchecked")
-    static void readDevPathsToSourceProjects(List<URL> urls) throws IOException
-    {
         if (urls.size() > 1)
         {
             log.severe("dev.yaml should be only in the project.");
@@ -430,7 +419,22 @@ public class ModuleLoader2
 
         if (urls.size() == 1)
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
+            readDevPathsToSourceProjects(urls.get(0));
+        }
+    }
+
+    /**
+     * dev.yaml example:
+     * paths:
+     *   testBe5app: /home/uuinnk/workspace/github/testBe5app
+     * roles:
+     * - SystemDeveloper
+     */
+    @SuppressWarnings("unchecked")
+    static void readDevPathsToSourceProjects(URL url) throws IOException
+    {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+        {
             Map<String, Object> content = new Yaml().load(reader);
 
             initPathsForDev(content);
@@ -438,6 +442,10 @@ public class ModuleLoader2
             {
                 devRoles = (List<String>) content.get("roles");
                 log.info("Dev roles read - " + devRoles.toString());
+            }
+            else
+            {
+                devRoles = Collections.emptyList();
             }
         }
     }

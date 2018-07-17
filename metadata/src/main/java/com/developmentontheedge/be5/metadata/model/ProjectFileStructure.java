@@ -41,6 +41,7 @@ public class ProjectFileStructure extends BeModelElementSupport
     private String remoteConnectionProfilesFile = "src/connectionProfiles.remote.yaml";
     private String macroDir = "src/include";
     private String selectedProfileFile = "src/profile.local";
+    private String devFile = "src/dev.yaml";
 
     public ProjectFileStructure(final Project project)
     {
@@ -382,6 +383,11 @@ public class ProjectFileStructure extends BeModelElementSupport
     {
         this.selectedProfileFile = selectedProfileFile;
         fireChanged();
+    }
+
+    public String getDevFile()
+    {
+        return devFile;
     }
 
     @Override

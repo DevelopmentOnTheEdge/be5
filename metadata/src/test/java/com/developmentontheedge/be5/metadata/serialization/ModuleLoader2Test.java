@@ -47,7 +47,7 @@ public class ModuleLoader2Test
         }
 
         ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));
-        ModuleLoader2.readDevPathsToSourceProjects(Collections.singletonList(path.resolve("dev.yaml").toUri().toURL()));
+        ModuleLoader2.readDevPathsToSourceProjects(path.resolve("dev.yaml").toUri().toURL());
 
         assertTrue(ModuleLoader2.getPathsToProjectsToHotReload().toString().startsWith("{test="));
         assertEquals(1, ModuleLoader2.getPathsToProjectsToHotReload().size());

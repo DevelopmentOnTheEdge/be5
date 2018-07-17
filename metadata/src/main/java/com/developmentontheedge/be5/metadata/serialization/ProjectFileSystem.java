@@ -151,7 +151,7 @@ public class ProjectFileSystem
 
         List<String> files = Arrays.asList(structure.getSecurityFile(), structure.getDaemonsFile(), structure.getPagesFile(),
                 structure.getLocalConnectionProfilesFile(), structure.getRemoteConnectionProfilesFile(), structure.getMassChangesFile(),
-                structure.getCustomizationFile(), structure.getSelectedProfileFile());
+                structure.getCustomizationFile(), structure.getSelectedProfileFile(), structure.getDevFile());
         StreamEx.of(files).map(path -> resolve(root, path)).map(Path::getParent).forEach(p -> result.put(p, false));
 
         List<String> dirs = Arrays.asList(
