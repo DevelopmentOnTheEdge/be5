@@ -109,7 +109,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 "{'cells':[" +
                 "{'content':'tableModelTest','options':{}}," +
                 "{'content':11,'options':{}}," +
-                "{'content':'<div class=\\'inner-sql-row\\'>tableModelTest</div>','options':{}}]}," +
+                "{'content':'tableModelTest','options':{}}]}," +
                 "{'cells':[" +
                 "{'content':'tableModelTest','options':{}}," +
                 "{'options':{}}," +

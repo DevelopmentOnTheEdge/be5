@@ -45,7 +45,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
                 .limit(20)
                 .build();
 
-        assertEquals("{'content':'<div class=\\'inner-sql-row\\'>user1</div><div class=\\'inner-sql-row\\'>user2</div>','options':{}}",
+        assertEquals("{'content':'user1<br/> user2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
     }
 

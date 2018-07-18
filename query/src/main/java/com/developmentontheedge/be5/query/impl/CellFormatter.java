@@ -161,8 +161,9 @@ public class CellFormatter
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
-                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" ")).joining("<br/> ");
+//            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
+//                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
         }
         else
         {
