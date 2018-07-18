@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +17,9 @@ import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Collections;
 
+import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
+import static com.developmentontheedge.be5.metadata.RoleType.ROLE_SYSTEM_DEVELOPER;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -30,7 +34,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     @Before
     public void init()
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
+        initUserWithRoles(ROLE_ADMINISTRATOR);
     }
 
     @Test
@@ -43,8 +47,8 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
                 any(Instant.class),
                 ""));
     }
@@ -74,14 +78,14 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
+        component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", ROLE_ADMINISTRATOR)),
                 response);
 
         verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
                 any(Instant.class),
                 ""));
     }
@@ -97,8 +101,8 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
+                Collections.singletonList(ROLE_ADMINISTRATOR),
                 any(Instant.class),
                 ""));
     }
@@ -106,12 +110,13 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     @Test
     public void generateSelectRolesAndSendNewState() throws Exception
     {
+        DbServiceMock.clearMock();
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
-                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response);
+                ImmutableMap.of("roles", ROLE_ADMINISTRATOR)), response);
 
-        verify(response).sendAsJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
+        verify(response).sendAsJson(eq(ImmutableList.of(ROLE_ADMINISTRATOR)));
 
         verify(DbServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
                 "('Administrator')",
@@ -124,6 +129,16 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
                 "('Administrator')");
 
         initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Test
+    public void testSetCurrentRolesNotAvailable()
+    {
+        Request request = getSpyMockRequest("/api/userInfo/selectRoles",
+                ImmutableMap.of("roles", ROLE_ADMINISTRATOR + "," + ROLE_SYSTEM_DEVELOPER));
+        component.generate(request, "selectRoles");
+
+        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
     }
 
 }

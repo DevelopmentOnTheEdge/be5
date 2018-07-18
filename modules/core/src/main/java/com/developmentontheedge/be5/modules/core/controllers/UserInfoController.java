@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.google.common.base.Splitter;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 public class UserInfoController extends JsonApiController
@@ -37,9 +38,12 @@ public class UserInfoController extends JsonApiController
 
     private Object selectRolesAndSendNewState(Request req)
     {
-        String roles = req.getOrEmpty("roles");
+        List<String> roles = Splitter.on(',').splitToList(req.getOrEmpty("roles"));
 
-        loginService.setCurrentRoles(Splitter.on(',').splitToList(roles));
+        List<String> availableCurrentRoles = loginService.getAvailableCurrentRoles(roles,
+                userInfoProvider.get().getAvailableRoles());
+
+        loginService.setCurrentRoles(availableCurrentRoles);
 
         return userInfoProvider.get().getCurrentRoles();
     }

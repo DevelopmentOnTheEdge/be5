@@ -121,15 +121,16 @@ public class LoginServiceImpl implements LoginService
     @Override
     public void setCurrentRoles(List<String> roles)
     {
-        List<String> availableCurrentRoles = getAvailableCurrentRoles(roles, userInfoProvider.get().getAvailableRoles());
+        Objects.requireNonNull(roles.get(0), "There must be at least one role.");
 
         coreUtils.setUserSetting(userInfoProvider.get().getUserName(), DatabaseConstants.CURRENT_ROLE_LIST,
                 MetadataUtils.toInClause(roles));
 
-        userInfoProvider.get().setCurrentRoles(availableCurrentRoles);
+        userInfoProvider.get().setCurrentRoles(roles);
     }
 
-    private List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
+    @Override
+    public List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
     {
         return roles.stream()
                 .filter(availableRoles::contains)
