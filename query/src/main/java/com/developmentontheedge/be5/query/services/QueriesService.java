@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;
@@ -148,18 +147,6 @@ public class QueriesService
         return tags.toArray(stockArr);
     }
 
-    public Map<String, String> readAsMap(String query, Object... params)
-    {
-        Map<String, String> values = new LinkedHashMap<>();
-        db.query(query, rs -> {
-            while (rs.next())
-            {
-                values.put(rs.getString(1), rs.getString(2));
-            }
-            return null;
-        }, params);
-        return values;
-    }
 //
 //    public Map<String, String> getTagsMapFromQuery( Map<String, Object> parameters, String query, Object... params )
 //    {
@@ -281,325 +268,6 @@ public class QueriesService
             return arr;
         });
     }
-//
-//    public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)
-//    {
-//        ImmutableList.Builder<Option> options = ImmutableList.builder();
-//        options.add(new Option("", placeholder));
-//        options.addAll(formOptions(tableName));
-//
-//        return options.build();
-//    }
-
-//
-//    /**
-//     * Replaces in the query {@link com.beanexplorer.enterprise.DatabaseConstants#QP_DICTIONARY_START DatabaseConstants.QP_DICTIONARY_START} placeholder
-//     *
-//     * <br/><br/><dictionary:entity_name [multiple="isMultiple"] [column_name1="columnfilter1_value"] [column_name2="columnfilter2_value"] .../>
-//     *
-//     * <br/><br/>for the set of the id`s from the specified entity_name where columns values are filtered with some specified column filter value.
-//     *
-//     * <br/><br/>For additional information, on how to specify filter for the column, see also
-//     * {@link #addRecordFilter(DatabaseConnector, String, String, String, Map, boolean, UserInfo) addRecordFilter}
-//     *
-//     * @param connector DB connector
-//     * @param query string to substitute {@link com.beanexplorer.enterprise.DatabaseConstants#QP_DICTIONARY_START DatabaseConstants.QP_DICTIONARY_START}
-//     * placeholder for the set of values
-//     * @param ui user info
-//     * @return prepared query
-//     */
-//    public static String putDictionaryValues( DatabaseConnector connector, String query, UserInfo ui )
-//    {
-//        if( Utils.isEmpty( query ) )
-//        {
-//            return query;
-//        }
-//
-//        try
-//        {
-//            while( query.indexOf( DatabaseConstants.QP_DICTIONARY_START ) != -1 )
-//            {
-//                String clause = getPlaceholderClause( query, DatabaseConstants.QP_DICTIONARY_START );
-//                String entity = getPlaceholderName( clause, DatabaseConstants.QP_DICTIONARY_START );
-//                Map attrs = new HashMap( PropertyInfo.withCache( clause ).asMap() );
-//                String def = ( String )attrs.remove( DatabaseConstants.QP_DEFAULT_VALUE );
-//
-//                boolean bSafeValue = true;
-//                if( attrs.get( DatabaseConstants.QP_SAFE_VALUE ) != null )
-//                {
-//                    bSafeValue = !"no".equals( attrs.remove( DatabaseConstants.QP_SAFE_VALUE ) );
-//                }
-//                boolean bMult = false;
-//                if( bMult = ( attrs.get( DatabaseConstants.QP_DICT_PARAM_MULTIPLE ) != null ) )
-//                {
-//                    attrs.remove( DatabaseConstants.QP_DICT_PARAM_MULTIPLE );
-//
-//                }
-//                if( Logger.isDebugEnabled( cat ) )
-//                {
-//                    Logger.debug( cat, "putDictionaryValues -> filtering values:\n" + attrs );
-//                }
-//
-//                String pk = null;
-//                if( "systemSettings".equalsIgnoreCase( entity ) )
-//                {
-//                    pk = "setting_value";
-//                }
-//                else
-//                {
-//                    pk = findPrimaryKeyName( connector, entity );
-//                }
-//
-//                String replacement = null;
-//
-//                if( DatabaseConstants.ENTITY_TYPE_DICTIONARY.equals( getEntityType( connector, entity ) ) )
-//                {
-//                    List values = getValuesFromDictionary( connector, entity, pk, attrs, ui );
-//                    if( values != null && !values.isEmpty() )
-//                    {
-//                        replacement = values.get( 0 ).toString();
-//                        if( bMult )
-//                        {
-//                            replacement = toInClause( values, isNumericColumn( connector, entity, pk ) );
-//                        }
-//                        else if( !"systemSettings".equalsIgnoreCase( entity ) )
-//                        {
-//                            replacement = bSafeValue ? safeIdValue( connector, entity, pk, values.get( 0 ) ) : values.get( 0 ).toString();
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if( !isEmpty( def ) )
-//                            replacement = def;
-//                        else
-//                            throw new Exception( "Can not get value from dictionary" );
-//                    }
-//                }
-//                else
-//                {
-//                    String sql = "SELECT dict." + connector.getAnalyzer().quoteIdentifier( pk ) + " AS \"code\" ";
-//                    sql += " FROM " + connector.getAnalyzer().quoteIdentifier( entity ) + " dict";
-//                    sql = addRecordFilter( connector, sql, entity, pk, attrs, false, ui );
-//
-//                    if( Logger.isDebugEnabled( cat ) )
-//                    {
-//                        Logger.debug( cat, "putDictionaryValues -> SQL =\n" + sql );
-//                    }
-//
-//                    if( bMult )
-//                    {
-//                        replacement = toInClause(
-//                                readAsList( connector, sql, DictionaryCache.getInstance() ),
-//                                isNumericColumn( connector, entity, pk )
-//                        );
-//                    }
-//                    else
-//                    {
-//                        try
-//                        {
-//                            replacement = QRec.withCache( connector, sql, DictionaryQRecCache.getInstance() ).getString( "code" );
-//                        }
-//                        catch( Exception exc )
-//                        {
-//                            if( !isEmpty( def ) )
-//                                replacement = def;
-//                            else
-//                                throw exc;
-//                        }
-//                        //if( bSafeValue )
-//                        //{
-//                        //    replacement = safeIdValue( connector, entity, pk, replacement );
-//                        //}
-//                    }
-//                }
-//                query = subst( query, clause, replacement );
-//            }
-//        }
-//        catch( Exception exc )
-//        {
-//            Logger.error( cat, "Unable to replace 'dictionary' placeholder", exc );
-//        }
-//
-//
-//        // handle <entity:returnColumnName fied1=" ... " field2=" ... " />
-//        try
-//        {
-//            int ind = 0;
-//            while( ( ind = query.indexOf( "<", ind + 1 ) ) != -1 )
-//            {
-//                int colon = query.indexOf( ":", ind + 1 );
-//                if( colon == -1 )
-//                    continue;
-//                String entity = query.substring( ind + 1, colon );
-//                if( entity.indexOf( " " ) >= 0 )
-//                    continue;
-//                if( entity.indexOf( ">" ) >= 0 )
-//                    continue;
-//                String pk = null;
-//                if( ( pk = findPrimaryKeyName( connector, entity ) ) == null ) // not real entity
-//                    continue;
-//                String clause = getPlaceholderClause( query, "<" + entity + ":" );
-//                String returnColumnName = getPlaceholderName( clause, "<" + entity + ":" );
-//                Map attrs = new HashMap( PropertyInfo.withCache( clause ).asMap() );
-//                String def = ( String )attrs.remove( DatabaseConstants.QP_DEFAULT_VALUE );
-//
-//                boolean bSafeValue = true;
-//                if( attrs.get( DatabaseConstants.QP_SAFE_VALUE ) != null )
-//                {
-//                    bSafeValue = !"no".equals( attrs.remove( DatabaseConstants.QP_SAFE_VALUE ) );
-//                }
-//
-//                boolean bMult = false;
-//                if( bMult = ( attrs.get( DatabaseConstants.QP_DICT_PARAM_MULTIPLE ) != null ) )
-//                {
-//                    attrs.remove( DatabaseConstants.QP_DICT_PARAM_MULTIPLE );
-//                }
-//
-//                if( Logger.isDebugEnabled( cat ) )
-//                {
-//                    Logger.debug( cat, "*putDictionaryValues -> filtering values:\n" + attrs );
-//                }
-//
-//                String replacement = null;
-//
-//                if( DatabaseConstants.ENTITY_TYPE_DICTIONARY.equals( getEntityType( connector, entity ) ) )
-//                {
-//                    List values = getValuesFromDictionary( connector, entity, returnColumnName, attrs, ui );
-//                    if( values != null && !values.isEmpty() )
-//                    {
-//                        replacement = bMult ? toInClause( values, isNumericColumn( connector, entity, returnColumnName ) ) :
-//                                ( bSafeValue ? safeIdValue( connector, entity, pk, values.get( 0 ) ) : values.get( 0 ).toString() );
-//                    }
-//                    else
-//                    {
-//                        if( !isEmpty( def ) )
-//                            replacement = def;
-//                        else
-//                            throw new Exception( "Can not get value from dictionary " + entity + ":" + returnColumnName );
-//                    }
-//                }
-//                else
-//                {
-//                    if( "systemSettings".equalsIgnoreCase( entity ) )
-//                    {
-//                        pk = "setting_value";
-//                    }
-//
-//                    String sql = "SELECT dict." + returnColumnName + " AS \"val\" ";
-//                    sql += " FROM " + connector.getAnalyzer().quoteIdentifier( entity ) + " dict";
-//                    sql = addRecordFilter( connector, sql, entity, pk, attrs, false, ui );
-//
-//                    if( Logger.isDebugEnabled( cat ) )
-//                    {
-//                        Logger.debug( cat, "*putDictionaryValues -> SQL =\n" + sql );
-//                    }
-//
-//                    if( bMult )
-//                    {
-//                        replacement = toInClause(
-//                                readAsList( connector, sql, DictionaryCache.getInstance() ),
-//                                isNumericColumn( connector, entity, returnColumnName )
-//                        );
-//                    }
-//                    else
-//                    {
-//                        try
-//                        {
-//                            String value = QRec.withCache( connector, sql, DictionaryQRecCache.getInstance() ).getString( "val" );
-//                            replacement = ( bSafeValue ? safeIdValue( connector, entity, returnColumnName, value ) : value );
-//                        }
-//                        catch( Exception exc )
-//                        {
-//                            if( !isEmpty( def ) )
-//                                replacement = def;
-//                            else
-//                                throw exc;
-//                        }
-//                        //if( bSafeValue )
-//                        //{
-//                        //    replacement = safeIdValue( connector, entity, returnColumnName, replacement );
-//                        //}
-//                    }
-//                }
-//                int nDiff = clause.length() - replacement.length();
-//                ind -= nDiff;
-//                query = subst( query, clause, replacement );
-//            }
-//        }
-//        catch( Exception exc )
-//        {
-//            Logger.error( cat, "Unable to replace 'entity:returnColumnName' placeholder.\nQuery = " + query, exc );
-//        }
-//
-//        return query;
-//    }
-
-    //todo use Be5QueryExecutor?
-    public List<DynamicPropertySet> readAsRecords(String sql, Object... params)
-    {
-        return db.list(sql, DpsRecordAdapter::createDps, params);
-    }
-
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String sql, Map<String, Object> parameters)
-    {
-        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
-    }
-
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
-    {
-        return readAsRecordsFromQuery(meta.getQuery(tableName, queryName), parameters);
-    }
-
-    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
-    {
-        return queryService.build(query, parameters).execute();
-    }
-
-    public QRec readOneRecord(String sql, Map<String, Object> parameters)
-    {
-        return readOneRecord(meta.createQueryFromSql(sql), parameters);
-    }
-
-    public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
-    {
-        return readOneRecord(meta.getQuery(tableName, queryName), parameters);
-    }
-
-    public QRec readOneRecord(Query query, Map<String, Object> parameters)
-    {
-        List<DynamicPropertySet> dpsList = readAsRecordsFromQuery(query, parameters);
-
-        return QRec.fromList(dpsList);
-    }
-
-    public QRec qRec(String sql, Object... params)
-    {
-        return db.select(sql, (rs) -> DpsRecordAdapter.addDp(new QRec(), rs), params);
-    }
-
-//    public QRec withCache( String sql, Object... params )
-//    {
-//        throw Be5Exception.internal("not implemented");
-//        //return withCache( sql, null );
-//    }
-
-    public List<List<Object>> readAsList(String sql, Object... params)
-    {
-        List<List<Object>> vals = new ArrayList<>();
-        List<DynamicPropertySet> list = readAsRecords(sql, params);
-
-        for (int i = 0; i < list.size(); i++)
-        {
-            List<Object> propertyList = new ArrayList<>();
-            for (DynamicProperty property : list.get(i))
-            {
-                propertyList.add(property.getValue());
-            }
-            vals.add(propertyList);
-        }
-
-        return vals;
-    }
 
     public String[][] addTags(Map<String, String> before, String[][] tags)
     {
@@ -630,5 +298,82 @@ public class QueriesService
 
         return stockArr;
     }
+
+    public List<QRec> list(String sql, Object... params)
+    {
+        return db.list(sql, DpsRecordAdapter::qRec, params);
+    }
+
+    public List<List<Object>> listOfLists(String sql, Object... params)
+    {
+        List<List<Object>> vals = new ArrayList<>();
+        List<QRec> list = list(sql, params);
+
+        for (QRec aList : list)
+        {
+            List<Object> propertyList = new ArrayList<>();
+            for (DynamicProperty property : aList)
+            {
+                propertyList.add(property.getValue());
+            }
+            vals.add(propertyList);
+        }
+
+        return vals;
+    }
+
+    public Map<String, String> map(String query, Object... params)
+    {
+        Map<String, String> values = new LinkedHashMap<>();
+        db.query(query, rs -> {
+            while (rs.next())
+            {
+                values.put(rs.getString(1), rs.getString(2));
+            }
+            return null;
+        }, params);
+        return values;
+    }
+
+    public QRec qRec(String sql, Object... params)
+    {
+        return db.select(sql, DpsRecordAdapter::qRec, params);
+    }
+
+    public List<QRec> readAsRecordsFromQuery(String sql, Map<String, Object> parameters)
+    {
+        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
+    }
+
+    public List<QRec> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
+    {
+        return readAsRecordsFromQuery(meta.getQuery(tableName, queryName), parameters);
+    }
+
+    public List<QRec> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
+    {
+        return queryService.build(query, parameters).execute(DpsRecordAdapter::qRec);
+    }
+
+    public QRec readOneRecord(String sql, Map<String, Object> parameters)
+    {
+        return readOneRecord(meta.createQueryFromSql(sql), parameters);
+    }
+
+    public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
+    {
+        return readOneRecord(meta.getQuery(tableName, queryName), parameters);
+    }
+
+    public QRec readOneRecord(Query query, Map<String, Object> parameters)
+    {
+        return queryService.build(query, parameters).getRow(DpsRecordAdapter::qRec);
+    }
+
+//    public QRec withCache( String sql, Object... params )
+//    {
+//        throw Be5Exception.internal("not implemented");
+//        //return withCache( sql, null );
+//    }
 
 }

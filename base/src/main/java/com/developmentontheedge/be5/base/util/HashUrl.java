@@ -40,7 +40,7 @@ public class HashUrl
 
     public HashUrl named(String key, String value)
     {
-        Objects.requireNonNull(value, "Null key supplied");
+        Objects.requireNonNull(key, "Null key supplied");
         Objects.requireNonNull(value, () -> "Null value supplied for key " + key);
         return new HashUrl(components, StreamEx.of(keyValues).append(key, value).toArray(String[]::new));
     }

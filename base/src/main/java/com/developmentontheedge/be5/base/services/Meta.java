@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

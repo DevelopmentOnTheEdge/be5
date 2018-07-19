@@ -160,7 +160,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsMapTest()
     {
-        Map<String, String> values = queries.readAsMap("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
+        Map<String, String> values = queries.map("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
         assertEquals(ImmutableMap.of(
                 "01", "Regional",
@@ -182,7 +182,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsTest()
     {
-        List<DynamicPropertySet> list = queries.readAsRecords("SELECT code, admlevel FROM testTags");
+        List<QRec> list = queries.list("SELECT code, admlevel FROM testTags");
 
         assertEquals("01", list.get(0).getValue("code"));
         assertEquals("Regional", list.get(0).getValue("admlevel"));
@@ -196,7 +196,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsFromQueryTest()
     {
-        List<DynamicPropertySet> list = queries.readAsRecordsFromQuery("testTags", "With parameter",
+        List<QRec> list = queries.readAsRecordsFromQuery("testTags", "With parameter",
                 Collections.emptyMap());
 
         assertEquals("01", list.get(0).getValue("ID"));
@@ -217,7 +217,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsFromQuerySqlTest()
     {
-        List<DynamicPropertySet> list = queries.readAsRecordsFromQuery(
+        List<QRec> list = queries.readAsRecordsFromQuery(
                 "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
                         "        FROM testTags\n" +
                         "        WHERE 1=1\n" +
@@ -235,7 +235,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsListTest()
     {
-        List<List<Object>> lists = queries.readAsList("SELECT code, admlevel FROM testTags");
+        List<List<Object>> lists = queries.listOfLists("SELECT code, admlevel FROM testTags");
 
         assertEquals("01", lists.get(0).get(0));
         assertEquals("Regional", lists.get(0).get(1));

@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model.selectors;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 
 /**
  * Several selector rules like Element[attr="value"]

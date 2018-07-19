@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.model;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,7 +32,11 @@ public class OperationContext
 
     public <T> T getRecord()
     {
-        if (records.length != 1) throw new IllegalStateException("Expected one record");
+        if (records.length != 1)
+        {
+            throw new IllegalStateException("Expected one record, but was " + Arrays.toString(records));
+        }
+
         return (T) records[0];
     }
 

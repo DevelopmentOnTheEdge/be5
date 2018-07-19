@@ -26,10 +26,8 @@ public interface Session
 
     default Object getOrDefault(String name, Object defaultValue)
     {
-        Object v;
-        return ((v = get(name)) != null)
-                ? v
-                : defaultValue;
+        Object v = get(name);
+        return v != null ? v : defaultValue;
     }
 
     /**

@@ -73,9 +73,15 @@ public class FormController extends JsonApiModelController
         }
         catch (Be5Exception e)
         {
-            String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
+            HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
+                    .named(operationParams);
+            if (req.get(RestApiConstants.SELECTED_ROWS) != null)
+            {
+                url = url.named("selectedRows", req.get(RestApiConstants.SELECTED_ROWS));
+            }
+
             log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
-            return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
+            return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));
         }
     }
 

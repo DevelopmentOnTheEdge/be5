@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;

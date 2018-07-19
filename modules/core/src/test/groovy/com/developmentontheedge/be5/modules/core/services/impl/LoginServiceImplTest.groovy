@@ -43,7 +43,7 @@ class LoginServiceImplTest extends CoreBe5ProjectDbMockTest
     {
         loginService.setCurrentRoles(['3'])
 
-        assertEquals([], userInfoProvider.get().currentRoles)
+        assertEquals(['3'], userInfoProvider.get().currentRoles)
     }
 
 }

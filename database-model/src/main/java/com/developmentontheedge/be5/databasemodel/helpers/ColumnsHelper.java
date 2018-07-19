@@ -43,17 +43,17 @@ public class ColumnsHelper
         this.userInfoProvider = userInfoProvider;
     }
 
-    public void addUpdateSpecialColumns(Entity entity, Map<String, ? super Object> values)
+    public void addUpdateSpecialColumns(Entity entity, Map<String, Object> values)
     {
         addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
     }
 
-    public void addInsertSpecialColumns(Entity entity, Map<String, ? super Object> values)
+    public void addInsertSpecialColumns(Entity entity, Map<String, Object> values)
     {
         addSpecialColumns(entity, values, ColumnsHelper.insertSpecialColumns);
     }
 
-    private void addSpecialColumns(Entity entity, Map<String, ? super Object> values, List<String> specialColumns)
+    private void addSpecialColumns(Entity entity, Map<String, Object> values, List<String> specialColumns)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
@@ -88,7 +88,7 @@ public class ColumnsHelper
         throw Be5Exception.internal("Not support: " + propertyName);
     }
 
-    public Map<String, ? super Object> addDeleteSpecialValues(Entity entity, Map<String, ? super Object> values)
+    public Map<String, ?> addDeleteSpecialValues(Entity entity, Map<String, Object> values)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
@@ -106,7 +106,7 @@ public class ColumnsHelper
         return values;
     }
 
-    public void checkDpsColumns(Entity entity, Map<String, ? super Object> values)
+    public void checkDpsColumns(Entity entity, Map<String, ?> values)
     {
         StringBuilder errorMsg = new StringBuilder();
         Map<String, ColumnDef> columns = meta.getColumns(entity);

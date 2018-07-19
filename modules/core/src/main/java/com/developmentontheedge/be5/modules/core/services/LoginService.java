@@ -15,4 +15,6 @@ public interface LoginService
     void saveUser(String username, Request req);
 
     void setCurrentRoles(List<String> roles);
+
+    List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles);
 }

@@ -32,7 +32,7 @@ public interface EntityModel<T>
      *
      * @return number of records
      */
-    long count(Map<String, ? super Object> values);
+    long count(Map<String, ?> values);
 
     /**
      * Returns <tt>true</tt> if this table contains no records.
@@ -51,7 +51,7 @@ public interface EntityModel<T>
      * @return <tt>true</tt> if entity contains record consistent with
      * conditions, otherwise false
      */
-    boolean contains(Map<String, ? super Object> conditions);
+    boolean contains(Map<String, ?> conditions);
 
     /**
      * Adds record into database from map, where key is the column name
@@ -63,7 +63,7 @@ public interface EntityModel<T>
      * @param values map with column names and values
      * @return generated record identify number
      */
-    <R> R add(Map<String, ? super Object> values);
+    <R> R add(Map<String, ?> values);
 
     /**
      * Adds record into database from map, where key is the column name
@@ -83,7 +83,7 @@ public interface EntityModel<T>
      * @return <tt>true</tt> if entity contains record consistent with the
      * all specified condition
      */
-    boolean containsAll(Collection<Map<String, ? super Object>> c);
+    boolean containsAll(Collection<Map<String, ?>> c);
 
     /**
      * Adds all records from collection into database.
@@ -91,7 +91,7 @@ public interface EntityModel<T>
      * @param c collection with column names and values
      * @return list with record identify numbers
      */
-    <R> List<R> addAll(Collection<Map<String, ? super Object>> c);
+    <R> List<R> addAll(Collection<Map<String, ?>> c);
 
     /**
      * Returns the record object with the specified id
@@ -108,11 +108,11 @@ public interface EntityModel<T>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel<T> getBy(Map<String, ? super Object> conditions);
+    RecordModel<T> getBy(Map<String, ?> conditions);
 
     RecordModel<T> getColumns(List<String> columns, T id);
 
-    RecordModel<T> getColumnsBy(List<String> columns, Map<String, ? super Object> conditions);
+    RecordModel<T> getColumnsBy(List<String> columns, Map<String, ?> conditions);
 
     /**
      * Returns a list of records of current entity.
@@ -136,7 +136,7 @@ public interface EntityModel<T>
      * @param conditions the filter parameters
      * @return array of records
      */
-    List<RecordModel<T>> toList(Map<String, ? super Object> conditions);
+    List<RecordModel<T>> toList(Map<String, ?> conditions);
 
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
@@ -144,7 +144,7 @@ public interface EntityModel<T>
      * @param conditions the filter parameters
      * @return array of records
      */
-    RecordModel<T>[] toArray(Map<String, ? super Object> conditions);
+    RecordModel<T>[] toArray(Map<String, ?> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -169,9 +169,9 @@ public interface EntityModel<T>
      * @param values column names and values
      * @return number of affected rows
      */
-    int set(T id, Map<String, ? super Object> values);
+    int set(T id, Map<String, ?> values);
 
-//    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
+//    void setMany( Map<String, ?> values, Map<String, ?> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -194,7 +194,7 @@ public interface EntityModel<T>
 //     * @param c collection of conditions
 //     * @return number of affected rows
 //     */
-//    int removeAll(Collection<Map<String, ? super Object>> c);
+//    int removeAll(Collection<Map<String, ?>> c);
 
     int removeWhereColumnIn(String columnName, T[] ids);
 
@@ -213,7 +213,7 @@ public interface EntityModel<T>
      * @param conditions conditions
      * @return number of affected rows
      */
-    int removeBy(Map<String, ? super Object> conditions);
+    int removeBy(Map<String, ?> conditions);
 
     /**
      * Deletes the record with the specified identifiers.
@@ -235,17 +235,17 @@ public interface EntityModel<T>
      */
     int remove(T[] ids);
 
-    /**
-     * Spreads collection and collect elements from function to list.<br>
-     * For example:<br>
-     * <code>List<DynamicPropertySet> list =
-     *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null, Collections.<String, Object>.emptyMap() );
-     * </code>
-     * @param conditions condition values
-     * @param lambda handler
-     * @return list with the function results
-     */
-//  <T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
+//    /**
+//     * Spreads collection and collect elements from function to list.<br>
+//     * For example:<br>
+//     * <code>List<DynamicPropertySet> list =
+//     *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null, Collections.<String, Object>.emptyMap() );
+//     * </code>
+//     * @param conditions condition values
+//     * @param lambda handler
+//     * @return list with the function results
+//     */
+//  <T> List<T> collect(Map<String, ?> conditions, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.

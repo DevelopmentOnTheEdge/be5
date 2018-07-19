@@ -57,7 +57,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> getBy(Map<String, ? super Object> conditions)
+    public RecordModel<T> getBy(Map<String, ?> conditions)
     {
         return getColumnsBy(Collections.emptyList(), conditions);
     }
@@ -75,7 +75,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ? super Object> conditions)
+    public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
@@ -103,7 +103,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public List<RecordModel<T>> toList(Map<String, ? super Object> conditions)
+    public List<RecordModel<T>> toList(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
 
@@ -113,7 +113,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T>[] toArray(Map<String, ? super Object> conditions)
+    public RecordModel<T>[] toArray(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
 
@@ -170,7 +170,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public long count(Map<String, ? super Object> conditions)
+    public long count(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
 
@@ -186,30 +186,30 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public boolean contains(Map<String, ? super Object> conditions)
+    public boolean contains(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
         return count(conditions) != 0;
     }
 
     @Override
-    public boolean containsAll(Collection<Map<String, ? super Object>> c)
+    public boolean containsAll(Collection<Map<String, ?>> c)
     {
         return c.stream().allMatch(this::contains);
     }
 
     @Override
-    public <R> R add(Map<String, ? super Object> values)
+    public <R> R add(Map<String, ?> values)
     {
         Objects.requireNonNull(values);
 
-        values = new LinkedHashMap<>(values);
-        values.values().removeIf(Objects::isNull);
+        Map<String, Object> map = new LinkedHashMap<>(values);
+        map.values().removeIf(Objects::isNull);
 
-        columnsHelper.addInsertSpecialColumns(entity, values);
-        columnsHelper.checkDpsColumns(entity, values);
+        columnsHelper.addInsertSpecialColumns(entity, map);
+        columnsHelper.checkDpsColumns(entity, map);
 
-        return sqlHelper.insert(entity.getName(), values);
+        return sqlHelper.insert(entity.getName(), map);
     }
 
     @Override
@@ -221,10 +221,10 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public <R> List<R> addAll(final Collection<Map<String, ? super Object>> c)
+    public <R> List<R> addAll(final Collection<Map<String, ?>> c)
     {
         final List<R> keys = new ArrayList<>(c.size());
-        for (Map<String, ? super Object> values : c)
+        for (Map<String, ?> values : c)
         {
             keys.add(add(values));
         }
@@ -241,18 +241,18 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set(T id, Map<String, ? super Object> values)
+    public int set(T id, Map<String, ?> values)
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        values = new LinkedHashMap<>(values);
+        Map<String, Object> map = new LinkedHashMap<>(values);
 
-        columnsHelper.addUpdateSpecialColumns(entity, values);
+        columnsHelper.addUpdateSpecialColumns(entity, map);
 
         return sqlHelper.update(entity.getName(),
                 Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
-                values);
+                map);
     }
 
     @Override
@@ -291,7 +291,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
-            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            Map<String, ?> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
         }
         else
@@ -307,14 +307,14 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int removeBy(Map<String, ? super Object> conditions)
+    public int removeBy(Map<String, ?> conditions)
     {
         Objects.requireNonNull(conditions);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
-            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            Map<String, ?> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.update(entity.getName(), conditions, values);
         }
         else
@@ -343,7 +343,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //    }
 //
 //    @Override
-//    public <T> List<T> collect( Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda )
+//    public <T> List<T> collect( Map<String, ?> values, BiFunction<R, Integer, T> lambda )
 //    {
 //        Objects.requireNonNull(values);
 //        Objects.requireNonNull(lambda);
@@ -369,9 +369,9 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        setForceMany(values, conditions);
 //    }
 
-    private void checkPrimaryKey(Map<String, ? super Object> conditions)
+    private void checkPrimaryKey(Map<String, ?> conditions)
     {
-        for (Map.Entry<String, ? super Object> entry : conditions.entrySet())
+        for (Map.Entry<String, ?> entry : conditions.entrySet())
         {
             if (entry.getKey().equalsIgnoreCase(getPrimaryKeyName())) checkPrimaryKey((T) entry.getValue());
         }
@@ -411,7 +411,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //     * in process
 //     */
 //    @Override
-//    public void setForceMany(Map<String, ? super Object> values, Map<String, ? super Object> conditions)
+//    public void setForceMany(Map<String, ?> values, Map<String, ?> conditions)
 //    {
 //        Objects.requireNonNull(values);
 //        Objects.requireNonNull(conditions);

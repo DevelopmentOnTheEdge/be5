@@ -5,8 +5,8 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.operations.support.OperationExtenderSupport;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,10 +75,10 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             List<Object> records = Arrays.asList(op.getContext().getRecords());
             Set<Object> disabledRecords = new HashSet<>(records);
 
-            List<DynamicPropertySet> dps = queries.readAsRecordsFromQuery(query,
+            List<QRec> dps = queries.readAsRecordsFromQuery(query,
                     Collections.singletonMap(op.getInfo().getPrimaryKey(), records));
 
-            for (DynamicPropertySet row : dps)
+            for (QRec row : dps)
             {
                 disabledRecords.remove(row.getValue("ID"));
             }

@@ -9,7 +9,8 @@ public class BeMacroFunction implements Function
     {
         this.name = name;
         this.priority = Function.FUNCTION_PRIORITY;
-        this.minNumberOfParams = this.maxNumberOfParams = numberOfParameters;
+        this.minNumberOfParams = numberOfParameters;
+        this.maxNumberOfParams = numberOfParameters;
     }
 
     public BeMacroFunction(String name, int minNumberOfParams, int maxNumberOfParams)

@@ -1,16 +1,15 @@
 package com.developmentontheedge.be5.metadata.model.selectors;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.selectors.parser.ParseException;
+import com.developmentontheedge.be5.metadata.model.selectors.parser.Parser;
+import one.util.streamex.StreamEx;
+
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.selectors.parser.ParseException;
-import com.developmentontheedge.be5.metadata.model.selectors.parser.Parser;
-
-import one.util.streamex.StreamEx;
 
 /**
  * Represents comma-separated several hierarchy rules
