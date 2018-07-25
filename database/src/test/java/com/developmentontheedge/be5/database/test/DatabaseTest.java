@@ -8,13 +8,13 @@ import com.developmentontheedge.be5.database.impl.test.TestTransaction2ServiceIm
 import com.developmentontheedge.be5.database.impl.test.TestTransactionService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import org.junit.Before;
 
+import javax.inject.Inject;
 import java.util.logging.LogManager;
 
 
