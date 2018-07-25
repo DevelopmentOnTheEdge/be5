@@ -19,21 +19,6 @@ public interface Request extends SessionAccess, ParametersAccess
     Session getSession(boolean create);
 
     /**
-     * For tables - may be need refactoring to use Map<String, Object> getValuesFromJson()
-     */
-    //Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
-
-//    /**
-//     * For operation with POJO
-//     * @param parameterName
-//     * @param clazz
-//     * @param <T>
-//     * @return
-//     * @throws Be5Exception
-//     */
-//    <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception;
-
-    /**
      * Returns a remaining part of the request URI after the component ID.
      */
     String getRequestUri();

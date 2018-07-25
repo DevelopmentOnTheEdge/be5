@@ -23,29 +23,6 @@ public class ResponseImpl implements Response
         this.rawWrapper = new RawResponseWrapper(rawResponse);
     }
 
-//    @Override
-//    public void sendErrorsAsJson(Object[] errors, Object meta)
-//    {
-//        throw new RuntimeException("");
-//        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
-//    }
-//
-//    @Override
-//    public void sendError(Be5Exception e)
-//    {
-//        ErrorModel errorModel;
-//        if(UserInfoHolder.isSystemDeveloper())
-//        {
-//            errorModel = new ErrorModel(e);
-//        }
-//        else
-//        {
-//            errorModel = new ErrorModel(e.getHttpStatusCode(), "");
-//        }
-//
-//        sendErrorAsJson(errorModel, null);
-//    }
-
     @Override
     public void sendAsJson(Object value)
     {
