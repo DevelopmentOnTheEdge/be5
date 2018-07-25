@@ -9,7 +9,7 @@ import java.io.IOException;
 public class GroovyDSLGeneratorMavenTest extends TestMavenUtils
 {
     @Test
-    public void test() throws IOException
+    public void test()
     {
         GroovyDSLGeneratorMojo mojo = new GroovyDSLGeneratorMojo();
         mojo.projectPath = tpmProjectPath.toFile();
