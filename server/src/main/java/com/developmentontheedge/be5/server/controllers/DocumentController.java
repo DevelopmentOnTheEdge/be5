@@ -18,13 +18,13 @@ import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
-public class TableController extends JsonApiModelController
+public class DocumentController extends JsonApiModelController
 {
     private final DocumentGenerator documentGenerator;
     private final ErrorModelHelper errorModelHelper;
 
     @Inject
-    public TableController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper)
+    public DocumentController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper)
     {
         this.documentGenerator = documentGenerator;
         this.errorModelHelper = errorModelHelper;

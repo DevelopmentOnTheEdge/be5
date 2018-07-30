@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.server.controllers.LanguageSelectorControlle
 import com.developmentontheedge.be5.server.controllers.MenuController;
 import com.developmentontheedge.be5.server.controllers.QueryBuilderController;
 import com.developmentontheedge.be5.server.controllers.StaticPageController;
-import com.developmentontheedge.be5.server.controllers.TableController;
+import com.developmentontheedge.be5.server.controllers.DocumentController;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
@@ -47,7 +47,7 @@ public class ServerModule extends ServletModule
         install(new OperationModule());
         install(new QueryModule());
 
-        bind(TableController.class).in(Scopes.SINGLETON);
+        bind(DocumentController.class).in(Scopes.SINGLETON);
         bind(FormController.class).in(Scopes.SINGLETON);
         bind(StaticPageController.class).in(Scopes.SINGLETON);
         bind(MenuController.class).in(Scopes.SINGLETON);
@@ -56,7 +56,7 @@ public class ServerModule extends ServletModule
         bind(QueryBuilderController.class).in(Scopes.SINGLETON);
         bind(DownloadController.class).in(Scopes.SINGLETON);
 
-        serve("/api/table*").with(TableController.class);
+        serve("/api/table*").with(DocumentController.class);
         serve("/api/form*").with(FormController.class);
         serve("/api/static*").with(StaticPageController.class);
         serve("/api/menu*").with(MenuController.class);
