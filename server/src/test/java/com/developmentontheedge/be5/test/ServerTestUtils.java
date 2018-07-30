@@ -20,9 +20,7 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
@@ -316,7 +314,6 @@ public abstract class ServerTestUtils extends BaseTestUtils
         protected void configure()
         {
             bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
-            bind(CategoriesService.class).to(CategoriesServiceForTest.class).in(Scopes.SINGLETON);
         }
     }
 

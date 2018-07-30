@@ -22,10 +22,8 @@ import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.FormGenerator;
-import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 
 import javax.inject.Inject;
@@ -38,7 +36,6 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_MORE_ACTION;
@@ -52,7 +49,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
-    private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
     private final FormGenerator formGenerator;
     private final ErrorModelHelper errorModelHelper;
@@ -60,13 +56,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
-            CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
             FormGenerator formGenerator, ErrorModelHelper errorModelHelper)
     {
         this.userAwareMeta = userAwareMeta;
-        this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
         this.userInfoProvider = userInfoProvider;
         this.formGenerator = formGenerator;
@@ -105,24 +99,25 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         List<TableOperationPresentation> operations = collectOperations(query);
 
-        List<Category> categoryNavigation = getCategoryNavigation(entityName, (String) parameters.get(CATEGORY_ID_PARAM));
+        //todo add as plugin
+        //List<Category> categoryNavigation = getCategoryNavigation(entityName, (String) parameters.get(CATEGORY_ID_PARAM));
 
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
-                parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query), categoryNavigation);
+                parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query));
     }
 
-    private List<Category> getCategoryNavigation(String entityName, String categoryID)
-    {
-        if (categoryID != null)
-        {
-            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
-        }
-        else
-        {
-            return categoriesService.getRootCategory(entityName);
-        }
-    }
+//    private List<Category> getCategoryNavigation(String entityName, String categoryID)
+//    {
+//        if (categoryID != null)
+//        {
+//            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
+//        }
+//        else
+//        {
+//            return categoriesService.getRootCategory(entityName);
+//        }
+//    }
 
     private List<TableOperationPresentation> collectOperations(Query query)
     {
