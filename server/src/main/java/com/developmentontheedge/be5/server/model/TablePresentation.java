@@ -24,13 +24,10 @@ public class TablePresentation
     private final boolean hasAggregate;
     private final Object layout;
 
-    private final List<TableOperationPresentation> operations;
-
     public TablePresentation(
             String title,
             String category,
             String page,
-            List<TableOperationPresentation> operations,
             boolean selectable,
             List<Object> columns,
             List<InitialRow> rows,
@@ -46,7 +43,6 @@ public class TablePresentation
         this.title = title;
         this.category = category;
         this.page = page;
-        this.operations = operations;
         this.selectable = selectable;
         this.columns = columns;
         this.rows = rows;
@@ -128,11 +124,6 @@ public class TablePresentation
     public Object getLayout()
     {
         return layout;
-    }
-
-    public List<TableOperationPresentation> getOperations()
-    {
-        return operations;
     }
 
     @Override
