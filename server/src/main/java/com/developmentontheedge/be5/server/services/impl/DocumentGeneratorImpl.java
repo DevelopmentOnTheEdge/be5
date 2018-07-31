@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
@@ -52,7 +51,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private static final Logger log = Logger.getLogger(DocumentGeneratorImpl.class.getName());
 
     private final UserAwareMeta userAwareMeta;
-    private final GroovyRegister groovyRegister;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
@@ -62,39 +60,18 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
-            GroovyRegister groovyRegister,
             CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
             FormGenerator formGenerator, ErrorModelHelper errorModelHelper)
     {
         this.userAwareMeta = userAwareMeta;
-        this.groovyRegister = groovyRegister;
         this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
         this.userInfoProvider = userInfoProvider;
         this.formGenerator = formGenerator;
         this.errorModelHelper = errorModelHelper;
     }
-
-//
-//    @Override
-//    public StaticPagePresentation getStatic(Query query)
-//    {
-//        String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
-//
-//        String entityName = query.getEntity().getName();
-//        String queryName = query.getName();
-//        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
-//
-//        return new StaticPagePresentation(localizedQueryTitle, content);
-//    }
-
-//    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
-//            Operation operation, Map<String, String> presetValues)
-//    {
-//        return new FormGenerator(injector).generate(entityName, queryName, operationName, operation, presetValues, req);
-//    }
 
     @Override
     public JsonApiModel createStaticPage(String title, String content, String url)
@@ -201,8 +178,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return getJsonApiModel(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
-    @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
+    private JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         TablePresentation data = getTablePresentation(query, parameters, tableModel);
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
@@ -239,9 +215,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         try
         {
             Query query = userAwareMeta.getQuery(entityName, queryName);
-            TableModel tableModel = tableModelService.getTableModel(query, parameters);
-
-            return getJsonApiModel(query, parameters, tableModel);
+            return getJsonApiModel(query, parameters);
         }
         catch (Be5Exception e)
         {

@@ -628,7 +628,8 @@ public class DateUtils
 
     public static boolean isActual(Date beginDate, Date endDate, Date curDate)
     {
-        return isSameDay(curDate, beginDate) || curDate.after(beginDate) && (endDate == null || curDate.before(endDate));
+        return isSameDay(curDate, beginDate) ||
+               curDate.after(beginDate) && (endDate == null || curDate.before(endDate) || isSameDay(curDate, endDate));
     }
 
     /**
@@ -652,4 +653,3 @@ public class DateUtils
     }
 
 }
-

@@ -12,7 +12,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,4 +70,15 @@ public abstract class TestMavenUtils
 //        assertEquals(0, appDb.getCreatedViews());
     }
 
+    protected InputStream inputStream(String str)
+    {
+        try
+        {
+            return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

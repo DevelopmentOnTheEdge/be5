@@ -10,21 +10,16 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
+    //todo move from DocumentGenerator
     JsonApiModel createStaticPage(String title, String content, String url);
 
-    //todo move to TableGenerator, add methods return ResourceData
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel);
 
     JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters);
 
-    JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel);
-
     JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters);
 
-    //todo refactor frontend to JsonApiModel
     JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
-
-    //    StaticPagePresentation getStatic(Query query);
 }

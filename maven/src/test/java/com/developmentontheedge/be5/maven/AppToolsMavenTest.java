@@ -31,16 +31,4 @@ public class AppToolsMavenTest extends TestMavenUtils
 
         mojo.execute();
     }
-
-    public InputStream inputStream(String str)
-    {
-        try
-        {
-            return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
 }

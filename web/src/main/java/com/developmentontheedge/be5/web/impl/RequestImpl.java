@@ -94,7 +94,7 @@ public class RequestImpl implements Request
     @Override
     public Map<String, String[]> getParameters()
     {
-        return Collections.unmodifiableMap((Map<String, String[]>) raw.getParameterMap());
+        return Collections.unmodifiableMap(raw.getParameterMap());
     }
 
     @Override
