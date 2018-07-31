@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -41,9 +40,10 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("testtable: All records", table.getTitle());
 
-        assertEquals("['Name','Value']", BaseTestUtils.oneQuotes(jsonb.toJson(table.getColumns())));
+        assertEquals("['Name','Value']", oneQuotes(jsonb.toJson(table.getColumns())));
 
-        assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]", BaseTestUtils.oneQuotes(jsonb.toJson(table.getRows())));
+        assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]",
+                oneQuotes(jsonb.toJson(table.getRows())));
     }
 
     @Test
@@ -53,7 +53,8 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("testtable: LinkQuick", table.getTitle());
 
-        assertEquals("{'cells':[{" + "'content':'tableModelTest'," + "'options':{" + "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," + "'quick':{'visible':'true'}" + "}}]}", BaseTestUtils.oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("{'cells':[{" + "'content':'tableModelTest'," + "'options':{" + "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," + "'quick':{'visible':'true'}" + "}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
     @Test
@@ -65,7 +66,8 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         JsonApiModel document = documentGenerator.getJsonApiModel(query, Collections.emptyMap());
 
-        assertEquals("{" + "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'offset':0,'operations':[],'orderColumn':-1,'orderDir':'asc','page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," + "'included':[" + "{'attributes':{" + "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," + "'entity':'testtable'," + "'layout':{}," + "'operation':'FilterByParamsInQueryOperation','operationParams':{}," + "'operationResult':{'status':'generate'}," + "'query':'TableWithFilter'," + "'selectedRows':''," + "'title':'FilterByParamsInQueryOperation'" + "}," + "'id':'topForm'," + "'links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'}," + "'type':'form'}" + "]" + "}", BaseTestUtils.oneQuotes(jsonb.toJson(document)));
+        assertEquals("{'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'offset':0,'orderColumn':-1,'orderDir':'asc','page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'},'included':[{'attributes':{'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']},'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','selectedRows':'','title':'FilterByParamsInQueryOperation'},'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'},{'attributes':[{'clientSide':false,'name':'FilterByParamsInQueryOperation','requiresConfirmation':false,'title':'FilterByParamsInQueryOperation','visibleWhen':'always'}],'type':'documentOperations'}]}",
+                oneQuotes(jsonb.toJson(document)));
     }
 
     @Test
@@ -77,7 +79,8 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         TablePresentation table = documentGenerator.getTablePresentation(meta.getQuery("testtableAdmin", "Test null in subQuery"), Collections.emptyMap());
 
-        assertEquals("[" + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':11,'options':{}}," + "{'content':'tableModelTest','options':{}}]}," + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'options':{}}," + "{'content':'','options':{}}" + "]}]", BaseTestUtils.oneQuotes(jsonb.toJson(table.getRows())));
+        assertEquals("[" + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':11,'options':{}}," + "{'content':'tableModelTest','options':{}}]}," + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'options':{}}," + "{'content':'','options':{}}" + "]}]",
+                oneQuotes(jsonb.toJson(table.getRows())));
     }
 
     @Test
@@ -94,7 +97,8 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
 
-        assertEquals(new ErrorModel("403", "Access denied to query: testtableAdmin.All records", Collections.singletonMap("self", "table/testtableAdmin/All records")), queryJsonApiForUser.getErrors()[0]);
+        assertEquals(new ErrorModel("403", "Access denied to query: testtableAdmin.All records", Collections.singletonMap("self", "table/testtableAdmin/All records")),
+                queryJsonApiForUser.getErrors()[0]);
     }
 
     @Test

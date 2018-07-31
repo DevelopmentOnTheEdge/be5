@@ -1,48 +1,44 @@
 package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
 
-public class DocumentFormPlugin
+
+public class DocumentFormPlugin implements DocumentPlugin
 {
-    private final UserInfoProvider userInfoProvider;
+    private final FormGenerator formGenerator;
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public DocumentFormPlugin(UserInfoProvider userInfoProvider, UserAwareMeta userAwareMeta)
+    public DocumentFormPlugin(FormGenerator formGenerator, UserAwareMeta userAwareMeta)
     {
-        this.userInfoProvider = userInfoProvider;
+        this.formGenerator = formGenerator;
         this.userAwareMeta = userAwareMeta;
     }
 
-    private ResourceData getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
+    @Override
+    public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        //List<ResourceData> included = new ArrayList<>();
+        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        if (topForm != null)
+        {
+            if (userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm) != null)
+            {
+                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters, Collections.emptyMap());
+                operationResourceData.setId("topForm");
 
-//todo add as plugin
-//        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
-//        if (topForm != null)
-//        {
-//            Optional<TableOperationPresentation> topFormOperationPresentation =
-//                    data.getOperations().stream().filter(x -> x.getName().equals(topForm)).findAny();
-//
-//            if (topFormOperationPresentation.isPresent())
-//            {
-//                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters, Collections.emptyMap());
-//                operationResourceData.setId("topForm");
-//
-//                included.add(operationResourceData);
-//
-//                data.getOperations().remove(topFormOperationPresentation.get());
-//            }
-//        }
+                return operationResourceData;
+            }
+        }
 
         return null;
     }

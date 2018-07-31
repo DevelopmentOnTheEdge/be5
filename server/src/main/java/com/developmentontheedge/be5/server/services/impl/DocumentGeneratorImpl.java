@@ -13,11 +13,14 @@ import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
+import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -41,15 +44,22 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final TableModelService tableModelService;
     private final ErrorModelHelper errorModelHelper;
 
+    private final List<DocumentPlugin> documentPlugins = new ArrayList<>();
+
     @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             TableModelService tableModelService,
+            DocumentFormPlugin documentFormPlugin,
+            DocumentOperationsPlugin documentOperationsPlugin,
             ErrorModelHelper errorModelHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.errorModelHelper = errorModelHelper;
+
+        addDocumentPlugin(documentFormPlugin);
+        addDocumentPlugin(documentOperationsPlugin);
     }
 
     @Override
@@ -87,18 +97,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query));
     }
 
-//    private List<Category> getCategoryNavigation(String entityName, String categoryID)
-//    {
-//        if (categoryID != null)
-//        {
-//            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
-//        }
-//        else
-//        {
-//            return categoriesService.getRootCategory(entityName);
-//        }
-//    }
-
     @Override
     public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters)
     {
@@ -111,11 +109,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
 
         List<ResourceData> included = new ArrayList<>();
-        //todo call all plugins
-
-        //List<TableOperationPresentation> operations = collectOperations(query);
-        //List<Category> categoryNavigation = getCategoryNavigation(entityName, (String) parameters.get(CATEGORY_ID_PARAM));
-        //topFormOperationPresentation
+        documentPlugins.forEach(d -> {
+            ResourceData resourceData = d.addData(query, parameters);
+            if (resourceData != null) included.add(resourceData);
+        });
 
         return JsonApiModel.data(
                 new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
@@ -164,6 +161,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             return JsonApiModel.error(errorModelHelper.
                     getErrorModel(e, links), null);
         }
+    }
+
+    @Override
+    public void addDocumentPlugin(DocumentPlugin documentPlugin)
+    {
+        documentPlugins.add(documentPlugin);
     }
 
 }

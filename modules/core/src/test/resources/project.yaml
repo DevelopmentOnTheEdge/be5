@@ -1,5 +1,6 @@
 testProject:
-  features: logging
+  features:
+  - documentCategories
   l10n: ru
   projectFileStructure: {}
   modules:

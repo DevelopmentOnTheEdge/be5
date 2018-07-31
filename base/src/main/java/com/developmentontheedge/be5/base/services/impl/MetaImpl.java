@@ -557,6 +557,12 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public boolean hasFeature(String name)
+    {
+        return getProject().getFeatures().contains(name);
+    }
+
+    @Override
     public Query createQueryFromSql(String sql)
     {
         Entity e = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);

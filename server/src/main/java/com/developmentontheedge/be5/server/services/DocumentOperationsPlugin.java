@@ -6,24 +6,33 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.Collections3;
+import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 
-public class DocumentOperationPlugin
+public class DocumentOperationsPlugin implements DocumentPlugin
 {
     private final UserInfoProvider userInfoProvider;
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public DocumentOperationPlugin(UserInfoProvider userInfoProvider, UserAwareMeta userAwareMeta)
+    public DocumentOperationsPlugin(UserInfoProvider userInfoProvider, UserAwareMeta userAwareMeta)
     {
         this.userInfoProvider = userInfoProvider;
         this.userAwareMeta = userAwareMeta;
+    }
+
+    @Override
+    public ResourceData addData(Query query, Map<String, Object> parameters)
+    {
+        return new ResourceData("documentOperations", collectOperations(query), null);
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)
