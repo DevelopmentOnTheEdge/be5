@@ -32,11 +32,14 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        return new ResourceData(
-                documentPluginName,
-                getCategoryNavigation(query.getEntity().getName(), (String) parameters.get(CATEGORY_ID_PARAM)),
-                null
-        );
+        List<Category> categories =
+                getCategoryNavigation(query.getEntity().getName(), (String) parameters.get(CATEGORY_ID_PARAM));
+        if (categories.size() > 0)
+        {
+            return new ResourceData(documentPluginName, categories, null);
+        }
+
+        return null;
     }
 
     private List<Category> getCategoryNavigation(String entityName, String categoryID)

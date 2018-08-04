@@ -32,7 +32,13 @@ public class DocumentOperationsPlugin implements DocumentPlugin
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        return new ResourceData("documentOperations", collectOperations(query), null);
+        List<TableOperationPresentation> operations = collectOperations(query);
+        if (operations.size() > 0)
+        {
+            return new ResourceData("documentOperations", operations, null);
+        }
+
+        return null;
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)
