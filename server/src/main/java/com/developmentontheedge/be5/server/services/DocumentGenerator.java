@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 
@@ -22,4 +23,6 @@ public interface DocumentGenerator
     JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters);
 
     JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
+
+    void addDocumentPlugin(DocumentPlugin documentPlugin);
 }

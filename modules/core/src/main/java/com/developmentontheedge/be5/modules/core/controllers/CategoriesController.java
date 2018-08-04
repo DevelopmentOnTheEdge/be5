@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.services.CategoriesService;
+import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 

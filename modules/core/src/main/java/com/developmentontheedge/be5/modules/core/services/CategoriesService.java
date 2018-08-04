@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.server.services.model.Category;
+import com.developmentontheedge.be5.modules.core.services.model.Category;
 
 import java.util.List;
 

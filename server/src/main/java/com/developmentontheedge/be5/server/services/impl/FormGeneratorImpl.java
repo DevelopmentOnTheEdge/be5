@@ -89,6 +89,7 @@ public class FormGeneratorImpl implements FormGenerator
         return operation;
     }
 
+    @SuppressWarnings("unchecked")
     private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
                                                                   Map<String, ?> values, boolean execute)
     {
