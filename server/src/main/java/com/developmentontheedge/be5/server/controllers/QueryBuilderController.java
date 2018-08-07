@@ -82,9 +82,9 @@ public class QueryBuilderController extends JsonApiModelController
             boolean execute = sql != null;
 
             List<String> history;
-            if (req.getAttribute(QUERY_BUILDER_HISTORY) != null)
+            if (req.getSession().get(QUERY_BUILDER_HISTORY) != null)
             {
-                history = (List<String>) req.getAttribute(QUERY_BUILDER_HISTORY);
+                history = (List<String>) req.getSession().get(QUERY_BUILDER_HISTORY);
             }
             else
             {
@@ -107,7 +107,7 @@ public class QueryBuilderController extends JsonApiModelController
                 if (history.isEmpty() || !history.get(history.size() - 1).equals(sql))
                 {
                     history.add(sql);
-                    req.setAttribute(QUERY_BUILDER_HISTORY, history);
+                    req.getSession().set(QUERY_BUILDER_HISTORY, history);
                 }
             }
 
