@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
 import com.developmentontheedge.be5.query.model.InitialRow;
-import com.developmentontheedge.be5.server.services.model.Category;
 
 import java.util.List;
 import java.util.Map;
@@ -25,14 +24,10 @@ public class TablePresentation
     private final boolean hasAggregate;
     private final Object layout;
 
-    private final List<TableOperationPresentation> operations;
-    private final List<Category> categoryNavigation;
-
     public TablePresentation(
             String title,
             String category,
             String page,
-            List<TableOperationPresentation> operations,
             boolean selectable,
             List<Object> columns,
             List<InitialRow> rows,
@@ -43,12 +38,11 @@ public class TablePresentation
             Map<String, Object> parameters,
             Long totalNumberOfRows,
             boolean hasAggregate,
-            Object layout, List<Category> categoryNavigation)
+            Object layout)
     {
         this.title = title;
         this.category = category;
         this.page = page;
-        this.operations = operations;
         this.selectable = selectable;
         this.columns = columns;
         this.rows = rows;
@@ -60,7 +54,6 @@ public class TablePresentation
         this.totalNumberOfRows = totalNumberOfRows;
         this.hasAggregate = hasAggregate;
         this.layout = layout;
-        this.categoryNavigation = categoryNavigation;
     }
 
     public String getTitle()
@@ -131,16 +124,6 @@ public class TablePresentation
     public Object getLayout()
     {
         return layout;
-    }
-
-    public List<TableOperationPresentation> getOperations()
-    {
-        return operations;
-    }
-
-    public List<Category> getCategoryNavigation()
-    {
-        return categoryNavigation;
     }
 
     @Override
