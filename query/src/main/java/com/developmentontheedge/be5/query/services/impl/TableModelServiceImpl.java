@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.query.services.TableModelService;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
@@ -75,6 +76,7 @@ public class TableModelServiceImpl implements TableModelService
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
     {
+        parameters = new HashMap<>(parameters);
         int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
         String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
         int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
