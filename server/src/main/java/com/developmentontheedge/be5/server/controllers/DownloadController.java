@@ -34,7 +34,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
     public void generate(Request req, Response res, String requestSubUrl)
     {
         String entity = req.getNonEmpty("_t_");
-        String ID = req.getNonEmpty("ID");
+        Long ID = req.getLong("ID");
 
         String typeColumn = req.getOrDefault("_typeColumn_", "mimeType");
         String filenameColumn = req.getOrDefault("_filenameColumn_", "name");
