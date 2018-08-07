@@ -27,23 +27,17 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
-
 
 public class QueryUtils
 {
-    private static final List<String> keywords = Arrays.asList("category",
-            SEARCH_PARAM, SEARCH_PRESETS_PARAM, CATEGORY_ID_PARAM, RELOAD_CONTROL_NAME);
+    private static final List<String> keywords = Collections.singletonList("category");
 
     public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters)
     {
@@ -58,6 +52,7 @@ public class QueryUtils
         Map<ColumnRef, List<Object>> filters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(keywords::contains)
+                .removeKeys(QueryUtils::ignoreNotQueryParameters)
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))
                 .nonNullKeys().toMap();
 
@@ -65,6 +60,11 @@ public class QueryUtils
         {
             new FilterApplier().addFilter(ast, filters);
         }
+    }
+
+    private static boolean ignoreNotQueryParameters(String key)
+    {
+        return key.startsWith("_") && key.endsWith("_");
     }
 
     public static void countFromQuery(AstQuery query)

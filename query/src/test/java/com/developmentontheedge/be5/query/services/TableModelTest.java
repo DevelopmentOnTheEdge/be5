@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -48,16 +47,6 @@ public class TableModelTest extends QueryBe5ProjectDBTest
 
         assertEquals("{'content':'user1<br/> user2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
-    }
-
-    @Test
-    public void testUnmodifiableMap()
-    {
-        Query query = projectProvider.get().getEntity("testtable").getQueries().get("All records");
-        TableModel tableModel = tableModelService.getTableModel(query, Collections.unmodifiableMap(Collections.emptyMap()));
-
-        assertEquals("{'content':'1','options':{}}",
-                oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(1))));
     }
 
     @Test

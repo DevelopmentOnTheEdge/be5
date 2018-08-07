@@ -46,7 +46,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void ignoreKeywords() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("_search_", Collections.singletonList("test")));
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("_test_", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());
