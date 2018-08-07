@@ -71,7 +71,7 @@ public class UserHelper
         UserInfo userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
         String username = userInfo.getUserName();
 
-        //session.invalidate();
+        session.invalidate();
         initGuest();
 
         log.info("Logout user: " + username);
