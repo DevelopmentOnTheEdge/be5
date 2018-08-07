@@ -15,7 +15,6 @@ import com.developmentontheedge.be5.query.services.TableModelService;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.query.TableConstants.LIMIT;

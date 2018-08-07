@@ -27,7 +27,6 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,21 +36,12 @@ import java.util.Set;
 
 public class QueryUtils
 {
-    private static final List<String> keywords = Collections.singletonList("category");
-
     public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters)
     {
-//        parameters.forEach((k, v) -> {
-//            if(v != null && v.getClass() != String.class){
-//                System.out.println("v getClass: " + v + ", " + v.getClass());
-//            }
-//        });
-
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<ColumnRef, List<Object>> filters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
-                .removeKeys(keywords::contains)
                 .removeKeys(QueryUtils::ignoreNotQueryParameters)
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))
                 .nonNullKeys().toMap();
