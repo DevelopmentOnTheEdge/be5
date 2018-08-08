@@ -117,6 +117,11 @@ public class OperationResult
         return new OperationResult(OperationStatus.FINISHED, message, null);
     }
 
+    public static OperationResult finishedWithData(Object details)
+    {
+        return new OperationResult(OperationStatus.FINISHED, null, details);
+    }
+
     public static OperationResult finished(String message, Object details)
     {
         return new OperationResult(OperationStatus.FINISHED, message, details);
