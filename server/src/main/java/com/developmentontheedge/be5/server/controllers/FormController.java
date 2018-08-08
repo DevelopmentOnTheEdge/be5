@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
@@ -75,7 +76,7 @@ public class FormController extends JsonApiModelController
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
                     .named(operationParams);
-            if (req.get(RestApiConstants.SELECTED_ROWS) != null)
+            if (!Utils.isEmpty(req.get(RestApiConstants.SELECTED_ROWS)))
             {
                 url = url.named("selectedRows", req.get(RestApiConstants.SELECTED_ROWS));
             }
