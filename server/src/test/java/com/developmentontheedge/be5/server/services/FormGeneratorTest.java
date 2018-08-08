@@ -45,7 +45,8 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         //result.getAttributes()
 
-        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}", BaseTestUtils.oneQuotes(jsonb.toJson(result.getAttributes())));
+        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','title':'Добавить'}",
+                oneQuotes(jsonb.toJson(result.getAttributes())));
     }
 
     @Test
