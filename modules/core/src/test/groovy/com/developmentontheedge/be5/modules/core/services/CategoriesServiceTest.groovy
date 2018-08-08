@@ -148,8 +148,8 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
         assertEquals "p1", docTypes.get(0).children.get(0).name
 
         assertEquals 2, docTypes.get(0).children.get(0).children.size()
-        assertEquals "c2", docTypes.get(0).children.get(0).children.get(0).name
-        assertEquals "c1", docTypes.get(0).children.get(0).children.get(1).name
+        assertEquals "c1", docTypes.get(0).children.get(0).children.get(0).name
+        assertEquals "c2", docTypes.get(0).children.get(0).children.get(1).name
 
         assertEquals 0, docTypes.get(0).children.get(0).children.get(0).children.size()
         assertEquals 0, docTypes.get(0).children.get(0).children.get(1).children.size()
