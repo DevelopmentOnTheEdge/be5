@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
@@ -17,10 +16,8 @@ import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
 import com.developmentontheedge.be5.test.mocks.TestResponse;
@@ -29,7 +26,6 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import org.junit.Before;
@@ -106,11 +102,6 @@ public abstract class TestUtils extends BaseTestUtils
         return request;
     }
 
-    protected Request getSpyMockRequest(String requestUri)
-    {
-        return getSpyMockRequest(requestUri, new HashMap<>(), new HashMap<>());
-    }
-
     protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters)
     {
         return getSpyMockRequest(requestUri, parameters, new HashMap<>());
@@ -134,38 +125,6 @@ public abstract class TestUtils extends BaseTestUtils
         }
 
         return request;
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.OPERATION, operation,
-                RestApiConstants.SELECTED_ROWS, selectedRows,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values)
-    {
-        return getSpyMockRecForQuery(entity, query, values, new HashMap<>());
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
-    {
-        return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
     public static QRec getQRec(Map<String, ?> nameValues)
@@ -308,15 +267,6 @@ public abstract class TestUtils extends BaseTestUtils
             {
                 return ".java";
             }
-        }
-    }
-
-    public static class CoreTestModule extends AbstractModule
-    {
-        @Override
-        protected void configure()
-        {
-            bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
         }
     }
 
