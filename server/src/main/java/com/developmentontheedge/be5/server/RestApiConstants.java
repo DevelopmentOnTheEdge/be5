@@ -25,11 +25,6 @@ public interface RestApiConstants
 
     String OPERATION_PARAMS = "operationParams";
 
-    /**
-     * Selected rows of a table.
-     */
-    String SELECTED_ROWS = "selectedRows";
-
     // json api
 
     String TIMESTAMP_PARAM = "_ts_";

@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.operation.services
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.operation.OperationBe5ProjectDBTest
+import com.developmentontheedge.be5.operation.OperationConstants
 import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationInfo
 import com.developmentontheedge.be5.operation.model.OperationStatus
@@ -46,7 +47,7 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     {
         def op = operationExecutor.create(
                 new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp")),
-                "All records", ["1"] as String[], [:])
+                "All records", Collections.singletonMap(OperationConstants.SELECTED_ROWS, "1"))
 
         assertEquals(OperationStatus.CREATE, op.getStatus())
         assertEquals(1L, op.getContext().getRecord())

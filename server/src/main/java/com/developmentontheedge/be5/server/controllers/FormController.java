@@ -3,8 +3,6 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.base.util.Utils;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
@@ -21,7 +19,6 @@ import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
-import static com.google.common.base.Strings.nullToEmpty;
 
 
 public class FormController extends JsonApiModelController
@@ -56,7 +53,6 @@ public class FormController extends JsonApiModelController
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        String[] selectedRows = OperationUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
         Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
@@ -65,9 +61,9 @@ public class FormController extends JsonApiModelController
             switch (requestSubUrl)
             {
                 case "":
-                    return data(formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values));
+                    return data(formGenerator.generate(entityName, queryName, operationName, operationParams, values));
                 case "apply":
-                    return data(formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values));
+                    return data(formGenerator.execute(entityName, queryName, operationName, operationParams, values));
                 default:
                     return null;
             }
@@ -76,11 +72,6 @@ public class FormController extends JsonApiModelController
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
                     .named(operationParams);
-            if (!Utils.isEmpty(req.get(RestApiConstants.SELECTED_ROWS)))
-            {
-                url = url.named("selectedRows", req.get(RestApiConstants.SELECTED_ROWS));
-            }
-
             log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));
         }

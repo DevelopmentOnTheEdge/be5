@@ -7,7 +7,7 @@ public class OperationUtils
 {
     public static String[] selectedRows(String selectedRowsString)
     {
-        if (selectedRowsString.trim().isEmpty()) return new String[0];
+        if (selectedRowsString == null || selectedRowsString.trim().isEmpty()) return new String[0];
         return selectedRowsString.split(",");
     }
 

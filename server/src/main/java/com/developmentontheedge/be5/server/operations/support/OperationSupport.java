@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
@@ -15,7 +16,6 @@ import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.web.Request;
@@ -87,7 +87,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     {
         return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
                 .named(getRedirectParams())
-                .named(RestApiConstants.SELECTED_ROWS, newID.toString());
+                .named(OperationConstants.SELECTED_ROWS, newID.toString());
     }
 
 }

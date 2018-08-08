@@ -58,9 +58,9 @@ public class FormGeneratorImpl implements FormGenerator
 
     @Override
     public ResourceData generate(String entityName, String queryName, String operationName,
-                                 String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+                                 Map<String, Object> operationParams, Map<String, Object> values)
     {
-        Operation operation = getOperation(entityName, queryName, operationName, selectedRows, operationParams);
+        Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
         Either<FormPresentation, OperationResult> data = processForm(operation, values, false);
 
@@ -70,9 +70,9 @@ public class FormGeneratorImpl implements FormGenerator
 
     @Override
     public ResourceData execute(String entityName, String queryName, String operationName,
-                                String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+                                Map<String, Object> operationParams, Map<String, Object> values)
     {
-        Operation operation = getOperation(entityName, queryName, operationName, selectedRows, operationParams);
+        Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
         Either<FormPresentation, OperationResult> data = processForm(operation, values, true);
 
@@ -80,12 +80,12 @@ public class FormGeneratorImpl implements FormGenerator
                 Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString()));
     }
 
-    private Operation getOperation(String entityName, String queryName, String operationName, String[] selectedRows, Map<String, Object> operationParams)
+    private Operation getOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
     {
         Operation operation;
 
         OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-        operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
+        operation = operationExecutor.create(operationInfo, queryName, operationParams);
         return operation;
     }
 

@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationExtender;
@@ -16,6 +17,7 @@ import com.developmentontheedge.be5.operation.model.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -267,9 +269,9 @@ public class OperationExecutorImpl implements OperationExecutor
 
     @Override
     public Operation create(OperationInfo operationInfo, String queryName,
-                            String[] stringSelectedRows, Map<String, Object> operationParams)
+                            Map<String, Object> operationParams)
     {
-        Object[] selectedRows = stringSelectedRows;
+        Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
         if (!operationInfo.getEntityName().startsWith("_"))
         {
             Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());

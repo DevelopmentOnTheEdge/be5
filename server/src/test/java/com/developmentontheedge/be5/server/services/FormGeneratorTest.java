@@ -39,7 +39,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
             put("value", "2");
         }};
 
-        ResourceData result = formGenerator.generate("testtable", "All records", "Insert", new String[0], Collections.emptyMap(), map);
+        ResourceData result = formGenerator.generate("testtable", "All records", "Insert", Collections.emptyMap(), map);
 
         assertEquals(FORM_ACTION, result.getType());
 
@@ -55,7 +55,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
             put("name", "generateErrorInProperty");
         }};
 
-        ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", new String[0], Collections.emptyMap(), map);
+        ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", Collections.emptyMap(), map);
         FormPresentation formPresentation = (FormPresentation) result.getAttributes();
         assertEquals("{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}", BaseTestUtils.oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString()));
 

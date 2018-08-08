@@ -8,8 +8,8 @@ import java.util.Map;
 public interface FormGenerator
 {
     ResourceData generate(String entityName, String queryName, String operationName,
-                          String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values);
+                          Map<String, Object> operationParams, Map<String, Object> values);
 
     ResourceData execute(String entityName, String queryName, String operationName,
-                         String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values);
+                         Map<String, Object> operationParams, Map<String, Object> values);
 }

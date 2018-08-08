@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
@@ -139,7 +140,7 @@ public abstract class ServerTestUtils extends BaseTestUtils
                 RestApiConstants.ENTITY, entity,
                 RestApiConstants.QUERY, query,
                 RestApiConstants.OPERATION, operation,
-                RestApiConstants.SELECTED_ROWS, selectedRows,
+                OperationConstants.SELECTED_ROWS, selectedRows,
                 RestApiConstants.VALUES, values),
                 sessionValues
         );

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.util;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class HashUrlUtils
 
         if (operation.getContext().getRecords().length > 0)
         {
-            hashUrl = hashUrl.named("selectedRows", Arrays.stream(operation.getContext().getRecords())
+            hashUrl = hashUrl.named(OperationConstants.SELECTED_ROWS, Arrays.stream(operation.getContext().getRecords())
                     .map(Object::toString)
                     .collect(Collectors.joining(",")));
         }
