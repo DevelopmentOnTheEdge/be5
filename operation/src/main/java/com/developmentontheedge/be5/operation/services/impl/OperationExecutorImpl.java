@@ -268,8 +268,7 @@ public class OperationExecutorImpl implements OperationExecutor
 //    }
 
     @Override
-    public Operation create(OperationInfo operationInfo, String queryName,
-                            Map<String, Object> operationParams)
+    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, Object> operationParams)
     {
         Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
         if (!operationInfo.getEntityName().startsWith("_"))
@@ -278,7 +277,14 @@ public class OperationExecutorImpl implements OperationExecutor
             selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
         }
 
-        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+        return new OperationContext(selectedRows, queryName, operationParams);
+    }
+
+    @Override
+    public Operation create(OperationInfo operationInfo, String queryName,
+                            Map<String, Object> operationParams)
+    {
+        OperationContext operationContext = getOperationContext(operationInfo, queryName, operationParams);
 
         return create(operationInfo, operationContext);
     }

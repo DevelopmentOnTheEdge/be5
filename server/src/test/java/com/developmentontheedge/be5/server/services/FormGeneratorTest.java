@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.BaseTestUtils;
@@ -21,9 +21,7 @@ import static org.junit.Assert.assertNull;
 
 public class FormGeneratorTest extends TestTableQueryDBTest
 {
-    @Inject private Meta meta;
     @Inject private FormGenerator formGenerator;
-    @Inject private OperationExecutor operationExecutor;
 
     @Before
     public void setUp()
@@ -47,6 +45,8 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','title':'Добавить'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
+
+        assertEquals("form/testtable/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
     }
 
     @Test
@@ -64,5 +64,17 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals("Error in property (getParameters)", formPresentation.getOperationResult().getMessage());
 
         assertNull(formPresentation.getOperationResult().getDetails());
+    }
+
+    @Test
+    public void testSelfLink()
+    {
+        Long id = db.oneLong("select id from testtable limit 1");
+        ResourceData result = formGenerator.generate("testtable", "All records", "Edit",
+                Collections.singletonMap(OperationConstants.SELECTED_ROWS, id.toString()),
+                Collections.emptyMap());
+
+        assertEquals("form/testtable/All records/Edit/_selectedRows_=" + id.toString(),
+                result.getLinks().get(RestApiConstants.SELF_LINK));
     }
 }

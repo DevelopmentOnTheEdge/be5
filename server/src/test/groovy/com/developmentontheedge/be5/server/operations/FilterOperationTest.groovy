@@ -77,7 +77,7 @@ class FilterOperationTest extends SqlMockOperationTest
         assertEquals("redirect",
                 oneQuotes(execute.getSecond().getStatus()))
 
-        assertEquals("table/testtable/All records/_search_presets_=name/name=test/_search_=true",
+        assertEquals("table/testtable/All records/name=test/_search_=true/_search_presets_=name",
                 (String) execute.getSecond().getDetails())
     }
 

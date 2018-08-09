@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -237,29 +236,24 @@ public abstract class ServerTestUtils extends BaseTestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation createOperation(String entityName, String operationName, OperationContext context)
-    {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
-
-        Operation operation = operationExecutor.create(operationInfo, context);
-        ShowCreatedOperations.addOperation(operation);
-
-        return operation;
-    }
-
-    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRowsParam)
+    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
         OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
-        String[] stringSelectedRows = OperationUtils.selectedRows(selectedRowsParam);
-        Object[] selectedRows = stringSelectedRows;
-        if (!operationInfo.getEntityName().startsWith("_"))
+        Map<String, Object> params;
+        if (Utils.isEmpty(selectedRows))
         {
-            Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
-            selectedRows = Utils.changeTypes(stringSelectedRows, primaryKeyColumnType);
+            params = Collections.emptyMap();
+        }
+        else
+        {
+            params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, selectedRows);
         }
 
-        Operation operation = operationExecutor.create(operationInfo, new OperationContext(selectedRows, queryName, Collections.emptyMap()));
+        OperationContext operationContext = operationExecutor.getOperationContext(
+                operationInfo, queryName, params);
+
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
 
         return operation;

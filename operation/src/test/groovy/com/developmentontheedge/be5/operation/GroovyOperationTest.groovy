@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operation
 
-import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.OperationStatus

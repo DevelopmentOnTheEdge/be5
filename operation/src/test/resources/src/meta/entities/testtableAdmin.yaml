@@ -21,6 +21,7 @@ testtableAdmin:
       roles: Administrator
       operations:
       - TestOperation
+      - TestOperation1
       - TestGroovyOp
       - OperationWithExtend
       - OperationWithExtend2
@@ -77,6 +78,10 @@ testtableAdmin:
               testtableAdmin t
   operations:
   - TestOperation:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operation.test.TestOperation
+  - TestOperation1:
+      records: 1
       roles: Administrator
       code: com.developmentontheedge.be5.operation.test.TestOperation
   - TestOperationProperty:
