@@ -94,13 +94,12 @@ public class OperationTestUtils extends BaseTestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation createOperation(String entityName, String operationName, OperationContext context)
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, Object> params)
     {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
-
-        Operation operation = operationExecutor.create(operationInfo, context);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
+        OperationContext operationContext = operationExecutor.getOperationContext(operationInfo, queryName, params);
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
-
         return operation;
     }
 

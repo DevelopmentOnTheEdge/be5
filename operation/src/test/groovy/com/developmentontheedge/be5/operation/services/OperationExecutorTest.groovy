@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.operation.OperationBe5ProjectDBTest
 import com.developmentontheedge.be5.operation.OperationConstants
-import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationInfo
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import org.junit.Test
@@ -26,7 +25,8 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     void execute()
     {
         def info = new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp"))
-        def operation = operationExecutor.create(info, new OperationContext([] as String[], null, Collections.emptyMap()))
+        def operation = operationExecutor.create(info,
+                operationExecutor.getOperationContext(info, null, Collections.emptyMap()))
 
         db.update("DELETE FROM testtableAdmin")
 

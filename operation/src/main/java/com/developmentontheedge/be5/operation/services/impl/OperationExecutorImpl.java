@@ -72,9 +72,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (Throwable e)
         {
-            Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
-            //operation.setResult(OperationResult.error(be5Exception));
-            throw be5Exception;
+            throw Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
         }
     }
 
@@ -257,18 +255,10 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         return false;
     }
-//
-//    @Override
-//    public Operation create(OperationInfo operationInfo, String queryName,
-//                            String[] selectedRows, Map<String, String> operationParams)
-//    {
-//        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
-//
-//        return create(operationInfo, operationContext);
-//    }
 
     @Override
-    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, Object> operationParams)
+    @SuppressWarnings("unchecked")
+    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, ?> operationParams)
     {
         Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
         if (!operationInfo.getEntityName().startsWith("_"))
@@ -277,7 +267,7 @@ public class OperationExecutorImpl implements OperationExecutor
             selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
         }
 
-        return new OperationContext(selectedRows, queryName, operationParams);
+        return new OperationContext(selectedRows, queryName, (Map<String, Object>) operationParams);
     }
 
     @Override

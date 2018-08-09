@@ -14,7 +14,7 @@ public interface OperationExecutor
     Object execute(Operation operation, Map<String, Object> presetValues);
 
     OperationContext getOperationContext(OperationInfo operationInfo,
-                                         String queryName, Map<String, Object> operationParams);
+                                         String queryName, Map<String, ?> operationParams);
 
     Operation create(OperationInfo operationInfo, String queryName,
                      Map<String, Object> operationParams);

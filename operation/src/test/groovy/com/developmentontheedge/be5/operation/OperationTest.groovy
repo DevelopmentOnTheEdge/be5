@@ -44,8 +44,8 @@ class OperationTest extends OperationsSqlMockProjectTest
     @Test
     void withOperationParams()
     {
-        OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
-                new OperationContext([] as String[], "All records", ["name": "foo"])),
+        OperationResult result = executeOperation(
+                createOperation("testtableAdmin", "All records", "TestOperation", ["name": "foo"]),
                 ImmutableMap.of("name", "testName", "value", "1")).getSecond()
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
     }
@@ -53,9 +53,8 @@ class OperationTest extends OperationsSqlMockProjectTest
     @Test
     void testRemoveSelectedRows()
     {
-        OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation1",
-                new OperationContext([] as String[], "All records",
-                        ImmutableMap.of("name", "foo", OperationConstants.SELECTED_ROWS, "1"))), [:]).getSecond()
+        OperationResult result = executeOperation(createOperation("testtableAdmin", "All records", "TestOperation1",
+                 ImmutableMap.of("name", "foo", OperationConstants.SELECTED_ROWS, "1")), [:]).getSecond()
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
     }
 

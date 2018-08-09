@@ -198,13 +198,12 @@ public abstract class TestUtils extends BaseTestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation createOperation(String entityName, String operationName, OperationContext context)
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, ?> params)
     {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
-
-        Operation operation = operationExecutor.create(operationInfo, context);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
+        OperationContext operationContext = operationExecutor.getOperationContext(operationInfo, queryName, params);
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
-
         return operation;
     }
 
@@ -236,7 +235,7 @@ public abstract class TestUtils extends BaseTestUtils
     {
         private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
 
-        public static void addOperation(Operation operation)
+        static void addOperation(Operation operation)
         {
             operations.add(operation);
         }

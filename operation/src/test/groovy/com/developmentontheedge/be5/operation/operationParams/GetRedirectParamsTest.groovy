@@ -65,8 +65,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
 
     private Operation getOperation(Map<String, String> operationParams)
     {
-        return createOperation("testtableAdmin", "PrintParamsCustomOp",
-                new OperationContext([] as String[], "All records", operationParams))
+        return createOperation("testtableAdmin", "All records", "PrintParamsCustomOp", operationParams)
     }
 }
 
