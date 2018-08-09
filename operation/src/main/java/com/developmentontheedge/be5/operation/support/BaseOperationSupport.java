@@ -51,12 +51,6 @@ public abstract class BaseOperationSupport implements Operation
     }
 
     @Override
-    public final void interrupt()
-    {
-        Thread.currentThread().interrupt();
-    }
-
-    @Override
     public final OperationStatus getStatus()
     {
         return operationResult.getStatus();

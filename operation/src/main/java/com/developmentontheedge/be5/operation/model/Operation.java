@@ -37,11 +37,6 @@ public interface Operation extends Serializable
     void invoke(Object parameters) throws Exception;
 
     /**
-     * Set flag (Thread.interrupt) to interrupt the operation.
-     */
-    void interrupt();
-
-    /**
      * Returns current status of the operation
      */
     OperationStatus getStatus();

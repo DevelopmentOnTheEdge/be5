@@ -24,7 +24,7 @@ public class BaseOperationSupportTest extends OperationsSqlMockProjectTest
         };
         operationSupport.initialize(
                 new OperationInfo(meta.getOperation("testtable", "CustomOperation")),
-                new OperationContext(new Object[]{}, "Test", Collections.emptyMap()),
+                new OperationContext(new Object[]{"1"}, "Test", Collections.singletonMap(OperationConstants.SELECTED_ROWS, "1")),
                 OperationResult.create());
     }
 
