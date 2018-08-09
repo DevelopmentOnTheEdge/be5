@@ -169,9 +169,10 @@ public abstract class BaseOperationSupport implements Operation
 
     public HashUrl getUrlForNewRecordId(Object newID)
     {
+        Map<String, Object> params = getRedirectParams();
+        params.put(OperationConstants.SELECTED_ROWS, newID.toString());
         return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
-                .named(getRedirectParams())
-                .named(OperationConstants.SELECTED_ROWS, newID.toString());
+                .named(params);
     }
 
 }
