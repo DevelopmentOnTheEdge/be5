@@ -88,7 +88,7 @@ public class Utils
         {
             return true;
         }
-        if (value instanceof String && "".equals(((String) value).trim()))
+        if (value instanceof String && ((String) value).trim().isEmpty())
         {
             return true;
         }
