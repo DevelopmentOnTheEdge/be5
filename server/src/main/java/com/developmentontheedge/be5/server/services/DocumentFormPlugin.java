@@ -33,7 +33,7 @@ public class DocumentFormPlugin implements DocumentPlugin
         {
             if (userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm) != null)
             {
-                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters, Collections.emptyMap());
+                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, parameters, Collections.emptyMap());
                 operationResourceData.setId("topForm");
 
                 return operationResourceData;

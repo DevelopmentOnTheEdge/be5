@@ -1,10 +1,15 @@
 package com.developmentontheedge.be5.operation.support;
 
+import com.developmentontheedge.be5.base.FrontendConstants;
+import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.util.OperationUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,12 +48,6 @@ public abstract class BaseOperationSupport implements Operation
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         return null;
-    }
-
-    @Override
-    public final void interrupt()
-    {
-        Thread.currentThread().interrupt();
     }
 
     @Override
@@ -136,5 +135,38 @@ public abstract class BaseOperationSupport implements Operation
 //    {
 //        presetValues.forEach((key, value) -> addNotNullRedirectParam(presetValues, key));
 //    }
+
+    public void redirectThisOperation()
+    {
+        String url = new HashUrl(FrontendConstants.FORM_ACTION,
+                getInfo().getEntityName(), getContext().getQueryName(), getInfo().getName())
+                .named(getRedirectParams()).toString();
+        setResult(OperationResult.redirect(url));
+    }
+
+    public void redirectThisOperationNewId(Object newID)
+    {
+        setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
+    }
+
+    public void redirectToTable(String entityName, String queryName, Map<String, Object> params)
+    {
+        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName)
+                .named(OperationUtils.paramsWithoutSelectedRows(params)).toString()));
+    }
+
+    public void redirectToTable(Query query, Map<String, Object> params)
+    {
+        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, query.getEntity().getName(), query.getName())
+                .named(OperationUtils.paramsWithoutSelectedRows(params)).toString()));
+    }
+
+    public HashUrl getUrlForNewRecordId(Object newID)
+    {
+        Map<String, Object> params = getRedirectParams();
+        params.put(OperationConstants.SELECTED_ROWS, newID.toString());
+        return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
+                .named(params);
+    }
 
 }

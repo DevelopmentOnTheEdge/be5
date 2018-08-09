@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
+import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
@@ -17,7 +18,6 @@ import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
-import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -58,34 +58,34 @@ public class FormGeneratorImpl implements FormGenerator
 
     @Override
     public ResourceData generate(String entityName, String queryName, String operationName,
-                                 String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+                                 Map<String, Object> operationParams, Map<String, Object> values)
     {
-        Operation operation = getOperation(entityName, queryName, operationName, selectedRows, operationParams);
+        Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
         Either<FormPresentation, OperationResult> data = processForm(operation, values, false);
 
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString()));
+                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
     }
 
     @Override
     public ResourceData execute(String entityName, String queryName, String operationName,
-                                String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+                                Map<String, Object> operationParams, Map<String, Object> values)
     {
-        Operation operation = getOperation(entityName, queryName, operationName, selectedRows, operationParams);
+        Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
         Either<FormPresentation, OperationResult> data = processForm(operation, values, true);
 
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString()));
+                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
     }
 
-    private Operation getOperation(String entityName, String queryName, String operationName, String[] selectedRows, Map<String, Object> operationParams)
+    private Operation getOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
     {
         Operation operation;
 
         OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-        operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
+        operation = operationExecutor.create(operationInfo, queryName, operationParams);
         return operation;
     }
 
@@ -110,7 +110,7 @@ public class FormGeneratorImpl implements FormGenerator
             {
                 if (userInfoProvider.isSystemDeveloper())
                 {
-                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), HashUrlUtils.getUrl(operation));
+                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), getUrl(operation));
                 }
             }
 
@@ -149,4 +149,10 @@ public class FormGeneratorImpl implements FormGenerator
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
+    public static HashUrl getUrl(Operation operation)
+    {
+        return new HashUrl(FrontendConstants.FORM_ACTION,
+                operation.getInfo().getEntityName(), operation.getContext().getQueryName(), operation.getInfo().getName())
+                .named(operation.getRedirectParams());
+    }
 }

@@ -21,7 +21,7 @@ class OperationTest extends OperationsSqlMockProjectTest
     @Test
     void testOperation()
     {
-        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
+        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "",
                 ImmutableMap.of("name", "testName", "value", "1"))
 
         Object parameters = generate.getFirst()
@@ -44,9 +44,17 @@ class OperationTest extends OperationsSqlMockProjectTest
     @Test
     void withOperationParams()
     {
-        OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
-                new OperationContext([] as String[], "All records", ["name": "foo"])),
+        OperationResult result = executeOperation(
+                createOperation("testtableAdmin", "All records", "TestOperation", ["name": "foo"]),
                 ImmutableMap.of("name", "testName", "value", "1")).getSecond()
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
+    }
+
+    @Test
+    void testRemoveSelectedRows()
+    {
+        OperationResult result = executeOperation(createOperation("testtableAdmin", "All records", "TestOperation1",
+                 ImmutableMap.of("name", "foo", OperationConstants.SELECTED_ROWS, "1")), [:]).getSecond()
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
     }
 

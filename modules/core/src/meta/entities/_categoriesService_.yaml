@@ -23,6 +23,7 @@ _categoriesService_:
         LEFT JOIN categories c7 on c7.parentID = c6.ID
         LEFT JOIN categories c8 on c8.parentID = c7.ID
         WHERE <parameter:categoryID /> IN ( c1.ID, c2.ID, c3.ID, c4.ID, c5.ID, c6.ID, c7.ID, c8.ID ) OR (c1.parentID = <parameter:categoryID />)
+        ORDER BY c1.parentId, c1.name
   - hasAnyItem:
       type: 1D_unknown
       code: |-

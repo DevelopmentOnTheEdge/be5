@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.operation.util.OperationUtils.paramsWithoutSelectedRows;
 
 
 public class OperationServiceImpl implements OperationService
@@ -91,7 +92,7 @@ public class OperationServiceImpl implements OperationService
         {
             operation.setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
                     operation.getInfo().getEntityName(), operation.getContext().getQueryName())
-                    .named(operation.getRedirectParams()).toString())
+                    .named(paramsWithoutSelectedRows(operation.getRedirectParams())).toString())
             );
         }
 

@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -66,7 +67,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         JsonApiModel document = documentGenerator.getJsonApiModel(query, Collections.emptyMap());
 
-        assertEquals("{'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'offset':0,'orderColumn':-1,'orderDir':'asc','page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'},'included':[{'attributes':{'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']},'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','selectedRows':'','title':'FilterByParamsInQueryOperation'},'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'},{'attributes':[{'clientSide':false,'name':'FilterByParamsInQueryOperation','requiresConfirmation':false,'title':'FilterByParamsInQueryOperation','visibleWhen':'always'}],'type':'documentOperations'}]}",
+        assertEquals("{'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'offset':0,'orderColumn':-1,'orderDir':'asc','page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'},'included':[{'attributes':{'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']},'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','title':'FilterByParamsInQueryOperation'},'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'},{'attributes':[{'clientSide':false,'name':'FilterByParamsInQueryOperation','requiresConfirmation':false,'title':'FilterByParamsInQueryOperation','visibleWhen':'always'}],'type':'documentOperations'}]}",
                 oneQuotes(jsonb.toJson(document)));
     }
 
@@ -119,5 +120,15 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertNull(queryJsonApiForUser.getData());
         assertEquals(new ErrorModel("500", "Internal error occurred during query: testtable.Query with error", Collections.singletonMap("self", "table/testtable/Query with error")), queryJsonApiForUser.getErrors()[0]);
+    }
+
+    @Test
+    public void testSelfLink()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.getJsonApiModel(meta.getQuery("testtable", "All records"),
+                Collections.singletonMap("name", "1"));
+
+        assertEquals("table/testtable/All records/name=1",
+                jsonApiModel.getData().getLinks().get(RestApiConstants.SELF_LINK));
     }
 }

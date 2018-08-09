@@ -45,6 +45,7 @@ public class TableModelServiceImpl implements TableModelService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TableModel getTableModel(Query query, Map<String, ?> parameters)
     {
         try
@@ -68,6 +69,7 @@ public class TableModelServiceImpl implements TableModelService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
         return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService, userAwareMeta);
@@ -79,11 +81,6 @@ public class TableModelServiceImpl implements TableModelService
         String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
         int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
         int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
-
-        parameters.remove(ORDER_COLUMN);
-        parameters.remove(ORDER_DIR);
-        parameters.remove(OFFSET);
-        parameters.remove(LIMIT);
 
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 

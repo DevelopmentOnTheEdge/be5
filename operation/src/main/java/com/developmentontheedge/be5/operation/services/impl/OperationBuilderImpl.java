@@ -9,9 +9,14 @@ import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.developmentontheedge.be5.operation.OperationConstants.SELECTED_ROWS;
 
 
 public class OperationBuilderImpl implements OperationBuilder
@@ -37,26 +42,12 @@ public class OperationBuilderImpl implements OperationBuilder
         this.operationName = operationName;
     }
 
-//    @Override
-//    public OperationBuilder setEntityName(String entityName)
-//    {
-//        this.entityName = entityName;
-//        return this;
-//    }
-
     @Override
     public OperationBuilder setQueryName(String queryName)
     {
         this.queryName = queryName;
         return this;
     }
-//
-//    @Override
-//    public OperationBuilder setOperationName(String operationName)
-//    {
-//        this.operationName = operationName;
-//        return this;
-//    }
 
     @Override
     public OperationBuilder setRecords(Object[] records)
@@ -133,9 +124,17 @@ public class OperationBuilderImpl implements OperationBuilder
         return new OperationInfo(operationModel);
     }
 
-    public OperationContext getOperationContext()
+    private OperationContext getOperationContext()
     {
-        return new OperationContext(records, queryName, operationParams);
+        operationParams = new HashMap<>(operationParams);
+        if (records.length > 0)
+        {
+            operationParams.put(SELECTED_ROWS, Arrays.stream(records)
+                    .map(Object::toString)
+                    .collect(Collectors.joining(",")));
+        }
+
+        return operationExecutor.getOperationContext(getOperationInfo(), queryName, operationParams);
     }
 
 }

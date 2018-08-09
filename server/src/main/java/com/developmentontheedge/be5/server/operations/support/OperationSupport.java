@@ -1,9 +1,7 @@
 package com.developmentontheedge.be5.server.operations.support;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -15,15 +13,12 @@ import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
-import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.server.SessionConstants;
 
 import javax.inject.Inject;
-import java.util.Map;
 
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
@@ -62,32 +57,4 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     {
         return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
-
-    public void redirectThisOperation()
-    {
-        setResult(OperationResult.redirect(HashUrlUtils.getUrl(this).toString()));
-    }
-
-    public void redirectThisOperationNewId(Object newID)
-    {
-        setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
-    }
-
-    public void redirectToTable(String entityName, String queryName, Map<String, Object> params)
-    {
-        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params).toString()));
-    }
-
-    public void redirectToTable(Query query, Map<String, Object> params)
-    {
-        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, query.getEntity().getName(), query.getName()).named(params).toString()));
-    }
-
-    public HashUrl getUrlForNewRecordId(Object newID)
-    {
-        return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
-                .named(getRedirectParams())
-                .named(RestApiConstants.SELECTED_ROWS, newID.toString());
-    }
-
 }

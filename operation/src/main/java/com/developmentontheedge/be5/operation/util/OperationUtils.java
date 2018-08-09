@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.operation.util;
 
+import com.developmentontheedge.be5.operation.OperationConstants;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +9,7 @@ public class OperationUtils
 {
     public static String[] selectedRows(String selectedRowsString)
     {
-        if (selectedRowsString.trim().isEmpty()) return new String[0];
+        if (selectedRowsString == null || selectedRowsString.trim().isEmpty()) return new String[0];
         return selectedRowsString.split(",");
     }
 
@@ -25,6 +27,14 @@ public class OperationUtils
                 map.put(entry.getKey(), entry.getValue());
             }
         }
+        return map;
+    }
+
+    public static Map<String, Object> paramsWithoutSelectedRows(Map<String, Object> redirectParams)
+    {
+        HashMap<String, Object> map = new HashMap<>(redirectParams);
+        map.remove(OperationConstants.SELECTED_ROWS);
+
         return map;
     }
 }

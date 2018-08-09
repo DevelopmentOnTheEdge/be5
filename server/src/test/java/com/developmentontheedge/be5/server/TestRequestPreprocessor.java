@@ -18,6 +18,6 @@ public class TestRequestPreprocessor extends RequestPreprocessorSupport
     @Override
     public void preprocessUrl(Request req, Response res)
     {
-        req.setAttribute("testRequestPreprocessor", stage.toString());
+        req.getSession().set("testRequestPreprocessor", stage.toString());
     }
 }

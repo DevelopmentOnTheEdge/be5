@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
@@ -14,13 +14,10 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
 import com.developmentontheedge.be5.test.mocks.TestResponse;
@@ -29,7 +26,6 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import org.junit.Before;
@@ -106,11 +102,6 @@ public abstract class TestUtils extends BaseTestUtils
         return request;
     }
 
-    protected Request getSpyMockRequest(String requestUri)
-    {
-        return getSpyMockRequest(requestUri, new HashMap<>(), new HashMap<>());
-    }
-
     protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters)
     {
         return getSpyMockRequest(requestUri, parameters, new HashMap<>());
@@ -134,38 +125,6 @@ public abstract class TestUtils extends BaseTestUtils
         }
 
         return request;
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.OPERATION, operation,
-                RestApiConstants.SELECTED_ROWS, selectedRows,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values)
-    {
-        return getSpyMockRecForQuery(entity, query, values, new HashMap<>());
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
-    {
-        return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
     public static QRec getQRec(Map<String, ?> nameValues)
@@ -239,39 +198,44 @@ public abstract class TestUtils extends BaseTestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation createOperation(String entityName, String operationName, OperationContext context)
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, ?> params)
     {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
-
-        Operation operation = operationExecutor.create(operationInfo, context);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
+        OperationContext operationContext = operationExecutor.getOperationContext(operationInfo, queryName, params);
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
-
         return operation;
     }
 
-    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRowsParam)
+    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
         OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
-        String[] stringSelectedRows = OperationUtils.selectedRows(selectedRowsParam);
-        Object[] selectedRows = stringSelectedRows;
-        if (!operationInfo.getEntityName().startsWith("_"))
+        Map<String, Object> params;
+        if (Utils.isEmpty(selectedRows))
         {
-            Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
-            selectedRows = Utils.changeTypes(stringSelectedRows, primaryKeyColumnType);
+            params = Collections.emptyMap();
+        }
+        else
+        {
+            params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, selectedRows);
         }
 
-        Operation operation = operationExecutor.create(operationInfo, new OperationContext(selectedRows, queryName, Collections.emptyMap()));
+        OperationContext operationContext = operationExecutor.getOperationContext(
+                operationInfo, queryName, params);
+
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
 
         return operation;
     }
+
 
     public static class ShowCreatedOperations extends TestWatcher
     {
         private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
 
-        public static void addOperation(Operation operation)
+        static void addOperation(Operation operation)
         {
             operations.add(operation);
         }
@@ -308,15 +272,6 @@ public abstract class TestUtils extends BaseTestUtils
             {
                 return ".java";
             }
-        }
-    }
-
-    public static class CoreTestModule extends AbstractModule
-    {
-        @Override
-        protected void configure()
-        {
-            bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
         }
     }
 

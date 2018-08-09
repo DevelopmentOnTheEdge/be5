@@ -3,17 +3,16 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
+import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.developmentontheedge.be5.server.util.ResponseUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
-import com.google.common.base.Charsets;
-import com.google.common.base.MoreObjects;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -34,7 +33,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
     public void generate(Request req, Response res, String requestSubUrl)
     {
         String entity = req.getNonEmpty("_t_");
-        String ID = req.getNonEmpty("ID");
+        Long ID = req.getLong("ID");
 
         String typeColumn = req.getOrDefault("_typeColumn_", "mimeType");
         String filenameColumn = req.getOrDefault("_filenameColumn_", "name");
@@ -48,8 +47,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
         String filename = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
         Object data = record.getValue(dataColumn);
-        String charset = MoreObjects.
-                firstNonNull(charsetColumn != null ? record.getValueAsString(charsetColumn) : null, Charsets.UTF_8.name());
+        String charset = charsetColumn != null ? record.getValueAsString(charsetColumn) : StandardCharsets.UTF_8.name();
 
         InputStream in;
 

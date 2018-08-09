@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -84,7 +85,7 @@ public class FormTest extends ServerBe5ProjectTest
                 .put(RestApiConstants.ENTITY, "testtableAdmin")
                 .put(RestApiConstants.QUERY, queryName)
                 .put(RestApiConstants.OPERATION, "Insert")
-                .put(RestApiConstants.SELECTED_ROWS, "")
+                .put(OperationConstants.SELECTED_ROWS, "")
                 .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(map1))
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
                 .put(RestApiConstants.VALUES, values)

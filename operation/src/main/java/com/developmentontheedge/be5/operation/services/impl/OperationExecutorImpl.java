@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationExtender;
@@ -16,6 +17,7 @@ import com.developmentontheedge.be5.operation.model.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -70,9 +72,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (Throwable e)
         {
-            Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
-            //operation.setResult(OperationResult.error(be5Exception));
-            throw be5Exception;
+            throw Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
         }
     }
 
@@ -255,28 +255,26 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         return false;
     }
-//
-//    @Override
-//    public Operation create(OperationInfo operationInfo, String queryName,
-//                            String[] selectedRows, Map<String, String> operationParams)
-//    {
-//        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
-//
-//        return create(operationInfo, operationContext);
-//    }
 
     @Override
-    public Operation create(OperationInfo operationInfo, String queryName,
-                            String[] stringSelectedRows, Map<String, Object> operationParams)
+    @SuppressWarnings("unchecked")
+    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, ?> operationParams)
     {
-        Object[] selectedRows = stringSelectedRows;
+        Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
         if (!operationInfo.getEntityName().startsWith("_"))
         {
             Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
             selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
         }
 
-        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+        return new OperationContext(selectedRows, queryName, (Map<String, Object>) operationParams);
+    }
+
+    @Override
+    public Operation create(OperationInfo operationInfo, String queryName,
+                            Map<String, Object> operationParams)
+    {
+        OperationContext operationContext = getOperationContext(operationInfo, queryName, operationParams);
 
         return create(operationInfo, operationContext);
     }
