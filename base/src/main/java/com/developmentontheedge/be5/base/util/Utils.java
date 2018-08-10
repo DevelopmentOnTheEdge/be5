@@ -103,6 +103,19 @@ public class Utils
         return false;
     }
 
+    public static void requireNonEmpty(Object value)
+    {
+        requireNonEmpty(value, "Required not empty");
+    }
+
+    public static void requireNonEmpty(Object value, String errorMessage)
+    {
+        if (isEmpty(value))
+        {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T[] changeTypes(Object[] values, Class<T> aClass)
     {
