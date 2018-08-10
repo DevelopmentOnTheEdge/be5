@@ -319,8 +319,18 @@ public class DpsHelper
         }
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
-
-        addDpForColumns(dps, modelElements, usedParams, operationParams);
+        Map<String, ColumnDef> entityColumns = meta.getColumns(getEntity(modelElements));
+        for (String param: usedParams)
+        {
+            if (entityColumns.containsKey(param))
+            {
+                addDpForColumns(dps, modelElements, Collections.singletonList(param), operationParams);
+            }
+            else
+            {
+                dps.add(new DynamicProperty(param, String.class));
+            }
+        }
 
         return dps;
     }

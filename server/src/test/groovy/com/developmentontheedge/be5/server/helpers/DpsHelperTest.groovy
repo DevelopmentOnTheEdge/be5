@@ -368,4 +368,22 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         }
         assertEquals "1.0E-300", dpsHelper.getPrecision(300)
     }
+
+    @Test
+    void addParamsFromQuery()
+    {
+        dpsHelper.addParamsFromQuery(dps, meta.getEntity("testTags"),
+                meta.getQuery("testTags", "With parameter"), [:])
+        assertEquals "{'values':{'payable':'yes'},'meta':{'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]}},'order':['/payable']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addParamsFromQueryWithNotEntityParameter()
+    {
+        dpsHelper.addParamsFromQuery(dps, meta.getEntity("testTags"),
+                meta.getQuery("testTags", "With Not entity parameter"), [:])
+        assertEquals "{'values':{},'meta':{'/queryString':{'displayName':'queryString'}},'order':['/queryString']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
 }
