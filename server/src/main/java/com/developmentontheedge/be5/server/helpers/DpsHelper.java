@@ -173,7 +173,7 @@ public class DpsHelper
 
         for (String propertyName : excludedColumnsList)
         {
-            log.warning("Column " + propertyName + " not found in " + modelElements.getName());
+            log.warning("Column " + propertyName + " not found in " + getEntity(modelElements));
         }
         return dps;
     }
@@ -264,7 +264,7 @@ public class DpsHelper
             }
             else
             {
-                throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
+                throw Be5Exception.internal(getEntity(modelElements) + "' not contain column " + propertyName);
             }
         }
         return dps;
@@ -298,7 +298,7 @@ public class DpsHelper
             }
             else
             {
-                throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
+                throw Be5Exception.internal(getEntity(modelElements) + "' not contain column " + propertyName);
             }
         }
         return dps;
