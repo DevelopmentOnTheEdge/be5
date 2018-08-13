@@ -21,7 +21,7 @@ users:
         ORDER BY 1
   - All records:
       type: 1D
-      roles: [SystemDeveloper, Administrator]
+      roles: [Administrator]
       layout: '{"topForm":"Filter"}'
       operations:
       - Delete
@@ -51,16 +51,16 @@ users:
       code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 1
-      roles: [SystemDeveloper, Administrator]
+      roles: [Administrator]
       code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
-      roles: [SystemDeveloper, Administrator]
+      roles: [Administrator]
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - EditRoles:
-      roles: [SystemDeveloper, Administrator]
+      roles: [Administrator]
       code: com.developmentontheedge.be5.modules.core.operations.users.EditRoles
   - Filter:
-      roles: [SystemDeveloper, Administrator]
+      roles: [Administrator]
       layout: '{"type":"inlineMiniForm", "bsSize":"sm"}'
       code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - Login:
