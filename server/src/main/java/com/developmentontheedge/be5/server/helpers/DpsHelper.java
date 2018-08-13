@@ -459,6 +459,7 @@ public class DpsHelper
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
+        String tableName = columnDef.getTableTo();
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
@@ -467,12 +468,27 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
         }
-        else if (columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null)
+        else if (tableName != null && meta.getEntity(tableName) != null)
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    queries.getTagsFromSelectionView(columnDef.getTableTo(),
-                            FilterUtil.getOperationParamsWithoutFilter(operationParams)));
+            Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+            String propertyName = dp.getName();
+            if (operationParamsWithoutFilter.containsKey(propertyName))
+            {
+                dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
+                        getTagForPrimaryKeyValue(tableName, operationParamsWithoutFilter.get(propertyName)));
+            }
+            else
+            {
+                dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
+                        queries.getTagsFromSelectionView(tableName, operationParamsWithoutFilter));
+            }
         }
+    }
+
+    private String[][] getTagForPrimaryKeyValue(String tableName, Object value)
+    {
+        return queries.getTagsFromSelectionView(tableName,
+                Collections.singletonMap(meta.getEntity(tableName).getPrimaryKey(), value));
     }
 
     public Object[] getValues(DynamicPropertySet dps)
