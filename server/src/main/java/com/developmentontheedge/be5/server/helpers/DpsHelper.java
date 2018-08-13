@@ -460,13 +460,14 @@ public class DpsHelper
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
         String tableName = columnDef.getTableTo();
+        String[][] tags = null;
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
+            tags = queries.getTagsYesNo();
         }
         else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
+            tags = queries.getTagsFromEnum(columnDef);
         }
         else if (tableName != null && meta.getEntity(tableName) != null)
         {
@@ -474,14 +475,17 @@ public class DpsHelper
             String propertyName = dp.getName();
             if (operationParamsWithoutFilter.containsKey(propertyName))
             {
-                dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                        getTagForPrimaryKeyValue(tableName, operationParamsWithoutFilter.get(propertyName)));
+                tags = getTagForPrimaryKeyValue(tableName, operationParamsWithoutFilter.get(propertyName));
             }
             else
             {
-                dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                        queries.getTagsFromSelectionView(tableName, operationParamsWithoutFilter));
+                tags = queries.getTagsFromSelectionView(tableName, operationParamsWithoutFilter);
             }
+        }
+
+        if (tags != null)
+        {
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, tags);
         }
     }
 
