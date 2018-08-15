@@ -32,17 +32,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class QueryUtils
 {
-    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters)
+    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters, Meta meta)
     {
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
+        Map<String, String> aliasToTable = ast.tree()
+                .select(AstTableRef.class)
+                .filter(t -> t.getAlias() != null)
+                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
+                        (address1, address2) -> address1));
+
         Map<ColumnRef, List<Object>> filters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
-                .removeKeys(QueryUtils::ignoreNotQueryParameters)
+                .removeKeys(QueryUtils::isNotQueryParameters)
+                .removeKeys(k -> isNotContainsInQuery(mainEntityName, aliasToTable, meta, k))
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))
                 .nonNullKeys().toMap();
 
@@ -52,7 +60,21 @@ public class QueryUtils
         }
     }
 
-    private static boolean ignoreNotQueryParameters(String key)
+    private static boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, Meta meta, String key)
+    {
+        String[] split = key.split("\\.");
+        if (split.length == 1)
+        {
+            return meta.getColumn(mainEntityName, split[0]) == null;
+        }
+        else
+        {
+            return meta.getColumn(aliasToTable.get(split[0]), split[1]) == null
+                    && meta.getColumn(split[0], split[1]) == null;
+        }
+    }
+
+    private static boolean isNotQueryParameters(String key)
     {
         return key.startsWith("_") && key.endsWith("_");
     }
@@ -68,12 +90,6 @@ public class QueryUtils
 
     public static void resolveTypeOfRefColumn(AstStart ast, Meta meta)
     {
-//todo ignore subquery
-//        Map<String, String> aliasToTable = ast.tree()
-//                .select(AstTableRef.class)
-//                .filter(t -> t.getAlias() != null)
-//                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable));
-
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if (tag.getRefColumn() != null)
             {

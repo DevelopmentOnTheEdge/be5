@@ -16,7 +16,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void empty() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.emptyMap());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.emptyMap(), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());
@@ -26,7 +26,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void simpleFilterIntColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("value", Collections.singletonList(123)));
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("value", Collections.singletonList(123)), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
@@ -36,7 +36,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void simpleFilterStringColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("name", Collections.singletonList("test")));
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("name", Collections.singletonList("test")), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.name ='test'", ast.format());
@@ -46,7 +46,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void ignoreKeywords() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("_test_", Collections.singletonList("test")));
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("_test_", Collections.singletonList("test")), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());
@@ -56,7 +56,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void ignoreUsedParams() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "With Parameter").getQueryCompiled().validate().trim());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("name", Collections.singletonList("test")));
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("name", Collections.singletonList("test")), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft\n" +
