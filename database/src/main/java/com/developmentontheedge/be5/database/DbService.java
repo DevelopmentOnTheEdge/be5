@@ -22,8 +22,6 @@ public interface DbService
 
     int update(String sql, Object... params);
 
-    //todo add QueryRunner batch, insertBatch
-
     int updateUnsafe(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
@@ -40,11 +38,11 @@ public interface DbService
         if (number == null) return null;
 
         Long res;
-        if (number instanceof BigInteger)
+        if (number.getClass() == BigInteger.class)
         {
             return ((BigInteger) number).longValue();
         }
-        if (!(number instanceof Long))
+        if (!(number.getClass() == Long.class))
         {
             res = Long.parseLong(number.toString());
         }
@@ -72,14 +70,12 @@ public interface DbService
 
     default Long[] longArray(String sql, Object... params)
     {
-        List<Long> list = list(sql, new ScalarParser<Long>(), params);
-        return list.toArray(new Long[list.size()]);
+        return list(sql, new ScalarParser<Long>(), params).toArray(new Long[0]);
     }
 
     default String[] stringArray(String sql, Object... params)
     {
-        List<String> list = list(sql, new ScalarParser<String>(), params);
-        return list.toArray(new String[list.size()]);
+        return list(sql, new ScalarParser<String>(), params).toArray(new String[0]);
     }
 
 }

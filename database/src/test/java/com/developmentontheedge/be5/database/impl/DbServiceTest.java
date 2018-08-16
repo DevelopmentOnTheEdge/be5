@@ -38,8 +38,9 @@ public class DbServiceTest extends DatabaseTest
     @Test
     public void updateUnsafe()
     {
-        db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
+        int count = db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
 
+        assertEquals(0, count);
         assertNull(db.one("select column_test from persons"));
     }
 
