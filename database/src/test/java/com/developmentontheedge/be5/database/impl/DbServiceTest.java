@@ -154,6 +154,15 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
+    public void scalarLongList()
+    {
+        List<Long> persons = db.scalarLongList("SELECT id FROM persons");
+
+        assertTrue(persons.size() >= 2);
+        assertEquals(Long.class, persons.get(0).getClass());
+    }
+
+    @Test
     public void testSelectArrayLong()
     {
         Long[] persons = db.longArray("SELECT id FROM persons");

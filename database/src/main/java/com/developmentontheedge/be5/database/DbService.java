@@ -3,10 +3,11 @@ package com.developmentontheedge.be5.database;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.parsers.ScalarLongParser;
 import com.developmentontheedge.be5.database.sql.parsers.ScalarParser;
+import com.developmentontheedge.be5.database.util.SqlUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import java.math.BigInteger;
 import java.util.List;
 
 
@@ -34,23 +35,7 @@ public interface DbService
 
     default Long oneLong(String sql, Object... params)
     {
-        Object number = one(sql, params);
-        if (number == null) return null;
-
-        Long res;
-        if (number.getClass() == BigInteger.class)
-        {
-            return ((BigInteger) number).longValue();
-        }
-        if (!(number.getClass() == Long.class))
-        {
-            res = Long.parseLong(number.toString());
-        }
-        else
-        {
-            res = (Long) number;
-        }
-        return res;
+        return SqlUtils.longFromDbObject(one(sql, params));
     }
 
     default String oneString(String sql, Object... params)
@@ -68,9 +53,14 @@ public interface DbService
         return list(sql, new ScalarParser<T>(), params);
     }
 
+    default List<Long> scalarLongList(String sql, Object... params)
+    {
+        return list(sql, new ScalarLongParser(), params);
+    }
+
     default Long[] longArray(String sql, Object... params)
     {
-        return list(sql, new ScalarParser<Long>(), params).toArray(new Long[0]);
+        return list(sql, new ScalarLongParser(), params).toArray(new Long[0]);
     }
 
     default String[] stringArray(String sql, Object... params)
