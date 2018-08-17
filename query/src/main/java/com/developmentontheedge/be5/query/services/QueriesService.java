@@ -340,32 +340,32 @@ public class QueriesService
         return db.select(sql, DpsRecordAdapter::qRec, params);
     }
 
-    public List<QRec> readAsRecordsFromQuery(String sql, Map<String, Object> parameters)
+    public List<QRec> readAsRecordsFromQuery(String sql, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<QRec> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
+    public List<QRec> readAsRecordsFromQuery(String tableName, String queryName, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.getQuery(tableName, queryName), parameters);
     }
 
-    public List<QRec> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
+    public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
         return queryService.build(query, parameters).execute(DpsRecordAdapter::qRec);
     }
 
-    public QRec readOneRecord(String sql, Map<String, Object> parameters)
+    public QRec readOneRecord(String sql, Map<String, ?> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
+    public QRec readOneRecord(String tableName, String queryName, Map<String, ?> parameters)
     {
         return readOneRecord(meta.getQuery(tableName, queryName), parameters);
     }
 
-    public QRec readOneRecord(Query query, Map<String, Object> parameters)
+    public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
         return queryService.build(query, parameters).getRow(DpsRecordAdapter::qRec);
     }
