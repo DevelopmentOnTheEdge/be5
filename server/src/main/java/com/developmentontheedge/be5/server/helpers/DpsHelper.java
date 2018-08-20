@@ -173,7 +173,7 @@ public class DpsHelper
 
         for (String propertyName : excludedColumnsList)
         {
-            log.warning("Column " + propertyName + " not found in " + modelElements.getName());
+            log.warning("Column " + propertyName + " not found in " + getEntity(modelElements));
         }
         return dps;
     }
@@ -264,7 +264,7 @@ public class DpsHelper
             }
             else
             {
-                throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
+                throw Be5Exception.internal(getEntity(modelElements) + "' not contain column " + propertyName);
             }
         }
         return dps;
@@ -298,7 +298,7 @@ public class DpsHelper
             }
             else
             {
-                throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
+                throw Be5Exception.internal(getEntity(modelElements) + "' not contain column " + propertyName);
             }
         }
         return dps;
@@ -319,8 +319,18 @@ public class DpsHelper
         }
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
-
-        addDpForColumns(dps, modelElements, usedParams, operationParams);
+        Map<String, ColumnDef> entityColumns = meta.getColumns(getEntity(modelElements));
+        for (String param: usedParams)
+        {
+            if (entityColumns.containsKey(param))
+            {
+                addDpForColumns(dps, modelElements, Collections.singletonList(param), operationParams);
+            }
+            else
+            {
+                dps.add(new DynamicProperty(param, String.class));
+            }
+        }
 
         return dps;
     }
@@ -449,20 +459,40 @@ public class DpsHelper
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
+        String tableName = columnDef.getTableTo();
+        String[][] tags = null;
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
+            tags = queries.getTagsYesNo();
         }
         else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
+            tags = queries.getTagsFromEnum(columnDef);
         }
-        else if (columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null)
+        else if (tableName != null && meta.getEntity(tableName) != null)
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    queries.getTagsFromSelectionView(columnDef.getTableTo(),
-                            FilterUtil.getOperationParamsWithoutFilter(operationParams)));
+            Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+            String propertyName = dp.getName();
+            if (operationParamsWithoutFilter.containsKey(propertyName))
+            {
+                tags = getTagForPrimaryKeyValue(tableName, operationParamsWithoutFilter.get(propertyName));
+            }
+            else
+            {
+                tags = queries.getTagsFromSelectionView(tableName, operationParamsWithoutFilter);
+            }
         }
+
+        if (tags != null)
+        {
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, tags);
+        }
+    }
+
+    private String[][] getTagForPrimaryKeyValue(String tableName, Object value)
+    {
+        return queries.getTagsFromSelectionView(tableName,
+                Collections.singletonMap(meta.getEntity(tableName).getPrimaryKey(), value));
     }
 
     public Object[] getValues(DynamicPropertySet dps)
@@ -505,6 +535,7 @@ public class DpsHelper
         DynamicProperty label = new DynamicProperty(name, String.class, text);
         label.setAttribute(BeanInfoConstants.LABEL_FIELD, true);
         label.setAttribute(BeanInfoConstants.CAN_BE_NULL, true);
+        label.setReadOnly(true);
         return label;
     }
 

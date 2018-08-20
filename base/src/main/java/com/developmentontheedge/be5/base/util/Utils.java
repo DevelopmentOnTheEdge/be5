@@ -88,7 +88,7 @@ public class Utils
         {
             return true;
         }
-        if (value instanceof String && "".equals(((String) value).trim()))
+        if (value instanceof String && ((String) value).trim().isEmpty())
         {
             return true;
         }
@@ -101,6 +101,19 @@ public class Utils
             return true;
         }
         return false;
+    }
+
+    public static void requireNonEmpty(Object value)
+    {
+        requireNonEmpty(value, "Required not empty");
+    }
+
+    public static void requireNonEmpty(Object value, String errorMessage)
+    {
+        if (isEmpty(value))
+        {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
     @SuppressWarnings("unchecked")

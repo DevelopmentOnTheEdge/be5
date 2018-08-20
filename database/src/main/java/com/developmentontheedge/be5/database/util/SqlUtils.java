@@ -66,6 +66,26 @@ public class SqlUtils
         }
     }
 
+    public static Long longFromDbObject(Object number)
+    {
+        if (number == null)
+        {
+            return null;
+        }
+        else if (number.getClass() == Long.class)
+        {
+            return (Long) number;
+        }
+        else if (number.getClass() == BigInteger.class)
+        {
+            return ((BigInteger) number).longValue();
+        }
+        else
+        {
+            return Long.parseLong(number.toString());
+        }
+    }
+
     public static Class<?> getTypeClass(int columnType)
     {
         switch (columnType)

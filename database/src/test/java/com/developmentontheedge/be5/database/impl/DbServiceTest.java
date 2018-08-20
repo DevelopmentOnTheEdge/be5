@@ -38,8 +38,9 @@ public class DbServiceTest extends DatabaseTest
     @Test
     public void updateUnsafe()
     {
-        db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
+        int count = db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
 
+        assertEquals(0, count);
         assertNull(db.one("select column_test from persons"));
     }
 
@@ -150,6 +151,15 @@ public class DbServiceTest extends DatabaseTest
         assertTrue(persons.size() >= 2);
         assertEquals("pass1", persons.get(0).getPassword());
         assertEquals("email2@mail.ru", persons.get(1).getEmail());
+    }
+
+    @Test
+    public void scalarLongList()
+    {
+        List<Long> persons = db.scalarLongList("SELECT id FROM persons");
+
+        assertTrue(persons.size() >= 2);
+        assertEquals(Long.class, persons.get(0).getClass());
     }
 
     @Test

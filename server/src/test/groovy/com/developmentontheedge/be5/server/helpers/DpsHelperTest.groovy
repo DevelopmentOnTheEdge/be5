@@ -264,21 +264,21 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addLabel(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','readOnly':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabelRaw(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'readOnly':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabel(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','readOnly':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
         dps.remove("customName")
 
         dpsHelper.addLabelRaw(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'readOnly':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
@@ -367,5 +367,23 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
             assertEquals "1.0E-${i}".toString(), dpsHelper.getPrecision(i)
         }
         assertEquals "1.0E-300", dpsHelper.getPrecision(300)
+    }
+
+    @Test
+    void addParamsFromQuery()
+    {
+        dpsHelper.addParamsFromQuery(dps, meta.getEntity("testTags"),
+                meta.getQuery("testTags", "With parameter"), [:])
+        assertEquals "{'values':{'payable':'yes'},'meta':{'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]}},'order':['/payable']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addParamsFromQueryWithNotEntityParameter()
+    {
+        dpsHelper.addParamsFromQuery(dps, meta.getEntity("testTags"),
+                meta.getQuery("testTags", "With Not entity parameter"), [:])
+        assertEquals "{'values':{},'meta':{'/queryString':{'displayName':'queryString'}},'order':['/queryString']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
     }
 }

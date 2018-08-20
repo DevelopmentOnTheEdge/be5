@@ -119,7 +119,7 @@ public class DbServiceImpl implements DbService
     {
         sql = format(sql);
         log.fine(sql + Arrays.toString(params));
-        return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
+        return queryRunner.insert(conn, sql, new ScalarHandler<T>(), params);
     }
 
     private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor)

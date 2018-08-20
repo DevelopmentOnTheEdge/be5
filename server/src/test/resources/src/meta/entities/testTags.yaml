@@ -49,6 +49,16 @@ testTags:
         <if parameter="payable">
           AND payable = '<parameter:payable/>'
         </if>
+  - With Not entity parameter:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT code AS "ID", admlevel AS "NAME"
+        FROM testTags
+        WHERE 1=1
+        <if parameter="queryString">
+          AND payable = '<parameter:queryString/>'
+        </if>
   - TestLocalizQuery:
       type: 1D_unknown
       roles: '@AllRoles'

@@ -3,10 +3,11 @@ package com.developmentontheedge.be5.database;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.parsers.ScalarLongParser;
 import com.developmentontheedge.be5.database.sql.parsers.ScalarParser;
+import com.developmentontheedge.be5.database.util.SqlUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import java.math.BigInteger;
 import java.util.List;
 
 
@@ -22,8 +23,6 @@ public interface DbService
 
     int update(String sql, Object... params);
 
-    //todo add QueryRunner batch, insertBatch
-
     int updateUnsafe(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
@@ -36,23 +35,7 @@ public interface DbService
 
     default Long oneLong(String sql, Object... params)
     {
-        Object number = one(sql, params);
-        if (number == null) return null;
-
-        Long res;
-        if (number instanceof BigInteger)
-        {
-            return ((BigInteger) number).longValue();
-        }
-        if (!(number instanceof Long))
-        {
-            res = Long.parseLong(number.toString());
-        }
-        else
-        {
-            res = (Long) number;
-        }
-        return res;
+        return SqlUtils.longFromDbObject(one(sql, params));
     }
 
     default String oneString(String sql, Object... params)
@@ -70,16 +53,19 @@ public interface DbService
         return list(sql, new ScalarParser<T>(), params);
     }
 
+    default List<Long> scalarLongList(String sql, Object... params)
+    {
+        return list(sql, new ScalarLongParser(), params);
+    }
+
     default Long[] longArray(String sql, Object... params)
     {
-        List<Long> list = list(sql, new ScalarParser<Long>(), params);
-        return list.toArray(new Long[list.size()]);
+        return list(sql, new ScalarLongParser(), params).toArray(new Long[0]);
     }
 
     default String[] stringArray(String sql, Object... params)
     {
-        List<String> list = list(sql, new ScalarParser<String>(), params);
-        return list.toArray(new String[list.size()]);
+        return list(sql, new ScalarParser<String>(), params).toArray(new String[0]);
     }
 
 }

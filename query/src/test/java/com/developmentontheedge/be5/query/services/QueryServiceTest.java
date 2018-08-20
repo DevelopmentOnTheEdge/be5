@@ -116,11 +116,12 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
                 build(query, Collections.singletonMap("name", "test")).getFinalSql());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testResolveUnknownColumn()
+    @Test
+    public void testIgnoreUnknownColumn()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumn");
-        queryService.build(query, Collections.singletonMap("unknownColumn", "test")).execute();
+        List<DynamicPropertySet> list = queryService.build(query, Collections.singletonMap("unknownColumn", "test")).execute();
+        assertEquals(list.size(), 0);
     }
 
     @Test(expected = Be5Exception.class)

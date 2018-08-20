@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.base.util;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -9,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -20,6 +23,9 @@ public class UtilsTest
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
     private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void inClause()
@@ -51,6 +57,20 @@ public class UtilsTest
         assertFalse(Utils.isEmpty(new Object[]{1}));
         assertFalse(Utils.isEmpty(Collections.singletonList(1)));
         assertFalse(Utils.isEmpty(Collections.<String>singletonList("1")));
+    }
+
+    @Test
+    public void requiredNotEmpty()
+    {
+        Utils.requireNonEmpty("1", "test message");
+    }
+
+    @Test
+    public void requiredNotEmptyError()
+    {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("test message");
+        Utils.requireNonEmpty(null, "test message");
     }
 
     @Test
