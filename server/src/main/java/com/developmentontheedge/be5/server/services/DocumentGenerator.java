@@ -12,6 +12,8 @@ import java.util.Map;
 public interface DocumentGenerator
 {
     //todo move from DocumentGenerator
+    JsonApiModel getStaticPage(String name);
+
     JsonApiModel createStaticPage(String title, String content, String url);
 
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
