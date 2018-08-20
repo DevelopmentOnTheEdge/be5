@@ -68,22 +68,22 @@ public class SqlUtils
 
     public static Long longFromDbObject(Object number)
     {
-        if (number == null) return null;
-
-        Long res;
-        if (number.getClass() == BigInteger.class)
+        if (number == null)
+        {
+            return null;
+        }
+        else if (number.getClass() == Long.class)
+        {
+            return (Long) number;
+        }
+        else if (number.getClass() == BigInteger.class)
         {
             return ((BigInteger) number).longValue();
         }
-        if (!(number.getClass() == Long.class))
-        {
-            res = Long.parseLong(number.toString());
-        }
         else
         {
-            res = (Long) number;
+            return Long.parseLong(number.toString());
         }
-        return res;
     }
 
     public static Class<?> getTypeClass(int columnType)
