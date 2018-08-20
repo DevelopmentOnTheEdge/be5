@@ -535,6 +535,7 @@ public class DpsHelper
         DynamicProperty label = new DynamicProperty(name, String.class, text);
         label.setAttribute(BeanInfoConstants.LABEL_FIELD, true);
         label.setAttribute(BeanInfoConstants.CAN_BE_NULL, true);
+        label.setReadOnly(true);
         return label;
     }
 

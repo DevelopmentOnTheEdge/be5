@@ -264,21 +264,21 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addLabel(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','readOnly':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabelRaw(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'readOnly':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabel(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','readOnly':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
         dps.remove("customName")
 
         dpsHelper.addLabelRaw(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'readOnly':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
