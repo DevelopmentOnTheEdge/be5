@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation.services.validation;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -11,6 +12,8 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.ERROR;
 import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
@@ -18,12 +21,16 @@ import static com.developmentontheedge.be5.operation.services.validation.Validat
 
 public class Validator
 {
+    public static final Logger log = Logger.getLogger(Validator.class.getName());
+
     private final UserAwareMeta userAwareMeta;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public Validator(UserAwareMeta userAwareMeta)
+    public Validator(UserAwareMeta userAwareMeta, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
+        this.userInfoProvider = userInfoProvider;
     }
 
 //    private Map<String, String> getValidationAttributes(DynamicProperty property)
@@ -41,8 +48,6 @@ public class Validator
 
     public void checkErrorAndCast(Object parameters)
     {
-        isError(parameters);
-
         if (parameters instanceof DynamicPropertySet)
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
@@ -54,6 +59,8 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
+        isError(property);
+
         if (property.getValue() == null
                 || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
                 && ((Object[]) property.getValue()).length == 0))
