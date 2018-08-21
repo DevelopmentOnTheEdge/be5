@@ -33,18 +33,33 @@ public class Validator
         this.userInfoProvider = userInfoProvider;
     }
 
-//    private Map<String, String> getValidationAttributes(DynamicProperty property)
-//    {
-//        Map<String, String> result = new LinkedHashMap<String, String>();
-//        for( AbstractRule rule : defaultRules )
-//        {
-//            if( rule.isApplicable( property ) )
-//            {
-//                result.put( rule.getRule(), userAwareMeta.getLocalizedValidationMessage( rule.getMessage() ) );
-//            }
-//        }
-//        return result;
-//    }
+    public boolean validate(Object parameters)
+    {
+        return validateStatusInsteadError(() -> checkErrorAndCast(parameters));
+    }
+
+    public boolean validate(DynamicProperty property)
+    {
+        return validateStatusInsteadError(() -> checkErrorAndCast(property));
+    }
+
+    private boolean validateStatusInsteadError(Runnable function)
+    {
+        try
+        {
+            function.run();
+            return true;
+        }
+        catch (RuntimeException e)
+        {
+            if (userInfoProvider.isSystemDeveloper())
+            {
+                log.log(Level.INFO, "Error on validate: ", e);
+            }
+            return false;
+        }
+    }
+
 
     public void checkErrorAndCast(Object parameters)
     {
@@ -270,6 +285,11 @@ public class Validator
                 }
             }
         }
+    }
+
+    public boolean isValid(DynamicProperty property)
+    {
+        return !isError(property);
     }
 
     public boolean isError(DynamicProperty property)

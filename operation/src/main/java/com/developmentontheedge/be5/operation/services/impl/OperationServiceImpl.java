@@ -62,18 +62,7 @@ public class OperationServiceImpl implements OperationService
 
         if (presetValues.containsKey(RELOAD_CONTROL_NAME))
         {
-            try
-            {
-                validator.checkErrorAndCast(parameters);
-            }
-            catch (RuntimeException e)
-            {
-                if (userInfoProvider.isSystemDeveloper())
-                {
-                    log.log(Level.INFO, "error on generate in validate parameters", e);
-                    //operation.setResult(OperationResult.error(e.getMessage(), e));
-                }
-            }
+            validator.validate(parameters);
         }
 
         return replaceNullValueToEmptyStringAndReturn(parameters);
