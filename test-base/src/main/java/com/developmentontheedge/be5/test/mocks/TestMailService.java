@@ -18,13 +18,13 @@ public class TestMailService implements MailService
     }
 
     @Override
-    public void sendPlainEmail(String to, String subject, String body) throws Exception
+    public void sendPlainEmail(String to, String subject, String body)
     {
         mock.sendPlainEmail(to, subject, body);
     }
 
     @Override
-    public void sendHtmlEmail(String to, String subject, String body) throws Exception
+    public void sendHtmlEmail(String to, String subject, String body)
     {
         mock.sendHtmlEmail(to, subject, body);
     }

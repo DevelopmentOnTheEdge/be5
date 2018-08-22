@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface MailService
 {
-    void sendPlainEmail(String to, String subject, String body) throws Exception;
+    void sendPlainEmail(String to, String subject, String body);
 
-    void sendHtmlEmail(String to, String subject, String body) throws Exception;
+    void sendHtmlEmail(String to, String subject, String body);
 
     void sendEmail(InternetAddress from, InternetAddress[] to,
                    String subject, String body, String type) throws Exception;
