@@ -2,6 +2,8 @@ package com.developmentontheedge.be5.metadata.model;
 
 import org.junit.Test;
 
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,7 +41,7 @@ public class SqlColumnTypeTest
 
         SqlColumnType bool = new SqlColumnType("BOOL");
         assertEquals("BOOL", bool.getTypeName());
-        assertArrayEquals(new String[]{"no", "yes"}, bool.getEnumValues());
+        assertArrayEquals(new String[]{NO, YES}, bool.getEnumValues());
 
         assertEquals("UNKNOWN", SqlColumnType.unknown().getTypeName());
         assertEquals("UNKNOWN", SqlColumnType.unknown().toString());

@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
+
 
 public class QueriesService
 {
@@ -36,9 +39,6 @@ public class QueriesService
     private final QueryService queryService;
     private final TableModelService tableModelService;
     private final UserInfoProvider userInfoProvider;
-
-    public static final String yes = "yes";
-    public static final String no = "no";
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
@@ -252,8 +252,8 @@ public class QueriesService
         return tagsCache.get("getTagsYesNo" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
-            arr[0] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
-            arr[1] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
+            arr[0] = new String[]{YES, userAwareMeta.getColumnTitle("query.jsp", "page", YES)};
+            arr[1] = new String[]{NO, userAwareMeta.getColumnTitle("query.jsp", "page", NO)};
             return arr;
         });
     }
@@ -263,8 +263,8 @@ public class QueriesService
         return tagsCache.get("getTagsNoYes" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
-            arr[0] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
-            arr[1] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
+            arr[0] = new String[]{NO, userAwareMeta.getColumnTitle("query.jsp", "page", NO)};
+            arr[1] = new String[]{YES, userAwareMeta.getColumnTitle("query.jsp", "page", YES)};
             return arr;
         });
     }
