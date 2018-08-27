@@ -52,10 +52,15 @@ public class ConnectionServiceImpl implements ConnectionService
     @Override
     public Connection beginTransaction() throws SQLException
     {
-        Connection txConnection = getTxConnection();
-        if (TRANSACT_CONN_COUNT.get() == null) TRANSACT_CONN_COUNT.set(0);
-        TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
-        return txConnection;
+        if (TRANSACT_CONN_COUNT.get() == null)
+        {
+            TRANSACT_CONN_COUNT.set(1);
+        }
+        else
+        {
+            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
+        }
+        return getTxConnection();
     }
 
     @Override
