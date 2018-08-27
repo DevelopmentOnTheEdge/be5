@@ -155,10 +155,14 @@ public abstract class BaseOperationSupport implements Operation
                 .named(OperationUtils.paramsWithoutSelectedRows(params)).toString()));
     }
 
+    public void redirectToTable(String entityName, String queryName)
+    {
+        redirectToTable(entityName, queryName, getRedirectParams());
+    }
+
     public void redirectToTable(Query query, Map<String, Object> params)
     {
-        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, query.getEntity().getName(), query.getName())
-                .named(OperationUtils.paramsWithoutSelectedRows(params)).toString()));
+        redirectToTable(query.getEntity().getName(), query.getName(), params);
     }
 
     public HashUrl getUrlForNewRecordId(Object newID)
