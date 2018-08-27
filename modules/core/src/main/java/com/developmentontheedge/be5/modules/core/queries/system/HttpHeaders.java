@@ -9,6 +9,7 @@ import java.util.Enumeration;
 public class HttpHeaders extends TableBuilderSupport
 {
     @Override
+    @SuppressWarnings("unchecked")
     public TableModel getTableModel()
     {
         addColumns("name", "value");

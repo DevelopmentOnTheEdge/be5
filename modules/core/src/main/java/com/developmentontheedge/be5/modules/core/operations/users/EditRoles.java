@@ -43,9 +43,9 @@ public class EditRoles extends OperationSupport implements TransactionalOperatio
         EntityModel<String> user_roles = database.getEntity("user_roles");
         database.getEntity("user_roles").removeBy(Collections.singletonMap("user_name", user_name));
 
-        for (Object role_name : (Object[])params.getProperty("roles").getValue())
+        for (Object role_name : (Object[]) params.getProperty("roles").getValue())
         {
-            user_roles.add(new HashMap<String, String>(){{
+            user_roles.add(new HashMap<String, String>() {{
                 put("user_name", user_name);
                 put("role_name", (String) role_name);
             }});

@@ -23,7 +23,7 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
     public DocumentCategoriesPlugin(CategoriesService categoriesService, DocumentGenerator documentGenerator, Meta meta)
     {
         this.categoriesService = categoriesService;
-        if(meta.hasFeature(documentPluginName))
+        if (meta.hasFeature(documentPluginName))
         {
             documentGenerator.addDocumentPlugin(this);
         }
