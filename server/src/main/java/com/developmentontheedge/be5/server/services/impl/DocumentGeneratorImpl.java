@@ -70,7 +70,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         try
         {
             return JsonApiModel.data(new ResourceData(STATIC_ACTION, new StaticPagePresentation(
-                    "",
+                    null,
                     userAwareMeta.getStaticPageContent(name)),
                     Collections.singletonMap(SELF_LINK, url)), null);
         }

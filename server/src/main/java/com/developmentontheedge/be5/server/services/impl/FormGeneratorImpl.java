@@ -114,10 +114,14 @@ public class FormGeneratorImpl implements FormGenerator
                 }
             }
 
+            String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
+            String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
+            String title = localizedEntityTitle + ": " + localizedOperationTitle;
+
             return Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel()),
+                    title,
                     JsonFactory.bean(result.getFirst()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
                     resultForFrontend(operation.getResult()),
