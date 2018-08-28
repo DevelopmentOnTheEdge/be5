@@ -43,8 +43,6 @@ public class EntitiesTable extends TableBuilderSupport
                                             .named("entity", entity.getName()).toString())
             ));
         }
-
         return table(columns, rows);
     }
-
 }

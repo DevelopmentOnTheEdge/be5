@@ -20,14 +20,9 @@ public class HttpHeadersTable extends TableBuilderSupport
             while (keys.hasMoreElements())
             {
                 String key = keys.nextElement();
-
                 addRow(cells(key, request.getRawRequest().getHeader(key)));
-
             }
-
         }
-
         return table(columns, rows);
     }
-
 }

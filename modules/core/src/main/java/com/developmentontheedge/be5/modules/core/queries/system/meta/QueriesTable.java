@@ -16,7 +16,6 @@ public class QueriesTable extends TableBuilderSupport
         addColumns("EntityName", "Name", "Type", "Roles", "Operations");
 
         String selectEntity = (String) parameters.get("entity");
-
         if (selectEntity != null)
         {
             addQueries(selectEntity);
@@ -27,7 +26,6 @@ public class QueriesTable extends TableBuilderSupport
                     e -> addQueries(e.getName())
             );
         }
-
         return table(columns, rows);
     }
 
@@ -37,7 +35,6 @@ public class QueriesTable extends TableBuilderSupport
         for (String queryName : queries)
         {
             Query query = meta.getQuery(entityName, queryName);
-
             addRow(cells(
                     entityName,
                     cell(query.getName())
@@ -47,7 +44,5 @@ public class QueriesTable extends TableBuilderSupport
                     query.getOperationNames().getFinalValues().size()
             ));
         }
-
     }
-
 }

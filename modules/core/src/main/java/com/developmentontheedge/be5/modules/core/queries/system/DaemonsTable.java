@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 
 import javax.inject.Inject;
-import java.util.List;
 
 
 public class DaemonsTable extends TableBuilderSupport
@@ -16,11 +15,9 @@ public class DaemonsTable extends TableBuilderSupport
     @Override
     public TableModel getTableModel()
     {
-        List<Daemon> daemons = meta.getDaemons();
-
         addColumns("Name", "DaemonType", "Status", "ConfigSection", "Description", "ClassName");
 
-        for (Daemon daemon : daemons)
+        for (Daemon daemon : meta.getDaemons())
         {
             addRow(daemon.getName(), cells(
                     daemon.getName(),
@@ -31,8 +28,6 @@ public class DaemonsTable extends TableBuilderSupport
                     daemon.getClassName()
             ));
         }
-
-
         return table(columns, rows, true);
     }
 

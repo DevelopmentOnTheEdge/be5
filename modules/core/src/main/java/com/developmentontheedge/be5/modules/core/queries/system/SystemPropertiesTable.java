@@ -22,7 +22,6 @@ public class SystemPropertiesTable extends TableBuilderSupport
 
             addRow(cells(key, p.get(key).toString()));
         }
-
         return table(columns, rows);
     }
 

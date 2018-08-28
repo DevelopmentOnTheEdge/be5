@@ -38,7 +38,6 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
         {
             return new ResourceData(documentPluginName, categories, null);
         }
-
         return null;
     }
 

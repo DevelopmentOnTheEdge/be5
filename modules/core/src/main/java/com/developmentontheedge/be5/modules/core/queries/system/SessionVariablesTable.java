@@ -15,9 +15,6 @@ public class SessionVariablesTable extends TableBuilderSupport
         {
             addRow(name, cells(name, session.get(name).toString()));
         }
-
-
         return table(columns, rows, true);
     }
-
 }

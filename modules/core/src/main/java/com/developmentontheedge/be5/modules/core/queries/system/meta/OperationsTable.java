@@ -15,7 +15,6 @@ public class OperationsTable extends TableBuilderSupport
         addColumns("EntityName", "Name", "Type", "Roles");
 
         String selectEntity = (String) parameters.get("entity");
-
         if (selectEntity != null)
         {
             addOperations(selectEntity);
@@ -26,7 +25,6 @@ public class OperationsTable extends TableBuilderSupport
                     e -> addOperations(e.getName())
             );
         }
-
         return table(columns, rows);
     }
 
@@ -36,7 +34,6 @@ public class OperationsTable extends TableBuilderSupport
         for (String operationName : operationNames)
         {
             Operation operation = meta.getOperation(entityName, operationName);
-
             addRow(cells(
                     entityName,
                     operation.getName(),
@@ -44,7 +41,5 @@ public class OperationsTable extends TableBuilderSupport
                     operation.getRoles().getFinalRoles().toString()
             ));
         }
-
     }
-
 }
