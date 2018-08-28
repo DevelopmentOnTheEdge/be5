@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 
 
-public class SessionVariables extends TableBuilderSupport
+public class SessionVariablesTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()

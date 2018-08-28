@@ -13,43 +13,43 @@ _system_:
   - Daemons:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsQuery
+      code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsTable
   - Entities:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.meta.Entities
+      code: com.developmentontheedge.be5.modules.core.queries.system.meta.EntitiesTable
   - Queries:
       type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.meta.Queries
+      code: com.developmentontheedge.be5.modules.core.queries.system.meta.QueriesTable
   - Operations:
       type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.meta.Operations
+      code: com.developmentontheedge.be5.modules.core.queries.system.meta.OperationsTable
   - Session variables:
       type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - SessionVariablesEdit
-      code: com.developmentontheedge.be5.modules.core.queries.system.SessionVariables
+      code: com.developmentontheedge.be5.modules.core.queries.system.SessionVariablesTable
   - Threads:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.Threads
+      code: com.developmentontheedge.be5.modules.core.queries.system.ThreadsTable
   - System Properties:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.SystemProperties
+      code: com.developmentontheedge.be5.modules.core.queries.system.SystemPropertiesTable
   - Http Headers:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.HttpHeaders
+      code: com.developmentontheedge.be5.modules.core.queries.system.HttpHeadersTable
   - DataSource:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.queries.system.DataSource
+      code: com.developmentontheedge.be5.modules.core.queries.system.DataSourceTable
   - Query Builder:
       type: static
       roles: [SystemDeveloper]

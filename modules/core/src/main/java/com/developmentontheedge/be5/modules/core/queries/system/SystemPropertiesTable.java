@@ -4,27 +4,23 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 
 import java.util.Enumeration;
+import java.util.Properties;
 
 
-public class HttpHeaders extends TableBuilderSupport
+public class SystemPropertiesTable extends TableBuilderSupport
 {
     @Override
-    @SuppressWarnings("unchecked")
     public TableModel getTableModel()
     {
         addColumns("name", "value");
 
-        Enumeration<String> keys = request.getRawRequest().getHeaderNames();
-        if (keys != null)
+        Properties p = System.getProperties();
+        Enumeration keys = p.keys();
+        while (keys.hasMoreElements())
         {
-            while (keys.hasMoreElements())
-            {
-                String key = keys.nextElement();
+            String key = (String) keys.nextElement();
 
-                addRow(cells(key, request.getRawRequest().getHeader(key)));
-
-            }
-
+            addRow(cells(key, p.get(key).toString()));
         }
 
         return table(columns, rows);

@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class DataSource extends TableBuilderSupport
+public class DataSourceTable extends TableBuilderSupport
 {
     @Inject private DataSourceService databaseService;
     @Inject private DbService db;

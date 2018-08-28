@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.server.util.ActionUtils;
 import java.util.List;
 
 
-public class Queries extends TableBuilderSupport
+public class QueriesTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()

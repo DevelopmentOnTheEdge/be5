@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import java.util.List;
 
 
-public class Operations extends TableBuilderSupport
+public class OperationsTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()

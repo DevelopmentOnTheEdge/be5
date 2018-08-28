@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import java.util.Set;
 
 
-public class Threads extends TableBuilderSupport
+public class ThreadsTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()
