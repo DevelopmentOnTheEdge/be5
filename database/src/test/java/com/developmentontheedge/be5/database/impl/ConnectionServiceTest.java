@@ -46,9 +46,9 @@ public class ConnectionServiceTest extends DatabaseTest
     public void nextTransactionAfterErrorInTransaction() throws Exception
     {
         try{
-            connectionService.transaction(connection -> {
-                connectionService.rollbackTransaction(new RuntimeException("error in first transaction"));
-            });
+            connectionService.transaction(connection ->
+                connectionService.rollbackTransaction()
+            );
         }catch (RuntimeException ignore){}
 
         connectionService.transaction(conn ->

@@ -54,20 +54,20 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public Connection beginTransaction() throws SQLException
+    public Connection beginTransaction()
     {
         return null;
     }
 
     @Override
-    public void endTransaction() throws SQLException
+    public void endTransaction()
     {
 
     }
 
     @Override
-    public RuntimeException rollbackTransaction(Throwable e)
+    public void rollbackTransaction()
     {
-        return null;
+
     }
 }

@@ -13,11 +13,11 @@ public interface ConnectionService
 
     Connection getCurrentTxConn();
 
-    Connection beginTransaction() throws SQLException;
+    Connection beginTransaction();
 
-    void endTransaction() throws SQLException;
+    void endTransaction();
 
-    RuntimeException rollbackTransaction(Throwable e);
+    void rollbackTransaction();
 
     <T> T transactionWithResult(SqlExecutor<T> executor);
 
