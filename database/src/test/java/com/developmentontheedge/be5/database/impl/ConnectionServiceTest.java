@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -27,6 +28,21 @@ public class ConnectionServiceTest extends DatabaseTest
     }
 
     @Test
+    public void test() throws Exception
+    {
+        assertEquals(null, connectionService.getCurrentTxConn());
+
+        Connection connection = connectionService.beginTransaction();
+        assertEquals(connection, connectionService.getCurrentTxConn());
+
+        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
+        connectionService.endTransaction();
+
+        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        checkCountInOtherThreads(1L);
+    }
+
+    @Test
     public void nextTransactionAfterErrorInTransaction() throws Exception
     {
         try{
@@ -39,13 +55,25 @@ public class ConnectionServiceTest extends DatabaseTest
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass")
         );
 
-        checkCount();
+        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        checkCountInOtherThreads(1L);
     }
 
-    private void checkCount() throws InterruptedException, ExecutionException
+    @Test
+    public void checkInOtherThreadsBeforeCommit() throws Exception
     {
-        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        connectionService.transaction(conn -> {
+            db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
+            assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+            checkCountInOtherThreads(0L);
+        });
 
+        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        checkCountInOtherThreads(1L);
+    }
+
+    private void checkCountInOtherThreads(Long count) throws InterruptedException, ExecutionException
+    {
         Set<Future<Long>> set = new HashSet<>();
         ExecutorService service = Executors.newFixedThreadPool(4);
         for (int i = 0; i < 10; i++)
@@ -57,7 +85,7 @@ public class ConnectionServiceTest extends DatabaseTest
         }
 
         for (Future<Long> future : set) {
-            assertEquals(1L, (long)future.get());
+            assertEquals(count, future.get());
         }
         service.shutdown();
     }
