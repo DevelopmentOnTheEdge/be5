@@ -53,9 +53,9 @@ public class ConnectionServiceImpl implements ConnectionService
     public void endTransaction()
     {
         TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-        if (getCurrentTxConn() != null && TRANSACT_CONN_COUNT.get() == 0)
+        Connection txConnection = getCurrentTxConn();
+        if (txConnection != null && TRANSACT_CONN_COUNT.get() == 0)
         {
-            Connection txConnection = getCurrentTxConn();
             try
             {
                 txConnection.commit();
@@ -66,7 +66,6 @@ public class ConnectionServiceImpl implements ConnectionService
             }
             finally
             {
-                returnConnection(txConnection);
                 endWorkWithTxConnection();
             }
         }
@@ -90,7 +89,6 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         finally
         {
-            returnConnection(txConnection);
             endWorkWithTxConnection();
         }
     }
@@ -112,6 +110,7 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private void endWorkWithTxConnection()
     {
+        returnConnection(getCurrentTxConn());
         TRANSACT_CONN.set(null);
     }
 
