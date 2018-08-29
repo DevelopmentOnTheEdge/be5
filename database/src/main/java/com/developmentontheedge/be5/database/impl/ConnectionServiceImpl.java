@@ -33,43 +33,29 @@ public class ConnectionServiceImpl implements ConnectionService
         return TRANSACT_CONN.get();
     }
 
-    private Connection getTxConnection() throws SQLException
-    {
-        Connection conn = getCurrentTxConn();
-        if (conn != null)
-        {
-            return conn;
-        }
-        else
-        {
-            conn = databaseService.getDataSource().getConnection();
-            conn.setAutoCommit(false);
-            TRANSACT_CONN.set(conn);
-            return conn;
-        }
-    }
-
     @Override
     public Connection beginTransaction() throws SQLException
     {
-        if (TRANSACT_CONN_COUNT.get() == null)
+        Connection txConnection = getCurrentTxConn();
+        if (txConnection == null)
         {
             TRANSACT_CONN_COUNT.set(1);
+            return beginWorkWithTxConnection();
         }
         else
         {
             TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
+            return txConnection;
         }
-        return getTxConnection();
     }
 
     @Override
     public void endTransaction() throws SQLException
     {
-        Connection txConnection = getCurrentTxConn();
         TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-        if (TRANSACT_CONN_COUNT.get() == 0)
+        if (getCurrentTxConn() != null && TRANSACT_CONN_COUNT.get() == 0)
         {
+            Connection txConnection = getCurrentTxConn();
             try
             {
                 txConnection.commit();
@@ -77,7 +63,7 @@ public class ConnectionServiceImpl implements ConnectionService
             finally
             {
                 returnConnection(txConnection);
-                TRANSACT_CONN.set(null);
+                endWorkWithTxConnection();
             }
         }
     }
@@ -85,7 +71,6 @@ public class ConnectionServiceImpl implements ConnectionService
     @Override
     public RuntimeException rollbackTransaction(Throwable e)
     {
-        TRANSACT_CONN_COUNT.set(0);
         Connection txConnection = getCurrentTxConn();
         try
         {
@@ -103,8 +88,21 @@ public class ConnectionServiceImpl implements ConnectionService
         finally
         {
             returnConnection(txConnection);
-            TRANSACT_CONN.set(null);
+            endWorkWithTxConnection();
         }
+    }
+
+    private Connection beginWorkWithTxConnection() throws SQLException
+    {
+        Connection conn = databaseService.getDataSource().getConnection();
+        conn.setAutoCommit(false);
+        TRANSACT_CONN.set(conn);
+        return conn;
+    }
+
+    private void endWorkWithTxConnection()
+    {
+        TRANSACT_CONN.set(null);
     }
 
     private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
