@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
+import com.developmentontheedge.be5.operation.services.validation.Validation
 import com.developmentontheedge.be5.operation.services.validation.Validator
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -30,12 +31,32 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
     void test()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
         assertEquals 2L, property.getValue()
 
         DynamicProperty propertyStr = new DynamicProperty("name", "Name", Long.class, "2")
-        validator.checkErrorAndCast(propertyStr)
+        validator.checkAndThrowExceptionIsError(propertyStr)
         assertEquals 2L, propertyStr.getValue()
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    void throwIfErrorStatus()
+    {
+        DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
+        property.setAttribute(BeanInfoConstants.STATUS, Validation.Status.ERROR)
+        property.setAttribute(BeanInfoConstants.MESSAGE, "test message")
+
+        validator.checkAndThrowExceptionIsError(property)
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    void throwIfErrorStatus2()
+    {
+        DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
+        property.setAttribute(BeanInfoConstants.STATUS, "error")
+        property.setAttribute(BeanInfoConstants.MESSAGE, "test message")
+
+        validator.checkAndThrowExceptionIsError(property)
     }
 
     @Test
@@ -43,12 +64,12 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
     {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, null)
         property.setCanBeNull(true)
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
         assertEquals null, property.getValue()
 
         DynamicProperty propertyStr = new DynamicProperty("name", "Name", String.class, "")
         propertyStr.setCanBeNull(true)
-        validator.checkErrorAndCast(propertyStr)
+        validator.checkAndThrowExceptionIsError(propertyStr)
         assertEquals "", propertyStr.getValue()
     }
 
@@ -63,13 +84,13 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
             value = initValue
             MULTIPLE_SELECTION_LIST = true
         }
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
 
         assertArrayEquals(initValue, (Object[]) property.getValue())
 
         property.setValue(null)
         property.setCanBeNull(true)
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
 
         assertEquals(null, property.getValue())
     }
@@ -85,7 +106,7 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
             value = initValue
             MULTIPLE_SELECTION_LIST = true
         }
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
 
         assertArrayEquals(initValue, (Object[]) property.getValue())
     }
@@ -97,7 +118,7 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, value)
         property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true)
 
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
 
         assertArrayEquals([1L, 3L] as Long[], (Object[]) property.getValue())
     }
@@ -106,14 +127,14 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
     void testError()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, "a")
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
     }
 
     @Test(expected = IllegalArgumentException.class)
     void testString()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, 2)
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
     }
 
     @Ignore
@@ -124,7 +145,7 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, "a")
         property << [VALIDATION_RULES: baseRule(digits)]
 
-        validator.checkErrorAndCast(property)
+        validator.checkAndThrowExceptionIsError(property)
     }
 
 }

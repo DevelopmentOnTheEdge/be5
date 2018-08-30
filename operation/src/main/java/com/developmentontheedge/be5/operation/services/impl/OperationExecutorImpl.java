@@ -107,7 +107,7 @@ public class OperationExecutorImpl implements OperationExecutor
 
         try
         {
-            validator.checkErrorAndCast(parameters);
+            validator.checkAndThrowExceptionIsError(parameters);
         }
         catch (RuntimeException e)
         {
@@ -132,7 +132,7 @@ public class OperationExecutorImpl implements OperationExecutor
 
             try
             {
-                validator.isError(parameters);
+                validator.throwExceptionIsError(parameters);
             }
             catch (RuntimeException e)
             {

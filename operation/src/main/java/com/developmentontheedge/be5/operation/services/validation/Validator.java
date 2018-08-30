@@ -35,12 +35,12 @@ public class Validator
 
     public boolean validate(Object parameters)
     {
-        return validateStatusInsteadError(() -> checkErrorAndCast(parameters));
+        return validateStatusInsteadError(() -> checkAndThrowExceptionIsError(parameters));
     }
 
     public boolean validate(DynamicProperty property)
     {
-        return validateStatusInsteadError(() -> checkErrorAndCast(property));
+        return validateStatusInsteadError(() -> checkAndThrowExceptionIsError(property));
     }
 
     private boolean validateStatusInsteadError(Runnable function)
@@ -61,20 +61,20 @@ public class Validator
     }
 
 
-    public void checkErrorAndCast(Object parameters)
+    public void checkAndThrowExceptionIsError(Object parameters)
     {
         if (parameters instanceof DynamicPropertySet)
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
-                checkErrorAndCast(property);
+                checkAndThrowExceptionIsError(property);
             }
         }
     }
 
-    public void checkErrorAndCast(DynamicProperty property)
+    public void checkAndThrowExceptionIsError(DynamicProperty property)
     {
-        isError(property);
+        throwExceptionIsError(property);
 
         if (property.getValue() == null
                 || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
@@ -273,17 +273,22 @@ public class Validator
         return value;
     }
 
-    public void isError(Object parameters)
+    public void throwExceptionIsError(Object parameters)
     {
         if (parameters instanceof DynamicPropertySet)
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
-                if (isError(property))
-                {
-                    throw new IllegalArgumentException(property.getAttribute("message") + toStringProperty(property));
-                }
+                throwExceptionIsError(property);
             }
+        }
+    }
+
+    public void throwExceptionIsError(DynamicProperty property)
+    {
+        if (isError(property))
+        {
+            throw new IllegalArgumentException((String) property.getAttribute("message"));
         }
     }
 
@@ -294,9 +299,18 @@ public class Validator
 
     public boolean isError(DynamicProperty property)
     {
-        return property.getAttribute(BeanInfoConstants.STATUS) != null &&
-                Validation.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
-                        == Validation.Status.ERROR;
+        Object statusAttr = property.getAttribute(BeanInfoConstants.STATUS);
+        if (statusAttr == null) return false;
+        Validation.Status status;
+        if (statusAttr.getClass() == Validation.Status.class)
+        {
+            status = (Validation.Status) statusAttr;
+        }
+        else
+        {
+            status = Validation.Status.valueOf(((String) statusAttr).toUpperCase());
+        }
+        return status == Validation.Status.ERROR;
     }
 
     private String toStringProperty(DynamicProperty property)

@@ -32,7 +32,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
             value = "2"
         }
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
@@ -46,7 +46,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
             TAG_LIST_ATTR = [["1", "1"], ["2", "2"]] as String[][]
             value = 2L
         }
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
@@ -61,7 +61,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
         }
 
         try {
-            validator.checkErrorAndCast(dps)
+            validator.checkAndThrowExceptionIsError(dps)
         } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
@@ -80,7 +80,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
             MULTIPLE_SELECTION_LIST = true
         }
 
-        validator.checkErrorAndCast(dps)
+        validator.checkAndThrowExceptionIsError(dps)
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
         assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
@@ -96,7 +96,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
         }
 
         try {
-            validator.checkErrorAndCast(dps)
+            validator.checkAndThrowExceptionIsError(dps)
         } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))

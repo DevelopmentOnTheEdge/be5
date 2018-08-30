@@ -89,7 +89,7 @@ public class OperationServiceImpl implements OperationService
         {
             try
             {
-                validator.isError(parameters);
+                validator.throwExceptionIsError(parameters);
             }
             catch (RuntimeException e)
             {
