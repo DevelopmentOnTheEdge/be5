@@ -181,7 +181,8 @@ public class QueriesService
         for (RowModel row : tableModel.getRows())
         {
             String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
-            String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";
+            String second = row.getCells().size() >= 2 && row.getCells().get(1).content != null ?
+                    row.getCells().get(1).content.toString() : "";
             stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(entityName, second)};
         }
 
