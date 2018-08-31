@@ -43,6 +43,11 @@ public class SqlUtils
                 return (T) (Integer) ((Long) object).intValue();
             }
 
+            if (clazz == Long.class && object.getClass() == Integer.class)
+            {
+                return (T) object;
+            }
+
             if (clazz == String.class && object.getClass() == byte[].class)
             {
                 return (T) new String((byte[]) object);
