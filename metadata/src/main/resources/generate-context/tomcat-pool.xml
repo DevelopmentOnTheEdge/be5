@@ -7,6 +7,8 @@
          directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
          pattern="common"/>
 
+  PARAMETERS
+
   <Resource name="jdbc/PROJECT_NAME"
             auth="Container"
             description="DB Connection PROJECT_NAME"
