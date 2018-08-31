@@ -26,6 +26,7 @@ public class DataSourceServiceImpl implements DataSourceService
     private static final Logger log = Logger.getLogger(DataSourceServiceImpl.class.getName());
 
     private DataSource dataSource;
+    private String connectionUrl;
     private Rdbms type;
 
     @Inject
@@ -35,7 +36,6 @@ public class DataSourceServiceImpl implements DataSourceService
         String configInfo;
 
         Connection conn = null;
-        String connectUrl;
         String userName;
 
         try
@@ -45,10 +45,10 @@ public class DataSourceServiceImpl implements DataSourceService
             dataSource = (DataSource) xmlContext.lookup("jdbc/" + project.getAppName());
 
             conn = dataSource.getConnection();
-            connectUrl = conn.getMetaData().getURL();
+            connectionUrl = conn.getMetaData().getURL();
             userName = conn.getMetaData().getUserName();
 
-            type = Rdbms.getRdbms(connectUrl);
+            type = Rdbms.getRdbms(connectionUrl);
 
             configInfo = "xml context : " + "'jdbc/" + project.getAppName() + "'";
         }
@@ -71,8 +71,8 @@ public class DataSourceServiceImpl implements DataSourceService
             {
                 bds.setDriverClassName(profile.getDriverDefinition());
             }
-            connectUrl = profile.getJdbcUrl().createConnectionUrl(false);
-            bds.setUrl(connectUrl);
+            connectionUrl = profile.getJdbcUrl().createConnectionUrl(false);
+            bds.setUrl(connectionUrl);
             userName = profile.getUsername();
             bds.setUsername(userName);
             bds.setPassword(profile.getPassword());
@@ -100,7 +100,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
         log.info(JULLogger.infoBlock(
                 "ConfigInfo: " + configInfo +
-                        "\nUsing connection:   " + DatabaseUtils.formatUrl(connectUrl, userName, "xxxxx")
+                        "\nUsing connection:   " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx")
         ));
     }
 
@@ -114,5 +114,11 @@ public class DataSourceServiceImpl implements DataSourceService
     public Dbms getDbms()
     {
         return type.getDbms();
+    }
+
+    @Override
+    public String getConnectionUrl()
+    {
+        return connectionUrl;
     }
 }

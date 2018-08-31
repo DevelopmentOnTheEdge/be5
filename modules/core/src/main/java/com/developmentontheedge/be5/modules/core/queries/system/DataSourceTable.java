@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -20,7 +19,6 @@ import java.util.TreeMap;
 public class DataSourceTable extends TableBuilderSupport
 {
     @Inject private DataSourceService databaseService;
-    @Inject private DbService db;
 
     @Override
     public TableModel getTableModel()
@@ -39,7 +37,7 @@ public class DataSourceTable extends TableBuilderSupport
 
     private void getMBeanInfo()
     {
-        String connectUrl = db.transactionWithResult(conn -> conn.getMetaData().getURL());
+        String connectUrl = databaseService.getConnectionUrl();
         try
         {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();

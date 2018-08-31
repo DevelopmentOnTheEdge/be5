@@ -10,4 +10,6 @@ public interface DataSourceService
     DataSource getDataSource();
 
     Dbms getDbms();
+
+    String getConnectionUrl();
 }
