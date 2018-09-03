@@ -96,9 +96,15 @@ public class UtilsTest
     public void changeTypeArray()
     {
         String[] stringArray = new String[]{"1", "2", "3"};
-
         assertArrayEquals(new Long[]{1L, 2L, 3L}, (Long[]) Utils.changeType(stringArray, Long[].class));
         assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) Utils.changeType(stringArray, Integer[].class));
     }
 
+    @Test
+    public void changeTypes()
+    {
+        assertArrayEquals(new Long[]{1L, 2L, 3L}, Utils.changeTypes(new String[]{"1", "2", "3"}, Long.class));
+
+        assertArrayEquals(new String[]{"1", "2", "3"}, Utils.changeTypes(new Long[]{1L, 2L, 3L}, String.class));
+    }
 }
