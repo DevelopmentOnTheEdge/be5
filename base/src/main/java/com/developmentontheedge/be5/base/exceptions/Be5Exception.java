@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -105,7 +106,16 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception internalInOperationExtender(OperationExtender operationExtender, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow(cause, operationExtender.getClassName());
+        String name;
+        if(operationExtender instanceof SourceFileOperationExtender)
+        {
+            name = ((SourceFileOperationExtender) operationExtender).getFileName();
+        }
+        else
+        {
+            name = operationExtender.getClassName();
+        }
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow(cause, name);
     }
 
     public static Be5Exception unknownEntity(String entityName)
