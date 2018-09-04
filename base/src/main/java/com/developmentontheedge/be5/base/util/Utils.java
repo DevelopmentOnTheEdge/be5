@@ -328,6 +328,18 @@ public class Utils
             return changeArrayItemTypes((Object[]) val, valClass);
         }
 
+        if (java.sql.Timestamp.class.equals(valClass))
+        {
+            if (val instanceof java.util.Date)
+            {
+                return new java.sql.Timestamp(((java.util.Date) val).getTime());
+            }
+            if (val instanceof java.util.Calendar)
+            {
+                return new java.sql.Timestamp(((java.util.Calendar) val).getTime().getTime());
+            }
+        }
+
         if (java.util.Date.class.equals(valClass))
         {
             if (val instanceof java.sql.Timestamp)
