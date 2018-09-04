@@ -107,7 +107,7 @@ public class Be5Exception extends RuntimeException
     public static Be5Exception internalInOperationExtender(OperationExtender operationExtender, Throwable cause)
     {
         String name;
-        if(operationExtender instanceof SourceFileOperationExtender)
+        if (operationExtender instanceof SourceFileOperationExtender)
         {
             name = ((SourceFileOperationExtender) operationExtender).getFileName();
         }

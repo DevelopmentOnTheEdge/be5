@@ -328,6 +328,49 @@ public class Utils
             return changeArrayItemTypes((Object[]) val, valClass);
         }
 
+        if (java.sql.Timestamp.class.equals(valClass) || java.util.Date.class.equals(valClass) ||
+                XMLGregorianCalendar.class.equals(valClass))
+        {
+            return changeDateType(val, valClass);
+        }
+
+        if (val instanceof Boolean && String.class.equals(valClass))
+        {
+            return val.toString();
+        }
+
+        if (val instanceof Number)
+        {
+            if (String.class.equals(valClass))
+            {
+                return val.toString();
+            }
+            if (int.class.equals(valClass) || Integer.class.equals(valClass))
+            {
+                return ((Number) val).intValue();
+            }
+            if (long.class.equals(valClass) || Long.class.equals(valClass))
+            {
+                return ((Number) val).longValue();
+            }
+            if (BigDecimal.class.equals(valClass))
+            {
+                return new BigDecimal(((Number) val).doubleValue());
+            }
+        }
+
+        if (val instanceof String)
+        {
+            return parseType((String) val, valClass);
+        }
+        else
+        {
+            return val;
+        }
+    }
+
+    private static Object changeDateType(Object val, Class valClass)
+    {
         if (java.sql.Timestamp.class.equals(valClass))
         {
             if (val instanceof java.util.Date)
@@ -389,39 +432,7 @@ public class Utils
             }
         }
 
-        if (val instanceof Boolean && String.class.equals(valClass))
-        {
-            return val.toString();
-        }
-
-        if (val instanceof Number)
-        {
-            if (String.class.equals(valClass))
-            {
-                return val.toString();
-            }
-            if (int.class.equals(valClass) || Integer.class.equals(valClass))
-            {
-                return ((Number) val).intValue();
-            }
-            if (long.class.equals(valClass) || Long.class.equals(valClass))
-            {
-                return ((Number) val).longValue();
-            }
-            if (BigDecimal.class.equals(valClass))
-            {
-                return new BigDecimal(((Number) val).doubleValue());
-            }
-        }
-
-        if (val instanceof String)
-        {
-            return parseType((String) val, valClass);
-        }
-        else
-        {
-            return val;
-        }
+        return parseDateOrTimeType((String) val, valClass);
     }
 
 
