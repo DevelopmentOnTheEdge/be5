@@ -128,8 +128,13 @@ public class ConnectionServiceImpl implements ConnectionService
         catch (Throwable e)
         {
             rollbackTransaction();
-            throw new RuntimeException("rethrow after rollback", e);
+            throw returnRuntimeExceptionOrWrap(e);
         }
+    }
+
+    private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
+    {
+        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException("rethrow after rollback", e);
     }
 
     @Override
