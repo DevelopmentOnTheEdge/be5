@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.base.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +23,7 @@ public class UserInfo implements Serializable
     private Timestamp prevLoggedInTime;
     private Timestamp loggedInTime;
 
-    public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles)
+    public UserInfo(String userName, Collection<String> availableRoles, Collection<String> currentRoles)
     {
         this.userName = userName;
         this.availableRoles = new ArrayList<>(availableRoles);
