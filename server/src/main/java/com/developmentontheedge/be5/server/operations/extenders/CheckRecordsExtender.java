@@ -40,7 +40,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
         {
             op.setResult(OperationResult.error(message));
         }
-        return skip;
+        return parameters;
     }
 
     @Override
