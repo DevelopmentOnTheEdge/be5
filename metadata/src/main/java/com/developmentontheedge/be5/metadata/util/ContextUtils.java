@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.util;
+package com.developmentontheedge.be5.metadata.util;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

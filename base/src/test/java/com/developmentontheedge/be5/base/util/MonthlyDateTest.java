@@ -1,15 +1,13 @@
-package com.developmentontheedge.be5.server.util;
+package com.developmentontheedge.be5.base.util;
 
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MonthlyDateTest
 {
