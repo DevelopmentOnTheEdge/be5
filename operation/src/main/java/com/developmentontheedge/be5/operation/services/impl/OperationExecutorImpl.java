@@ -66,9 +66,21 @@ public class OperationExecutorImpl implements OperationExecutor
     @Override
     public Object generate(Operation operation, Map<String, Object> presetValues)
     {
+        List<OperationExtender> extenders = loadOperationExtenders(operation);
+        return generateWithExtenders(operation, extenders, presetValues);
+    }
+
+    private Object generateWithExtenders(Operation operation, List<OperationExtender> extenders,
+                                         Map<String, Object> presetValues)
+    {
         try
         {
-            return operation.getParameters(presetValues);
+            Object parameters = operation.getParameters(presetValues);
+            for (OperationExtender ext : extenders)
+            {
+                parameters = ext.postGetParameters(operation, parameters, presetValues);
+            }
+            return parameters;
         }
         catch (Throwable e)
         {
@@ -79,10 +91,11 @@ public class OperationExecutorImpl implements OperationExecutor
     @Override
     public Object execute(Operation operation, Map<String, Object> presetValues)
     {
+        List<OperationExtender> extenders = loadOperationExtenders(operation);
         if (operation instanceof TransactionalOperation)
         {
             return connectionService.transactionWithResult(connection -> {
-                Object parameters = callOperation(operation, presetValues);
+                Object parameters = callOperation(operation, extenders, presetValues);
                 if (operation.getStatus() == OperationStatus.ERROR)
                 {
                     connectionService.rollbackTransaction();
@@ -92,13 +105,13 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         else
         {
-            return callOperation(operation, presetValues);
+            return callOperation(operation, extenders, presetValues);
         }
     }
 
-    private Object callOperation(Operation operation, Map<String, Object> presetValues)
+    private Object callOperation(Operation operation, List<OperationExtender> extenders, Map<String, Object> presetValues)
     {
-        Object parameters = generate(operation, presetValues);
+        Object parameters = generateWithExtenders(operation, extenders, presetValues);
 
         if (operation.getStatus() == OperationStatus.ERROR)
         {
@@ -116,14 +129,14 @@ public class OperationExecutorImpl implements OperationExecutor
             return parameters;
         }
 
-        return callInvoke(operation, parameters);
+        return callInvoke(operation, extenders, parameters);
     }
 
-    private Object callInvoke(Operation operation, Object parameters)
+    private Object callInvoke(Operation operation, List<OperationExtender> extenders, Object parameters)
     {
         try
         {
-            doInvokeOperation(operation, parameters);
+            doInvokeWithExtenders(operation, extenders, parameters);
 
             if (operation.getStatus() == OperationStatus.ERROR)
             {
@@ -154,14 +167,13 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
-    private void doInvokeOperation(Operation op, Object parameters) throws Exception
+    private void doInvokeWithExtenders(Operation op, List<OperationExtender> extenders, Object parameters) throws Exception
     {
-        List<OperationExtender> operationExtenders = loadOperationExtenders(op);
-        invokeExtenders("preInvoke", op, operationExtenders, parameters);
-        if (!invokeExtenders("skipInvoke", op, operationExtenders, parameters))
+        invokeExtenders("preInvoke", op, extenders, parameters);
+        if (!invokeExtenders("skipInvoke", op, extenders, parameters))
         {
             op.invoke(parameters);
-            invokeExtenders("postInvoke", op, operationExtenders, parameters);
+            invokeExtenders("postInvoke", op, extenders, parameters);
         }
         else
         {

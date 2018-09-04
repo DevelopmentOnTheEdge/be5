@@ -32,8 +32,8 @@ public class CheckRecordsExtender extends OperationExtenderSupport
 
     private String message;
 
-    //TODO @Override
-    public boolean preGetParameters(Operation op, Map<String, Object> presetValues) throws Exception
+    @Override
+    public Object postGetParameters(Operation op, Object parameters, Map<String, Object> presetValues) throws Exception
     {
         boolean skip = skip(op);
         if (skip)
