@@ -20,8 +20,8 @@ class OperationServiceTransactionalTest extends OperationBe5ProjectDBTest
             executeOperation(operation, ['name': 'generateError'])
             fail()
         } catch (Throwable e) {
-            assertTrue(e instanceof RuntimeException)
-            assertEquals(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, ((Be5Exception) e.getCause()).code)
+            assertTrue(e instanceof Be5Exception)
+            assertEquals(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, ((Be5Exception) e).code)
         }
     }
 }
