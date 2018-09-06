@@ -74,6 +74,21 @@ public class MailServiceImpl implements MailService
         }
     }
 
+    @Override
+    public void sendHtmlEmail(String from, String to, String subject, String body)
+    {
+        try
+        {
+            sendEmail(new InternetAddress(from), new InternetAddress[]{new InternetAddress(to)}, subject, body,
+                    "text/html");
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Same as,
      * {@link #sendEmailReal(InternetAddress, InternetAddress[], String, String, String, Map)

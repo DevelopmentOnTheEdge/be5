@@ -11,6 +11,7 @@ import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
+import static com.developmentontheedge.be5.server.FrontendActions.CLOSE_MAIN_MODAL
 import static com.developmentontheedge.be5.server.FrontendActions.UPDATE_PARENT_DOCUMENT
 import static org.junit.Assert.assertEquals
 
@@ -59,13 +60,14 @@ class FilterOperationTest extends SqlMockOperationTest
         assertEquals("finished",
                 oneQuotes(execute.getSecond().getStatus()))
 
-        def details = (FrontendAction) execute.getSecond().getDetails()
+        def details = (FrontendAction[]) execute.getSecond().getDetails()
 
         assertEquals("[_search_presets_:name, name:test, _search_:true]",
-                oneQuotes(((TablePresentation) ((JsonApiModel) details.getValue())
+                oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
 
-        assertEquals(UPDATE_PARENT_DOCUMENT, details.getType())
+        assertEquals(UPDATE_PARENT_DOCUMENT, details[0].getType())
+        assertEquals(CLOSE_MAIN_MODAL, details[1].getType())
     }
 
     @Test

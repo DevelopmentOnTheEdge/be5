@@ -34,6 +34,13 @@ public class TestMailService implements MailService
     }
 
     @Override
+    public void sendHtmlEmail(String from, String to, String subject, String body)
+    {
+        mock.sendHtmlEmail(from, to, subject, body);
+        log.info(body);
+    }
+
+    @Override
     public void sendEmail(InternetAddress from, InternetAddress[] to, String subject, String body, String type) throws Exception
     {
         mock.sendEmail(from, to, subject, body, type);

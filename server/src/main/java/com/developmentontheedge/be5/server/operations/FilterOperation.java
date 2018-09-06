@@ -9,6 +9,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.server.FrontendActions.closeMainModal;
 import static com.developmentontheedge.be5.server.FrontendActions.updateParentDocument;
 
 
@@ -29,7 +30,9 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.finished(null,
-                updateParentDocument(filterHelper.filterDocument(getQuery(), parameters))));
+        setResult(OperationResult.finished(null, new Object[]{
+                updateParentDocument(filterHelper.filterDocument(getQuery(), parameters)),
+                closeMainModal()
+        }));
     }
 }
