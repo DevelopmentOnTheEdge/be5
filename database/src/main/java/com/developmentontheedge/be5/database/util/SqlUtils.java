@@ -48,9 +48,9 @@ public class SqlUtils
                 return (T) object;
             }
 
-            if (clazz == String.class && object.getClass() == byte[].class)
+            if (clazz == String.class)
             {
-                return (T) new String((byte[]) object);
+                return (T) BlobUtils.getAsString(object);
             }
 
             return clazz.cast(object);
