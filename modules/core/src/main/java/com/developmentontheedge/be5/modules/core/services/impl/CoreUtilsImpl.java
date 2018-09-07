@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.util.BlobUtils;
+import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;
@@ -66,9 +66,9 @@ public class CoreUtilsImpl implements CoreUtils
 
         String key = section + "." + param;
 
-        Object value = systemSettingsCache.get(key, (k) -> {
+        String value = systemSettingsCache.get(key, (k) -> {
             String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
-            return BlobUtils.getAsString(db.one(sql, param, section));
+            return db.oneString(sql, param, section);
         });
 
         if (MISSING_SETTING_VALUE.equals(value))
@@ -82,7 +82,7 @@ public class CoreUtilsImpl implements CoreUtils
             return defValue;
         }
 
-        return BlobUtils.getAsString(value);
+        return value;
     }
 
     /**
@@ -127,8 +127,16 @@ public class CoreUtilsImpl implements CoreUtils
         Map<String, String> settingsInSection = new HashMap<>();
         db.list(sql, rs -> {
             String param = rs.getString(1);
-            String value = BlobUtils.getAsString(rs.getObject(2));
-            systemSettingsCache.put(section + "." + param, value);
+            String value = SqlUtils.stringFromDbObject(rs.getObject(2));
+            String key = section + "." + param;
+            if (value == null)
+            {
+                systemSettingsCache.put(key, MISSING_SETTING_VALUE);
+            }
+            else
+            {
+                systemSettingsCache.put(key, value);
+            }
             return settingsInSection.put(param, value);
         }, section);
         return settingsInSection;
@@ -248,9 +256,9 @@ public class CoreUtilsImpl implements CoreUtils
         Objects.requireNonNull(param);
 
         String key = user + "." + param;
-        Object value = userSettingsCache.get(key, k -> {
+        String value = userSettingsCache.get(key, k -> {
             String sql = "SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?";
-            return BlobUtils.getAsString(db.one(sql, param, user));
+            return db.oneString(sql, param, user);
         });
 
         if (MISSING_SETTING_VALUE.equals(value))
@@ -264,7 +272,7 @@ public class CoreUtilsImpl implements CoreUtils
             return null;
         }
 
-        return BlobUtils.getAsString(value);
+        return value;
     }
 
     /**
