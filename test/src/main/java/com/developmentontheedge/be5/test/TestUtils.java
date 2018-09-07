@@ -90,6 +90,12 @@ public abstract class TestUtils extends BaseTestUtils
                 saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "");
     }
 
+    protected void initUserWithNameAndRoles(String name, String... roles)
+    {
+        getInjector().getInstance(UserHelper.class).
+                saveUser(name, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "");
+    }
+
     protected void initGuest()
     {
         initUserWithRoles(RoleType.ROLE_GUEST);
