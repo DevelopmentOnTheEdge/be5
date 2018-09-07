@@ -112,7 +112,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
 
     private String getParameters()
     {
-        return "<Parameter name=\"environmentName\" value=\"" + environmentName + "\" override=\"false\"/>\n";
+        return "<Parameter name=\"" + ENVIRONMENT_NAME + "\" value=\"" + environmentName + "\" override=\"false\"/>\n";
     }
 
     public GenerateContext setGenerateContextPath(String generateContextPath)
