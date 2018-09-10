@@ -201,6 +201,20 @@ public abstract class BaseTestUtils
         initDb(project);
     }
 
+    protected static void addH2Profile()
+    {
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        }
+        catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
+        addH2Profile(project);
+    }
+
     protected static void initDb(Project project)
     {
         if (project.getConnectionProfileName() != null &&
