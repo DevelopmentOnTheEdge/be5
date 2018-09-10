@@ -261,11 +261,20 @@ public class Validator
         try
         {
             if (type == Date.class) return Date.valueOf(value);
-            if (type == Timestamp.class) return Timestamp.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date.");
+            setError(property, msg);
+            throw new IllegalArgumentException(msg + toStringProperty(property));
+        }
+        try
+        {
+            if (type == Timestamp.class) return Timestamp.valueOf(value);
+        }
+        catch (IllegalArgumentException e)
+        {
+            String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date with time.");
             setError(property, msg);
             throw new IllegalArgumentException(msg + toStringProperty(property));
         }
