@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.model.EntityType
-import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test
@@ -116,7 +116,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         ]
 
         assertEquals "12,yes,Regional,null",
-                db.select("SELECT * FROM testTags WHERE CODE = ?", { rs -> BaseTestUtils.resultSetToString(rs) }, "12")
+                db.select("SELECT * FROM testTags WHERE CODE = ?", new ConcatColumnsParser(), "12")
 
         database.getEntity("testTags").remove("12")
     }

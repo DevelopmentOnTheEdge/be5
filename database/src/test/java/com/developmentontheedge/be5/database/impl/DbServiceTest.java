@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
 import com.developmentontheedge.be5.database.test.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -237,5 +238,12 @@ public class DbServiceTest extends DatabaseTest
 
         assertEquals(-5, (int) metaData.get("ID"));
         assertEquals(12, (int) metaData.get("NAME"));
+    }
+
+    @Test
+    public void testConcatStringResultParser()
+    {
+        String row = db.select("SELECT name, password, email FROM persons WHERE name = ?", new ConcatColumnsParser(),"user2");
+        assertEquals("user2,pass2,email2@mail.ru", row);
     }
 }
