@@ -305,6 +305,22 @@ public class QueriesService
         return db.list(sql, DpsRecordAdapter::qRec, params);
     }
 
+/* TODO add
+    public <T> List<T> scalarList(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        return list(meta.getQuery(tableName, queryName), new ScalarParser<T>(), parameters);
+    }
+
+    public List<Long> scalarLongList(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        return list(meta.getQuery(tableName, queryName), new ScalarLongParser(), parameters);
+    }
+
+    public <T> List<T> list(Query query, ResultSetParser<T> parser, Map<String, ?> parameters)
+    {
+        return queryService.build(query, parameters).execute(parser);
+    }
+*/
     public List<List<Object>> listOfLists(String sql, Object... params)
     {
         List<List<Object>> vals = new ArrayList<>();
@@ -341,6 +357,7 @@ public class QueriesService
         return db.select(sql, DpsRecordAdapter::qRec, params);
     }
 
+    //TODO rename records()
     public List<QRec> readAsRecordsFromQuery(String sql, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
@@ -356,6 +373,7 @@ public class QueriesService
         return queryService.build(query, parameters).execute(DpsRecordAdapter::qRec);
     }
 
+    //TODO rename one()
     public QRec readOneRecord(String sql, Map<String, ?> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
