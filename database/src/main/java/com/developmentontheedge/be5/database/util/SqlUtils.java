@@ -153,4 +153,17 @@ public class SqlUtils
                 return String.class;
         }
     }
+
+    public static Class<?> getSimpleStringTypeClass(int columnType)
+    {
+        switch (columnType)
+        {
+            case Types.CLOB:
+            case Types.BLOB:
+            case Types.BINARY:
+                return String.class;
+            default:
+                return getTypeClass(columnType);
+        }
+    }
 }
