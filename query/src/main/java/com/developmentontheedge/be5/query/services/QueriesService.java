@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.github.benmanes.caffeine.cache.Cache;
 
@@ -302,7 +302,7 @@ public class QueriesService
 
     public List<QRec> list(String sql, Object... params)
     {
-        return db.list(sql, DpsRecordAdapter::qRec, params);
+        return db.list(sql, new QRecParser(), params);
     }
 
 /* TODO add
@@ -354,7 +354,7 @@ public class QueriesService
 
     public QRec qRec(String sql, Object... params)
     {
-        return db.select(sql, DpsRecordAdapter::qRec, params);
+        return db.select(sql, new QRecParser(), params);
     }
 
     //TODO rename records()
@@ -370,7 +370,7 @@ public class QueriesService
 
     public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).execute(DpsRecordAdapter::qRec);
+        return queryService.build(query, parameters).execute(new QRecParser());
     }
 
     //TODO rename one()
@@ -386,7 +386,7 @@ public class QueriesService
 
     public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).getRow(DpsRecordAdapter::qRec);
+        return queryService.build(query, parameters).getRow(new QRecParser());
     }
 
 //    public QRec withCache( String sql, Object... params )

@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.query.sql.DynamicPropertySetParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -358,27 +359,27 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<DynamicPropertySet> execute()
     {
         executeType = ExecuteType.DEFAULT;
-        return execute(DpsRecordAdapter::createDps);
+        return execute(new DynamicPropertySetParser());
     }
 
     @Override
     public List<DynamicPropertySet> executeAggregate()
     {
         executeType = ExecuteType.AGGREGATE;
-        return execute(DpsRecordAdapter::createDps);
+        return execute(new DynamicPropertySetParser());
     }
 
     @Override
     public long count()
     {
         executeType = ExecuteType.COUNT;
-        return (Long) execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
+        return (Long) execute(new DynamicPropertySetParser()).get(0).asMap().get("count");
     }
 
     @Override
     public DynamicPropertySet getRow()
     {
-        return getRow(DpsRecordAdapter::createDps);
+        return getRow(new DynamicPropertySetParser());
     }
 
     @Override
@@ -397,7 +398,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         try
         {
-            dynamicPropertySets = db.list(finalSql, DpsRecordAdapter::createDps);
+            dynamicPropertySets = db.list(finalSql, new DynamicPropertySetParser());
         }
         catch (Throwable e)
         {

@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.query.impl.BeTagParser;
 import com.developmentontheedge.be5.query.impl.DynamicPropertyMeta;
-import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -19,22 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-
 public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
-
-    public static DynamicPropertySet createDps(ResultSet resultSet)
-    {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        return addDp(dps, resultSet);
-    }
-
-    public static QRec qRec(ResultSet resultSet)
-    {
-        QRec dps = new QRec();
-        return addDp(dps, resultSet);
-    }
 
     public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet)
     {

@@ -3,8 +3,7 @@ package com.developmentontheedge.be5.query.services;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
-import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
@@ -287,7 +286,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
         assertEquals("TestName", db.oneString("SELECT name FROM testtableAdmin WHERE id = ?", id));
         assertEquals(123, (int) db.oneInteger("SELECT value FROM testtableAdmin WHERE id = ?", id));
 
-        DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", DpsRecordAdapter::createDps, id);
+        QRec dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", new QRecParser(), id);
         if (dps != null)
         {
             assertEquals("TestName", dps.getValue("name"));
