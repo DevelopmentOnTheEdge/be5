@@ -27,7 +27,7 @@ public class Context
                 dbmsTransformer = new SqlServerTransformer();
                 break;
             case H2:
-                dbmsTransformer = new PostgreSqlTransformer();
+                dbmsTransformer = new H2SqlTransformer();
                 break;
         }
     }
