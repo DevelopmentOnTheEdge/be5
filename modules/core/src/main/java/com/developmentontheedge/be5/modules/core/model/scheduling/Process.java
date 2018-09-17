@@ -4,9 +4,14 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public abstract class Process implements Job
 {
+    private static final Logger log = Logger.getLogger(Process.class.getName());
+
     @Override
     public final void execute(JobExecutionContext context) throws JobExecutionException
     {
@@ -15,10 +20,9 @@ public abstract class Process implements Job
             doWork(context);
             //updateLastExecutionResult( ok );
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            //updateLastExecutionResult( error );
-            //journal( "Exception in doWork(): " + e.getMessage(), e );
+            log.log(Level.SEVERE, "Error in process: ", e);
             throw new JobExecutionException(e);
         }
     }
