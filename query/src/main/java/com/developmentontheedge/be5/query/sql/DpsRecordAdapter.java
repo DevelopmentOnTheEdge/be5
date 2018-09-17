@@ -17,16 +17,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
-    public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet)
+    static <T extends DynamicPropertySet> T addDp(T dps, DynamicProperty[] schema, ResultSet resultSet)
     {
         try
         {
-            DynamicProperty[] schema = createSchema(resultSet.getMetaData());
             for (int i = 0; i < schema.length; i++)
             {
                 DynamicProperty dp = schema[i];
@@ -58,7 +58,17 @@ public class DpsRecordAdapter
         }
     }
 
+    static DynamicProperty[] createSimpleStringSchema(ResultSetMetaData metaData)
+    {
+        return createSchema(metaData, SqlUtils::getSimpleStringTypeClass);
+    }
+
     public static DynamicProperty[] createSchema(ResultSetMetaData metaData)
+    {
+        return createSchema(metaData, SqlUtils::getTypeClass);
+    }
+
+    private static DynamicProperty[] createSchema(ResultSetMetaData metaData, Function<Integer, Class<?>> getTypeClassFun)
     {
         try
         {
@@ -82,7 +92,7 @@ public class DpsRecordAdapter
                 }
                 String[] parts = columnLabel.split(";", 2);
                 String name = getUniqueName(names, parts[0]);
-                Class<?> clazz = SqlUtils.getTypeClass(metaData.getColumnType(i));
+                Class<?> clazz = getTypeClassFun.apply(metaData.getColumnType(i));
                 DynamicProperty dp = new DynamicProperty(name, clazz);
                 if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX))
                 {
