@@ -15,17 +15,18 @@ public class DaemonsTable extends TableBuilderSupport
     @Override
     public TableModel getTableModel()
     {
-        addColumns("Name", "DaemonType", "Status", "ConfigSection", "Description", "ClassName");
+        addColumns("Name", "Type", "Status", "Running", "Meta");
 
         for (Daemon daemon : meta.getDaemons())
         {
             addRow(daemon.getName(), cells(
                     daemon.getName(),
                     daemon.getDaemonType(),
+                    daemonStarter.isEnabled(daemon.getName()),
                     Boolean.valueOf(daemonStarter.isJobRunning(daemon.getName())).toString(),
-                    daemon.getConfigSection(),
-                    daemon.getDescription(),
-                    daemon.getClassName()
+                    "ConfigSection: " + daemon.getConfigSection() + ",<br> " +
+                    "Description: " + daemon.getDescription() + ",<br> " +
+                    "ClassName: " + daemon.getClassName()
             ));
         }
         return table(columns, rows, true);
