@@ -20,6 +20,7 @@ public class TestDaemon extends Process
     @Override
     public void doWork(JobExecutionContext context) throws Exception
     {
-
+        db.insert("INSERT INTO users(user_name,user_pass) VALUES (?, ?)",
+                "TestDaemonUser" + System.currentTimeMillis(), "test");
     }
 }

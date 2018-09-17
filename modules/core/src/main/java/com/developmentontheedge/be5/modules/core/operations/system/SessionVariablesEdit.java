@@ -1,16 +1,19 @@
 package com.developmentontheedge.be5.modules.core.operations.system;
 
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
+import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
 
 import static com.developmentontheedge.beans.BeanInfoConstants.LABEL_FIELD;
 
 
-public class SessionVariablesEdit extends GOperationSupport
+public class SessionVariablesEdit extends OperationSupport
 {
+    public DynamicPropertySetSupport params = new DynamicPropertySetSupport();
+
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {

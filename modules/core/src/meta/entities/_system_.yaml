@@ -13,6 +13,8 @@ _system_:
   - Daemons:
       type: Java
       roles: [SystemDeveloper, Administrator]
+      operations:
+      - ExecuteInOperation
       code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsTable
   - Entities:
       type: Java
@@ -55,6 +57,11 @@ _system_:
       roles: [SystemDeveloper]
       value: queryBuilder
   operations:
+  - ExecuteInOperation:
+      type: Java
+      records: 1
+      roles: [SystemDeveloper, Administrator]
+      code: com.developmentontheedge.be5.modules.core.operations.system.daemons.ExecuteInOperation
   - SessionVariablesEdit:
       type: Java
       records: 1
