@@ -39,7 +39,6 @@ public class CacheTable extends TableBuilderSupport
                     entry.getValue().stats().loadFailureCount()
             ));
         }
-
         return table(columns, rows);
     }
 }

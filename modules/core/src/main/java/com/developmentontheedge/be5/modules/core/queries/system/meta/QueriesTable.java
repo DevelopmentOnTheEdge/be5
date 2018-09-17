@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.server.util.ActionUtils;
 import java.util.List;
 
 
-public class Queries extends TableBuilderSupport
+public class QueriesTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()
@@ -16,7 +16,6 @@ public class Queries extends TableBuilderSupport
         addColumns("EntityName", "Name", "Type", "Roles", "Operations");
 
         String selectEntity = (String) parameters.get("entity");
-
         if (selectEntity != null)
         {
             addQueries(selectEntity);
@@ -27,7 +26,6 @@ public class Queries extends TableBuilderSupport
                     e -> addQueries(e.getName())
             );
         }
-
         return table(columns, rows);
     }
 
@@ -37,7 +35,6 @@ public class Queries extends TableBuilderSupport
         for (String queryName : queries)
         {
             Query query = meta.getQuery(entityName, queryName);
-
             addRow(cells(
                     entityName,
                     cell(query.getName())
@@ -47,7 +44,5 @@ public class Queries extends TableBuilderSupport
                     query.getOperationNames().getFinalValues().size()
             ));
         }
-
     }
-
 }

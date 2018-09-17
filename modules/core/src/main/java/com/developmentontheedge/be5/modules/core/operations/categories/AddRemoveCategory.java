@@ -53,17 +53,13 @@ public class AddRemoveCategory extends GOperationSupport
         }
 
         Long categoryID = params.getValueAsLong("categoryID");
-
-
         String entity = getInfo().getEntityName();
         String pk = getInfo().getPrimaryKey();
 
         if ("Add".equals(params.getValue("operationType")))
         {
             List<Long> categories = categoriesHelper.getParentCategories(categoryID);
-
             delete(entity, categories);
-
             db.insert("INSERT INTO classifications (recordID, categoryID)" +
                             "SELECT CONCAT('" + entity + ".', e." + pk + "), c.ID " +
                             "FROM " + entity + " e, categories c " +
@@ -74,10 +70,8 @@ public class AddRemoveCategory extends GOperationSupport
         else
         {
             List<Long> categories = categoriesHelper.getChildCategories(categoryID);
-
             delete(entity, categories);
         }
-
     }
 
     private void delete(String entity, List<Long> categories)

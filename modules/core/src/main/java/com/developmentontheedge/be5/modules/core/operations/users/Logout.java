@@ -12,15 +12,14 @@ import javax.inject.Inject;
 public class Logout extends GOperationSupport
 {
     @Inject
-    protected UserHelper userHelper;
+    private UserHelper userHelper;
     @Inject
-    protected LoginService loginService;
+    private LoginService loginService;
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
         userHelper.logout();
-
         setResult(OperationResult.finished(null,
                 CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
     }

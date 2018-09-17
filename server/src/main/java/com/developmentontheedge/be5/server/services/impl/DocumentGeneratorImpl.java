@@ -63,6 +63,25 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
+    public JsonApiModel getStaticPage(String name)
+    {
+        String url = new HashUrl(STATIC_ACTION, name).toString();
+
+        try
+        {
+            return JsonApiModel.data(new ResourceData(STATIC_ACTION, new StaticPagePresentation(
+                    null,
+                    userAwareMeta.getStaticPageContent(name)),
+                    Collections.singletonMap(SELF_LINK, url)), null);
+        }
+        catch (Be5Exception e)
+        {
+            log.log(e.getLogLevel(), "Error in static page: " + url, e);
+            return JsonApiModel.error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), null);
+        }
+    }
+
+    @Override
     public JsonApiModel createStaticPage(String title, String content, String url)
     {
         return JsonApiModel.data(

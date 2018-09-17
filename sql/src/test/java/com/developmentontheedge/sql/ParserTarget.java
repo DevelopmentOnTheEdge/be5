@@ -195,6 +195,8 @@ public class ParserTarget extends Target
             dbms = Dbms.POSTGRESQL;
         else if (Dbms.SQLSERVER.getName().equals(dbmsName))
             dbms = Dbms.SQLSERVER;
+        else if (Dbms.H2.getName().equals(dbmsName))
+            dbms = Dbms.H2;
         else
         {
             test.getResult().addError(test, new Exception("Unknown DBMS \"" + dbmsName + "\". DBMS should be: db2, mysql, oracle, postgresql or sqlserver."));

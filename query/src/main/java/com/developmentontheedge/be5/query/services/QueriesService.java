@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.github.benmanes.caffeine.cache.Cache;
 
@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
+
 
 public class QueriesService
 {
@@ -36,9 +39,6 @@ public class QueriesService
     private final QueryService queryService;
     private final TableModelService tableModelService;
     private final UserInfoProvider userInfoProvider;
-
-    public static final String yes = "yes";
-    public static final String no = "no";
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
@@ -181,7 +181,8 @@ public class QueriesService
         for (RowModel row : tableModel.getRows())
         {
             String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
-            String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";
+            String second = row.getCells().size() >= 2 && row.getCells().get(1).content != null ?
+                    row.getCells().get(1).content.toString() : "";
             stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(entityName, second)};
         }
 
@@ -252,8 +253,8 @@ public class QueriesService
         return tagsCache.get("getTagsYesNo" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
-            arr[0] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
-            arr[1] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
+            arr[0] = new String[]{YES, userAwareMeta.getColumnTitle("query.jsp", "page", YES)};
+            arr[1] = new String[]{NO, userAwareMeta.getColumnTitle("query.jsp", "page", NO)};
             return arr;
         });
     }
@@ -263,8 +264,8 @@ public class QueriesService
         return tagsCache.get("getTagsNoYes" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
-            arr[0] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
-            arr[1] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
+            arr[0] = new String[]{NO, userAwareMeta.getColumnTitle("query.jsp", "page", NO)};
+            arr[1] = new String[]{YES, userAwareMeta.getColumnTitle("query.jsp", "page", YES)};
             return arr;
         });
     }
@@ -301,9 +302,25 @@ public class QueriesService
 
     public List<QRec> list(String sql, Object... params)
     {
-        return db.list(sql, DpsRecordAdapter::qRec, params);
+        return db.list(sql, new QRecParser(), params);
     }
 
+/* TODO add
+    public <T> List<T> scalarList(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        return list(meta.getQuery(tableName, queryName), new ScalarParser<T>(), parameters);
+    }
+
+    public List<Long> scalarLongList(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        return list(meta.getQuery(tableName, queryName), new ScalarLongParser(), parameters);
+    }
+
+    public <T> List<T> list(Query query, ResultSetParser<T> parser, Map<String, ?> parameters)
+    {
+        return queryService.build(query, parameters).execute(parser);
+    }
+*/
     public List<List<Object>> listOfLists(String sql, Object... params)
     {
         List<List<Object>> vals = new ArrayList<>();
@@ -337,9 +354,10 @@ public class QueriesService
 
     public QRec qRec(String sql, Object... params)
     {
-        return db.select(sql, DpsRecordAdapter::qRec, params);
+        return db.select(sql, new QRecParser(), params);
     }
 
+    //TODO rename records()
     public List<QRec> readAsRecordsFromQuery(String sql, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
@@ -352,9 +370,10 @@ public class QueriesService
 
     public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).execute(DpsRecordAdapter::qRec);
+        return queryService.build(query, parameters).execute(new QRecParser());
     }
 
+    //TODO rename one()
     public QRec readOneRecord(String sql, Map<String, ?> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
@@ -367,7 +386,7 @@ public class QueriesService
 
     public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).getRow(DpsRecordAdapter::qRec);
+        return queryService.build(query, parameters).getRow(new QRecParser());
     }
 
 //    public QRec withCache( String sql, Object... params )

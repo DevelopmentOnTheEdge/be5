@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
+import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
+
 @PropertyName("Column type")
 public class SqlColumnType
 {
@@ -197,7 +200,7 @@ public class SqlColumnType
     @PropertyName("Enum values")
     public String[] getEnumValues()
     {
-        return typeName.equals(TYPE_BOOL) ? new String[]{"no", "yes"}
+        return typeName.equals(TYPE_BOOL) ? new String[]{NO, YES}
                 : (enumValues == null || !typeName.equals(TYPE_ENUM)) ? Strings2.EMPTY : enumValues;
     }
 

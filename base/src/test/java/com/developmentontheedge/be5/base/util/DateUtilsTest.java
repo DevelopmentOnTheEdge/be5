@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.util;
+package com.developmentontheedge.be5.base.util;
 
 import org.junit.Test;
 

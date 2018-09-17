@@ -20,4 +20,9 @@ public class DataSourceServiceMock implements DataSourceService
         return Dbms.H2;
     }
 
+    @Override
+    public String getConnectionUrl()
+    {
+        return "";
+    }
 }

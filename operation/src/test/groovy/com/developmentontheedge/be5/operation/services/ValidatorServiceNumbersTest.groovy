@@ -117,7 +117,7 @@ class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
     void checkMessage(String msg)
     {
         try {
-            validator.checkErrorAndCast(dps)
+            validator.checkAndThrowExceptionIsError(dps)
         } catch (RuntimeException e) {
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
             assertEquals(msg,

@@ -40,7 +40,7 @@ public interface DbService
 
     default String oneString(String sql, Object... params)
     {
-        return one(sql, params);
+        return SqlUtils.stringFromDbObject(one(sql, params));
     }
 
     default Integer oneInteger(String sql, Object... params)

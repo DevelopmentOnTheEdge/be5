@@ -14,7 +14,7 @@ import java.util.List;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 
 
-public class Entities extends TableBuilderSupport
+public class EntitiesTable extends TableBuilderSupport
 {
     @Override
     public TableModel getTableModel()
@@ -43,8 +43,6 @@ public class Entities extends TableBuilderSupport
                                             .named("entity", entity.getName()).toString())
             ));
         }
-
         return table(columns, rows);
     }
-
 }

@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -47,7 +48,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -114,26 +114,20 @@ public abstract class BaseTestUtils
         return s.toString().replace("'", "\"");
     }
 
+    /**
+     * Use new ConcatColumnsParser()
+     */
+    @Deprecated
     public static String resultSetToString(ResultSet rs)
     {
-        List<String> list = new ArrayList<>();
         try
         {
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
-            {
-                if (rs.getObject(i) != null)
-                    list.add(rs.getObject(i).toString());
-                else
-                {
-                    list.add("null");
-                }
-            }
+            return new ConcatColumnsParser().parse(rs);
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return list.stream().collect(Collectors.joining(","));
     }
 
     public static DynamicPropertySetSupport getDpsS(Map<String, ?> nameValues)
@@ -199,6 +193,20 @@ public abstract class BaseTestUtils
         }
         addH2Profile(project);
         initDb(project);
+    }
+
+    protected static void addH2Profile()
+    {
+        Project project;
+        try
+        {
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        }
+        catch (ProjectLoadException e)
+        {
+            throw new RuntimeException(e);
+        }
+        addH2Profile(project);
     }
 
     protected static void initDb(Project project)

@@ -95,11 +95,4 @@ public class ParseRequestUtils
 
         return OperationUtils.replaceEmptyStringToNull(fieldValues);
     }
-
-    public static String getRequestWithoutContext(String contextPath, String requestUri)
-    {
-        String reqWithoutContext = requestUri.replaceFirst(contextPath, "");
-        if (!reqWithoutContext.endsWith("/")) reqWithoutContext += "/";
-        return reqWithoutContext;
-    }
 }

@@ -88,45 +88,37 @@ public class QueryBuilderController extends JsonApiModelController
             }
             else
             {
-                history = new ArrayList<>();
+                history = new ArrayList<String>() {{
+                    add("select * from users");
+                }};
             }
 
             if (sql == null)
             {
-                if (!history.isEmpty())
-                {
-                    sql = history.get(history.size() - 1);
-                }
-                else
-                {
-                    sql = "select * from users";
-                }
+                sql = history.get(history.size() - 1);
             }
             else
             {
-                if (history.isEmpty() || !history.get(history.size() - 1).equals(sql))
+                if (!history.get(history.size() - 1).equals(sql))
                 {
                     history.add(sql);
                     req.getSession().set(QUERY_BUILDER_HISTORY, history);
                 }
             }
 
-            ResourceData resourceData = new ResourceData(
-                    "queryBuilder",
-                    new Data(sql, history),
-                    Collections.singletonMap(SELF_LINK, "queryBuilder")
-            );
-
+            Data data;
             try
             {
                 SqlType type = getSqlType(sql);
 
                 if (type == SqlType.SELECT)
                 {
+                    data = new Data(sql, history);
                     select(sql, req);
                 }
                 else
                 {
+                    data = new Data("", history);
                     if (execute)
                     {
                         switch (type)
@@ -148,8 +140,15 @@ public class QueryBuilderController extends JsonApiModelController
             }
             catch (Throwable e)
             {
+                data = new Data(sql, history);
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
+
+            ResourceData resourceData = new ResourceData(
+                    "queryBuilder",
+                    data,
+                    Collections.singletonMap(SELF_LINK, "queryBuilder")
+            );
 
             return data(
                     resourceData,

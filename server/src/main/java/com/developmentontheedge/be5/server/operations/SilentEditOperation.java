@@ -8,6 +8,6 @@ public class SilentEditOperation extends EditOperation
     {
         super.invoke(parameters);
 
-        redirectToTable(getInfo().getEntityName(), getContext().getQueryName(), getRedirectParams());
+        redirectToTable(getInfo().getEntityName(), getContext().getQueryName());
     }
 }

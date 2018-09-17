@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -83,22 +82,32 @@ public class UtilsTest
     @Test
     public void changeTypeDateTime() throws ParseException
     {
-        assertEquals(dateFormatter.parse("2017-08-27"), Utils.changeType("2017-08-27", java.sql.Date.class));
-        assertEquals(dateFormatter.parse("2017-08-27"), Utils.changeType("2017-08-27", Date.class));
+        assertEquals(dateFormatter.parse("2017-08-27"), (java.sql.Date)Utils.changeType("2017-08-27", java.sql.Date.class));
+        assertEquals(dateFormatter.parse("2017-08-27"), (Date)Utils.changeType("2017-08-27", Date.class));
 
-        assertEquals(timeFormatter.parse("20:49:01"), Utils.changeType("20:49:01", Time.class));
+        assertEquals(timeFormatter.parse("20:49:01"), (Time)Utils.changeType("20:49:01", Time.class));
 
         assertEquals(dateTimeFormatter.parse("2017-08-27 20:49:01"),
-                Utils.changeType("2017-08-27 20:49:01", Timestamp.class));
+                (Timestamp)Utils.changeType("2017-08-27 20:49:01", Timestamp.class));
+
+        java.sql.Date sqlDate = new java.sql.Date(dateTimeFormatter.parse("2017-08-27 20:49:01").getTime());
+        Timestamp timestamp = (Timestamp)Utils.changeType(sqlDate, Timestamp.class);
+        assertEquals(dateTimeFormatter.parse("2017-08-27 20:49:01"), timestamp);
     }
 
     @Test
     public void changeTypeArray()
     {
         String[] stringArray = new String[]{"1", "2", "3"};
-
         assertArrayEquals(new Long[]{1L, 2L, 3L}, (Long[]) Utils.changeType(stringArray, Long[].class));
         assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) Utils.changeType(stringArray, Integer[].class));
     }
 
+    @Test
+    public void changeTypes()
+    {
+        assertArrayEquals(new Long[]{1L, 2L, 3L}, Utils.changeTypes(new String[]{"1", "2", "3"}, Long.class));
+
+        assertArrayEquals(new String[]{"1", "2", "3"}, Utils.changeTypes(new Long[]{1L, 2L, 3L}, String.class));
+    }
 }

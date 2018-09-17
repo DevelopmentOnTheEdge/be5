@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class GenerateContext extends ScriptSupport<GenerateContext>
 {
+    public static final String ENVIRONMENT_NAME = "environmentName";
     private static final Logger log = Logger.getLogger(GenerateContext.class.getName());
 
     private String generateContextPath;
@@ -25,6 +26,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     private boolean skipGenerateContextPath = false;
 
     private String generateFilePath;
+    private String environmentName = "test";
 
     @Override
     public void execute()
@@ -104,7 +106,13 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
                 replaceAll("USERNAME", prof.getUsername()).
                 replaceAll("PASSWORD", connectionPassword != null ? connectionPassword : prof.getPassword()).
                 replaceAll("URL", prof.getConnectionUrl()).
-                replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition());
+                replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition()).
+                replaceAll("PARAMETERS", getParameters());
+    }
+
+    private String getParameters()
+    {
+        return "<Parameter name=\"" + ENVIRONMENT_NAME + "\" value=\"" + environmentName + "\" override=\"false\"/>\n";
     }
 
     public GenerateContext setGenerateContextPath(String generateContextPath)
@@ -116,6 +124,12 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     public GenerateContext setSkipGenerateContextPath(boolean skipGenerateContextPath)
     {
         this.skipGenerateContextPath = skipGenerateContextPath;
+        return this;
+    }
+
+    public GenerateContext setEnvironmentName(String environmentName)
+    {
+        this.environmentName = environmentName;
         return this;
     }
 

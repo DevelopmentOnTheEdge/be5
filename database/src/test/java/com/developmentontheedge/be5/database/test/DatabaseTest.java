@@ -46,7 +46,7 @@ public abstract class DatabaseTest
         @Override
         protected void configure()
         {
-            bind(DataSourceService.class).to(DataSourceServiceTestImpl.class).in(Scopes.SINGLETON);
+            bind(DataSourceService.class).to(TestH2DataSourceService.class).in(Scopes.SINGLETON);
             bind(TestTransactionService.class).in(Scopes.SINGLETON);
             bind(TestTransaction2Service.class).to(TestTransaction2ServiceImpl.class).in(Scopes.SINGLETON);
         }

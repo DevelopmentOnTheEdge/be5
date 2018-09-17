@@ -292,17 +292,7 @@ public class DaemonStarterImpl implements DaemonStarter
         }
         String type = daemon.getDaemonType();
 
-        Class<? extends Process> cls;
-        try
-        {
-            cls = (Class<? extends Process>) Class.forName(daemon.getClassName());
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw Be5Exception.internal(e);
-        }
-
-        JobDetail job = JobBuilder.newJob(cls)
+        JobDetail job = JobBuilder.newJob(getProcessClass(daemon))
                 .withIdentity(name, DAEMONS_GROUP)
                 .build();
 
@@ -321,6 +311,21 @@ public class DaemonStarterImpl implements DaemonStarter
             log.log(Level.SEVERE, "Error in delete or add job", se);
             throw Be5Exception.internal(se);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends Process> getProcessClass(Daemon daemon)
+    {
+        Class<? extends Process> cls;
+        try
+        {
+            cls = (Class<? extends Process>) Class.forName(daemon.getClassName());
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+        return cls;
     }
 
     private Trigger getTrigger(String name, String config, String type)
@@ -417,9 +422,6 @@ public class DaemonStarterImpl implements DaemonStarter
      * Put needed values to job "context" .
      * ATTENTION! Since daemons can be used in distributed environment, only serializable objects must be stored in it.
      *
-     * @param job
-     * @param name
-     * @param config
      */
     private static void fillJobDataMap(JobDetail job, String name, String config, Map<? extends String, ?> extra)
     {

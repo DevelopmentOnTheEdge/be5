@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation.services.validation;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -11,6 +12,8 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.ERROR;
 import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
@@ -18,42 +21,61 @@ import static com.developmentontheedge.be5.operation.services.validation.Validat
 
 public class Validator
 {
+    public static final Logger log = Logger.getLogger(Validator.class.getName());
+
     private final UserAwareMeta userAwareMeta;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public Validator(UserAwareMeta userAwareMeta)
+    public Validator(UserAwareMeta userAwareMeta, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
+        this.userInfoProvider = userInfoProvider;
     }
 
-//    private Map<String, String> getValidationAttributes(DynamicProperty property)
-//    {
-//        Map<String, String> result = new LinkedHashMap<String, String>();
-//        for( AbstractRule rule : defaultRules )
-//        {
-//            if( rule.isApplicable( property ) )
-//            {
-//                result.put( rule.getRule(), userAwareMeta.getLocalizedValidationMessage( rule.getMessage() ) );
-//            }
-//        }
-//        return result;
-//    }
-
-    public void checkErrorAndCast(Object parameters)
+    public boolean validate(Object parameters)
     {
-        isError(parameters);
+        return validateStatusInsteadError(() -> checkAndThrowExceptionIsError(parameters));
+    }
 
+    public boolean validate(DynamicProperty property)
+    {
+        return validateStatusInsteadError(() -> checkAndThrowExceptionIsError(property));
+    }
+
+    private boolean validateStatusInsteadError(Runnable function)
+    {
+        try
+        {
+            function.run();
+            return true;
+        }
+        catch (RuntimeException e)
+        {
+            if (userInfoProvider.isSystemDeveloper())
+            {
+                log.log(Level.INFO, "Error on validate: ", e);
+            }
+            return false;
+        }
+    }
+
+
+    public void checkAndThrowExceptionIsError(Object parameters)
+    {
         if (parameters instanceof DynamicPropertySet)
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
-                checkErrorAndCast(property);
+                checkAndThrowExceptionIsError(property);
             }
         }
     }
 
-    public void checkErrorAndCast(DynamicProperty property)
+    public void checkAndThrowExceptionIsError(DynamicProperty property)
     {
+        throwExceptionIsError(property);
+
         if (property.getValue() == null
                 || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
                 && ((Object[]) property.getValue()).length == 0))
@@ -239,7 +261,6 @@ public class Validator
         try
         {
             if (type == Date.class) return Date.valueOf(value);
-            if (type == Timestamp.class) return Timestamp.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
@@ -247,29 +268,58 @@ public class Validator
             setError(property, msg);
             throw new IllegalArgumentException(msg + toStringProperty(property));
         }
+        try
+        {
+            if (type == Timestamp.class) return Timestamp.valueOf(value);
+        }
+        catch (IllegalArgumentException e)
+        {
+            String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date with time.");
+            setError(property, msg);
+            throw new IllegalArgumentException(msg + toStringProperty(property));
+        }
 
         return value;
     }
 
-    public void isError(Object parameters)
+    public void throwExceptionIsError(Object parameters)
     {
         if (parameters instanceof DynamicPropertySet)
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
-                if (isError(property))
-                {
-                    throw new IllegalArgumentException(property.getAttribute("message") + toStringProperty(property));
-                }
+                throwExceptionIsError(property);
             }
         }
     }
 
+    public void throwExceptionIsError(DynamicProperty property)
+    {
+        if (isError(property))
+        {
+            throw new IllegalArgumentException((String) property.getAttribute("message"));
+        }
+    }
+
+    public boolean isValid(DynamicProperty property)
+    {
+        return !isError(property);
+    }
+
     public boolean isError(DynamicProperty property)
     {
-        return property.getAttribute(BeanInfoConstants.STATUS) != null &&
-                Validation.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
-                        == Validation.Status.ERROR;
+        Object statusAttr = property.getAttribute(BeanInfoConstants.STATUS);
+        if (statusAttr == null) return false;
+        Validation.Status status;
+        if (statusAttr.getClass() == Validation.Status.class)
+        {
+            status = (Validation.Status) statusAttr;
+        }
+        else
+        {
+            status = Validation.Status.valueOf(((String) statusAttr).toUpperCase());
+        }
+        return status == Validation.Status.ERROR;
     }
 
     private String toStringProperty(DynamicProperty property)

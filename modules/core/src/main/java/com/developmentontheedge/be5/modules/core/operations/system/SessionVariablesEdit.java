@@ -39,5 +39,4 @@ public class SessionVariablesEdit extends GOperationSupport
     {
         session.putAt(context.getRecord(), params.getValue("newValue"));
     }
-
 }

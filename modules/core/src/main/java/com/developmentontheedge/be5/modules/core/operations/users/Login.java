@@ -29,11 +29,9 @@ public class Login extends GOperationSupport
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         dpsHelper.addDpForColumns(params, getInfo().getEntity(), Arrays.asList("user_name", "user_pass"), context.getOperationParams(), presetValues);
-
         DynamicProperty user_pass = params.getProperty("user_pass");
         user_pass.setAttribute(CAN_BE_NULL, false);
         user_pass.setAttribute(PASSWORD_FIELD, true);
-
         return params;
     }
 
@@ -45,7 +43,6 @@ public class Login extends GOperationSupport
         {
             loginService.saveUser(username, request);
             postLogin(parameters);
-
             if (context.getOperationParams().get("withoutUpdateUserInfo") == null)
             {
                 setResult(OperationResult.finished(null,

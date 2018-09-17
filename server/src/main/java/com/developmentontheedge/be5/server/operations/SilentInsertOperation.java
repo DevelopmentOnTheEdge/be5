@@ -8,6 +8,6 @@ public class SilentInsertOperation extends InsertOperation
     {
         super.invoke(parameters);
 
-        redirectToTable(getInfo().getEntityName(), getContext().getQueryName(), getRedirectParams());
+        redirectToTable(getInfo().getEntityName(), getContext().getQueryName());
     }
 }

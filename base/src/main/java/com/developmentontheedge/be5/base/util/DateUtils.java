@@ -1,6 +1,4 @@
-package com.developmentontheedge.be5.server.util;
-
-import com.developmentontheedge.be5.base.util.Utils;
+package com.developmentontheedge.be5.base.util;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;

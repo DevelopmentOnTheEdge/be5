@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.server.services.HtmlMetaTags;
+import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -27,17 +25,16 @@ public class TemplateFilter extends FilterSupport
     private ServletContext servletContext;
     private TemplateEngine templateEngine;
 
-    private final UserAwareMeta userAwareMeta;
+    private final HtmlMetaTags htmlMetaTags;
     private final UserHelper userHelper;
-    private final Meta meta;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider, Meta meta, UserInfoProvider userInfoProvider)
+    public TemplateFilter(UserHelper userHelper, ProjectProvider projectProvider,
+                          HtmlMetaTags htmlMetaTags, UserInfoProvider userInfoProvider)
     {
-        this.userAwareMeta = userAwareMeta;
         this.userHelper = userHelper;
-        this.meta = meta;
+        this.htmlMetaTags = htmlMetaTags;
         this.userInfoProvider = userInfoProvider;
 
         projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
@@ -50,19 +47,11 @@ public class TemplateFilter extends FilterSupport
         this.templateEngine = new TemplateEngine();
 
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
-
-        // HTML is the default mode, but we will set it anyway for better understanding of code
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        // This will convert "home" to "/WEB-INF/templates/home.html"
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
-        // Set template cache TTL to 1 hour. If not set, entries would live in cache until expelled by LRU
         templateResolver.setCacheTTLMs(3600000L);
-
-        // Cache is set to true by default. Set to false if you want templates to
-        // be automatically updated when modified.
         templateResolver.setCacheable(true);
-
         templateEngine.setTemplateResolver(templateResolver);
     }
 
@@ -73,27 +62,31 @@ public class TemplateFilter extends FilterSupport
         {
             userHelper.initGuest();
         }
-
-        String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
-
+        String reqWithoutContext = getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
         if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)
         {
             chain.doFilter(req.getRawRequest(), res.getRawResponse());
-            return;
         }
+        else
+        {
+            res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req)));
+        }
+    }
 
-        String title = userAwareMeta.getColumnTitle("index", "page", "title");
-        String description = userAwareMeta.getColumnTitle("index", "page", "description");
+    private static String getRequestWithoutContext(String contextPath, String requestUri)
+    {
+        String reqWithoutContext = requestUri.replaceFirst(contextPath, "");
+        if (!reqWithoutContext.endsWith("/")) reqWithoutContext += "/";
+        return reqWithoutContext;
+    }
 
+    private Context getContext(Request req)
+    {
         Context context = new Context();
-        context.setVariable("lang", meta.getLocale(null));
-        context.setVariable("title", title);
-        context.setVariable("description", description);
-
+        context.setVariables(htmlMetaTags.getTags());
         context.setVariable("requestUrl", req.getRequestUri());
         context.setVariable("contextPath", req.getContextPath());
-
-        res.sendHtml(templateEngine.process(reqWithoutContext + "index", context));
+        return context;
     }
 
 }

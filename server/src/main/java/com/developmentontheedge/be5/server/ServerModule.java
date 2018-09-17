@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.server.controllers.ApplicationInfoController;
 import com.developmentontheedge.be5.server.controllers.DocumentController;
 import com.developmentontheedge.be5.server.controllers.DownloadController;
 import com.developmentontheedge.be5.server.controllers.FormController;
@@ -23,6 +22,7 @@ import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.FormGenerator;
+import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
@@ -52,7 +52,6 @@ public class ServerModule extends ServletModule
         bind(StaticPageController.class).in(Scopes.SINGLETON);
         bind(MenuController.class).in(Scopes.SINGLETON);
         bind(LanguageSelectorController.class).in(Scopes.SINGLETON);
-        bind(ApplicationInfoController.class).in(Scopes.SINGLETON);
         bind(QueryBuilderController.class).in(Scopes.SINGLETON);
         bind(DownloadController.class).in(Scopes.SINGLETON);
 
@@ -61,7 +60,6 @@ public class ServerModule extends ServletModule
         serve("/api/static*").with(StaticPageController.class);
         serve("/api/menu*").with(MenuController.class);
         serve("/api/languageSelector*").with(LanguageSelectorController.class);
-        serve("/api/appInfo").with(ApplicationInfoController.class);
         serve("/api/queryBuilder").with(QueryBuilderController.class);
         serve("/api/download").with(DownloadController.class);
 
@@ -77,6 +75,7 @@ public class ServerModule extends ServletModule
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
+        bind(HtmlMetaTags.class).in(Scopes.SINGLETON);
 
         bind(QuerySession.class).to(QuerySessionImpl.class).in(ServletScopes.SESSION);
         bind(Session.class).to(SessionImpl.class).in(ServletScopes.SESSION);

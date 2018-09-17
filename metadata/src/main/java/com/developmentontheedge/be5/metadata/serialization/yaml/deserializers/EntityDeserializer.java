@@ -310,13 +310,12 @@ class EntityDeserializer extends FileDeserializer
                         fileExtender = new GroovyOperationExtender(operation, getProjectOrigin());
                     }
 
-                    SourceFile sourceFile = yamlDeserializer.project.getApplication().
-                            getSourceFile(fileExtender.getNamespace(), classPathToFileName(filepath, fileExtender.getFileExtension()));
+                    String realFilePath = classPathToFileName(filepath, fileExtender.getFileExtension());
+                    SourceFile sourceFile = yamlDeserializer.project.getApplication().getSourceFile(fileExtender.getNamespace(), realFilePath);
                     if (sourceFile == null)
                     {
-                        sourceFile = yamlDeserializer.project.getApplication().addSourceFile(fileExtender.getNamespace(),
-                                classPathToFileName(filepath, fileExtender.getFileExtension()));
-                        sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(fileExtender.getNamespace(), filepath));
+                        sourceFile = yamlDeserializer.project.getApplication().addSourceFile(fileExtender.getNamespace(), realFilePath);
+                        sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(fileExtender.getNamespace(), realFilePath));
                     }
 
                     fileExtender.setFileName(sourceFile.getName());

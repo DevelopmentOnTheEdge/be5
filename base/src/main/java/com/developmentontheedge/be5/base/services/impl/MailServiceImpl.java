@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -41,10 +42,16 @@ public class MailServiceImpl implements MailService
      */
     @Override
     public void sendPlainEmail(String to, String subject, String body)
-            throws Exception
     {
-        sendEmail(null,
-                new InternetAddress[]{new InternetAddress(to)}, subject, body, "text/plain");
+        try
+        {
+            sendEmail(null, new InternetAddress[]{new InternetAddress(to)}, subject, body, "text/plain");
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -55,10 +62,31 @@ public class MailServiceImpl implements MailService
      */
     @Override
     public void sendHtmlEmail(String to, String subject, String body)
-            throws Exception
     {
-        sendEmail(null,
-                new InternetAddress[]{new InternetAddress(to)}, subject, body, "text/html");
+        try
+        {
+            sendEmail(null, new InternetAddress[]{new InternetAddress(to)}, subject, body, "text/html");
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendHtmlEmail(String from, String to, String subject, String body)
+    {
+        try
+        {
+            sendEmail(new InternetAddress(from), new InternetAddress[]{new InternetAddress(to)}, subject, body,
+                    "text/html");
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**

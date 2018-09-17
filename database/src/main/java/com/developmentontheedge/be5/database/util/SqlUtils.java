@@ -28,11 +28,6 @@ public class SqlUtils
                 return (T) (Double) ((BigDecimal) object).doubleValue();
             }
 
-            if (clazz == Long.class && object.getClass() == BigInteger.class)
-            {
-                return (T) (Long) ((BigInteger) object).longValue();
-            }
-
             if (clazz == Short.class && object.getClass() == Integer.class)
             {
                 return (T) (Short) ((Integer) object).shortValue();
@@ -43,9 +38,14 @@ public class SqlUtils
                 return (T) (Integer) ((Long) object).intValue();
             }
 
-            if (clazz == String.class && object.getClass() == byte[].class)
+            if (clazz == Long.class)
             {
-                return (T) new String((byte[]) object);
+                return (T) longFromDbObject(object);
+            }
+
+            if (clazz == String.class)
+            {
+                return (T) stringFromDbObject(object);
             }
 
             return clazz.cast(object);
@@ -76,6 +76,10 @@ public class SqlUtils
         {
             return (Long) number;
         }
+        else if (number.getClass() == Integer.class)
+        {
+            return (Long) number;
+        }
         else if (number.getClass() == BigInteger.class)
         {
             return ((BigInteger) number).longValue();
@@ -83,6 +87,35 @@ public class SqlUtils
         else
         {
             return Long.parseLong(number.toString());
+        }
+    }
+
+    public static String stringFromDbObject(Object value)
+    {
+        try
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            else if (value.getClass() == String.class)
+            {
+                return (String) value;
+            }
+            else if (value.getClass() == byte[].class)
+            {
+                return new String((byte[]) value);
+            }
+            else if (value instanceof Clob)
+            {
+                Clob clob = (Clob) value;
+                return clob.getSubString(1, (int) clob.length());
+            }
+            return (String) value;
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
@@ -118,6 +151,19 @@ public class SqlUtils
                 return byte[].class;
             default:
                 return String.class;
+        }
+    }
+
+    public static Class<?> getSimpleStringTypeClass(int columnType)
+    {
+        switch (columnType)
+        {
+            case Types.CLOB:
+            case Types.BLOB:
+            case Types.BINARY:
+                return String.class;
+            default:
+                return getTypeClass(columnType);
         }
     }
 }

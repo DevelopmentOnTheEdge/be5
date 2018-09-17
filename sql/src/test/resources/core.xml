@@ -1060,7 +1060,7 @@ WHERE ( c.name || ' - ОГРН: ' || c.ogrn ) LIKE 'test%']]></format>
     <parser>
       <query><![CDATA[SELECT ADD_MONTHS(date, mon) FROM t]]></query>
       <format dbms="oracle"><![CDATA[SELECT ADD_MONTHS(date, mon) FROM t]]></format>
-      <format dbms="sqlserver"><![CDATA[SELECT DATEADD(MONTH, mon, date) FROM t]]></format>
+      <format dbms="sqlserver,h2"><![CDATA[SELECT DATEADD(MONTH, mon, date) FROM t]]></format>
       <format dbms="db2"><![CDATA[SELECT (date + mon MONTHS) FROM t]]></format>
       <format dbms="mysql"><![CDATA[SELECT DATE_ADD(date, INTERVAL mon MONTH) FROM t]]></format>
       <format dbms="postgres"><![CDATA[SELECT (date + INTERVAL '1 MONTH'*( mon)) FROM t]]></format>
@@ -1070,7 +1070,7 @@ WHERE ( c.name || ' - ОГРН: ' || c.ogrn ) LIKE 'test%']]></format>
   <test name="add-days">
     <parser>
       <query><![CDATA[SELECT ADD_DAYS(date, days) FROM t]]></query>
-      <format dbms="sqlserver"><![CDATA[SELECT DATEADD(DAY, days, date) FROM t]]></format>
+      <format dbms="sqlserver,h2"><![CDATA[SELECT DATEADD(DAY, days, date) FROM t]]></format>
       <format dbms="oracle"><![CDATA[SELECT ((date)+( days)) FROM t]]></format>
       <format dbms="db2"><![CDATA[SELECT (date + days DAYS) FROM t]]></format>
       <format dbms="mysql"><![CDATA[SELECT DATE_ADD(date, INTERVAL days DAY) FROM t]]></format>
@@ -1082,7 +1082,7 @@ WHERE ( c.name || ' - ОГРН: ' || c.ogrn ) LIKE 'test%']]></format>
     <parser>
       <query><![CDATA[SELECT ADD_MILLIS(date, ms) FROM t]]></query>
       <format dbms="oracle"><![CDATA[SELECT (date +( ms / 86400000)) FROM t]]></format>
-      <format dbms="sqlserver"><![CDATA[SELECT DATEADD(MILLISECOND, ms, date) FROM t]]></format>
+      <format dbms="sqlserver,h2"><![CDATA[SELECT DATEADD(MILLISECOND, ms, date) FROM t]]></format>
       <format dbms="db2"><![CDATA[SELECT (date +( ms * 1000) MICROSECONDS) FROM t]]></format>
       <format dbms="mysql"><![CDATA[SELECT DATE_ADD(date, INTERVAL ( ms * 1000) MICROSECOND) FROM t]]></format>
       <format dbms="postgres"><![CDATA[SELECT (date + INTERVAL '1 MILLISECOND'*( ms)) FROM t]]></format>

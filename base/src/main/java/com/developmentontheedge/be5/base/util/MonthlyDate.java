@@ -1,6 +1,6 @@
 /* $Id: MonthlyDate.java,v 1.24 2013/11/12 11:17:49 mixa Exp $ */
 
-package com.developmentontheedge.be5.server.util;
+package com.developmentontheedge.be5.base.util;
 
 import java.util.Calendar;
 

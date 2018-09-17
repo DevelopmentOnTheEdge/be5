@@ -10,14 +10,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public class DataSourceServiceTestImpl implements DataSourceService
+public class TestH2DataSourceService implements DataSourceService
 {
     private final DataSource dataSource;
+    private final String connectionUrl = "jdbc:h2:~/be5_database_tests";
 
-    public DataSourceServiceTestImpl()
+    public TestH2DataSourceService()
     {
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:~/be5_database_tests");
+        ds.setURL(connectionUrl);
         ds.setUser("sa");
         ds.setPassword("sa");
 
@@ -52,4 +53,9 @@ public class DataSourceServiceTestImpl implements DataSourceService
         return dataSource;
     }
 
+    @Override
+    public String getConnectionUrl()
+    {
+        return connectionUrl;
+    }
 }

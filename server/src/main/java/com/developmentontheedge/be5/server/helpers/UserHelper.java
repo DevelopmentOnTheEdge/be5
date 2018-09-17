@@ -4,16 +4,15 @@ import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.server.SessionConstants;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -40,19 +39,27 @@ public class UserHelper
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
                              Locale locale, String remoteAddr)
     {
+        UserInfo ui;
         if (stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
-            Set<String> hs = new HashSet<>();
-            hs.addAll(availableRoles);
-            hs.addAll(ModuleLoader2.getDevRoles());
+            Set<String> devAvailableRoles = new LinkedHashSet<String>() {{
+                addAll(availableRoles);
+                addAll(ModuleLoader2.getDevRoles());
+            }};
+            Set<String> devCurrentRoles = new LinkedHashSet<String>() {{
+                addAll(currentRoles);
+                addAll(ModuleLoader2.getDevRoles());
+            }};
 
-            availableRoles = new ArrayList<>(hs);
-            currentRoles = new ArrayList<>(hs);
+            ui = new UserInfo(userName, devAvailableRoles, devCurrentRoles);
 
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
         }
+        else
+        {
+            ui = new UserInfo(userName, availableRoles, currentRoles);
+        }
 
-        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles);
         ui.setRemoteAddr(remoteAddr);
         ui.setLocale(meta.getLocale(locale));
 

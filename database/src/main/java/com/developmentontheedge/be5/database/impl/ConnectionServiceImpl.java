@@ -33,54 +33,47 @@ public class ConnectionServiceImpl implements ConnectionService
         return TRANSACT_CONN.get();
     }
 
-    private Connection getTxConnection() throws SQLException
+    @Override
+    public Connection beginTransaction()
     {
-        Connection conn = getCurrentTxConn();
-        if (conn != null)
+        Connection txConnection = getCurrentTxConn();
+        if (txConnection == null)
         {
-            return conn;
+            TRANSACT_CONN_COUNT.set(1);
+            return beginWorkWithTxConnection();
         }
         else
         {
-            conn = databaseService.getDataSource().getConnection();
-            conn.setAutoCommit(false);
-            TRANSACT_CONN.set(conn);
-            return conn;
+            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
+            return txConnection;
         }
     }
 
     @Override
-    public Connection beginTransaction() throws SQLException
+    public void endTransaction()
     {
-        Connection txConnection = getTxConnection();
-        if (TRANSACT_CONN_COUNT.get() == null) TRANSACT_CONN_COUNT.set(0);
-        TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
-        return txConnection;
-    }
-
-    @Override
-    public void endTransaction() throws SQLException
-    {
-        Connection txConnection = getCurrentTxConn();
         TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-        if (TRANSACT_CONN_COUNT.get() == 0)
+        Connection txConnection = getCurrentTxConn();
+        if (txConnection != null && TRANSACT_CONN_COUNT.get() == 0)
         {
             try
             {
                 txConnection.commit();
             }
+            catch (SQLException e)
+            {
+                throw new RuntimeException(e);
+            }
             finally
             {
-                returnConnection(txConnection);
-                TRANSACT_CONN.set(null);
+                endWorkWithTxConnection();
             }
         }
     }
 
     @Override
-    public RuntimeException rollbackTransaction(Throwable e)
+    public void rollbackTransaction()
     {
-        TRANSACT_CONN_COUNT.set(0);
         Connection txConnection = getCurrentTxConn();
         try
         {
@@ -88,23 +81,37 @@ public class ConnectionServiceImpl implements ConnectionService
             {
                 txConnection.rollback();
             }
-            return returnRuntimeExceptionOrWrap(e);
         }
-        catch (SQLException se)
+        catch (SQLException e)
         {
-            log.log(Level.SEVERE, "Unable to rollback transaction", se);
-            return returnRuntimeExceptionOrWrap(e);
+            log.log(Level.SEVERE, "Unable to rollback transaction", e);
+            throw new RuntimeException(e);
         }
         finally
         {
-            returnConnection(txConnection);
-            TRANSACT_CONN.set(null);
+            endWorkWithTxConnection();
         }
     }
 
-    private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
+    private Connection beginWorkWithTxConnection()
     {
-        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+        try
+        {
+            Connection conn = databaseService.getDataSource().getConnection();
+            conn.setAutoCommit(false);
+            TRANSACT_CONN.set(conn);
+            return conn;
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void endWorkWithTxConnection()
+    {
+        returnConnection(getCurrentTxConn());
+        TRANSACT_CONN.set(null);
     }
 
     @Override
@@ -120,8 +127,14 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         catch (Throwable e)
         {
-            throw rollbackTransaction(e);
+            rollbackTransaction();
+            throw returnRuntimeExceptionOrWrap(e);
         }
+    }
+
+    private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
+    {
+        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException("rethrow after rollback", e);
     }
 
     @Override

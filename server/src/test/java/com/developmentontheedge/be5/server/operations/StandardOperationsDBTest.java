@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
-import com.developmentontheedge.be5.test.ServerTestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
                 operationResult);
 
         assertEquals("EditName,123",
-                db.select("SELECT name, value FROM testtableAdmin WHERE id = ?", ServerTestUtils::resultSetToString, id));
+                db.select("SELECT name, value FROM testtableAdmin WHERE id = ?", new ConcatColumnsParser(), id));
     }
 
     @Test

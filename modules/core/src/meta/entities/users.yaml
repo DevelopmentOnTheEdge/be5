@@ -57,6 +57,7 @@ users:
       roles: [Administrator]
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - EditRoles:
+      records: 1
       roles: [Administrator]
       code: com.developmentontheedge.be5.modules.core.operations.users.EditRoles
   - Filter:
