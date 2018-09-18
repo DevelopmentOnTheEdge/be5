@@ -13,7 +13,7 @@ public abstract class CoreBe5ProjectDBTest extends TestUtils
 {
     static
     {
-        initDb();
+        addH2ProfileAndCreateDb();
     }
 
     private static final Injector injector = initInjector(
