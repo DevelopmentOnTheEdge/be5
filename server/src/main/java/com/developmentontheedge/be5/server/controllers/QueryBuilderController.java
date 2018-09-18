@@ -109,31 +109,38 @@ public class QueryBuilderController extends JsonApiModelController
             Data data;
             try
             {
-                SqlType type = getSqlType(sql);
-
-                if (type == SqlType.SELECT)
+                if (req.getBoolean("updateWithoutBeSql", false))
                 {
-                    data = new Data(sql, history);
-                    select(sql, req);
+                    data = new Data("", history);
+                    updateUnsafe(sql);
                 }
                 else
                 {
-                    data = new Data("", history);
-                    if (execute)
+                    SqlType type = getSqlType(sql);
+                    if (type == SqlType.SELECT)
                     {
-                        switch (type)
+                        data = new Data(sql, history);
+                        select(sql, req);
+                    }
+                    else
+                    {
+                        data = new Data("", history);
+                        if (execute)
                         {
-                            case INSERT:
-                                insert(sql);
-                                break;
-                            case UPDATE:
-                                update(sql);
-                                break;
-                            case DELETE:
-                                update(sql);
-                                break;
-                            default:
-                                return null;
+                            switch (type)
+                            {
+                                case INSERT:
+                                    insert(sql);
+                                    break;
+                                case UPDATE:
+                                    update(sql);
+                                    break;
+                                case DELETE:
+                                    update(sql);
+                                    break;
+                                default:
+                                    return null;
+                            }
                         }
                     }
                 }
@@ -181,6 +188,21 @@ public class QueryBuilderController extends JsonApiModelController
     private void update(String sql)
     {
         Object id = db.update(sql);
+
+        includedData.add(new ResourceData(
+                "result",
+                FrontendConstants.STATIC_ACTION,
+                new StaticPagePresentation(
+                        "Update was successful",
+                        id + " row(s) affected"
+                ),
+                null
+        ));
+    }
+
+    private void updateUnsafe(String sql)
+    {
+        Object id = db.updateUnsafe(sql);
 
         includedData.add(new ResourceData(
                 "result",
