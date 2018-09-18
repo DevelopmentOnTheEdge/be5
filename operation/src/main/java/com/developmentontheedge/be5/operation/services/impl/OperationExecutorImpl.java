@@ -273,12 +273,14 @@ public class OperationExecutorImpl implements OperationExecutor
     public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, ?> operationParams)
     {
         Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
-        if (!operationInfo.getEntityName().startsWith("_"))
+        if (selectedRows.length > 0)
         {
-            Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
-            selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
+            if (!operationInfo.getEntityName().startsWith("_"))
+            {
+                Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
+                selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
+            }
         }
-
         return new OperationContext(selectedRows, queryName, (Map<String, Object>) operationParams);
     }
 
