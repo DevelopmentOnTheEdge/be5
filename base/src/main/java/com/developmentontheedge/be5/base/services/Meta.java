@@ -93,11 +93,6 @@ public interface Meta
         return getColumn(entity, column) == null;
     }
 
-    default String getColumnDefaultValue(Entity entity, String columnName)
-    {
-        return getColumnDefaultValue(getColumn(entity, columnName));
-    }
-
     default String getColumnDefaultValue(ColumnDef column)
     {
         if (column == null) return null;
