@@ -89,7 +89,8 @@ public class DbServiceImpl implements DbService
         return execute(false, conn -> insert(conn, sql, params));
     }
 
-    private String format(String sql)
+    @Override
+    public String format(String sql)
     {
         return new Formatter().format(SqlQuery.parse(sql),
                 new Context(databaseService.getDbms()), new DefaultParserContext());

@@ -27,6 +27,8 @@ public interface DbService
 
     <T> T insert(String sql, Object... params);
 
+    String format(String sql);
+
     <T> T execute(SqlExecutor<T> executor);
 
     <T> T transactionWithResult(SqlExecutor<T> executor);

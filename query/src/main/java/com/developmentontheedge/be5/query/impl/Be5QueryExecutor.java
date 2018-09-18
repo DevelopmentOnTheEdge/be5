@@ -269,20 +269,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private DynamicProperty[] getSchema(String sql)
     {
-        try
-        {
-            return db.execute(conn -> {
-                try (PreparedStatement ps = conn.prepareStatement(sql))
-                {
-                    return DpsRecordAdapter.createSchema(ps.getMetaData());
-                }
-            });
-        }
-        catch (Throwable e)
-        {
-            log.log(Level.FINE, "fail getSchema, return empty", e);
-            return new DynamicProperty[]{};
-        }
+        return db.execute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement(db.format(sql)))
+            {
+                return DpsRecordAdapter.createSchema(ps.getMetaData());
+            }
+        });
     }
 
     private void applyCategory(DebugQueryLogger dql, AstStart ast)

@@ -105,4 +105,10 @@ public class DbServiceMock implements DbService
             throw Be5Exception.internal(e);
         }
     }
+
+    @Override
+    public String format(String sql)
+    {
+        return sql;
+    }
 }
