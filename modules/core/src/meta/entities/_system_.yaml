@@ -40,10 +40,14 @@ _system_:
       type: Java
       roles: [SystemDeveloper, Administrator]
       code: com.developmentontheedge.be5.modules.core.queries.system.ThreadsTable
-  - System Properties:
+  - System properties:
       type: Java
       roles: [SystemDeveloper, Administrator]
       code: com.developmentontheedge.be5.modules.core.queries.system.SystemPropertiesTable
+  - System settings:
+      type: static
+      roles: [SystemDeveloper, Administrator]
+      value: systemSettings.redir?_qn_=All+records
   - Http Headers:
       type: Java
       roles: [SystemDeveloper, Administrator]

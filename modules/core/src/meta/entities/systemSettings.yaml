@@ -20,8 +20,14 @@ systemSettings:
   queries:
   - All records:
       type: 1D_unknown
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
+      invisible: true
+      operations:
+      - Insert
       code: |-
         SELECT section_name,setting_name,setting_value
         FROM systemSettings
-
+  operations:
+  - Insert:
+      roles: [SystemDeveloper, Administrator]
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
