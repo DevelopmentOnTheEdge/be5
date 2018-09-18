@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -87,7 +86,7 @@ public class FormTest extends ServerBe5ProjectTest
                 .put(RestApiConstants.OPERATION, "Insert")
                 .put(OperationConstants.SELECTED_ROWS, "")
                 .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(map1))
-                .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
+                .put(RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())
                 .put(RestApiConstants.VALUES, values)
                 .build()), "");
     }

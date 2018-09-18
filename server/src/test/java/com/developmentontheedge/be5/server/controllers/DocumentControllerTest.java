@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,7 +32,7 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
         JsonApiModel jsonApiModel = documentController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 RestApiConstants.ENTITY, "testtable",
                 RestApiConstants.QUERY, "All records",
-                RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), "");
+                RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())), "");
 
         assertEquals("testtable: All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getTitle());
     }

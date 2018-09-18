@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Date;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -26,7 +25,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
         Response response = mock(Response.class);
         component.generate(getSpyMockRequest("/api/queryBuilder/", ImmutableMap.of(
                 "sql", "select * from testtable limit 1",
-                RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response);
+                RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())), response);
 
         verify(response).sendAsJson(any(JsonApiModel.class));
     }
