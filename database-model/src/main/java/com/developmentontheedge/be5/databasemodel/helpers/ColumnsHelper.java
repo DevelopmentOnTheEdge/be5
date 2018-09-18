@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +55,7 @@ public class ColumnsHelper
     private void addSpecialColumns(Entity entity, Map<String, Object> values, List<String> specialColumns)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        Timestamp currentTime = new Timestamp(new Date().getTime());
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
         for (String propertyName : specialColumns)
         {
@@ -91,7 +90,7 @@ public class ColumnsHelper
     public Map<String, ?> addDeleteSpecialValues(Entity entity, Map<String, Object> values)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        Timestamp currentTime = new Timestamp(new Date().getTime());
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
         if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
