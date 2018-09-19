@@ -62,7 +62,7 @@ public interface DbService
 
     default Long[] longArray(String sql, Object... params)
     {
-        return list(sql, new ScalarLongParser(), params).toArray(new Long[0]);
+        return scalarLongList(sql, params).toArray(new Long[0]);
     }
 
     default String[] stringArray(String sql, Object... params)
