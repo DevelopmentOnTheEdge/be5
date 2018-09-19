@@ -300,7 +300,7 @@ public class QueriesService
         return stockArr;
     }
 
-    public List<QRec> list(String sql, Object... params)
+    public List<QRec> readAsRecords(String sql, Object... params)
     {
         return db.list(sql, new QRecParser(), params);
     }
@@ -324,7 +324,7 @@ public class QueriesService
     public List<List<Object>> listOfLists(String sql, Object... params)
     {
         List<List<Object>> vals = new ArrayList<>();
-        List<QRec> list = list(sql, params);
+        List<QRec> list = readAsRecords(sql, params);
 
         for (QRec aList : list)
         {

@@ -181,7 +181,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsTest()
     {
-        List<QRec> list = queries.list("SELECT code, admlevel FROM testTags");
+        List<QRec> list = queries.readAsRecords("SELECT code, admlevel FROM testTags");
 
         assertEquals("01", list.get(0).getValue("code"));
         assertEquals("Regional", list.get(0).getValue("admlevel"));
