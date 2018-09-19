@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
+import com.developmentontheedge.be5.modules.core.services.RoleHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
@@ -31,6 +32,7 @@ public class CoreModule extends ServletModule
         serve("/api/categories*").with(CategoriesController.class);
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
+        bind(RoleHelper.class).in(Scopes.SINGLETON);
         bind(CoreUtils.class).to(CoreUtilsImpl.class).in(Scopes.SINGLETON);
         bind(LoginService.class).to(LoginServiceImpl.class).in(Scopes.SINGLETON);
         bind(CategoriesService.class).to(CategoriesServiceImpl.class).in(Scopes.SINGLETON);

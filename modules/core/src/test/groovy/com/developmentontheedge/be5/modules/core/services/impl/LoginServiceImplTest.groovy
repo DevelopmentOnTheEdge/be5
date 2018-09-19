@@ -22,14 +22,6 @@ class LoginServiceImplTest extends CoreBe5ProjectDbMockTest
     }
 
     @Test
-    void parseRoles()
-    {
-        assertEquals Arrays.asList('1', '2'), ((LoginServiceImpl) loginService).parseRoles("('1','2')")
-        assertEquals Collections.emptyList(), ((LoginServiceImpl) loginService).parseRoles("()")
-        assertEquals Collections.emptyList(), ((LoginServiceImpl) loginService).parseRoles(null)
-    }
-
-    @Test
     void testSetCurrentRoles()
     {
         assertEquals(['1', '2'], userInfoProvider.get().currentRoles)
