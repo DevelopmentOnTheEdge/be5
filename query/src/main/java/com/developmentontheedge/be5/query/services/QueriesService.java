@@ -305,6 +305,11 @@ public class QueriesService
         return db.list(sql, new QRecParser(), params);
     }
 
+    public QRec qRec(String sql, Object... params)
+    {
+        return db.select(sql, new QRecParser(), params);
+    }
+
 /* TODO add
     public <T> List<T> scalarList(String tableName, String queryName, Map<String, ?> parameters)
     {
@@ -352,12 +357,6 @@ public class QueriesService
         return values;
     }
 
-    public QRec qRec(String sql, Object... params)
-    {
-        return db.select(sql, new QRecParser(), params);
-    }
-
-    //TODO rename records()
     public List<QRec> readAsRecordsFromQuery(String sql, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
