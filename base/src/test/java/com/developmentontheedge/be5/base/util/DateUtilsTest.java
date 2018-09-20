@@ -164,4 +164,26 @@ public class DateUtilsTest
         assertTrue(DateUtils.isTimeBefore(sdf.parse("2016.12.31 10:00:00"), "10:00:01"));
         assertTrue(DateUtils.isTimeAfter(sdf.parse("2016.12.31 10:00:01"), "10:00:00"));
     }
+
+    @Test
+    public void maxDate()
+    {
+        assertEquals(DateUtils.makeDate(2013, 12, 2),
+                DateUtils.max(DateUtils.makeDate(2013, 12, 2), DateUtils.makeDate(2013, 12, 1)));
+        assertEquals(DateUtils.makeDate(2013, 12, 2),
+                DateUtils.max(DateUtils.makeDate(2013, 12, 1), DateUtils.makeDate(2013, 12, 2)));
+        assertEquals(DateUtils.makeDate(2013, 12, 2),
+                DateUtils.max(DateUtils.makeDate(2013, 12, 2), null));
+        assertEquals(DateUtils.makeDate(2013, 12, 2),
+                DateUtils.max(null, DateUtils.makeDate(2013, 12, 2)));
+    }
+
+    @Test
+    public void maxDateForTimestamp()
+    {
+        assertEquals(new Timestamp(DateUtils.makeDate(2013, 12, 2).getTime()),
+                DateUtils.max(
+                        new Timestamp(DateUtils.makeDate(2013, 12, 1).getTime()),
+                        new Timestamp(DateUtils.makeDate(2013, 12, 2).getTime())));
+    }
 }

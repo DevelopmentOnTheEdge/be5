@@ -650,4 +650,8 @@ public class DateUtils
         return new java.sql.Date(System.currentTimeMillis());
     }
 
+    public static <T extends Date> T max(T a, T b)
+    {
+        return a == null ? b : (b == null ? a : (a.before(b) ? b : a));
+    }
 }
