@@ -33,7 +33,15 @@ public class RoleHelper
     public List<String> getCurrentRoles(String userName)
     {
         String readCurrentRoles = coreUtils.getUserSetting(userName, DatabaseConstants.CURRENT_ROLE_LIST);
-        return parseRoles(readCurrentRoles);
+        List<String> roles = parseRoles(readCurrentRoles);
+        if (roles.size() > 0)
+        {
+            return roles;
+        }
+        else
+        {
+            return getAvailableRoles(userName);
+        }
     }
 
     public List<String> getAvailableRoles(String userName)
