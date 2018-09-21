@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.web.Request;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -100,9 +101,17 @@ public class LoginServiceImpl implements LoginService
     @Override
     public List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
     {
-        return roles.stream()
+        List<String> newRoles = roles.stream()
                 .filter(availableRoles::contains)
                 .collect(Collectors.toList());
+        if (newRoles.size() > 0)
+        {
+            return newRoles;
+        }
+        else
+        {
+            return Collections.singletonList(availableRoles.get(0));
+        }
     }
 
 }

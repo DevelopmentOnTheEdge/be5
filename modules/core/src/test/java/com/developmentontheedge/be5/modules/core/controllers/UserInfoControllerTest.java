@@ -141,4 +141,14 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
     }
 
+    @Test
+    public void testSetCurrentRolesEmpty()
+    {
+        Request request = getSpyMockRequest("/api/userInfo/selectRoles",
+                ImmutableMap.of("roles", ""));
+        component.generate(request, "selectRoles");
+
+        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
+    }
+
 }
