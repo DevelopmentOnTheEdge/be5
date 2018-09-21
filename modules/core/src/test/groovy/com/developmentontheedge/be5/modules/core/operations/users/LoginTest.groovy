@@ -87,6 +87,25 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     }
 
     @Test
+    void withoutCURRENT_ROLE_LIST()
+    {
+        String testPass = "testPass"
+        when(DbServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+                eq(TEST_USER), eq(testPass))).thenReturn(1L)
+        when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
+                Matchers.<ResultSetParser<String>> any(), eq(TEST_USER)))
+                .thenReturn(Arrays.asList("Test1", "Test2"))
+        when(DbServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
+                eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
+                .thenReturn(null)
+
+        executeOperation(createOperation("users", "All records", "Login", ""),
+                [user_name: TEST_USER, user_pass: testPass]).getSecond()
+
+        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.get().currentRoles
+    }
+
+    @Test
     @Ignore
     void loginAccessDenied()
     {

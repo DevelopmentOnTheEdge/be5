@@ -84,15 +84,7 @@ public class LoginServiceImpl implements LoginService
     public void saveUser(String username, Request req)
     {
         List<String> availableRoles = roleHelper.getAvailableRoles(username);
-        List<String> currentRoles = roleHelper.getCurrentRoles(username);
-        if (currentRoles != null)
-        {
-            currentRoles = getAvailableCurrentRoles(currentRoles, availableRoles);
-        }
-        else
-        {
-            currentRoles = availableRoles;
-        }
+        List<String> currentRoles = getAvailableCurrentRoles(roleHelper.getCurrentRoles(username), availableRoles);
         userHelper.saveUser(username, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr());
         log.fine("Login user: " + username);
     }
