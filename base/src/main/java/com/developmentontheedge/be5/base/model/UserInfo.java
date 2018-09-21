@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.base.model;
 
+import com.developmentontheedge.be5.metadata.RoleType;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -121,6 +123,12 @@ public class UserInfo implements Serializable
     public void setCurrentRoles(List<String> currentRoles)
     {
         this.currentRoles = currentRoles;
+    }
+
+    public boolean isAdmin()
+    {
+        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR) ||
+               getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
     @Override
