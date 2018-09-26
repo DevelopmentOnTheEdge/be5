@@ -7,7 +7,7 @@ public class AppDataTest extends ScriptTestUtils
     @Test
     public void data() throws Exception
     {
-        createTestDB();
+        dropAndCreateTestDB();
 
         new AppData()
                 .setBe5Project(project)
@@ -18,7 +18,7 @@ public class AppDataTest extends ScriptTestUtils
     @Test
     public void dataManyFiles() throws Exception
     {
-        createTestDB();
+        dropAndCreateTestDB();
 
         new AppData()
                 .setBe5Project(project)

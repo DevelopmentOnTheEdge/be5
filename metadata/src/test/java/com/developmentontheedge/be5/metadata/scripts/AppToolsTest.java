@@ -11,7 +11,7 @@ public class AppToolsTest extends ScriptTestUtils
     @Before
     public void setUpAppTools() throws Exception
     {
-        createTestDB();
+        dropAndCreateTestDB();
 
         appTools = new AppTools();
         appTools

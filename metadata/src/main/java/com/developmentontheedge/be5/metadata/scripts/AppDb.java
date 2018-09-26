@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
@@ -15,8 +13,9 @@ import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 public class AppDb extends ScriptSupport<AppDb>
@@ -42,44 +41,19 @@ public class AppDb extends ScriptSupport<AppDb>
     public void execute() throws ScriptException
     {
         init();
-
         try
         {
             ps = createPrintStream((moduleName == null ? be5Project.getName() : moduleName) + "_db.sql");
-
             sql = new BeSqlExecutor(connector, ps);
-
-            if (moduleName != null)
-            {
-                Module module = be5Project.getModule(moduleName);
-                if (module == null)
-                {
-                    throw new ScriptException("Module '" + moduleName + "' not found!");
-                }
-                createDb(module);
-            }
-            else
-            {
-                for (Module module : be5Project.getModules())
-                {
-                    if (ModuleLoader2.containsModule(module.getName()))
-                        createDb(module);
-                }
-                createDb(be5Project.getApplication());
-            }
-            logger.info("Created tables: " + createdTables + ", created views: " + createdViews);
+            processProject();
+            logger.info("Processed tables: " + createdTables + ", processed views: " + createdViews);
         }
         catch (ScriptException e)
         {
             throw e;
         }
-        catch (ProjectElementException | FreemarkerSqlException e)
-        {
-            throw new ScriptException("Setup db error", e);
-        }
         catch (Exception e)
         {
-            e.printStackTrace();
             throw new ScriptException("Setup db error", e);
         }
         finally
@@ -89,30 +63,56 @@ public class AppDb extends ScriptSupport<AppDb>
                 ps.close();
             }
         }
-
         logSqlFilePath();
     }
 
-    private void createDb(Module module) throws ProjectElementException
+    protected void processProject()
     {
-        BeVectorCollection<FreemarkerScript> scripts = module.getOrCreateCollection(Module.SCRIPTS, FreemarkerScript.class);
-        sql.executeScript(scripts.get(FreemarkerCatalog.PRE_DB_STEP), logger);
-        execute(module);
-        sql.executeScript(scripts.get(FreemarkerCatalog.POST_DB_STEP), logger);
+        processAllModules(module -> {
+            BeVectorCollection<FreemarkerScript> scripts = module.getOrCreateCollection(Module.SCRIPTS, FreemarkerScript.class);
+            sql.executeScript(scripts.get(FreemarkerCatalog.PRE_DB_STEP), logger);
+        });
+        processAllModules(module -> processDdlElements(module, TableDef.class, DdlElement::getCreateDdl));
+        processAllModules(module -> processDdlElements(module, ViewDef.class, DdlElement::getCreateDdl));
+        processAllModules(module -> {
+            BeVectorCollection<FreemarkerScript> scripts = module.getOrCreateCollection(Module.SCRIPTS, FreemarkerScript.class);
+            sql.executeScript(scripts.get(FreemarkerCatalog.POST_DB_STEP), logger);
+        });
     }
 
-    private void execute(final Module module) throws ProjectElementException
+    void processAllModules(Consumer<Module> processModule)
+    {
+        if (moduleName != null)
+        {
+            Module module = be5Project.getModule(moduleName);
+            if (module == null)
+            {
+                throw new ScriptException("Module '" + moduleName + "' not found!");
+            }
+            processModule.accept(module);
+        }
+        else
+        {
+            for (Module module : be5Project.getModules())
+            {
+                if (ModuleLoader2.containsModule(module.getName()))
+                    processModule.accept(module);
+            }
+            processModule.accept(be5Project.getApplication());
+        }
+    }
+
+    void processDdlElements(final Module module, Class<? extends DdlElement> ddlElementType,
+                                      Function<DdlElement, String> getSqlFunction)
     {
         boolean started = false;
         List<Entity> entities = new ArrayList<>(module.getOrCreateEntityCollection().getAvailableElements());
-        entities.sort(Comparator.comparing(this::tablesFirstViews));
-
         for (Entity entity : entities)
         {
             DdlElement scheme = entity.getScheme();
-            if (scheme instanceof TableDef || scheme instanceof ViewDef)
+            if (scheme != null && scheme.getClass() == ddlElementType)
             {
-                if (scheme instanceof TableDef)
+                if (scheme.getClass() == TableDef.class)
                 {
                     createdTables++;
                 }
@@ -128,7 +128,7 @@ public class AppDb extends ScriptSupport<AppDb>
                         logger.setOperationName("[A] " + module.getCompletePath());
                         started = true;
                     }
-                    processDdl(scheme);
+                    executeMultiple(getSqlFunction.apply(scheme));
                 }
                 else
                 {
@@ -138,31 +138,15 @@ public class AppDb extends ScriptSupport<AppDb>
         }
     }
 
-    /**
-     * Define views after tables as there might be dependencies
-     */
-    private Integer tablesFirstViews(Entity entity)
-    {
-        if (entity.getScheme() instanceof TableDef)
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
-    }
-
-    private void processDdl(final DdlElement tableDef) throws ProjectElementException
+    private void executeMultiple(String sqls)
     {
         try
         {
-            final String generatedQuery = tableDef.getDdl();
-            sql.executeMultiple(generatedQuery);
+            sql.executeMultiple(sqls);
         }
         catch (Exception e)
         {
-            throw new ProjectElementException(tableDef, e);
+            throw new RuntimeException(e);
         }
     }
 

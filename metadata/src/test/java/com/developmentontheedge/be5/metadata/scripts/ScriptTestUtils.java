@@ -78,8 +78,13 @@ public abstract class ScriptTestUtils
         return module;
     }
 
-    protected void createTestDB() throws Exception
+    protected void dropAndCreateTestDB() throws Exception
     {
+        AppDropAllTables appDropAllTables = new AppDropAllTables();
+        appDropAllTables.setBe5Project(project)
+                .setProfileName(profileTestMavenPlugin)
+                .execute();
+
         AppDb appDb = new AppDb();
         appDb.setBe5Project(project)
                 .setProfileName(profileTestMavenPlugin)

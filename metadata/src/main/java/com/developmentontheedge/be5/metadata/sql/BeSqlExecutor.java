@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata.sql;
 
-import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.freemarker.FreemarkerSqlHandler;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
@@ -28,7 +26,7 @@ public class BeSqlExecutor extends SqlExecutor
         super(connector, log, BeSqlExecutor.class.getResource("sql.properties"));
     }
 
-    public void executeScript(FreemarkerScript script, ProcessController log) throws ProjectElementException, FreemarkerSqlException
+    public void executeScript(FreemarkerScript script, ProcessController log)
     {
         if (script == null || script.getSource().trim().isEmpty())
             return;
@@ -36,13 +34,9 @@ public class BeSqlExecutor extends SqlExecutor
         {
             new FreemarkerSqlHandler(this, false, log).execute(script);
         }
-        catch (ProjectElementException | FreemarkerSqlException e)
-        {
-            throw e;
-        }
         catch (Exception e)
         {
-            throw new ProjectElementException(script, e);
+            throw new RuntimeException(e);
         }
     }
 

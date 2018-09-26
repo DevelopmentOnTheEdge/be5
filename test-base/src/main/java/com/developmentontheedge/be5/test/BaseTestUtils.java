@@ -17,8 +17,8 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
+import com.developmentontheedge.be5.metadata.scripts.AppDropAllTables;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
@@ -30,7 +30,6 @@ import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
-import com.developmentontheedge.dbms.SimpleConnector;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -205,10 +204,13 @@ public abstract class BaseTestUtils
         if (project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
-            log.info(JULLogger.infoBlock("Execute be5:create-db"));
+            log.info(JULLogger.infoBlock("Execute AppDropAllTables"));
+            new AppDropAllTables()
+                    .setLogger(new JULLogger(log))
+                    .setBe5Project(project)
+                    .execute();
 
-            dropAllTables(project.getConnectionProfile());
-
+            log.info(JULLogger.infoBlock("Execute AppDb"));
             new AppDb()
                     .setLogger(new JULLogger(log))
                     .setBe5Project(project)
@@ -217,21 +219,6 @@ public abstract class BaseTestUtils
         else
         {
             log.warning("For integration tests allowed only '" + profileForIntegrationTests + "' profile name.");
-        }
-    }
-
-    private static void dropAllTables(BeConnectionProfile profile)
-    {
-        SimpleConnector connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
-                profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
-
-        try
-        {
-            connector.executeUpdate("DROP ALL OBJECTS");
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
         }
     }
 

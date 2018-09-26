@@ -8,7 +8,7 @@ public class AppSyncTest extends ScriptTestUtils
     @Test
     public void sync() throws Exception
     {
-        createTestDB();
+        dropAndCreateTestDB();
 
         new AppSync()
                 .setBe5Project(project)
