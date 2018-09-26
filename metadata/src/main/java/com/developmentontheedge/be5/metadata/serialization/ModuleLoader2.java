@@ -479,4 +479,10 @@ public class ModuleLoader2
     {
         return devRoles;
     }
+
+    public static boolean getDevFileExists()
+    {
+        return ModuleLoader2.class.getClassLoader().getResource("dev.yaml") != null;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.base.services.impl;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.MailService;
 import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 import javax.inject.Inject;
 import javax.mail.Authenticator;
@@ -113,6 +114,13 @@ public class MailServiceImpl implements MailService
                               Map locMessages)
             throws Exception
     {
+        String notSendEmail = coreUtils.getSystemSetting("DEV_NOT_SEND_EMAIL");
+        if (ModuleLoader2.getDevFileExists() && "yes".equals(notSendEmail))
+        {
+            log.log(Level.SEVERE, "Not send email by setting DEV_NOT_SEND_EMAIL and dev file exists.");
+            return;
+        }
+
         String enc = "UTF-8";
         MimeMessage2 message = createMimeMessage();
 

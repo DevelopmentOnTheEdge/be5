@@ -13,10 +13,7 @@ public abstract class Be5GuiceServletContextListener extends GuiceServletContext
 
     protected Stage getStage()
     {
-        boolean mode = Be5GuiceServletContextListener.class.getClassLoader().getResource("dev.yaml") != null;
-
-        Stage stage = mode ? Stage.DEVELOPMENT : Stage.PRODUCTION;
-
+        Stage stage = ModuleLoader2.getDevFileExists() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
         log.info("Stage: " + stage);
         return stage;
     }
