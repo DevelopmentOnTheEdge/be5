@@ -78,7 +78,7 @@ public class DataSourceServiceImpl implements DataSourceService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            configInfo = "connection profile form 'profile.local' - " + profile.getName();
+            configInfo = "connection profile form 'profile.local' or set in code - " + profile.getName();
         }
         finally
         {

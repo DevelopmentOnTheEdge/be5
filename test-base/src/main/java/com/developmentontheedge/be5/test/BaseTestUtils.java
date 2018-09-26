@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -168,34 +169,18 @@ public abstract class BaseTestUtils
 
     protected static void initDb()
     {
-        Project project;
-        try
-        {
-            project = ModuleLoader2.findAndLoadProjectWithModules(false);
-        }
-        catch (ProjectLoadException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Project project = findProject();
         initDb(project);
     }
 
     protected static void addH2ProfileAndCreateDb()
     {
-        Project project;
-        try
-        {
-            project = ModuleLoader2.findAndLoadProjectWithModules(false);
-        }
-        catch (ProjectLoadException e)
-        {
-            throw new RuntimeException(e);
-        }
+        Project project = findProject();
         addH2Profile(project);
         initDb(project);
     }
 
-    protected static void addH2Profile()
+    protected static Project findProject()
     {
         Project project;
         try
@@ -206,6 +191,12 @@ public abstract class BaseTestUtils
         {
             throw new RuntimeException(e);
         }
+        return project;
+    }
+
+    protected static void addH2Profile()
+    {
+        Project project = findProject();
         addH2Profile(project);
     }
 
@@ -225,7 +216,7 @@ public abstract class BaseTestUtils
         }
         else
         {
-            log.warning("Fail set '" + profileForIntegrationTests + "' profile, maybe DatabaseService already initialized.");
+            log.warning("For integration tests allowed only '" + profileForIntegrationTests + "' profile name.");
         }
     }
 
@@ -244,7 +235,18 @@ public abstract class BaseTestUtils
         }
     }
 
-    public static void addH2Profile(Project project)
+    public static BeConnectionProfile addProfile(Project project, String url, String userName, String password)
+    {
+        BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
+        profile.setConnectionUrl(url);
+        profile.setUsername(userName);
+        profile.setPassword(password);
+        DataElementUtils.save(profile);
+        project.setConnectionProfileName(profileForIntegrationTests);
+        return project.getConnectionProfile();
+    }
+
+    protected static BeConnectionProfile addH2Profile(Project project)
     {
         if (project.getConnectionProfile() == null ||
                 !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
@@ -252,6 +254,7 @@ public abstract class BaseTestUtils
             ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
         }
         project.setConnectionProfileName(profileForIntegrationTests);
+        return project.getConnectionProfile();
     }
 
     public static class BaseDbMockTestModule extends AbstractModule
