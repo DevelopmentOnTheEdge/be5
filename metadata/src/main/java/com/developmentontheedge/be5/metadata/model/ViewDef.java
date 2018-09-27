@@ -2,8 +2,13 @@ package com.developmentontheedge.be5.metadata.model;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.dbms.SqlExecutor;
+import com.developmentontheedge.sql.model.AstDerivedColumn;
+import com.developmentontheedge.sql.model.AstIdentifierConstant;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.SqlQuery;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +37,19 @@ public class ViewDef extends BeModelElementSupport implements DdlElement
     @PropertyName("Definition")
     public String getDefinition()
     {
+        Rdbms dbms = getProject().getDatabaseSystem();
+        if (dbms == Rdbms.H2)
+        {
+            AstStart sql = SqlQuery.parse(definition);
+            sql.tree().select(AstDerivedColumn.class).forEach(derivedColumn -> {
+                derivedColumn.children().select(AstIdentifierConstant.class).forEach(x -> {
+                    AstIdentifierConstant.QuoteSymbol quoteSymbol = x.getQuoteSymbol();
+                    x.setValue(x.getValue().toUpperCase());
+                    x.setQuoteSymbol(quoteSymbol);
+                });
+            });
+            return sql.getQuery().toString();
+        }
         return definition;
     }
 
