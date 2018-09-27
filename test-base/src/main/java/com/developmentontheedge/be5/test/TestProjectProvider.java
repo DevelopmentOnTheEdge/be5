@@ -10,8 +10,6 @@ import javax.inject.Inject;
 
 public class TestProjectProvider implements ProjectProvider
 {
-    public static final String profileForIntegrationTests = "profileForIntegrationTests";
-
     private Project project;
 
     @Inject

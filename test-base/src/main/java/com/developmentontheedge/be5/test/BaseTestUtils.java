@@ -54,7 +54,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.test.TestProjectProvider.profileForIntegrationTests;
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
@@ -63,6 +62,8 @@ import static org.mockito.Mockito.when;
 public abstract class BaseTestUtils
 {
     public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
+    private static final String profileForIntegrationTests = "profileForIntegrationTests";
+    private static final String ITest_ = "ITest_";
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -160,7 +161,8 @@ public abstract class BaseTestUtils
     public static void whenSelectListTagsContains(String containsSql, String... tagValues)
     {
         List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
-                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
+                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue)))
+                .collect(Collectors.toList());
 
         when(DbServiceMock.mock.list(contains(containsSql),
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
@@ -201,8 +203,7 @@ public abstract class BaseTestUtils
 
     protected static void initDb(Project project)
     {
-        if (project.getConnectionProfileName() != null &&
-                profileForIntegrationTests.equals(project.getConnectionProfileName()))
+        if (isITestProfile(project.getConnectionProfile()))
         {
             log.info(JULLogger.infoBlock("Execute AppDropAllTables"));
             new AppDropAllTables()
@@ -218,13 +219,21 @@ public abstract class BaseTestUtils
         }
         else
         {
-            log.warning("For integration tests allowed only '" + profileForIntegrationTests + "' profile name.");
+            log.warning("For integration tests allowed only '" + profileForIntegrationTests
+                    + "' profile name or start with '" + ITest_ + "'.");
         }
+    }
+
+    public static boolean isITestProfile(BeConnectionProfile connectionProfile)
+    {
+        return connectionProfile != null && (connectionProfile.getName().equals(profileForIntegrationTests) ||
+                connectionProfile.getName().startsWith(ITest_));
     }
 
     public static BeConnectionProfile addProfile(Project project, String url, String userName, String password)
     {
-        BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
+        BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests,
+                project.getConnectionProfiles().getLocalProfiles());
         profile.setConnectionUrl(url);
         profile.setUsername(userName);
         profile.setPassword(password);
@@ -235,12 +244,11 @@ public abstract class BaseTestUtils
 
     protected static BeConnectionProfile addH2Profile(Project project)
     {
-        if (project.getConnectionProfile() == null ||
-                !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
+        if (!isITestProfile(project.getConnectionProfile()))
         {
-            ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
+            ProjectTestUtils.createH2Profile(project, ITest_ + project.getName());
+            project.setConnectionProfileName(ITest_ + project.getName());
         }
-        project.setConnectionProfileName(profileForIntegrationTests);
         return project.getConnectionProfile();
     }
 

@@ -25,7 +25,7 @@ class LoadTest extends CoreBe5ProjectDbMockTest
     @Test
     void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
-        assertEquals("testProject", projectProvider.get().getAppName())
+        assertEquals("be5CoreTestProject", projectProvider.get().getAppName())
 
         BeModelCollection<Module> modules = projectProvider.get().getModules()
         assertNotNull(modules.get("core"))

@@ -1,4 +1,4 @@
-testProject:
+be5ServerTestProject:
   features: logging
   l10n: ru
   projectFileStructure: {}
