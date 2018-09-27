@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.scripts.AppDropAllTables;
 import org.apache.maven.plugins.annotations.Mojo;
 
 
-@Mojo(name = "drop-all-tables-db")
+@Mojo(name = "drop-all-tables")
 public class AppDropAllTablesMojo extends Be5Mojo
 {
     @Override
