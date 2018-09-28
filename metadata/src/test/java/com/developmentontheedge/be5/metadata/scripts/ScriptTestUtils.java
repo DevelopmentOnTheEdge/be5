@@ -30,7 +30,7 @@ public abstract class ScriptTestUtils
     protected Path tpmProjectPath;
     protected Project project;
 
-    public final String profileTestMavenPlugin = "profileTestMavenPlugin";
+    public final String profileTestMavenPlugin = "profileTestMetadataScript";
 
     @Before
     public void setUp() throws Exception
@@ -41,7 +41,7 @@ public abstract class ScriptTestUtils
         ProjectTestUtils.createScheme(entity);
         ProjectTestUtils.createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')");
         ProjectTestUtils.createScript(project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')");
-        ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
+        ProjectTestUtils.createH2Profile(project, profileTestMavenPlugin);
 
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
         query.getOperationNames().setValues(Collections.singleton("op"));

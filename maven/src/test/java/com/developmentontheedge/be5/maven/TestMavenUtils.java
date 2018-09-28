@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
+import com.developmentontheedge.be5.metadata.scripts.AppDb;
+import com.developmentontheedge.be5.metadata.scripts.AppDropAllTables;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
+
 
 public abstract class TestMavenUtils
 {
@@ -31,18 +35,18 @@ public abstract class TestMavenUtils
     protected Path tpmProjectPath;
     Project project;
 
-    public final String profileTestMavenPlugin = "profileTestMavenPlugin";
+    public final String profileTestMavenPlugin = "profileTestMavenPlugin2";
 
     @Before
     public void setUp() throws Exception
     {
         tpmProjectPath = tmp.newFolder().toPath();
-        project = ProjectTestUtils.getProject("test");
+        project = ProjectTestUtils.getProject("mavenTestProject");
         Entity entity = ProjectTestUtils.createEntity(project, "entity", "ID");
         ProjectTestUtils.createScheme(entity);
         ProjectTestUtils.createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')");
         ProjectTestUtils.createScript(project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')");
-        ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
+        ProjectTestUtils.createH2Profile(project, profileTestMavenPlugin);
 
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
         query.getOperationNames().setValues(Collections.singleton("op"));
@@ -57,17 +61,22 @@ public abstract class TestMavenUtils
 
         LoadContext ctx = new LoadContext();
         ModuleLoader2.mergeAllModules(project, Collections.emptyList(), ctx);
+
+        new AppDropAllTables()
+                .setBe5ProjectPath(tpmProjectPath.toFile().toPath())
+                .setProfileName(profileTestMavenPlugin)
+                .execute();
     }
 
     void createTestDB() throws Exception
     {
-//        AppDbMojo appDb = new AppDbMojo();
-//        appDb.setBe5Project(project)
-//                .setProfileName(profileTestMavenPlugin)
-//                .execute();
-//
-//        assertEquals(2, appDb.getCreatedTables());
-//        assertEquals(0, appDb.getCreatedViews());
+        AppDb appDb = new AppDb();
+        appDb.setBe5Project(project)
+                .setProfileName(profileTestMavenPlugin)
+                .execute();
+
+        assertEquals(1, appDb.getCreatedTables());
+        assertEquals(0, appDb.getCreatedViews());
     }
 
     protected InputStream inputStream(String str)

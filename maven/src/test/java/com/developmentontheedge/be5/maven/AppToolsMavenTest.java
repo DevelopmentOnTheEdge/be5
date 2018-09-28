@@ -3,11 +3,6 @@ package com.developmentontheedge.be5.maven;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-
 
 public class AppToolsMavenTest extends TestMavenUtils
 {

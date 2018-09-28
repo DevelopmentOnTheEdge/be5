@@ -27,7 +27,7 @@ public class GenerateContextTest extends ScriptTestUtils
         assertTrue(result.contains("<Resource name=\"jdbc/test\""));
         assertTrue(result.contains("username=\"sa\""));
         assertTrue(result.contains("password=\"\""));
-        assertTrue(result.contains("url=\"jdbc:h2:~/profileTestMavenPlugin\""));
+        assertTrue(result.contains("url=\"jdbc:h2:~/" + profileTestMavenPlugin + "\""));
         assertTrue(result.contains("driverClassName=\"org.h2.Driver\""));
         assertTrue(result.contains("<Parameter name=\"environmentName\" value=\"test\""));
     }
