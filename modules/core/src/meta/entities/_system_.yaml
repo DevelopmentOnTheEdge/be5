@@ -8,7 +8,7 @@ _system_:
       type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
-      - ReloadProject
+      - Clear all caches
       code: com.developmentontheedge.be5.modules.core.queries.system.CacheTable
   - Daemons:
       type: Java
@@ -71,7 +71,7 @@ _system_:
       records: 1
       roles: [SystemDeveloper, Administrator]
       code: com.developmentontheedge.be5.modules.core.operations.system.SessionVariablesEdit
-  - ReloadProject:
+  - Clear all caches:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.core.operations.system.ReloadProject
+      code: com.developmentontheedge.be5.modules.core.operations.system.ClearAllCaches
