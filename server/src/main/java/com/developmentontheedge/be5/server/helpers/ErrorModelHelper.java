@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HtmlUtils;
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 
@@ -121,26 +122,27 @@ public class ErrorModelHelper
                 ? e.getClassName()
                 : e.getClassName().substring(0, e.getClassName().indexOf('$'));
 
-        String code = groovyOperationLoader
-                .getByFullName(className + ".groovy")
-                .getCode();
-        String lines[] = HtmlUtils.escapeHTML(code).split("\\r?\\n");
-
-        sb.append("\n\n<code>");
-        for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
+        Operation operation = groovyOperationLoader.getByFullName(className + ".groovy");
+        if (operation != null)
         {
-            String lineNumber = String.format("%4d", i + 1) + " | ";
-            if (lineID == i + 1)
-            {
-                sb.append("<span style=\"color: #e00000;\">").append(lineNumber).append(lines[i]).append("</span>\n");
-            }
-            else
-            {
-                sb.append(lineNumber).append(lines[i]).append("\n");
-            }
-        }
-        sb.append("</code>");
+            String code = operation.getCode();
+            String lines[] = HtmlUtils.escapeHTML(code).split("\\r?\\n");
 
+            sb.append("\n\n<code>");
+            for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
+            {
+                String lineNumber = String.format("%4d", i + 1) + " | ";
+                if (lineID == i + 1)
+                {
+                    sb.append("<span style=\"color: #e00000;\">").append(lineNumber).append(lines[i]).append("</span>\n");
+                }
+                else
+                {
+                    sb.append(lineNumber).append(lines[i]).append("\n");
+                }
+            }
+            sb.append("</code>");
+        }
         return sb.toString();
     }
 }
