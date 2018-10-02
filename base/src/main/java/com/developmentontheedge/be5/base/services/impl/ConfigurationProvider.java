@@ -83,15 +83,15 @@ public class ConfigurationProvider
                 return configurations;
             }
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
-
-            Map<String, Object> config = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
-
-            if (config != null)
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8")))
             {
-                for (Map.Entry<String, Object> entry : config.entrySet())
+                Map<String, Object> config = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
+                if (config != null)
                 {
-                    configurations.put(loadClass(entry.getKey()), entry.getValue());
+                    for (Map.Entry<String, Object> entry : config.entrySet())
+                    {
+                        configurations.put(loadClass(entry.getKey()), entry.getValue());
+                    }
                 }
             }
 
