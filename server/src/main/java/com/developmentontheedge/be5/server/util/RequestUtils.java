@@ -43,9 +43,11 @@ public class RequestUtils
     public static String readAsString(InputStream inputStream)
     {
         StringBuilder result = new StringBuilder();
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream)))
+        {
             String inputLine;
-            while ((inputLine = br.readLine()) != null) {
+            while ((inputLine = br.readLine()) != null)
+            {
                 result.append(inputLine);
             }
         }
