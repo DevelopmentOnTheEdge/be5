@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class ResponseUtils
+public class RequestUtils
 {
     public static void sendFile(Response res, boolean download, String filename, String contentType, String charset, InputStream in)
     {
