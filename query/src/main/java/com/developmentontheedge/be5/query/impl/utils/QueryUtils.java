@@ -43,7 +43,7 @@ public class QueryUtils
 
         Map<String, String> aliasToTable = ast.tree()
                 .select(AstTableRef.class)
-                .filter(t -> t.getAlias() != null)
+                .filter(t -> t.getTable() != null && t.getAlias() != null)
                 .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
                         (address1, address2) -> address1));
 
