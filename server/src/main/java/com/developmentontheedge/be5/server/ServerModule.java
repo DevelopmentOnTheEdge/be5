@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
+import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
@@ -75,7 +76,7 @@ public class ServerModule extends ServletModule
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
-        bind(HtmlMetaTags.class).in(Scopes.SINGLETON);
+        bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
 
         bind(QuerySession.class).to(QuerySessionImpl.class).in(ServletScopes.SESSION);
         bind(Session.class).to(SessionImpl.class).in(ServletScopes.SESSION);
