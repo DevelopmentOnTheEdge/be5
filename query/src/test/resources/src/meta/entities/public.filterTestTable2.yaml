@@ -1,0 +1,22 @@
+public.filterTestTable2:
+  type: table
+  displayName: filterTestTable2
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: INT
+        canBeNull: true
+  queries:
+  - All records:
+      roles: Administrator
+      code: |2-
+        SELECT *
+        FROM public.filterTestTable2 ft
