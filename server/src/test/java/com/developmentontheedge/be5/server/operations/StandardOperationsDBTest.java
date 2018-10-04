@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
+import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
@@ -22,6 +23,20 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
 
         db.update("DELETE FROM testtableAdmin");
         id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 1);
+    }
+
+    @Test
+    public void insertOperation()
+    {
+        InsertOperation operation = (InsertOperation)createOperation("testtable", "All records", "Insert", "");
+        assertEquals(OperationResult.redirect("table/testtable/All records"),
+                executeOperation(operation, "{'name':'test2','value':'2'}").getSecond());
+
+        Long lastInsertID = (Long)operation.getLastInsertID();
+        RecordModel<Object> record = database.getEntity("testtable").get(lastInsertID);
+
+        assertEquals("test2", record.getValueAsString("name"));
+        assertEquals(2L, (long)record.getValueAsLong("value"));
     }
 
     @Test
