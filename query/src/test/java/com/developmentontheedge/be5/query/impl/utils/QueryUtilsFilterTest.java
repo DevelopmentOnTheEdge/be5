@@ -83,6 +83,16 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void isNotContainsInQuery() throws Exception
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("t.productID", Collections.singletonList(1)), meta);
+
+        assertEquals("SELECT ft.name, ft.value\n" +
+                "FROM filterTestTable ft", ast.format());
+    }
+
+    @Test
     public void ignoreUsedParams() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "With Parameter").getQueryCompiled().validate().trim());

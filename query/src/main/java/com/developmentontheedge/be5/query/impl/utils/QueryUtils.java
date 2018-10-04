@@ -69,8 +69,16 @@ public class QueryUtils
         }
         else
         {
-            return meta.getColumn(aliasToTable.get(split[0]), split[1]) == null
-                    && meta.getColumn(split[0], split[1]) == null;
+            String entityName = null;
+            if (aliasToTable.get(split[0]) != null && meta.getEntity(aliasToTable.get(split[0])) != null)
+            {
+                entityName = aliasToTable.get(split[0]);
+            }
+            else if (meta.getEntity(split[0]) != null)
+            {
+                entityName = split[0];
+            }
+            return entityName == null || meta.getColumn(entityName, split[1]) == null;
         }
     }
 
