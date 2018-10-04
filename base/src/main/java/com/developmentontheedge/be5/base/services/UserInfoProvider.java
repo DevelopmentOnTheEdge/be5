@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.metadata.RoleType;
 
 import java.util.List;
 import java.util.Locale;
@@ -24,5 +25,14 @@ public interface UserInfoProvider
 
     String getRemoteAddr();
 
-    boolean isSystemDeveloper();
+    default boolean isSystemDeveloper()
+    {
+        return getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
+    default boolean isAdmin()
+    {
+        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR) ||
+                getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
 }

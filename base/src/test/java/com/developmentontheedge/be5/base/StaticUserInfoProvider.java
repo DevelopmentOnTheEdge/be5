@@ -63,10 +63,4 @@ public class StaticUserInfoProvider implements UserInfoProvider
     {
         return get().getRemoteAddr();
     }
-
-    @Override
-    public boolean isSystemDeveloper()
-    {
-        return getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
 }

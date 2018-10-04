@@ -69,11 +69,4 @@ public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo
     {
         return get().getRemoteAddr();
     }
-
-    @Override
-    public boolean isSystemDeveloper()
-    {
-        return getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
 }
