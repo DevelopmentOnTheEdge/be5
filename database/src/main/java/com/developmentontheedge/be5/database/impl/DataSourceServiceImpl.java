@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services.impl;
+package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.ProjectProvider;

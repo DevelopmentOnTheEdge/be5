@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.impl.test.TestTransaction2Service;
 import com.developmentontheedge.be5.database.impl.test.TestTransactionService;
-import com.developmentontheedge.be5.database.test.DatabaseTest;
+import com.developmentontheedge.be5.database.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.operation;
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
@@ -35,6 +36,7 @@ public abstract class OperationBe5ProjectDBTest extends OperationTestUtils
         protected void configure()
         {
             install(new BaseDbTestModule());
+            install(new DatabaseModule());
             bind(CoreUtils.class).to(CoreUtilsForTest.class);
             bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
         }

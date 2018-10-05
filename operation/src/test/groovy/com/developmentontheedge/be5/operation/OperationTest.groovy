@@ -130,8 +130,6 @@ class OperationTest extends OperationsSqlMockProjectTest
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [:])
 
         assertEquals("{" +
-                "'simple':''," +
-                "'simpleNumber':''," +
                 "'getOrDefault':'defaultValue'," +
                 "'getOrDefaultNumber':'3'}",
                 oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
@@ -142,15 +140,11 @@ class OperationTest extends OperationsSqlMockProjectTest
     {
         Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [
-                "simple"            : "testName",
-                "simpleNumber"      : "1",
                 "getOrDefault"      : "testName2",
                 "getOrDefaultNumber": "2",
                 "_reloadcontrol_"   : "name"])
 
         assertEquals("{" +
-                "'simple':'testName'," +
-                "'simpleNumber':'1'," +
                 "'getOrDefault':'testName2'," +
                 "'getOrDefaultNumber':'2'}",
                 oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))

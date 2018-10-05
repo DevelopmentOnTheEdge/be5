@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.base.util;
+package com.developmentontheedge.be5.databasemodel.util;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -85,7 +84,7 @@ public class DpsUtils
         }
         catch (SQLException e)
         {
-            throw Be5Exception.internal(e);
+            throw new RuntimeException(e);
         }
 
         return dps;
