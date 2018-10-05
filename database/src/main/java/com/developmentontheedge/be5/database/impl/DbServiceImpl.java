@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
@@ -10,6 +11,7 @@ import com.developmentontheedge.sql.format.dbms.Context;
 import com.developmentontheedge.sql.format.dbms.Formatter;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
+import com.github.benmanes.caffeine.cache.Cache;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
@@ -28,16 +30,19 @@ public class DbServiceImpl implements DbService
 {
     private static final Logger log = Logger.getLogger(DbServiceImpl.class.getName());
 
+    private final Cache<String, String> formatSqlCache;
+
     private QueryRunner queryRunner;
     private DataSourceService databaseService;
     private ConnectionService connectionService;
 
     @Inject
-    public DbServiceImpl(ConnectionService connectionService, DataSourceService databaseService)
+    public DbServiceImpl(ConnectionService connectionService, DataSourceService databaseService, Be5Caches be5Caches)
     {
         this.databaseService = databaseService;
         this.connectionService = connectionService;
         queryRunner = new QueryRunner();
+        formatSqlCache = be5Caches.createCache("Format sql");
     }
 
     @Override
@@ -92,8 +97,8 @@ public class DbServiceImpl implements DbService
     @Override
     public String format(String sql)
     {
-        return new Formatter().format(SqlQuery.parse(sql),
-                new Context(databaseService.getDbms()), new DefaultParserContext());
+        return formatSqlCache.get(sql, k -> new Formatter().format(SqlQuery.parse(k),
+                new Context(databaseService.getDbms()), new DefaultParserContext()));
     }
 
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
