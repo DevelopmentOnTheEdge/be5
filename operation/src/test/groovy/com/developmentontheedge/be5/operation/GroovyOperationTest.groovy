@@ -31,7 +31,7 @@ class GroovyOperationTest extends OperationsSqlMockProjectTest
                 "testtableAdmin", "All records", "TestGroovyOp", "0",
                 ['beginDate': '2017-12-20', 'name': 'testValue', 'reason': 'fired', 'reasonMulti': ['fired', 'other'] as String[]])
 
-        assertEquals("{'values':{'name':'testValue','beginDate':'2017-07-01','reason':'fired','reasonMulti':['fired','other']},'meta':{'/name':{'displayName':'Имя'},'/beginDate':{'displayName':'Дата начала','type':'Date','readOnly':true},'/reason':{'displayName':'Причина снятия предыдущего работника','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]},'/reasonMulti':{'displayName':'Множественный выбор','multipleSelectionList':true,'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}},'order':['/name','/beginDate','/reason','/reasonMulti']}",
+        assertEquals("{'values':{'name':'testValue','beginDate':'2017-12-20','reason':'fired','reasonMulti':['fired','other']},'meta':{'/name':{'displayName':'Имя'},'/beginDate':{'displayName':'Дата начала','type':'Date','readOnly':true},'/reason':{'displayName':'Причина снятия предыдущего работника','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]},'/reasonMulti':{'displayName':'Множественный выбор','multipleSelectionList':true,'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}},'order':['/name','/beginDate','/reason','/reasonMulti']}",
                 oneQuotes(JsonFactory.bean(generate.getFirst())))
     }
 
@@ -46,7 +46,7 @@ class GroovyOperationTest extends OperationsSqlMockProjectTest
 
         verify(DbServiceMock.mock).update(eq("update fakeTable set name = ?,beginDate = ?,reason = ?"),
                 eq("testValue"),
-                eq(parseDate("2017-07-01")),
+                eq(parseDate("2017-12-20")),
                 eq("fired"))
     }
 

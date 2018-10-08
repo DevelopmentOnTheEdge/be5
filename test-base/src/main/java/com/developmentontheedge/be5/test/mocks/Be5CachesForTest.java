@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -14,7 +15,8 @@ public class Be5CachesForTest implements Be5Caches
     @Override
     public void registerCache(String name, Cache cache)
     {
-
+        if (caches.containsKey(name)) throw Be5Exception.internal("caches containsKey: " + name);
+        caches.put(name, cache);
     }
 
     @Override

@@ -20,6 +20,11 @@ filterTestTable:
       code: |2-
         SELECT ft.name, ft.value
         FROM filterTestTable ft
+  - Select all:
+      roles: Administrator
+      code: |2-
+        SELECT *
+        FROM filterTestTable ft
   - With Where:
       roles: Administrator
       code: |2-

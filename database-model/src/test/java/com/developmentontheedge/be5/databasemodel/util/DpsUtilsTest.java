@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.util;
+package com.developmentontheedge.be5.databasemodel.util;
 
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

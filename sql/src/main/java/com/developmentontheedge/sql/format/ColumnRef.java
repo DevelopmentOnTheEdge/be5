@@ -30,25 +30,41 @@ public class ColumnRef
         return resolve(ast.getQuery(), value);
     }
 
-    public static ColumnRef resolve(AstQuery query, String value)
+    public static ColumnRef resolve(AstQuery query, String column)
     {
+        String[] parts = column.split("[.]");
+        if (parts.length > 3) throw new IllegalArgumentException("");
+
         for (AstSelect select : query.children().select(AstSelect.class))
         {
             for (AstDerivedColumn derColumn : select.tree().select(AstDerivedColumn.class))
             {
-                String columnName = derColumn.getAlias() != null ? derColumn.getAlias() : derColumn.getColumn();
-                if (value.equals(columnName))
-                    return new ColumnRef(null, value);
+                String queryColumn = derColumn.getAlias() != null ? derColumn.getAlias() : derColumn.getColumn();
+                if (column.equals(queryColumn))
+                    return new ColumnRef(null, column);
             }
-            String[] parts = value.split("[.]");
-            if (parts.length > 2)
-                return null;
+        }
+
+        String columnTableName, columnName;
+        if (parts.length == 2)
+        {
+            columnTableName = parts[0];
+            columnName = parts[1];
+        }
+        else
+        {
+            columnTableName = parts[0] + "." + parts[1];
+            columnName = parts[2];
+        }
+
+        for (AstSelect select : query.children().select(AstSelect.class))
+        {
             for (AstTableRef table : select.tree().select(AstTableRef.class))
             {
                 String tableName = table.getAlias() != null ? table.getAlias() : table.getTable();
-                if (parts[0].equals(tableName) || parts[0].equals(table.getTable()))
+                if (columnTableName.equals(tableName) || columnTableName.equals(table.getTable()))
                 {
-                    return new ColumnRef(tableName, parts[1]);
+                    return new ColumnRef(tableName, columnName);
                 }
             }
         }

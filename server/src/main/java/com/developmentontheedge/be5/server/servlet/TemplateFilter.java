@@ -83,7 +83,7 @@ public class TemplateFilter extends FilterSupport
     private Context getContext(Request req)
     {
         Context context = new Context();
-        context.setVariables(htmlMetaTags.getTags());
+        context.setVariables(htmlMetaTags.getTags(req));
         context.setVariable("requestUrl", req.getRequestUri());
         context.setVariable("contextPath", req.getContextPath());
         return context;

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.databasemodel;
 
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
@@ -17,7 +18,7 @@ public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
     @Inject protected DatabaseModel database;
 
     private static final Injector injector = initInjector(
-            Modules.override(new BaseModule()).with(new DatabaseModelDbTestModule())
+            Modules.override(new BaseModule(), new DatabaseModule()).with(new DatabaseModelDbTestModule())
     );
 
     static

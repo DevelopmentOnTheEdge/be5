@@ -1,19 +1,19 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.impl.ControllerSupport;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
+import com.developmentontheedge.be5.web.impl.ResponseImpl;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public abstract class ApiControllerSupport extends HttpServlet implements Controller
+public abstract class ApiControllerSupport extends ControllerSupport
 {
     protected static final Logger log = Logger.getLogger(ApiControllerSupport.class.getName());
 
@@ -31,11 +31,12 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
 
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
+        ServletUtils.addHeaders(request, response);
         Request req = new RequestImpl(request);
-
+        Response res = new ResponseImpl(response);
         try
         {
-            generate(req, ServletUtils.getResponse(request, response));
+            generate(req, res);
         }
         catch (Be5Exception e)
         {

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.ConnectionService;
-import com.developmentontheedge.be5.database.test.DatabaseTest;
+import com.developmentontheedge.be5.database.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
 

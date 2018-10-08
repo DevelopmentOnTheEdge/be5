@@ -10,6 +10,13 @@ import java.util.Map;
 
 public class InsertOperation extends OperationSupport
 {
+    protected Object lastInsertID;
+
+    public Object getLastInsertID()
+    {
+        return lastInsertID;
+    }
+
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
@@ -23,7 +30,7 @@ public class InsertOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet) parameters);
+        lastInsertID = database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet) parameters);
 
         setResult(OperationResult.finished());
     }

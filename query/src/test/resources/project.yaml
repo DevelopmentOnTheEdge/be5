@@ -9,6 +9,7 @@ queryTestProject:
   - testSubQuery
   - testTags
   - filterTestTable
+  - public.filterTestTable2
   scripts:
   - Post-db
   - dictionaries

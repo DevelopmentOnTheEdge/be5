@@ -2,12 +2,12 @@ package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.controllers.DocumentController;
 import com.developmentontheedge.be5.server.controllers.DownloadController;
 import com.developmentontheedge.be5.server.controllers.FormController;
@@ -25,17 +25,10 @@ import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
-import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
+import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.web.impl.RequestImpl;
-import com.developmentontheedge.be5.web.impl.ResponseImpl;
-import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
-import com.google.inject.servlet.ServletScopes;
 
 
 public class ServerModule extends ServletModule
@@ -44,6 +37,7 @@ public class ServerModule extends ServletModule
     protected void configureServlets()
     {
         install(new BaseModule());
+        install(new DatabaseModule());
         install(new OperationModule());
         install(new QueryModule());
 
@@ -75,11 +69,6 @@ public class ServerModule extends ServletModule
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
-        bind(HtmlMetaTags.class).in(Scopes.SINGLETON);
-
-        bind(QuerySession.class).to(QuerySessionImpl.class).in(ServletScopes.SESSION);
-        bind(Session.class).to(SessionImpl.class).in(ServletScopes.SESSION);
-        bind(Request.class).to(RequestImpl.class).in(ServletScopes.REQUEST);
-        bind(Response.class).to(ResponseImpl.class).in(ServletScopes.REQUEST);
+        bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
     }
 }

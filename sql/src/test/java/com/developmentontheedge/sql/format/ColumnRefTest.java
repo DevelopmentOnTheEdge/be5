@@ -25,6 +25,15 @@ public class ColumnRefTest
     }
 
     @Test
+    public void resolveWithSchema()
+    {
+        AstStart sql = SqlQuery.parse("SELECT name FROM public.users");
+        ColumnRef resolve = ColumnRef.resolve(sql, "public.users.name");
+
+        assertEquals(new ColumnRef("public.users", "name"), resolve);
+    }
+
+    @Test
     public void resolve()
     {
         AstStart sql = SqlQuery.parse("SELECT foo FROM users");
@@ -42,4 +51,12 @@ public class ColumnRefTest
         assertEquals(new ColumnRef("u", "name"), resolve);
     }
 
+    @Test
+    public void notResolve()
+    {
+        AstStart sql = SqlQuery.parse("SELECT name FROM users");
+        ColumnRef resolve = ColumnRef.resolve(sql, "person.name");
+
+        assertEquals(null, resolve);
+    }
 }

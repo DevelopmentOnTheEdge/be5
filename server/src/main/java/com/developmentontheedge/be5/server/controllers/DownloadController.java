@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
-import com.developmentontheedge.be5.server.util.ResponseUtils;
+import com.developmentontheedge.be5.server.util.RequestUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -68,7 +68,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
             throw Be5Exception.internal("Unknown data type");
         }
 
-        ResponseUtils.sendFile(res, download, filename, contentType, charset, in);
+        RequestUtils.sendFile(res, download, filename, contentType, charset, in);
     }
 
 }

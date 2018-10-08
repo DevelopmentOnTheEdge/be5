@@ -2,7 +2,6 @@ package src.groovy.operations
 
 import com.developmentontheedge.be5.base.services.UserAwareMeta
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl
-import com.developmentontheedge.be5.base.util.DpsUtils
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.support.TestOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySetSupport
@@ -25,21 +24,21 @@ class TestGroovyOp extends TestOperationSupport implements Operation
         dps << [
                 name        : "name",
                 DISPLAY_NAME: "Имя",
-                value       : "Test"
+                value       : presetValues.getOrDefault("name", "Test")
         ]
 
         dps << [
                 name        : "beginDate",
                 DISPLAY_NAME: "Дата начала",
                 TYPE        : Date,
-                value       : "2017-07-01"
+                value       : presetValues.getOrDefault("beginDate", "2017-07-01")
         ]
 
         dps << [
                 name         : "reason",
                 DISPLAY_NAME : "Причина снятия предыдущего работника",
                 TAG_LIST_ATTR: [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                value        : "vacation"
+                value        : presetValues.getOrDefault("reason", "vacation")
         ]
 
         dps << [
@@ -48,7 +47,7 @@ class TestGroovyOp extends TestOperationSupport implements Operation
                 DISPLAY_NAME           : "Множественный выбор",
                 MULTIPLE_SELECTION_LIST: true,
                 TAG_LIST_ATTR          : [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                value                  : ["vacation", "sick"] as String[]
+                value                  : presetValues.getOrDefault("reasonMulti", ["vacation", "sick"] as String[])
         ]
 
         //@Deprecated
@@ -88,7 +87,7 @@ class TestGroovyOp extends TestOperationSupport implements Operation
 //
 //        dps.edit("beginDate") { READ_ONLY = true }
 
-        return DpsUtils.setValues(dps, presetValues)
+        return dps
     }
 
     @Override

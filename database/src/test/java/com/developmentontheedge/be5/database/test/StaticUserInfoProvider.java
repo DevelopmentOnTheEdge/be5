@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base;
+package com.developmentontheedge.be5.database.test;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;

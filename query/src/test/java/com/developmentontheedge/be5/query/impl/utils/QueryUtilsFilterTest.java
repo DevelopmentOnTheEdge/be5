@@ -33,6 +33,36 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void selectAllFilterIntColumn() throws Exception
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Select all").getQueryCompiled().validate().trim());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("value", Collections.singletonList(123)), meta);
+
+        assertEquals("SELECT *\n" +
+                "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
+    }
+
+    @Test
+    public void selectAllFilterByID() throws Exception
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Select all").getQueryCompiled().validate().trim());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("ID", Collections.singletonList(1)), meta);
+
+        assertEquals("SELECT *\n" +
+                "FROM filterTestTable ft WHERE ft.ID = 1", ast.format());
+    }
+
+    @Test
+    public void selectAllWithSchemaFilterByID() throws Exception
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("public.filterTestTable2", "All records").getQueryCompiled().validate().trim());
+        QueryUtils.applyFilters(ast, "public.filterTestTable2", Collections.singletonMap("ID", Collections.singletonList(1)), meta);
+
+        assertEquals("SELECT *\n" +
+                "FROM public.filterTestTable2 ft WHERE ft.ID = 1", ast.format());
+    }
+
+    @Test
     public void simpleFilterStringColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
@@ -47,6 +77,16 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
         QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("_test_", Collections.singletonList("test")), meta);
+
+        assertEquals("SELECT ft.name, ft.value\n" +
+                "FROM filterTestTable ft", ast.format());
+    }
+
+    @Test
+    public void isNotContainsInQuery() throws Exception
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("t.productID", Collections.singletonList(1)), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());

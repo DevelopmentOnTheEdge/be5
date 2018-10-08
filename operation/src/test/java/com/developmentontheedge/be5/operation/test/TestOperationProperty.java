@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -20,23 +19,21 @@ public class TestOperationProperty extends TestOperationSupport
     public Object getParameters(Map<String, Object> presetValues)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("simple", "Name", String.class));
-        dps.add(new DynamicProperty("simpleNumber", "Number", Long.class));
-
         dps.add(new DynamicProperty("getOrDefault", "Name", String.class,
                 presetValues.getOrDefault("getOrDefault", "defaultValue")));
 
         dps.add(new DynamicProperty("getOrDefaultNumber", "Name", Long.class,
                 presetValues.getOrDefault("getOrDefaultNumber", "3")));
 
-        return DpsUtils.setValues(dps, presetValues);
+        return dps;
     }
 
     @Override
     public void invoke(Object parameters)
     {
-        sqlHelper.insert(getInfo().getEntityName(),
-                DpsUtils.toLinkedHashMap((DynamicPropertySet) parameters));
+        DynamicPropertySet params = (DynamicPropertySet) parameters;
+//        sqlHelper.insert(getInfo().getEntityName(),
+//                DpsUtils.toLinkedHashMap((DynamicPropertySet) parameters));
     }
 
 }

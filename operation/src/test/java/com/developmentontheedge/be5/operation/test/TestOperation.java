@@ -1,21 +1,15 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.base.util.DpsUtils;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import javax.inject.Inject;
 import java.util.Map;
 
 
 public class TestOperation extends TestOperationSupport
 {
-    @Inject
-    SqlHelper sqlHelper;
-
     @Override
     public Object getParameters(Map<String, Object> presetValues)
     {
@@ -32,8 +26,9 @@ public class TestOperation extends TestOperationSupport
     @Override
     public void invoke(Object parameters)
     {
-        sqlHelper.insert(getInfo().getEntityName(),
-                DpsUtils.toLinkedHashMap((DynamicPropertySet) parameters));
+        DynamicPropertySet params = (DynamicPropertySet) parameters;
+        db.insert("INSERT INTO "+getInfo().getEntityName()+" (name, value) VALUES (?, ?)",
+                params.getValue("name"), params.getValue("value"));
     }
 
 }

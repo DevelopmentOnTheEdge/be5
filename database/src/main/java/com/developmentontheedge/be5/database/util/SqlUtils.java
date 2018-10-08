@@ -78,7 +78,7 @@ public class SqlUtils
         }
         else if (number.getClass() == Integer.class)
         {
-            return (Long) number;
+            return ((Integer) number).longValue();
         }
         else if (number.getClass() == BigInteger.class)
         {
