@@ -182,6 +182,12 @@ public class CompiledLocalizations
 
         if (!localization.isPresent())
         {
+            localization = findLocalization(language, entityName,
+                    CompiledEntityLocalizations.fnGetByTopicAndKey("Insert", content));
+        }
+
+        if (!localization.isPresent())
+        {
             localization = findLocalization(language, "query.jsp",
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
