@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.operations
 
+import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.server.model.FrontendAction
@@ -37,8 +38,8 @@ class FilterOperationTest extends SqlMockOperationTest
     @Test
     void generateWithOperationParams()
     {
-        Either<Object, OperationResult> generate = generateOperation(
-                "testtable", "All records", "Filter", "", [name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
+        def operation = createOperation("testtable", "All records", "Filter", [name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
+        Either<Object, OperationResult> generate = generateOperation(operation, "")
 
         assertEquals("{" +
                 "'values':{'name':'b','value':'','_search_presets_':'name','_search_':true}," +

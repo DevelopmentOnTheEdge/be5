@@ -60,7 +60,7 @@ public class FilterHelper
 
         for (DynamicProperty property : dps)
         {
-            if (!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
+            if (!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD) && !property.isReadOnly())
             {
                 property.setValue(null); //remove defaultValue
             }

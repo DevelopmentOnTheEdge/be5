@@ -204,19 +204,8 @@ public abstract class TestUtils extends BaseTestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, ?> params)
-    {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
-        OperationContext operationContext = operationExecutor.getOperationContext(operationInfo, queryName, params);
-        Operation operation = operationExecutor.create(operationInfo, operationContext);
-        ShowCreatedOperations.addOperation(operation);
-        return operation;
-    }
-
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
-
         Map<String, Object> params;
         if (Utils.isEmpty(selectedRows))
         {
@@ -226,16 +215,21 @@ public abstract class TestUtils extends BaseTestUtils
         {
             params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, selectedRows);
         }
+        return createOperation(entityName, queryName, operationName, params);
+    }
+
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
+    {
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
         OperationContext operationContext = operationExecutor.getOperationContext(
-                operationInfo, queryName, params);
+                operationInfo, queryName, operationParams);
 
         Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
 
         return operation;
     }
-
 
     public static class ShowCreatedOperations extends TestWatcher
     {

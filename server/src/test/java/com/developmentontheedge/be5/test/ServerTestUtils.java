@@ -238,8 +238,6 @@ public abstract class ServerTestUtils extends BaseTestUtils
 
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
-        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
-
         Map<String, Object> params;
         if (Utils.isEmpty(selectedRows))
         {
@@ -249,9 +247,15 @@ public abstract class ServerTestUtils extends BaseTestUtils
         {
             params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, selectedRows);
         }
+        return createOperation(entityName, queryName, operationName, params);
+    }
+
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
+    {
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
         OperationContext operationContext = operationExecutor.getOperationContext(
-                operationInfo, queryName, params);
+                operationInfo, queryName, operationParams);
 
         Operation operation = operationExecutor.create(operationInfo, operationContext);
         ShowCreatedOperations.addOperation(operation);
