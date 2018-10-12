@@ -119,13 +119,7 @@ public class ColumnsHelper
             }
         }
 
-        for (String key : values.keySet())
-        {
-            if (!columns.keySet().contains(key))
-            {
-                errorMsg.append("Entity not contain column '").append(key).append("'\n");
-            }
-        }
+        values.entrySet().removeIf(e -> !columns.keySet().contains(e.getKey()));
 
         if (!errorMsg.toString().isEmpty())
         {

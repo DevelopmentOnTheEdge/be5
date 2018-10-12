@@ -174,14 +174,10 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     @Test
     void checkDpsColumnsTest()
     {
-        expectedEx.expect(Be5Exception.class)
-        expectedEx.expectMessage("Dps columns errors for modelElements 'meters'\n" +
-                "Dps not contain notNull column 'value'\n" +
-                "Entity not contain column 'value2'")
-
         table << [
                 "name"  : "test",
-                "value2": (Short) 1
+                "value": (Short) 1,
+                "notContainColumn": "test"
         ]
     }
 }
