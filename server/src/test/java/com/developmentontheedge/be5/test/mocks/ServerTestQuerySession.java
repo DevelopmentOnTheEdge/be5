@@ -20,4 +20,10 @@ public class ServerTestQuerySession implements QuerySession
     {
         return testSession.get(name);
     }
+
+    @Override
+    public void set(String name, Object value)
+    {
+        testSession.set(name, value);
+    }
 }

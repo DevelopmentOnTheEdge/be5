@@ -21,4 +21,10 @@ public class QuerySessionImpl implements QuerySession
     {
         return session.getAttribute(name);
     }
+
+    @Override
+    public void set(String name, Object value)
+    {
+        session.setAttribute(name, value);
+    }
 }
