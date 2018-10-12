@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
-import com.developmentontheedge.be5.operation.util.FilterUtil;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

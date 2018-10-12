@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.util
 
-import com.developmentontheedge.be5.operation.util.FilterUtil
+import com.developmentontheedge.be5.base.util.FilterUtil
 import com.developmentontheedge.be5.operation.util.OperationUtils
 import org.junit.Test
 

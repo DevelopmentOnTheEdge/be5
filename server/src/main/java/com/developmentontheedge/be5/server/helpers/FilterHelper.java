@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.beans.BeanInfoConstants;
@@ -10,12 +11,9 @@ import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
@@ -39,24 +37,7 @@ public class FilterHelper
         Map<String, Object> filterPresetValues = new HashMap<>(operationParams);
         filterPresetValues.putAll(presetValues);
 
-        List<String> searchPresets = new ArrayList<>();
-        if (!filterPresetValues.containsKey(SEARCH_PARAM))
-        {
-            searchPresets.addAll(
-                    presetValues.entrySet()
-                            .stream()
-                            .filter(x -> x.getValue() != null)
-                            .map(Map.Entry::getKey)
-                            .collect(Collectors.toList())
-            );
-        }
-        else
-        {
-            if (filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
-            {
-                searchPresets.addAll(Arrays.asList(((String) filterPresetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
-            }
-        }
+        List<String> searchPresets = FilterUtil.getSearchPresetNames(filterPresetValues);
 
         for (DynamicProperty property : dps)
         {

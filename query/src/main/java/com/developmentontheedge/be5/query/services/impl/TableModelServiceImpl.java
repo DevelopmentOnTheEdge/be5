@@ -18,8 +18,10 @@ import com.google.inject.Injector;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.base.util.FilterUtil.getSearchPresetNames;
 import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
 import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
 import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
@@ -29,6 +31,7 @@ import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
 public class TableModelServiceImpl implements TableModelService
 {
     private static final String QUERY_POSITIONS = "QUERY_POSITIONS";
+    private static final String QUERY_FILTER = "QUERY_FILTER";
     private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
@@ -99,7 +102,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta)
+        return new SqlTableBuilder(query, addFilterParamsIfNotExist(parameters), userInfoProvider.get(), queryService, userAwareMeta)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))
@@ -130,6 +133,16 @@ public class TableModelServiceImpl implements TableModelService
         }
         String queryKey = query.getEntity().getName() + "." + query.getName();
         return positions.computeIfAbsent(queryKey, k -> new HashMap<>());
+    }
+
+    private Map<String, Object> addFilterParamsIfNotExist(Map<String, Object> parameters)
+    {
+        Map<String, Map<String, String>> savedParams = (Map<String, Map<String, String>>) session.get().get(QUERY_FILTER);
+
+//        HashMap<String, Object> filterParams = new HashMap<>(parameters);
+//        List<String> searchPresetNames = getSearchPresetNames(parameters);
+
+        return parameters;
     }
 
     private TableModel getFromTableBuilder(Query query, Map<String, Object> parameters)

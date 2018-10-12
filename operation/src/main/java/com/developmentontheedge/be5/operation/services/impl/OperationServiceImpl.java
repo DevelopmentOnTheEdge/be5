@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.operation.util.FilterUtil;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
