@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -135,6 +136,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private final Meta meta;
     private final DbService db;
+    private final UserAwareMeta userAwareMeta;
 
     private final Map<String, List<String>> parameters;
     private final UserInfo userInfo;
@@ -146,7 +148,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo,
-                            QuerySession querySession, Meta meta, DbService db)
+                            QuerySession querySession, Meta meta, UserAwareMeta userAwareMeta, DbService db)
     {
         super(query);
 
@@ -155,6 +157,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.querySession = querySession;
 
         this.meta = meta;
+        this.userAwareMeta = userAwareMeta;
         this.db = db;
 
         this.executorQueryContext = new ExecutorQueryContext();
@@ -405,7 +408,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dynamicPropertySets = Collections.singletonList(dynamicProperties);
         }
 
-        return dynamicPropertySets;
+        if (dynamicPropertySets.size() == 0 && subQuery.getParameter("default") != null)
+        {
+            String value = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), subQuery.getParameter("default"));
+
+            DynamicPropertySetSupport dpsWithMessage = new DynamicPropertySetSupport();
+            dpsWithMessage.add(new DynamicProperty("___ID", String.class, "-1"));
+            dpsWithMessage.add(new DynamicProperty("message", String.class, value));
+            return Collections.singletonList(dpsWithMessage);
+        }
+        else
+        {
+            return dynamicPropertySets;
+        }
     }
 
 }
