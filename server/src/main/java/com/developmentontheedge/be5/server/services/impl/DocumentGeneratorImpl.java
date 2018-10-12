@@ -112,7 +112,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         return new TablePresentation(title, entityName, queryName, tableModel.isSelectable(), columns, rows,
-                tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
+                tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query));
     }
 
