@@ -324,7 +324,7 @@ public class MetaImpl implements Meta
 
         for (Query query : entity.getQueries())
         {
-            if (!query.isInvisible() && isAvailableFor(query, roles))
+            if (isAvailableFor(query, roles))
             {
                 permittedQueries.add(query);
             }

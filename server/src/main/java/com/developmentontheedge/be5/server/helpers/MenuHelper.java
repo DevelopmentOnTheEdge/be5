@@ -37,7 +37,7 @@ public class MenuHelper
 
     public Action getDefaultAction()
     {
-        List<RootNode> entities = collectEntities(false, EntityType.TABLE);
+        List<RootNode> entities = collectEntities(false, false, EntityType.TABLE);
 
         for (RootNode rootNode : entities)
         {
@@ -77,6 +77,11 @@ public class MenuHelper
      */
     public List<RootNode> collectEntities(boolean withIds, EntityType entityType)
     {
+        return collectEntities(withIds, true, entityType);
+    }
+
+    private List<RootNode> collectEntities(boolean withIds, boolean withoutInvisible, EntityType entityType)
+    {
         UserInfo userInfo = userInfoProvider.get();
         List<String> roles = userInfo.getCurrentRoles();
         String language = userInfo.getLanguage();
@@ -84,18 +89,22 @@ public class MenuHelper
 
         for (Entity entity : meta.getOrderedEntities(entityType, language))
         {
-            collectEntityContent(entity, language, roles, withIds, out);
+            collectEntityContent(entity, language, roles, withIds, withoutInvisible, out);
         }
 
         return out;
     }
 
     private void collectEntityContent(Entity entity, String language, List<String> roles, boolean withIds,
-                                      List<RootNode> out)
+                                      boolean withoutInvisible, List<RootNode> out)
     {
-        List<Query> permittedQueries = meta.getQueries(entity, roles);
+        List<Query> queries = meta.getQueries(entity, roles);
+        if (withoutInvisible)
+        {
+            queries.removeIf(Query::isInvisible);
+        }
 
-        if (permittedQueries.isEmpty())
+        if (queries.isEmpty())
         {
             return;
         }
@@ -108,16 +117,16 @@ public class MenuHelper
             operations = null;
         }
 
-        if (permittedQueries.size() == 1)
+        if (queries.size() == 1)
         {
             // Query in the root, contains an action.
             Id id = null;
-            Action action = ActionUtils.toAction(permittedQueries.get(0));
-            boolean isDefault = permittedQueries.get(0).isDefaultView();
+            Action action = ActionUtils.toAction(queries.get(0));
+            boolean isDefault = queries.get(0).isDefaultView();
 
             if (withIds)
             {
-                String queryTitle = getTitleOfRootQuery(permittedQueries, title, language, meta);
+                String queryTitle = getTitleOfRootQuery(queries, title, language, meta);
                 id = new Id(entity.getName(), queryTitle);
             }
 
@@ -126,7 +135,7 @@ public class MenuHelper
         else
         {
             // No query in the root, just inner queries.
-            List<QueryNode> children = generateEntityQueries(permittedQueries, language, meta, withIds);
+            List<QueryNode> children = generateEntityQueries(queries, language, meta, withIds);
             Id id = new Id(entity.getName(), null);
             out.add(RootNode.container(id, title, children, operations));
         }

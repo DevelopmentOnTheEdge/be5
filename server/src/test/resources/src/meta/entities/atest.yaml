@@ -14,6 +14,12 @@ atest:
     - value:
         type: VARCHAR(30)
   queries:
+  - Test2DefaultView:
+      type: 1D_unknown
+      invisible: true
+      defaultView: true
+      roles: TestUserWithInvisibleDefaultView
+      code: SELECT * FROM testtable t
   - Test1:
       type: 1D_unknown
       roles: TestUser2

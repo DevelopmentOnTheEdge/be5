@@ -5,4 +5,5 @@ security:
     SystemDeveloper: {}
     User: {}
     TestUser2: {}
+    TestUserWithInvisibleDefaultView: {}
   groups: {}

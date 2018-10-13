@@ -94,4 +94,13 @@ public class MenuHelperTest extends ServerBe5ProjectTest
                 menuHelper.getDefaultAction());
     }
 
+    @Test
+    public void testTestUserWithInvisibleDefaultView()
+    {
+        initUserWithRoles("TestUserWithInvisibleDefaultView");
+
+        assertEquals(new Action("call", "table/atest/Test2DefaultView"),
+                menuHelper.getDefaultAction());
+    }
+
 }
