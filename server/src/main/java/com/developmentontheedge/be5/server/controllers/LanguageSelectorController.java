@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.web.Request;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@Singleton
 public class LanguageSelectorController extends JsonApiController implements Controller
 {
     private final Meta meta;

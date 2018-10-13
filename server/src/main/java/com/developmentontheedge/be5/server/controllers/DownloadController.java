@@ -10,15 +10,16 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
 
 /**
  * Example url
  * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
  */
+@Singleton
 public class DownloadController extends ApiControllerSupport implements Controller
 {
     private final DatabaseModel database;

@@ -30,6 +30,7 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,7 +41,7 @@ import java.util.logging.Level;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
 
-
+@Singleton
 public class QueryBuilderController extends JsonApiModelController
 {
     private static final String entityName = "queryBuilderComponent";

@@ -14,13 +14,14 @@ import com.developmentontheedge.be5.web.Request;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
-
+@Singleton
 public class FormController extends JsonApiModelController
 {
     private final FormGenerator formGenerator;

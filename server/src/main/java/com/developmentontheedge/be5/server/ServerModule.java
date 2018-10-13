@@ -41,14 +41,6 @@ public class ServerModule extends ServletModule
         install(new OperationModule());
         install(new QueryModule());
 
-        bind(DocumentController.class).in(Scopes.SINGLETON);
-        bind(FormController.class).in(Scopes.SINGLETON);
-        bind(StaticPageController.class).in(Scopes.SINGLETON);
-        bind(MenuController.class).in(Scopes.SINGLETON);
-        bind(LanguageSelectorController.class).in(Scopes.SINGLETON);
-        bind(QueryBuilderController.class).in(Scopes.SINGLETON);
-        bind(DownloadController.class).in(Scopes.SINGLETON);
-
         serve("/api/table*").with(DocumentController.class);
         serve("/api/form*").with(FormController.class);
         serve("/api/static*").with(StaticPageController.class);

@@ -6,9 +6,10 @@ import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
-
+@Singleton
 public class MenuController extends JsonApiController
 {
     private final MenuHelper menuHelper;

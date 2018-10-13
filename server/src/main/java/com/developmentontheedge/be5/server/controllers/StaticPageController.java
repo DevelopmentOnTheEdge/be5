@@ -6,8 +6,9 @@ import com.developmentontheedge.be5.server.servlet.support.JsonApiModelControlle
 import com.developmentontheedge.be5.web.Request;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-
+@Singleton
 public class StaticPageController extends JsonApiModelController
 {
     private final DocumentGenerator documentGenerator;
