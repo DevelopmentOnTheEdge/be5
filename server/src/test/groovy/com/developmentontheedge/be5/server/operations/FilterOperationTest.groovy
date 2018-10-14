@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.operations
 
-import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.server.model.FrontendAction
@@ -53,17 +52,85 @@ class FilterOperationTest extends SqlMockOperationTest
     }
 
     @Test
+    void generateDocumentForm()
+    {
+        def operation = createOperation("testtable", "All records", "Filter",
+                [_search_:true, _search_presets_:"", name: "name1"])
+        Either<Object, OperationResult> generate = generateOperation(operation, [:])
+
+        assertEquals(
+                "{'name':'name1','value':'','_search_presets_':'','_search_':true}"
+                , oneQuotes(JsonFactory.beanValues(generate.getFirst())))
+    }
+
+    @Test
+    void executeFilterWithoutOperationParamProperty()
+    {
+        def operation = createOperation("testtable", "TestFilterByParamsInQueryOperation",
+                "FilterByParamsInQueryOperation", [value: "value1"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [:])
+
+        assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
+        def details = (FrontendAction[]) execute.getSecond().getDetails()
+        assertEquals("[_search_:true, _search_presets_:value, value:value1]",
+                oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
+                        .getData().getAttributes()).getParameters().toString()))
+    }
+
+    @Test
+    void executeFilterWithoutOperationParamProperty2()
+    {
+        def operation = createOperation("testtable", "TestFilterByParamsInQueryOperation",
+                "FilterByParamsInQueryOperation", [value: "value1"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [_search_:true, _search_presets_:"value", name: "name1"])
+
+        assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
+        def details = (FrontendAction[]) execute.getSecond().getDetails()
+        assertEquals("[name:name1, _search_:true, _search_presets_:value, value:value1]",
+                oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
+                        .getData().getAttributes()).getParameters().toString()))
+    }
+
+    @Test
+    void executeFilterWithoutOperationParamProperty3()
+    {
+        def operation = createOperation("testtable", "TestFilterByParamsInQueryOperation",
+                "FilterByParamsInQueryOperation", [value: "value1"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [name: "name1"])
+
+        assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
+        def details = (FrontendAction[]) execute.getSecond().getDetails()
+        assertEquals("[name:name1, _search_:true, _search_presets_:value, value:value1]",
+                oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
+                        .getData().getAttributes()).getParameters().toString()))
+    }
+
+    @Test
+    void changeFilterTest()
+    {
+        def operation = createOperation("testtable", "TestFilterByParamsInQueryOperation",
+                "FilterByParamsInQueryOperation", [_search_:true, _search_presets_:"", name: "name1"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [_search_:true, _search_presets_:"", name: "name2"])
+
+        assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
+        def details = (FrontendAction[]) execute.getSecond().getDetails()
+        assertEquals("[name:name2, _search_:true, _search_presets_:]",
+                oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
+                        .getData().getAttributes()).getParameters().toString()))
+    }
+
+    @Test
     void execute()
     {
-        Either<Object, OperationResult> execute = executeOperation(
-                "testtable", "All records", "Filter", "", [name: "test"])
+        def operation = createOperation("testtable", "All records", "Filter", [name: "test"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [:])
 
         assertEquals("finished",
                 oneQuotes(execute.getSecond().getStatus()))
 
         def details = (FrontendAction[]) execute.getSecond().getDetails()
 
-        assertEquals("[_search_presets_:name, name:test, _search_:true]",
+        assertEquals("[name:test, _search_:true, _search_presets_:name]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
 
@@ -74,8 +141,8 @@ class FilterOperationTest extends SqlMockOperationTest
     @Test
     void executeOldRedirectFilter()
     {
-        Either<Object, OperationResult> execute = executeOperation(
-                "testtable", "All records", "OldRedirectFilter", "", [name: "test"])
+        def operation = createOperation("testtable", "All records", "OldRedirectFilter", [name: "test"])
+        Either<Object, OperationResult> execute = executeOperation(operation, [:])
 
         assertEquals("redirect",
                 oneQuotes(execute.getSecond().getStatus()))

@@ -12,7 +12,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
@@ -21,23 +20,18 @@ import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS
 
 public class FilterHelper
 {
-    private final DpsHelper dpsHelper;
     private final DocumentGenerator documentGenerator;
 
     @Inject
-    public FilterHelper(DpsHelper dpsHelper, DocumentGenerator documentGenerator)
+    public FilterHelper(DocumentGenerator documentGenerator)
     {
-        this.dpsHelper = dpsHelper;
         this.documentGenerator = documentGenerator;
     }
 
     public <T extends DynamicPropertySet> T processFilterParams(T dps, Map<String, Object> presetValues,
                                                                 Map<String, Object> operationParams)
     {
-        Map<String, Object> filterPresetValues = new HashMap<>(operationParams);
-        filterPresetValues.putAll(presetValues);
-
-        Collection<String> searchPresets = FilterUtil.getSearchPresetNames(filterPresetValues);
+        Collection<String> searchPresets = FilterUtil.getSearchPresetNames(operationParams);
 
         for (DynamicProperty property : dps)
         {
@@ -47,7 +41,8 @@ public class FilterHelper
             }
         }
 
-        DpsUtils.setValues(dps, filterPresetValues);
+        DpsUtils.setValues(dps, operationParams);
+        DpsUtils.setValues(dps, presetValues);
 
         for (DynamicProperty property : dps)
         {
@@ -72,9 +67,9 @@ public class FilterHelper
         return dps;
     }
 
-    public JsonApiModel filterDocument(Query query, Object parameters)
+    public JsonApiModel filterDocument(Query query, Map<String, Object> parameters)
     {
-        return documentGenerator.getJsonApiModel(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
+        return documentGenerator.getJsonApiModel(query, parameters);
     }
 
 }

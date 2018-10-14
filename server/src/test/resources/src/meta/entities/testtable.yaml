@@ -29,6 +29,21 @@ testtable:
           t.value AS "Value"
         FROM
           testtable t
+  - TestFilterByParamsInQueryOperation:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      operations:
+      - FilterByParamsInQueryOperation
+      code: |-
+        SELECT
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM
+          testtable t
+        WHERE (1=1)
+        <if parameter="name">
+          AND t.name = '<parameter:name/>'
+        </if>
   - LinkQuick:
       type: 1D
       roles: SystemDeveloper

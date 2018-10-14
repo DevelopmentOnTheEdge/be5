@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
@@ -30,8 +31,10 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
+        Map<String, Object> params = dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters);
+        params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getOperationParams()));
         setResult(OperationResult.finished(null, new Object[]{
-                updateParentDocument(filterHelper.filterDocument(getQuery(), parameters)),
+                updateParentDocument(filterHelper.filterDocument(getQuery(), params)),
                 closeMainModal()
         }));
     }
