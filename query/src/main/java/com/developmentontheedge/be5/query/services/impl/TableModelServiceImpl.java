@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
@@ -20,6 +21,8 @@ import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
 import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
 import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
 import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
@@ -100,7 +103,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, addFilterParamsIfNotExist(parameters), userInfoProvider.get(), queryService, userAwareMeta)
+        return new SqlTableBuilder(query, withSavedFilterParamsIfNotExist(query, parameters), userInfoProvider.get(), queryService, userAwareMeta)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))
@@ -133,14 +136,31 @@ public class TableModelServiceImpl implements TableModelService
         return positions.computeIfAbsent(queryKey, k -> new HashMap<>());
     }
 
-    private Map<String, Object> addFilterParamsIfNotExist(Map<String, Object> parameters)
+    private Map<String, Object> withSavedFilterParamsIfNotExist(Query query, Map<String, Object> parameters)
     {
-        Map<String, Map<String, String>> savedParams = (Map<String, Map<String, String>>) session.get().get(QUERY_FILTER);
-
-//        HashMap<String, Object> filterParams = new HashMap<>(parameters);
-//        List<String> searchPresetNames = getSearchPresetNames(parameters);
-
-        return parameters;
+        Map<String, Map<String, Object>> filterParams =
+                (Map<String, Map<String, Object>>) session.get().get(QUERY_FILTER);
+        if (filterParams == null)
+        {
+            filterParams = new HashMap<>();
+            session.get().set(QUERY_FILTER, filterParams);
+        }
+        String queryKey = query.getEntity().getName() + "." + query.getName();
+        if (parameters.containsKey(SEARCH_PARAM))
+        {
+            filterParams.put(queryKey, FilterUtil.getFilterParams(parameters));
+            return parameters;
+        }
+        else
+        {
+            if (filterParams.containsKey(queryKey))
+            {
+                parameters.put(SEARCH_PRESETS_PARAM, FilterUtil.getSearchPresetParam(parameters));
+                parameters.putAll(filterParams.get(queryKey));
+                parameters.put(SEARCH_PARAM, true);
+            }
+            return parameters;
+        }
     }
 
     private TableModel getFromTableBuilder(Query query, Map<String, Object> parameters)

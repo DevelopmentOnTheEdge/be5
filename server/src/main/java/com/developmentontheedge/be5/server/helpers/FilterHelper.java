@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.helpers;
 
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.beans.BeanInfoConstants;
@@ -11,8 +11,8 @@ import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
@@ -37,7 +37,7 @@ public class FilterHelper
         Map<String, Object> filterPresetValues = new HashMap<>(operationParams);
         filterPresetValues.putAll(presetValues);
 
-        List<String> searchPresets = FilterUtil.getSearchPresetNames(filterPresetValues);
+        Collection<String> searchPresets = FilterUtil.getSearchPresetNames(filterPresetValues);
 
         for (DynamicProperty property : dps)
         {
@@ -56,7 +56,7 @@ public class FilterHelper
         }
 
         dps.add(new DynamicPropertyBuilder(SEARCH_PRESETS_PARAM, String.class)
-                .value(searchPresets.size() > 0 ? String.join(",", searchPresets) : null)
+                .value(FilterUtil.getSearchPresetParam(searchPresets))
                 .readonly()
                 .nullable()
                 .hidden()

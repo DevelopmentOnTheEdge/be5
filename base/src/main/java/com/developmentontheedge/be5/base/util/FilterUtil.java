@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.base.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,23 +25,49 @@ public class FilterUtil
             return Collections.emptyMap();
         }
 
-        List<String> notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> contextParamNames = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
 
         return operationParams.entrySet()
                 .stream()
-                .filter(e -> notFilterParams.contains(e.getKey()))
+                .filter(e -> contextParamNames.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static List<String> getSearchPresetNames(Map<String, Object> params)
+    public static Map<String, Object> getFilterParams(Map<String, Object> params)
     {
         if (!params.containsKey(SEARCH_PARAM))
         {
-            return params.entrySet()
-                    .stream()
-                    .filter(x -> x.getValue() != null)
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
+            return Collections.emptyMap();
+        }
+
+        if (params.get(SEARCH_PRESETS_PARAM) == null)
+        {
+            return params;
+        }
+
+        List<String> contextParamNames = Arrays.asList(((String) params.get(SEARCH_PRESETS_PARAM)).split(","));
+
+        return params.entrySet()
+                .stream()
+                .filter(e -> !contextParamNames.contains(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static String getSearchPresetParam(Map<String, Object> params)
+    {
+        return getSearchPresetParam(getSearchPresetNames(params));
+    }
+
+    public static String getSearchPresetParam(Collection<String> searchPresets)
+    {
+        return searchPresets.size() > 0 ? String.join(",", searchPresets) : null;
+    }
+
+    public static Collection<String> getSearchPresetNames(Map<String, Object> params)
+    {
+        if (!params.containsKey(SEARCH_PARAM))
+        {
+            return params.keySet();
         }
         else
         {
@@ -51,7 +77,7 @@ public class FilterUtil
             }
             else
             {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
         }
     }
