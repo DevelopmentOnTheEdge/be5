@@ -51,11 +51,5 @@ public abstract class QueryBe5ProjectDBTest extends BaseTestUtils
         {
             return null;
         }
-
-        @Override
-        public void set(String name, Object value)
-        {
-
-        }
     }
 }

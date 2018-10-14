@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -21,18 +22,27 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
+import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_MORE_ACTION;
+import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
+import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
+import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
@@ -40,23 +50,25 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 {
     private static final Logger log = Logger.getLogger(DocumentGeneratorImpl.class.getName());
 
+    private static final String QUERY_POSITIONS = "QUERY_POSITIONS";
+    private static final String QUERY_FILTER = "QUERY_FILTER";
+
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
     private final ErrorModelHelper errorModelHelper;
+    private final Provider<Session> session;
 
     private final List<DocumentPlugin> documentPlugins = new ArrayList<>();
 
     @Inject
-    public DocumentGeneratorImpl(
-            UserAwareMeta userAwareMeta,
-            TableModelService tableModelService,
-            DocumentFormPlugin documentFormPlugin,
-            DocumentOperationsPlugin documentOperationsPlugin,
-            ErrorModelHelper errorModelHelper)
+    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
+            DocumentFormPlugin documentFormPlugin, DocumentOperationsPlugin documentOperationsPlugin,
+            ErrorModelHelper errorModelHelper, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.errorModelHelper = errorModelHelper;
+        this.session = session;
 
         addDocumentPlugin(documentFormPlugin);
         addDocumentPlugin(documentOperationsPlugin);
@@ -119,7 +131,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters)
     {
-        return getJsonApiModel(query, parameters, tableModelService.getTableModel(query, parameters));
+        Map<String, Object> params = processQueryParams(query, parameters);
+        return getJsonApiModel(query, params, tableModelService.getTableModel(query, params));
     }
 
     private JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
@@ -166,7 +179,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         try
         {
             Query query = userAwareMeta.getQuery(entityName, queryName);
-            TableModel tableModel = tableModelService.getTableModel(query, parameters);
+            Map<String, Object> params = processQueryParams(query, parameters);
+            TableModel tableModel = tableModelService.getTableModel(query, params);
 
             return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
                     tableModel.getTotalNumberOfRows().intValue(),
@@ -182,10 +196,76 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
     }
 
+    private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
+    {
+        HashMap<String, Object> params = new HashMap<>(parameters);
+        Map<String, String> positions = getUserQueryPositions(query);
+        getPosition(params, positions, ORDER_COLUMN);
+        getPosition(params, positions, ORDER_DIR);
+        getPosition(params, positions, OFFSET);
+        getPosition(params, positions, LIMIT);
+
+        return withSavedFilterParamsIfNotExist(query, params);
+    }
+
     @Override
     public void addDocumentPlugin(DocumentPlugin documentPlugin)
     {
         documentPlugins.add(documentPlugin);
     }
 
+    private Map<String, String> getUserQueryPositions(Query query)
+    {
+        Map<String, Map<String, String>> positions =
+                (Map<String, Map<String, String>>) session.get().get(QUERY_POSITIONS);
+        if (positions == null)
+        {
+            positions = new HashMap<>();
+            session.get().set(QUERY_POSITIONS, positions);
+        }
+        String queryKey = query.getEntity().getName() + "." + query.getName();
+        return positions.computeIfAbsent(queryKey, k -> new HashMap<>());
+    }
+
+    private void getPosition(Map<String, Object> parameters, Map<String, String> positions, String name)
+    {
+        if (parameters.containsKey(name))
+        {
+            String value = (String) parameters.get(name);
+            positions.put(name, value);
+        }
+        else
+        {
+            String savedValue = positions.get(name);
+            if (savedValue != null)parameters.put(name, savedValue);
+        }
+    }
+
+    private Map<String, Object> withSavedFilterParamsIfNotExist(Query query, Map<String, Object> parameters)
+    {
+        Map<String, Map<String, Object>> filterParams =
+                (Map<String, Map<String, Object>>) session.get().get(QUERY_FILTER);
+        if (filterParams == null)
+        {
+            filterParams = new HashMap<>();
+            session.get().set(QUERY_FILTER, filterParams);
+        }
+        String queryKey = query.getEntity().getName() + "." + query.getName();
+        if (parameters.containsKey(SEARCH_PARAM))
+        {
+            filterParams.put(queryKey, FilterUtil.getFilterParams(parameters));
+            return parameters;
+        }
+        else
+        {
+            if (filterParams.containsKey(queryKey))
+            {
+                String searchPresetParam = FilterUtil.getSearchPresetParam(parameters);
+                if (searchPresetParam != null)parameters.put(SEARCH_PRESETS_PARAM, searchPresetParam);
+                parameters.putAll(filterParams.get(queryKey));
+                parameters.put(SEARCH_PARAM, "true");
+            }
+            return parameters;
+        }
+    }
 }
