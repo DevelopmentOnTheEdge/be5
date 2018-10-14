@@ -155,9 +155,10 @@ public class TableModelServiceImpl implements TableModelService
         {
             if (filterParams.containsKey(queryKey))
             {
-                parameters.put(SEARCH_PRESETS_PARAM, FilterUtil.getSearchPresetParam(parameters));
+                String searchPresetParam = FilterUtil.getSearchPresetParam(parameters);
+                if (searchPresetParam != null)parameters.put(SEARCH_PRESETS_PARAM, searchPresetParam);
                 parameters.putAll(filterParams.get(queryKey));
-                parameters.put(SEARCH_PARAM, true);
+                parameters.put(SEARCH_PARAM, "true");
             }
             return parameters;
         }
