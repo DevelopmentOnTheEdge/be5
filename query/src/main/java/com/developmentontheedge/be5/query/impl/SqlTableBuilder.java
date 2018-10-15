@@ -167,9 +167,7 @@ public class SqlTableBuilder
     {
         if (rows.size() == 0 || rows.get(0).getCells().stream()
                 .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE))) return false;
-
         List<RowModel> aggregateRow = new ArrayList<>();
-
         collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow);
 
         List<CellModel> firstLine = aggregateRow.get(0).getCells();
@@ -189,7 +187,8 @@ public class SqlTableBuilder
                     }
                     else
                     {
-                        add = (double) row.getCells().get(i).content; //todo test aggregate
+                        if (row.getCells().get(i).content != null) add = Double.parseDouble("" + row.getCells().get(i).content);
+                        else add = 0.0;
                     }
                     if ("Number".equals(aggregate.get("type")))
                     {
