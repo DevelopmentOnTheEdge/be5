@@ -44,18 +44,17 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     }
 
     @Override
-    public void update(String propertyName, Object value)
+    public int update(String propertyName, Object value)
     {
-        entityModel.set(getPrimaryKey(), propertyName, value);
-
+        int count = entityModel.set(getPrimaryKey(), propertyName, value);
         super.setValueHidden(propertyName, value);
+        return count;
     }
 
     @Override
-    public void update(Map<String, Object> values)
+    public int update(Map<String, Object> values)
     {
-        entityModel.set(getPrimaryKey(), values);
-
+        int count = entityModel.set(getPrimaryKey(), values);
         for (String propertyName : values.keySet())
         {
             if (super.hasProperty(propertyName))
@@ -63,6 +62,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
                 super.setValueHidden(propertyName, values.get(propertyName));
             }
         }
+        return count;
     }
 
     @Override

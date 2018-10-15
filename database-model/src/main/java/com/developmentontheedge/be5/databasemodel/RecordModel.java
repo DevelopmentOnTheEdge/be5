@@ -11,7 +11,7 @@ public interface RecordModel<T> extends DynamicPropertySet
 
     int remove();
 
-    void update(String propertyName, Object value);
+    int update(String propertyName, Object value);
 
-    void update(Map<String, Object> values);
+    int update(Map<String, Object> values);
 }
