@@ -60,7 +60,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public int getOrderColumn()
     {
-        return orderColumn + (selectable ? -1 : 0);
+        return orderColumn;
     }
 
     @Override
