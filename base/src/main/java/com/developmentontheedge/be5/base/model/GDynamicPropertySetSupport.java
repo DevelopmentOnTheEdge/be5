@@ -21,6 +21,16 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         GroovyRegister.registerMetaClass(GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class);
     }
 
+    public GDynamicPropertySetSupport()
+    {
+        super();
+    }
+
+    public GDynamicPropertySetSupport(DynamicPropertySet dps)
+    {
+        super(dps);
+    }
+
 //may be add
 //    public DynamicProperty setAt(String name, String value)
 //    {
