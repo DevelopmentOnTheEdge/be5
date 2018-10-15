@@ -54,6 +54,8 @@ public class MenuHelper
             }
         }
 
+        entities = collectEntities(false, true, EntityType.TABLE);
+
         for (RootNode rootNode : entities)
         {
             if (rootNode.action != null)
