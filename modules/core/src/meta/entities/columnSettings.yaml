@@ -1,0 +1,70 @@
+columnSettings:
+  type: dictionary
+  displayName: columnSettings
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - queryID:
+        type: KEYTYPE
+    - table_name:
+        type: VARCHAR(30)
+    - query_name:
+        type: VARCHAR(255)
+    - column_name:
+        type: VARCHAR(255)
+    - user_name:
+        type: VARCHAR(50)
+        reference: users
+    - visible:
+        type: BOOL
+        defaultValue: '''yes'''
+    - width:
+        type: VARCHAR(5)
+        canBeNull: true
+    - quick:
+        type: BOOL
+        canBeNull: true
+    - grouping:
+        type: BOOL
+        canBeNull: true
+    - sort:
+        type: VARCHAR(7)
+        type: ENUM('DEFAULT', 'ASC', 'DESC')
+        defaultValue: '''DEFAULT'''
+    - aggregate:
+        type: VARCHAR(10)
+        type: ENUM('DEFAULT', 'SUM', 'COUNT', 'AVG')
+        defaultValue: '''DEFAULT'''
+  queries:
+  - All records:
+      type: 1D_unknown
+      roles: Administrator
+      operations:
+      - Delete
+      - Edit
+      - Filter
+      - Insert
+      code: |-
+        SELECT
+            *
+        FROM categories
+  operations:
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
