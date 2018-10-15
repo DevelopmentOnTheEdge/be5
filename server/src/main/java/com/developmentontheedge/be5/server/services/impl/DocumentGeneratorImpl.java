@@ -199,7 +199,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
     {
         HashMap<String, Object> params = new HashMap<>(parameters);
-        Map<String, String> positions = getUserQueryPositions(query);
+        Map<String, String> positions = getUserQueryPositions(query, parameters);
         getPosition(params, positions, ORDER_COLUMN);
         getPosition(params, positions, ORDER_DIR);
         getPosition(params, positions, OFFSET);
@@ -214,7 +214,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         documentPlugins.add(documentPlugin);
     }
 
-    private Map<String, String> getUserQueryPositions(Query query)
+    private Map<String, String> getUserQueryPositions(Query query, Map<String, Object> parameters)
     {
         Map<String, Map<String, String>> positions =
                 (Map<String, Map<String, String>>) session.get().get(QUERY_POSITIONS);
@@ -223,7 +223,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             positions = new HashMap<>();
             session.get().set(QUERY_POSITIONS, positions);
         }
-        String queryKey = query.getEntity().getName() + "." + query.getName();
+        String queryKey = new HashUrl(query.getEntity().getName(), query.getName()).named(
+                FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
+
         return positions.computeIfAbsent(queryKey, k -> new HashMap<>());
     }
 
@@ -250,7 +252,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             filterParams = new HashMap<>();
             session.get().set(QUERY_FILTER, filterParams);
         }
-        String queryKey = query.getEntity().getName() + "." + query.getName();
+        String queryKey = new HashUrl(query.getEntity().getName(), query.getName()).named(
+                FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
         if (parameters.containsKey(SEARCH_PARAM))
         {
             filterParams.put(queryKey, FilterUtil.getFilterParams(parameters));

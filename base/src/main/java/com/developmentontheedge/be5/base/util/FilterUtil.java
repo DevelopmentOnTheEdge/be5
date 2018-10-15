@@ -17,7 +17,10 @@ public class FilterUtil
     {
         if (!operationParams.containsKey(SEARCH_PARAM))
         {
-            return operationParams;
+            return operationParams.entrySet()
+                    .stream()
+                    .filter(e -> !e.getKey().startsWith("_"))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
         if (operationParams.get(SEARCH_PRESETS_PARAM) == null)
@@ -29,6 +32,7 @@ public class FilterUtil
 
         return operationParams.entrySet()
                 .stream()
+                .filter(e -> !e.getKey().startsWith("_"))
                 .filter(e -> contextParamNames.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
