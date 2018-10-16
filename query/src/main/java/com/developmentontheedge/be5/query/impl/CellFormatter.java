@@ -128,23 +128,25 @@ public class CellFormatter
             return null;
         }
 
+        Object content;
         if (cell.content instanceof String)
         {
             unzipper.unzip((String) cell.content, builder::add, subquery ->
                     builder.add(toTable(subquery, varResolver))
             );
             ImmutableList<Object> formattedParts = builder.build();
-
-            if (hasLink)
-            {
-                cell.options.put("link", link);
-            }
-            return StreamEx.of(formattedParts).map(this::print).joining();
+            content = StreamEx.of(formattedParts).map(this::print).joining();
         }
         else
         {
-            return cell.content;
+            content = cell.content;
         }
+
+        if (hasLink)
+        {
+            cell.options.put("link", link);
+        }
+        return content;
     }
 
     /**
