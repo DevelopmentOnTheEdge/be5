@@ -20,10 +20,10 @@ meters:
         type: VARCHAR(100)
         canBeNull: true
     - creationDate___:
-        type: TIMESTAMP
+        type: DATETIME
         canBeNull: true
     - modificationDate___:
-        type: TIMESTAMP
+        type: DATETIME
         canBeNull: true
     - isDeleted___:
         type: ENUM('no','yes')
