@@ -138,7 +138,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         TablePresentation data = getTablePresentation(query, parameters, tableModel);
-        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
+        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
+                .named(FilterUtil.getOperationParamsWithoutFilter(parameters));
 
         List<ResourceData> included = new ArrayList<>();
         documentPlugins.forEach(d -> {
@@ -163,7 +164,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
         catch (Be5Exception e)
         {
-            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
+            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName)
+                    .named(FilterUtil.getOperationParamsWithoutFilter(parameters));
             log.log(e.getLogLevel(), "Error in table: " + url.toString(), e);
             return JsonApiModel.error(errorModelHelper.
                     getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
@@ -173,7 +175,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
     {
-        String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
+        String url = new HashUrl(TABLE_ACTION, entityName, queryName)
+                .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
         Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
 
         try

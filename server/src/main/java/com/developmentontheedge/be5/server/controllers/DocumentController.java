@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
@@ -53,7 +54,8 @@ public class DocumentController extends JsonApiModelController
         }
         catch (Be5Exception e)
         {
-            String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
+            String url = new HashUrl(TABLE_ACTION, entityName, queryName)
+                    .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
             log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
