@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
@@ -113,7 +112,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
-        List<Object> columns = tableModel.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
+        List<ColumnModel> columns = tableModel.getColumns();
         List<InitialRow> rows = new InitialRowsBuilder(tableModel).build();
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
 
@@ -123,9 +122,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
-        return new TablePresentation(title, entityName, queryName, tableModel.isSelectable(), columns, rows,
+        return new TablePresentation(
+                title, entityName, queryName, tableModel.isSelectable(),
+                columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
-                parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query));
+                parameters, totalNumberOfRows, tableModel.isHasAggregate(),
+                LayoutUtils.getLayoutObject(query));
     }
 
     @Override

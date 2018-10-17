@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
+import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.InitialRow;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class TablePresentation
     private final String category;
     private final String page;
     private final boolean selectable;
-    private final List<Object> columns;
+    private final List<ColumnModel> columns;
     private final List<InitialRow> rows;
 
     private final int offset;
@@ -29,7 +30,7 @@ public class TablePresentation
             String category,
             String page,
             boolean selectable,
-            List<Object> columns,
+            List<ColumnModel> columns,
             List<InitialRow> rows,
             int orderColumn,
             String orderDir,
@@ -76,7 +77,7 @@ public class TablePresentation
         return selectable;
     }
 
-    public List<Object> getColumns()
+    public List<ColumnModel> getColumns()
     {
         return columns;
     }

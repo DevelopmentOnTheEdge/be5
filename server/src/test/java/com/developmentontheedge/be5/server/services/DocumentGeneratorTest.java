@@ -41,7 +41,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("testtable: All records", table.getTitle());
 
-        assertEquals("['Name','Value']", oneQuotes(jsonb.toJson(table.getColumns())));
+        assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]", oneQuotes(jsonb.toJson(table.getColumns())));
 
         assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
@@ -67,7 +67,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         JsonApiModel document = documentGenerator.getJsonApiModel(query, Collections.emptyMap());
 
-        assertEquals("{'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
+        assertEquals("{'data':{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
                         "'length':10,'offset':0,'orderColumn':-1,'orderDir':'asc'," +
                         "'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'},'included':[{'attributes':{'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']},'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','title':'testtable: FilterByParamsInQueryOperation'},'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'},{'attributes':[{'clientSide':false,'name':'FilterByParamsInQueryOperation','requiresConfirmation':false,'title':'FilterByParamsInQueryOperation','visibleWhen':'always'}],'type':'documentOperations'}]}",
                 oneQuotes(jsonb.toJson(document)));
