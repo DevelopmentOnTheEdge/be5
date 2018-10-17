@@ -31,7 +31,12 @@ public final class ActionUtils
         }
         else if (isStaticPage(query))
         {
-            return Action.call(new HashUrl("static", query.getQuery()));
+            String url = query.getQuery();
+            if (url.startsWith("static/"))
+            {
+                url = url.replaceFirst("static/", "");
+            }
+            return Action.call(new HashUrl("static", url));
         }
         else
         {
@@ -97,18 +102,6 @@ public final class ActionUtils
                 }
 
                 return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
-//                if( parser.isLegacy() )
-//                {
-//                    if (parser.isForm())
-//                    {
-//                        return Action.call(new HashUrl("form", parser.getEntityName(), parser.getQueryName(), parser.getOperationName()));
-//                    }
-//                    // continue
-//                }
-//                else
-//                {
-//                    return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
-//                }
             }
 
             return Action.call(new HashUrl("table", query.getEntity().getName(), query.getName()));
@@ -135,10 +128,9 @@ public final class ActionUtils
         return Action.call(hashUrl);
     }
 
-    // TODO move me to Query
     public static boolean isStaticPage(Query query)
     {
-        return query.getType() == QueryType.STATIC && query.getQuery().endsWith(".be");
+        return query.getType() == QueryType.STATIC && (query.getQuery().endsWith(".be") || query.getQuery().startsWith("static/"));
     }
 
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");

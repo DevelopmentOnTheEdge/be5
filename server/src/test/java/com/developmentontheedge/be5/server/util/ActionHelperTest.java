@@ -70,6 +70,22 @@ public class ActionHelperTest extends ServerBe5ProjectTest
                 ActionUtils.toAction(query).arg);
     }
 
+    @Test
+    public void staticPage()
+    {
+        Query query = getQuery(QueryType.STATIC, "page.be");
+        assertEquals("static/page.be",
+                ActionUtils.toAction(query).arg);
+    }
+
+    @Test
+    public void staticPageWithoutBe()
+    {
+        Query query = getQuery(QueryType.STATIC, "static/page");
+        assertEquals("static/page",
+                ActionUtils.toAction(query).arg);
+    }
+
     private Query getQuery(QueryType type, String queryCode)
     {
         Entity entity = meta.getEntity("testtable");
