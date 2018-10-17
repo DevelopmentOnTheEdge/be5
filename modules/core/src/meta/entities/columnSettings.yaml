@@ -1,5 +1,5 @@
 columnSettings:
-  type: dictionary
+  type: collection
   displayName: columnSettings
   primaryKey: ID
   scheme:
@@ -19,6 +19,16 @@ columnSettings:
     - user_name:
         type: VARCHAR(50)
         reference: users
+        canBeNull: true
+    - role_name:
+        type: VARCHAR(50)
+        canBeNull: true
+    - wrap:
+        type: VARCHAR(3)
+        defaultValue: '''no'''
+    - nowrap:
+        type: VARCHAR(3)
+        defaultValue: '''no'''
     - visible:
         type: BOOL
         defaultValue: '''yes'''
@@ -27,10 +37,10 @@ columnSettings:
         canBeNull: true
     - quick:
         type: BOOL
-        canBeNull: true
+        defaultValue: '''no'''
     - grouping:
         type: BOOL
-        canBeNull: true
+        defaultValue: '''no'''
     - sort:
         type: VARCHAR(7)
         type: ENUM('DEFAULT', 'ASC', 'DESC')

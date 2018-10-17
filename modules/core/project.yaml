@@ -10,6 +10,7 @@ core:
   - _categoriesService_
   - categories
   - classifications
+  - columnSettings
   - countries
   - entities
   - languages
