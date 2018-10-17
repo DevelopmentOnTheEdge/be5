@@ -7,9 +7,10 @@ import com.developmentontheedge.be5.web.Request;
 import com.google.common.base.Splitter;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
-
+@Singleton
 public class UserInfoController extends JsonApiController
 {
     private final LoginService loginService;

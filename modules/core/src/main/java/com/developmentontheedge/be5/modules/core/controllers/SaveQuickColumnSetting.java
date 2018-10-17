@@ -9,8 +9,10 @@ import com.developmentontheedge.be5.web.Request;
 import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 
+@Singleton
 public class SaveQuickColumnSetting extends JsonApiController
 {
     private final DatabaseModel database;
@@ -30,7 +32,7 @@ public class SaveQuickColumnSetting extends JsonApiController
         String table_name = req.get("table_name");
         String query_name = req.get("query_name");
         String column_name = req.get("column_name");
-        Boolean quick = req.getBoolean("quick", false);
+        String quick = req.get("quick");
 
         String ret;
         RecordModel<Object> settings = database.getEntity("columnSettings").getBy(ImmutableMap.of(

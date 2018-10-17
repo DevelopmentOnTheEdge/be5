@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
+import com.developmentontheedge.be5.modules.core.controllers.SaveQuickColumnSetting;
 import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
@@ -25,11 +26,10 @@ public class CoreModule extends ServletModule
     protected void configureServlets()
     {
         install(new ServerModule());
-        bind(UserInfoController.class).in(Scopes.SINGLETON);
-        bind(CategoriesController.class).in(Scopes.SINGLETON);
 
         serve("/api/userInfo*").with(UserInfoController.class);
         serve("/api/categories*").with(CategoriesController.class);
+        serve("/api/quick*").with(SaveQuickColumnSetting.class);
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
         bind(RoleHelper.class).in(Scopes.SINGLETON);
