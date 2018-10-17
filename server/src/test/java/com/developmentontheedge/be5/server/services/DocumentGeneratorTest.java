@@ -51,11 +51,11 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     public void testLinkQuick()
     {
         TablePresentation table = documentGenerator.getTablePresentation(meta.getQuery("testtable", "LinkQuick"), Collections.emptyMap());
-
         assertEquals("testtable: LinkQuick", table.getTitle());
-
-        assertEquals("{'cells':[{" + "'content':'tableModelTest'," + "'options':{" + "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," + "'quick':{'visible':'true'}" + "}}]}",
+        assertEquals("{'cells':[{'content':'tableModelTest','options':{'link':{'url':'table/testtable/Test 1D unknown/ID=123'}}}]}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
     }
 
     @Test

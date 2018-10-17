@@ -1,19 +1,22 @@
 package com.developmentontheedge.be5.query.model;
 
-import java.util.Objects;
-
 public class ColumnModel
 {
     private final String title;
     private final String name;
+    private final String quick;
+
+    public ColumnModel(String name, String title, String quick)
+    {
+        this.title = title;
+        this.name = name;
+        this.quick = quick;
+    }
 
     public ColumnModel(String name, String title)
     {
-        Objects.requireNonNull(title);
-        this.title = title;
-        this.name = name;
+        this(name, title, null);
     }
-
 
     public String getName()
     {
@@ -23,5 +26,10 @@ public class ColumnModel
     public String getTitle()
     {
         return title;
+    }
+
+    public String getQuick()
+    {
+        return quick;
     }
 }
