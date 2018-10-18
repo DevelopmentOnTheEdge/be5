@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.base.services.CoreUtils;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
@@ -106,4 +107,21 @@ public class CoreUtilsForTest implements CoreUtils
 
     }
 
+    @Override
+    public Map<String, Object> getColumnSettingForUser(String table_name, String query_name, String column_name, String user_name)
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public void setColumnSettingForUser(String table_name, String query_name, String column_name, String user_name, Map<String, Object> values)
+    {
+
+    }
+
+    @Override
+    public void removeColumnSettingForUser(String table_name, String query_name, String column_name, String user_name)
+    {
+
+    }
 }

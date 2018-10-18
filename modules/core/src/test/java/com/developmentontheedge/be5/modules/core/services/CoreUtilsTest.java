@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.google.inject.internal.util.ImmutableMap;
@@ -11,6 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,11 +35,12 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     {
         db.update("DELETE FROM systemSettings");
         db.update("DELETE FROM user_prefs");
+        db.update("DELETE FROM columnSettings");
         be5Caches.clearAll();
     }
 
     @Test
-    public void getSystemSettingInSection() throws Exception
+    public void getSystemSettingInSection()
     {
         database.getEntity("systemSettings").add(ImmutableMap.of(
                 "section_name", "system",
@@ -45,20 +51,20 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void getSystemSettingInSectionNotFound() throws Exception
+    public void getSystemSettingInSectionNotFound()
     {
         assertEquals("Be5 Application", utils.getSystemSettingInSection("system", "app_name", "Be5 Application"));
     }
 
     @Test
-    public void getSystemSettingNotFound() throws Exception
+    public void getSystemSettingNotFound()
     {
         assertEquals(null, utils.getSystemSetting("app_name"));
         assertEquals("No value", utils.getSystemSetting("app_name", "No value"));
     }
 
     @Test
-    public void setSystemSettingInSection() throws Exception
+    public void setSystemSettingInSection()
     {
         utils.setSystemSettingInSection("system", "app_name", "Name 1");
         assertEquals("Name 1", utils.getSystemSetting("app_name"));
@@ -68,7 +74,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void getSystemSettingsInSectionTest() throws Exception
+    public void getSystemSettingsInSectionTest()
     {
         utils.setSystemSettingInSection("system", "app_name", "App");
         utils.setSystemSettingInSection("system", "app_url", "Url");
@@ -80,7 +86,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void getBooleanSystemSetting() throws Exception
+    public void getBooleanSystemSetting()
     {
         assertEquals(false, utils.getBooleanSystemSetting("is_active"));
         assertEquals(CoreUtilsImpl.MISSING_SETTING_VALUE, be5Caches.getCache("System settings").getIfPresent("system.is_active"));
@@ -96,7 +102,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void getModuleSetting() throws Exception
+    public void getModuleSetting()
     {
         assertEquals(false, utils.getBooleanModuleSetting("core", "is_active"));
         assertEquals(true, utils.getBooleanModuleSetting("core", "is_active", true));
@@ -114,7 +120,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void getUserSetting() throws Exception
+    public void getUserSetting()
     {
         assertEquals(null, utils.getUserSetting("testName", "companyID"));
         assertEquals(CoreUtilsImpl.MISSING_SETTING_VALUE, be5Caches.getCache("User settings").getIfPresent("testName.companyID"));
@@ -135,7 +141,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void setUserSettingTest() throws Exception
+    public void setUserSettingTest()
     {
         utils.setUserSetting("testName", "companyID", "1");
         assertEquals("1", utils.getUserSetting("testName", "companyID"));
@@ -144,26 +150,71 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals("2", utils.getUserSetting("testName", "companyID"));
     }
 
+    @Test
+    public void getColumnSettingForUserTest()
+    {
+        assertEquals(Collections.emptyMap(), utils.getColumnSettingForUser("users", "All records", "User", TEST_USER));
+
+        database.getEntity("columnSettings").add(new HashMap<String, Object>() {{
+            put("queryID", 0);
+            put("table_name", "users");
+            put("query_name", "All records");
+            put("column_name", "User");
+            put("user_name", TEST_USER);
+            put("quick", "yes");
+        }});
+        be5Caches.clearAll();
+
+        assertEquals("yes", utils.getColumnSettingForUser("users", "All records", "User", TEST_USER).get("quick"));
+
+        utils.removeColumnSettingForUser("users", "All records", "User", TEST_USER);
+
+        assertEquals(Collections.emptyMap(), utils.getColumnSettingForUser("users", "All records", "User", TEST_USER));
+    }
+
+    @Test
+    public void setColumnSettingForUserTest()
+    {
+        EntityModel<Long> columnSettings = database.getEntity("columnSettings");
+        utils.setColumnSettingForUser("users", "All records", "User", TEST_USER,
+                Collections.singletonMap("quick", "yes"));
+        assertEquals("yes",
+                utils.getColumnSettingForUser("users", "All records", "User", TEST_USER).get("quick"));
+        assertEquals("yes", columnSettings.getBy(com.google.common.collect.ImmutableMap.of(
+                "table_name", "users",
+                "query_name", "All records",
+                "column_name", "User")).getValueAsString("quick"));
+
+        utils.setColumnSettingForUser("users", "All records", "User", TEST_USER,
+                Collections.singletonMap("quick", "no"));
+        assertEquals("no",
+                utils.getColumnSettingForUser("users", "All records", "User", TEST_USER).get("quick"));
+        assertEquals("no", columnSettings.getBy(com.google.common.collect.ImmutableMap.of(
+                "table_name", "users",
+                "query_name", "All records",
+                "column_name", "User")).getValueAsString("quick"));
+    }
+
     @Test(expected = java.lang.NullPointerException.class)
-    public void getBooleanModuleSettingNull() throws Exception
+    public void getBooleanModuleSettingNull()
     {
         utils.getBooleanModuleSetting("test", null);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
-    public void getBooleanModuleSettingNull2() throws Exception
+    public void getBooleanModuleSettingNull2()
     {
         utils.getBooleanModuleSetting(null, "test");
     }
 
     @Test(expected = java.lang.NullPointerException.class)
-    public void getUserSettingNullParams() throws Exception
+    public void getUserSettingNullParams()
     {
         utils.getUserSetting(null, "test");
     }
 
     @Test(expected = java.lang.NullPointerException.class)
-    public void getUserSettingNullParams2() throws Exception
+    public void getUserSettingNullParams2()
     {
         utils.getUserSetting("test", null);
     }

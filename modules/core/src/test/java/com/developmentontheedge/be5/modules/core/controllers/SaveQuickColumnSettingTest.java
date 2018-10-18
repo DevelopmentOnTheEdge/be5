@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.databasemodel.EntityModel;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -14,34 +14,28 @@ public class SaveQuickColumnSettingTest extends CoreBe5ProjectDBTest
 {
     @Inject
     private SaveQuickColumnSetting component;
+    @Inject
+    private CoreUtils coreUtils;
 
     @Test
     public void test()
     {
-        EntityModel<Long> columnSettings = database.getEntity("columnSettings");
-        columnSettings.removeAll();
-        assertEquals("1", component.generate(getSpyMockRequest("/api/quick", ImmutableMap.of(
-                        "table_name", "users",
-                        "query_name", "All records",
-                        "column_name", "User",
-                        "quick", "yes"
-                        )), ""));
-        assertEquals(1, columnSettings.count());
-        assertEquals("yes", columnSettings.getBy(ImmutableMap.of(
+        assertEquals("ok", component.generate(getSpyMockRequest("/api/quick", ImmutableMap.of(
                 "table_name", "users",
                 "query_name", "All records",
-                "column_name", "User")).getValueAsString("quick"));
+                "column_name", "User",
+                "quick", "yes"
+        )), ""));
+        assertEquals("yes", coreUtils.getColumnSettingForUser(
+                "users", "All records", "User", TEST_USER).get("quick"));
 
-        assertEquals("1", component.generate(getSpyMockRequest("/api/quick", ImmutableMap.of(
+        assertEquals("ok", component.generate(getSpyMockRequest("/api/quick", ImmutableMap.of(
                 "table_name", "users",
                 "query_name", "All records",
                 "column_name", "User",
                 "quick", "no"
         )), ""));
-        assertEquals(1, columnSettings.count());
-        assertEquals("no", columnSettings.getBy(ImmutableMap.of(
-                "table_name", "users",
-                "query_name", "All records",
-                "column_name", "User")).getValueAsString("quick"));
+        assertEquals("no", coreUtils.getColumnSettingForUser(
+                "users", "All records", "User", TEST_USER).get("quick"));
     }
 }

@@ -33,4 +33,11 @@ public interface CoreUtils
     void setUserSetting(String user, String param, String value);
 
     void removeUserSetting(String user, String param);
+
+    Map<String, Object> getColumnSettingForUser(String table_name, String query_name, String column_name,
+                                        String user_name);
+    void setColumnSettingForUser(String table_name, String query_name, String column_name,
+                                        String user_name, Map<String, Object> values);
+    void removeColumnSettingForUser(String table_name, String query_name, String column_name,
+                                           String user_name);
 }

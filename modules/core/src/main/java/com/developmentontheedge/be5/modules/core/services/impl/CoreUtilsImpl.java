@@ -4,10 +4,14 @@ import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.util.SqlUtils;
+import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.github.benmanes.caffeine.cache.Cache;
+import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,16 +23,20 @@ public class CoreUtilsImpl implements CoreUtils
 
     private final Cache<String, String> systemSettingsCache;
     private final Cache<String, String> userSettingsCache;
+    private final Cache<String, Map<String, Object>> columnSettingsCache;
 
     private final DbService db;
+    private final DatabaseModel database;
 
     @Inject
-    public CoreUtilsImpl(DbService db, Be5Caches be5Caches)
+    public CoreUtilsImpl(DbService db, DatabaseModel database, Be5Caches be5Caches)
     {
         this.db = db;
+        this.database = database;
 
         systemSettingsCache = be5Caches.createCache("System settings");
         userSettingsCache = be5Caches.createCache("User settings");
+        columnSettingsCache = be5Caches.createCache("Column settings");
     }
 
     /**
@@ -313,5 +321,81 @@ public class CoreUtilsImpl implements CoreUtils
 
         db.update("DELETE FROM user_prefs WHERE pref_name = ? AND user_name = ?", param, user);
         userSettingsCache.invalidate(user + "." + param);
+    }
+
+    @Override
+    public Map<String, Object> getColumnSettingForUser(String table_name, String query_name, String column_name,
+                                                       String user_name)
+    {
+        Objects.requireNonNull(table_name);
+        Objects.requireNonNull(query_name);
+        Objects.requireNonNull(column_name);
+        Objects.requireNonNull(user_name);
+
+        String key = table_name + "." + query_name + "." + column_name + "?user_name=" + user_name;
+        return columnSettingsCache.get(key, k -> {
+            RecordModel<Object> record = database.getEntity("columnSettings").getBy(ImmutableMap.of(
+                    "table_name", table_name,
+                    "query_name", query_name,
+                    "column_name", column_name,
+                    "user_name", user_name
+            ));
+            return record != null ? record.asMap() : Collections.emptyMap();
+        });
+    }
+
+    @Override
+    public void setColumnSettingForUser(String table_name, String query_name, String column_name,
+                                        String user_name, Map<String, Object> values)
+    {
+        Objects.requireNonNull(table_name);
+        Objects.requireNonNull(query_name);
+        Objects.requireNonNull(column_name);
+        Objects.requireNonNull(user_name);
+        Objects.requireNonNull(values);
+
+        String key = table_name + "." + query_name + "." + column_name + "?user_name=" + user_name;
+        RecordModel<Object> record = database.getEntity("columnSettings").getBy(ImmutableMap.of(
+                "table_name", table_name,
+                "query_name", query_name,
+                "column_name", column_name,
+                "user_name", user_name
+        ));
+        if (record != null)
+        {
+            record.update(values);
+            columnSettingsCache.put(key, record.asMap());
+        }
+        else
+        {
+            Map<String, Object> params = new HashMap<String, Object>() {{
+                put("queryID", 0);
+                put("table_name", table_name);
+                put("query_name", query_name);
+                put("column_name", column_name);
+                put("user_name", user_name);
+            }};
+            params.putAll(values);
+            database.getEntity("columnSettings").add(params);
+            columnSettingsCache.put(key, Collections.unmodifiableMap(params));
+        }
+    }
+
+    @Override
+    public void removeColumnSettingForUser(String table_name, String query_name, String column_name,
+                                           String user_name)
+    {
+        Objects.requireNonNull(table_name);
+        Objects.requireNonNull(query_name);
+        Objects.requireNonNull(column_name);
+        Objects.requireNonNull(user_name);
+        database.getEntity("columnSettings").removeBy(ImmutableMap.of(
+                "table_name", table_name,
+                "query_name", query_name,
+                "column_name", column_name,
+                "user_name", user_name
+        ));
+        String key = table_name + "." + query_name + "." + column_name + "?user_name=" + user_name;
+        columnSettingsCache.invalidate(key);
     }
 }
