@@ -75,7 +75,7 @@ public class TableModelServiceImpl implements TableModelService
     @SuppressWarnings("unchecked")
     public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
-        return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService, userAwareMeta);
+        return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService, userAwareMeta, coreUtils);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
@@ -94,7 +94,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta)
+        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta, coreUtils)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))

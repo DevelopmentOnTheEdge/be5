@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -34,15 +35,17 @@ public class SqlTableBuilder
     private final QueryExecutor queryExecutor;
     private final UserAwareMeta userAwareMeta;
     private final CellFormatter cellFormatter;
+    private final CoreUtils coreUtils;
 
     public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
-                           UserAwareMeta userAwareMeta)
+                           UserAwareMeta userAwareMeta, CoreUtils coreUtils)
     {
         this.query = query;
         this.parameters = parameters;
         this.userInfo = userInfo;
 
         this.queryService = queryService;
+        this.coreUtils = coreUtils;
         this.queryExecutor = queryService.build(query, parameters);
         this.userAwareMeta = userAwareMeta;
         this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta);
@@ -271,7 +274,7 @@ public class SqlTableBuilder
         {
             if (columns.isEmpty())
             {
-                columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns());
+                columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils).collectColumns());
             }
             rows.add(generateRow(entityName, queryName, properties));
         }
@@ -279,7 +282,7 @@ public class SqlTableBuilder
 
     private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties) throws AssertionError
     {
-        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
+        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
         List<CellModel> processedCells = processCells(cells); // only visible cells

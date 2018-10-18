@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -23,19 +25,25 @@ class PropertiesToRowTransformer
     private final String entityName;
     private final String queryName;
     private final DynamicPropertySet properties;
+    private final UserInfo userInfo;
     private final UserAwareMeta userAwareMeta;
+    private final CoreUtils coreUtils;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     /**
      * @param properties represent a row
+     * @param userInfo
+     * @param coreUtils
      */
-    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta)
+    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo, UserAwareMeta userAwareMeta, CoreUtils coreUtils)
     {
         this.entityName = entityName;
         this.queryName = queryName;
         this.properties = properties;
+        this.userInfo = userInfo;
         this.userAwareMeta = userAwareMeta;
+        this.coreUtils = coreUtils;
     }
 
     /**
@@ -80,6 +88,11 @@ class PropertiesToRowTransformer
     {
         Map<String, String> quickOption = DynamicPropertyMeta.get(property).get("quick");
         if (quickOption == null) return null;
+
+        String savedQuick = (String) coreUtils.getColumnSettingForUser(entityName, queryName, property.getName(),
+                                                        userInfo.getUserName()).get("quick");
+        if (savedQuick != null) return savedQuick;
+
         if ("true".equals(quickOption.get("visible")))
             return SqlBoolColumnType.YES;
         else
