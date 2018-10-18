@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.OperationConstants;
@@ -152,7 +153,7 @@ public abstract class BaseOperationSupport implements Operation
     public void redirectToTable(String entityName, String queryName, Map<String, Object> params)
     {
         setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName)
-                .named(OperationUtils.paramsWithoutSelectedRows(params)).toString()));
+                .named(FilterUtil.getOperationParamsWithoutFilter(params)).toString()));
     }
 
     public void redirectToTable(String entityName, String queryName)
