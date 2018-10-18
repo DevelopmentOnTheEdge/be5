@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.databasemodel;
 
-
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
@@ -13,5 +12,5 @@ public interface RecordModel<T> extends DynamicPropertySet
 
     int update(String propertyName, Object value);
 
-    int update(Map<String, Object> values);
+    int update(Map<String, ?> values);
 }

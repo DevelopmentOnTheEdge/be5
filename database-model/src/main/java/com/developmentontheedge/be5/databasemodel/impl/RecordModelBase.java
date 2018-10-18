@@ -52,7 +52,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     }
 
     @Override
-    public int update(Map<String, Object> values)
+    public int update(Map<String, ?> values)
     {
         int count = entityModel.set(getPrimaryKey(), values);
         for (String propertyName : values.keySet())
