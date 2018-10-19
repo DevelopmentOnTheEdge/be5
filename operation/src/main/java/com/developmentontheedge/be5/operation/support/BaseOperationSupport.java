@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
