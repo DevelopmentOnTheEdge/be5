@@ -32,8 +32,7 @@ public class FilterUtil
 
         return operationParams.entrySet()
                 .stream()
-                .filter(e -> !e.getKey().startsWith("_"))
-                .filter(e -> contextParamNames.contains(e.getKey()))
+                .filter(e -> !e.getKey().startsWith("_") && contextParamNames.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -44,20 +43,12 @@ public class FilterUtil
             return Collections.emptyMap();
         }
 
-        if (params.get(SEARCH_PRESETS_PARAM) == null)
-        {
-            return params.entrySet()
-                    .stream()
-                    .filter(e -> !e.getKey().startsWith("_"))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        }
-
-        List<String> contextParamNames = Arrays.asList(((String) params.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> contextParamNames = params.get(SEARCH_PRESETS_PARAM) == null ? Collections.emptyList() :
+                Arrays.asList(((String) params.get(SEARCH_PRESETS_PARAM)).split(","));
 
         return params.entrySet()
                 .stream()
-                .filter(e -> !e.getKey().startsWith("_"))
-                .filter(e -> !contextParamNames.contains(e.getKey()))
+                .filter(e -> !e.getKey().startsWith("_") && !contextParamNames.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
