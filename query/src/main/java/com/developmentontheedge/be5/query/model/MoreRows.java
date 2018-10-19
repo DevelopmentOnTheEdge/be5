@@ -4,18 +4,16 @@ import java.util.List;
 
 public class MoreRows
 {
-
     private final int recordsTotal;
     private final int recordsFiltered;
-    private final List<List<Object>> data; // rows
+    private final List<List<CellModel>> data; // rows
 
-    public MoreRows(int recordsTotal, int recordsFiltered, List<List<Object>> data)
+    public MoreRows(int recordsTotal, int recordsFiltered, List<List<CellModel>> data)
     {
         this.recordsTotal = recordsTotal;
         this.recordsFiltered = recordsFiltered;
         this.data = data;
     }
-
 
     public int getRecordsTotal()
     {
@@ -27,9 +25,8 @@ public class MoreRows
         return recordsFiltered;
     }
 
-    public List<List<Object>> getData()
+    public List<List<CellModel>> getData()
     {
         return data;
     }
-
 }

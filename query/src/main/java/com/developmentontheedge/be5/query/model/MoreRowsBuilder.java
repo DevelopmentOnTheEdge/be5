@@ -5,9 +5,8 @@ import com.google.common.collect.ImmutableList.Builder;
 
 import java.util.List;
 
-public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object>
+public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>, CellModel>
 {
-
     private final TableModel tableModel;
 
     public MoreRowsBuilder(TableModel tableModel)
@@ -16,21 +15,23 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object>
     }
 
     @Override
-    protected Object createCell(CellModel cellModel)
+    protected CellModel createCell(CellModel cellModel)
     {
         return cellModel;
     }
 
     @Override
-    protected List<Object> createRow(RowModel rowModel, List<Object> cells)
+    protected List<CellModel> createRow(RowModel rowModel, List<CellModel> cells)
     {
-        Builder<Object> builder = ImmutableList.builder();
-
+        Builder<CellModel> builder = ImmutableList.builder();
         if (tableModel.isSelectable())
         {
-            builder = builder.add(rowModel.getId());
+            builder = builder.add(new CellModel(rowModel.getId()));
         }
-
+        else
+        {
+            builder = builder.add(new CellModel(""));
+        }
         return builder.addAll(cells).build();
     }
 
