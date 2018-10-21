@@ -272,6 +272,8 @@ public class SimpleNode implements Node, Cloneable
             return true;
         if (left == '=' && right == '?')
             return true;
+        if (left == ')' && right == '=')
+            return true;
         return false;
     }
 

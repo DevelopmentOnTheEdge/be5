@@ -83,6 +83,8 @@ public class DefaultParserContext implements ParserContext
     public static final String NOT_LIKE = "NOT LIKE";
     public static final String IN = "IN";
     public static final String NOT_IN = "NOT IN";
+    public static final String UPPER = "UPPER";
+    public static final String LOWER = "LOWER";
 
     public static final String PLUS = "+";
     public static final String MINUS = "-";
@@ -127,6 +129,9 @@ public class DefaultParserContext implements ParserContext
     public static final PredefinedFunction FUNC_MOD = new PredefinedFunction(MOD, Function.TIMES_PRIORITY, 2);
 
     public static final PredefinedFunction FUNC_CONCAT = new PredefinedFunction(OP_CONCAT, Function.LOGICAL_PRIORITY, 2);
+
+    public static final PredefinedFunction FUNC_UPPER = new PredefinedFunction(UPPER, Function.FUNCTION_PRIORITY, 1);
+    public static final PredefinedFunction FUNC_LOWER = new PredefinedFunction(LOWER, Function.FUNCTION_PRIORITY, 1);
 
     public static void declareStandardOperators(ParserContext context)
     {
@@ -199,8 +204,8 @@ public class DefaultParserContext implements ParserContext
         declareFunction(context, 2, "RIGHT");
         declareFunction(context, 2, "LEFT");
 
-        declareFunction(context, 1, "UPPER");
-        declareFunction(context, 1, "LOWER");
+        declareFunction(context, 1, UPPER);
+        declareFunction(context, 1, LOWER);
         declareFunction(context, 1, "CHR", "CHAR");
 
         declareFunction(context, 1, 2, "TO_CHAR");
@@ -261,5 +266,6 @@ public class DefaultParserContext implements ParserContext
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("STRING_AGG", Function.AGGREGATE_FUNCTION_PRIORITY, 1, 2), Dbms.DB2, Dbms.POSTGRESQL, Dbms.ORACLE, Dbms.MYSQL));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("TRANSLATE", Function.FUNCTION_PRIORITY, 3), Dbms.DB2, Dbms.POSTGRESQL, Dbms.ORACLE));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("LEVENSHTEIN", Function.FUNCTION_PRIORITY, 2), Dbms.POSTGRESQL, Dbms.ORACLE));
+        //TODO context.declareFunction(new DbSpecificFunction(new PredefinedFunction("REVERSE", Function.FUNCTION_PRIORITY, 2), Dbms.MYSQL));
     }
 }

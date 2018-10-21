@@ -130,7 +130,7 @@ public class FilterApplier
 
     private static final Pattern BeSqlVar_PATTERN = Pattern.compile("<var:(.*)[ /]");
 
-    private SimpleNode toNode(Object value)
+    protected SimpleNode toNode(Object value)
     {
         if (SqlTypeUtils.isNumber(value.getClass())) return AstNumericConstant.of((Number) value);
 
