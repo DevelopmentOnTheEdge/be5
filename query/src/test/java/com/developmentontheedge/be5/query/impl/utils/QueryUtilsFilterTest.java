@@ -63,13 +63,13 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void simpleFilterStringColumn() throws Exception
+    public void filterStringColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
         QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("name", Collections.singletonList("test")), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
-                "FROM filterTestTable ft WHERE ft.name ='test'", ast.format());
+                "FROM filterTestTable ft WHERE UPPER(ft.name) LIKE UPPER('%test%')", ast.format());
     }
 
     @Test

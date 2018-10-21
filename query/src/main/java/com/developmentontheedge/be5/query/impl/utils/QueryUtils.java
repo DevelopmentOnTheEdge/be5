@@ -9,7 +9,6 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
-import com.developmentontheedge.sql.format.FilterApplier;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
@@ -56,7 +55,7 @@ public class QueryUtils
 
         if (!filters.isEmpty())
         {
-            new FilterApplier().addFilter(ast, filters);
+            new Be5FilterApplier().addFilter(ast, filters);
         }
     }
 
