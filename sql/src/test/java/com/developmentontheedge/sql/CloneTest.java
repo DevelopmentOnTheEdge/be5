@@ -23,8 +23,8 @@ public class CloneTest
         ((AstSelect) clone.getQuery().child(0)).getFrom().removeChild(1);
         // TODO: Current expected value is incorrect and should be fixed when formatter will be improved
         assertEquals("SELECT * FROM table1 WHERE col = 'value'",
-                new Formatter().format(clone, new Context(Dbms.ORACLE), new DefaultParserContext()));
+                new Formatter().format(clone, new Context(Dbms.ORACLE)));
         assertEquals("SELECT * FROM table1, table2 WHERE col = 'value'",
-                new Formatter().format(start, new Context(Dbms.ORACLE), new DefaultParserContext()));
+                new Formatter().format(start, new Context(Dbms.ORACLE)));
     }
 }

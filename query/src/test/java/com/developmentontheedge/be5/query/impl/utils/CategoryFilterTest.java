@@ -1,10 +1,6 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import com.developmentontheedge.sql.format.dbms.Context;
-import com.developmentontheedge.sql.format.dbms.Dbms;
-import com.developmentontheedge.sql.format.dbms.Formatter;
 import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Test;
 
@@ -21,8 +17,8 @@ public class CategoryFilterTest
 
         assertEquals("SELECT t.a, q.b FROM myTable t "
                 + "INNER JOIN classifications ON classifications.categoryID = 123 "
-                + "AND classifications.recordID = CONCAT('myTable.', t.ID), otherTable q "
+                + "AND classifications.recordID ='myTable.'|| t.ID, otherTable q "
                 + "INNER JOIN oneMoreTable a ON (a.ID = q.ID) "
-                + "WHERE t.b > 2", new Formatter().format(start, new Context(Dbms.MYSQL), new DefaultParserContext()));
+                + "WHERE t.b > 2", start.format());
     }
 }

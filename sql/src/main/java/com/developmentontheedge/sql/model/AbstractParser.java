@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class AbstractParser implements Parser
 {
-    protected ParserContext context = new DefaultParserContext();
+    protected ParserContext context = DefaultParserContext.getInstance();
 
     @Override
     public ParserContext getContext()

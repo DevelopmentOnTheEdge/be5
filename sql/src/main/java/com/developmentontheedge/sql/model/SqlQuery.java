@@ -4,7 +4,7 @@ public class SqlQuery
 {
     public static AstStart parse(String query)
     {
-        return parse(query, new DefaultParserContext());
+        return parse(query, DefaultParserContext.getInstance());
     }
 
     public static AstStart parse(String query, ParserContext context)

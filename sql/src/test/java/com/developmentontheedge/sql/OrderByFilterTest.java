@@ -26,7 +26,7 @@ public class OrderByFilterTest
         columns.put("foo", "DESC");
         new OrderByFilter().apply(start, columns);
         assertEquals("SELECT t.a, t.b, t.c AS foo FROM myTable t WHERE t.b > 2 ORDER BY 1 ASC, 3 DESC",
-                new Formatter().format(start, new Context(Dbms.MYSQL), new DefaultParserContext()));
+                new Formatter().format(start, new Context(Dbms.MYSQL)));
     }
 
     @Test
@@ -36,6 +36,6 @@ public class OrderByFilterTest
         Map<String, String> columns = Collections.singletonMap("name", "DESC");
         new OrderByFilter().apply(start, columns);
         assertEquals("SELECT * FROM (SELECT name FROM bbc WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%') "
-                + "tmp ORDER BY 1 DESC", new Formatter().format(start, new Context(Dbms.MYSQL), new DefaultParserContext()));
+                + "tmp ORDER BY 1 DESC", new Formatter().format(start, new Context(Dbms.MYSQL)));
     }
 }

@@ -37,7 +37,7 @@ public class MacroTest
 
         SqlParser newParser = new SqlParser();
         input = "MACRO B(arg1, arg2, arg3) arg1 || arg2 || A(arg3) END";
-        newParser.setContext(context);
+        //newParser.setContext(context);
         newParser.parse(input);
         if (!newParser.getMessages().isEmpty())
         {

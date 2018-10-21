@@ -12,12 +12,16 @@ import java.util.Locale;
  */
 public class DefaultParserContext implements ParserContext
 {
-    public DefaultParserContext()
+    private DefaultParserContext()
     {
         declareStandardOperators(this);
         declareSqlFunctions(this);
     }
 
+    public static DefaultParserContext getInstance()
+    {
+        return instance;
+    }
 
     ParserContext parent = null;
 
@@ -132,6 +136,8 @@ public class DefaultParserContext implements ParserContext
 
     public static final PredefinedFunction FUNC_UPPER = new PredefinedFunction(UPPER, Function.FUNCTION_PRIORITY, 1);
     public static final PredefinedFunction FUNC_LOWER = new PredefinedFunction(LOWER, Function.FUNCTION_PRIORITY, 1);
+
+    private static final DefaultParserContext instance = new DefaultParserContext();
 
     public static void declareStandardOperators(ParserContext context)
     {
@@ -266,6 +272,6 @@ public class DefaultParserContext implements ParserContext
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("STRING_AGG", Function.AGGREGATE_FUNCTION_PRIORITY, 1, 2), Dbms.DB2, Dbms.POSTGRESQL, Dbms.ORACLE, Dbms.MYSQL));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("TRANSLATE", Function.FUNCTION_PRIORITY, 3), Dbms.DB2, Dbms.POSTGRESQL, Dbms.ORACLE));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("LEVENSHTEIN", Function.FUNCTION_PRIORITY, 2), Dbms.POSTGRESQL, Dbms.ORACLE));
-        //TODO context.declareFunction(new DbSpecificFunction(new PredefinedFunction("REVERSE", Function.FUNCTION_PRIORITY, 2), Dbms.MYSQL));
+        context.declareFunction(new DbSpecificFunction(new PredefinedFunction("REVERSE", Function.FUNCTION_PRIORITY, 1), Dbms.MYSQL));
     }
 }

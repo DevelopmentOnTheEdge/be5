@@ -22,4 +22,11 @@ public class DefaultParserContextTest
         ((AstSelect) query.getQuery().child(0)).where(where);
         assertEquals("SELECT * FROM test WHERE UPPER(test.name) = LOWER('test')", query.format());
     }
+
+    @Test
+    public void testReverse()
+    {
+        String query = "SELECT REVERSE(path) FROM test";
+        assertEquals(query, SqlQuery.parse(query).format());
+    }
 }
