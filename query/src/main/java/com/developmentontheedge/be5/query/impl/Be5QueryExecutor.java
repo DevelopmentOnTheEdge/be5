@@ -43,7 +43,6 @@ import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applyFilt
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applySort;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.countFromQuery;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.resolveTypeOfRefColumn;
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.resolveTypes;
 
 
 /**
@@ -235,7 +234,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         resolveTypeOfRefColumn(ast, meta);
 
         // FILTERS
-        applyFilters(ast, query.getEntity().getName(), resolveTypes(parameters, meta), meta);
+        applyFilters(ast, query.getEntity().getName(), parameters, meta);
 
         // CATEGORY
         applyCategory(dql, ast);

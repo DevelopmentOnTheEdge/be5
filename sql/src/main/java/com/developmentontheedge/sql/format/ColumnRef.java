@@ -71,6 +71,16 @@ public class ColumnRef
         return null;
     }
 
+    public String getTable()
+    {
+        return table;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
     @Override
     public boolean equals(Object o)
     {

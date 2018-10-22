@@ -108,6 +108,8 @@ public interface Meta
     Class<?> getColumnType(ColumnDef columnDef);
 
     Class<?> getColumnType(Entity entity, String columnName);
+
+    Class<?> getColumnType(String entityName, String columnName);
 //
 //    boolean isNumericColumn(String entityName, String columnName);
 //

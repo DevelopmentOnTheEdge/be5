@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class QueryUtils
 {
-    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters, Meta meta)
+    public static void applyFilters(AstStart ast, String entityName, Map<String, List<String>> parameters, Meta meta)
     {
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
@@ -46,12 +47,15 @@ public class QueryUtils
                 .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
                         (address1, address2) -> address1));
 
-        Map<ColumnRef, List<Object>> filters = EntryStream.of(parameters)
+        Map<ColumnRef, List<String>> rawFilters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(QueryUtils::isNotQueryParameters)
-                .removeKeys(k -> isNotContainsInQuery(mainEntityName, aliasToTable, meta, k))
-                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))
-                .nonNullKeys().toMap();
+                .removeKeys(k -> isNotContainsInQuery(entityName, aliasToTable, meta, k))
+                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : entityName + "." + k))
+                .nonNullKeys()
+                .toMap();
+
+        Map<ColumnRef, List<Object>> filters = resolveTypes(rawFilters, aliasToTable, meta);
 
         if (!filters.isEmpty())
         {
@@ -132,14 +136,17 @@ public class QueryUtils
         });
     }
 
-    public static Map<String, List<Object>> resolveTypes(Map<String, List<String>> parameters, Meta meta)
+    public static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<String>> parameters,
+                                            Map<String, String> aliasToTable, Meta meta)
     {
-        //todo resolveTypes
-        Map<String, List<Object>> map = new HashMap<>();
+        Map<ColumnRef, List<Object>> map = new HashMap<>();
         parameters.forEach((k, v) -> {
             if (v != null)
             {
-                map.put(k, new ArrayList<>(v));
+                List<Object> list = new ArrayList<>();
+                Class<?> columnType = meta.getColumnType(aliasToTable.getOrDefault(k.getTable(), k.getTable()), k.getName());
+                v.forEach(a -> list.add(Utils.changeType(a, columnType)));
+                map.put(k, list);
             }
         });
         return map;

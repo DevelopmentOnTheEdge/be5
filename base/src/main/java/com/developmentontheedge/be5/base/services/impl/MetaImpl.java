@@ -467,6 +467,12 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public Class<?> getColumnType(String entityName, String columnName)
+    {
+        return getColumnType(getEntity(entityName), columnName);
+    }
+
+    @Override
     public Class<?> getColumnType(ColumnDef columnDef)
     {
         switch (columnDef.getType().getTypeName())
