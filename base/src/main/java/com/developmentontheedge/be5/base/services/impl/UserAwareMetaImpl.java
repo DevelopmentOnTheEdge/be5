@@ -128,7 +128,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public String getLocalizedCell(String content, String entity, String query)
     {
         String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
-                localizations.get(getLanguage(), entity, query, message).orElse(content)
+                localizations.get(getLanguage(), entity, query, message).orElse(message)
         );
 
         if (localized.startsWith("{{{") && localized.endsWith("}}}"))
