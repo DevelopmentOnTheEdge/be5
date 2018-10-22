@@ -10,6 +10,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
 import static com.developmentontheedge.be5.server.FrontendActions.closeMainModal;
 import static com.developmentontheedge.be5.server.FrontendActions.updateParentDocument;
 
@@ -32,6 +33,7 @@ public class FilterOperation extends OperationSupport
     public void invoke(Object parameters) throws Exception
     {
         Map<String, Object> params = dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters);
+        params.put(OFFSET, "0");
         params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getOperationParams()));
         setResult(OperationResult.finished(null, new Object[]{
                 updateParentDocument(filterHelper.filterDocument(getQuery(), params)),
