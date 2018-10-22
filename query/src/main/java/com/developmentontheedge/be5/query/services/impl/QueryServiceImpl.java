@@ -38,7 +38,7 @@ public class QueryServiceImpl implements QueryService
     @Override
     public Be5QueryExecutor build(Query query, Map<String, ?> parameters)
     {
-        Map<String, List<String>> listParams = getMapOfList(parameters);
+        Map<String, List<Object>> listParams = getMapOfList(parameters);
 
         return new Be5QueryExecutor(query, listParams, userInfoProvider.get(),
                 querySession.get(), meta, userAwareMeta, db);
@@ -50,22 +50,22 @@ public class QueryServiceImpl implements QueryService
         return build(query, Collections.emptyMap());
     }
 
-    private Map<String, List<String>> getMapOfList(Map<String, ?> parameters)
+    private Map<String, List<Object>> getMapOfList(Map<String, ?> parameters)
     {
-        Map<String, List<String>> listParams = new HashMap<>();
+        Map<String, List<Object>> listParams = new HashMap<>();
         parameters.forEach((k, v) -> listParams.put(k, getParameterList(v)));
 
         return listParams;
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> getParameterList(Object parameter)
+    private List<Object> getParameterList(Object parameter)
     {
         if (parameter == null) return null;
 
         if (parameter instanceof List)
         {
-            return (List<String>) parameter;
+            return (List<Object>) parameter;
         }
         else
         {

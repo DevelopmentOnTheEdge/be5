@@ -205,6 +205,14 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void readAsRecordsWithLongFilter()
+    {
+        List<QRec> list = queries.readAsRecordsFromQuery("filterTestTable", "Simple",
+                Collections.singletonMap("ID", Collections.singletonList(123L)));
+        assertEquals(0, list.size());
+    }
+
+    @Test
     public void readOneRecordTest()
     {
         QRec qRec = queries.readOneRecord("testTags", "With parameter", Collections.emptyMap());

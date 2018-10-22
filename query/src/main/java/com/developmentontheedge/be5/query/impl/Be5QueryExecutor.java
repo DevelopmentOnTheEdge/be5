@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.addIDColumnIfNeeded;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applyFilters;
@@ -100,13 +101,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             if (parameters.get(name).size() != 1)
                 throw new IllegalStateException(name + " contains more than one value");
             else
-                return parameters.get(name).get(0);
+                return parameters.get(name).get(0) + "";
         }
 
         @Override
         public List<String> getListParameter(String name)
         {
-            return parameters.get(name);
+            if(parameters.get(name) == null) return null;
+            return parameters.get(name).stream().map(x -> x + "").collect(Collectors.toList());
         }
 
         @Override
@@ -137,7 +139,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final DbService db;
     private final UserAwareMeta userAwareMeta;
 
-    private final Map<String, List<String>> parameters;
+    private final Map<String, List<Object>> parameters;
     private final UserInfo userInfo;
     private final QuerySession querySession;
 
@@ -146,7 +148,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo,
+    public Be5QueryExecutor(Query query, Map<String, List<Object>> parameters, UserInfo userInfo,
                             QuerySession querySession, Meta meta, UserAwareMeta userAwareMeta, DbService db)
     {
         super(query);

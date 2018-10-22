@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class QueryUtils
 {
-    public static void applyFilters(AstStart ast, String entityName, Map<String, List<String>> parameters, Meta meta)
+    public static void applyFilters(AstStart ast, String entityName, Map<String, List<Object>> parameters, Meta meta)
     {
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
@@ -47,7 +47,7 @@ public class QueryUtils
                 .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
                         (address1, address2) -> address1));
 
-        Map<ColumnRef, List<String>> rawFilters = EntryStream.of(parameters)
+        Map<ColumnRef, List<Object>> rawFilters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(QueryUtils::isNotQueryParameters)
                 .removeKeys(k -> isNotContainsInQuery(entityName, aliasToTable, meta, k))
@@ -136,7 +136,7 @@ public class QueryUtils
         });
     }
 
-    public static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<String>> parameters,
+    public static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,
                                             Map<String, String> aliasToTable, Meta meta)
     {
         Map<ColumnRef, List<Object>> map = new HashMap<>();
