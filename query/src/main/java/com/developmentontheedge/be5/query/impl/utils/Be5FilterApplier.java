@@ -28,10 +28,10 @@ public class Be5FilterApplier extends FilterApplier
             if (parameter.size() == 1)
             {
                 Object value = parameter.get(0);
-                if (value.getClass() == String.class)
+                if (value.getClass() == String.class && haveLikeExp((String) value))
                 {
                     AstFunNode op1 = FUNC_UPPER.node(entry.getKey().asNode());
-                    AstFunNode op2 = FUNC_UPPER.node(toNode("%" + parameter.get(0) + "%"));
+                    AstFunNode op2 = FUNC_UPPER.node(toNode(value));
                     node = FUNC_LIKE.node(op1, op2);
                 }
                 else
@@ -46,5 +46,10 @@ public class Be5FilterApplier extends FilterApplier
             }
             where.addChild(node);
         }
+    }
+
+    private boolean haveLikeExp(String value)
+    {
+        return value.startsWith("%") || value.endsWith("%");
     }
 }

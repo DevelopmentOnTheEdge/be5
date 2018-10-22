@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -136,7 +137,7 @@ public class QueryUtils
         });
     }
 
-    public static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,
+    private static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,
                                             Map<String, String> aliasToTable, Meta meta)
     {
         Map<ColumnRef, List<Object>> map = new HashMap<>();
@@ -144,8 +145,28 @@ public class QueryUtils
             if (v != null)
             {
                 List<Object> list = new ArrayList<>();
-                Class<?> columnType = meta.getColumnType(aliasToTable.getOrDefault(k.getTable(), k.getTable()), k.getName());
-                v.forEach(a -> list.add(Utils.changeType(a, columnType)));
+                ColumnDef columnDef = meta.getColumn(aliasToTable.getOrDefault(k.getTable(), k.getTable()), k.getName());
+                Class<?> columnType = meta.getColumnType(columnDef);
+                if (columnType == String.class)
+                {
+                    if (v.size() == 1 && columnDef.getType().getEnumValues().length == 0 && !columnDef.hasReference())
+                    {
+                        String value = (String) v.get(0);
+                        if (!value.startsWith("%") && !value.endsWith("%"))
+                        {
+                            value = "%" + value + "%";
+                        }
+                        list.add(value);
+                    }
+                    else
+                    {
+                        list.addAll(v);
+                    }
+                }
+                else
+                {
+                    v.forEach(a -> list.add(Utils.changeType(a, columnType)));
+                }
                 map.put(k, list);
             }
         });

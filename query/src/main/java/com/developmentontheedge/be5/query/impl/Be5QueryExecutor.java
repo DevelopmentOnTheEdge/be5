@@ -107,7 +107,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public List<String> getListParameter(String name)
         {
-            if(parameters.get(name) == null) return null;
+            if (parameters.get(name) == null) return null;
             return parameters.get(name).stream().map(x -> x + "").collect(Collectors.toList());
         }
 

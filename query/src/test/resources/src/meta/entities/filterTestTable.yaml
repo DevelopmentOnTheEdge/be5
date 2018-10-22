@@ -17,11 +17,16 @@ filterTestTable:
     - user_name:
         type: VARCHAR(100)
         reference: users
+        canBeNull: true
     - recordID:
         type: VARCHAR(200)
         reference:
           to: []
           view: ''
+        canBeNull: true
+    - activeStatus:
+        type: BOOL
+        canBeNull: true
   queries:
   - Simple:
       roles: Administrator
