@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -27,6 +29,7 @@ import java.util.Set;
  */
 public class CheckRecordsExtender extends OperationExtenderSupport
 {
+    private static final Logger log = Logger.getLogger(CheckRecordsExtender.class.getName());
     public static final String ALLOWED_RECORDS_VIEW = "AllowedRecords";
     public static final String ALLOWED_RECORDS_VIEW_PREFIX = "AllowedRecordsFor";
 
@@ -91,6 +94,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
         catch (Throwable e)
         {
             message = "Cannot execute operation " + op.getInfo().getName() + ": " + e.getMessage();
+            log.log(Level.SEVERE, message, e);
             return true;
         }
 
