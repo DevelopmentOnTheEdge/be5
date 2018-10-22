@@ -14,6 +14,14 @@ filterTestTable:
     - value:
         type: INT
         canBeNull: true
+    - user_name:
+        type: VARCHAR(100)
+        reference: users
+    - recordID:
+        type: VARCHAR(200)
+        reference:
+          to: []
+          view: ''
   queries:
   - Simple:
       roles: Administrator

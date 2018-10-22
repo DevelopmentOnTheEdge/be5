@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.impl.utils;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -70,6 +71,28 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE UPPER(ft.name) LIKE UPPER('%test%')", ast.format());
+    }
+
+    @Test
+    @Ignore
+    public void filterStringColumnWithReference()
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQuery());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("user_name", Collections.singletonList("test")), meta);
+
+        assertEquals("SELECT ft.name, ft.value\n" +
+                "FROM filterTestTable ft WHERE ft.user_name = 'test'", ast.format());
+    }
+
+    @Test
+    @Ignore
+    public void filterStringColumnWithGenericReferences()
+    {
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQuery());
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("recordID", Collections.singletonList("test")), meta);
+
+        assertEquals("SELECT ft.name, ft.value\n" +
+                "FROM filterTestTable ft WHERE ft.user_name = 'test'", ast.format());
     }
 
     @Test
