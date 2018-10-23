@@ -21,7 +21,7 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     @Before
     public void setUp()
     {
-        setStaticUserInfo(RoleType.ROLE_GUEST);
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
         database.getEntity("testTags").add(ImmutableMap.of("CODE", "50"));
     }
 

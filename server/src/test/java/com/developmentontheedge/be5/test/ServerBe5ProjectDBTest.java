@@ -2,10 +2,8 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
@@ -35,8 +33,6 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
         @Override
         protected void configure()
         {
-            bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
-
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
             install(new ServerWebTestModule());

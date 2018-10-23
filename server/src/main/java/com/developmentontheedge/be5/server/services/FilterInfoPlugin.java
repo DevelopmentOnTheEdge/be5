@@ -36,7 +36,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         map.put("operationParamsInfo", getOperationParamsInfo(query, parameters));
         if (map.size() > 0)
         {
-            return new ResourceData("documentOperations", map, null);
+            return new ResourceData("filterInfo", map, null);
         }
 
         return null;
@@ -46,7 +46,7 @@ public class FilterInfoPlugin implements DocumentPlugin
     {
         Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
         Map<String, String> result = new HashMap<>();
-        params.forEach((k,v) -> {
+        params.forEach((k, v) -> {
             String columnTitle = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), k);
             String valueTitle = v + "";
             ColumnDef column = meta.getColumn(query.getEntity().getName(), k);
