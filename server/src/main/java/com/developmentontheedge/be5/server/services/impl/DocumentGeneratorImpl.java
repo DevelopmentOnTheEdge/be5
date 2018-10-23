@@ -22,6 +22,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
+import com.developmentontheedge.be5.server.services.FilterInfoPlugin;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
@@ -62,6 +63,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Inject
     public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
             DocumentFormPlugin documentFormPlugin, DocumentOperationsPlugin documentOperationsPlugin,
+            FilterInfoPlugin filterInfoPlugin,
             ErrorModelHelper errorModelHelper, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
@@ -71,6 +73,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         addDocumentPlugin(documentFormPlugin);
         addDocumentPlugin(documentOperationsPlugin);
+        addDocumentPlugin(filterInfoPlugin);
     }
 
     @Override
