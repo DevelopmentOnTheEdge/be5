@@ -41,10 +41,12 @@ public abstract class ApiControllerSupport extends ControllerSupport
         catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in controller", e);
+            res.sendErrorAsJson(e.getMessage(), Integer.parseInt(e.getHttpStatusCode()));
         }
         catch (Throwable e)
         {
             log.log(Level.SEVERE, "Error in controller", e);
+            res.sendErrorAsJson("Error in controller", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

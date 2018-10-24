@@ -56,7 +56,7 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception accessDenied()
     {
-        return Be5ErrorCode.ACCESS_DENIED.exception();
+        return Be5ErrorCode.ACCESS_DENIED.exception(" ");
     }
 
     public static Be5Exception accessDenied(String info)
@@ -198,6 +198,7 @@ public class Be5Exception extends RuntimeException
         }
     }
 
+    //todo refactor to int and use HttpServletResponse.* constants
     public String getHttpStatusCode()
     {
         return code.getHttpStatus();
