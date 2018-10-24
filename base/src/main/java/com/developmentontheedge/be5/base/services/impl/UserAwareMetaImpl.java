@@ -182,6 +182,13 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
+    public boolean hasAccessToOperation(String entityName, String queryName, String name)
+    {
+        Operation operation = meta.getOperation(entityName, queryName, name);
+        return meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles());
+    }
+
+    @Override
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = meta.getOperation(entityName, queryName, name);

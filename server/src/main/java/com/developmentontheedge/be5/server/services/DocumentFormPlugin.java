@@ -31,7 +31,7 @@ public class DocumentFormPlugin implements DocumentPlugin
         String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
         if (topForm != null)
         {
-            if (userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm) != null)
+            if (userAwareMeta.hasAccessToOperation(query.getEntity().getName(), query.getName(), topForm))
             {
                 ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, parameters, Collections.emptyMap());
                 operationResourceData.setId("topForm");

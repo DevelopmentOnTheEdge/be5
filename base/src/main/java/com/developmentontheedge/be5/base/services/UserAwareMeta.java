@@ -72,6 +72,8 @@ public interface UserAwareMeta
      */
     Operation getOperation(String entity, String name);
 
+    boolean hasAccessToOperation(String entityName, String queryName, String name);
+
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
