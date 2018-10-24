@@ -14,7 +14,7 @@ mimeTypes:
   - '*** Selection view ***':
       type: 1D
       operations: Filter
-      code: SELECT type AS "Code", name AS "Name" FROM mimeTypes
+      code: SELECT type AS "Code", COALESCE(name, type) AS "Name" FROM mimeTypes
   - All records:
       type: 1D
       roles: Administrator
