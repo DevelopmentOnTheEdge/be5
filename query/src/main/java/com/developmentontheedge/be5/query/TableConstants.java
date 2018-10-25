@@ -9,4 +9,6 @@ public interface TableConstants
 
     String DISPLAY_TYPE = "_displayType_";
     String TITLE_LEVEL = "_titleLevel_";
+
+    String CLEAN_NAV = "_cleanNav_";
 }
