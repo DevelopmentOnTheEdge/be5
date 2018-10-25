@@ -273,5 +273,6 @@ public class DefaultParserContext implements ParserContext
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("TRANSLATE", Function.FUNCTION_PRIORITY, 3), Dbms.DB2, Dbms.POSTGRESQL, Dbms.ORACLE));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("LEVENSHTEIN", Function.FUNCTION_PRIORITY, 2), Dbms.POSTGRESQL, Dbms.ORACLE));
         context.declareFunction(new DbSpecificFunction(new PredefinedFunction("REVERSE", Function.FUNCTION_PRIORITY, 1), Dbms.MYSQL));
+        context.declareFunction(new DbSpecificFunction(new PredefinedFunction("SUBSTRING_INDEX", Function.FUNCTION_PRIORITY, 3), Dbms.MYSQL));
     }
 }
