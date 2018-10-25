@@ -72,6 +72,7 @@ public class BeTagParser
 
     public static void parseTags(Map<String, Map<String, String>> map, String tagString)
     {
+        if (tagString == null) return;
         try
         {
             String input = tagString.trim();
