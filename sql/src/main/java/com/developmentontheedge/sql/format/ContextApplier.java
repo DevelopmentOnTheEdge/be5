@@ -350,7 +350,11 @@ public class ContextApplier
             {
                 SimpleNode[] objects;
 
-                if (value instanceof List)
+                if (value == null)
+                {
+                    throw new IllegalArgumentException("Session variable value can not be null: " + name);
+                }
+                else if (value instanceof List)
                 {
                     List list = (List) value;
                     objects = new SimpleNode[list.size()];
