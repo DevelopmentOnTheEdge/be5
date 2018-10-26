@@ -27,4 +27,6 @@ public interface DocumentGenerator
     JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
 
     void addDocumentPlugin(DocumentPlugin documentPlugin);
+
+    void clearSavedPosition(Query query, Map<String, Object> parameters);
 }

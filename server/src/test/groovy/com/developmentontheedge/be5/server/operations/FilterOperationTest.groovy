@@ -72,7 +72,7 @@ class FilterOperationTest extends SqlMockOperationTest
 
         assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
         def details = (FrontendAction[]) execute.getSecond().getDetails()
-        assertEquals("[_search_:true, _offset_:0, _search_presets_:value, value:value1]",
+        assertEquals("[_search_:true, _search_presets_:value, value:value1]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
     }
@@ -86,7 +86,7 @@ class FilterOperationTest extends SqlMockOperationTest
 
         assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
         def details = (FrontendAction[]) execute.getSecond().getDetails()
-        assertEquals("[name:name1, _search_:true, _offset_:0, _search_presets_:value, value:value1]",
+        assertEquals("[name:name1, _search_:true, _search_presets_:value, value:value1]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
     }
@@ -100,7 +100,7 @@ class FilterOperationTest extends SqlMockOperationTest
 
         assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
         def details = (FrontendAction[]) execute.getSecond().getDetails()
-        assertEquals("[name:name1, _search_:true, _offset_:0, _search_presets_:value, value:value1]",
+        assertEquals("[name:name1, _search_:true, _search_presets_:value, value:value1]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
     }
@@ -114,7 +114,7 @@ class FilterOperationTest extends SqlMockOperationTest
 
         assertEquals("finished", oneQuotes(execute.getSecond().getStatus()))
         def details = (FrontendAction[]) execute.getSecond().getDetails()
-        assertEquals("[name:name2, _search_:true, _offset_:0, _search_presets_:]",
+        assertEquals("[name:name2, _search_:true, _search_presets_:]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
     }
@@ -130,7 +130,7 @@ class FilterOperationTest extends SqlMockOperationTest
 
         def details = (FrontendAction[]) execute.getSecond().getDetails()
 
-        assertEquals("[name:test, _search_:true, _offset_:0, _search_presets_:name]",
+        assertEquals("[name:test, _search_:true, _search_presets_:name]",
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue())
                         .getData().getAttributes()).getParameters().toString()))
 

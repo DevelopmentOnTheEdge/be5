@@ -28,6 +28,7 @@ import com.developmentontheedge.be5.web.Session;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private static final String QUERY_POSITIONS = "QUERY_POSITIONS";
     private static final String QUERY_FILTER = "QUERY_FILTER";
+    private static final List<String> positionsParamNames = Arrays.asList(ORDER_COLUMN, ORDER_DIR, OFFSET, LIMIT);
 
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
@@ -208,24 +210,19 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
     {
         HashMap<String, Object> params = new HashMap<>(parameters);
-        Map<String, String> positions = getUserQueryPositions(query, parameters);
         if (parameters.containsKey(CLEAN_NAV))
         {
             params.remove(CLEAN_NAV);
-            positions.clear();
-
             String queryKey = getQueryKey(query, parameters);
+            getUserQueriesPositions().remove(queryKey);
             getUserQueriesFilterParams().remove(queryKey);
             return params;
         }
         else
         {
-            getPosition(params, positions, ORDER_COLUMN);
-            getPosition(params, positions, ORDER_DIR);
-            getPosition(params, positions, OFFSET);
-            getPosition(params, positions, LIMIT);
-
-            return withSavedFilterParamsIfNotExist(query, params);
+            addSavedPositionIfNotExist(query, params);
+            addSavedFilterParamsIfNotExist(query, params);
+            return params;
         }
     }
 
@@ -235,32 +232,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         documentPlugins.add(documentPlugin);
     }
 
-    private Map<String, String> getUserQueryPositions(Query query, Map<String, Object> parameters)
+    private Map<String, Map<String, Object>> getUserQueriesPositions()
     {
-        Map<String, Map<String, String>> positions =
-                (Map<String, Map<String, String>>) session.get().get(QUERY_POSITIONS);
-        if (positions == null)
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, Object>> filterParams =
+                (Map<String, Map<String, Object>>) session.get().get(QUERY_POSITIONS);
+        if (filterParams == null)
         {
-            positions = new HashMap<>();
-            session.get().set(QUERY_POSITIONS, positions);
+            filterParams = new HashMap<>();
+            session.get().set(QUERY_POSITIONS, filterParams);
         }
-        String queryKey = getQueryKey(query, parameters);
-
-        return positions.computeIfAbsent(queryKey, k -> new HashMap<>());
-    }
-
-    private void getPosition(Map<String, Object> parameters, Map<String, String> positions, String name)
-    {
-        if (parameters.containsKey(name))
-        {
-            String value = (String) parameters.get(name);
-            positions.put(name, value);
-        }
-        else
-        {
-            String savedValue = positions.get(name);
-            if (savedValue != null) parameters.put(name, savedValue);
-        }
+        return filterParams;
     }
 
     private Map<String, Map<String, Object>> getUserQueriesFilterParams()
@@ -276,14 +258,39 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return filterParams;
     }
 
-    private Map<String, Object> withSavedFilterParamsIfNotExist(Query query, Map<String, Object> parameters)
+    @Override
+    public void clearSavedPosition(Query query, Map<String, Object> parameters)
+    {
+        getUserQueriesPositions().remove(getQueryKey(query, parameters));
+    }
+
+    private void addSavedPositionIfNotExist(Query query, Map<String, Object> parameters)
+    {
+        Map<String, Map<String, Object>> positions = getUserQueriesPositions();
+        String queryKey = getQueryKey(query, parameters);
+        if (parameters.containsKey(ORDER_COLUMN) || parameters.containsKey(ORDER_DIR) ||
+                parameters.containsKey(OFFSET) || parameters.containsKey(LIMIT))
+        {
+            Map<String, Object> newPos = new HashMap<>();
+            positionsParamNames.forEach(name -> {
+                if (parameters.containsKey(name)) newPos.put(name, parameters.get(name));
+            });
+            positions.put(queryKey, newPos);
+        }
+        else
+        {
+            Map<String, Object> savedPosition = positions.get(queryKey);
+            if (savedPosition != null) parameters.putAll(savedPosition);
+        }
+    }
+
+    private void addSavedFilterParamsIfNotExist(Query query, Map<String, Object> parameters)
     {
         Map<String, Map<String, Object>> filterParams = getUserQueriesFilterParams();
         String queryKey = getQueryKey(query, parameters);
         if (parameters.containsKey(SEARCH_PARAM))
         {
             filterParams.put(queryKey, FilterUtil.getFilterParams(parameters));
-            return parameters;
         }
         else
         {
@@ -294,7 +301,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 parameters.putAll(filterParams.get(queryKey));
                 parameters.put(SEARCH_PARAM, "true");
             }
-            return parameters;
         }
     }
 
