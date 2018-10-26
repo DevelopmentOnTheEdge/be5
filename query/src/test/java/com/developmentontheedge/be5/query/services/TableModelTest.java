@@ -115,7 +115,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "beLink");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
         assertEquals("{'cells':[{'content':'user1','options':{" +
-                        "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}}}]}",
+                        "'link':{'url':'table/testtable/Test 1D unknown/entity=users/ID=123'}}}]}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
         assertEquals("[{'name':'Name','title':'Name'}]",
                 oneQuotes(jsonb.toJson(table.getColumns())));

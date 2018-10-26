@@ -40,7 +40,7 @@ testtable:
          SELECT
             123 as "___ID",
             t.name AS "Name",
-            '<link using="___ID" columns="ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
+            '<link columns="entity,ID" using="users,___ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
           FROM
             testtable t
   - beQuick:

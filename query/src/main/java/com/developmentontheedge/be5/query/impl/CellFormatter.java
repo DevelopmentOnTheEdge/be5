@@ -94,7 +94,7 @@ public class CellFormatter
                     for (int i = 0; i < colsArr.length; i++)
                     {
                         Object resolveValue = varResolver.resolve(valuesArr[i]);
-                        if (resolveValue != null) url = url.named(colsArr[i], resolveValue.toString());
+                        url = url.named(colsArr[i], resolveValue != null ? resolveValue.toString() : valuesArr[i]);
                     }
                 }
                 cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
@@ -220,10 +220,8 @@ public class CellFormatter
         @Override
         public Object resolve(String varName)
         {
-            Object value = dps.getValue(varName);
-            return value; // != null ? value : varName;
+            return dps.getValue(varName);
         }
-
     }
 
     private static class CompositeVarResolver implements VarResolver
@@ -247,7 +245,6 @@ public class CellFormatter
 
             return parent.resolve(varName);
         }
-
     }
 
 }
