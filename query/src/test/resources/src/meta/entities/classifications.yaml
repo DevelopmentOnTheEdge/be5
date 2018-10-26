@@ -1,0 +1,29 @@
+classifications:
+  type: genericCollection
+  displayName: Assigned categories
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - recordID:
+        type: VARCHAR(200)
+        reference:
+          to: []
+          view: ''
+    - categoryID:
+        type: KEYTYPE
+        reference: categories
+    - importID:
+        type: KEYTYPE
+        canBeNull: true
+        extras: module:attributes
+        reference: import.ID
+    - whoInserted___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - creationDate___:
+        type: DATETIME
+        canBeNull: true

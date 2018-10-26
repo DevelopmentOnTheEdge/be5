@@ -430,10 +430,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         if (dynamicPropertySets.size() == 0 && subQuery.getParameter("default") != null)
         {
-            String value = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), subQuery.getParameter("default"));
-
+            String value = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
+                                                        subQuery.getParameter("default"));
             DynamicPropertySetSupport dpsWithMessage = new DynamicPropertySetSupport();
-            dpsWithMessage.add(new DynamicProperty("___ID", String.class, "-1"));
             dpsWithMessage.add(new DynamicProperty("message", String.class, value));
             return Collections.singletonList(dpsWithMessage);
         }

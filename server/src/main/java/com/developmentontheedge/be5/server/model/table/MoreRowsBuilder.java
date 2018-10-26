@@ -1,5 +1,8 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.server.model.table;
 
+import com.developmentontheedge.be5.query.model.CellModel;
+import com.developmentontheedge.be5.query.model.RowModel;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 

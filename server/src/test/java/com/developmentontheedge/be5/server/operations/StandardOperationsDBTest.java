@@ -49,6 +49,16 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    public void editWithCheckRecords()
+    {
+        Object first = generateOperation("testtableAdmin", "All records",
+                "EditWithCheckRecords", id.toString(), "{}").getFirst();
+
+        assertEquals("{'name':'TestName','value':'1'}",
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
+    }
+
+    @Test
     public void editInvoke()
     {
         OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),

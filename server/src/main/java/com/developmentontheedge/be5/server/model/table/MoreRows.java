@@ -1,4 +1,6 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.server.model.table;
+
+import com.developmentontheedge.be5.query.model.CellModel;
 
 import java.util.List;
 

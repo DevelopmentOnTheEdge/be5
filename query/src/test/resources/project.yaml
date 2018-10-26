@@ -4,6 +4,7 @@ queryTestProject:
   projectFileStructure: {}
   modules: []
   application:
+  - classifications
   - testtable
   - testtableAdmin
   - testSubQuery

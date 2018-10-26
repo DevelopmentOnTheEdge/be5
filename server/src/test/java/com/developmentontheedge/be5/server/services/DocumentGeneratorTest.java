@@ -115,4 +115,20 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
         assertEquals("table/testtable/All records/name=1",
                 jsonApiModel.getData().getLinks().get(RestApiConstants.SELF_LINK));
     }
+
+    @Test
+    public void updateQueryJsonApi()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.updateQueryJsonApi("testtable", "All records", Collections.emptyMap());
+
+        assertEquals("{'attributes':{'data':[[" +
+                        "{'content':'','options':{}}," +
+                        "{'content':'tableModelTest','options':{}}," +
+                        "{'content':'1','options':{}}" +
+                    "]]," +
+                    "'recordsFiltered':1,'recordsTotal':1}," +
+                    "'links':{'self':'table/testtable/All records'}," +
+                    "'type':'table_more'}",
+                oneQuotes(jsonb.toJson(jsonApiModel.getData())));
+    }
 }

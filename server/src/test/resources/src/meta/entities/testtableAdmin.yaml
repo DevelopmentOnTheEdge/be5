@@ -33,13 +33,14 @@ testtableAdmin:
       - TestTransactionalOperation
       - TestOperationProperty
       - Insert
+      - EditWithCheckRecords
       code: |2-
             SELECT
               t.ID AS "___ID",
               t.name AS "Name",
               t.value AS "Value"
             FROM
-              testtable t
+              testtableAdmin t
   - Query without operations:
       type: 1D_unknown
       roles: '@AllRoles'
@@ -59,6 +60,15 @@ testtableAdmin:
               t.value AS "Value"
             FROM
               testtable t
+  - AllowedRecords:
+      type: 1D
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+          SELECT
+            t.ID AS "ID"
+          FROM
+            testtableAdmin t
   - TestGroovyTable:
       type: Groovy
       invisible: true
@@ -109,3 +119,9 @@ testtableAdmin:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - EditWithCheckRecords:
+      records: 1
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.server.operations.extenders.CheckRecordsExtender
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
