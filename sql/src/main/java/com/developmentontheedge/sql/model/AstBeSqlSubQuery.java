@@ -13,7 +13,7 @@ public class AstBeSqlSubQuery extends AstBeNode
     static final Set<String> ALLOWED_PARAMETERS = StreamEx.of("beautifier", "beautifierName", "limit", "property", "default", "distinct",
             "if", "unless", "connectString", "noError", "varSubst", "outColumns", "entity", "queryName", "cache", "filterKey",
             "filterKeyProperty", "filterVal", "filterValProperty", "exec", "queryNameProperty", "entityProperty", "splitParameter",
-            "queryID").toSet();
+            "queryID", "using").toSet();
 
     private Map<String, String> substMap = null;
 
@@ -82,6 +82,11 @@ public class AstBeSqlSubQuery extends AstBeNode
     public String getOutColumns()
     {
         return getParameter("outColumns");
+    }
+
+    public String getUsingParamNames()
+    {
+        return getParameter("using");
     }
 }
 /* JavaCC - OriginalChecksum=ec5b3915a160671116c3a7ccecc25aa9 (do not edit this line) */

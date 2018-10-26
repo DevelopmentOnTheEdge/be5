@@ -381,7 +381,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver)
     {
-        AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
+        AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, x -> {
+            Object value = varResolver.resolve(x);
+            return value != null ? value.toString() : null;
+        });
 
         if (subQuery.getQuery() == null)
         {
@@ -392,9 +395,25 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         List<DynamicPropertySet> dynamicPropertySets;
 
+        Object[] params;
+        String usingParamNames = subQuery.getUsingParamNames();
+        if (usingParamNames != null)
+        {
+            String[] paramNames = usingParamNames.split(",");
+            params = new Object[]{paramNames.length};
+            for (int i = 0; i < paramNames.length; i++)
+            {
+                params[i] = varResolver.resolve(paramNames[i]).toString();
+            }
+        }
+        else
+        {
+            params = new Object[]{};
+        }
+
         try
         {
-            dynamicPropertySets = db.list(finalSql, new DynamicPropertySetSimpleStringParser());
+            dynamicPropertySets = db.list(finalSql, new DynamicPropertySetSimpleStringParser(), params);
         }
         catch (Throwable e)
         {

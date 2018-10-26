@@ -12,4 +12,4 @@ testSubQuery:
     - name:
         type: VARCHAR(20)
     - value:
-        type: VARCHAR(30)
+        type: KEYTYPE

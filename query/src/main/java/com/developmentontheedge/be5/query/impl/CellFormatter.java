@@ -93,8 +93,8 @@ public class CellFormatter
                     String[] valuesArr = vals.split(",");
                     for (int i = 0; i < colsArr.length; i++)
                     {
-                        String resolveValue = varResolver.resolve(valuesArr[i]);
-                        if (resolveValue != null) url = url.named(colsArr[i], resolveValue);
+                        Object resolveValue = varResolver.resolve(valuesArr[i]);
+                        if (resolveValue != null) url = url.named(colsArr[i], resolveValue.toString());
                     }
                 }
                 cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
@@ -218,9 +218,9 @@ public class CellFormatter
         }
 
         @Override
-        public String resolve(String varName)
+        public Object resolve(String varName)
         {
-            String value = dps.getValueAsString(varName);
+            Object value = dps.getValue(varName);
             return value; // != null ? value : varName;
         }
 
@@ -238,9 +238,9 @@ public class CellFormatter
         }
 
         @Override
-        public String resolve(String varName)
+        public Object resolve(String varName)
         {
-            String value = local.resolve(varName);
+            Object value = local.resolve(varName);
 
             if (value != null)
                 return value;

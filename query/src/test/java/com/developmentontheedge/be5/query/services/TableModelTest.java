@@ -30,11 +30,11 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("delete from testtable");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)", "tableModelTest", "1");
+        db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 1L);
 
         db.update("delete from testSubQuery");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "tableModelTest", "user1");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "tableModelTest", "user2");
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 1L);
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 2L);
     }
 
     @Test
@@ -45,12 +45,38 @@ public class TableModelTest extends QueryBe5ProjectDBTest
                 .limit(20)
                 .build();
 
-        assertEquals("{'content':'user1<br/> user2','options':{}}",
+        assertEquals("{'content':'1<br/> 2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
     }
 
     @Test
-    public void groovyTableTest() throws Exception
+    public void testExecuteSubQueryWithPrepareParams()
+    {
+        Query query = projectProvider.get().getEntity("testtable").getQueries()
+                .get("Sub Query with prepare params");
+        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
+                .limit(20)
+                .build();
+
+        assertEquals("{'content':'1<br/> 2','options':{}}",
+                oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
+    }
+
+    @Test
+    public void testExecuteSubQueryWithLongPrepareParams()
+    {
+        Query query = projectProvider.get().getEntity("testtable").getQueries()
+                .get("Sub Query with long prepare params");
+        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
+                .limit(20)
+                .build();
+
+        assertEquals("{'content':'1','options':{}}",
+                oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
+    }
+
+    @Test
+    public void groovyTableTest()
     {
         TableModel tableModel = tableModelService.
                 getTableModel(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>());

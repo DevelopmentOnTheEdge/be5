@@ -12,7 +12,7 @@ testtable:
     - name:
         type: VARCHAR(20)
     - value:
-        type: VARCHAR(30)
+        type: KEYTYPE
   queries:
   - All records:
       type: 1D_unknown
@@ -47,10 +47,30 @@ testtable:
               t.name AS "___Name",
               t.name AS "Name",
               t.value AS "Value",
-              '<sql>SELECT u.value
-                    FROM testSubQuery u
-                    WHERE u.name = '<var:___Name />'
-               </sql>' AS "testSubQueryValues"
+              '<sql>SELECT u.value FROM testSubQuery u
+                    WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues"
+            FROM
+              testtable t
+  - Sub Query with prepare params:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+            SELECT
+              t.name AS "___Name",
+              t.name AS "Name",
+              t.value AS "Value",
+              '<sql using="___Name">SELECT u.value FROM testSubQuery u WHERE u.name = ?</sql>' AS "testtUserValues"
+            FROM
+              testtable t
+  - Sub Query with long prepare params:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+            SELECT
+              t.value AS "___value",
+              t.name AS "Name",
+              t.value AS "Value",
+              '<sql using="___value">SELECT u.value FROM testSubQuery u WHERE u.value = ?</sql>' AS "testtUserValues"
             FROM
               testtable t
   - TestMultipleColumn:

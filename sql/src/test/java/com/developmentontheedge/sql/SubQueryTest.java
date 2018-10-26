@@ -153,6 +153,19 @@ public class SubQueryTest
     }
 
     @Test
+    public void testApplyWithPrepareParams()
+    {
+        AstStart start = SqlQuery.parse("SELECT ID, " +
+                "'<sql>SELECT name FROM subTable WHERE id = ?</sql>' AS \"val\" FROM table");
+        ContextApplier contextApplier = new ContextApplier(new BasicQueryContext.Builder().build());
+        contextApplier.applyContext(start);
+        String key = contextApplier.subQueryKeys().findFirst().get();
+        Map<String, String> vars = Collections.singletonMap("ID", "5");
+        AstBeSqlSubQuery subQuery = contextApplier.applyVars(key, vars::get);
+        assertEquals("SELECT name FROM subTable WHERE id = ?", subQuery.getQuery().format());
+    }
+
+    @Test
     public void testVarsInFieldReference()
     {
         AstStart start = SqlQuery.parse("SELECT ID, '<sql limit=\"2\">SELECT field.<var:reference/> FROM table.<var:name/></sql>' FROM table");

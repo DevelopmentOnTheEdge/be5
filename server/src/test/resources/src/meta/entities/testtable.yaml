@@ -62,20 +62,6 @@ testtable:
       roles: SystemDeveloper
       code: |-
          SELECT 1
-  - Sub Query:
-      type: 1D_unknown
-      roles: SystemDeveloper
-      code: |-
-            SELECT
-              t.name AS "___Name",
-              t.name AS "Name",
-              t.value AS "Value",
-              '<sql>SELECT u.value
-                    FROM testtUser u
-                    WHERE u.name = '<var:___Name />'
-               </sql>' AS "testtUserValues"
-            FROM
-              testtable t
   - TestMultipleColumn:
       type: 1D_unknown
       invisible: true
