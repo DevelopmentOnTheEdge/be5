@@ -133,6 +133,63 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void beCssFormat()
+    {
+        Query query = meta.getQuery("testtable", "beCssFormat");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':1,'options':{'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+    }
+
+    @Test
+    public void beRoles()
+    {
+        Query query = meta.getQuery("testtable", "beRoles");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("[{'name':'Name','title':'Name'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
+
+        setStaticUserInfo("TestUser2");
+        TableModel table2 = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'TestUser2'}}}]}",
+                oneQuotes(jsonb.toJson(table2.getRows().get(0))));
+        assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]",
+                oneQuotes(jsonb.toJson(table2.getColumns())));
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
+    @Test
+    public void beGrouping()
+    {
+        Query query = meta.getQuery("testtable", "beGrouping");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{'grouping':{}}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+    }
+
+    @Test
+    public void beRowCssClass()
+    {
+        Query query = meta.getQuery("testtable", "beRowCssClass");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("[{'cells':[{'content':1,'options':{'css':{'class':' user1'}}}]}," +
+                              "{'cells':[{'content':2,'options':{'css':{'class':' user2'}}}]}]",
+                oneQuotes(jsonb.toJson(table.getRows())));
+    }
+
+    @Test
+    public void beAggregate()
+    {
+        Query query = meta.getQuery("testtable", "beAggregate");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':3.0,'options':{'css':{'class':'currency'}," +
+                        "'format':{'mask':'###,###,##0.00'}}}],'id':'aggregate'}",
+                oneQuotes(jsonb.toJson(table.getRows().get(2))));
+    }
+
+    @Test
     public void testNullInSubQuery()
     {
         db.update("DELETE FROM testtableAdmin");

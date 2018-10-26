@@ -184,7 +184,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
         List<QRec> list = queries.readAsRecords("SELECT code, admlevel FROM testTags");
 
         assertEquals("01", list.get(0).getValue("code"));
-        assertEquals("Regional", list.get(0).getValue("admlevel"));
+        assertEquals("Regional", list.get(0).getString("admlevel"));
 
         assertEquals("02", list.get(1).getValue("code"));
         assertEquals("Municipal", list.get(1).getValue("admlevel"));
@@ -287,6 +287,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
             //One request to the database for several fields
             assertEquals("TestName", rec.getString("name"));
             assertEquals(123, rec.getInt("value"));
+            assertEquals(123, rec.getLong("value"));
         }
 
 

@@ -53,6 +53,55 @@ testtable:
             '<quick visible="true"/>' AS ";Name"
           FROM
             testtable t
+  - beCssFormat:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.value AS "Value",
+            '<css class="currency"/>;<format mask="###,###,##0.00" />' AS ";Value"
+          FROM
+            testtable t
+  - beGrouping:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.name AS "Name;<grouping/>"
+          FROM
+            testtable t
+  - beRoles:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.name AS "Name",
+            t.value AS "Value;<roles name='TestUser2'/>"
+          FROM
+            testtable t
+  - beRowCssClass:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.value AS "value",
+            t.name AS "___css_class"
+          FROM
+            testtable t
+  - beAggregate:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.value AS "Value",
+            '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
+          FROM
+            testtable t
   - TableWithFilter:
       type: 1D_unknown
       layout: '{"topForm":"FilterByParamsInQueryOperation"}'

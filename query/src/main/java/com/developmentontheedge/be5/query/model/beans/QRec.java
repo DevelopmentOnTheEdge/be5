@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.SQLException;
 
 
@@ -152,6 +153,11 @@ public class QRec extends DynamicPropertySetSupport
         {
             return new ByteArrayInputStream((byte[]) val);
         }
+        else if (val instanceof Clob)
+        {
+            Clob clob = (Clob) val;
+            return clob.getAsciiStream();
+        }
         return new BlobInputStream((Blob) val, properties.get(0).getName());
     }
 
@@ -166,6 +172,11 @@ public class QRec extends DynamicPropertySetSupport
         else if (val instanceof byte[])
         {
             return new ByteArrayInputStream((byte[]) val);
+        }
+        else if (val instanceof Clob)
+        {
+            Clob clob = (Clob) val;
+            return clob.getAsciiStream();
         }
         return new BlobInputStream((Blob) val, name);
     }
