@@ -62,20 +62,6 @@ testtableAdmin:
               t.value AS "Value"
             FROM
               testtable t
-  - Test null in subQuery:
-      type: 1D_unknown
-      roles: SystemDeveloper
-      code: |2-
-            SELECT
-              t.ID AS "___ID",
-              t.name AS "Name",
-              t.value AS "Value",
-              '<sql>SELECT name
-                    FROM testtableAdmin t
-                    WHERE t.value = <var:Value />
-               </sql>' AS "NameFromSubQuery"
-            FROM
-              testtableAdmin t
   operations:
   - TestOperation:
       roles: Administrator

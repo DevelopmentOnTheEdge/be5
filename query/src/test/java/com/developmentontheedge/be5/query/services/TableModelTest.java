@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -86,6 +87,42 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         assertEquals("[{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}],'id':'0'}," +
                         "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}],'id':'0'}]"
                 , oneQuotes(jsonb.toJson(tableModel.getRows())));
+    }
+
+    @Test
+    public void beLink()
+    {
+        Query query = meta.getQuery("testtable", "beLink");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{" +
+                        "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("[{'name':'Name','title':'Name'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
+    }
+
+    @Test
+    public void beQuick()
+    {
+        Query query = meta.getQuery("testtable", "beQuick");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
+    }
+
+    @Test
+    public void testNullInSubQuery()
+    {
+        db.update("DELETE FROM testtableAdmin");
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null);
+
+        TableModel table = tableModelService.getTableModel(meta.getQuery("testtableAdmin", "Test null in subQuery"), Collections.emptyMap());
+
+        assertEquals("[" + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':11,'options':{}}," + "{'content':'tableModelTest','options':{}}]}," + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'options':{}}," + "{'content':'','options':{}}" + "]}]",
+                oneQuotes(jsonb.toJson(table.getRows())));
     }
 
 }

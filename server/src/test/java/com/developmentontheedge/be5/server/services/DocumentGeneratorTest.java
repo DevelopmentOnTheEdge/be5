@@ -49,17 +49,6 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    public void testLinkQuick()
-    {
-        TablePresentation table = documentGenerator.getTablePresentation(meta.getQuery("testtable", "LinkQuick"), Collections.emptyMap());
-        assertEquals("testtable: LinkQuick", table.getTitle());
-        assertEquals("{'cells':[{'content':'tableModelTest','options':{'link':{'url':'table/testtable/Test 1D unknown/ID=123'}}}]}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
-        assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
-                oneQuotes(jsonb.toJson(table.getColumns())));
-    }
-
-    @Test
     public void testTableWithFilter()
     {
         initUserWithRoles("SystemDeveloper");
@@ -77,19 +66,6 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
                         "'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','title':'testtable: FilterByParamsInQueryOperation'}," +
                         "'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'}",
                 oneQuotes(jsonb.toJson(Arrays.stream(document.getIncluded()).filter(res -> "topForm".equals(res.getId())).findAny())));
-    }
-
-    @Test
-    public void testNullInSubQuery()
-    {
-        db.update("DELETE FROM testtableAdmin");
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null);
-
-        TablePresentation table = documentGenerator.getTablePresentation(meta.getQuery("testtableAdmin", "Test null in subQuery"), Collections.emptyMap());
-
-        assertEquals("[" + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':11,'options':{}}," + "{'content':'tableModelTest','options':{}}]}," + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'options':{}}," + "{'content':'','options':{}}" + "]}]",
-                oneQuotes(jsonb.toJson(table.getRows())));
     }
 
     @Test

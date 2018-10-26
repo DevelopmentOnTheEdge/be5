@@ -23,14 +23,9 @@ public class RowModel
         return cells;
     }
 
-    /**
-     * Returns an identifier. Never returns null.
-     *
-     * @throws NullPointerException if null
-     */
     public String getId()
     {
-        return Objects.requireNonNull(id);
+        return id;
     }
 
     @Override
