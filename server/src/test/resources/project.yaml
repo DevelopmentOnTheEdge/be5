@@ -4,6 +4,7 @@ be5ServerTestProject:
   projectFileStructure: {}
   modules: []
   application:
+  - attachments
   - dateTime
   - testtable
   - testtableAdmin

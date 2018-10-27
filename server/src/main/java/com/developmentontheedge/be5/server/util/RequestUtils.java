@@ -31,7 +31,7 @@ public class RequestUtils
 
         try
         {
-            ByteStreams.copy(in, response.getOutputStream());
+            ByteStreams.copy(in, res.getOutputStream());
             in.close();
         }
         catch (IOException e)

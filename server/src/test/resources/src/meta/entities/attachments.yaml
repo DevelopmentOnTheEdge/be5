@@ -1,0 +1,22 @@
+attachments:
+  type: table
+  displayName: attachments
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - mimeType:
+        type: VARCHAR(30)
+    - name:
+        type: VARCHAR(30)
+        canBeNull: true
+    - data:
+        type: TEXT
+        canBeNull: true
+    - value:
+        type: VARCHAR(30)
+        canBeNull: true

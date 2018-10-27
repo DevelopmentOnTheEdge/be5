@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.web.Response;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 public class ResponseImpl implements Response
@@ -92,4 +94,11 @@ public class ResponseImpl implements Response
             throw new RuntimeException("Response error", e);
         }
     }
+
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException
+    {
+        return rawWrapper.getRawResponse().getOutputStream();
+    }
+
 }

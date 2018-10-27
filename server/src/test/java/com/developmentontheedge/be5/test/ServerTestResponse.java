@@ -2,7 +2,10 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.web.Response;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
 
@@ -62,5 +65,11 @@ public class ServerTestResponse implements Response
     public void redirect(String location)
     {
         mock.redirect(location);
+    }
+
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException
+    {
+        return mock.getOutputStream();
     }
 }
