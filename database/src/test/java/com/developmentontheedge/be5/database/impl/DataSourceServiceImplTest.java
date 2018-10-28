@@ -1,30 +1,56 @@
 package com.developmentontheedge.be5.database.impl;
 
 
-import com.developmentontheedge.be5.database.DataSourceService;
+import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
+import com.developmentontheedge.be5.database.DatabaseTest;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.sql.format.dbms.Dbms;
+import com.google.inject.Stage;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import javax.inject.Inject;
+import java.nio.file.Path;
+import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
-//TODO
-public class DataSourceServiceImplTest// extends BaseTest
+public class DataSourceServiceImplTest extends DatabaseTest
 {
-//    @Inject
-//    private DataSourceService dataSourceService;
+    @Inject
+    private Stage stage;
+
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder();
+
+    private Path path;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        path = tmp.newFolder().toPath();
+        Project project = ProjectTestUtils.getProject("test");
+        ProjectTestUtils.createH2Profile(project, "testProfile");
+        project.setConnectionProfileName("testProfile");
+        Serialization.save(project, path);
+        ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));
+    }
 
     @Test
     public void test() throws Exception
     {
-//        BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
-//        assertEquals("jdbc:h2:~/profileForIntegrationTestsServer", dataSource.getUrl());
-//        assertEquals("sa", dataSource.getUsername());
-//
-//        assertEquals(Dbms.H2, dataSourceService.getDbms());
+        DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(new ProjectProviderImpl(stage));
+        BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
+        assertEquals("jdbc:h2:~/testProfile", dataSource.getUrl());
+        assertEquals("sa", dataSource.getUsername());
+        assertEquals(Dbms.H2, dataSourceService.getDbms());
     }
 
 }

@@ -5,6 +5,9 @@ import com.developmentontheedge.be5.database.impl.TestPerson;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigInteger;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -76,5 +79,19 @@ public class SqlUtilsTest extends DatabaseTest
 
         assertEquals(String.class, SqlUtils.getTypeClass(Types.VARCHAR));
 
+        assertEquals(1L, (long)SqlUtils.longFromDbObject(1));
+        assertEquals(1L, (long)SqlUtils.longFromDbObject(BigInteger.ONE));
+        assertEquals(1L, (long)SqlUtils.longFromDbObject("1"));
+
+        assertEquals(null, SqlUtils.stringFromDbObject(null));
+        assertEquals("test", SqlUtils.stringFromDbObject("test".getBytes()));
+
+        assertEquals(String.class, SqlUtils.getSimpleStringTypeClass(Types.CLOB));
+        assertEquals(String.class, SqlUtils.getSimpleStringTypeClass(Types.BLOB));
+        assertEquals(String.class, SqlUtils.getSimpleStringTypeClass(Types.BINARY));
+
+        assertEquals(Clob.class, SqlUtils.getTypeClass(Types.CLOB));
+        assertEquals(Blob.class, SqlUtils.getTypeClass(Types.BLOB));
+        assertEquals(byte[].class, SqlUtils.getTypeClass(Types.BINARY));
     }
 }
