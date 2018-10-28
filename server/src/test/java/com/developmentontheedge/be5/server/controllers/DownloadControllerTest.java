@@ -8,10 +8,11 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,8 +35,8 @@ public class DownloadControllerTest extends ServerBe5ProjectTest
         Response response = mock(Response.class);
         when(response.getRawResponse()).thenReturn(mock(HttpServletResponse.class));
 
-        ServletOutputStream outputStream = mock(ServletOutputStream.class);
-        when(response.getOutputStream()).thenReturn(outputStream);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        when(response.getOutputStream()).thenReturn(baos);
         Request req = getSpyMockRequest("/api/download/", ImmutableMap.<String, Object>builder()
                 .put("_t_", "attachments")
                 .put("_typeColumn_", "mimeType")
@@ -47,8 +48,6 @@ public class DownloadControllerTest extends ServerBe5ProjectTest
                 .build());
 
         component.generate(req, response);
-        //verify(outputStream).write(eq("test data".getBytes()));
+        assertEquals("test data", baos.toString());
     }
-
-
 }

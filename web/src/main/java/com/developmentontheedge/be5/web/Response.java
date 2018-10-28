@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.web;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 
 
 public interface Response
@@ -33,5 +33,5 @@ public interface Response
 
     void redirect(String location);
 
-    ServletOutputStream getOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 }

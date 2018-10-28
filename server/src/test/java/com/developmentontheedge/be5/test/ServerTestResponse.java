@@ -6,6 +6,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static org.mockito.Mockito.mock;
 
@@ -68,7 +69,7 @@ public class ServerTestResponse implements Response
     }
 
     @Override
-    public ServletOutputStream getOutputStream() throws IOException
+    public OutputStream getOutputStream() throws IOException
     {
         return mock.getOutputStream();
     }
