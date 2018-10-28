@@ -46,6 +46,14 @@ public class SqlExecutorTest
     }
 
     @Test
+    public void insert() throws ExtendedSqlException, SQLException
+    {
+        sqlExecutor.startSection("Sync schema");
+        connector.executeInsert("INSERT INTO persons (name, password) VALUES ('test','test')");
+        assertEquals("1", sqlExecutor.readString("sql.countRows", "persons"));
+    }
+
+    @Test
     public void executeMultiple() throws ExtendedSqlException
     {
         sqlExecutor.startSection("Sync schema");
@@ -84,5 +92,12 @@ public class SqlExecutorTest
         assertEquals(1L, rs.getLong(1));
 
         sqlExecutor.close(rs);
+    }
+
+    @Test(expected = ExtendedSqlException.class)
+    public void execPreparedError() throws ExtendedSqlException, IOException
+    {
+        SqlExecutor sqlTestExecutor = new SqlExecutor(connector, psOut, SqlExecutorTest.class.getResource("test.properties"));
+        sqlTestExecutor.execPrepared("sql.insert.person", new Object[]{"test"}, true);
     }
 }

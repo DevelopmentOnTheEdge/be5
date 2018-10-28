@@ -403,7 +403,6 @@ public class SqlExecutor
      * Note that if ? is NOT preceded by &, then this method will escape
      * all special symbols in arg using Utils.safestr() to avoid SQL injection.
      *
-     * @param connector Database connector
      * @param statement SQL statement
      * @param args      Actual values
      * @return Prepared statement

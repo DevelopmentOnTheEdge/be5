@@ -37,4 +37,18 @@ public class SimpleConnectorTest
 
         connector.close(resultSet);
     }
+
+    @Test
+    public void getConnectString() throws ExtendedSqlException, SQLException
+    {
+        assertEquals("jdbc:h2:mem:SimpleConnectorTest;MODE=PostgreSQL", connector.getConnectString());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void init() throws ExtendedSqlException, SQLException
+    {
+        connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
+                "sa", "");
+    }
+
 }
