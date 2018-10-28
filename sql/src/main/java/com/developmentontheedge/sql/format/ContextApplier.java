@@ -84,10 +84,7 @@ public class ContextApplier
         return propertyMap;
     }
 
-    /**
-     * todo rename getSubQuery
-     */
-    public AstBeSqlSubQuery applyVars(String key, Function<String, String> varResolver)
+    public AstBeSqlSubQuery getSubQuery(String key, Function<String, String> varResolver)
     {
         AstBeSqlSubQuery subQuery = context.getSubQueries().get(key);
         if (subQuery == null)
@@ -96,30 +93,10 @@ public class ContextApplier
         if (result.getLimit() != null)
             new LimitsApplier(0, result.getLimit()).transformQuery(result.getQuery());
 
-        applyFirstLevelVars(1, result, (AstBeSqlVar node) -> applyVar(key, node, varResolver));
-
-//        result.tree().select( AstBeSqlVar.class ).forEach( varNode -> {
-//            String value = varResolver.apply( subQuery.translateVar( varNode.getName() ) );
-//            if( value == null )
-//                value = varNode.getDefault();
-//            SimpleNode constant;
-//
-//            if(varNode.jjtGetParent() instanceof AstBeSqlSubQuery && value != null && !"".equals(value.trim()))
-//            {
-//                constant = SqlQuery.parse(value).getQuery();
-//            }
-//            else
-//            {
-//                if(value == null)
-//                {
-//                    value = "null";
-//                }
-//                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
-//                        : new AstIdentifierConstant(value);
-//            }
-//
-//            varNode.replaceWith( constant );
-//        } );
+        if (subQuery.getUsingParamNames() == null)
+        {
+            applyFirstLevelVars(1, result, (AstBeSqlVar node) -> applyVar(key, node, varResolver));
+        }
 
         checkExpression(result, key, varResolver);
 

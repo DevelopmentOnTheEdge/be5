@@ -346,7 +346,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //    {
 //        if (subQueryKeys.contains(value) && !meta.containsKey("sql"))
 //        {
-//            AstBeSqlSubQuery subQuery = contextApplier.applyVars((String) value, s -> "");
+//            AstBeSqlSubQuery subQuery = contextApplier.getSubQuery((String) value, s -> "");
 //            meta.put("sql", StreamEx.of("beautifier", "default").mapToEntry(subQuery::getParameter).nonNullValues().toSortedMap());
 //        }
 //    }
@@ -381,7 +381,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver)
     {
-        AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, x -> {
+        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subqueryName, x -> {
             Object value = varResolver.resolve(x);
             return value != null ? value.toString() : null;
         });
