@@ -52,7 +52,7 @@ public class FilterInfoPlugin implements DocumentPlugin
             ColumnDef column = meta.getColumn(query.getEntity().getName(), k);
             if (column != null && column.getTableTo() != null)
             {
-                if (meta.getEntity(column.getTableTo()) != null)
+                if(meta.getEntity(column.getTableTo()) != null)
                 {
                     String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
                             Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));
