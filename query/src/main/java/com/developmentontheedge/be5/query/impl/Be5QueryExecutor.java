@@ -403,7 +403,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             params = new Object[paramNames.length];
             for (int i = 0; i < paramNames.length; i++)
             {
-                params[i] = varResolver.resolve(paramNames[i]).toString();
+                params[i] = varResolver.resolve(paramNames[i]);
             }
         }
         else
