@@ -400,7 +400,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         if (usingParamNames != null)
         {
             String[] paramNames = usingParamNames.split(",");
-            params = new Object[]{paramNames.length};
+            params = new Object[paramNames.length];
             for (int i = 0; i < paramNames.length; i++)
             {
                 params[i] = varResolver.resolve(paramNames[i]).toString();
