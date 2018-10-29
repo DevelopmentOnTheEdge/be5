@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HtmlUtils;
@@ -63,11 +64,21 @@ public class ErrorModelHelper
 
     public ErrorModel getErrorModel(Be5Exception e, Map<String, String> links)
     {
+        String message;
+        try
+        {
+            message = userAwareMeta.getLocalizedBe5ErrorMessage(e);
+        }
+        catch (Be5Exception ignore)
+        {
+            message = ErrorTitles.formatTitle(ErrorTitles.getTitle(e.getCode()), e.getParameters());
+        }
+
         if (userInfoProvider.isSystemDeveloper())
         {
             return new ErrorModel(
                     e.getHttpStatusCode(),
-                    userAwareMeta.getLocalizedBe5ErrorMessage(e),
+                    message,
                     Be5Exception.getMessage(e) + getErrorCodeLine(e),
                     exceptionAsString(e),
                     links
@@ -75,7 +86,7 @@ public class ErrorModelHelper
         }
         else
         {
-            return new ErrorModel(e.getHttpStatusCode(), userAwareMeta.getLocalizedBe5ErrorMessage(e), links);
+            return new ErrorModel(e.getHttpStatusCode(), message, links);
         }
     }
 

@@ -75,7 +75,7 @@ public class ProjectProviderImpl implements ProjectProvider
                 {
                     project = null;
                 }
-                throw new RuntimeException("Can't load project.", e);
+                throw Be5Exception.internal("Can't load project", e);
             }
             finally
             {

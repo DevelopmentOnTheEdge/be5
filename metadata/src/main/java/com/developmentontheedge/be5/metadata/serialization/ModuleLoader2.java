@@ -131,11 +131,11 @@ public class ModuleLoader2
 
     public static void loadAllProjects(List<URL> urls)
     {
-        modulesMap = new HashMap<>();
+        modulesMap = null;
         try
         {
             replaceAndAddURLtoSource(urls);
-
+            Map<String, Project> newModulesMap = new HashMap<>();
             for (URL url : urls)
             {
                 LoadContext loadContext = new LoadContext();
@@ -169,8 +169,9 @@ public class ModuleLoader2
                     log.fine("Load module from " + url.toExternalForm() + ", path=" + path);
                 }
                 loadContext.check();
-                modulesMap.put(module.getAppName(), module);
+                newModulesMap.put(module.getAppName(), module);
             }
+            modulesMap = newModulesMap;
         }
         catch (ProjectLoadException | IOException | URISyntaxException e)
         {
