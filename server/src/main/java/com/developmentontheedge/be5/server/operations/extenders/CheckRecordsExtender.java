@@ -87,7 +87,14 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             }
             if (disabledRecords.size() > 0)
             {
-                message = "Cannot execute operation " + op.getInfo().getName() + ": the following records are not found or not accessible: " + disabledRecords;
+                if (userInfoProvider.isAdmin())
+                {
+                    message = "Cannot execute operation " + op.getInfo().getName() + ": the following records are not found or not accessible: " + disabledRecords;
+                }
+                else
+                {
+                    message = userAwareMeta.getLocalizedExceptionMessage("Access to these records is denied.");
+                }
                 return true;
             }
         }

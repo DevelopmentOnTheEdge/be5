@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.server.operations.support;
 
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
@@ -17,6 +19,8 @@ public abstract class OperationExtenderSupport extends BaseOperationExtenderSupp
     @Inject
     public Meta meta;
     @Inject
+    public UserAwareMeta userAwareMeta;
+    @Inject
     public DbService db;
     @Inject
     public DatabaseModel database;
@@ -28,5 +32,6 @@ public abstract class OperationExtenderSupport extends BaseOperationExtenderSupp
     public OperationsFactory operations;
     @Inject
     public QueriesService queries;
-
+    @Inject
+    public UserInfoProvider userInfoProvider;
 }

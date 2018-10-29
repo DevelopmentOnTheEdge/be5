@@ -17,6 +17,7 @@ ru:
       - 'Access denied. $1': 'Доступ запрещен. $1'
       - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
+      - Access to these records is denied.: 'Доступ к этим записям запрещен.'
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.
