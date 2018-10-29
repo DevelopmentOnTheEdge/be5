@@ -32,7 +32,6 @@ public interface UserInfoProvider
 
     default boolean isAdmin()
     {
-        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR) ||
-                getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
+        return get().isAdmin();
     }
 }
