@@ -13,6 +13,7 @@ public interface FrontendActions
     String UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
     String REFRESH_PARENT_DOCUMENT = "REFRESH_PARENT_DOCUMENT";
+    String REFRESH_DOCUMENT = "REFRESH_DOCUMENT";
     String GO_BACK = "GO_BACK";
     String SET_URL = "SET_URL";
     String OPEN_NEW_WINDOW = "OPEN_NEW_WINDOW";
@@ -20,6 +21,7 @@ public interface FrontendActions
 
     FrontendAction CLOSE_MAIN_MODAL_ACTION = new FrontendAction(CLOSE_MAIN_MODAL, null);
     FrontendAction REFRESH_PARENT_DOCUMENT_ACTION = new FrontendAction(REFRESH_PARENT_DOCUMENT, null);
+    FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
 
     static FrontendAction setUrl(String url)
@@ -43,6 +45,11 @@ public interface FrontendActions
     static FrontendAction closeMainModal()
     {
         return CLOSE_MAIN_MODAL_ACTION;
+    }
+
+    static FrontendAction refreshDocument()
+    {
+        return REFRESH_DOCUMENT_ACTION;
     }
 
     static FrontendAction refreshParentDocument()
