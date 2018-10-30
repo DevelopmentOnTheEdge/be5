@@ -273,8 +273,16 @@ public class QueryBuilderController extends JsonApiModelController
     private static SqlType getSqlType(String sql)
     {
         if (sql == null || sql.trim().length() == 0) return SqlType.SELECT;
+        AstStart parse;
+        try
+        {
+            parse = SqlQuery.parse(sql);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return SqlType.SELECT;
+        }
 
-        AstStart parse = SqlQuery.parse(sql);
         if (parse.getQuery().children().select(AstUpdate.class).findAny().isPresent())
         {
             return SqlType.UPDATE;
