@@ -233,7 +233,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
         dql.log("Compiled", ast);
 
-        resolveTypeOfRefColumn(ast, meta);
+        resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
 
         // FILTERS
         applyFilters(ast, query.getEntity().getName(), parameters, meta);

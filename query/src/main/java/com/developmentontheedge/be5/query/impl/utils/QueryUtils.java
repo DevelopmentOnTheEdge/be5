@@ -13,6 +13,7 @@ import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
+import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
 import com.developmentontheedge.sql.model.AstLimit;
 import com.developmentontheedge.sql.model.AstNumericConstant;
@@ -22,7 +23,9 @@ import com.developmentontheedge.sql.model.AstParenthesis;
 import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.AstStringConstant;
 import com.developmentontheedge.sql.model.AstTableRef;
+import com.developmentontheedge.sql.model.SimpleNode;
 import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
@@ -36,17 +39,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+//TODO get mainEntityName from query -> FROM name
 public class QueryUtils
 {
     public static void applyFilters(AstStart ast, String entityName, Map<String, List<Object>> parameters, Meta meta)
     {
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
-        Map<String, String> aliasToTable = ast.tree()
-                .select(AstTableRef.class)
-                .filter(t -> t.getTable() != null && t.getAlias() != null)
-                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
-                        (address1, address2) -> address1));
+        Map<String, String> aliasToTable = getAliasToTable(ast);
 
         Map<ColumnRef, List<Object>> rawFilters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
@@ -62,6 +62,15 @@ public class QueryUtils
         {
             new Be5FilterApplier().addFilter(ast, filters);
         }
+    }
+
+    public static Map<String, String> getAliasToTable(AstStart ast)
+    {
+        return ast.tree()
+                    .select(AstTableRef.class)
+                    .filter(t -> t.getTable() != null && t.getAlias() != null)
+                    .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
+                            (address1, address2) -> address1));
     }
 
     private static boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, Meta meta, String key)
@@ -100,41 +109,70 @@ public class QueryUtils
         query.replaceWith(new AstQuery(select));
     }
 
-    public static void resolveTypeOfRefColumn(AstStart ast, Meta meta)
+    public static void resolveTypeOfRefColumn(AstStart ast, String entityName, Meta meta)
     {
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
-            if (tag.getRefColumn() != null)
+            ColumnDef columnDef = getColumnDef(ast, tag, entityName, meta);
+            if (columnDef != null)
             {
-                String[] split = tag.getRefColumn().split("\\.");
-                String table, column;
-                if (split.length == 2)
-                {
-                    table = split[0];
-                    column = split[1];
-                }
-                else if (split.length == 3)
-                {
-                    table = split[0] + "." + split[1];
-                    column = split[2];
-                }
-                else
-                {
-                    return;
-                }
-                Entity entity;
-
-//                if(aliasToTable.get(table) != null)
-//                    entity = meta.getEntity(aliasToTable.get(table));
-//                else
-
-                entity = meta.getEntity(table);
-
-                if (entity != null)
-                {
-                    tag.setType(meta.getColumnType(entity, column).getName());
-                }
+                tag.setType(meta.getColumnType(columnDef).getName());
             }
         });
+    }
+
+    public static ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName, Meta meta)
+    {
+        if (beParameterTag.getRefColumn() != null)
+        {
+            return getColumnDef(ast, beParameterTag.getRefColumn(), mainEntityName, meta);
+        }
+        else
+        {
+            SimpleNode node = beParameterTag.jjtGetParent();
+            if (node.getClass() == AstStringConstant.class)
+            {
+                node = node.jjtGetParent();
+            }
+            Optional<AstFieldReference> first = node.children().select(AstFieldReference.class).findFirst();
+            if (first.isPresent())
+            {
+                return getColumnDef(ast, first.get().getValue(), mainEntityName, meta);
+            }
+            else
+            {
+                throw new RuntimeException("ColumnDef for " + beParameterTag.getName() + " not found. Please add refColumn attribute.");
+            }
+        }
+    }
+
+    public static ColumnDef getColumnDef(AstStart ast, String rawColumnDef, String mainEntityName, Meta meta)
+    {
+        String[] split = rawColumnDef.split("\\.");
+        String entityName, column;
+        if (split.length == 2)
+        {
+            entityName = split[0];
+            column = split[1];
+        }
+        else if (split.length == 3)
+        {
+            entityName = split[0] + "." + split[1];
+            column = split[2];
+        }
+        else
+        {
+            return meta.getColumn(mainEntityName, split[0]);
+        }
+        Entity entity = meta.getEntity(entityName);
+        if (entity == null)
+        {
+            entity = meta.getEntity(getAliasToTable(ast).get(entityName));
+        }
+        if (entity == null)
+        {
+            throw new RuntimeException("Entity '" + entityName + "' not found.");
+        }
+        return meta.getColumn(entity, column);
     }
 
     private static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,

@@ -112,6 +112,18 @@ testtable:
       roles: '@AllRoles'
       code: |-
         Query with error
+  - usedParam filter info:
+      type: 1D_unknown
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT *
+        FROM testtable t
+        INNER JOIN testTags tTags ON tTags.CODE = t.name
+        WHERE 1=1
+        <if parameter="referenceTest">
+          AND tTags.referenceTest = '<parameter:referenceTest/>'
+        </if>
   operations:
   - Filter:
       roles: Administrator

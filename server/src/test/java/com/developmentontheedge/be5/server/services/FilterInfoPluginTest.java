@@ -40,4 +40,13 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
                 oneQuotes(jsonb.toJson(resourceData.getAttributes())));
     }
 
+    @Test
+    public void addDataUsedParam()
+    {
+        Query query = meta.getQuery("testtable", "usedParam filter info");
+        ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("referenceTest", "50"));
+        Assert.assertEquals("{'operationParamsInfo':{'Тест выборки':'Региональный'}}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
 }
