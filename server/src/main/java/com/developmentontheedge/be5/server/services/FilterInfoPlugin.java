@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.services;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.FilterUtil;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.utils.QueryUtils;
@@ -62,17 +63,23 @@ public class FilterInfoPlugin implements DocumentPlugin
                 return;
             }
 
-            AstStart ast = SqlQuery.parse(meta.getQueryCode(query));
-            Optional<AstBeParameterTag> usedParam = ast.tree()
-                    .select(AstBeParameterTag.class)
-                    .filter(x -> x.getName().equals(k))
-                    .findFirst();
-
-            if (usedParam.isPresent())
+            if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
             {
-                ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParam.get(), mainEntityName, meta);
-                result.add(getValueTitle(column2, mainEntityName, k, v));
-                return;
+                AstStart ast = SqlQuery.parse(meta.getQueryCode(query));
+                Optional<AstBeParameterTag> usedParam = ast.tree()
+                        .select(AstBeParameterTag.class)
+                        .filter(x -> x.getName().equals(k))
+                        .findFirst();
+
+                if (usedParam.isPresent())
+                {
+                    ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParam.get(), mainEntityName, meta);
+                    if (column2 != null)
+                    {
+                        result.add(getValueTitle(column2, mainEntityName, k, v));
+                        return;
+                    }
+                }
             }
 
             String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");

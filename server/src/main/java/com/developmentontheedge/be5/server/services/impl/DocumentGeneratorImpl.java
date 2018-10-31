@@ -150,10 +150,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 .named(FilterUtil.getOperationParamsWithoutFilter(parameters));
 
         List<ResourceData> included = new ArrayList<>();
-        documentPlugins.forEach(d -> {
-            ResourceData resourceData = d.addData(query, parameters);
-            if (resourceData != null) included.add(resourceData);
-        });
+        try
+        {
+            documentPlugins.forEach(d -> {
+                ResourceData resourceData = d.addData(query, parameters);
+                if (resourceData != null) included.add(resourceData);
+            });
+        }
+        catch (RuntimeException e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
+        }
 
         return JsonApiModel.data(
                 new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),

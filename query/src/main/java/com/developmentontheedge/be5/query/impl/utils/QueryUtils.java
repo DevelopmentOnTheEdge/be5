@@ -133,14 +133,14 @@ public class QueryUtils
             {
                 node = node.jjtGetParent();
             }
-            Optional<AstFieldReference> first = node.tree().select(AstFieldReference.class).findFirst();
+            Optional<AstFieldReference> first = node.children().select(AstFieldReference.class).findFirst();
             if (first.isPresent())
             {
                 return getColumnDef(ast, first.get().getValue(), mainEntityName, meta);
             }
             else
             {
-                throw new RuntimeException("ColumnDef for " + beParameterTag.getName() + " not found. Please add refColumn attribute.");
+                return null;
             }
         }
     }
