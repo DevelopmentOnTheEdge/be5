@@ -14,6 +14,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -79,6 +80,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
 
         when(servletContext.getResourceAsStream("/WEB-INF/templates/index.html"))
                 .thenReturn(new ByteArrayInputStream(html.getBytes()));
+        when(res.getRawResponse()).thenReturn(mock(HttpServletResponse.class));
 
         templateFilter.filter(req, res, filterChain);
 
