@@ -36,7 +36,16 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     {
         Query query = meta.getQuery("testTags", "All records");
         ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("referenceTest", "50"));
-        Assert.assertEquals("{'operationParamsInfo':{'Тест выборки':'Региональный'}}",
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Тест выборки','value':'Региональный'}]}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
+    @Test
+    public void addDataForPrimaryKey()
+    {
+        Query query = meta.getQuery("testTags", "All records");
+        ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("CODE", "50"));
+        Assert.assertEquals("{'operationParamsInfo':[{'value':'Региональный'}]}",
                 oneQuotes(jsonb.toJson(resourceData.getAttributes())));
     }
 
@@ -45,7 +54,7 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "usedParam filter info");
         ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("referenceTest", "50"));
-        Assert.assertEquals("{'operationParamsInfo':{'Тест выборки':'Региональный'}}",
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Тест выборки','value':'Региональный'}]}",
                 oneQuotes(jsonb.toJson(resourceData.getAttributes())));
     }
 

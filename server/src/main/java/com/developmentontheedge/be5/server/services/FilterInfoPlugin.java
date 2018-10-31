@@ -14,8 +14,10 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,18 +49,16 @@ public class FilterInfoPlugin implements DocumentPlugin
         return null;
     }
 
-    private Map<String, String> getOperationParamsInfo(Query query, Map<String, Object> parameters)
+    private List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
     {
         Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
-        Map<String, String> result = new HashMap<>();
+        List<FilterItem> result = new ArrayList<>();
         String mainEntityName = query.getEntity().getName();
         params.forEach((k, v) -> {
-            String columnTitle = k;
             ColumnDef column = meta.getColumn(mainEntityName, k);
             if (column != null)
             {
-                columnTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), k);
-                result.put(columnTitle, getValueTitle(column, v));
+                result.add(getValueTitle(column, mainEntityName, k, v));
                 return;
             }
 
@@ -71,26 +71,55 @@ public class FilterInfoPlugin implements DocumentPlugin
             if (usedParam.isPresent())
             {
                 ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParam.get(), mainEntityName, meta);
-                columnTitle = userAwareMeta.getColumnTitle(column2.getTableFrom(), column2.getName());
-                result.put(columnTitle, getValueTitle(column2, v));
+                result.add(getValueTitle(column2, mainEntityName, k, v));
                 return;
             }
 
             String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");
-            result.put(columnTitle, valueTitle);
+            result.add(new FilterItem(k, valueTitle));
         });
         return result;
     }
 
-    private String getValueTitle(ColumnDef column, Object v)
+    private FilterItem getValueTitle(ColumnDef column, String mainEntityName, String k, Object v)
     {
+        String columnTitle = userAwareMeta.getColumnTitle(column.getTableFrom(), k);
+        if (meta.getEntity(column.getTableFrom()).getPrimaryKey().equals(column.getName()))
+        {
+            String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
+                    Collections.singletonMap(meta.getEntity(column.getTableFrom()).getPrimaryKey(), v));
+            String idColumnTitle = mainEntityName.equalsIgnoreCase(column.getTableFrom()) ? null : columnTitle;
+            if (tags.length > 0) return new FilterItem(idColumnTitle, tags[0][1]);
+        }
         if (column.getTableTo() != null && meta.getEntity(column.getTableTo()) != null)
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
                     Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));
-            if (tags.length > 0) return tags[0][1];
+            if (tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
         }
-        return v + "";
+        return new FilterItem(columnTitle, v + "");
+    }
+
+    public class FilterItem
+    {
+        private String key;
+        private String value;
+
+        public FilterItem(String key, String value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey()
+        {
+            return key;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
     }
 
 }

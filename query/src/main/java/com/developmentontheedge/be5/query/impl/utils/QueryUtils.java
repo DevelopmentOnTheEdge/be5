@@ -133,7 +133,7 @@ public class QueryUtils
             {
                 node = node.jjtGetParent();
             }
-            Optional<AstFieldReference> first = node.children().select(AstFieldReference.class).findFirst();
+            Optional<AstFieldReference> first = node.tree().select(AstFieldReference.class).findFirst();
             if (first.isPresent())
             {
                 return getColumnDef(ast, first.get().getValue(), mainEntityName, meta);
