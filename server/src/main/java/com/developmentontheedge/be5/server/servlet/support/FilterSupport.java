@@ -29,7 +29,6 @@ public abstract class FilterSupport implements Filter
     {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        ServletUtils.addHeaders(request, response);
         Request req = new RequestImpl(request);
         Response res = new ResponseImpl(response);
         filter(req, res, filterChain);

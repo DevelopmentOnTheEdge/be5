@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
+import com.developmentontheedge.be5.server.servlet.support.ServletUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import org.thymeleaf.TemplateEngine;
@@ -69,6 +70,7 @@ public class TemplateFilter extends FilterSupport
         }
         else
         {
+            ServletUtils.addHeaders(req.getRawRequest(), res.getRawResponse());
             res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req)));
         }
     }
