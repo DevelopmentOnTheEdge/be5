@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.server.helpers
 
 import com.developmentontheedge.be5.base.services.Meta
+import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser
+import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -14,6 +16,7 @@ import org.junit.Test
 
 import javax.inject.Inject
 
+import static com.developmentontheedge.beans.BeanInfoConstants.TAG_LIST_ATTR
 import static org.junit.Assert.*
 
 class DpsHelperTest extends ServerBe5ProjectDBTest
@@ -127,7 +130,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals 2, dps.size()
-        assertNotNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
+        assertNotNull dps.getProperty("payable").getAttribute(TAG_LIST_ATTR)
 
         def list = dps.asList()
         assertEquals "CODE", list.get(0).getName()
@@ -145,13 +148,13 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         dps.add(new DynamicProperty("payable", String.class))
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE"], [:])
 
-        assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
+        assertNull dps.getProperty("payable").getAttribute(TAG_LIST_ATTR)
 
         dps = new DynamicPropertySetSupport()
         dps.add(new DynamicProperty("payable", String.class))
         dpsHelper.addDpExcludeColumns(dps, meta.getEntity("testTags"), ["payable"], [:])
 
-        assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
+        assertNull dps.getProperty("payable").getAttribute(TAG_LIST_ATTR)
     }
 
     @Test
@@ -385,5 +388,25 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
                 meta.getQuery("testTags", "With Not entity parameter"), [:])
         assertEquals "{'values':{},'meta':{'/queryString':{'displayName':'queryString'}},'order':['/queryString']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addTagsFromCustomSelectionViewWithParamTest()
+    {
+        def property = new DynamicProperty("test", String.class)
+        dpsHelper.addTags(property,
+                meta.getColumn("columnWithCustomViewName", "referenceTest"),
+                ImmutableMap.of())
+        assertEquals("customRegional", ((String[][])property.getAttribute(TAG_LIST_ATTR))[0][1])
+    }
+
+    @Test
+    void addTagsForPrimaryKeyValue()
+    {
+        def property = new DynamicProperty("test", String.class)
+        dpsHelper.addTags(property,
+                meta.getColumn("testTags", "referenceTest"),
+                ImmutableMap.of("CODE", "02"))
+        assertEquals("Муниципальный", ((String[][])property.getAttribute(TAG_LIST_ATTR))[0][1])
     }
 }

@@ -5,6 +5,7 @@ be5ServerTestProject:
   modules: []
   application:
   - attachments
+  - columnWithCustomViewName
   - dateTime
   - testtable
   - testtableAdmin

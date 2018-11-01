@@ -1,0 +1,15 @@
+columnWithCustomViewName:
+  type: dictionary
+  displayName: columnWithCustomViewName
+  primaryKey: CODE
+  scheme:
+    columns:
+    - CODE:
+        type: VARCHAR(2)
+        primaryKey: true
+    - referenceTest:
+        type: VARCHAR(2)
+        canBeNull: true
+        reference:
+          to: testTags
+          view: Custom Selection view
