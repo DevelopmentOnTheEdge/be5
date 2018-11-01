@@ -61,7 +61,12 @@ public class OperationServiceImpl implements OperationService
 
         if (presetValues.containsKey(RELOAD_CONTROL_NAME))
         {
-            validator.validate(parameters);
+            if (parameters instanceof DynamicPropertySet)
+            {
+                String reloadControlName = (String) presetValues.get(RELOAD_CONTROL_NAME);
+                DynamicProperty property = ((DynamicPropertySet) parameters).getProperty(reloadControlName);
+                validator.validate(property);
+            }
         }
 
         return replaceNullValueToEmptyStringAndReturn(parameters);
