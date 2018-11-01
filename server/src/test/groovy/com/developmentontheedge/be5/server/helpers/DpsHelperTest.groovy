@@ -398,15 +398,26 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
                 meta.getColumn("columnWithCustomViewName", "referenceTest"),
                 ImmutableMap.of())
         assertEquals("customRegional", ((String[][])property.getAttribute(TAG_LIST_ATTR))[0][1])
+        assertEquals(null, property.getValue())
     }
 
     @Test
     void addTagsForPrimaryKeyValue()
     {
         def property = new DynamicProperty("test", String.class)
-        dpsHelper.addTags(property,
-                meta.getColumn("testTags", "referenceTest"),
+        dpsHelper.addTags(property, meta.getColumn("testTags", "referenceTest"),
                 ImmutableMap.of("CODE", "02"))
         assertEquals("Муниципальный", ((String[][])property.getAttribute(TAG_LIST_ATTR))[0][1])
+        assertEquals("02", property.getValue())
+    }
+
+    @Test
+    void addTagsForPrimaryKeyValueAndCanBeNull()
+    {
+        def property = new DynamicProperty("test", String.class)
+        property.setCanBeNull(true)
+        dpsHelper.addTags(property, meta.getColumn("testTags", "referenceTest"),
+                ImmutableMap.of("CODE", "02"))
+        assertEquals(null, property.getValue())
     }
 }

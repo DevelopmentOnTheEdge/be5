@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.helpers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -13,7 +14,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
-import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -490,6 +490,10 @@ public class DpsHelper
         if (tags != null)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, tags);
+            if (tags.length == 1 && !dp.isCanBeNull())
+            {
+                dp.setValue(tags[0][0]);
+            }
         }
     }
 
