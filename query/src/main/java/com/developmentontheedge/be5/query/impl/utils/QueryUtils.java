@@ -166,6 +166,10 @@ public class QueryUtils
         Entity entity = meta.getEntity(entityName);
         if (entity == null)
         {
+            if (getAliasToTable(ast).get(entityName) == null)
+            {
+                throw new RuntimeException("Entity with alias '" + entityName + "' not found.");
+            }
             entity = meta.getEntity(getAliasToTable(ast).get(entityName));
         }
         if (entity == null)
