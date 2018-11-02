@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.helpers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -13,7 +14,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
-import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -459,7 +459,6 @@ public class DpsHelper
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
-        String tableName = columnDef.getTableTo();
         String[][] tags = null;
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
         {
@@ -469,29 +468,38 @@ public class DpsHelper
         {
             tags = queries.getTagsFromEnum(columnDef);
         }
-        else if (tableName != null && meta.getEntity(tableName) != null)
+        else
         {
-            Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
-            String propertyName = dp.getName();
-            if (operationParamsWithoutFilter.containsKey(propertyName))
+            String tableName = columnDef.getTableTo();
+            if (tableName != null && meta.getEntity(tableName) != null)
             {
-                tags = getTagForPrimaryKeyValue(tableName, operationParamsWithoutFilter.get(propertyName));
-            }
-            else
-            {
-                tags = queries.getTagsFromSelectionView(tableName, operationParamsWithoutFilter);
+                String viewName = columnDef.getViewName();
+                Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+                String propertyName = dp.getName();
+                if (operationParamsWithoutFilter.containsKey(propertyName))
+                {
+                    tags = getTagForPrimaryKeyValue(tableName, viewName, operationParamsWithoutFilter.get(propertyName));
+                }
+                else
+                {
+                    tags = queries.getTagsFromCustomSelectionView(tableName, viewName, operationParamsWithoutFilter);
+                }
             }
         }
 
         if (tags != null)
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, tags);
+            if (tags.length == 1 && !dp.isCanBeNull())
+            {
+                dp.setValue(tags[0][0]);
+            }
         }
     }
 
-    private String[][] getTagForPrimaryKeyValue(String tableName, Object value)
+    private String[][] getTagForPrimaryKeyValue(String tableName, String viewName, Object value)
     {
-        return queries.getTagsFromSelectionView(tableName,
+        return queries.getTagsFromCustomSelectionView(tableName, viewName,
                 Collections.singletonMap(meta.getEntity(tableName).getPrimaryKey(), value));
     }
 

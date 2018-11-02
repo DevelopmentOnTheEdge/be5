@@ -86,7 +86,7 @@ class OperationTest extends OperationsSqlMockProjectTest
                 ImmutableMap.of(
                         "name", "testName",
                         "value", "ab",
-                        FrontendConstants.RELOAD_CONTROL_NAME, "name"))
+                        FrontendConstants.RELOAD_CONTROL_NAME, "value"))
 
         assertNotNull(result.getFirst())
 
