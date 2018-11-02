@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 @PropertyName("Error")
-public class ProjectElementException extends Exception implements Formattable
+public class ProjectElementException extends RuntimeException implements Formattable
 {
     private static final long serialVersionUID = 1L;
     private final DataElementPath path;
