@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -12,8 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -40,7 +37,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
         initProject();
 
         setRdbms();
-        validateProject();
+        //validateProject();
         checkQuery();
         checkRoles();
         checkDdl();
@@ -89,34 +86,19 @@ public class AppValidate extends ScriptSupport<AppValidate>
         }
     }
 
-    private void validateProject() throws ScriptException
-    {
-        List<ProjectElementException> errors = new ArrayList<>();
-        if (skipValidation)
-        {
-            logger.info("Validation skipped");
-        }
-        else
-        {
-            logger.info("Validating...");
-            errors.addAll(be5Project.getErrors());
-            int count = 0;
-            for (ProjectElementException error : errors)
-            {
-                if (error.getPath().equals(be5Project.getName()) && error.getProperty().equals("connectionProfileName"))
-                    continue;
-                count++;
-                displayError(error);
-            }
-            if (count > 0)
-            {
-                throw new ScriptException("Project has " + count + " errors.");
-            }
-
-            logger.info("Project is valid.");
-            skipValidation = true;
-        }
-    }
+//    private void validateProject() throws ScriptException
+//    {
+//        if (skipValidation)
+//        {
+//            logger.info("Validation skipped");
+//        }
+//        else
+//        {
+//            logger.info("Validating...");
+//            be5Project.validate();
+//            logger.info("Project is valid.");
+//        }
+//    }
 
 //    private List<ProjectElementException> validateDeps( List<Project> moduleProjects )
 //    {

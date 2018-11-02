@@ -1,11 +1,8 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
-import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
@@ -65,7 +62,7 @@ public abstract class ScriptSupport<T>
         initConnector();
     }
 
-    public void initConnector()
+    private void initConnector()
     {
         if (connectionProfileName != null)
         {
@@ -93,7 +90,7 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    public void initProject()
+    protected void initProject()
     {
         initLogging();
 
@@ -123,7 +120,7 @@ public abstract class ScriptSupport<T>
     /**
      * Configures JUL (java.util.logging).
      */
-    public void initLogging()
+    private void initLogging()
     {
         // configure JUL logging
         String ln = System.lineSeparator();
@@ -148,7 +145,7 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    public PrintStream createPrintStream(String name)
+    PrintStream createPrintStream(String name)
     {
         if (sqlPath != null)
         {
@@ -166,7 +163,7 @@ public abstract class ScriptSupport<T>
         return null;
     }
 
-    public void logSqlFilePath()
+    void logSqlFilePath()
     {
         if (sqlPath != null)
         {
@@ -174,30 +171,24 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    public void displayError(ProjectElementException error)
-    {
-        error.format(System.err);
-    }
-
-    public void checkErrors(final LoadContext loadContext, String messageTemplate) throws ScriptException
-    {
-        if (!loadContext.getWarnings().isEmpty())
-        {
-            for (ReadException exception : loadContext.getWarnings())
-            {
-                if (debug)
-                {
-                    exception.printStackTrace();
-                }
-                else
-                {
-                    logger.error("Error: " + exception.getMessage());
-                }
-            }
-            throw new ScriptException(messageTemplate.replace("%d", String.valueOf(loadContext.getWarnings().size())));
-        }
-    }
-
+//    public void checkErrors(final LoadContext loadContext, String messageTemplate) throws ScriptException
+//    {
+//        if (!loadContext.getWarnings().isEmpty())
+//        {
+//            for (ReadException exception : loadContext.getWarnings())
+//            {
+//                if (debug)
+//                {
+//                    exception.printStackTrace();
+//                }
+//                else
+//                {
+//                    logger.error("Error: " + exception.getMessage());
+//                }
+//            }
+//            throw new ScriptException(messageTemplate.replace("%d", String.valueOf(loadContext.getWarnings().size())));
+//        }
+//    }
 
 //    public void dumpSql( String ddlString )
 //    {

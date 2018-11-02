@@ -748,6 +748,31 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         return errors;
     }
 
+    public void validate()
+    {
+        List<ProjectElementException> errors = new ArrayList<>();
+        errors.addAll(this.getErrors());
+        int count = 0;
+        ProjectElementException firstError = null;
+        StringBuilder errorsInfo = new StringBuilder();
+        for (ProjectElementException error : errors)
+        {
+            if (error.getPath().equals(this.getName()) && error.getProperty().equals("connectionProfileName"))
+                continue;
+            count++;
+            firstError = error;
+            errorsInfo.append(error.format());
+        }
+        if (count == 1)
+        {
+            throw firstError;
+        }
+        if (count > 0)
+        {
+            throw new ProjectElementException(this, "Project has " + count + " errors.\n" + errorsInfo.toString());
+        }
+    }
+
     @Override
     public boolean hasErrors()
     {

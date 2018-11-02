@@ -68,6 +68,11 @@ public class ModuleLoader2
 
         for (Map.Entry<String, Project> module : modulesMap.entrySet())
         {
+            module.getValue().validate();
+        }
+
+        for (Map.Entry<String, Project> module : modulesMap.entrySet())
+        {
             if (module.getValue() != null && !module.getValue().isModuleProject())
             {
                 if (project != null)
