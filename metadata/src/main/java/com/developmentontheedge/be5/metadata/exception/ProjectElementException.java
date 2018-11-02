@@ -12,12 +12,11 @@ import java.nio.charset.StandardCharsets;
 @PropertyName("Error")
 public class ProjectElementException extends Exception implements Formattable
 {
-
     private static final long serialVersionUID = 1L;
-    final DataElementPath path;
-    final String property;
-    final int row;
-    final int column;
+    private final DataElementPath path;
+    private final String property;
+    private final int row;
+    private final int column;
 
     public ProjectElementException(DataElementPath path, String property, int row, int column, Throwable cause)
     {
@@ -41,6 +40,11 @@ public class ProjectElementException extends Exception implements Formattable
     public ProjectElementException(DataElementPath path, Throwable cause)
     {
         this(path, null, cause);
+    }
+
+    public ProjectElementException(BeModelElement element, String property, String cause)
+    {
+        this(element.getCompletePath(), property, 0, 0, new Exception(cause));
     }
 
     public ProjectElementException(BeModelElement element, Throwable cause)
@@ -110,8 +114,8 @@ public class ProjectElementException extends Exception implements Formattable
         {
             return "ok";
         }
-        String baseMessage = String.valueOf(getCause().getMessage()).replaceFirst("\\s+at .+\\[line \\d+, column \\d+\\]", "");
-        return baseMessage;
+        return String.valueOf(getCause().getMessage()).
+                replaceFirst("\\s+at .+\\[line \\d+, column \\d+\\]", "");
     }
 
     public boolean isNoError()
@@ -138,9 +142,8 @@ public class ProjectElementException extends Exception implements Formattable
             final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             final PrintStream out = new PrintStream(bytes, true, StandardCharsets.UTF_8.name());
             format(out);
-            final String string = bytes.toString(StandardCharsets.UTF_8.name());
 
-            return string;
+            return bytes.toString(StandardCharsets.UTF_8.name());
         }
         catch (UnsupportedEncodingException e)
         {
