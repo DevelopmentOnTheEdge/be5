@@ -248,6 +248,7 @@ public class TableDefTest
         TableDef def = create();
         List<ProjectElementException> errors = def.getErrors();
         assertEquals(1, errors.size());
-        assertEquals("test/application/Entities/test/Scheme: Table must have at least one column", errors.get(0).getMessage());
+        assertEquals("test/application/Entities/test/Scheme: Table must have at least one column",
+                errors.get(0).getMessage());
     }
 }

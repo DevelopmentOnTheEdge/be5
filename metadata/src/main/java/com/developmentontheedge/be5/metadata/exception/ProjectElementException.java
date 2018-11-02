@@ -18,23 +18,28 @@ public class ProjectElementException extends RuntimeException implements Formatt
     private final int row;
     private final int column;
 
-    public ProjectElementException(DataElementPath path, String property, int row, int column, Throwable cause)
+    public ProjectElementException(DataElementPath path, String property, int row, int column, String message, Throwable cause)
     {
-        super(cause);
+        super(message, cause);
         this.path = path;
         this.property = property;
         this.row = row;
         this.column = column;
     }
 
+    public ProjectElementException(DataElementPath path, String property, int row, int column, Throwable cause)
+    {
+        this(path, property, row, column, null, cause);
+    }
+
     public ProjectElementException(DataElementPath path, String property, Throwable cause)
     {
-        this(path, property, 0, 0, cause);
+        this(path, property, 0, 0, null, cause);
     }
 
     public ProjectElementException(DataElementPath path, String property, String cause)
     {
-        this(path, property, 0, 0, new Exception(cause));
+        this(path, property, 0, 0, cause, null);
     }
 
     public ProjectElementException(DataElementPath path, Throwable cause)
@@ -44,7 +49,7 @@ public class ProjectElementException extends RuntimeException implements Formatt
 
     public ProjectElementException(BeModelElement element, String property, String cause)
     {
-        this(element.getCompletePath(), property, 0, 0, new Exception(cause));
+        this(element.getCompletePath(), property, 0, 0, cause, null);
     }
 
     public ProjectElementException(BeModelElement element, Throwable cause)
@@ -54,21 +59,12 @@ public class ProjectElementException extends RuntimeException implements Formatt
 
     public ProjectElementException(BeModelElement element, String cause)
     {
-        this(element.getCompletePath(), null, new Exception(cause));
-    }
-
-    public ProjectElementException()
-    {
-        this(null, null, 0, 0, null);
+        this(element.getCompletePath(), null, cause);
     }
 
     @Override
     public String getMessage()
     {
-        if (isNoError())
-        {
-            return "ok";
-        }
         StringBuilder sb = new StringBuilder();
         sb.append(path);
         if (property != null)
@@ -110,17 +106,16 @@ public class ProjectElementException extends RuntimeException implements Formatt
     @PropertyName("Message")
     public String getBaseMessage()
     {
-        if (isNoError())
+        String msg = super.getMessage() != null ? super.getMessage() + " " : "";
+        if (getCause() != null)
         {
-            return "ok";
+            return msg + String.valueOf(getCause().getMessage()).
+                    replaceFirst("\\s+at .+\\[line \\d+, column \\d+\\]", "");
         }
-        return String.valueOf(getCause().getMessage()).
-                replaceFirst("\\s+at .+\\[line \\d+, column \\d+\\]", "");
-    }
-
-    public boolean isNoError()
-    {
-        return getCause() == null;
+        else
+        {
+            return super.getMessage();
+        }
     }
 
     public static ProjectElementException notSpecified(BeModelElement de, String property)
@@ -171,13 +166,21 @@ public class ProjectElementException extends RuntimeException implements Formatt
             if (prefix.isEmpty())
                 prefix = " ";
             prefix = "-" + prefix;
-            if (!(cause instanceof ProjectElementException))
+            if (cause == null)
+            {
+                if (super.getMessage() != null)out.println(prefix + super.getMessage());
+                break;
+            }
+            if (cause instanceof ProjectElementException)
+            {
+                error = (ProjectElementException) cause;
+            }
+            else
             {
                 out.println(prefix + cause.getMessage());
                 out.println();
                 break;
             }
-            error = (ProjectElementException) cause;
         }
     }
 

@@ -26,7 +26,7 @@ public class FreemarkerScript extends SourceFile implements TemplateElement, Fre
     {
         List<ProjectElementException> result = new ArrayList<>();
         ProjectElementException error = getResult().getError();
-        if (error != null && !error.isNoError())
+        if (error != null)
         {
             DataElementPath path = getCompletePath();
             if (error.getPath().equals(path.toString()))

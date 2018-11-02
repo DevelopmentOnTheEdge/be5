@@ -499,7 +499,7 @@ public class Query extends EntityItem implements TemplateElement
             result.add(new ProjectElementException(getCompletePath(), "roles", "Unknown role(s): " + missingEntries));
         }
         ProjectElementException error = getQueryCompiled().getError();
-        if (error != null && !error.isNoError())
+        if (error != null)
         {
             DataElementPath path = getCompletePath();
             if (error.getPath().equals(path.toString()))
