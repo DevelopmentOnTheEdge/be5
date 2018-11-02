@@ -35,5 +35,5 @@ meters:
       code: |-
         SELECT
             m.ID,
-            ${concat( 'm.meterType', ' № '?str, 'm.serialNumber' )} AS name
+            CONCAT(m.meterType, ' № ', m.serialNumber) AS name
         FROM meters m
