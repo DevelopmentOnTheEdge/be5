@@ -21,7 +21,7 @@ provinces:
   - '*** Selection view ***':
       type: 1D
       operations: Filter
-      code: SELECT p.ID AS Code, ${concat( 'p.countryID', ' - '?str, 'p.name' )} AS Name FROM provinces p ORDER BY p.countryID, p.name
+      code: SELECT p.ID AS Code, CONCAT(p.countryID, ' - ', p.name) AS Name FROM provinces p ORDER BY p.countryID, p.name
   - All records:
       type: 1D
       roles: Administrator
