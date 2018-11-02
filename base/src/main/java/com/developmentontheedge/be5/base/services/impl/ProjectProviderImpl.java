@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -21,7 +20,6 @@ public class ProjectProviderImpl implements ProjectProvider
     private static final Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
 
     private Project project;
-    private Map<String, Project> initModulesMap;
     private List<Runnable> callOnReload = new ArrayList<>();
 
     private WatchDir watcher = null;
@@ -81,10 +79,12 @@ public class ProjectProviderImpl implements ProjectProvider
             {
                 if (stage == Stage.DEVELOPMENT)
                 {
-                    if (initModulesMap == null) initModulesMap = ModuleLoader2.getModulesMap();
-                    watcher = new WatchDir(initModulesMap)
-                            .onModify(onModify -> dirty = true)
-                            .start();
+                    if (ModuleLoader2.getModulesMap() != null)
+                    {
+                        watcher = new WatchDir(ModuleLoader2.getModulesMap())
+                                .onModify(onModify -> dirty = true)
+                                .start();
+                    }
                 }
             }
         }
