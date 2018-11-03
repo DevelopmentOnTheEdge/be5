@@ -27,8 +27,7 @@ public class ConnectionServiceImpl implements ConnectionService
         this.databaseService = databaseService;
     }
 
-    @Override
-    public Connection getCurrentTxConn()
+    Connection getCurrentTxConn()
     {
         return TRANSACT_CONN.get();
     }
@@ -154,7 +153,14 @@ public class ConnectionServiceImpl implements ConnectionService
     @Override
     public Connection getConnection() throws SQLException
     {
-        return databaseService.getDataSource().getConnection();
+        if (isInTransaction())
+        {
+            return getCurrentTxConn();
+        }
+        else
+        {
+            return databaseService.getDataSource().getConnection();
+        }
     }
 
     @Override

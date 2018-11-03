@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ConnectionServiceTest extends DatabaseTest
 {
@@ -30,10 +31,10 @@ public class ConnectionServiceTest extends DatabaseTest
     @Test
     public void test() throws Exception
     {
-        assertEquals(null, connectionService.getCurrentTxConn());
+        assertNull(((ConnectionServiceImpl) connectionService).getCurrentTxConn());
 
         Connection connection = connectionService.beginTransaction();
-        assertEquals(connection, connectionService.getCurrentTxConn());
+        assertEquals(connection, ((ConnectionServiceImpl) connectionService).getCurrentTxConn());
 
         db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
         connectionService.endTransaction();

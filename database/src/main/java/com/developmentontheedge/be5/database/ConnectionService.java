@@ -11,8 +11,6 @@ public interface ConnectionService
 {
     Connection getConnection() throws SQLException;
 
-    Connection getCurrentTxConn();
-
     Connection beginTransaction();
 
     void endTransaction();

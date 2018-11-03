@@ -16,12 +16,6 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public Connection getCurrentTxConn()
-    {
-        return null;
-    }
-
-    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         try

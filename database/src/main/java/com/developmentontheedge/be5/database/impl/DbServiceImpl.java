@@ -130,11 +130,9 @@ public class DbServiceImpl implements DbService
     public <T> T execute(SqlExecutor<T> executor)
     {
         Connection conn = null;
-        Connection txConn = connectionService.getCurrentTxConn();
-
         try
         {
-            conn = (txConn != null) ? txConn : connectionService.getConnection();
+            conn = connectionService.getConnection();
             return executor.run(conn);
         }
         catch (Throwable e)
@@ -144,10 +142,7 @@ public class DbServiceImpl implements DbService
         }
         finally
         {
-            if (txConn == null)
-            {
-                connectionService.releaseConnection(conn);
-            }
+            connectionService.releaseConnection(conn);
         }
     }
 
