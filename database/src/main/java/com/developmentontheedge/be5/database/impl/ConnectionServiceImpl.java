@@ -152,14 +152,9 @@ public class ConnectionServiceImpl implements ConnectionService
     }
 
     @Override
-    public Connection getConnection(boolean isReadOnly) throws SQLException
+    public Connection getConnection() throws SQLException
     {
-        Connection conn = databaseService.getDataSource().getConnection();
-        if (isReadOnly)
-        {
-            conn.setReadOnly(true);
-        }
-        return conn;
+        return databaseService.getDataSource().getConnection();
     }
 
     @Override

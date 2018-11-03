@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class ConnectionServiceMock implements ConnectionService
 {
     @Override
-    public Connection getConnection(boolean isReadOnly) throws SQLException
+    public Connection getConnection() throws SQLException
     {
         return null;
     }

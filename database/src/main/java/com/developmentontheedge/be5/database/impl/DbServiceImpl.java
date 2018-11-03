@@ -47,19 +47,19 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params)
     {
-        return execute(true, conn -> query(conn, sql, rsh, params));
+        return execute(conn -> query(conn, sql, rsh, params));
     }
 
     @Override
     public <T> T select(String sql, ResultSetParser<T> parser, Object... params)
     {
-        return execute(true, conn -> query(conn, sql, rs -> rs.next() ? parser.parse(rs) : null, params));
+        return execute(conn -> query(conn, sql, rs -> rs.next() ? parser.parse(rs) : null, params));
     }
 
     @Override
     public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
-        return execute(true, conn -> query(conn, sql, rs -> {
+        return execute(conn -> query(conn, sql, rs -> {
             List<T> rows = new ArrayList<>();
             while (rs.next())
             {
@@ -72,25 +72,25 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> T one(String sql, Object... params)
     {
-        return execute(true, conn -> query(conn, sql, new ScalarHandler<T>(), params));
+        return execute(conn -> query(conn, sql, new ScalarHandler<>(), params));
     }
 
     @Override
     public int update(String sql, Object... params)
     {
-        return execute(false, conn -> update(conn, sql, params));
+        return execute(conn -> update(conn, sql, params));
     }
 
     @Override
     public int updateUnsafe(String sql, Object... params)
     {
-        return execute(false, conn -> updateUnsafe(conn, sql, params));
+        return execute(conn -> updateUnsafe(conn, sql, params));
     }
 
     @Override
     public <T> T insert(String sql, Object... params)
     {
-        return execute(false, conn -> insert(conn, sql, params));
+        return execute(conn -> insert(conn, sql, params));
     }
 
     @Override
@@ -123,17 +123,18 @@ public class DbServiceImpl implements DbService
     {
         sql = format(sql);
         log.fine(sql + Arrays.toString(params));
-        return queryRunner.insert(conn, sql, new ScalarHandler<T>(), params);
+        return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
     }
 
-    private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor)
+    @Override
+    public <T> T execute(SqlExecutor<T> executor)
     {
         Connection conn = null;
         Connection txConn = connectionService.getCurrentTxConn();
 
         try
         {
-            conn = (txConn != null) ? txConn : connectionService.getConnection(isReadOnly);
+            conn = (txConn != null) ? txConn : connectionService.getConnection();
             return executor.run(conn);
         }
         catch (Throwable e)
@@ -148,12 +149,6 @@ public class DbServiceImpl implements DbService
                 connectionService.releaseConnection(conn);
             }
         }
-    }
-
-    @Override
-    public <T> T execute(SqlExecutor<T> executor)
-    {
-        return execute(false, executor);
     }
 
     @Override

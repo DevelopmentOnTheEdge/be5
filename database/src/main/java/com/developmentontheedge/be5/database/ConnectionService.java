@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public interface ConnectionService
 {
-    Connection getConnection(boolean isReadOnly) throws SQLException;
+    Connection getConnection() throws SQLException;
 
     Connection getCurrentTxConn();
 
