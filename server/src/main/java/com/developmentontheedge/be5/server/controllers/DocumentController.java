@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -24,12 +25,14 @@ public class DocumentController extends JsonApiModelController
 {
     private final DocumentGenerator documentGenerator;
     private final ErrorModelHelper errorModelHelper;
+    private final DbService db;
 
     @Inject
-    public DocumentController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper)
+    public DocumentController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper, DbService db)
     {
         this.documentGenerator = documentGenerator;
         this.errorModelHelper = errorModelHelper;
+        this.db = db;
     }
 
     @Override
@@ -42,15 +45,17 @@ public class DocumentController extends JsonApiModelController
 
         try
         {
-            switch (requestSubUrl)
-            {
-                case "":
-                    return documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
-                case "update":
-                    return documentGenerator.updateQueryJsonApi(entityName, queryName, parameters);
-                default:
-                    return null;
-            }
+            return db.transactionWithResult(conn -> {
+                switch (requestSubUrl)
+                {
+                    case "":
+                        return documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
+                    case "update":
+                        return documentGenerator.updateQueryJsonApi(entityName, queryName, parameters);
+                    default:
+                        return null;
+                }
+            });
         }
         catch (Be5Exception e)
         {
