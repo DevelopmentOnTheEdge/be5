@@ -763,13 +763,9 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             firstError = error;
             errorsInfo.append(error.format());
         }
-        if (count == 1)
-        {
-            throw firstError;
-        }
         if (count > 0)
         {
-            throw new ProjectElementException(this, "Project has " + count + " errors.\n" + errorsInfo.toString());
+            throw new ProjectElementException(this, "Project has " + count + " errors.\n" + errorsInfo.toString(), firstError);
         }
     }
 

@@ -47,6 +47,11 @@ public class ProjectElementException extends RuntimeException implements Formatt
         this(path, null, cause);
     }
 
+    public ProjectElementException(BeModelElement element, String property, Throwable cause)
+    {
+        this(element.getCompletePath(), property, 0, 0, null, cause);
+    }
+
     public ProjectElementException(BeModelElement element, String property, String cause)
     {
         this(element.getCompletePath(), property, 0, 0, cause, null);
