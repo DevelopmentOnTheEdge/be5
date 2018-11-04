@@ -79,6 +79,23 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>com.developmentontheedge.be5</groupId>
+        <artifactId>be5-maven-plugin</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+        <configuration>
+          <projectPath>./</projectPath>
+        </configuration>
+        <executions>
+          <execution>
+            <id>generate-groovy-dsl</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>validate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
         <version>1.6</version>

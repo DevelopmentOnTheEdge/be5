@@ -2,9 +2,11 @@ package com.developmentontheedge.be5.metadata.sql;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.ParseResult;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.sql.model.SqlQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,8 @@ public class SqlValidator
 
     private void validateQuery(Query query, List<ProjectElementException> result)
     {
-        ProjectElementException error = query.getQueryCompiled().getError();
+        ParseResult parseResult = query.getQueryCompiled();
+        ProjectElementException error = parseResult.getError();
         if (error != null)
         {
             DataElementPath path = query.getCompletePath();
@@ -53,6 +56,20 @@ public class SqlValidator
                 result.add(error);
             else
                 result.add(new ProjectElementException(path, "query", error));
+        }
+        else
+        {
+            if (query.isSqlQuery())
+            {
+                try
+                {
+                    SqlQuery.parse(parseResult.getResult());
+                }
+                catch (RuntimeException e)
+                {
+                    result.add(new ProjectElementException(query.getCompletePath(), "query", e));
+                }
+            }
         }
     }
 }
