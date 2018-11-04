@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.sql.SqlValidator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
         initProject();
 
         setRdbms();
-        //validateProject();
+        validateProjectSql();
         checkQuery();
         checkRoles();
         checkDdl();
@@ -86,19 +87,19 @@ public class AppValidate extends ScriptSupport<AppValidate>
         }
     }
 
-//    private void validateProject() throws ScriptException
-//    {
-//        if (skipValidation)
-//        {
-//            logger.info("Validation skipped");
-//        }
-//        else
-//        {
-//            logger.info("Validating...");
-//            be5Project.validate();
-//            logger.info("Project is valid.");
-//        }
-//    }
+    private void validateProjectSql() throws ScriptException
+    {
+        if (skipValidation)
+        {
+            logger.info("Validation sql skipped");
+        }
+        else
+        {
+            logger.info("Validating sql...");
+            new SqlValidator().validate(be5Project);
+            logger.info("Project sql is valid.");
+        }
+    }
 
 //    private List<ProjectElementException> validateDeps( List<Project> moduleProjects )
 //    {

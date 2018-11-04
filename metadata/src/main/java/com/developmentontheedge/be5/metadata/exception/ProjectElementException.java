@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @PropertyName("Error")
 public class ProjectElementException extends RuntimeException implements Formattable
@@ -189,4 +190,22 @@ public class ProjectElementException extends RuntimeException implements Formatt
         }
     }
 
+    public static void checkErrors(List<ProjectElementException> errors)
+    {
+        int count = 0;
+        ProjectElementException firstError = null;
+        StringBuilder errorsInfo = new StringBuilder();
+        for (ProjectElementException error : errors)
+        {
+            if (error.getProperty().equals("connectionProfileName"))
+                continue;
+            count++;
+            firstError = error;
+            errorsInfo.append(error.format());
+        }
+        if (count > 0)
+        {
+            throw new RuntimeException("Project has " + count + " errors.\n" + errorsInfo.toString(), firstError);
+        }
+    }
 }
