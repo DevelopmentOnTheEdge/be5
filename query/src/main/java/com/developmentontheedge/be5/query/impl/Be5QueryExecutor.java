@@ -227,8 +227,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
-
-            //ast = SqlQuery.parse("select 'error'");
         }
         dql.log("Compiled", ast);
 

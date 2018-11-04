@@ -4,6 +4,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -14,12 +15,12 @@ public class DebugQueryLogger
 
     public void log(String name, AstStart ast)
     {
-        log(name, ast.format());
+        if (log.isLoggable(Level.FINER)) log(name, ast.format());
     }
 
     public void log(String name, String query)
     {
-        if (!query.equals(lastQuery))
+        if (log.isLoggable(Level.FINER) && !query.equals(lastQuery))
         {
             StringBuilder sb = new StringBuilder();
             sb.append(name).append(": ");
