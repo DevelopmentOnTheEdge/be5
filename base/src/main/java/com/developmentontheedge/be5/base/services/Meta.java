@@ -62,10 +62,6 @@ public interface Meta
      */
     boolean isAvailableFor(EntityItem entityItem, List<String> roles);
 
-    String getQueryCode(String entityName, String queryName);
-
-    String getQueryCode(Query query);
-
     /**
      * Returns a query.
      * Throws an exception if there's no such query.

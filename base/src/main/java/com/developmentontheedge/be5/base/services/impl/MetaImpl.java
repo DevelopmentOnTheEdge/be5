@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -337,30 +336,6 @@ public class MetaImpl implements Meta
     public boolean isAvailableFor(EntityItem entityItem, List<String> roles)
     {
         return roles.stream().anyMatch(entityItem.getRoles().getFinalRoles()::contains);
-    }
-
-    @Override
-    public String getQueryCode(String entityName, String queryName)
-    {
-        Query query = getQuery(entityName, queryName);
-
-        return getQueryCode(query);
-    }
-
-    @Override
-    public String getQueryCode(Query query)
-    {
-        try
-        {
-            synchronized (query.getProject())
-            {
-                return query.getQueryCompiled().validate().trim();
-            }
-        }
-        catch (ProjectElementException e)
-        {
-            throw Be5Exception.internalInQuery(query, e);
-        }
     }
 
     @Override

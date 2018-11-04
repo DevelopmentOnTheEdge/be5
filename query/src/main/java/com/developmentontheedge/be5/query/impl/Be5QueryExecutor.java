@@ -78,7 +78,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String resolveQuery(String entityName, String queryName)
         {
-            return meta.getQueryCode(entityName == null ? query.getEntity().getName() : entityName, queryName);
+            return meta.getQuery(entityName == null ? query.getEntity().getName() : entityName, queryName)
+                       .getFinalQuery();
         }
 
         @Override
@@ -214,11 +215,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
 
-        String queryText = meta.getQueryCode(query);
-
-        dql.log("After FreeMarker", queryText);
-        if (queryText.isEmpty())
-            return null;
+        String queryText = query.getFinalQuery();
+        dql.log("FinalQuery", queryText);
+        if (queryText.isEmpty()) return null;
         AstStart ast;
         try
         {

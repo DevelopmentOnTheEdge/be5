@@ -65,7 +65,7 @@ public class FilterInfoPlugin implements DocumentPlugin
 
             if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
             {
-                AstStart ast = SqlQuery.parse(meta.getQueryCode(query));
+                AstStart ast = SqlQuery.parse(query.getFinalQuery());
                 Optional<AstBeParameterTag> usedParam = ast.tree()
                         .select(AstBeParameterTag.class)
                         .filter(x -> x.getName().equals(k))

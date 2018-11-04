@@ -310,7 +310,7 @@ public class DpsHelper
         AstStart ast;
         try
         {
-            ast = SqlQuery.parse(meta.getQueryCode(query));
+            ast = SqlQuery.parse(query.getFinalQuery());
         }
         catch (RuntimeException e)
         {

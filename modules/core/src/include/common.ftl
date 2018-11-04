@@ -2,7 +2,7 @@
 
 <#macro _sqlMacro><#assign nested><#nested></#assign>${project.addSQLMacro(nested)}</#macro>
 
-<#macro _copyQuery name>${entity.getQueries().get(name).getQueryCompiled().validate()}</#macro>
+<#macro _copyQuery name>${entity.getQueries().get(name).getFinalQuery()}</#macro>
 
 <#macro _copySelectionQuery><@_copyQuery "*** Selection view ***"/></#macro>
 

@@ -39,12 +39,12 @@ public class EntityTest
         DataElementUtils.save(query);
         query.setQuery("SELECT a || b FROM test");
 
-        assertEquals("SELECT a || b FROM test", query.getQueryCompiled().validate());
+        assertEquals("SELECT a || b FROM test", query.getFinalQuery());
         e.setBesql(true);
-        assertEquals("SELECT CONCAT(a , b) FROM test", query.getQueryCompiled().validate());
+        assertEquals("SELECT CONCAT(a , b) FROM test", query.getFinalQuery());
 
         prj.setDatabaseSystem(Rdbms.POSTGRESQL);
-        assertEquals("SELECT a || b FROM test", query.getQueryCompiled().validate());
+        assertEquals("SELECT a || b FROM test", query.getFinalQuery());
     }
 
 }

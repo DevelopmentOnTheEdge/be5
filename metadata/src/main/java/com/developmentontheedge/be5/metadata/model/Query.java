@@ -172,6 +172,14 @@ public class Query extends EntityItem implements TemplateElement
         return getProject().mergeTemplate(this);
     }
 
+    public String getFinalQuery()
+    {
+        synchronized (this.getProject())
+        {
+            return this.getQueryCompiled().validate().trim();
+        }
+    }
+
     @PropertyName("Query to check new data")
     public String getNewDataCheckQuery()
     {

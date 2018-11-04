@@ -53,12 +53,12 @@ public class LoadTest extends CoreBe5ProjectDbMockTest
         DataElementUtils.saveQuiet(query2);
 
         query2.setQuery("<@_copyAllRecordsQuery/>");
-        Assert.assertEquals("SELECT * FROM myTable", query2.getQueryCompiled().validate());
+        Assert.assertEquals("SELECT * FROM myTable", query2.getFinalQuery());
 
         query2.setQuery("SELECT <@_bold>name</@_bold> FROM myTable");
-        Assert.assertEquals("SELECT ( '<b>' || name || '</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+        Assert.assertEquals("SELECT ( '<b>' || name || '</b>' ) FROM myTable", query2.getFinalQuery());
 
         query2.setQuery("SELECT <@_bold><@_italic>name</@></@> FROM myTable");
-        Assert.assertEquals("SELECT ( '<b>' || ( '<i>' || name || '</i>' ) || '</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+        Assert.assertEquals("SELECT ( '<b>' || ( '<i>' || name || '</i>' ) || '</b>' ) FROM myTable", query2.getFinalQuery());
     }
 }

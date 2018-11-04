@@ -126,7 +126,7 @@ public class FreemarkerTest extends TestCase
         Query query = new Query("query", entity);
         DataElementUtils.saveQuiet(query);
         query.setQuery("SELECT ${concat('col1','col2'?asVarchar)} FROM ${entity.getName()}");
-        assertEquals("SELECT CONCAT( col1,CAST(col2 AS CHAR) ) FROM myTable", query.getQueryCompiled().validate());
+        assertEquals("SELECT CONCAT( col1,CAST(col2 AS CHAR) ) FROM myTable", query.getFinalQuery());
         query.setQuery("SELECT ${error} FROM myTable");
         ProjectElementException error = query.getQueryCompiled().getError();
         assertNotNull(error);
@@ -138,7 +138,7 @@ public class FreemarkerTest extends TestCase
         DataElementUtils.saveQuiet(query2);
         query2.setMenuName("My menu item");
         query.setQuery("${project.getEntity('myTable').getQueries().get('myQuery').getMenuName()}");
-        assertEquals("My menu item", query.getQueryCompiled().validate());
+        assertEquals("My menu item", query.getFinalQuery());
     }
 
     public void testPredefinedMacros() throws ProjectElementException
@@ -154,7 +154,7 @@ public class FreemarkerTest extends TestCase
         FreemarkerScript script = new FreemarkerScript(FreemarkerCatalog.MAIN_MACRO_LIBRARY, project.getMacroCollection());
         DataElementUtils.saveQuiet(script);
         script.setSource(
-                "<#macro _copyQuery name>${entity.getQueries().get(name).getQueryCompiled().validate()}</#macro>" +
+                "<#macro _copyQuery name>${entity.getQueries().get(name).getFinalQuery()}</#macro>" +
                         "<#macro _copyAllRecordsQuery><@_copyQuery \"All records\"/></#macro>" +
                         "<#macro _bold><#assign nested><#nested></#assign>${concat('<b>'?str, nested, '</b>'?str)}</#macro>\n" +
                         "<#macro _italic><#assign nested><#nested></#assign>${concat('<i>'?str, nested, '</i>'?str)}</#macro>"
@@ -166,13 +166,13 @@ public class FreemarkerTest extends TestCase
         DataElementUtils.saveQuiet(query2);
 
         query2.setQuery("<@_copyAllRecordsQuery/>");
-        assertEquals("SELECT * FROM myTable", query2.getQueryCompiled().validate());
+        assertEquals("SELECT * FROM myTable", query2.getFinalQuery());
 
         query2.setQuery("SELECT <@_bold>name</@_bold> FROM myTable");
-        assertEquals("SELECT CONCAT( '<b>',name,'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+        assertEquals("SELECT CONCAT( '<b>',name,'</b>' ) FROM myTable", query2.getFinalQuery());
 
         query2.setQuery("SELECT <@_bold><@_italic>name</@></@> FROM myTable");
-        assertEquals("SELECT CONCAT( '<b>',CONCAT( '<i>',name,'</i>' ),'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+        assertEquals("SELECT CONCAT( '<b>',CONCAT( '<i>',name,'</i>' ),'</b>' ) FROM myTable", query2.getFinalQuery());
     }
 
     public void testProjectMacros() throws ProjectElementException
@@ -188,13 +188,13 @@ public class FreemarkerTest extends TestCase
         Query query = new Query("All records", entity);
         DataElementUtils.saveQuiet(query);
         query.setQuery("SELECT <@USER_INFO/> FROM ${entity.getName()}");
-        assertEquals("SELECT User: CONCAT( u.emailAddress,' (',per.courtesy,' ',per.firstName,' ',per.lastName,', #',CAST(per.ID AS CHAR),')' ) FROM myTable", query.getQueryCompiled().validate());
+        assertEquals("SELECT User: CONCAT( u.emailAddress,' (',per.courtesy,' ',per.firstName,' ',per.lastName,', #',CAST(per.ID AS CHAR),')' ) FROM myTable", query.getFinalQuery());
         script.setSource("<#macro USER_INFO>${concat('u.emailAddress', ' ('?str, 'per.courtesy', ' '?str, 'per.firstName', ' '?str, 'per.lastName', ', #'?str, 'per.ID'?asVarchar, ')'?str)}</#macro>");
-        assertEquals("SELECT CONCAT( u.emailAddress,' (',per.courtesy,' ',per.firstName,' ',per.lastName,', #',CAST(per.ID AS CHAR),')' ) FROM myTable", query.getQueryCompiled().validate());
+        assertEquals("SELECT CONCAT( u.emailAddress,' (',per.courtesy,' ',per.firstName,' ',per.lastName,', #',CAST(per.ID AS CHAR),')' ) FROM myTable", query.getFinalQuery());
 
         script.setSource("<#macro test a b c>${a} - ${b} - ${c}</#macro>");
         query.setQuery("<@test 'q' 'w' 'e'/>");
-        assertEquals("q - w - e", query.getQueryCompiled().validate());
+        assertEquals("q - w - e", query.getFinalQuery());
     }
 
     public void testProjectMacroDefValues() throws ProjectElementException
@@ -212,6 +212,6 @@ public class FreemarkerTest extends TestCase
         Query query = new Query("All records", entity);
         DataElementUtils.saveQuiet(query);
         query.setQuery("<@test 'a'/>|<@test 'a' 'b'/>|<@test a='q'/>");
-        assertEquals("a = a, b = default|a = a, b = b|a = q, b = default", query.getQueryCompiled().validate());
+        assertEquals("a = a, b = default|a = a, b = b|a = q, b = default", query.getFinalQuery());
     }
 }

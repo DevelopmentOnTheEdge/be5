@@ -27,7 +27,7 @@ public class QueryTest
         Query query = new Query("query", e);
         query.setQuery("SELECT * FROM ${entity.getName()}");
         DataElementUtils.save(query);
-        assertEquals("SELECT * FROM e", query.getQueryCompiled().validate());
+        assertEquals("SELECT * FROM e", query.getFinalQuery());
         query.setType(QueryType.JAVASCRIPT);
         assertFalse(query.isFileNameHidden());
         assertTrue(query.isFromApplication());
