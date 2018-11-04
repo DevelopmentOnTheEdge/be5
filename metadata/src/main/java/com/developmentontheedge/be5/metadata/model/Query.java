@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.annot.PropertyDescription;
@@ -497,15 +496,6 @@ public class Query extends EntityItem implements TemplateElement
         if (!missingEntries.isEmpty())
         {
             result.add(new ProjectElementException(getCompletePath(), "roles", "Unknown role(s): " + missingEntries));
-        }
-        ProjectElementException error = getQueryCompiled().getError();
-        if (error != null)
-        {
-            DataElementPath path = getCompletePath();
-            if (error.getPath().equals(path.toString()))
-                result.add(error);
-            else
-                result.add(new ProjectElementException(path, "query", error));
         }
         return result;
     }
