@@ -51,6 +51,8 @@ import java.util.TreeSet;
 @PropertyName("Project")
 public class Project extends BeVectorCollection<BeModelElement> implements BeElementWithProperties
 {
+    public static final String BE_SQL_QUERIES_FEATURE = "beSqlQueries";
+
     public static final String APPLICATION = "application";
     public static final String MODULES = "Modules";
     public static final String MACROS = "Macros";

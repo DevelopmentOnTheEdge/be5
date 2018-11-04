@@ -17,7 +17,7 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 public class DocumentCategoriesPlugin implements DocumentPlugin
 {
     private final CategoriesService categoriesService;
-    private final static String DOCUMENT_CATEGORIES_FEATURE = "documentCategories";
+    private static final String DOCUMENT_CATEGORIES_FEATURE = "documentCategories";
 
     @Inject
     public DocumentCategoriesPlugin(CategoriesService categoriesService, DocumentGenerator documentGenerator,

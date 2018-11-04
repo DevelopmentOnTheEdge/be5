@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.developmentontheedge.be5.metadata.model.Project.BE_SQL_QUERIES_FEATURE;
+
 
 @PropertyName("Query")
 public class Query extends EntityItem implements TemplateElement
@@ -174,9 +176,16 @@ public class Query extends EntityItem implements TemplateElement
 
     public String getFinalQuery()
     {
-        synchronized (this.getProject())
+        if (getProject().hasFeature(BE_SQL_QUERIES_FEATURE))
         {
-            return this.getQueryCompiled().validate().trim();
+            return this.getQuery();
+        }
+        else
+        {
+            synchronized (this.getProject())
+            {
+                return this.getQueryCompiled().validate().trim();
+            }
         }
     }
 
@@ -474,8 +483,8 @@ public class Query extends EntityItem implements TemplateElement
             return debugEquals("quickFilters");
         if (!getQuerySettingsPerRole().equals(other.getQuerySettingsPerRole()))
             return debugEquals("querySettings");
-        if (!getQueryCompiled().equals(other.getQueryCompiled()))
-            return debugEquals("queryCompiled");
+        if (!getQuery().equals(other.getQuery()))
+            return debugEquals("query");
         return true;
     }
 
