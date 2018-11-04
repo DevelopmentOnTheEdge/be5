@@ -204,12 +204,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<String> getColumnNames() throws Be5Exception
     {
         if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
-            return getColumnNames(getFinalSql());
+            return getColumnNames(getFinalSql().getQuery().toString());
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
     @Override
-    public String getFinalSql()
+    public AstStart getFinalSql()
     {
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
@@ -218,7 +218,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         dql.log("After FreeMarker", queryText);
         if (queryText.isEmpty())
-            return "";
+            return null;
         AstStart ast;
         try
         {
@@ -268,7 +268,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dql.log("With limits", ast);
         }
 
-        return ast.getQuery().toString();
+        return ast;
     }
 
     private DynamicProperty[] getSchema(String sql)

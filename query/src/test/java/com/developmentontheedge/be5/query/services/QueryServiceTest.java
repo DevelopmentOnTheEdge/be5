@@ -68,7 +68,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
                 "  t.name AS \"Name\",\n" +
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
-                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql());
+                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE name IN ('test1', 'test2') LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql());
+                build(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE ID IN (1, 2) LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql());
+                build(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", "test")).getFinalSql());
+                build(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable t\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", "test")).getFinalSql());
+                build(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -140,6 +140,6 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
-        assertEquals("", be5QueryExecutor.getFinalSql());
+        assertEquals("", be5QueryExecutor.getFinalSql().getQuery().toString());
     }
 }

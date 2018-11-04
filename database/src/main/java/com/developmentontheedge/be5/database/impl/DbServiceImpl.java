@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import com.developmentontheedge.sql.format.dbms.Context;
 import com.developmentontheedge.sql.format.dbms.Formatter;
+import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.apache.commons.dbutils.QueryRunner;
@@ -17,13 +18,13 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import javax.inject.Inject;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class DbServiceImpl implements DbService
 {
@@ -59,14 +60,23 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
-        return execute(conn -> query(conn, sql, rs -> {
-            List<T> rows = new ArrayList<>();
-            while (rs.next())
-            {
-                rows.add(parser.parse(rs));
-            }
-            return rows;
-        }, params));
+        return execute(conn -> query(conn, sql, rs -> listWrapper(rs, parser), params));
+    }
+
+    @Override
+    public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
+    {
+        return execute(conn -> query(conn, astStart, rs -> listWrapper(rs, parser), params));
+    }
+
+    private <T> List<T> listWrapper(ResultSet rs, ResultSetParser<T> parser) throws SQLException
+    {
+        List<T> rows = new ArrayList<>();
+        while (rs.next())
+        {
+            rows.add(parser.parse(rs));
+        }
+        return rows;
     }
 
     @Override
@@ -99,9 +109,21 @@ public class DbServiceImpl implements DbService
         return formatSqlCache.get(sql, k -> new Formatter().format(SqlQuery.parse(k), context));
     }
 
+    public String format(AstStart astStart)
+    {
+        return new Formatter().format(astStart, context);
+    }
+
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
     {
         sql = format(sql);
+        log.fine(sql + Arrays.toString(params));
+        return queryRunner.query(conn, sql, rsh, params);
+    }
+
+    private <T> T query(Connection conn, AstStart astStart, ResultSetHandler<T> rsh, Object... params) throws SQLException
+    {
+        String sql = format(astStart);
         log.fine(sql + Arrays.toString(params));
         return queryRunner.query(conn, sql, rsh, params);
     }
@@ -157,5 +179,4 @@ public class DbServiceImpl implements DbService
     {
         connectionService.transaction(executor);
     }
-
 }

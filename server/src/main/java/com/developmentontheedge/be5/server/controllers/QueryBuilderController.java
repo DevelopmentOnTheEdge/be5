@@ -241,7 +241,7 @@ public class QueryBuilderController extends JsonApiModelController
                     FrontendConstants.STATIC_ACTION,
                     new StaticPagePresentation(
                             "Final sql",
-                            queryService.build(query, parameters).getFinalSql()
+                            queryService.build(query, parameters).getFinalSql().getQuery().toString()
                     ),
                     null
             ));

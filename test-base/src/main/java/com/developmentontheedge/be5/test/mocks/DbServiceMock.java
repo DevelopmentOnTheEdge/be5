@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.util.Arrays;
@@ -44,6 +45,13 @@ public class DbServiceMock implements DbService
     {
         log.fine(sql + Arrays.toString(params));
         return mock.list(sql, parser, params);
+    }
+
+    @Override
+    public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
+    {
+        log.fine(astStart.getQuery().toString() + Arrays.toString(params));
+        return mock.list(astStart, parser, params);
     }
 
     @Override
