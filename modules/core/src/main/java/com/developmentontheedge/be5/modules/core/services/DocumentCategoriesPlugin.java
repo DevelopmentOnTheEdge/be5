@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.modules.core.services.model.Category;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
@@ -17,13 +17,14 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 public class DocumentCategoriesPlugin implements DocumentPlugin
 {
     private final CategoriesService categoriesService;
-    private final String documentPluginName = "documentCategories";
+    private final static String DOCUMENT_CATEGORIES_FEATURE = "documentCategories";
 
     @Inject
-    public DocumentCategoriesPlugin(CategoriesService categoriesService, DocumentGenerator documentGenerator, Meta meta)
+    public DocumentCategoriesPlugin(CategoriesService categoriesService, DocumentGenerator documentGenerator,
+                                    ProjectProvider projectProvider)
     {
         this.categoriesService = categoriesService;
-        if (meta.hasFeature(documentPluginName))
+        if (projectProvider.get().hasFeature(DOCUMENT_CATEGORIES_FEATURE))
         {
             documentGenerator.addDocumentPlugin(this);
         }
@@ -36,7 +37,7 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
                 getCategoryNavigation(query.getEntity().getName(), (String) parameters.get(CATEGORY_ID_PARAM));
         if (categories.size() > 0)
         {
-            return new ResourceData(documentPluginName, categories, null);
+            return new ResourceData(DOCUMENT_CATEGORIES_FEATURE, categories, null);
         }
         return null;
     }

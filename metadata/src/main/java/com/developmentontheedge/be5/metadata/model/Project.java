@@ -1133,4 +1133,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         getAutomaticSerializationService().fireCodeChanged(this);
     }
 
+    public boolean hasFeature(String name)
+    {
+        return this.getFeatures().contains(name);
+    }
 }

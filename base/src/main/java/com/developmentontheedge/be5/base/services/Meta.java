@@ -130,8 +130,6 @@ public interface Meta
 
     List<Daemon> getDaemons();
 
-    boolean hasFeature(String name);
-
     Query createQueryFromSql(String sql);
 
     boolean hasAccess(RoleSet roles, List<String> availableRoles);
