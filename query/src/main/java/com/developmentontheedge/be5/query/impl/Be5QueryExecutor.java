@@ -317,40 +317,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         });
     }
 
-//    private StreamEx<DynamicPropertySet> streamCustomQuery()
-//    {
-//        try
-//        {
-//            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
-//                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
-//                    // TODO: create and pass ParamHelper
-//                    .newInstance( userInfo.getUserInfo(), new MapParamHelper(parameters), connector, offset, limit );
-//
-//            if (iterator instanceof Be5Query)
-//            {
-//                ((Be5Query) iterator).initialize(injector);
-//            }
-//
-//            @SuppressWarnings("unchecked")
-//            StreamEx<DynamicPropertySet> streamDps = StreamEx.of( iterator );
-//            return streamDps;
-//        }
-//        catch( InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-//                | NoSuchMethodException | SecurityException | ProjectElementException e )
-//        {
-//            throw Be5Exception.internalInQuery( e, query );
-//        }
-//    }
-
-//    private void processMeta(Object value, Map<String, Map<String, String>> meta)
-//    {
-//        if (subQueryKeys.contains(value) && !meta.containsKey("sql"))
-//        {
-//            AstBeSqlSubQuery subQuery = contextApplier.getSubQuery((String) value, s -> "");
-//            meta.put("sql", StreamEx.of("beautifier", "default").mapToEntry(subQuery::getParameter).nonNullValues().toSortedMap());
-//        }
-//    }
-
     @Override
     public List<DynamicPropertySet> execute()
     {

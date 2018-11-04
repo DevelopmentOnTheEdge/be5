@@ -27,19 +27,4 @@ public class ProjectTest
                 "  testtable t", project.getEntity("testtable").getQueries().get("All records").getQuery());
 
     }
-
-    @Test
-    public void testQueryCompiledValidate() throws ProjectElementException
-    {
-        Query testQuery = projectProvider.get().getEntity("testtable").getQueries().get("All records");
-
-        String validatedQuery = testQuery.getQueryCompiled().validate().trim();
-        assertNotNull(validatedQuery);
-        assertEquals("SELECT\n" +
-                "  t.name AS \"Name\",\n" +
-                "  t.value AS \"Value\"\n" +
-                "FROM\n" +
-                "  testtable t", validatedQuery);
-    }
-
 }
