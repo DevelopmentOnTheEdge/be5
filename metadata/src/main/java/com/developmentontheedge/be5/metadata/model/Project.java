@@ -13,11 +13,6 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.sql.format.MacroExpander;
-import com.developmentontheedge.sql.format.dbms.Context;
-import com.developmentontheedge.sql.format.dbms.Dbms;
-import com.developmentontheedge.sql.format.dbms.DbmsTransformer;
-import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlParser;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
@@ -62,9 +57,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     private Rdbms databaseSystem;
 
     // BE-SQL related fields
-    private int beSQL = 0;
     private final List<String> sqlMacros = new ArrayList<>();
-    private SqlParser sqlParser;
 
     protected Configuration freemarkerConfiguration = null;
     private PrintStream debugStream;
@@ -207,8 +200,6 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public Rdbms getDatabaseSystem()
     {
-        if (beSQL > 0)
-            return Rdbms.BESQL;
         return databaseSystem == null && isModuleProject() ? Rdbms.POSTGRESQL : databaseSystem;
     }
 
@@ -416,18 +407,13 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public ParseResult mergeTemplate(TemplateElement element)
     {
-        boolean besql = element instanceof Query && ((Query) element).getEntity().isBesql() &&
-                ((Query) element).isSqlQuery();
         try
         {
-            sqlMacros.clear();
             if (" ".equals(element.getTemplateCode()))
                 return new ParseResult(" ");
             final DataElementPath path = element.getCompletePath();
             final String merged = FreemarkerUtils.mergeTemplateByPath(path.toString(), getContext(element), getConfiguration());
-            if (besql)
-                enterSQL();
-            return new ParseResult(besql ? translateSQL(merged) : merged);
+            return new ParseResult(merged);
         }
         catch (ProjectElementException e)
         {
@@ -437,10 +423,23 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         {
             return new ParseResult(new ProjectElementException(getCompletePath(), "source", e));
         }
-        finally
+    }
+
+    public void initBeSqlMacros()
+    {
+        try
         {
-            beSQL = 0;
             sqlMacros.clear();
+            FreemarkerUtils.mergeTemplate("initMergeTemplate", " 1", null, getConfiguration());
+            enterSQL();
+        }
+        catch (ProjectElementException e)
+        {
+            throw e;
+        }
+        catch (Throwable e)
+        {
+            throw new ProjectElementException(getCompletePath(), "source", e);
         }
     }
 
@@ -1067,43 +1066,6 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         return null;
     }
 
-    /**
-     * Try to translate the SQL query to the current DBMS using com.developmentontheedge.sql
-     *
-     * @param sql
-     * @return
-     */
-    public String translateSQL(String sql)
-    {
-        if (beSQL > 0)
-        {
-            if (--beSQL == 0)
-                reconfigureFreemarker();
-        }
-        if (sqlParser == null)
-        {
-            throw new IllegalStateException("translateSQL was called without enterSQL");
-        }
-        sqlParser.parse(sql);
-        List<String> messages = sqlParser.getMessages();
-        if (!messages.isEmpty())
-        {
-            throw new IllegalArgumentException(
-                    ("SQL cannot be parsed:\nQuery:" + sql + "\nErrors: " + String.join("\n", messages)).replace("\r", "").replace("\n",
-                            System.lineSeparator()));
-        }
-        AstStart ast = sqlParser.getStartNode();
-        if (databaseSystem != Rdbms.BESQL)
-        {
-            new MacroExpander().expandMacros(ast);
-            Dbms dbms = databaseSystem == null ? Dbms.POSTGRESQL : Dbms.valueOf(databaseSystem.name());
-            DbmsTransformer dbmsTransformer = new Context(dbms).getDbmsTransformer();
-            dbmsTransformer.setParserContext(sqlParser.getContext());
-            dbmsTransformer.transformAst(ast);
-        }
-        return ast.format();
-    }
-
     public void addSQLMacro(String sql)
     {
         sqlMacros.add(sql);
@@ -1111,21 +1073,17 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public void enterSQL()
     {
-        if (++beSQL == 1)
+        reconfigureFreemarker();
+        SqlParser parser = new SqlParser();
+        for (String sqlMacro : sqlMacros)
         {
-            reconfigureFreemarker();
-            SqlParser parser = new SqlParser();
-            for (String sqlMacro : sqlMacros)
+            parser.parse(sqlMacro);
+            List<String> messages = parser.getMessages();
+            if (!messages.isEmpty())
             {
-                parser.parse(sqlMacro);
-                List<String> messages = parser.getMessages();
-                if (!messages.isEmpty())
-                {
-                    throw new IllegalArgumentException(("SQL Macro cannot be parsed:\nMacro:" + sqlMacro + "\nErrors: " + String.join("\n",
-                            messages)).replace("\r", "").replace("\n", System.lineSeparator()));
-                }
+                throw new IllegalArgumentException(("SQL Macro cannot be parsed:\nMacro:" + sqlMacro + "\nErrors: " + String.join("\n",
+                        messages)).replace("\r", "").replace("\n", System.lineSeparator()));
             }
-            this.sqlParser = parser;
         }
     }
 

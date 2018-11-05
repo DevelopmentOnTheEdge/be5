@@ -1,5 +1,3 @@
-<#macro _sql>${project.enterSQL()}<#assign nested><#nested></#assign>${project.translateSQL(nested)}</#macro>
-
 <#macro _sqlMacro><#assign nested><#nested></#assign>${project.addSQLMacro(nested)}</#macro>
 
 <#macro _copyQuery name>${entity.getQueries().get(name).getFinalQuery()}</#macro>

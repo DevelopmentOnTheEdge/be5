@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,24 +26,4 @@ public class EntityTest
         op.setRecords(Operation.VISIBLE_ALWAYS);
         assertEquals(e, e2);
     }
-
-    @Test
-    public void testBeSQL() throws Exception
-    {
-        Project prj = new Project("test");
-        prj.setDatabaseSystem(Rdbms.MYSQL);
-        Entity e = new Entity("e", prj.getApplication(), EntityType.TABLE);
-        DataElementUtils.save(e);
-        Query query = new Query("query", e);
-        DataElementUtils.save(query);
-        query.setQuery("SELECT a || b FROM test");
-
-        assertEquals("SELECT a || b FROM test", query.getFinalQuery());
-        e.setBesql(true);
-        assertEquals("SELECT CONCAT(a , b) FROM test", query.getFinalQuery());
-
-        prj.setDatabaseSystem(Rdbms.POSTGRESQL);
-        assertEquals("SELECT a || b FROM test", query.getFinalQuery());
-    }
-
 }

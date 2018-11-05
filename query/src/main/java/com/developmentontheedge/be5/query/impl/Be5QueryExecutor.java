@@ -21,6 +21,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
+import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
@@ -222,32 +223,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             ast = SqlQuery.parse(queryText);
+            dql.log("Compiled", ast);
         }
         catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
         }
-        dql.log("Compiled", ast);
-
+        new MacroExpander().expandMacros(ast);
         resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
-
-        // FILTERS
         applyFilters(ast, query.getEntity().getName(), parameters, meta);
-
-        // CATEGORY
         applyCategory(dql, ast);
-
-        // CONTEXT
         contextApplier.applyContext(ast);
-        dql.log("With context", ast);
-
-        // ID COLUMN
         addIDColumnIfNeeded(ast, query, dql);
-
-        // SIMPLIFY
         Simplifier.simplify(ast);
-        dql.log("Simplified", ast);
 
         if (executeType == ExecuteType.COUNT)
         {

@@ -45,15 +45,6 @@ public class ProjectTest
     }
 
     @Test
-    public void testTranslateSqlNested()
-    {
-        Project project = new Project("test");
-        project.setDatabaseSystem(Rdbms.POSTGRESQL);
-        project.enterSQL();
-        assertEquals("SELECT a || b || CAST(c AS VARCHAR) FROM d", project.translateSQL("SELECT CONCAT(a, b, TO_CHAR(c)) FROM d"));
-    }
-
-    @Test
     public void testModulesBasics()
     {
         Project project = new Project("test");

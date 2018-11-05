@@ -7,9 +7,11 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.format.dbms.Context;
-import com.developmentontheedge.sql.format.dbms.Formatter;
+import com.developmentontheedge.sql.format.dbms.DbmsTransformer;
 import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.apache.commons.dbutils.QueryRunner;
@@ -34,7 +36,7 @@ public class DbServiceImpl implements DbService
 
     private QueryRunner queryRunner;
     private ConnectionService connectionService;
-    private Context context;
+    private DbmsTransformer dbmsTransformer;
 
     @Inject
     public DbServiceImpl(ConnectionService connectionService, DataSourceService databaseService, Be5Caches be5Caches)
@@ -42,7 +44,9 @@ public class DbServiceImpl implements DbService
         this.connectionService = connectionService;
         queryRunner = new QueryRunner();
         formatSqlCache = be5Caches.createCache("Format sql");
-        context = new Context(databaseService.getDbms());
+        Context context = new Context(databaseService.getDbms());
+        this.dbmsTransformer = context.getDbmsTransformer();
+        dbmsTransformer.setParserContext(DefaultParserContext.getInstance());
     }
 
     @Override
@@ -106,12 +110,17 @@ public class DbServiceImpl implements DbService
     @Override
     public String format(String sql)
     {
-        return formatSqlCache.get(sql, k -> new Formatter().format(SqlQuery.parse(k), context));
+        return formatSqlCache.get(sql, k -> {
+            AstStart astStart = SqlQuery.parse(k);
+            new MacroExpander().expandMacros(astStart);
+            return format(astStart);
+        });
     }
 
-    public String format(AstStart astStart)
+    private String format(AstStart astStart)
     {
-        return new Formatter().format(astStart, context);
+        dbmsTransformer.transformAst(astStart);
+        return astStart.format();
     }
 
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException

@@ -1,5 +1,6 @@
 queryTestProject:
-  features: logging
+  features:
+  - beSqlQueries
   l10n: ru
   projectFileStructure: {}
   modules: []
@@ -14,4 +15,5 @@ queryTestProject:
   scripts:
   - Post-db
   - dictionaries
-
+  includes:
+  - common
