@@ -48,4 +48,28 @@ public class MacroTest
         assertEquals("SELECT  a ||  b || '<!--' || TO_CHAR((SYSDATE))|| \'-->\' || '<a href=\"...\">\' ||  c || \'</a>\'   FROM table t",
                 new Formatter().format(start, new Context(Dbms.ORACLE), context));
     }
+
+    @Test
+    public void testConditions()
+    {
+        SqlParser parser = new SqlParser();
+        String input = "MACRO A() (1=1\n" +
+                "<if parameter=\"serverID\">\n" +
+                "  AND s.ID = <parameter:serverID/>\n" +
+                "</if>" +
+                ")END";
+        parser.parse(input);
+        if (!parser.getMessages().isEmpty())
+        {
+            throw new IllegalArgumentException(String.join("\n", parser.getMessages()));
+        }
+        ParserContext context = parser.getContext();
+        AstStart query = SqlQuery.parse("SELECT * FROM table t WHERE (1=1) AND A()", context);
+        new MacroExpander().expandMacros(query);
+        assertEquals("SELECT * FROM table t WHERE (1 = 1) AND (1 = 1\n" +
+                        "<if parameter=\"serverID\">\n" +
+                        "  AND s.ID = <parameter:serverID />\n" +
+                        "</if>)",
+                query.format());
+    }
 }
