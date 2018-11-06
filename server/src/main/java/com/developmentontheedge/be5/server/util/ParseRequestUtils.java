@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ParseRequestUtils
 {
     public static Map<String, Object> getValuesFromJson(String valuesString) throws Be5Exception
@@ -57,9 +56,20 @@ public class ParseRequestUtils
 
                 fieldValues.put(name, arrValues);
             }
-            else if (entry.getValue() instanceof JsonObject)
+            else if (entry.getValue() instanceof JsonObject
+                    || (entry.getValue() instanceof JsonPrimitive &&
+                        ((JsonPrimitive) entry.getValue()).getAsString().contains("\"type\":\"Base64File\"")))
             {
-                JsonObject jsonObject = ((JsonObject) entry.getValue());
+                JsonObject jsonObject;
+                if (entry.getValue() instanceof JsonPrimitive)
+                {
+                    String value = ((JsonPrimitive) entry.getValue()).getAsString();
+                    jsonObject = (JsonObject) new JsonParser().parse(value);
+                }
+                else
+                {
+                    jsonObject = ((JsonObject) entry.getValue());
+                }
                 String type = jsonObject.get("type").getAsString();
                 if ("Base64File".equals(type))
                 {

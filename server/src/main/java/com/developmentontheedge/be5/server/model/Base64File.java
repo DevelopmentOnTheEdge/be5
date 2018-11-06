@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.model;
 
 
 import java.util.Arrays;
+import java.util.Base64;
 
 public class Base64File
 {
@@ -34,11 +35,8 @@ public class Base64File
     @Override
     public String toString()
     {
-        return "Base64File{" +
-                "name='" + name + '\'' +
-                ", data=" + new String(data) +
-                ", mimeTypes='" + mimeTypes + '\'' +
-                '}';
+        return "{\"type\":\"Base64File\",\"name\":\"" + name +
+                "\", \"data\":\"data:" + mimeTypes + ";base64," + Base64.getEncoder().encodeToString(data) + "\"}";
     }
 
     @Override
