@@ -10,6 +10,9 @@ public interface FrontendActions
 {
     String CLOSE_MAIN_MODAL = "CLOSE_MAIN_MODAL";
 
+    String MAIN_DOCUMENT = "MAIN_DOCUMENT";
+    String MAIN_MODAL_DOCUMENT = "MAIN_MODAL_DOCUMENT";
+
     String UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
     String REFRESH_PARENT_DOCUMENT = "REFRESH_PARENT_DOCUMENT";
@@ -50,6 +53,11 @@ public interface FrontendActions
     static FrontendAction refreshDocument()
     {
         return REFRESH_DOCUMENT_ACTION;
+    }
+
+    static FrontendAction refreshDocument(String name)
+    {
+        return new FrontendAction(REFRESH_DOCUMENT, name);
     }
 
     static FrontendAction refreshParentDocument()
