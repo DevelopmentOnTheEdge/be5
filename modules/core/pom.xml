@@ -87,7 +87,7 @@
         </configuration>
         <executions>
           <execution>
-            <id>generate-groovy-dsl</id>
+            <id>validate</id>
             <phase>compile</phase>
             <goals>
               <goal>validate</goal>
