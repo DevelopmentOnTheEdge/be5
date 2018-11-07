@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
+import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
@@ -62,7 +63,7 @@ public class FormGeneratorImpl implements FormGenerator
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
-        Either<FormPresentation, OperationResult> data = processForm(operation, values, false);
+        Either<FormPresentation, OperationResultPresentation> data = processForm(operation, values, false);
 
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                 Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
@@ -74,7 +75,7 @@ public class FormGeneratorImpl implements FormGenerator
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
 
-        Either<FormPresentation, OperationResult> data = processForm(operation, values, true);
+        Either<FormPresentation, OperationResultPresentation> data = processForm(operation, values, true);
 
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                 Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
@@ -90,8 +91,8 @@ public class FormGeneratorImpl implements FormGenerator
     }
 
     @SuppressWarnings("unchecked")
-    private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
-                                                                  Map<String, ?> values, boolean execute)
+    private Either<FormPresentation, OperationResultPresentation> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
+                                                                              Map<String, ?> values, boolean execute)
     {
         Either<Object, OperationResult> result;
         if (execute)
@@ -130,7 +131,10 @@ public class FormGeneratorImpl implements FormGenerator
         }
         else
         {
-            return Either.second(resultForFrontend(result.getSecond()));
+            return Either.second(new OperationResultPresentation(
+                    resultForFrontend(result.getSecond()),
+                    LayoutUtils.getLayoutObject(operation.getInfo().getModel())
+            ));
         }
     }
 
@@ -153,7 +157,7 @@ public class FormGeneratorImpl implements FormGenerator
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
-    public static HashUrl getUrl(Operation operation)
+    private static HashUrl getUrl(Operation operation)
     {
         return new HashUrl(FrontendConstants.FORM_ACTION,
                 operation.getInfo().getEntityName(), operation.getContext().getQueryName(), operation.getInfo().getName())
