@@ -11,6 +11,8 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.developmentontheedge.be5.metadata.model.Project.BE_SQL_QUERIES_FEATURE;
+
 public class SqlValidator
 {
     public void validate(Project project)
@@ -47,28 +49,36 @@ public class SqlValidator
 
     private void validateQuery(Query query, List<ProjectElementException> result)
     {
-        ParseResult parseResult = query.getQueryCompiled();
-        ProjectElementException error = parseResult.getError();
-        if (error != null)
+        String queryText;
+        if (query.getProject().hasFeature(BE_SQL_QUERIES_FEATURE))
         {
-            DataElementPath path = query.getCompletePath();
-            if (error.getPath().equals(path.toString()))
-                result.add(error);
-            else
-                result.add(new ProjectElementException(path, "query", error));
+            queryText = query.getFinalQuery();
         }
         else
         {
-            if (query.isSqlQuery())
+            ParseResult parseResult = query.getQueryCompiled();
+            ProjectElementException error = parseResult.getError();
+            if (error != null)
             {
-                try
-                {
-                    SqlQuery.parse(parseResult.getResult());
-                }
-                catch (RuntimeException e)
-                {
-                    result.add(new ProjectElementException(query.getCompletePath(), "query", e));
-                }
+                DataElementPath path = query.getCompletePath();
+                if (error.getPath().equals(path.toString()))
+                    result.add(error);
+                else
+                    result.add(new ProjectElementException(path, "query", error));
+                return;
+            }
+            queryText = parseResult.getResult();
+        }
+
+        if (query.isSqlQuery())
+        {
+            try
+            {
+                SqlQuery.parse(queryText);
+            }
+            catch (RuntimeException e)
+            {
+                result.add(new ProjectElementException(query.getCompletePath(), "query", e));
             }
         }
     }
