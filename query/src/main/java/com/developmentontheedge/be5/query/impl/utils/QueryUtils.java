@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.query.impl.utils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -283,17 +282,9 @@ public class QueryUtils
                 .has(idColumnLabel);
     }
 
-    public static void addIDColumnIfNeeded(AstStart ast, Query query, DebugQueryLogger dql)
+    public static void addIDColumnLabel(AstStart ast, Query query)
     {
-        if (query.getType() == QueryType.D1 && query.getEntity().findTableDefinition() != null && !hasColumnWithLabel(ast, DatabaseConstants.ID_COLUMN_LABEL))
-        {
-            new ColumnAdder().addColumn(ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
-                    DatabaseConstants.ID_COLUMN_LABEL);
-            dql.log("With ID column", ast);
-        }
-        else
-        {
-            dql.log("Without ID column", ast);
-        }
+        new ColumnAdder().addColumn(ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
+                DatabaseConstants.ID_COLUMN_LABEL);
     }
 }

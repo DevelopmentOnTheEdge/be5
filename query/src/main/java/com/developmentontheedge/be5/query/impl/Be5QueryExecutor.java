@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.addIDColumnIfNeeded;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.addIDColumnLabel;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applyFilters;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applySort;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.countFromQuery;
@@ -233,9 +233,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         new MacroExpander().expandMacros(ast);
         resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
         applyFilters(ast, query.getEntity().getName(), parameters, meta);
-        applyCategory(dql, ast);
+        applyCategory(ast);
         contextApplier.applyContext(ast);
-        addIDColumnIfNeeded(ast, query, dql);
+        if (selectable) addIDColumnLabel(ast, query);
         Simplifier.simplify(ast);
 
         if (executeType == ExecuteType.COUNT)
@@ -267,7 +267,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         });
     }
 
-    private void applyCategory(DebugQueryLogger dql, AstStart ast)
+    private void applyCategory(AstStart ast)
     {
         String categoryString = executorQueryContext.getParameter(FrontendConstants.CATEGORY_ID_PARAM);
         if (categoryString != null)
@@ -284,7 +284,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             }
 
             new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply(ast);
-            dql.log("With category", ast);
         }
     }
 
