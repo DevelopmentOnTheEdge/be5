@@ -18,7 +18,7 @@ public class AstDerivedColumnTest
 
         test.setAlias("Name");
 
-        assertEquals("\"Name\"", test.getAlias());
+        assertEquals("Name", test.getAlias());
         assertEquals("name AS \"Name\"", test.format());
     }
 

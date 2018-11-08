@@ -80,7 +80,7 @@ public class AstDerivedColumn extends SimpleNode
     {
         if (jjtGetNumChildren() == 1)
             return null;
-        return ((AstIdentifierConstant) child(1)).getNodeContent();
+        return ((AstIdentifierConstant) child(1)).getValue();
     }
 
     public String getColumn()

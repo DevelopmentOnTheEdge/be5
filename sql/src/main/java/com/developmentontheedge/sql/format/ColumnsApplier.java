@@ -25,7 +25,7 @@ public class ColumnsApplier
             for (int i = selectList.jjtGetNumChildren() - 1; i >= 0; i--)
             {
                 AstDerivedColumn derivedColumn = (AstDerivedColumn) selectList.jjtGetChild(i);
-                if (!outColumns.contains(derivedColumn.getAlias().replace("\"", "")))
+                if (!outColumns.contains(derivedColumn.getAlias()))
                 {
                     derivedColumn.remove();
                 }
