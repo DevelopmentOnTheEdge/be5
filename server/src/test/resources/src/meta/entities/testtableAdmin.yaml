@@ -15,6 +15,13 @@ testtableAdmin:
         type: INT
         canBeNull: true
   queries:
+  - '*** Selection view ***':
+      type: 1D
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT ID AS "ID", name AS "NAME"
+        FROM testtableAdmin
   - All records:
       defaultView: true
       type: 1D

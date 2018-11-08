@@ -475,14 +475,17 @@ public class DpsHelper
             {
                 String viewName = columnDef.getViewName();
                 Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+                Entity entity = columnDef.getEntity();
+                Map<String, Object> tagsParams = addEntityPrefix(entity, operationParamsWithoutFilter);
+
                 String propertyName = dp.getName();
-                if (operationParamsWithoutFilter.containsKey(propertyName))
+                if (tagsParams.containsKey(propertyName))
                 {
-                    tags = getTagForPrimaryKeyValue(tableName, viewName, operationParamsWithoutFilter.get(propertyName));
+                    tags = getTagForPrimaryKeyValue(tableName, viewName, tagsParams.get(propertyName));
                 }
                 else
                 {
-                    tags = queries.getTagsFromCustomSelectionView(tableName, viewName, operationParamsWithoutFilter);
+                    tags = queries.getTagsFromCustomSelectionView(tableName, viewName, tagsParams);
                 }
             }
         }
@@ -495,6 +498,22 @@ public class DpsHelper
                 dp.setValue(tags[0][0]);
             }
         }
+    }
+
+    private Map<String, Object> addEntityPrefix(Entity entity, Map<String, Object> operationParams)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        return operationParams.entrySet().stream()
+                .collect(Collectors.toMap(e -> {
+                    if (columns.containsKey(e.getKey()))
+                    {
+                        return entity.getName() + "." + e.getKey();
+                    }
+                    else
+                    {
+                        return e.getKey();
+                    }
+                }, Map.Entry::getValue));
     }
 
     private String[][] getTagForPrimaryKeyValue(String tableName, String viewName, Object value)

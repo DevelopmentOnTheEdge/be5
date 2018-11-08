@@ -412,6 +412,19 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    void addEntityPrefixTest()
+    {
+        db.update("DELETE FROM testtableAdmin");
+        db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 1)
+        db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 2)
+
+        def property = new DynamicProperty("test", String.class)
+        dpsHelper.addTags(property, meta.getColumn("testCollection", "categoryID"),
+                ImmutableMap.of("ID", 1))
+        assertTrue(((String[][])property.getAttribute(TAG_LIST_ATTR)).length > 1)
+    }
+
+    @Test
     void addTagsForPrimaryKeyValueAndCanBeNull()
     {
         def property = new DynamicProperty("test", String.class)
