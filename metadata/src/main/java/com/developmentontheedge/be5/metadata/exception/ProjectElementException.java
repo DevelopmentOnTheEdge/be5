@@ -197,7 +197,7 @@ public class ProjectElementException extends RuntimeException implements Formatt
         StringBuilder errorsInfo = new StringBuilder();
         for (ProjectElementException error : errors)
         {
-            if (error.getProperty().equals("connectionProfileName"))
+            if ("connectionProfileName".equals(error.getProperty()))
                 continue;
             count++;
             firstError = error;
