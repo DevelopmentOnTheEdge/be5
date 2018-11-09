@@ -123,6 +123,7 @@ public class ModuleLoader2
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
 
             urls.addAll(additionalUrls);
+            replaceAndAddURLtoSource(urls);
             loadAllProjects(urls);
         }
         catch (IOException e)
@@ -136,7 +137,6 @@ public class ModuleLoader2
         modulesMap = null;
         try
         {
-            replaceAndAddURLtoSource(urls);
             Map<String, Project> newModulesMap = new HashMap<>();
             for (URL url : urls)
             {
