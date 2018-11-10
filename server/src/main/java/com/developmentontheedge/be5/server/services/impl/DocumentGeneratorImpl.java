@@ -7,10 +7,6 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.server.model.table.InitialRow;
-import com.developmentontheedge.be5.server.model.table.InitialRowsBuilder;
-import com.developmentontheedge.be5.server.model.table.MoreRows;
-import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
@@ -19,10 +15,15 @@ import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.table.InitialRow;
+import com.developmentontheedge.be5.server.model.table.InitialRowsBuilder;
+import com.developmentontheedge.be5.server.model.table.MoreRows;
+import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
 import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
 import com.developmentontheedge.be5.server.services.FilterInfoPlugin;
+import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
@@ -170,6 +171,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
+    @LogBe5Event
     public JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters)
     {
         try
@@ -188,6 +190,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
+    @LogBe5Event
     public JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
     {
         String url = new HashUrl(TABLE_ACTION, entityName, queryName)

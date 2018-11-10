@@ -23,12 +23,17 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
+import com.developmentontheedge.be5.server.services.events.EventManager;
+import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
+
+import static com.google.inject.matcher.Matchers.annotatedWith;
+import static com.google.inject.matcher.Matchers.any;
 
 
 public class ServerModule extends ServletModule
@@ -62,5 +67,10 @@ public class ServerModule extends ServletModule
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
+
+        EventManager eventManager = new EventManager();
+        bind(EventManager.class).toInstance(eventManager);
+        requestInjection(eventManager);
+        bindInterceptor(any(), annotatedWith(LogBe5Event.class), eventManager);
     }
 }

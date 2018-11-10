@@ -1,0 +1,24 @@
+be5eventParams:
+  type: collection
+  extras: feature:eventDbLogging
+  displayName: Event Parameters
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - logID:
+        type: KEYTYPE
+        reference:
+          to: events
+          view: ''
+    - paramName:
+        type: VARCHAR(255)
+    - paramValue:
+        type: TEXT
+        canBeNull: true
+    indices:
+    - I_EVENTPARS_LOGID:
+        columns: logID

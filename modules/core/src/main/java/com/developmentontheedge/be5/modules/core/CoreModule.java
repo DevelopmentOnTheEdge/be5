@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
+import com.developmentontheedge.be5.modules.core.services.impl.Be5EventDbLogger;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
@@ -37,6 +38,7 @@ public class CoreModule extends ServletModule
         bind(LoginService.class).to(LoginServiceImpl.class).in(Scopes.SINGLETON);
         bind(CategoriesService.class).to(CategoriesServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentCategoriesPlugin.class).asEagerSingleton();
+        bind(Be5EventDbLogger.class).asEagerSingleton();
 
         bind(GuiceJobFactory.class).in(Scopes.SINGLETON);
         bind(DaemonStarter.class).to(DaemonStarterImpl.class).asEagerSingleton();

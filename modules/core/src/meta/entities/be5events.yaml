@@ -1,0 +1,38 @@
+be5events:
+  type: collection
+  extras: feature:eventDbLogging
+  displayName: Events
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - login:
+        type: VARCHAR(50)
+    - IP:
+        type: VARCHAR(100)
+        canBeNull: true
+    - START:
+        type: DATETIME
+    - END:
+        type: DATETIME
+        canBeNull: true
+    - action:
+        type: ENUM('logging','operation','query','print','servlet','queryBuilder','process','other')
+    - entity:
+        type: VARCHAR(30)
+        canBeNull: true
+    - title:
+        type: VARCHAR(255)
+        canBeNull: true
+    - result:
+        type: TEXT
+        canBeNull: true
+    - exception:
+        type: TEXT
+        canBeNull: true
+    indices:
+    - I_EVENTS_START:
+        columns: START
