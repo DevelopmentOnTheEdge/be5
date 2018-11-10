@@ -70,7 +70,7 @@ public class FilterHelper
     public JsonApiModel filterDocument(Query query, Map<String, Object> parameters)
     {
         documentGenerator.clearSavedPosition(query, parameters);
-        return documentGenerator.getJsonApiModel(query, parameters);
+        return documentGenerator.getDocument(query, parameters);
     }
 
 }

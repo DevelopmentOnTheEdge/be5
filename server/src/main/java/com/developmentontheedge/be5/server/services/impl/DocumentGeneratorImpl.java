@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.TableModel;
@@ -60,6 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
     private final ErrorModelHelper errorModelHelper;
+    private final DbService db;
     private final Provider<Session> session;
 
     private final List<DocumentPlugin> documentPlugins = new ArrayList<>();
@@ -68,11 +70,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
                                  DocumentFormPlugin documentFormPlugin, DocumentOperationsPlugin documentOperationsPlugin,
                                  FilterInfoPlugin filterInfoPlugin,
-                                 ErrorModelHelper errorModelHelper, Provider<Session> session)
+                                 ErrorModelHelper errorModelHelper, DbService db, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.errorModelHelper = errorModelHelper;
+        this.db = db;
         this.session = session;
 
         addDocumentPlugin(documentFormPlugin);
@@ -112,12 +115,45 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         );
     }
 
-    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
+    @Override
+    public JsonApiModel getDocument(String entityName, String queryName, Map<String, Object> parameters)
     {
-        return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        return getDocument(query, parameters);
     }
 
-    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
+    @Override
+    @LogBe5Event
+    public JsonApiModel getDocument(Query query, Map<String, Object> parameters)
+    {
+        return db.transactionWithResult(conn -> {
+            Map<String, Object> params = processQueryParams(query, parameters);
+            TableModel tableModel = tableModelService.getTableModel(query, params);
+            TablePresentation data = getTablePresentation(query, params, tableModel);
+            HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
+                    .named(FilterUtil.getOperationParamsWithoutFilter(params));
+
+            List<ResourceData> included = new ArrayList<>();
+            try
+            {
+                documentPlugins.forEach(d -> {
+                    ResourceData resourceData = d.addData(query, params);
+                    if (resourceData != null) included.add(resourceData);
+                });
+            } catch (RuntimeException e)
+            {
+                throw Be5Exception.internalInQuery(query, e);
+            }
+
+            return JsonApiModel.data(
+                    new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                    included.toArray(new ResourceData[0]),
+                    null
+            );
+        });
+    }
+
+    private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         List<ColumnModel> columns = tableModel.getColumns();
         List<InitialRow> rows = new InitialRowsBuilder(tableModel).build();
@@ -138,63 +174,30 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters)
-    {
-        Map<String, Object> params = processQueryParams(query, parameters);
-        return getJsonApiModel(query, params, tableModelService.getTableModel(query, params));
-    }
-
-    private JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
-    {
-        TablePresentation data = getTablePresentation(query, parameters, tableModel);
-        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
-                .named(FilterUtil.getOperationParamsWithoutFilter(parameters));
-
-        List<ResourceData> included = new ArrayList<>();
-        try
-        {
-            documentPlugins.forEach(d -> {
-                ResourceData resourceData = d.addData(query, parameters);
-                if (resourceData != null) included.add(resourceData);
-            });
-        }
-        catch (RuntimeException e)
-        {
-            throw Be5Exception.internalInQuery(query, e);
-        }
-
-        return JsonApiModel.data(
-                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
-                included.toArray(new ResourceData[0]),
-                null
-        );
-    }
-
-    @Override
-    @LogBe5Event
-    public JsonApiModel newDocument(String entityName, String queryName, Map<String, Object> parameters)
+    public JsonApiModel getNewTableRows(String entityName, String queryName, Map<String, Object> parameters)
     {
         Query query = userAwareMeta.getQuery(entityName, queryName);
-        return getJsonApiModel(query, parameters);
+        return getNewTableRows(query, parameters);
     }
 
-    @Override
     @LogBe5Event
-    public JsonApiModel updateDocument(String entityName, String queryName, Map<String, Object> parameters)
+    JsonApiModel getNewTableRows(Query query, Map<String, Object> parameters)
     {
-        String url = new HashUrl(TABLE_ACTION, entityName, queryName)
-                .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
-        Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
+        return db.transactionWithResult(conn -> {
+            String url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
+                    .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
+            Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
 
-        Query query = userAwareMeta.getQuery(entityName, queryName);
-        Map<String, Object> params = processQueryParams(query, parameters);
-        TableModel tableModel = tableModelService.getTableModel(query, params);
 
-        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
-                tableModel.getTotalNumberOfRows().intValue(),
-                tableModel.getTotalNumberOfRows().intValue(),
-                new MoreRowsBuilder(tableModel).build()
-        ), links), null);
+            Map<String, Object> params = processQueryParams(query, parameters);
+            TableModel tableModel = tableModelService.getTableModel(query, params);
+
+            return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    new MoreRowsBuilder(tableModel).build()
+            ), links), null);
+        });
     }
 
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)

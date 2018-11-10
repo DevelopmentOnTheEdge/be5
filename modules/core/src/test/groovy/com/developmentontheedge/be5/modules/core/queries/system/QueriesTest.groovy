@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.query.model.CellModel
-import com.developmentontheedge.be5.server.services.DocumentGenerator
+import com.developmentontheedge.be5.query.services.TableModelService
 import org.junit.Before
 import org.junit.Test
 
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue
 class QueriesTest extends CoreBe5ProjectDBTest
 {
     @Inject
-    DocumentGenerator documentGenerator
+    TableModelService tableModelService
     @Inject
     Meta meta
 
@@ -32,7 +32,7 @@ class QueriesTest extends CoreBe5ProjectDBTest
     {
         Query query = meta.getQuery("_system_", "Entities")
 
-        def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
+        def table = tableModelService.getTableModel(query, Collections.emptyMap())
 
         assertTrue(table.getRows().stream()
                 .filter({ x -> ((CellModel) x.cells.get(0)).getContent() == "_system_" })
@@ -45,7 +45,7 @@ class QueriesTest extends CoreBe5ProjectDBTest
         session.set("test", "value")
         Query query = meta.getQuery("_system_", "Session variables")
 
-        def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
+        def table = tableModelService.getTableModel(query, Collections.emptyMap())
 
         assertEquals(true, table.getRows().stream()
                 .map({ x -> x.id })

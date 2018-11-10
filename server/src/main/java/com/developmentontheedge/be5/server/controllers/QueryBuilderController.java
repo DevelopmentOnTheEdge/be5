@@ -254,7 +254,7 @@ public class QueryBuilderController extends JsonApiModelController
 
         try
         {
-            JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters);
+            JsonApiModel document = documentGenerator.getDocument(query, parameters);
 
             //todo refactor documentGenerator
             document.getData().setId("result");

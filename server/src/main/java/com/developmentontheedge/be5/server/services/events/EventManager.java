@@ -35,12 +35,10 @@ public class EventManager implements MethodInterceptor
         String name = invocation.getMethod().getName();
 
         if (className.equals("DocumentGeneratorImpl") &&
-            (name.equals("newDocument") || name.equals("updateDocument")))
+            (name.equals("getDocument") || name.equals("getNewTableRows")))
         {
-            String entityName = (String) arguments[0];
-            String queryName = (String) arguments[1];
-            Map<String, Object> parameters = (Map<String, Object>) arguments[2];
-            Query query = meta.getQuery(entityName, queryName);
+            Query query = (Query) arguments[0];
+            Map<String, Object> parameters = (Map<String, Object>) arguments[1];
             try
             {
                 Object proceed = invocation.proceed();

@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
-import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import junit.framework.TestCase;
@@ -36,8 +34,8 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getTablePresentation()
     {
-        TablePresentation table = documentGenerator.getTablePresentation(meta.getQuery("testtable", "All records"), Collections.emptyMap());
-
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), Collections.emptyMap());
+        TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
         assertEquals("testtable: All records", table.getTitle());
 
         assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]", oneQuotes(jsonb.toJson(table.getColumns())));
@@ -53,7 +51,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         Query query = meta.getQuery("testtable", "TableWithFilter");
 
-        JsonApiModel document = documentGenerator.getJsonApiModel(query, Collections.emptyMap());
+        JsonApiModel document = documentGenerator.getDocument(query, Collections.emptyMap());
 
         assertEquals("{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
                         "'length':10,'offset':0,'orderColumn':-1,'orderDir':'asc'," +
@@ -69,7 +67,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getQueryJsonApiForUser()
     {
-        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtable", "All records", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.getDocument("testtable", "All records", Collections.emptyMap());
 
         assertNotNull(queryJsonApiForUser.getData());
         TestCase.assertNull(queryJsonApiForUser.getErrors());
@@ -78,7 +76,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void testSelfLink()
     {
-        JsonApiModel jsonApiModel = documentGenerator.getJsonApiModel(meta.getQuery("testtable", "All records"),
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"),
                 Collections.singletonMap("name", "1"));
 
         assertEquals("table/testtable/All records/name=1",
@@ -88,7 +86,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void updateQueryJsonApi()
     {
-        JsonApiModel jsonApiModel = documentGenerator.updateDocument("testtable", "All records", Collections.emptyMap());
+        JsonApiModel jsonApiModel = documentGenerator.getNewTableRows("testtable", "All records", Collections.emptyMap());
 
         assertEquals("{'attributes':{'data':[[" +
                         "{'content':'','options':{}}," +

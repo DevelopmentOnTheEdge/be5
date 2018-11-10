@@ -50,7 +50,6 @@ be5events:
       code: |-
         SELECT
            e.ID AS "___myid",
-           e.IP AS "IP",
            e.user_name AS "User Name",
            TIMESTAMPDIFF(SECOND, e.startTime, e.endTime) AS "Time",
            e.startTime AS "Begin",
@@ -62,6 +61,7 @@ be5events:
                 FROM be5eventParams p WHERE p.logID = ?
            </sql>' AS "Parameters",
            '<ref table="be5eventParams" />' AS ";Parameters",
+           e.IP AS "IP;<quick visible='false'/>",
            e.result AS "Result;",
            e.exception AS "Exception;"
         FROM be5events e

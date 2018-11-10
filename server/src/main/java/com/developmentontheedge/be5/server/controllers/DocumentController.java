@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -25,14 +24,12 @@ public class DocumentController extends JsonApiModelController
 {
     private final DocumentGenerator documentGenerator;
     private final ErrorModelHelper errorModelHelper;
-    private final DbService db;
 
     @Inject
-    public DocumentController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper, DbService db)
+    public DocumentController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper)
     {
         this.documentGenerator = documentGenerator;
         this.errorModelHelper = errorModelHelper;
-        this.db = db;
     }
 
     @Override
@@ -43,17 +40,15 @@ public class DocumentController extends JsonApiModelController
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
         try
         {
-            return db.transactionWithResult(conn -> {
-                switch (requestSubUrl)
-                {
-                    case "":
-                        return documentGenerator.newDocument(entityName, queryName, parameters);
-                    case "update":
-                        return documentGenerator.updateDocument(entityName, queryName, parameters);
-                    default:
-                        return null;
-                }
-            });
+            switch (requestSubUrl)
+            {
+                case "":
+                    return documentGenerator.getDocument(entityName, queryName, parameters);
+                case "update":
+                    return documentGenerator.getNewTableRows(entityName, queryName, parameters);
+                default:
+                    return null;
+            }
         }
         catch (Be5Exception e)
         {
