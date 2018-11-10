@@ -131,11 +131,6 @@ public class ConnectionServiceImpl implements ConnectionService
         }
     }
 
-    private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
-    {
-        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException("rethrow after rollback", e);
-    }
-
     @Override
     public void transaction(SqlExecutorVoid executor)
     {

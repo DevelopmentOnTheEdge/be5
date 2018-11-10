@@ -174,19 +174,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @LogBe5Event
     public JsonApiModel newDocument(String entityName, String queryName, Map<String, Object> parameters)
     {
-        try
-        {
-            Query query = userAwareMeta.getQuery(entityName, queryName);
-            return getJsonApiModel(query, parameters);
-        }
-        catch (Be5Exception e)
-        {
-            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName)
-                    .named(FilterUtil.getOperationParamsWithoutFilter(parameters));
-            log.log(e.getLogLevel(), "Error in table: " + url.toString(), e);
-            return JsonApiModel.error(errorModelHelper.
-                    getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
-        }
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        return getJsonApiModel(query, parameters);
     }
 
     @Override
@@ -197,24 +186,15 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
         Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
 
-        try
-        {
-            Query query = userAwareMeta.getQuery(entityName, queryName);
-            Map<String, Object> params = processQueryParams(query, parameters);
-            TableModel tableModel = tableModelService.getTableModel(query, params);
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        Map<String, Object> params = processQueryParams(query, parameters);
+        TableModel tableModel = tableModelService.getTableModel(query, params);
 
-            return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
-                    tableModel.getTotalNumberOfRows().intValue(),
-                    tableModel.getTotalNumberOfRows().intValue(),
-                    new MoreRowsBuilder(tableModel).build()
-            ), links), null);
-        }
-        catch (Be5Exception e)
-        {
-            log.log(e.getLogLevel(), "Error in table: " + url, e);
-            return JsonApiModel.error(errorModelHelper.
-                    getErrorModel(e, links), null);
-        }
+        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
+                tableModel.getTotalNumberOfRows().intValue(),
+                tableModel.getTotalNumberOfRows().intValue(),
+                new MoreRowsBuilder(tableModel).build()
+        ), links), null);
     }
 
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -29,18 +30,18 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     @Override
-    public void queryError(Query query, Map<String, Object> parameters, long estimatedTime)
-    {
-        log.severe(query.getEntity().getName() + " " + query.getName() +
-                " " + parameters + " " + estimatedTime);
-    }
-
-    @Override
     public void queryCompleted(Query query, Map<String, Object> parameters, long estimatedTime)
     {
         log.info(query.getEntity().getName() + " " + query.getName() +
                 " " + parameters + " " + estimatedTime);
         //database.getEntity(EVENT_LOG_TABLE).add();
+    }
+
+    @Override
+    public void queryError(Query query, Map<String, Object> parameters, Be5Exception e, long estimatedTime)
+    {
+        log.severe(query.getEntity().getName() + " " + query.getName() +
+                " " + parameters + " " + e.getMessage() + " " + estimatedTime);
     }
 
     //

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,6 +21,13 @@ public class DbServiceMock implements DbService
     private static final Logger log = Logger.getLogger(DbServiceMock.class.getName());
 
     public static DbService mock = mock(DbService.class);
+    private ConnectionService connectionService;
+
+    @Inject
+    public DbServiceMock(ConnectionService connectionService)
+    {
+        this.connectionService = connectionService;
+    }
 
     public static void clearMock()
     {
@@ -91,27 +99,13 @@ public class DbServiceMock implements DbService
     @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        try
-        {
-            return executor.run(null);
-        }
-        catch (Throwable e)
-        {
-            throw Be5Exception.internal(e);
-        }
+        return connectionService.transactionWithResult(executor);
     }
 
     @Override
     public void transaction(SqlExecutorVoid executor)
     {
-        try
-        {
-            executor.run(null);
-        }
-        catch (Throwable e)
-        {
-            throw Be5Exception.internal(e);
-        }
+        connectionService.transaction(executor);
     }
 
     @Override

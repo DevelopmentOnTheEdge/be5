@@ -22,4 +22,9 @@ public interface ConnectionService
     void transaction(SqlExecutorVoid executor);
 
     void releaseConnection(java.sql.Connection conn);
+
+    default RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
+    {
+        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException("rethrow after rollback", e);
+    }
 }

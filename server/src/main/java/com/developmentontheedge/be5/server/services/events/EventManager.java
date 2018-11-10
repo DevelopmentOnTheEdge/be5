@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services.events;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -31,22 +32,30 @@ public class EventManager implements MethodInterceptor
     {
         long startTime = System.currentTimeMillis();
         Object[] arguments = invocation.getArguments();
-        Object proceed = invocation.proceed();
-        long estimatedTime = System.currentTimeMillis() - startTime;
-
         String className = invocation.getMethod().getDeclaringClass().getSimpleName();
         String name = invocation.getMethod().getName();
 
         if (className.equals("DocumentGeneratorImpl") &&
-            (name.equals("document") || name.equals("updateDocument")))
+            (name.equals("newDocument") || name.equals("updateDocument")))
         {
             String entityName = (String) arguments[0];
             String queryName = (String) arguments[1];
-            Query query = meta.getQuery(entityName, queryName);
             Map<String, Object> parameters = (Map<String, Object>) arguments[2];
-            queryCompleted(query, parameters, estimatedTime);
+            Query query = meta.getQuery(entityName, queryName);
+            try
+            {
+                Object proceed = invocation.proceed();
+                queryCompleted(query, parameters, System.currentTimeMillis() - startTime);
+                return proceed;
+            }
+            catch (Be5Exception e)
+            {
+                queryError(query, parameters, e, System.currentTimeMillis() - startTime);
+                throw e;
+            }
         }
-        return proceed;
+
+        return invocation.proceed();
     }
 
 //    public void operationStarted( int pageID, String login, String entity, String title, OperationInfo opInfo )
@@ -81,11 +90,11 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void queryError(Query query, Map<String, Object> parameters, long estimatedTime)
+    public void queryError(Query query, Map<String, Object> parameters, Be5Exception e, long estimatedTime)
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.queryError(query, parameters, estimatedTime);
+            listener.queryError(query, parameters, e, estimatedTime);
         }
     }
 //

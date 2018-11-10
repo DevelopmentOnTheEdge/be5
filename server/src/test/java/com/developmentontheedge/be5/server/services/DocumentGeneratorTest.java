@@ -76,35 +76,6 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    public void accessDenied()
-    {
-        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtableAdmin", "All records", Collections.emptyMap());
-
-        assertEquals(new ErrorModel("403", "Access denied to query: testtableAdmin.All records", Collections.singletonMap("self", "table/testtableAdmin/All records")),
-                queryJsonApiForUser.getErrors()[0]);
-    }
-
-    @Test
-    public void accessAllowed()
-    {
-        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
-
-        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtableAdmin", "All records", Collections.emptyMap());
-
-        assertNotNull(queryJsonApiForUser.getData());
-        TestCase.assertNull(queryJsonApiForUser.getErrors());
-    }
-
-    @Test
-    public void error()
-    {
-        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtable", "Query with error", Collections.emptyMap());
-
-        assertNull(queryJsonApiForUser.getData());
-        assertEquals(new ErrorModel("500", "Internal error occurred during query: testtable.Query with error", Collections.singletonMap("self", "table/testtable/Query with error")), queryJsonApiForUser.getErrors()[0]);
-    }
-
-    @Test
     public void testSelfLink()
     {
         JsonApiModel jsonApiModel = documentGenerator.getJsonApiModel(meta.getQuery("testtable", "All records"),

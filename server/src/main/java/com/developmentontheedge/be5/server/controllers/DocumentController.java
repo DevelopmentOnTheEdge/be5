@@ -40,9 +40,7 @@ public class DocumentController extends JsonApiModelController
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
-
         try
         {
             return db.transactionWithResult(conn -> {
@@ -61,9 +59,8 @@ public class DocumentController extends JsonApiModelController
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName)
                     .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
-            log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            log.log(e.getLogLevel(), "Error in document: " + url, e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
     }
-
 }

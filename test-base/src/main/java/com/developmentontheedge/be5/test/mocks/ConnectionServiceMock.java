@@ -24,7 +24,7 @@ public class ConnectionServiceMock implements ConnectionService
         }
         catch (Throwable e)
         {
-            throw new RuntimeException(e);
+            throw returnRuntimeExceptionOrWrap(e);
         }
     }
 
@@ -37,7 +37,7 @@ public class ConnectionServiceMock implements ConnectionService
         }
         catch (Throwable e)
         {
-            throw new RuntimeException(e);
+            throw returnRuntimeExceptionOrWrap(e);
         }
     }
 
