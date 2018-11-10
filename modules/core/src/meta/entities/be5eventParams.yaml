@@ -11,14 +11,12 @@ be5eventParams:
         primaryKey: true
     - logID:
         type: KEYTYPE
-        reference:
-          to: events
-          view: ''
+        reference: events
     - paramName:
         type: VARCHAR(255)
     - paramValue:
         type: TEXT
         canBeNull: true
     indices:
-    - I_EVENTPARS_LOGID:
+    - IDX_EVENTPARS_LOGID:
         columns: logID

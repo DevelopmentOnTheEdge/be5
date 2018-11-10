@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.services.events;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -45,12 +44,12 @@ public class EventManager implements MethodInterceptor
             try
             {
                 Object proceed = invocation.proceed();
-                queryCompleted(query, parameters, System.currentTimeMillis() - startTime);
+                queryCompleted(query, parameters, startTime, System.currentTimeMillis());
                 return proceed;
             }
-            catch (Be5Exception e)
+            catch (Throwable e)
             {
-                queryError(query, parameters, e, System.currentTimeMillis() - startTime);
+                queryError(query, parameters, startTime, System.currentTimeMillis(), e.getMessage());
                 throw e;
             }
         }
@@ -82,19 +81,19 @@ public class EventManager implements MethodInterceptor
 //        }
 //    }
 
-    public void queryCompleted(Query query, Map<String, Object> parameters, long estimatedTime)
+    public void queryCompleted(Query query, Map<String, Object> parameters, long startTime, long endTime)
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.queryCompleted(query, parameters, estimatedTime);
+            listener.queryCompleted(query, parameters, startTime, endTime);
         }
     }
 
-    public void queryError(Query query, Map<String, Object> parameters, Be5Exception e, long estimatedTime)
+    public void queryError(Query query, Map<String, Object> parameters, long startTime, long endTime, String exception)
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.queryError(query, parameters, e, estimatedTime);
+            listener.queryError(query, parameters, startTime, endTime, exception);
         }
     }
 //
