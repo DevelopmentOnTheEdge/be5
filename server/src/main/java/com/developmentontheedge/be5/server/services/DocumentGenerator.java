@@ -22,9 +22,9 @@ public interface DocumentGenerator
 
     JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters);
 
-    JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters);
+    JsonApiModel newDocument(String entityName, String queryName, Map<String, Object> parameters);
 
-    JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
+    JsonApiModel updateDocument(String entityName, String queryName, Map<String, Object> parameters);
 
     void addDocumentPlugin(DocumentPlugin documentPlugin);
 

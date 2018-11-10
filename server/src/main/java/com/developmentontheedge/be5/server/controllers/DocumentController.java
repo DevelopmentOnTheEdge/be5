@@ -49,9 +49,9 @@ public class DocumentController extends JsonApiModelController
                 switch (requestSubUrl)
                 {
                     case "":
-                        return documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
+                        return documentGenerator.newDocument(entityName, queryName, parameters);
                     case "update":
-                        return documentGenerator.updateQueryJsonApi(entityName, queryName, parameters);
+                        return documentGenerator.updateDocument(entityName, queryName, parameters);
                     default:
                         return null;
                 }

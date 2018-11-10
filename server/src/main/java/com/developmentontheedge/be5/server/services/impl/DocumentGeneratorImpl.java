@@ -172,7 +172,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     @Override
     @LogBe5Event
-    public JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters)
+    public JsonApiModel newDocument(String entityName, String queryName, Map<String, Object> parameters)
     {
         try
         {
@@ -191,7 +191,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     @Override
     @LogBe5Event
-    public JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
+    public JsonApiModel updateDocument(String entityName, String queryName, Map<String, Object> parameters)
     {
         String url = new HashUrl(TABLE_ACTION, entityName, queryName)
                 .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();

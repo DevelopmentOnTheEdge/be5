@@ -38,7 +38,7 @@ public class EventManager implements MethodInterceptor
         String name = invocation.getMethod().getName();
 
         if (className.equals("DocumentGeneratorImpl") &&
-            (name.equals("queryJsonApiFor") || name.equals("updateQueryJsonApi")))
+            (name.equals("document") || name.equals("updateDocument")))
         {
             String entityName = (String) arguments[0];
             String queryName = (String) arguments[1];

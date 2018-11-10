@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.server.services;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
@@ -26,7 +25,6 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 {
     @Inject private Meta meta;
     @Inject private DocumentGenerator documentGenerator;
-    @Inject private OperationExecutor operationExecutor;
 
     @Before
     public void setUp()
@@ -71,7 +69,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getQueryJsonApiForUser()
     {
-        JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtable", "All records", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtable", "All records", Collections.emptyMap());
 
         assertNotNull(queryJsonApiForUser.getData());
         TestCase.assertNull(queryJsonApiForUser.getErrors());
@@ -80,7 +78,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void accessDenied()
     {
-        JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtableAdmin", "All records", Collections.emptyMap());
 
         assertEquals(new ErrorModel("403", "Access denied to query: testtableAdmin.All records", Collections.singletonMap("self", "table/testtableAdmin/All records")),
                 queryJsonApiForUser.getErrors()[0]);
@@ -91,7 +89,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
-        JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtableAdmin", "All records", Collections.emptyMap());
 
         assertNotNull(queryJsonApiForUser.getData());
         TestCase.assertNull(queryJsonApiForUser.getErrors());
@@ -100,7 +98,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void error()
     {
-        JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtable", "Query with error", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.newDocument("testtable", "Query with error", Collections.emptyMap());
 
         assertNull(queryJsonApiForUser.getData());
         assertEquals(new ErrorModel("500", "Internal error occurred during query: testtable.Query with error", Collections.singletonMap("self", "table/testtable/Query with error")), queryJsonApiForUser.getErrors()[0]);
@@ -119,7 +117,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void updateQueryJsonApi()
     {
-        JsonApiModel jsonApiModel = documentGenerator.updateQueryJsonApi("testtable", "All records", Collections.emptyMap());
+        JsonApiModel jsonApiModel = documentGenerator.updateDocument("testtable", "All records", Collections.emptyMap());
 
         assertEquals("{'attributes':{'data':[[" +
                         "{'content':'','options':{}}," +
