@@ -42,6 +42,12 @@ public class ServerModule extends ServletModule
     protected void configureServlets()
     {
         install(new BaseModule());
+
+        EventManager eventManager = new EventManager();
+        bind(EventManager.class).toInstance(eventManager);
+        requestInjection(eventManager);
+        bindInterceptor(any(), annotatedWith(LogBe5Event.class), eventManager);
+
         install(new DatabaseModule());
         install(new OperationModule());
         install(new QueryModule());
@@ -67,10 +73,5 @@ public class ServerModule extends ServletModule
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
-
-        EventManager eventManager = new EventManager();
-        bind(EventManager.class).toInstance(eventManager);
-        requestInjection(eventManager);
-        bindInterceptor(any(), annotatedWith(LogBe5Event.class), eventManager);
     }
 }
