@@ -62,11 +62,8 @@ public class FormGeneratorImpl implements FormGenerator
                                  Map<String, Object> operationParams, Map<String, Object> values)
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
-
-        Either<FormPresentation, OperationResultPresentation> data = processForm(operation, values, false);
-
-        return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
+        Either<Object, OperationResult> result = operationService.generate(operation, values);
+        return getResult(operation, result);
     }
 
     @Override
@@ -74,11 +71,8 @@ public class FormGeneratorImpl implements FormGenerator
                                 Map<String, Object> operationParams, Map<String, Object> values)
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
-
-        Either<FormPresentation, OperationResultPresentation> data = processForm(operation, values, true);
-
-        return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
+        Either<Object, OperationResult> result = operationService.execute(operation, values);
+        return getResult(operation, result);
     }
 
     private Operation getOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
@@ -90,52 +84,44 @@ public class FormGeneratorImpl implements FormGenerator
         return operation;
     }
 
-    @SuppressWarnings("unchecked")
-    private Either<FormPresentation, OperationResultPresentation> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
-                                                                              Map<String, ?> values, boolean execute)
+    private ResourceData getResult(com.developmentontheedge.be5.operation.model.Operation operation,
+                                   Either<Object, OperationResult> result)
     {
-        Either<Object, OperationResult> result;
-        if (execute)
-        {
-            result = operationService.execute(operation, (Map<String, Object>) values);
-        }
-        else
-        {
-            result = operationService.generate(operation, (Map<String, Object>) values);
-        }
-
+        Either<FormPresentation, OperationResultPresentation> data;
         if (result.isFirst())
         {
-            ErrorModel errorModel = null;
-            if (operation.getResult().getStatus() == OperationStatus.ERROR)
-            {
-                if (userInfoProvider.isSystemDeveloper())
-                {
-                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), getUrl(operation));
-                }
-            }
-
             String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
             String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
             String title = localizedEntityTitle + ": " + localizedOperationTitle;
 
-            return Either.first(new FormPresentation(
+            data = Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
                     title,
                     JsonFactory.bean(result.getFirst()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
                     resultForFrontend(operation.getResult()),
-                    errorModel
+                    getErrorModel(operation)
             ));
         }
         else
         {
-            return Either.second(new OperationResultPresentation(
+            data = Either.second(new OperationResultPresentation(
                     resultForFrontend(result.getSecond()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel())
             ));
         }
+        return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
+                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
+    }
+
+    private ErrorModel getErrorModel(Operation operation)
+    {
+        if (userInfoProvider.isSystemDeveloper() && operation.getResult().getStatus() == OperationStatus.ERROR)
+        {
+            return getErrorModel((Throwable) operation.getResult().getDetails(), getUrl(operation));
+        }
+        return null;
     }
 
     private OperationResult resultForFrontend(OperationResult result)
