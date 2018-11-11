@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
+import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 
 public class FormGeneratorTest extends TestTableQueryDBTest
 {
@@ -26,6 +32,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     @Before
     public void setUp()
     {
+        Be5EventTestLogger.clearMock();
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
     }
 
@@ -50,6 +57,21 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
+    public void executeForm()
+    {
+        Map<String, Object> map = new HashMap<String, Object>(){{
+            put("name", "test1");
+            put("value", "2");
+        }};
+
+        ResourceData result = formGenerator.execute("testtable", "All records", "Insert", Collections.emptyMap(), map);
+        assertEquals(OPERATION_RESULT, result.getType());
+        assertEquals(OperationStatus.REDIRECTED, ((OperationResultPresentation)result.getAttributes())
+                .getOperationResult().getStatus());
+        verify(Be5EventTestLogger.mock).operationCompleted(any(), any(), anyLong(), anyLong());
+    }
+
+    @Test
     public void executeWithGenerateErrorInProperty()
     {
         Map<String, Object> map = new HashMap<String, Object>(){{
@@ -64,6 +86,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals("Error in property (getParameters)", formPresentation.getOperationResult().getMessage());
 
         assertNull(formPresentation.getOperationResult().getDetails());
+        verify(Be5EventTestLogger.mock).operationError(any(), any(), anyLong(), anyLong(), any());
     }
 
     @Test

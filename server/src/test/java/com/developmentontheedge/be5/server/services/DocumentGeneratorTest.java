@@ -1,10 +1,12 @@
 package com.developmentontheedge.be5.server.services;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -16,7 +18,9 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 
 
 public class DocumentGeneratorTest extends TestTableQueryDBTest
@@ -27,6 +31,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Before
     public void setUp()
     {
+        Be5EventTestLogger.clearMock();
         initGuest();
         ServerTestResponse.newMock();
     }
@@ -42,6 +47,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
+        verify(Be5EventTestLogger.mock).queryCompleted(any(), any(), anyLong(), anyLong());
     }
 
     @Test
@@ -97,5 +103,18 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
                     "'links':{'self':'table/testtable/All records'}," +
                     "'type':'table_more'}",
                 oneQuotes(jsonb.toJson(jsonApiModel.getData())));
+    }
+
+    @Test
+    public void error()
+    {
+        try
+        {
+            documentGenerator.getDocument("testtable", "Query with error", Collections.emptyMap());
+        }
+        catch (Be5Exception ignore)
+        {
+        }
+        verify(Be5EventTestLogger.mock).queryError(any(), any(), anyLong(), anyLong(), any());
     }
 }

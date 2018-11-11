@@ -1,6 +1,7 @@
 be5CoreTestProject:
   features:
   - documentCategories
+  - eventDbLogging
   l10n: ru
   projectFileStructure: {}
   modules:
