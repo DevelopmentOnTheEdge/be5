@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
@@ -62,7 +61,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
     private final ErrorModelHelper errorModelHelper;
-    private final DbService db;
     private final Provider<Session> session;
 
     private final List<DocumentPlugin> documentPlugins = new ArrayList<>();
@@ -71,12 +69,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
                                  DocumentFormPlugin documentFormPlugin, DocumentOperationsPlugin documentOperationsPlugin,
                                  FilterInfoPlugin filterInfoPlugin,
-                                 ErrorModelHelper errorModelHelper, DbService db, Provider<Session> session)
+                                 ErrorModelHelper errorModelHelper, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.errorModelHelper = errorModelHelper;
-        this.db = db;
         this.session = session;
 
         addDocumentPlugin(documentFormPlugin);
