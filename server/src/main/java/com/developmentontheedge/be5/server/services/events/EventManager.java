@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.server.services.events;
 
-import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,61 +23,75 @@ public class EventManager implements MethodInterceptor
     public static final String ACTION_PROCESS = "process";
     public static final String ACTION_OTHER = "other";
 
-    @Inject
-    private Meta meta;
-
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
         long startTime = System.currentTimeMillis();
         Object[] arguments = invocation.getArguments();
         String className = invocation.getMethod().getDeclaringClass().getSimpleName();
-        String name = invocation.getMethod().getName();
-
-        if (className.equals("DocumentGeneratorImpl") &&
-            (name.equals("getDocument") || name.equals("getNewTableRows")))
+        if (className.equals("DocumentGeneratorImpl"))
         {
-            Query query = (Query) arguments[0];
-            Map<String, Object> parameters = (Map<String, Object>) arguments[1];
-            try
-            {
-                Object proceed = invocation.proceed();
-                queryCompleted(query, parameters, startTime, System.currentTimeMillis());
-                return proceed;
-            }
-            catch (Throwable e)
-            {
-                queryError(query, parameters, startTime, System.currentTimeMillis(), e.getMessage());
-                throw e;
-            }
+            return logQuery(invocation, startTime, arguments);
+        }
+        if (className.equals("FormGeneratorImpl"))
+        {
+            return logOperation(invocation, startTime, arguments);
         }
 
         return invocation.proceed();
     }
 
-//    public void operationStarted( int pageID, String login, String entity, String title, OperationInfo opInfo )
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//            listener.operationStarted( pageID, login, entity, title, opInfo );
-//        }
-//    }
-//
-//    public void operationCompleted( int pageID, OperationInfo opInfo )
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//                listener.operationCompleted( pageID, opInfo );
-//        }
-//    }
-//
-//    public void operationDenied( int pageID, OperationInfo opInfo, String exc )
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//            listener.operationDenied( pageID, opInfo, exc );
-//        }
-//    }
+    private Object logQuery(MethodInvocation invocation, long startTime, Object[] arguments) throws Throwable
+    {
+        Query query = (Query) arguments[0];
+        Map<String, Object> parameters = (Map<String, Object>) arguments[1];
+        try
+        {
+            Object proceed = invocation.proceed();
+            queryCompleted(query, parameters, startTime, System.currentTimeMillis());
+            return proceed;
+        } catch (Throwable e)
+        {
+            queryError(query, parameters, startTime, System.currentTimeMillis(), e.getMessage());
+            throw e;
+        }
+    }
+
+    private Object logOperation(MethodInvocation invocation, long startTime, Object[] arguments) throws Throwable
+    {
+        Operation operation = (Operation) arguments[0];
+        Map<String, Object> values = (Map<String, Object>) arguments[1];
+
+        Object proceed = invocation.proceed();
+        if (operation.getStatus() == OperationStatus.ERROR)
+        {
+            operationError(operation, values, startTime, System.currentTimeMillis(), operation.getResult().getMessage());
+        }
+        else if (operation.getStatus() == OperationStatus.FINISHED ||
+                 operation.getStatus() == OperationStatus.REDIRECTED)
+        {
+            operationCompleted(operation, values, startTime, System.currentTimeMillis());
+        }
+        return proceed;
+    }
+
+    public void operationCompleted(Operation operation, Map<String, Object> values,
+                                   long startTime, long endTime)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.operationCompleted(operation, values, startTime, endTime);
+        }
+    }
+
+    public void operationError(Operation operation, Map<String, Object> values,
+                               long startTime, long endTime, String exception)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.operationError(operation, values, startTime, endTime, exception);
+        }
+    }
 
     public void queryCompleted(Query query, Map<String, Object> parameters, long startTime, long endTime)
     {
@@ -94,7 +108,7 @@ public class EventManager implements MethodInterceptor
             listener.queryError(query, parameters, startTime, endTime, exception);
         }
     }
-//
+
 //    public void servletStarted( ServletInfo si ) //, ...
 //
 //    {

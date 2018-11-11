@@ -2,6 +2,7 @@ be5events:
   type: table
   extras: feature:eventDbLogging
   displayName: Events
+  order: '97'
   primaryKey: ID
   scheme:
     columns:

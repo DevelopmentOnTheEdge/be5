@@ -19,6 +19,7 @@ import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
+import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -62,8 +63,7 @@ public class FormGeneratorImpl implements FormGenerator
                                  Map<String, Object> operationParams, Map<String, Object> values)
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
-        Either<Object, OperationResult> result = operationService.generate(operation, values);
-        return getResult(operation, result);
+        return generate(operation, values);
     }
 
     @Override
@@ -71,17 +71,25 @@ public class FormGeneratorImpl implements FormGenerator
                                 Map<String, Object> operationParams, Map<String, Object> values)
     {
         Operation operation = getOperation(entityName, queryName, operationName, operationParams);
-        Either<Object, OperationResult> result = operationService.execute(operation, values);
-        return getResult(operation, result);
+        return execute(operation, values);
     }
 
     private Operation getOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
     {
-        Operation operation;
-
         OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-        operation = operationExecutor.create(operationInfo, queryName, operationParams);
-        return operation;
+        return operationExecutor.create(operationInfo, queryName, operationParams);
+    }
+
+    @LogBe5Event
+    ResourceData generate(Operation operation, Map<String, Object> values)
+    {
+        return getResult(operation, operationService.generate(operation, values));
+    }
+
+    @LogBe5Event
+    ResourceData execute(Operation operation, Map<String, Object> values)
+    {
+        return getResult(operation, operationService.execute(operation, values));
     }
 
     private ResourceData getResult(com.developmentontheedge.be5.operation.model.Operation operation,

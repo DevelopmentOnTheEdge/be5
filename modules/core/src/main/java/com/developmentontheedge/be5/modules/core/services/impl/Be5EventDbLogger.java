@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_OPERATION;
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_QUERY;
 
 public class Be5EventDbLogger implements Be5EventLogger
@@ -48,6 +50,22 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
                 startTime, endTime, ACTION_QUERY, query.getEntity().getName(), query.getName(), exception);
+    }
+
+    @Override
+    public void operationCompleted(Operation operation, Map<String, Object> values, long startTime, long endTime)
+    {
+        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
+                startTime, endTime, ACTION_OPERATION,
+                operation.getInfo().getEntityName(), operation.getInfo().getName(), null);
+    }
+
+    @Override
+    public void operationError(Operation operation, Map<String, Object> values, long startTime, long endTime, String exception)
+    {
+        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
+                startTime, endTime, ACTION_OPERATION,
+                operation.getInfo().getEntityName(), operation.getInfo().getName(), exception);
     }
 
     //
