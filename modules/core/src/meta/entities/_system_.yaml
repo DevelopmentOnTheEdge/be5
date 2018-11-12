@@ -62,6 +62,10 @@ _system_:
       type: static
       roles: [SystemDeveloper]
       value: queryBuilder
+  - Events:
+      type: static
+      roles: [SystemDeveloper, Administrator]
+      value: be5events.redir?_qn_=All+records
   operations:
   - ExecuteInOperation:
       type: Java

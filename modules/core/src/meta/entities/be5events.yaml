@@ -42,6 +42,7 @@ be5events:
   - All records:
       type: 1D
       messageWhenEmpty: The list is empty
+      invisible: true
       roles: Administrator
       operations:
       - Filter
