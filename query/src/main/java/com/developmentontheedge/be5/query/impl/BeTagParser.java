@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.query.impl;
 
-import one.util.streamex.EntryStream;
-
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -80,15 +78,6 @@ public class BeTagParser
             Tokenizer tokenizer = new Tokenizer(input);
             if (!input.startsWith("<"))
             {
-                // legacy-style link attribute:
-                String[] cols = tagString.split(";");
-                if (cols.length != 3)
-                {
-                    throw tokenizer.new ParseException(
-                            "Must either start with '<' or contain three semicolon-separated fields like <using>;<table>;<columns>");
-                }
-                Map<String, String> attrs = EntryStream.of("using", cols[0].trim(), "table", cols[1].trim(), "columns", cols[2].trim()).toMap();
-                map.put("link", attrs);
                 return;
             }
             while (!tokenizer.finished())
