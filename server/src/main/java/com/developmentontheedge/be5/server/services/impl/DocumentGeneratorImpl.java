@@ -117,8 +117,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public JsonApiModel getDocument(Query query, Map<String, Object> parameters)
     {
         Map<String, Object> params = processQueryParams(query, parameters);
-        TableModel tableModel = tableModelService.getTableModel(query, params);
-        TablePresentation data = getTablePresentation(query, params, tableModel);
+        TablePresentation data = getTablePresentation(query, params);
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
                 .named(FilterUtil.getOperationParamsWithoutFilter(params));
 
@@ -140,6 +139,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 included.toArray(new ResourceData[0]),
                 null
         );
+    }
+
+    @Override
+    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
+    {
+        return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
     private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
