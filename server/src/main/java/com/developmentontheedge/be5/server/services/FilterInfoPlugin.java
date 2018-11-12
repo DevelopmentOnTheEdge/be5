@@ -46,7 +46,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         return new ResourceData(DOCUMENT_FILTER_INFO_PLUGIN, filterInfo, null);
     }
 
-    private List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
+    protected List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
     {
         Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
         List<FilterItem> result = new ArrayList<>();
@@ -84,7 +84,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         return result;
     }
 
-    private FilterItem getValueTitle(ColumnDef column, String mainEntityName, String k, Object v)
+    protected FilterItem getValueTitle(ColumnDef column, String mainEntityName, String k, Object v)
     {
         String columnTitle = userAwareMeta.getColumnTitle(column.getTableFrom(), k);
         if (meta.getEntity(column.getTableFrom()).getPrimaryKey().equals(column.getName()))
