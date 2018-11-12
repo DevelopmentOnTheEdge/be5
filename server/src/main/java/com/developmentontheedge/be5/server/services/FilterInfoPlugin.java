@@ -17,7 +17,6 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,26 +27,23 @@ public class FilterInfoPlugin implements DocumentPlugin
     private final QueriesService queries;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
+    protected static final String DOCUMENT_FILTER_INFO_PLUGIN = "filterInfo";
 
     @Inject
-    public FilterInfoPlugin(QueriesService queries, Meta meta, UserAwareMeta userAwareMeta)
+    public FilterInfoPlugin(QueriesService queries, Meta meta, UserAwareMeta userAwareMeta,
+                            DocumentGenerator documentGenerator)
     {
         this.queries = queries;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
+        documentGenerator.addDocumentPlugin(DOCUMENT_FILTER_INFO_PLUGIN, this);
     }
 
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        Map<String, Object> map = new HashMap<>();
-        map.put("operationParamsInfo", getOperationParamsInfo(query, parameters));
-        if (map.size() > 0)
-        {
-            return new ResourceData("filterInfo", map, null);
-        }
-
-        return null;
+        FilterInfo filterInfo = new FilterInfo(getOperationParamsInfo(query, parameters));
+        return new ResourceData(DOCUMENT_FILTER_INFO_PLUGIN, filterInfo, null);
     }
 
     private List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
@@ -126,6 +122,21 @@ public class FilterInfoPlugin implements DocumentPlugin
         public String getValue()
         {
             return value;
+        }
+    }
+
+    public class FilterInfo
+    {
+        private List<FilterItem> operationParamsInfo;
+
+        public FilterInfo(List<FilterItem> operationParamsInfo)
+        {
+            this.operationParamsInfo = operationParamsInfo;
+        }
+
+        public List<FilterItem> getOperationParamsInfo()
+        {
+            return operationParamsInfo;
         }
     }
 

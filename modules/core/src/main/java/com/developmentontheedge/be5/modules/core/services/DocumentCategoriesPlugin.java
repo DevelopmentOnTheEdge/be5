@@ -26,7 +26,7 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
         this.categoriesService = categoriesService;
         if (projectProvider.get().hasFeature(DOCUMENT_CATEGORIES_FEATURE))
         {
-            documentGenerator.addDocumentPlugin(this);
+            documentGenerator.addDocumentPlugin(DOCUMENT_CATEGORIES_FEATURE, this);
         }
     }
 

@@ -20,10 +20,7 @@ import com.developmentontheedge.be5.server.model.table.InitialRow;
 import com.developmentontheedge.be5.server.model.table.InitialRowsBuilder;
 import com.developmentontheedge.be5.server.model.table.MoreRows;
 import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
-import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
-import com.developmentontheedge.be5.server.services.FilterInfoPlugin;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.web.Session;
 
@@ -63,22 +60,16 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final ErrorModelHelper errorModelHelper;
     private final Provider<Session> session;
 
-    private final List<DocumentPlugin> documentPlugins = new ArrayList<>();
+    private final Map<String, DocumentPlugin> documentPlugins = new HashMap<>();
 
     @Inject
     public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
-                                 DocumentFormPlugin documentFormPlugin, DocumentOperationsPlugin documentOperationsPlugin,
-                                 FilterInfoPlugin filterInfoPlugin,
                                  ErrorModelHelper errorModelHelper, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.errorModelHelper = errorModelHelper;
         this.session = session;
-
-        addDocumentPlugin(documentFormPlugin);
-        addDocumentPlugin(documentOperationsPlugin);
-        addDocumentPlugin(filterInfoPlugin);
     }
 
     @Override
@@ -134,11 +125,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         List<ResourceData> included = new ArrayList<>();
         try
         {
-            documentPlugins.forEach(d -> {
-                ResourceData resourceData = d.addData(query, params);
+            documentPlugins.forEach((k, v) -> {
+                ResourceData resourceData = v.addData(query, params);
                 if (resourceData != null) included.add(resourceData);
             });
-        } catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
             throw Be5Exception.internalInQuery(query, e);
         }
@@ -216,9 +208,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public void addDocumentPlugin(DocumentPlugin documentPlugin)
+    public void addDocumentPlugin(String name, DocumentPlugin documentPlugin)
     {
-        documentPlugins.add(documentPlugin);
+        documentPlugins.put(name, documentPlugin);
     }
 
     private Map<String, Map<String, Object>> getUserQueriesPositions()

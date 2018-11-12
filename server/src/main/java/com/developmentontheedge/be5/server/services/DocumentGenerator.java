@@ -20,7 +20,7 @@ public interface DocumentGenerator
 
     JsonApiModel getNewTableRows(String entityName, String queryName, Map<String, Object> parameters);
 
-    void addDocumentPlugin(DocumentPlugin documentPlugin);
+    void addDocumentPlugin(String name, DocumentPlugin documentPlugin);
 
     void clearSavedPosition(Query query, Map<String, Object> parameters);
 }

@@ -20,7 +20,10 @@ import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
+import com.developmentontheedge.be5.server.services.FilterInfoPlugin;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.services.events.EventManager;
@@ -68,6 +71,10 @@ public class ServerModule extends ServletModule
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
         bind(ErrorModelHelper.class).in(Scopes.SINGLETON);
+
+        bind(DocumentOperationsPlugin.class).asEagerSingleton();
+        bind(DocumentFormPlugin.class).asEagerSingleton();
+        bind(FilterInfoPlugin.class).asEagerSingleton();
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);

@@ -19,10 +19,12 @@ public class DocumentFormPlugin implements DocumentPlugin
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public DocumentFormPlugin(FormGenerator formGenerator, UserAwareMeta userAwareMeta)
+    public DocumentFormPlugin(FormGenerator formGenerator, UserAwareMeta userAwareMeta,
+                              DocumentGenerator documentGenerator)
     {
         this.formGenerator = formGenerator;
         this.userAwareMeta = userAwareMeta;
+        documentGenerator.addDocumentPlugin("topForm", this);
     }
 
     @Override

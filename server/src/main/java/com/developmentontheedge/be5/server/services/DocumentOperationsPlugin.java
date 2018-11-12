@@ -23,10 +23,12 @@ public class DocumentOperationsPlugin implements DocumentPlugin
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public DocumentOperationsPlugin(UserInfoProvider userInfoProvider, UserAwareMeta userAwareMeta)
+    public DocumentOperationsPlugin(UserInfoProvider userInfoProvider, UserAwareMeta userAwareMeta,
+                                    DocumentGenerator documentGenerator)
     {
         this.userInfoProvider = userInfoProvider;
         this.userAwareMeta = userAwareMeta;
+        documentGenerator.addDocumentPlugin("documentOperations", this);
     }
 
     @Override
