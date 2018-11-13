@@ -170,16 +170,19 @@ public class OperationExecutorImpl implements OperationExecutor
     private void doInvokeWithExtenders(Operation op, List<OperationExtender> extenders, Object parameters) throws Exception
     {
         invokeExtenders("preInvoke", op, extenders, parameters);
+        if (op.getStatus() == OperationStatus.ERROR) return;
         if (!invokeExtenders("skipInvoke", op, extenders, parameters))
         {
+            if (op.getStatus() == OperationStatus.ERROR) return;
             op.invoke(parameters);
+            if (op.getStatus() == OperationStatus.ERROR) return;
             invokeExtenders("postInvoke", op, extenders, parameters);
         }
         else
         {
             if (OperationStatus.EXECUTE == op.getStatus())
             {
-                op.setResult(OperationResult.finished("Invokation of operation is cancelled by extender"));
+                op.setResult(OperationResult.finished("Invocation of operation is cancelled by extender"));
             }
         }
     }
@@ -264,6 +267,7 @@ public class OperationExecutorImpl implements OperationExecutor
                     ext.postInvoke(curOp, parameters);
                     break;
             }
+            if (curOp.getStatus() == OperationStatus.ERROR) return false;
         }
         return false;
     }
