@@ -51,6 +51,17 @@ public class FilterInfoPlugin implements DocumentPlugin
         Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
         List<FilterItem> result = new ArrayList<>();
         String mainEntityName = query.getEntity().getName();
+        if (params.containsKey("entity") && params.containsKey("entityID"))
+        {
+            String entity = (String) params.remove("entity");
+            String entityID = (String) params.remove("entityID");
+            ColumnDef column = meta.getColumn(entity, meta.getEntity(entity).getPrimaryKey());
+
+            String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
+                    Collections.singletonMap(column.getName(), entityID));
+            String entityTitle = userAwareMeta.getLocalizedEntityTitle(column.getTableFrom());
+            if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
+        }
         params.forEach((k, v) -> {
             ColumnDef column = meta.getColumn(mainEntityName, k);
             if (column != null)
