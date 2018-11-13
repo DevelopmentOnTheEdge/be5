@@ -277,6 +277,11 @@ public class OperationExecutorImpl implements OperationExecutor
         {
             if (!operationInfo.getEntityName().startsWith("_"))
             {
+                if (!operationInfo.getEntity().hasPrimaryKey())
+                {
+                    throw Be5Exception.internalInOperation(operationInfo.getModel(),
+                            new RuntimeException("Entity '" + operationInfo.getEntity().getName() + "' does not have primary key."));
+                }
                 Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
                 selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
             }

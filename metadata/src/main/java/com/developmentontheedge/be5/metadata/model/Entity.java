@@ -312,6 +312,12 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
         fireCodeChanged();
     }
 
+    @PropertyName("Primary key")
+    public boolean hasPrimaryKey()
+    {
+        return !"".equals(getPrimaryKey());
+    }
+
     @PropertyName("Icon")
     public Icon getIcon()
     {
