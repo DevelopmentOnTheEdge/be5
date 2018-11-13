@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
@@ -20,7 +19,7 @@ public class FilterUtil
             return operationParams.entrySet()
                     .stream()
                     .filter(e -> !e.getKey().startsWith("_"))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    .collect(Utils.toLinkedMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
         if (operationParams.get(SEARCH_PRESETS_PARAM) == null)
@@ -33,7 +32,7 @@ public class FilterUtil
         return operationParams.entrySet()
                 .stream()
                 .filter(e -> !e.getKey().startsWith("_") && contextParamNames.contains(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Utils.toLinkedMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static Map<String, Object> getFilterParams(Map<String, Object> params)
@@ -49,7 +48,7 @@ public class FilterUtil
         return params.entrySet()
                 .stream()
                 .filter(e -> !e.getKey().startsWith("_") && !contextParamNames.contains(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Utils.toLinkedMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static String getSearchPresetParam(Map<String, Object> params)

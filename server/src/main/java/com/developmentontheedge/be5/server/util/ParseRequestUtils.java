@@ -13,7 +13,7 @@ import com.google.gson.JsonPrimitive;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ParseRequestUtils
@@ -25,7 +25,7 @@ public class ParseRequestUtils
             return Collections.emptyMap();
         }
 
-        Map<String, Object> fieldValues = new HashMap<>();
+        Map<String, Object> fieldValues = new LinkedHashMap<>();
 
 
         //todo gson -> json-b

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -589,7 +589,7 @@ public class DpsHelper
 
     public Map<String, Object> getAsMap(DynamicPropertySet dps)
     {
-        Map<String, Object> values = new HashMap<>();
+        Map<String, Object> values = new LinkedHashMap<>();
         dps.forEach(p -> values.put(p.getName(), p.getValue()));
 
         return values;
@@ -597,7 +597,7 @@ public class DpsHelper
 
     public Map<String, Object> getAsMapStringValues(DynamicPropertySet dps)
     {
-        Map<String, Object> values = new HashMap<>();
+        Map<String, Object> values = new LinkedHashMap<>();
         dps.forEach(p -> {
             if (p.getValue() != null && !p.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {

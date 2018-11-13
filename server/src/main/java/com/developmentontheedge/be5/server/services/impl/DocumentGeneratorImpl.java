@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -195,7 +196,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
     {
-        HashMap<String, Object> params = new HashMap<>(parameters);
+        Map<String, Object> params = new LinkedHashMap<>(parameters);
         if (parameters.containsKey(CLEAN_NAV))
         {
             params.remove(CLEAN_NAV);
