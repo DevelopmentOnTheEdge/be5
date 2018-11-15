@@ -63,7 +63,7 @@ public class OperationServiceImpl implements OperationService
         {
             if (parameters instanceof DynamicPropertySet)
             {
-                String reloadControlName = (String) presetValues.get(RELOAD_CONTROL_NAME);
+                String reloadControlName = ((String) presetValues.get(RELOAD_CONTROL_NAME)).substring(1);
                 DynamicProperty property = ((DynamicPropertySet) parameters).getProperty(reloadControlName);
                 validator.validate(property);
             }

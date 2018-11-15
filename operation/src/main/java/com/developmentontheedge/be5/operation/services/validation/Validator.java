@@ -50,6 +50,10 @@ public class Validator
             function.run();
             return true;
         }
+        catch (NullPointerException e)
+        {
+            throw e;
+        }
         catch (RuntimeException e)
         {
             if (userInfoProvider.isSystemDeveloper())

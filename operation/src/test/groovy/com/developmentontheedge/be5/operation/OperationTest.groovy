@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation
 
 import com.developmentontheedge.be5.base.FrontendConstants
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
+import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
@@ -12,6 +13,7 @@ import com.google.common.collect.ImmutableMap
 import org.junit.Ignore
 import org.junit.Test
 
+import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME
 import static org.junit.Assert.*
 import static org.mockito.Mockito.verify
 
@@ -69,12 +71,12 @@ class OperationTest extends OperationsSqlMockProjectTest
     @Test
     void testReloadOnChange()
     {
-        Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "TestOperation", "0",
+        def operation = createOperation("testtableAdmin", "All records", "TestOperation", "0")
+        Either<Object, OperationResult> generate = generateOperation(operation,
                 ImmutableMap.of(
                         "name", "test",
                         "value", "0",
-                        FrontendConstants.RELOAD_CONTROL_NAME, "name"))
+                        RELOAD_CONTROL_NAME, "/name"))
 
         assertEquals("{'name':'test','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
@@ -86,7 +88,7 @@ class OperationTest extends OperationsSqlMockProjectTest
                 ImmutableMap.of(
                         "name", "testName",
                         "value", "ab",
-                        FrontendConstants.RELOAD_CONTROL_NAME, "value"))
+                        RELOAD_CONTROL_NAME, "/value"))
 
         assertNotNull(result.getFirst())
 
@@ -142,7 +144,7 @@ class OperationTest extends OperationsSqlMockProjectTest
                 "testtableAdmin", "All records", "TestOperationProperty", "0", [
                 "getOrDefault"      : "testName2",
                 "getOrDefaultNumber": "2",
-                "_reloadcontrol_"   : "name"])
+                (RELOAD_CONTROL_NAME) : "/getOrDefault"])
 
         assertEquals("{" +
                 "'getOrDefault':'testName2'," +
