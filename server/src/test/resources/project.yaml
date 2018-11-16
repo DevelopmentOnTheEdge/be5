@@ -1,5 +1,6 @@
 be5ServerTestProject:
-  features: logging
+  features:
+  - beSqlQueries
   l10n: ru
   projectFileStructure: {}
   modules: []

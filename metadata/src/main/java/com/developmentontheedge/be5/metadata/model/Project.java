@@ -431,7 +431,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         {
             sqlMacros.clear();
             FreemarkerUtils.mergeTemplate("initMergeTemplate", " 1", null, getConfiguration());
-            enterSQL();
+            parseBeSqlMacros();
+            sqlMacros.clear();
         }
         catch (ProjectElementException e)
         {
@@ -1071,7 +1072,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         sqlMacros.add(sql);
     }
 
-    public void enterSQL()
+    private void parseBeSqlMacros()
     {
         reconfigureFreemarker();
         SqlParser parser = new SqlParser();

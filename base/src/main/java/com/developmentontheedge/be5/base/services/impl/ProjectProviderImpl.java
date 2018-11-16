@@ -66,7 +66,6 @@ public class ProjectProviderImpl implements ProjectProvider
             try
             {
                 Project project = ModuleLoader2.findAndLoadProjectWithModules(dirty);
-                project.initBeSqlMacros();
                 return project;
             }
             catch (RuntimeException e)

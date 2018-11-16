@@ -1,6 +1,5 @@
 queryTestProject:
-  features:
-  - beSqlQueries
+  features: []
   l10n: ru
   projectFileStructure: {}
   modules: []

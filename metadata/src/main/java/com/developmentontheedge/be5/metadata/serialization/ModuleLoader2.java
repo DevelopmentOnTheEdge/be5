@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import org.yaml.snakeyaml.Yaml;
@@ -24,6 +25,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,6 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.metadata.model.Project.BE_SQL_QUERIES_FEATURE;
 import static java.util.stream.Collectors.joining;
 
 
@@ -91,8 +94,36 @@ public class ModuleLoader2
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
         project.validate();
-
+        project.initBeSqlMacros();
+        if (project.hasFeature(BE_SQL_QUERIES_FEATURE))
+        {
+            processOldFreemarkerMacros(project);
+        }
         return project;
+    }
+
+    private static void processOldFreemarkerMacros(Project project)
+    {
+        List<String> allowedFreemarkerMacros = Arrays.asList("<@_copySelectionQuery/>",
+                "<@_copyAllRecordsQuery/>", "<@_copyQuery ");
+        for (String entityName : project.getEntityNames())
+        {
+            for (Query query : project.getEntity(entityName).getQueries())
+            {
+                if (query.isSqlQuery())
+                {
+                    String queryCode = query.getQuery().trim();
+                    String queryAfterFreemarker = query.getQueryCompiled().validate().trim();
+                    if ((queryCode.contains("${") || queryCode.contains("<@")) &&
+                            allowedFreemarkerMacros.stream().filter(queryCode::contains).count() == 0)
+                    {
+                        throw new IllegalArgumentException("Project used " + BE_SQL_QUERIES_FEATURE +
+                                " feature, please use be-sql instead freemarker.\n" + "Compile freemarker for query:" + queryCode + "\n==============\n" + queryAfterFreemarker);
+                    }
+                    query.setQuery(queryAfterFreemarker);
+                }
+            }
+        }
     }
 
     public static Map<String, Project> getModulesMap()

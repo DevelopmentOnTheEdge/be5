@@ -19,7 +19,6 @@ public class TestProjectProvider implements ProjectProvider
         {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
             BaseTestUtils.addH2Profile(project);
-            project.initBeSqlMacros();
         }
         catch (ProjectLoadException e)
         {
