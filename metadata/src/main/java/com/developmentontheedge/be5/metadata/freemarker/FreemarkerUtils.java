@@ -114,11 +114,6 @@ public final class FreemarkerUtils
         {
             throw new RuntimeException("Unexpected error: " + e, e);
         }
-        FreemarkerScript macroCollection = project.getMacroCollection().optScript(FreemarkerCatalog.MAIN_MACRO_LIBRARY);
-        if (macroCollection != null)
-        {
-            config.addAutoInclude(macroCollection.getCompletePath().toString());
-        }
         for (Module module : project.getModules())
         {
             FreemarkerCatalog collection = module.getMacroCollection();
@@ -130,6 +125,11 @@ public final class FreemarkerUtils
                     config.addAutoInclude(script.getCompletePath().toString());
                 }
             }
+        }
+        FreemarkerScript macroCollection = project.getMacroCollection().optScript(FreemarkerCatalog.MAIN_MACRO_LIBRARY);
+        if (macroCollection != null)
+        {
+            config.addAutoInclude(macroCollection.getCompletePath().toString());
         }
         config.setTemplateLoader(new ProjectTemplateLoader(project));
         return config;
