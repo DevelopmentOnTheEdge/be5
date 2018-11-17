@@ -44,7 +44,7 @@ public class MetaTest extends BaseTest
     @Test
     public void getEntities()
     {
-        List<Entity> entities = meta.getEntities(null);
+        List<Entity> entities = meta.getEntities();
         assertTrue(entities.stream().anyMatch(e -> e.getName().equals("testtableAdmin")));
 
         List<Entity> genericCollectionEntities = meta.getEntities(EntityType.GENERIC_COLLECTION);

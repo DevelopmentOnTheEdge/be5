@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.query.impl.utils;
 
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.base.util.annotations.DirtyRealization;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
-import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.sql.format.Ast;
@@ -72,6 +72,7 @@ public class QueryUtils
                             (address1, address2) -> address1));
     }
 
+    @DirtyRealization(comment = "")
     private static boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, Meta meta, String key)
     {
         String[] split = key.split("\\.");
@@ -81,16 +82,16 @@ public class QueryUtils
         }
         else
         {
-            String entityName = null;
-            if (aliasToTable.get(split[0]) != null && meta.getEntity(aliasToTable.get(split[0])) != null)
+            String entityName;
+            if (aliasToTable.get(split[0]) != null)
             {
                 entityName = aliasToTable.get(split[0]);
             }
-            else if (meta.getEntity(split[0]) != null)
+            else
             {
                 entityName = split[0];
             }
-            return entityName == null || meta.getColumn(entityName, split[1]) == null;
+            return meta.getColumn(entityName, split[1]) == null;
         }
     }
 
@@ -162,20 +163,16 @@ public class QueryUtils
         {
             return meta.getColumn(mainEntityName, split[0]);
         }
-        Entity entity = meta.getEntity(entityName);
-        if (entity == null)
+        Set<String> entityNames = meta.getProject().getEntityNames();
+        if (!entityNames.contains(entityName))
         {
             if (getAliasToTable(ast).get(entityName) == null)
             {
                 throw new RuntimeException("Entity with alias '" + entityName + "' not found.");
             }
-            entity = meta.getEntity(getAliasToTable(ast).get(entityName));
+            entityName = getAliasToTable(ast).get(entityName);
         }
-        if (entity == null)
-        {
-            throw new RuntimeException("Entity '" + entityName + "' not found.");
-        }
-        return meta.getColumn(entity, column);
+        return meta.getColumn(entityName, column);
     }
 
     private static Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,

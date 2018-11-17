@@ -105,7 +105,7 @@ public class FilterInfoPlugin implements DocumentPlugin
             String idColumnTitle = mainEntityName.equalsIgnoreCase(column.getTableFrom()) ? null : columnTitle;
             if (tags.length > 0) return new FilterItem(idColumnTitle, tags[0][1]);
         }
-        if (column.getTableTo() != null && meta.getEntity(column.getTableTo()) != null)
+        if (column.getTableTo() != null)
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
                     Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));

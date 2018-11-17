@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
@@ -45,8 +44,6 @@ public final class DatabaseModel implements EntityAccess
     {
         Objects.requireNonNull(entityName);
         Entity entity = meta.getEntity(entityName);
-
-        if (entity == null) throw Be5Exception.unknownEntity(entityName);
 
         return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, meta, entity);
     }

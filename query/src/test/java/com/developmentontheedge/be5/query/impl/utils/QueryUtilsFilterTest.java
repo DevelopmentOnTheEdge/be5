@@ -116,7 +116,7 @@ public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
     public void isNotContainsInQuery() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("t.productID", Collections.singletonList("1")), meta);
+        QueryUtils.applyFilters(ast, "filterTestTable", Collections.singletonMap("testtable.productID", Collections.singletonList("1")), meta);
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());

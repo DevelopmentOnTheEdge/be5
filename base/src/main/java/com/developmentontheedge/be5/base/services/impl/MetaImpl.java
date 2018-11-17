@@ -27,6 +27,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollect
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -89,9 +90,15 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    public Entity getEntity(String name)
+    @Nonnull
+    public Entity getEntity(String entityName)
     {
-        return getProject().getEntity(name);
+        Entity entity = getProject().getEntity(entityName);
+        if (entity == null)
+        {
+            throw Be5Exception.unknownEntity(entityName);
+        }
+        return entity;
     }
 
     @Override
@@ -137,20 +144,18 @@ public class MetaImpl implements Meta
     @Override
     public List<Entity> getEntities(EntityType entityType)
     {
-        List<Entity> entities = new ArrayList<>();
+        return getProject().getEntityNames().stream()
+                .map(name -> getProject().getEntity(name))
+                .filter(e -> e.getType() == entityType)
+                .collect(Collectors.toList());
+    }
 
-        for (Module module : getProject().getModulesAndApplication())
-        {
-            for (Entity entity : module.getEntities())
-            {
-                if (entityType == null || entity.getType() == entityType)
-                {
-                    entities.add(entity);
-                }
-            }
-        }
-
-        return entities;
+    @Override
+    public List<Entity> getEntities()
+    {
+        return getProject().getEntityNames().stream()
+                .map(name -> getProject().getEntity(name))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -287,6 +292,7 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    @Nonnull
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = getProject().findOperation(entityName, queryName, name);
@@ -301,11 +307,11 @@ public class MetaImpl implements Meta
                 throw Be5Exception.unknownOperation(entityName, name);
             }
         }
-
         return operation;
     }
 
     @Override
+    @Nonnull
     public Operation getOperation(String entityName, String name)
     {
         Operation operation = getProject().findOperation(entityName, name);
@@ -339,20 +345,14 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    @Nonnull
     public Query getQuery(String entityName, String queryName)
     {
-        Entity entity = getEntity(entityName);
-        if (entity == null)
-        {
-            throw Be5Exception.unknownEntity(entityName);
-        }
-
-        Query query = entity.getQueries().get(queryName);
+        Query query = getEntity(entityName).getQueries().get(queryName);
         if (query == null)
         {
             throw Be5Exception.unknownQuery(entityName, queryName);
         }
-
         return query;
     }
 
@@ -362,27 +362,6 @@ public class MetaImpl implements Meta
         return entity.getQueries().stream()
                 .map(BeModelElementSupport::getName).toList();
     }
-
-//    @Override
-//    public Optional<Query> findQuery(String entityName, String queryName)
-//    {
-//        Objects.requireNonNull(entityName);
-//        Objects.requireNonNull(queryName);
-//
-//        return findEntity(entityName).flatMap(entity -> findQuery(entity, queryName));
-//    }
-//
-//    private Optional<Query> findQuery(Entity entity, String queryName)
-//    {
-//        return Optional.ofNullable(entity.getQueries().get(queryName));
-//    }
-//
-//    @Override
-//    public Optional<Query> findQuery(QueryLink link)
-//    {
-//        Objects.requireNonNull(link);
-//        return findQuery(link.getEntityName(), link.getQueryName());
-//    }
 
     @Override
     public Map<String, ColumnDef> getColumns(String entityName)
@@ -479,38 +458,14 @@ public class MetaImpl implements Meta
         }
     }
 
-//    @Override
-//    public boolean isNumericColumn(String entityName, String columnName)
-//    {
-//        Objects.requireNonNull(entityName);
-//        return isNumericColumn(getEntity(entityName), columnName);
-//    }
-//
-//    @Override
-//    public boolean isNumericColumn(Entity entity, String columnName)
-//    {
-//        Objects.requireNonNull(entity);
-//        Objects.requireNonNull(columnName);
-//
-//        return SqlTypeUtils.isNumber(getColumnType(getColumn(entity, columnName)));
-//    }
-
-//    /**
-//     * Tries to find a entity with the specified name.
-//     */
-//    @Override
-//    public Optional<Entity> findEntity(String entityName)
-//    {
-//        return Optional.ofNullable(getProject().getEntity(entityName));
-//    }
-
     @Override
     public String getStaticPageContent(String language, String name)
     {
         return getProject().getStaticPageContent(language, name);
     }
 
-    private Project getProject()
+    @Override
+    public Project getProject()
     {
         return projectProvider.get();
     }
