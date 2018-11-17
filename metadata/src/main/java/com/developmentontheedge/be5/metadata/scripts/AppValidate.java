@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
@@ -59,7 +60,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
             String line = "";
             try
             {
-                line = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                line = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).readLine();
             }
             catch (IOException e)
             {

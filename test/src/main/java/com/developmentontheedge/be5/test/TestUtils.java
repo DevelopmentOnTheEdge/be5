@@ -1,9 +1,6 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
@@ -44,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.operation.util.OperationUtils.replaceEmptyStringToNull;
@@ -54,8 +50,6 @@ import static org.mockito.Mockito.when;
 
 public abstract class TestUtils extends BaseTestUtils
 {
-    public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
-
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
@@ -63,20 +57,10 @@ public abstract class TestUtils extends BaseTestUtils
     private OperationService operationService;
     @Inject
     private OperationExecutor operationExecutor;
-
-    @Inject
-    protected Meta meta;
-    @Inject
-    protected UserAwareMeta userAwareMeta;
     @Inject
     protected DatabaseModel database;
     @Inject
-    protected DbService db;
-
-    @Inject
     protected Session session;
-
-    protected static final String TEST_USER = "testUser";
 
     @Before
     public void setUpTestUtils()

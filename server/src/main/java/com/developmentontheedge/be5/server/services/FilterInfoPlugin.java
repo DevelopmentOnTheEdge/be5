@@ -114,7 +114,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         return new FilterItem(columnTitle, v + "");
     }
 
-    public class FilterItem
+    public static class FilterItem
     {
         private String key;
         private String value;
@@ -136,7 +136,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         }
     }
 
-    public class FilterInfo
+    public static class FilterInfo
     {
         private List<FilterItem> operationParamsInfo;
 

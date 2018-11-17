@@ -85,7 +85,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     public void wizard() throws Exception
     {
-        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         final Parameters parameters = new Parameters();
         ProjectGenerator projectGenerator = new ProjectGenerator(parameters);
 

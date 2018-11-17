@@ -55,11 +55,11 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     public int update(Map<String, ?> values)
     {
         int count = entityModel.set(getPrimaryKey(), values);
-        for (String propertyName : values.keySet())
+        for (Map.Entry<String, ?> property : values.entrySet())
         {
-            if (super.hasProperty(propertyName))
+            if (super.hasProperty(property.getKey()))
             {
-                super.setValueHidden(propertyName, values.get(propertyName));
+                super.setValueHidden(property.getKey(), property.getValue());
             }
         }
         return count;

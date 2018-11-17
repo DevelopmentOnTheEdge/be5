@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
@@ -215,7 +216,7 @@ public class ModuleLoader2
     public static String parse(URL url) throws IOException
     {
         try (InputStream in = url.openStream();
-             BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8")))
+             BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)))
         {
             String ln = r.readLine();
             return ln.substring(0, ln.indexOf(':')).trim();
@@ -435,7 +436,7 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     private static String getProjectName(URL url) throws IOException
     {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)))
         {
             Map<String, Object> module = new Yaml().load(reader);
             return module.entrySet().iterator().next().getKey();
@@ -467,7 +468,7 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     static void readDevPathsToSourceProjects(URL url) throws IOException
     {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)))
         {
             Map<String, Object> content = new Yaml().load(reader);
 

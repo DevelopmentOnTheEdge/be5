@@ -304,7 +304,7 @@ public class QueryBuilderController extends JsonApiModelController
         INSERT, SELECT, UPDATE, DELETE
     }
 
-    public class Data
+    public static class Data
     {
         String sql;
         List<String> history;

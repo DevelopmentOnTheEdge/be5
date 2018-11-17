@@ -46,7 +46,7 @@ public interface ParametersAccess
     {
         String s = get(parameter);
 
-        return s != null ? Long.parseLong(s) : defaultValue;
+        return s != null ? (Long) Long.parseLong(s) : defaultValue;
     }
 
     /**

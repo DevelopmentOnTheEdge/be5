@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.database.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Date;
@@ -104,7 +105,7 @@ public class SqlUtils
             }
             else if (value.getClass() == byte[].class)
             {
-                return new String((byte[]) value);
+                return new String((byte[]) value, StandardCharsets.UTF_8);
             }
             else if (value instanceof Clob)
             {

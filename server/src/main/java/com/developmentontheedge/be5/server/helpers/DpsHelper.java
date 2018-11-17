@@ -102,8 +102,8 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
         List<String> excludedColumns = Collections.emptyList();
-        if (meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()) != null &&
-                meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()).isAutoIncrement())
+        ColumnDef column = meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey());
+        if (column != null && column.isAutoIncrement())
         {
             excludedColumns = Collections.singletonList(getEntity(modelElements).getPrimaryKey());
         }

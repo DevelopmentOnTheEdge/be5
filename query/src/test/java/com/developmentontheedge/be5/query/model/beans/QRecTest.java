@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.query.model.beans;
 import com.developmentontheedge.be5.base.util.DateUtils;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import org.junit.Test;
 
@@ -12,13 +11,12 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class QRecTest extends QueryBe5ProjectDBTest
 {
@@ -43,7 +41,7 @@ public class QRecTest extends QueryBe5ProjectDBTest
         QRec qRec = queries.readOneRecord("select * from testSubQuery", Collections.emptyMap());
 
         assertEquals("test2", new BufferedReader(
-                new InputStreamReader(qRec.getBinaryStream("commentTEXT"))).lines()
+                new InputStreamReader(qRec.getBinaryStream("commentTEXT"), StandardCharsets.UTF_8)).lines()
                 .parallel().collect(Collectors.joining("")));
     }
 
@@ -72,10 +70,10 @@ public class QRecTest extends QueryBe5ProjectDBTest
                 Collections.singletonMap("test", bytes));
         QRec qRec = new QRec(dps);
         assertEquals("This is an example", new BufferedReader(
-                    new InputStreamReader(qRec.getBinaryStream())).lines()
+                    new InputStreamReader(qRec.getBinaryStream(), StandardCharsets.UTF_8)).lines()
                 .parallel().collect(Collectors.joining("")));
         assertEquals("This is an example", new BufferedReader(
-                new InputStreamReader(qRec.getBinaryStream("test"))).lines()
+                new InputStreamReader(qRec.getBinaryStream("test"), StandardCharsets.UTF_8)).lines()
                 .parallel().collect(Collectors.joining("")));
     }
 }

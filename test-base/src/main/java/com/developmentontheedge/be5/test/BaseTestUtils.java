@@ -78,7 +78,6 @@ public abstract class BaseTestUtils
     protected UserInfoProvider userInfoProvider;
 
     protected static final String TEST_USER = "testUser";
-    //protected static final Jsonb jsonb = JsonbBuilder.create();
 
     @Before
     public void setUpBaseTestUtils()

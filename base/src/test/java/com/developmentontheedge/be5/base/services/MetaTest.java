@@ -61,6 +61,13 @@ public class MetaTest extends BaseTest
     }
 
     @Test
+    public void getOrderedEntity()
+    {
+        Entity entity = meta.getEntity("testtable");
+        assertEquals("testtable", entity.getName());
+    }
+
+    @Test
     public void getColumnType() throws Exception
     {
         Entity testtableAdmin = meta.getEntity("testtableAdmin");

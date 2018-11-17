@@ -70,7 +70,7 @@ public class AppTools extends ScriptSupport<AppTools>
             while (true)
             {
                 logger.info("Enter FTL/SQL (use 'quit' to exit):");
-                String line = new BufferedReader(new InputStreamReader(inputStream)).readLine();
+                String line = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readLine();
                 if (line == null)
                 {
                     break;

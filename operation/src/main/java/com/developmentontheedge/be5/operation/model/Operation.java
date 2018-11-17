@@ -1,10 +1,9 @@
 package com.developmentontheedge.be5.operation.model;
 
-import java.io.Serializable;
 import java.util.Map;
 
 
-public interface Operation extends Serializable
+public interface Operation
 {
     ///////////////////////////////////////////////////////////////////
     // Main interface

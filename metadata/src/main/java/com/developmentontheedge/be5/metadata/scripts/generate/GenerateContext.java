@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
         //InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
         InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/tomcat-pool.xml");
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource)))
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8)))
         {
             text = br.lines().collect(Collectors.joining("\n"));
         }

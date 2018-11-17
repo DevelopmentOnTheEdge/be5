@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 public class TestUtils
 {
@@ -31,7 +32,7 @@ public class TestUtils
 
     public static void assertFileEquals(String message, InputStream expectedFile, InputStream testFile) throws Exception
     {
-        assertFileEquals(message, new InputStreamReader(expectedFile, "UTF-8"), new InputStreamReader(testFile, "UTF-8"));
+        assertFileEquals(message, new InputStreamReader(expectedFile, StandardCharsets.UTF_8), new InputStreamReader(testFile, StandardCharsets.UTF_8));
     }
 
     public static void assertFileEquals(Reader expectedFile, Reader testFile) throws Exception

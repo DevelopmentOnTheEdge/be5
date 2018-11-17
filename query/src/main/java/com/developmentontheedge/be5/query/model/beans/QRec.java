@@ -8,8 +8,8 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
@@ -60,9 +60,9 @@ public class QRec extends DynamicPropertySetSupport
             if (val instanceof Blob)
                 return new String(((Blob) val).getBytes(1, (int) ((Blob) val).length()));
             if (val instanceof byte[])
-                return new String((byte[]) val, "UTF-8");
+                return new String((byte[]) val, StandardCharsets.UTF_8);
         }
-        catch (UnsupportedEncodingException | SQLException e)
+        catch (SQLException e)
         {
             return null;
         }
@@ -145,26 +145,17 @@ public class QRec extends DynamicPropertySetSupport
     public InputStream getBinaryStream() throws SQLException
     {
         Object val = getValue();
-        if (val == null)
-        {
-            return null;
-        }
-        else if (val instanceof byte[])
-        {
-            return new ByteArrayInputStream((byte[]) val);
-        }
-        else if (val instanceof Clob)
-        {
-            Clob clob = (Clob) val;
-            return clob.getAsciiStream();
-        }
-        return new BlobInputStream((Blob) val, properties.get(0).getName());
+        return getBinaryStream(val, properties.get(0).getName());
     }
 
     public InputStream getBinaryStream(String name) throws SQLException
     {
         Object val = getValue(name);
+        return getBinaryStream(val, name);
+    }
 
+    private InputStream getBinaryStream(Object val, String name) throws SQLException
+    {
         if (val == null)
         {
             return null;
