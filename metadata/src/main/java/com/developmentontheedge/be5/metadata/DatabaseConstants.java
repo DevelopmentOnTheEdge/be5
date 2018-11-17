@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.metadata;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,13 +52,9 @@ public interface DatabaseConstants
 
     String IS_DELETED_COLUMN_NAME = "isDeleted___";
 
-    List<String> specialColumns = ImmutableList.<String>builder()
-            .add(WHO_INSERTED_COLUMN_NAME)
-            .add(WHO_MODIFIED_COLUMN_NAME)
-            .add(CREATION_DATE_COLUMN_NAME)
-            .add(MODIFICATION_DATE_COLUMN_NAME)
-            .add(IP_INSERTED_COLUMN_NAME)
-            .add(IP_MODIFIED_COLUMN_NAME)
-            .add(IS_DELETED_COLUMN_NAME)
-            .build();
+    List<String> specialColumns = Arrays.asList(
+            WHO_INSERTED_COLUMN_NAME, WHO_MODIFIED_COLUMN_NAME,
+            CREATION_DATE_COLUMN_NAME, MODIFICATION_DATE_COLUMN_NAME,
+            IP_INSERTED_COLUMN_NAME, IP_MODIFIED_COLUMN_NAME,
+            IS_DELETED_COLUMN_NAME);
 }

@@ -25,20 +25,17 @@ public class ColumnRef
         return table == null ? new AstIdentifierConstant(name) : new AstFieldReference(table, name);
     }
 
-    /*
-    TODO implement resolve with checks in meta (in query module)
-
-    --
-    select role_name from users
-    inner join user_roles ON user_roles.user_name = users.user_name
-    */
-    @Deprecated
     public static ColumnRef resolve(AstStart ast, String value)
     {
         return resolve(ast.getQuery(), value);
     }
 
-    @Deprecated
+    /*
+    TODO implement resolve with checks in meta (in query module)
+    --
+    select role_name from users
+    inner join user_roles ON user_roles.user_name = users.user_name
+    */
     public static ColumnRef resolve(AstQuery query, String column)
     {
         String[] parts = column.split("[.]");

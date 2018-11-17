@@ -2,9 +2,9 @@ package com.developmentontheedge.sql.format;
 
 import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstWhere;
-import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class AstTest
     @Test
     public void selectColumns()
     {
-        AstSelect users = Ast.select(ImmutableList.of("name", "email")).from("users");
+        AstSelect users = Ast.select(Arrays.asList("name", "email")).from("users");
         assertEquals("SELECT name, email FROM users",
                 users.format());
     }

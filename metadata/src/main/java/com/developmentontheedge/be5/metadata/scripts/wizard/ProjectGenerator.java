@@ -6,9 +6,9 @@ import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.Localizations;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -241,10 +241,9 @@ public class ProjectGenerator
     private void addModules(final Project project)
     {
         final String[] modules;
-
         {
-            final List<String> ms = Lists.newArrayList(parameters.getModules());
-            modules = Iterables.toArray(ms, String.class);
+            final List<String> ms = new ArrayList<>(Arrays.asList(parameters.getModules()));
+            modules = ms.toArray(new String[0]);
         }
 
         for (final String module : modules)

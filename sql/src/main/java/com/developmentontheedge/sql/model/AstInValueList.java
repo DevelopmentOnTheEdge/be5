@@ -3,16 +3,17 @@
 package com.developmentontheedge.sql.model;
 
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
 
 
 public class AstInValueList extends SimpleNode
 {
     public static AstInValueList withReplacementParameter(int count)
     {
-        checkArgument(count > 0);
+        if (count <= 0)
+        {
+            throw new IllegalArgumentException();
+        }
 
         AstInValueList astInValueList = new AstInValueList(SqlParserTreeConstants.JJTINVALUELIST);
         for (int i = 0; i < count; i++)
@@ -24,7 +25,7 @@ public class AstInValueList extends SimpleNode
 
     public static AstInValueList of(List<SimpleNode> nodes)
     {
-        checkNotNull(nodes);
+        Objects.requireNonNull(nodes);
 
         AstInValueList astInValueList = new AstInValueList(SqlParserTreeConstants.JJTINVALUELIST);
         astInValueList.addChilds(nodes);

@@ -5,10 +5,6 @@ import com.developmentontheedge.be5.metadata.scripts.ScriptException;
 import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
 import com.developmentontheedge.be5.metadata.scripts.wizard.ProjectGenerator.Parameters;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -19,7 +15,9 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -200,7 +198,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     private void selectRoles(final Parameters parameters)
     {
-        final Set<String> elementsToIgnore = Sets.newHashSet("Administrator");
+        final Set<String> elementsToIgnore = Collections.singleton("Administrator");
         final String addActionTitle = "Add role";
         final String addActionQuery = "Role name: ";
         final MenuStrategy strategy = new MenuStrategy()
@@ -242,7 +240,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     private void selectLanguages(final Parameters parameters)
     {
-        final Set<String> elementsToIgnore = Sets.newHashSet("ru");
+        final Set<String> elementsToIgnore = Collections.singleton("ru");
         final String addActionTitle = "Add language";
         final String addActionQuery = "Language code: ";
         final MenuStrategy strategy = new MenuStrategy()
@@ -388,10 +386,10 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                     @Override
                     public void run()
                     {
-                        final ArrayList<String> newItems = Lists.newArrayList(strategy.get());
+                        final List<String> newItems = new ArrayList<>(Arrays.asList(strategy.get()));
                         newItems.remove(item);
                         strategy.onRemove(item);
-                        strategy.apply(Iterables.toArray(newItems, String.class));
+                        strategy.apply(newItems.toArray(new String[0]));
                     }
                 });
             }
@@ -410,8 +408,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                     item = readLine(addActionQuery);
                 else
                 {
-                    final TreeSet<String> items2 = Sets.newTreeSet(Sets.newHashSet(avaliableValues));
-                    items2.removeAll(Sets.newHashSet(strategy.get()));
+                    final TreeSet<String> items2 = new TreeSet<>(Arrays.asList(avaliableValues));
+                    items2.removeAll(new HashSet<>(Arrays.asList(strategy.get())));
 
                     if (items2.isEmpty())
                     {
@@ -420,7 +418,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                     }
 
                     int iValue = 0;
-                    final List<String> avaliableValues2 = Lists.newArrayList(items2);
+                    final List<String> avaliableValues2 = new ArrayList<>(items2);
                     out.println(addActionQuery);
 
                     for (final String avaliableValue : avaliableValues2)
@@ -440,7 +438,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                     item = avaliableValues2.get(itemIndex - 1);
                 }
 
-                final ArrayList<String> newItems = Lists.newArrayList(strategy.get());
+                final ArrayList<String> newItems = new ArrayList<>(Arrays.asList(strategy.get()));
                 if (newItems.contains(item))
                     out.println("Already added");
                 else if (strategy.validate(item) != null)
@@ -451,7 +449,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
                 else
                 {
                     newItems.add(item);
-                    strategy.apply(Iterables.toArray(newItems, String.class));
+                    strategy.apply(newItems.toArray(new String[0]));
                 }
             }
         });
@@ -511,7 +509,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     private String toString(final String[] array)
     {
-        return Joiner.on(", ").join(array);
+        return String.join(", ", array);
     }
 
     private String readLine(final String query)
