@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.databasemodel;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public interface EntityModel<T>
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
+    @Nullable
     RecordModel<T> get(T id);
 
     /**
@@ -108,10 +110,13 @@ public interface EntityModel<T>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
+    @Nullable
     RecordModel<T> getBy(Map<String, ?> conditions);
 
+    @Nullable
     RecordModel<T> getColumns(List<String> columns, T id);
 
+    @Nullable
     RecordModel<T> getColumnsBy(List<String> columns, Map<String, ?> conditions);
 
     /**

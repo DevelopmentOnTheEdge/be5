@@ -391,7 +391,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         if (id.getClass() != primaryKeyColumnType)
         {
-            throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName() + " instead " + id.getClass().getSimpleName());
+            throw new IllegalArgumentException("Primary key must be " + primaryKeyColumnType.getSimpleName() + " instead " + id.getClass().getSimpleName());
         }
 
         return id;

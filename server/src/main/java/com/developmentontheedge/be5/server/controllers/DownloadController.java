@@ -44,7 +44,10 @@ public class DownloadController extends ApiControllerSupport implements Controll
         boolean download = "yes".equals(req.get("_download_"));
 
         RecordModel record = database.getEntity(entity).get(ID);
-
+        if (record == null)
+        {
+            throw new RuntimeException("File not found.");
+        }
         String filename = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
         Object data = record.getValue(dataColumn);
