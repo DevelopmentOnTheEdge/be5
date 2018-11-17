@@ -18,6 +18,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -61,12 +62,14 @@ public class DbServiceImpl implements DbService
         return execute(conn -> query(conn, sql, rs -> rs.next() ? parser.parse(rs) : null, params));
     }
 
+    @Nonnull
     @Override
     public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
         return execute(conn -> query(conn, sql, rs -> listWrapper(rs, parser), params));
     }
 
+    @Nonnull
     @Override
     public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
     {
@@ -165,6 +168,11 @@ public class DbServiceImpl implements DbService
         {
             conn = connectionService.getConnection();
             return executor.run(conn);
+        }
+        catch (RuntimeException e)
+        {
+            log.log(Level.SEVERE, "", e);
+            throw e;
         }
         catch (Throwable e)
         {

@@ -77,8 +77,7 @@ public class LoginServiceImpl implements LoginService
     {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
-        String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?";
-        return db.oneLong(sql, username, password) == 1L;
+        return db.countFrom("users WHERE user_name = ? AND user_pass = ?", username, password) == 1L;
     }
 
     @Override

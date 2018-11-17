@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SqlUtilsTest extends DatabaseTest
 {
@@ -39,7 +40,7 @@ public class SqlUtilsTest extends DatabaseTest
                         SqlUtils.getSqlValue(String.class, rs, 3),
                         SqlUtils.getSqlValue(String.class, rs, 4)
                 ), "user2");
-
+        assertNotNull(testPerson);
         assertEquals("pass2", testPerson.getPassword());
         assertEquals("email2@mail.ru", testPerson.getEmail());
     }
@@ -54,7 +55,7 @@ public class SqlUtilsTest extends DatabaseTest
                         SqlUtils.getSqlValue(String.class, rs, 3),
                         SqlUtils.getSqlValue(String.class, rs, 4)
                 ), "user2");
-
+        assertNotNull(testPerson);
         assertEquals("pass2", testPerson.getPassword());
         assertEquals("email2@mail.ru", testPerson.getEmail());
     }

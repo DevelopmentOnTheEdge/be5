@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -90,8 +91,10 @@ public interface Meta
 
     Map<String, ColumnDef> getColumns(Entity entity);
 
+    @Nullable
     ColumnDef getColumn(String entityName, String columnName);
 
+    @Nullable
     ColumnDef getColumn(Entity entity, String columnName);
 
     default boolean columnExists(String entity, String column)

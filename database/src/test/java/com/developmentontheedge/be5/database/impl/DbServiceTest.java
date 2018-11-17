@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -56,7 +57,27 @@ public class DbServiceTest extends DatabaseTest
     @Test
     public void testCount()
     {
-        assertEquals((Long) 0L, db.oneLong("SELECT COUNT(id) FROM persons WHERE name = ?", "notContainUser"));
+        assertEquals((Long) 0L, db.oneLong("SELECT COUNT(1) FROM persons WHERE name = ?", "notContainUser"));
+    }
+
+    @Test
+    public void testCountMethod()
+    {
+        assertTrue(db.countFrom("SELECT COUNT(1) FROM persons") > 0);
+        assertTrue(db.countFrom("persons WHERE 1 = 2") == 0);
+        assertTrue(db.countFrom("persons") > 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCountMethodErrorSql()
+    {
+        assertTrue(db.countFrom("SELECT id FROM persons WHERE 1 = 2") == 0);
+    }
+
+    @Test
+    public void oneInteger()
+    {
+        assertNotNull(db.oneInteger("SELECT CAST(id AS INT) FROM persons"));
     }
 
     @Test
@@ -78,6 +99,7 @@ public class DbServiceTest extends DatabaseTest
         TestPerson testPerson = db.query("SELECT * FROM persons WHERE name = ?", TestPerson.beanHandler
                 , "user2");
 
+        assertNotNull(testPerson);
         assertEquals("pass2", testPerson.getPassword());
         assertEquals("email2@mail.ru", testPerson.getEmail());
     }
@@ -88,6 +110,7 @@ public class DbServiceTest extends DatabaseTest
         TestPerson testPerson = db.select("SELECT * FROM persons WHERE name = ?", parser
                 , "user2");
 
+        assertNotNull(testPerson);
         assertEquals("pass2", testPerson.getPassword());
         assertEquals("email2@mail.ru", testPerson.getEmail());
     }
@@ -139,6 +162,7 @@ public class DbServiceTest extends DatabaseTest
     {
         List<TestPerson> persons = db.query("SELECT * FROM persons", TestPerson.beanListHandler);
 
+        assertNotNull(persons);
         assertTrue(persons.size() >= 2);
         assertEquals("pass1", persons.get(0).getPassword());
         assertEquals("email2@mail.ru", persons.get(1).getEmail());

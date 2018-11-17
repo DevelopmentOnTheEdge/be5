@@ -52,7 +52,7 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
         catch (RuntimeException e)
         {
             Assert.assertTrue(true);
-            assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));
+            assertEquals(0L, db.countFrom("persons"));
         }
     }
 
@@ -62,9 +62,9 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
         try
         {
             db.transaction(conn -> {
-                db.transaction(conn2 -> {
-                    db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2", "pass2");
-                });
+                db.transaction(conn2 ->
+                        db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2", "pass2")
+                );
 
                 db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1", "pass1");
 
@@ -75,7 +75,7 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
         catch (RuntimeException e)
         {
             Assert.assertTrue(true);
-            assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));
+            assertEquals(0L, db.countFrom("persons"));
         }
     }
 
@@ -97,7 +97,7 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
         catch (RuntimeException e)
         {
             Assert.assertTrue(true);
-            assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons"));
+            assertEquals(0L, db.countFrom("persons"));
         }
     }
 }

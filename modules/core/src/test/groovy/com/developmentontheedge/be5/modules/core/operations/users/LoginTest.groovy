@@ -53,7 +53,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
 
         String testPass = "testPass"
 
-        when(DbServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+        when(DbServiceMock.mock.one(eq("SELECT COUNT(1) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
         when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
@@ -90,7 +90,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     void withoutCURRENT_ROLE_LIST()
     {
         String testPass = "testPass"
-        when(DbServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+        when(DbServiceMock.mock.one(eq("SELECT COUNT(1) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
         when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
                 Matchers.<ResultSetParser<String>> any(), eq(TEST_USER)))

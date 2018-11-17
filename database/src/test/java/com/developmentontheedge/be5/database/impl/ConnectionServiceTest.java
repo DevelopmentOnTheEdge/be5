@@ -39,7 +39,7 @@ public class ConnectionServiceTest extends DatabaseTest
         db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
         connectionService.endTransaction();
 
-        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        assertEquals((Long) 1L, db.oneLong("SELECT count(*) FROM persons"));
         checkCountInOtherThreads(1L);
     }
 
@@ -56,7 +56,7 @@ public class ConnectionServiceTest extends DatabaseTest
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass")
         );
 
-        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        assertEquals((Long) 1L, db.oneLong("SELECT count(*) FROM persons"));
         checkCountInOtherThreads(1L);
     }
 
@@ -65,11 +65,11 @@ public class ConnectionServiceTest extends DatabaseTest
     {
         connectionService.transaction(conn -> {
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
-            assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+            assertEquals((Long) 1L, db.oneLong("SELECT count(*) FROM persons"));
             checkCountInOtherThreads(0L);
         });
 
-        assertEquals(1L, (long)db.oneLong("SELECT count(*) FROM persons"));
+        assertEquals((Long) 1L, db.oneLong("SELECT count(*) FROM persons"));
         checkCountInOtherThreads(1L);
     }
 

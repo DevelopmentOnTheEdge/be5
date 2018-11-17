@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 public class TransactionInterceptorTest extends DatabaseTest
 {
     @Inject
-    TestTransactionService testTransactionService;
+    private TestTransactionService testTransactionService;
     @Inject
-    TestTransaction2Service testTransaction2Service;
+    private TestTransaction2Service testTransaction2Service;
 
     @Before
     public void setUp()
@@ -35,7 +35,7 @@ public class TransactionInterceptorTest extends DatabaseTest
         {
         }
 
-        assertEquals(1L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
+        assertEquals(1, db.countFrom("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class TransactionInterceptorTest extends DatabaseTest
         {
         }
 
-        assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
+        assertEquals(0, db.countFrom("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 
     @Test
@@ -63,6 +63,6 @@ public class TransactionInterceptorTest extends DatabaseTest
         {
         }
 
-        assertEquals(0L, (long) db.oneLong("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
+        assertEquals(0, db.countFrom("SELECT count(*) FROM persons WHERE name LIKE 'user1%'"));
     }
 }

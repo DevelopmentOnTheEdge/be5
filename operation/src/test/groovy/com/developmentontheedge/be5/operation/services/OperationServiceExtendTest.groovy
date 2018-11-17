@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.operation.services
 import com.developmentontheedge.be5.base.services.ProjectProvider
 import com.developmentontheedge.be5.base.services.UserAwareMeta
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.metadata.model.GroovyOperation
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import groovy.transform.TypeChecked
 import org.junit.Before
@@ -34,11 +35,11 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest
     {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
 
-        assertEquals("CustomOperation", groovyOperationLoader.getSimpleSuperClassName(operation))
+        assertEquals("CustomOperation", groovyOperationLoader.getSimpleSuperClassName((GroovyOperation) operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
 
-        assertEquals("OperationWithExtend", groovyOperationLoader.getSimpleSuperClassName(operation))
+        assertEquals("OperationWithExtend", groovyOperationLoader.getSimpleSuperClassName((GroovyOperation) operation))
     }
 
     @Test
@@ -46,11 +47,11 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest
     {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals("testtableAdmin.CustomOperation.groovy",
-                groovyOperationLoader.getCanonicalSuperClassName(operation))
+                groovyOperationLoader.getCanonicalSuperClassName((GroovyOperation) operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
         assertEquals("testtableAdmin.OperationWithExtend.groovy",
-                groovyOperationLoader.getCanonicalSuperClassName(operation))
+                groovyOperationLoader.getCanonicalSuperClassName((GroovyOperation) operation))
     }
 
     @Test
@@ -59,7 +60,8 @@ class OperationServiceExtendTest extends OperationsSqlMockProjectTest
         projectProvider.reloadProject()
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
-        assertEquals(["testtableAdmin.CustomOperation.groovy"], groovyOperationLoader.preloadSuperOperation(operation))
+        assertEquals(["testtableAdmin.CustomOperation.groovy"], groovyOperationLoader.
+                preloadSuperOperation((GroovyOperation) operation))
     }
 
 }

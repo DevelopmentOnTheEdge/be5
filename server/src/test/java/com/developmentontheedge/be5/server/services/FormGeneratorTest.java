@@ -20,6 +20,7 @@ import java.util.Map;
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -93,6 +94,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     public void testSelfLink()
     {
         Long id = db.oneLong("select id from testtable limit 1");
+        assertNotNull(id);
         ResourceData result = formGenerator.generate("testtable", "All records", "Edit",
                 Collections.singletonMap(OperationConstants.SELECTED_ROWS, id.toString()),
                 Collections.emptyMap());

@@ -18,9 +18,9 @@ public class ExecuteInOperationTest extends CoreBe5ProjectDBTest
     @Test
     public void testGet()
     {
-        Long before = db.oneLong("select count(1) from users WHERE user_name LIKE 'TestDaemonUser%'");
+        long before = db.countFrom("users WHERE user_name LIKE 'TestDaemonUser%'");
         executeOperation("_system_", "Daemons", "ExecuteInOperation", "TestDaemon", "").getSecond();
 
-        assertTrue(db.oneLong("select count(1) from users WHERE user_name LIKE 'TestDaemonUser%'") > before);
+        assertTrue(db.countFrom("users WHERE user_name LIKE 'TestDaemonUser%'") > before);
     }
 }

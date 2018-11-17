@@ -176,7 +176,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
 
-        return db.oneLong(sql, sqlHelper.getWithoutConstants(conditions));
+        return db.countFrom(sql, sqlHelper.getWithoutConstants(conditions));
     }
 
     @Override
