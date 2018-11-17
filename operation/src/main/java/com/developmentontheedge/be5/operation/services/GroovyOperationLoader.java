@@ -14,15 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
-
 
 public class GroovyOperationLoader
 {
     private final Meta meta;
     private final GroovyRegister groovyRegister;
 
-    private Map<String, Operation> groovyOperationsMap;
+    private Map<String, GroovyOperation> groovyOperationsMap;
 
     @Inject
     public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyRegister groovyRegister)
@@ -36,7 +34,7 @@ public class GroovyOperationLoader
 
     void initOperationMap()
     {
-        Map<String, com.developmentontheedge.be5.metadata.model.Operation> newOperationMap = new HashMap<>();
+        Map<String, com.developmentontheedge.be5.metadata.model.GroovyOperation> newOperationMap = new HashMap<>();
         List<Entity> entities = meta.getOrderedEntities("ru");
         for (Entity entity : entities)
         {
@@ -44,11 +42,11 @@ public class GroovyOperationLoader
             for (String operationName : operationNames)
             {
                 com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity.getName(), operationName);
-                if (operation.getType().equals(OPERATION_TYPE_GROOVY))
+                if (operation.getClass() == GroovyOperation.class)
                 {
                     GroovyOperation groovyOperation = (GroovyOperation) operation;
                     String fileName = groovyOperation.getFileName().replace("/", ".");
-                    newOperationMap.put(fileName, operation);
+                    newOperationMap.put(fileName, groovyOperation);
                 }
             }
         }
@@ -61,18 +59,18 @@ public class GroovyOperationLoader
         return groovyOperationsMap.get(name.replace("/", "."));
     }
 
-    public List<String> preloadSuperOperation(Operation operationMeta)
+    public List<String> preloadSuperOperation(GroovyOperation operationMeta)
     {
         String simpleSuperClassName = getSimpleSuperClassName(operationMeta);
         String superOperationCanonicalName = getCanonicalSuperClassName(operationMeta);
 
-        com.developmentontheedge.be5.metadata.model.Operation superOperation = groovyOperationsMap.get(superOperationCanonicalName);
-
-        if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
+        com.developmentontheedge.be5.metadata.model.Operation superOperation = groovyOperationsMap
+                .get(superOperationCanonicalName);
+        if (superOperation != null && superOperation.getClass() == GroovyOperation.class)
         {
             if (groovyRegister.getGroovyClasses().getIfPresent(superOperationCanonicalName) == null)
             {
-                ArrayList<String> list = new ArrayList<>(preloadSuperOperation(superOperation));
+                ArrayList<String> list = new ArrayList<>(preloadSuperOperation((GroovyOperation) superOperation));
 
                 list.add(superOperationCanonicalName);
                 groovyRegister.getClass(superOperationCanonicalName,
@@ -85,25 +83,23 @@ public class GroovyOperationLoader
         return Collections.emptyList();
     }
 
-    public Class get(Operation operationMeta)
+    public Class get(GroovyOperation groovyOperationMeta)
     {
-        preloadSuperOperation(operationMeta);
-        GroovyOperation groovyOperation = (GroovyOperation) operationMeta;
-        String fileName = groovyOperation.getFileName();
+        preloadSuperOperation(groovyOperationMeta);
+        String fileName = groovyOperationMeta.getFileName();
         String canonicalName = fileName.replace("/", ".");
         String simpleName = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length() - ".groovy".length()).trim();
 
-        return groovyRegister.getClass(canonicalName, operationMeta.getCode(), simpleName + ".groovy");
+        return groovyRegister.getClass(canonicalName, groovyOperationMeta.getCode(), simpleName + ".groovy");
     }
 
-    public String getSimpleSuperClassName(Operation operationMeta)
+    public String getSimpleSuperClassName(GroovyOperation groovyOperationMeta)
     {
-        GroovyOperation groovyOperation = (GroovyOperation) operationMeta;
-        String fileName = groovyOperation.getFileName();
+        String fileName = groovyOperationMeta.getFileName();
         String className = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length() - ".groovy".length()).trim();
         String classBegin = "class " + className + " extends ";
 
-        String code = operationMeta.getCode();
+        String code = groovyOperationMeta.getCode();
         int superClassBeginPos = code.indexOf(classBegin);
         if (superClassBeginPos == -1) return null;
 
@@ -116,7 +112,7 @@ public class GroovyOperationLoader
         return code.substring(superClassBeginPos, superClassEndPos).trim();
     }
 
-    public String getCanonicalSuperClassName(Operation operationMeta)
+    public String getCanonicalSuperClassName(GroovyOperation operationMeta)
     {
         String code = operationMeta.getCode();
         String superOperationName = getSimpleSuperClassName(operationMeta);

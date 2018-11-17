@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
+import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.metadata.model.JavaOperation;
 import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
@@ -29,15 +31,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_DOTNET;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVA;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVADOTNET;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVAFUNCTION;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVASCRIPT;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JSSERVER;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_SQL;
 
 
 public class OperationExecutorImpl implements OperationExecutor
@@ -266,6 +259,8 @@ public class OperationExecutorImpl implements OperationExecutor
                 case "postInvoke":
                     ext.postInvoke(curOp, parameters);
                     break;
+                default:
+                    throw Be5Exception.internal("Not support invoke action.");
             }
             if (curOp.getStatus() == OperationStatus.ERROR) return false;
         }
@@ -307,50 +302,44 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         Operation operation;
 
-        switch (operationInfo.getType())
+        if (operationInfo.getModel().getClass() == GroovyOperation.class)
         {
-            case OPERATION_TYPE_GROOVY:
-                try
+            try
+            {
+                Class aClass = groovyOperationLoader.get((GroovyOperation) operationInfo.getModel());
+                if (aClass != null)
                 {
-                    Class aClass = groovyOperationLoader.get(operationInfo.getModel());
-                    if (aClass != null)
-                    {
-                        operation = (Operation) aClass.newInstance();
-                    }
-                    else
-                    {
-                        throw Be5Exception.internalInOperation(operationInfo.getModel(),
-                                new Error("Class " + operationInfo.getCode() + " is null."));
-                    }
+                    operation = (Operation) aClass.newInstance();
                 }
-                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                else
                 {
-                    throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                    throw Be5Exception.internalInOperation(operationInfo.getModel(),
+                            new Error("Class " + operationInfo.getCode() + " is null."));
                 }
-                catch (Throwable e)
-                {
-                    throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
-                }
-                break;
-            case OPERATION_TYPE_JAVA:
-                try
-                {
-                    operation = (Operation) Class.forName(operationInfo.getCode()).newInstance();
-                    break;
-                }
-                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                {
-                    throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
-                }
-            case OPERATION_TYPE_JAVAFUNCTION:
-            case OPERATION_TYPE_SQL:
-            case OPERATION_TYPE_JAVASCRIPT:
-            case OPERATION_TYPE_JSSERVER:
-            case OPERATION_TYPE_DOTNET:
-            case OPERATION_TYPE_JAVADOTNET:
-                throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
-            default:
-                throw Be5Exception.internal("Unknown action type '" + operationInfo.getType() + "'");
+            }
+            catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+            {
+                throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+            }
+            catch (Throwable e)
+            {
+                throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
+            }
+        }
+        else if (operationInfo.getModel().getClass() == JavaOperation.class)
+        {
+            try
+            {
+                operation = (Operation) Class.forName(operationInfo.getCode()).newInstance();
+            }
+            catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+            {
+                throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
+            }
+        }
+        else
+        {
+            throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
         }
 
         injector.injectMembers(operation);
