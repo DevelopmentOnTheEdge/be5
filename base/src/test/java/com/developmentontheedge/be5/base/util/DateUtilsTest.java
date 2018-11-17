@@ -140,6 +140,12 @@ public class DateUtilsTest
 
         assertFalse(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
                 DateUtils.makeDate(2016, 12, 31), DateUtils.makeDate(2016, 12, 31)));
+
+        assertTrue(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
+                DateUtils.makeDate(2016, 12, 30), null));
+
+        assertFalse(DateUtils.isBetween(DateUtils.makeDate(2016, 12, 31),
+                null, null));
     }
 
     @Test

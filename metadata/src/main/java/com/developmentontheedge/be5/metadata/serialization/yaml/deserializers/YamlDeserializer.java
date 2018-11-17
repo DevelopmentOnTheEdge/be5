@@ -174,7 +174,6 @@ public class YamlDeserializer
      */
     private static BeConnectionProfile readConnectionProfile(final LoadContext loadContext, final String profileName, final Map<String, Object> serializedProfileBody, final Project project) throws ReadException
     {
-        final YamlDeserializer yamlDeserializer = new YamlDeserializer(loadContext);
         final ConnectionProfilesDeserializer connectionProfilesDeserializer = new ConnectionProfilesDeserializer(loadContext, project
                 .getConnectionProfiles().getLocalProfiles());
         final BeConnectionProfile connectionProfile = connectionProfilesDeserializer.deserializeConnectionProfile(profileName,
@@ -411,10 +410,10 @@ public class YamlDeserializer
 
         try
         {
-            for (final String name : serializedCustomizations.keySet())
+            for (Map.Entry<String, Object> serializedCustomization : serializedCustomizations.entrySet())
             {
-                final Map<String, Object> content = (Map<String, Object>) serializedCustomizations.get(name);
-                final List<String> splitted = StreamEx.split(name, "\\.").toList();
+                final Map<String, Object> content = (Map<String, Object>) serializedCustomization.getValue();
+                final List<String> splitted = StreamEx.split(serializedCustomization.getKey(), "\\.").toList();
                 final String type;
                 final String domain;
 

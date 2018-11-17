@@ -141,11 +141,6 @@ public class TableModelServiceImpl implements TableModelService
                 throw Be5Exception.internal("Not support operation type: " + query.getType());
         }
 
-        if (tableBuilder == null)
-        {
-            throw Be5Exception.internal("TableBuilder " + query.getQuery() + " is null.");
-        }
-
         injector.injectMembers(tableBuilder);
         tableBuilder.initialize(query, parameters);
 

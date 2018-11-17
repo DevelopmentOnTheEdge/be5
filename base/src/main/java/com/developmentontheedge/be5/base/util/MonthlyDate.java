@@ -5,7 +5,7 @@ package com.developmentontheedge.be5.base.util;
 import java.util.Calendar;
 
 /**
- * Дата, указанная с точностью до месяца
+ * Date specified to the month
  */
 public class MonthlyDate extends java.sql.Date
 {
@@ -191,5 +191,25 @@ public class MonthlyDate extends java.sql.Date
     public static MonthlyDate max(MonthlyDate a, MonthlyDate b, MonthlyDate c)
     {
         return max(a, MonthlyDate.max(b, c));
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        MonthlyDate that = (MonthlyDate) o;
+
+        return calendar != null ? calendar.equals(that.calendar) : that.calendar == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = super.hashCode();
+        result = 31 * result + (calendar != null ? calendar.hashCode() : 0);
+        return result;
     }
 }

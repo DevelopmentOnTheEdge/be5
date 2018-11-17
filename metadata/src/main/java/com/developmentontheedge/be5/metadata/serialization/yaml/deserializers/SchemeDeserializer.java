@@ -65,10 +65,10 @@ class SchemeDeserializer extends BaseDeserializer
             return;
         }
 
-        for (final String name : serializedReferences.keySet())
+        for (Map.Entry<String, Object> entry : serializedReferences.entrySet())
         {
-            final String columnFrom = name;
-            final Object content = serializedReferences.get(name);
+            final String columnFrom = entry.getKey();
+            final Object content = entry.getValue();
 
             final TableRefStructure tableRefStructure = toTableReference(content);
 

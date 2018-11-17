@@ -59,18 +59,18 @@ public class DynamicPropertyUtils
         Boolean isHidden = (Boolean) removeFromMap(map, "HIDDEN");
 
         if (displayName != null) dp.setDisplayName(displayName);
-        if (isHidden == Boolean.TRUE) dp.setHidden(true);
+        if (isHidden != null && isHidden) dp.setHidden(true);
 
-        for (String key : map.keySet())
+        for (Map.Entry<String, Object> attribute : map.entrySet())
         {
-            String attributeName = beanInfoConstants.get(key);
+            String attributeName = beanInfoConstants.get(attribute.getKey());
             if (attributeName != null)
             {
-                dp.setAttribute(attributeName, map.get(key));
+                dp.setAttribute(attributeName, attribute.getValue());
             }
             else
             {
-                log.warning("Not found attribute: " + key + " in BeanInfoConstants");
+                log.warning("Not found attribute: " + attribute.getKey() + " in BeanInfoConstants");
             }
         }
     }

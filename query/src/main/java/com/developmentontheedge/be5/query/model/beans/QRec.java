@@ -58,7 +58,7 @@ public class QRec extends DynamicPropertySetSupport
             if (val == null)
                 return null;
             if (val instanceof Blob)
-                return new String(((Blob) val).getBytes(1, (int) ((Blob) val).length()));
+                return new String(((Blob) val).getBytes(1, (int) ((Blob) val).length()), StandardCharsets.UTF_8);
             if (val instanceof byte[])
                 return new String((byte[]) val, StandardCharsets.UTF_8);
         }
@@ -169,21 +169,19 @@ public class QRec extends DynamicPropertySetSupport
             Clob clob = (Clob) val;
             return clob.getAsciiStream();
         }
-        return new BlobInputStream((Blob) val, name);
+        return new BlobInputStream((Blob) val);
     }
 
     public static final class BlobInputStream extends InputStream
     {
         Blob blob;
         InputStream is;
-        String name;
 
         boolean isClosed;
 
-        public BlobInputStream(Blob blob, String name) throws SQLException
+        public BlobInputStream(Blob blob) throws SQLException
         {
             this.blob = blob;
-            this.name = name;
             is = blob.getBinaryStream();
         }
 
@@ -193,7 +191,6 @@ public class QRec extends DynamicPropertySetSupport
             int ret = is.read();
             if (ret == -1)
             {
-                //System.out.println( "autoclose: " + name );
                 close();
             }
             return ret;
@@ -205,7 +202,6 @@ public class QRec extends DynamicPropertySetSupport
             int ret = is.read(b);
             if (ret < 1)
             {
-                //System.out.println( "autoclose: " + name );
                 close();
             }
             return ret;
@@ -217,7 +213,6 @@ public class QRec extends DynamicPropertySetSupport
             int ret = is.read(b, off, len);
             if (ret < 1)
             {
-                //System.out.println( "autoclose: " + name );
                 close();
             }
             return ret;

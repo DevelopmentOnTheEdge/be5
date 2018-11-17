@@ -15,9 +15,8 @@ public class LogConfigurator
 
     public LogConfigurator()
     {
-        try
+        try (InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(path))
         {
-            InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(path);
             if (resourceAsStream == null)
             {
                 log.info("File not found: " + path + ", log not configured.");
@@ -31,10 +30,7 @@ public class LogConfigurator
         {
             throw Be5Exception.internal(e);
         }
-
         String parentLevel = log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
-
         log.info("Log root level: " + parentLevel);
     }
-
 }

@@ -13,7 +13,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -210,16 +209,6 @@ public class ModuleLoader2
         catch (ProjectLoadException | IOException | URISyntaxException e)
         {
             e.printStackTrace();
-        }
-    }
-
-    public static String parse(URL url) throws IOException
-    {
-        try (InputStream in = url.openStream();
-             BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)))
-        {
-            String ln = r.readLine();
-            return ln.substring(0, ln.indexOf(':')).trim();
         }
     }
 

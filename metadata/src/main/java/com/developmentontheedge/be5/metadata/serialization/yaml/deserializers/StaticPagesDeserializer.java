@@ -42,10 +42,10 @@ public class StaticPagesDeserializer extends FileDeserializer
             final LanguageStaticPages langPages = new LanguageStaticPages(language, target);
             final Map<String, Object> serializedPages = (Map<String, Object>) pagesByLanguage.get(language);
 
-            for (final String pageName : serializedPages.keySet())
+            for (Map.Entry<String, Object> pageEntry : serializedPages.entrySet())
             {
-                final Object serializedContent = serializedPages.get(pageName);
-                final StaticPage page = new StaticPage(pageName, langPages);
+                final Object serializedContent = pageEntry.getValue();
+                final StaticPage page = new StaticPage(pageEntry.getKey(), langPages);
                 final String content;
 
                 if (serializedContent instanceof String)

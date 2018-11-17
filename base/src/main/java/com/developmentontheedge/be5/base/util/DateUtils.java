@@ -387,9 +387,13 @@ public class DateUtils
 
     public static boolean isBetween(Date date, Date from, Date to)
     {
-        if (to == null && !from.after(date))
+        if (from == null)
         {
-            return true;
+            return false;
+        }
+        if (to == null)
+        {
+            return !from.after(date);
         }
         if (to.before(from))
         {
@@ -397,12 +401,8 @@ public class DateUtils
             to = from;
             from = tmp;
         }
-        if (!from.after(date) && date.before(to))
-        {
-            return true;
-        }
+        return !from.after(date) && date.before(to);
 
-        return false;
     }
 
     public static boolean isSameDay(Date date1, Date date2)

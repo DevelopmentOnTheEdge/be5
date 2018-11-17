@@ -61,7 +61,7 @@ public class MetadataUtils
             {
                 try
                 {
-                    if (v != null && !"null".equalsIgnoreCase(v.toString()))
+                    if (!"null".equalsIgnoreCase(v.toString()))
                     {
                         Double.parseDouble(v.toString());
                     }

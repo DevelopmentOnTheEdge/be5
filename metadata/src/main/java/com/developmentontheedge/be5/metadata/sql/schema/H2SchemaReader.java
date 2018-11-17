@@ -160,7 +160,7 @@ public class H2SchemaReader extends DefaultSchemaReader
     @Override
     public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
     {
-        DbmsConnector connector = sql.getConnector();
+//        DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
 //        ResultSet rs = connector.executeQuery( "SELECT ct.relname AS TABLE_NAME, i.indisunique AS IS_UNIQUE, ci.relname AS INDEX_NAME, "+
 //            "pg_catalog.pg_get_indexdef(ci.oid, (i.keys).n, false) AS COLUMN_NAME, (i.keys).n AS ORDINAL "+
