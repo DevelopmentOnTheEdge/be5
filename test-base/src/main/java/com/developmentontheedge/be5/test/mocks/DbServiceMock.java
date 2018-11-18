@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +48,6 @@ public class DbServiceMock implements DbService
         return mock.select(sql, parser, params);
     }
 
-    @Nonnull
     @Override
     public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
@@ -57,7 +55,6 @@ public class DbServiceMock implements DbService
         return mock.list(sql, parser, params);
     }
 
-    @Nonnull
     @Override
     public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
     {

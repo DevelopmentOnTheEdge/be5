@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +42,6 @@ public interface Meta
      * Returns an entity with by its name.
      * Throws an exception if there's no such entity.
      */
-    @Nonnull
     Entity getEntity(String entityName);
 
     Locale getLocale(Locale locale);
@@ -55,10 +53,8 @@ public interface Meta
      * Throws an exception if there's no operation with this name.
      * Throws an exception if there's no query with this name or this query hasn't this operation.
      */
-    @Nonnull
     Operation getOperation(String entityName, String queryName, String name);
 
-    @Nonnull
     Operation getOperation(String entityName, String name);
 
     /**
@@ -76,7 +72,6 @@ public interface Meta
      * Returns a query.
      * Throws an exception if there's no such query.
      */
-    @Nonnull
     Query getQuery(String entityName, String queryName);
 
     List<String> getQueryNames(Entity entity);

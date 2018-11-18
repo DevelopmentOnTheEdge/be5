@@ -27,7 +27,6 @@ import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollect
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -90,7 +89,6 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    @Nonnull
     public Entity getEntity(String entityName)
     {
         Entity entity = getProject().getEntity(entityName);
@@ -292,7 +290,6 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    @Nonnull
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = getProject().findOperation(entityName, queryName, name);
@@ -311,7 +308,6 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    @Nonnull
     public Operation getOperation(String entityName, String name)
     {
         Operation operation = getProject().findOperation(entityName, name);
@@ -345,7 +341,6 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    @Nonnull
     public Query getQuery(String entityName, String queryName)
     {
         Query query = getEntity(entityName).getQueries().get(queryName);

@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -22,10 +21,8 @@ public interface DbService
     @Nullable
     <T> T select(String sql, ResultSetParser<T> parser, Object... params);
 
-    @Nonnull
     <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params);
 
-    @Nonnull
     <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params);
 
     @Nullable
