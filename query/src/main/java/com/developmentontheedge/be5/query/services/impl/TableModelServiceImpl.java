@@ -3,11 +3,11 @@ package com.developmentontheedge.be5.query.services.impl;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.query.services.TableModelService;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
@@ -27,6 +26,7 @@ import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
 
 public class TableModelServiceImpl implements TableModelService
 {
+    private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
@@ -35,10 +35,10 @@ public class TableModelServiceImpl implements TableModelService
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
-                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider,
-                                 Provider<QuerySession> session)
+    public TableModelServiceImpl(Meta meta, UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
+                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider)
     {
+        this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
         this.groovyRegister = groovyRegister;
@@ -75,7 +75,8 @@ public class TableModelServiceImpl implements TableModelService
     @SuppressWarnings("unchecked")
     public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
-        return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService, userAwareMeta, coreUtils);
+        return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService,
+                userAwareMeta, meta, coreUtils);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
@@ -94,7 +95,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta, coreUtils)
+        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta, meta, coreUtils)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))

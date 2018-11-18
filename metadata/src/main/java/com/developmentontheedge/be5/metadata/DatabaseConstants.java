@@ -28,6 +28,7 @@ public interface DatabaseConstants
     //TODO create enum COL_ATTR
     String COL_ATTR_NULLIF = "nullif";
     String COL_ATTR_LINK = "link";
+    String COL_ATTR_REF = "ref";
 
     String L10N_TOPIC_DISPLAY_NAME = "displayName";
     String L10N_TOPIC_VIEW_NAME = "viewName";

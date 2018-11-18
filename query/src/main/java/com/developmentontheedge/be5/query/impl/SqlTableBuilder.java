@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -38,7 +39,7 @@ public class SqlTableBuilder
     private final CoreUtils coreUtils;
 
     public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
-                           UserAwareMeta userAwareMeta, CoreUtils coreUtils)
+                           UserAwareMeta userAwareMeta, Meta meta, CoreUtils coreUtils)
     {
         this.query = query;
         this.parameters = parameters;
@@ -48,7 +49,7 @@ public class SqlTableBuilder
         this.coreUtils = coreUtils;
         this.queryExecutor = queryService.build(query, parameters);
         this.userAwareMeta = userAwareMeta;
-        this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta);
+        this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, meta);
     }
 
     public SqlTableBuilder offset(int offset)

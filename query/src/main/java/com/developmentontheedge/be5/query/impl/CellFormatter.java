@@ -1,14 +1,16 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -22,18 +24,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+
 public class CellFormatter
 {
     private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
     private final Query query;
     private final UserAwareMeta userAwareMeta;
+    private final Meta meta;
     private final QueryExecutor queryExecutor;
 
-    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta)
+    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta, Meta meta)
     {
         this.query = query;
         this.userAwareMeta = userAwareMeta;
         this.queryExecutor = queryExecutor;
+        this.meta = meta;
     }
 
     /**
@@ -104,6 +110,24 @@ public class CellFormatter
                 throw Be5Exception.internalInQuery(query,
                         new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
             }
+        }
+
+        Map<String, String> refProperties = cell.options.get(DatabaseConstants.COL_ATTR_REF);
+        if (refProperties != null)
+        {
+            String table = refProperties.get("table");
+            HashUrl url = new HashUrl("table")
+                    .positional(table)
+                    .positional(refProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+            for (TableReference reference : meta.getEntity(table).getAllReferences())
+            {
+                if (query.getEntity().getName().equals(reference.getTableTo()))
+                {
+                    url = url.named(reference.getName(), varResolver.resolve(ID_COLUMN_LABEL).toString());
+                    break;
+                }
+            }
+            cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
         }
 
         return formattedContent;
