@@ -39,6 +39,15 @@ be5events:
     - IDX_EVENTS_START:
         columns: startTime
   queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code:
+          SELECT
+            ID AS "Code",
+            CASE WHEN e.entity IS NULL OR e.entity = '' THEN e.title ELSE concat( e.entity, '::', e.title ) END
+                AS "Name"
+          FROM be5events e
   - All records:
       type: 1D
       messageWhenEmpty: The list is empty

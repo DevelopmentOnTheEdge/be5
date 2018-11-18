@@ -11,7 +11,7 @@ be5eventParams:
         primaryKey: true
     - logID:
         type: KEYTYPE
-        reference: events
+        reference: be5events
     - paramName:
         type: VARCHAR(255)
     - paramValue:
@@ -20,3 +20,13 @@ be5eventParams:
     indices:
     - IDX_EVENTPARS_LOGID:
         columns: logID
+  queries:
+  - All records:
+      type: 1D_unknown
+      roles: [SystemDeveloper, Administrator]
+      invisible: true
+      code: |-
+        SELECT
+          paramName,
+          paramValue
+        FROM be5eventParams
