@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
+import com.developmentontheedge.be5.server.services.MailService;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.server.services.impl.MailServiceImpl;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
@@ -79,6 +81,7 @@ public class ServerModule extends ServletModule
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
+        bind(MailService.class).to(MailServiceImpl.class).in(Scopes.SINGLETON);
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
     }
 }
