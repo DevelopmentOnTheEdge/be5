@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.metadata.model.Project.BE_SQL_QUERIES_FEATURE;
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES_FEATURE;
 import static java.util.stream.Collectors.joining;
 
 

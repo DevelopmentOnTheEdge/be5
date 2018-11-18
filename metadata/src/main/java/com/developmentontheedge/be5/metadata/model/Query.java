@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.developmentontheedge.be5.metadata.model.Project.BE_SQL_QUERIES_FEATURE;
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES_FEATURE;
 
 
 @PropertyName("Query")
