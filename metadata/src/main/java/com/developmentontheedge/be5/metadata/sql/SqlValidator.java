@@ -11,7 +11,7 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES_FEATURE;
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
 
 public class SqlValidator
 {
@@ -50,7 +50,7 @@ public class SqlValidator
     private void validateQuery(Query query, List<ProjectElementException> result)
     {
         String queryText;
-        if (query.getProject().hasFeature(BE_SQL_QUERIES_FEATURE))
+        if (query.getProject().hasFeature(BE_SQL_QUERIES))
         {
             queryText = query.getFinalQuery();
         }

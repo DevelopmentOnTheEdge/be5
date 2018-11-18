@@ -24,9 +24,9 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
                                     ProjectProvider projectProvider)
     {
         this.categoriesService = categoriesService;
-        if (projectProvider.get().hasFeature(Features.DOCUMENT_CATEGORIES_FEATURE))
+        if (projectProvider.get().hasFeature(Features.DOCUMENT_CATEGORIES))
         {
-            documentGenerator.addDocumentPlugin(Features.DOCUMENT_CATEGORIES_FEATURE, this);
+            documentGenerator.addDocumentPlugin(Features.DOCUMENT_CATEGORIES, this);
         }
     }
 
@@ -37,7 +37,7 @@ public class DocumentCategoriesPlugin implements DocumentPlugin
                 getCategoryNavigation(query.getEntity().getName(), (String) parameters.get(CATEGORY_ID_PARAM));
         if (categories.size() > 0)
         {
-            return new ResourceData(Features.DOCUMENT_CATEGORIES_FEATURE, categories, null);
+            return new ResourceData(Features.DOCUMENT_CATEGORIES, categories, null);
         }
         return null;
     }

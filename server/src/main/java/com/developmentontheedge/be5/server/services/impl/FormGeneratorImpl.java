@@ -19,6 +19,7 @@ import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
+import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.beans.json.JsonFactory;
 
@@ -42,6 +43,7 @@ public class FormGeneratorImpl implements FormGenerator
     private final OperationExecutor operationExecutor;
     private final UserInfoProvider userInfoProvider;
     private final ErrorModelHelper errorModelHelper;
+    private final OperationLogging operationLogging;
 
     @Inject
     public FormGeneratorImpl(
@@ -49,13 +51,15 @@ public class FormGeneratorImpl implements FormGenerator
             OperationService operationService,
             OperationExecutor operationExecutor,
             UserInfoProvider userInfoProvider,
-            ErrorModelHelper errorModelHelper)
+            ErrorModelHelper errorModelHelper,
+            OperationLogging operationLogging)
     {
         this.userAwareMeta = userAwareMeta;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
         this.userInfoProvider = userInfoProvider;
         this.errorModelHelper = errorModelHelper;
+        this.operationLogging = operationLogging;
     }
 
     @Override
@@ -83,13 +87,17 @@ public class FormGeneratorImpl implements FormGenerator
     @LogBe5Event
     ResourceData generate(Operation operation, Map<String, Object> values)
     {
-        return getResult(operation, operationService.generate(operation, values));
+        Either<Object, OperationResult> resultEither = operationService.generate(operation, values);
+        operationLogging.saveOperationLog(operation, values);
+        return getResult(operation, resultEither);
     }
 
     @LogBe5Event
     ResourceData execute(Operation operation, Map<String, Object> values)
     {
-        return getResult(operation, operationService.execute(operation, values));
+        Either<Object, OperationResult> resultEither = operationService.execute(operation, values);
+        operationLogging.saveOperationLog(operation, values);
+        return getResult(operation, resultEither);
     }
 
     private ResourceData getResult(com.developmentontheedge.be5.operation.model.Operation operation,

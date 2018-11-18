@@ -10,6 +10,8 @@ core:
   - _categoriesService_
   - be5eventParams
   - be5events
+  - be5operationLogParams
+  - be5operationLogs
   - categories
   - classifications
   - columnSettings

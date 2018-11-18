@@ -3,8 +3,10 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
+import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
+import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
@@ -38,6 +40,7 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
             install(new ServerWebTestModule());
             bind(Be5EventTestLogger.class).asEagerSingleton();
+            bind(OperationLogging.class).to(OperationLoggingMock.class).in(Scopes.SINGLETON);
         }
     }
 

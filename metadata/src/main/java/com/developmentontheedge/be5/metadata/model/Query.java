@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES_FEATURE;
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
 
 
 @PropertyName("Query")
@@ -176,7 +176,7 @@ public class Query extends EntityItem implements TemplateElement
 
     public String getFinalQuery()
     {
-        if (getProject().hasFeature(BE_SQL_QUERIES_FEATURE))
+        if (getProject().hasFeature(BE_SQL_QUERIES))
         {
             return this.getQuery();
         }

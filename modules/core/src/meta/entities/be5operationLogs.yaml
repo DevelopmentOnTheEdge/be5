@@ -1,0 +1,96 @@
+be5operationLogs:
+  type: collection
+  extras: feature:logging
+  displayName: Operation Logs
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - table_name:
+        type: VARCHAR(30)
+        reference: entities
+    - operation_name:
+        type: VARCHAR(100)
+    - user_name:
+        type: VARCHAR(100)
+        reference: users
+    - localeString:
+        type: VARCHAR(30)
+        canBeNull: true
+    - appUrl:
+        type: VARCHAR(150)
+        canBeNull: true
+    - executedAt:
+        type: DATETIME
+    - remoteAddr:
+        type: VARCHAR(255)
+        canBeNull: true
+    - result:
+        type: TEXT
+        canBeNull: true
+    indices:
+    - IDX_OP_LOGS_TNAME:
+        columns:
+        - table_name
+        - operation_name
+    - IDX_OP_LOGS_UTOE:
+        columns:
+        - user_name
+        - table_name
+        - operation_name
+        - executedAt
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code: SELECT ID AS "Code", operation_name AS "Name" FROM be5operationLogs
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Filter
+      - Insert
+      code: |-
+          SELECT
+             ol.ID AS "___ID",
+             ol.table_name AS "table_name",
+             ol.operation_name AS "operation_name",
+             ol.user_name AS "User Name",
+             ol.executedAt AS "executedAt",
+             '<sql using="___ID">SELECT CASE WHEN COUNT(1) > 0 THEN 'Click' ELSE '&nbsp;' END
+                  FROM be5operationLogParams p WHERE p.operLogID = ?
+             </sql>' AS "Parameters",
+             '<ref table="be5operationLogParams" />' AS ";Parameters",
+             ol.remoteAddr AS "IP;<quick visible='false'/>",
+             ol.result AS "Result"
+          FROM be5operationLogs ol
+          ORDER BY ol.executedAt DESC
+  operations:
+  - Clone:
+      records: 1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Filter:
+      records: -1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+  - Insert:
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - PermaLink:
+      records: 1
+      code: com.beanexplorer.enterprise.operations.PermaLink

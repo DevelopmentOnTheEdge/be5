@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.operation.util;
 
+import com.developmentontheedge.be5.operation.model.OperationStatus;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,6 +11,12 @@ public class OperationUtils
     {
         if (selectedRowsString == null || selectedRowsString.trim().isEmpty()) return new String[0];
         return selectedRowsString.split(",");
+    }
+
+    public static boolean operationSuccessfullyFinished(OperationStatus operationStatus)
+    {
+        return operationStatus == OperationStatus.FINISHED ||
+                operationStatus == OperationStatus.REDIRECTED;
     }
 
     public static Map<String, Object> replaceEmptyStringToNull(Map<String, Object> values)
@@ -27,5 +35,6 @@ public class OperationUtils
         }
         return map;
     }
+
 
 }

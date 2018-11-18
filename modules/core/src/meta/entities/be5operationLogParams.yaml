@@ -1,0 +1,79 @@
+be5operationLogParams:
+  type: collection
+  extras: feature:logging
+  displayName: Parameters of Operation Logs
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - operLogID:
+        type: KEYTYPE
+        reference: be5operationLogs
+    - type:
+        type: ENUM('input','session','context')
+        defaultValue: '''input'''
+    - paramName:
+        type: VARCHAR(255)
+    - paramValue:
+        type: TEXT
+        canBeNull: true
+    indices:
+    - IDX_OP_LOG_P_OID:
+        columns: operLogID
+    - IDX_OP_LOG_P_OID_N:
+        columns:
+        - operLogID
+        - paramName
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code: SELECT ID AS "Code", operLogID AS "Name" FROM be5operationLogParams
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Filter
+      - Insert
+      - Modify Parameters
+      code: |-
+        SELECT
+          operLogID,
+          type,
+          paramName,
+          paramValue
+        FROM be5operationLogParams
+        ORDER BY operLogID desc, type
+  operations:
+  - Clone:
+      records: 1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Filter:
+      records: -1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+  - Insert:
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - Modify Parameters:
+      records: -1
+      roles: '@AllRolesExceptGuest'
+      code: com.beanexplorer.enterprise.process.ModifyOfflineOperationParameters
+  - PermaLink:
+      records: 1
+      code: com.beanexplorer.enterprise.operations.PermaLink

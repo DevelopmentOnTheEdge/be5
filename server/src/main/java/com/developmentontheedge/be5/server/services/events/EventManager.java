@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.operation.util.OperationUtils.operationSuccessfullyFinished;
+
 public class EventManager implements MethodInterceptor
 {
     public static final Logger log = Logger.getLogger(EventManager.class.getName());
@@ -67,8 +69,7 @@ public class EventManager implements MethodInterceptor
         {
             operationError(operation, values, startTime, System.currentTimeMillis(), operation.getResult().getMessage());
         }
-        else if (operation.getStatus() == OperationStatus.FINISHED ||
-                 operation.getStatus() == OperationStatus.REDIRECTED)
+        else if (operationSuccessfullyFinished(operation.getStatus()))
         {
             operationCompleted(operation, values, startTime, System.currentTimeMillis());
         }

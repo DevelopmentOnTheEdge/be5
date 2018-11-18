@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES_FEATURE;
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
 import static java.util.stream.Collectors.joining;
 
 
@@ -95,7 +95,7 @@ public class ModuleLoader2
 
         project.validate();
         project.initBeSqlMacros();
-        if (project.hasFeature(BE_SQL_QUERIES_FEATURE))
+        if (project.hasFeature(BE_SQL_QUERIES))
         {
             processOldFreemarkerMacros(project);
         }
@@ -117,7 +117,7 @@ public class ModuleLoader2
                     if ((queryCode.contains("${") || queryCode.contains("<@")) &&
                             allowedFreemarkerMacros.stream().filter(queryCode::contains).count() == 0)
                     {
-                        throw new IllegalArgumentException("Project used " + BE_SQL_QUERIES_FEATURE +
+                        throw new IllegalArgumentException("Project used " + BE_SQL_QUERIES +
                                 " feature, please use be-sql instead freemarker.\n" + "Compile freemarker for query:" + queryCode + "\n==============\n" + queryAfterFreemarker);
                     }
                     query.setQuery(queryAfterFreemarker);

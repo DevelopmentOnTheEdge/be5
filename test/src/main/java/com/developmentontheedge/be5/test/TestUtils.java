@@ -15,7 +15,9 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.MailService;
+import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
 import com.developmentontheedge.be5.test.mocks.TestMailService;
 import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
@@ -269,6 +271,7 @@ public abstract class TestUtils extends BaseTestUtils
             install(new BaseDbMockTestModule());
             install(new WebTestModule());
             bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
+            bind(OperationLogging.class).to(OperationLoggingMock.class).in(Scopes.SINGLETON);
         }
     }
 
@@ -280,6 +283,7 @@ public abstract class TestUtils extends BaseTestUtils
             install(new BaseDbTestModule());
             install(new WebTestModule());
             bind(MailService.class).to(TestMailService.class).in(Scopes.SINGLETON);
+            bind(OperationLogging.class).to(OperationLoggingMock.class).in(Scopes.SINGLETON);
         }
     }
 

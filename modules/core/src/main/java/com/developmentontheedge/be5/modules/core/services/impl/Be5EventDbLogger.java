@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
@@ -23,7 +24,6 @@ public class Be5EventDbLogger implements Be5EventLogger
 
     private static final String EVENT_LOG_TABLE = "be5events";
     private static final String EVENT_LOG_TABLE_PARAMS = "be5eventParams";
-    private static final String EVENT_DB_LOGGING_FEATURE = "eventDbLogging";
     private final UserInfoProvider userInfoProvider;
     private final DatabaseModel database;
 
@@ -33,7 +33,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         this.database = database;
         this.userInfoProvider = userInfoProvider;
-        if (projectProvider.get().hasFeature(EVENT_DB_LOGGING_FEATURE))
+        if (projectProvider.get().hasFeature(Features.EVENT_DB_LOGGING_FEATURE))
         {
             eventManager.addListener(this);
         }
