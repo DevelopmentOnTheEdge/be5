@@ -42,6 +42,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 
@@ -121,41 +122,33 @@ public class MetaImpl implements Meta
     @Override
     public List<Entity> getOrderedEntities(EntityType entityType, String language)
     {
-        List<OrderedEntity> entities = new ArrayList<>();
-
-        for (Module module : getProject().getModulesAndApplication())
-        {
-            for (Entity entity : module.getEntities())
-            {
-                if (entity.isAvailable() && (entityType == null || entity.getType() == entityType))
-                {
-                    entities.add(new OrderedEntity(entity, getTitle(entity, language)));
-                }
-            }
-        }
-
-        Collections.sort(entities);
-
-        return entities.stream().map(e -> e.entity).collect(Collectors.toList());
+        return getEntitiesStream()
+                .filter(e -> entityType == null || e.getType() == entityType)
+                .map(e -> new OrderedEntity(e, getTitle(e, language)))
+                .sorted()
+                .map(oe -> oe.entity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Entity> getEntities(EntityType entityType)
     {
-        return getProject().getEntityNames().stream()
-                .map(name -> getProject().getEntity(name))
+        return getEntitiesStream()
                 .filter(e -> e.getType() == entityType)
-                .filter(BeModelElementSupport::isAvailable)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Entity> getEntities()
     {
+        return getEntitiesStream().collect(Collectors.toList());
+    }
+
+    private Stream<Entity> getEntitiesStream()
+    {
         return getProject().getEntityNames().stream()
                 .map(name -> getProject().getEntity(name))
-                .filter(BeModelElementSupport::isAvailable)
-                .collect(Collectors.toList());
+                .filter(BeModelElementSupport::isAvailable);
     }
 
     @Override
@@ -496,4 +489,49 @@ public class MetaImpl implements Meta
         query.setQuery(sql);
         return query;
     }
+
+    static class OrderedEntity implements Comparable<OrderedEntity>
+    {
+        public final Entity entity;
+        public final int order;
+        public final String title;
+
+        OrderedEntity(Entity entity, String title)
+        {
+            Objects.requireNonNull(entity);
+            Objects.requireNonNull(title);
+            this.entity = entity;
+            this.order = softParseInt(entity.getOrder(), Integer.MAX_VALUE);
+            this.title = title;
+        }
+
+        @Override
+        public int compareTo(OrderedEntity other)
+        {
+            Objects.requireNonNull(other);
+
+            if (order != other.order)
+                return Integer.compare(order, other.order);
+
+            return title.compareTo(other.title);
+        }
+
+        private static int softParseInt(String order, int defaultValue)
+        {
+            if (order == null || order.trim().length() == 0)
+            {
+                return defaultValue;
+            }
+
+            try
+            {
+                return Integer.parseInt(order);
+            }
+            catch (NumberFormatException e)
+            {
+                return defaultValue;
+            }
+        }
+    }
+
 }
