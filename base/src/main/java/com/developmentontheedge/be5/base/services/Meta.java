@@ -34,9 +34,9 @@ public interface Meta
 
     List<TableReference> getTableReferences(EntityType entityType);
 
-    Map<String, List<Entity>> getOrderedEntitiesByModules(String language);
-
-    Map<String, List<Entity>> getOrderedEntitiesByModules(EntityType entityType, String language);
+//    Map<String, List<Entity>> getOrderedEntitiesByModules(String language);
+//
+//    Map<String, List<Entity>> getOrderedEntitiesByModules(EntityType entityType, String language);
 
     /**
      * Returns an entity with by its name.
