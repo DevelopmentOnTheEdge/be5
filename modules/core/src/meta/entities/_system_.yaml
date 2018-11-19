@@ -6,13 +6,13 @@ _system_:
   queries:
   - Cache:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       operations:
       - Clear all caches
       code: com.developmentontheedge.be5.modules.core.queries.system.CacheTable
   - Daemons:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       operations:
       - ExecuteInOperation
       code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsTable
@@ -25,42 +25,42 @@ _system_:
   - Queries:
       type: Java
       invisible: true
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.meta.QueriesTable
   - Operations:
       type: Java
       invisible: true
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.meta.OperationsTable
   - Session variables:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       operations:
       - SessionVariablesEdit
       code: com.developmentontheedge.be5.modules.core.queries.system.SessionVariablesTable
   - Threads:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.ThreadsTable
   - System properties:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.SystemPropertiesTable
   - System settings:
       type: static
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       value: systemSettings.redir?_qn_=All+records
   - Http Headers:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.HttpHeadersTable
   - DataSource:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.queries.system.DataSourceTable
   - Query Builder:
       type: static
-      roles: [SystemDeveloper]
+      roles: SystemDeveloper
       value: queryBuilder
   - Events:
       type: static
@@ -70,18 +70,18 @@ _system_:
   - ExecuteInOperation:
       type: Java
       records: 1
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.operations.system.daemons.ExecuteInOperation
   - SessionVariablesEdit:
       type: Java
       records: 1
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.operations.system.SessionVariablesEdit
   - Clear all caches:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.operations.system.ClearAllCaches
   - Reload project:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.operations.system.DevReloadProject

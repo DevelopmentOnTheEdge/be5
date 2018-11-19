@@ -85,10 +85,10 @@ be5events:
         ORDER BY e.startTime DESC
   operations:
   - Filter:
-      roles: [Administrator]
+      roles: Administrator
       layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Filter by Date:
-      roles: [Administrator]
+      roles: Administrator
       layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
