@@ -206,7 +206,7 @@ public abstract class TestUtils extends BaseTestUtils
         return createOperation(entityName, queryName, operationName, params);
     }
 
-    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
+    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, ?> operationParams)
     {
         OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
