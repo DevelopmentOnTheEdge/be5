@@ -60,8 +60,12 @@ columnSettings:
       - Insert
       code: |-
         SELECT
-            *
-        FROM categories
+            table_name AS "table_name",
+            query_name AS "query_name",
+            column_name AS "column_name",
+            user_name AS "user_name",
+            quick AS "quick"
+        FROM columnSettings
   operations:
   - Insert:
       roles: Administrator
