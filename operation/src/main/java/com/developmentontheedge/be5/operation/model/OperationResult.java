@@ -47,16 +47,6 @@ public class OperationResult
         return details;
     }
 
-//    private static String getLocalisedMessage(OperationStatus status)
-//    {
-//        return null;
-//    }
-//
-//    private String getLocalisedMessage(String message, Object ... params)
-//    {
-//        return null;
-//    }
-
     ///////////////////////////////////////////////////////////////////
     // OperationResult factory methods
     //
@@ -65,7 +55,7 @@ public class OperationResult
     private static final OperationResult generate = new OperationResult(OperationStatus.GENERATE);
     private static final OperationResult execute = new OperationResult(OperationStatus.EXECUTE);
     private static final OperationResult finished = new OperationResult(OperationStatus.FINISHED);
-    private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
+    //private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
 
     public static OperationResult create()
     {
@@ -92,20 +82,20 @@ public class OperationResult
         return new OperationResult(OperationStatus.EXECUTE, preparedness);
     }
 
-    public static OperationResult cancelled()
-    {
-        return cancelled;
-    }
-
-    public static OperationResult interrupting()
-    {
-        return new OperationResult(OperationStatus.INTERRUPTING);
-    }
-
-    public static OperationResult interrupted()
-    {
-        return new OperationResult(OperationStatus.INTERRUPTED);
-    }
+//    public static OperationResult cancelled()
+//    {
+//        return cancelled;
+//    }
+//
+//    public static OperationResult interrupting()
+//    {
+//        return new OperationResult(OperationStatus.INTERRUPTING);
+//    }
+//
+//    public static OperationResult interrupted()
+//    {
+//        return new OperationResult(OperationStatus.INTERRUPTED);
+//    }
 
     public static OperationResult finished()
     {
@@ -115,11 +105,6 @@ public class OperationResult
     public static OperationResult finished(String message)
     {
         return new OperationResult(OperationStatus.FINISHED, message, null);
-    }
-
-    public static OperationResult finishedWithData(Object details)
-    {
-        return new OperationResult(OperationStatus.FINISHED, null, details);
     }
 
     public static OperationResult finished(String message, Object details)

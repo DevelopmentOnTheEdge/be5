@@ -91,7 +91,7 @@ public class OperationInfo
         return operationModel.getEntity();
     }
 
-    public Object getLayout()
+    public String getLayout()
     {
         return operationModel.getLayout();
     }
