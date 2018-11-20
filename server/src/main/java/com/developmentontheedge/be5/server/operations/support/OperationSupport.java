@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
@@ -56,5 +57,15 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     public Query getQuery()
     {
         return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
+    }
+
+    public void finishedWithActions(String message, FrontendAction... frontendActions)
+    {
+        setResult(OperationResult.finished(message, frontendActions));
+    }
+
+    public void finishedWithActions(FrontendAction... frontendActions)
+    {
+        setResult(OperationResult.finished(null, frontendActions));
     }
 }
