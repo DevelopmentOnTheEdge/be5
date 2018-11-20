@@ -161,6 +161,25 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void beRolesNot()
+    {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        Query query = meta.getQuery("testtable", "beRolesNot");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'!TestUser2'}}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
+
+        setStaticUserInfo("TestUser2");
+        TableModel table2 = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+                oneQuotes(jsonb.toJson(table2.getRows().get(0))));
+        assertEquals("[{'name':'Name','title':'Name'}]",
+                oneQuotes(jsonb.toJson(table2.getColumns())));
+    }
+
+    @Test
     public void beGrouping()
     {
         Query query = meta.getQuery("testtable", "beGrouping");

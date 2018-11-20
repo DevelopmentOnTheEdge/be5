@@ -139,10 +139,13 @@ public class SqlTableBuilder
             }
 
             String roles = columnRoles.get("name");
-            List<String> roleList = Arrays.asList(roles.split(","));
-            List<String> forbiddenRoles = roleList.stream().filter(x -> x.startsWith("!")).collect(Collectors.toList());
+            List<String> roleList = new ArrayList<>(Arrays.asList(roles.split(",")));
+            List<String> forbiddenRoles = roleList.stream()
+                    .filter(x -> x.startsWith("!"))
+                    .map(x -> x.substring(1))
+                    .collect(Collectors.toList());
 
-            roleList.removeAll(forbiddenRoles);
+            roleList.removeIf(x -> x.startsWith("!"));
 
             boolean hasAccess = false;
 

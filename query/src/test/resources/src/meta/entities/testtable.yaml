@@ -83,6 +83,16 @@ testtable:
             t.value AS "Value;<roles name='TestUser2'/>"
           FROM
             testtable t
+  - beRolesNot:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.name AS "Name",
+            t.value AS "Value;<roles name='!TestUser2'/>"
+          FROM
+            testtable t
   - beRowCssClass:
       type: 1D_unknown
       roles: SystemDeveloper
