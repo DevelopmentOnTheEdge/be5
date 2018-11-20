@@ -45,12 +45,11 @@ public class Login extends GOperationSupport
             postLogin(parameters);
             if (context.getOperationParams().get("withoutUpdateUserInfo") == null)
             {
-                setResult(OperationResult.finished(null,
-                        CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
+                setResultFinished(CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel()));
             }
             else
             {
-                setResult(OperationResult.finished());
+                setResultFinished();
             }
         }
         else

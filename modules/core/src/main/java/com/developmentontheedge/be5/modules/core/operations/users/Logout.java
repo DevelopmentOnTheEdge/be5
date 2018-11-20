@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 
@@ -20,7 +19,6 @@ public class Logout extends GOperationSupport
     public void invoke(Object parameters) throws Exception
     {
         userHelper.logout();
-        setResult(OperationResult.finished(null,
-                CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
+        setResultFinished(CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel()));
     }
 }

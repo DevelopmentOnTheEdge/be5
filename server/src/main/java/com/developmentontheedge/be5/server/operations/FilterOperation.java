@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.base.util.FilterUtil;
-import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -10,7 +9,6 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.server.FrontendActions.closeMainModal;
 import static com.developmentontheedge.be5.server.FrontendActions.updateParentDocument;
 
 
@@ -33,9 +31,6 @@ public class FilterOperation extends OperationSupport
     {
         Map<String, Object> params = dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters);
         params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getOperationParams()));
-        setResult(OperationResult.finished(null, new Object[]{
-                updateParentDocument(filterHelper.filterDocument(getQuery(), params)),
-                closeMainModal()
-        }));
+        setResultFinished(updateParentDocument(filterHelper.filterDocument(getQuery(), params)));
     }
 }

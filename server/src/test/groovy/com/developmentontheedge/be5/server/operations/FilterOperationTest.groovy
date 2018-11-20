@@ -135,7 +135,6 @@ class FilterOperationTest extends SqlMockOperationTest
                         .getData().getAttributes()).getParameters().toString()))
 
         assertEquals(UPDATE_PARENT_DOCUMENT, details[0].getType())
-        assertEquals(CLOSE_MAIN_MODAL, details[1].getType())
     }
 
     @Test

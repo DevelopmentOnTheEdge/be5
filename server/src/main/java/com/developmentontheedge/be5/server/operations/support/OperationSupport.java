@@ -62,12 +62,22 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
 
-    public void finishedWithActions(String message, FrontendAction... frontendActions)
+    public void setResultFinished()
+    {
+        setResult(OperationResult.finished());
+    }
+
+    public void setResultFinished(String message)
+    {
+        setResult(OperationResult.finished(message));
+    }
+
+    public void setResultFinished(String message, FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(message, frontendActions));
     }
 
-    public void finishedWithActions(FrontendAction... frontendActions)
+    public void setResultFinished(FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(null, frontendActions));
     }

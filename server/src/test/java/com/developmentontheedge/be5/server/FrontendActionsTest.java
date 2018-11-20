@@ -27,7 +27,7 @@ public class FrontendActionsTest extends ServerBe5ProjectTest
     public void updateDocument()
     {
         FrontendAction frontendAction = FrontendActions.updateDocument(documentGenerator.
-                createStaticPage("Title", "text", null));
+                createStaticPage("Title", "text", "url"));
         JsonApiModel jsonApiModel = (JsonApiModel) frontendAction.getValue();
 
         assertEquals("static", jsonApiModel.getData().getType());
