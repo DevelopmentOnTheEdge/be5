@@ -76,6 +76,24 @@ class DynamicPropertyMetaClassTest extends RegisterMetaClass
     }
 
     @Test
+    void updateValue()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+
+        dps.testField = [ DISPLAY_NAME: "Test Field" ]
+
+        DynamicProperty testField = dps.getProperty("testField")
+        assertEquals null, testField.getValue()
+        dps.testField = [ value: "testValue" ]
+        assertEquals "testValue", testField.getValue()
+        dps.testField = [ DISPLAY_NAME: "Test Field2" ]
+        assertEquals "testValue", testField.getValue()
+
+        dps.testField = [ value: null ]
+        assertEquals null, testField.getValue()
+    }
+
+    @Test
     void setPropertyNull()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()

@@ -84,7 +84,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
         Objects.requireNonNull(name);
         Class type = (Class) removeFromMap(map, "TYPE");
 
-        boolean isContainName = map.containsKey("name");
+        boolean isContainValue = map.containsKey("value");
         Object value = processValue(removeFromMap(map, "value"), type);
 
         DynamicProperty dp = dps.getProperty(name);
@@ -100,7 +100,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
         else
         {
             if (type != null) dp.setType(type);
-            if (isContainName) dp.setValue(value);
+            if (isContainValue) dp.setValue(value);
         }
 
         setAttributes(dp, map);
