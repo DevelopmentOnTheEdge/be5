@@ -68,6 +68,15 @@ public class DpsUtilsTest
     }
 
     @Test
+    public void notSetReadOnly()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class).value("1").readonly().get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "2"));
+        assertEquals("1", dps.getValue("value"));
+    }
+
+    @Test
     public void setValuesFromDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();

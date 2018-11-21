@@ -96,7 +96,8 @@ public class DpsHelper
                                                                       Map<String, Object> operationParams, Map<String, ? super Object> values)
     {
         addDpExcludeAutoIncrement(dps, modelElements, operationParams);
-        return DpsUtils.setValues(dps, values);
+        DpsUtils.setValues(dps, values);
+        return setOperationParams(dps, operationParams);
     }
 
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
