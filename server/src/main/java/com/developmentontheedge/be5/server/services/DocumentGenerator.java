@@ -10,11 +10,6 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    //todo move from DocumentGenerator
-    JsonApiModel getStaticPage(String name);
-
-    JsonApiModel createStaticPage(String title, String content, String url);
-
     JsonApiModel getDocument(Query query, Map<String, Object> parameters);
 
     JsonApiModel getDocument(String entityName, String queryName, Map<String, Object> parameters);

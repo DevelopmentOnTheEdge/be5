@@ -10,9 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
-import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
-import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -37,7 +35,6 @@ import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_MORE_ACTION;
 import static com.developmentontheedge.be5.query.TableConstants.CLEAN_NAV;
@@ -58,51 +55,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private final UserAwareMeta userAwareMeta;
     private final TableModelService tableModelService;
-    private final ErrorModelHelper errorModelHelper;
     private final Provider<Session> session;
 
     private final Map<String, DocumentPlugin> documentPlugins = new HashMap<>();
 
     @Inject
     public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
-                                 ErrorModelHelper errorModelHelper, Provider<Session> session)
+                                 Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
-        this.errorModelHelper = errorModelHelper;
         this.session = session;
-    }
-
-    @Override
-    public JsonApiModel getStaticPage(String name)
-    {
-        String url = new HashUrl(STATIC_ACTION, name).toString();
-
-        try
-        {
-            return JsonApiModel.data(new ResourceData(STATIC_ACTION, new StaticPagePresentation(
-                    null,
-                    userAwareMeta.getStaticPageContent(name)),
-                    Collections.singletonMap(SELF_LINK, url)), null);
-        }
-        catch (Be5Exception e)
-        {
-            log.log(e.getLogLevel(), "Error in static page: " + url, e);
-            return JsonApiModel.error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), null);
-        }
-    }
-
-    @Override
-    public JsonApiModel createStaticPage(String title, String content, String url)
-    {
-        return JsonApiModel.data(
-                new ResourceData(
-                        STATIC_ACTION,
-                        new StaticPagePresentation(title, content),
-                        Collections.singletonMap(SELF_LINK, url)
-                ),
-                null
-        );
     }
 
     @Override
