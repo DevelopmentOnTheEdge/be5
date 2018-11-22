@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.operation.util.OperationUtils.operationSuccessfullyFinished;
+import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
 
 public class EventManager implements MethodInterceptor
 {
@@ -69,7 +69,7 @@ public class EventManager implements MethodInterceptor
         {
             operationError(operation, values, startTime, System.currentTimeMillis(), operation.getResult().getMessage());
         }
-        else if (operationSuccessfullyFinished(operation.getStatus()))
+        else if (!values.containsKey(RELOAD_CONTROL_NAME))
         {
             operationCompleted(operation, values, startTime, System.currentTimeMillis());
         }

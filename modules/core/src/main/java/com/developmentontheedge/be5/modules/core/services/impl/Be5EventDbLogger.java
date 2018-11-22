@@ -42,37 +42,35 @@ public class Be5EventDbLogger implements Be5EventLogger
     @Override
     public void queryCompleted(Query query, Map<String, Object> parameters, long startTime, long endTime)
     {
-        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
-                startTime, endTime, ACTION_QUERY, query.getEntity().getName(), query.getName(), parameters, null);
+        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
+                ACTION_QUERY, query.getEntity().getName(), query.getName(), parameters, null);
     }
 
     @Override
     public void queryError(Query query, Map<String, Object> parameters, long startTime, long endTime, String exception)
     {
-        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
-                startTime, endTime, ACTION_QUERY, query.getEntity().getName(), query.getName(), parameters, exception);
+        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
+                ACTION_QUERY, query.getEntity().getName(), query.getName(), parameters, null, exception);
     }
 
     @Override
     public void operationCompleted(Operation operation, Map<String, Object> values, long startTime, long endTime)
     {
-        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
-                startTime, endTime, ACTION_OPERATION,
-                operation.getInfo().getEntityName(), operation.getInfo().getName(),
-                operation.getContext().getOperationParams(), null);
+        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
+                ACTION_OPERATION, operation.getInfo().getEntityName(), operation.getInfo().getName(),
+                operation.getContext().getOperationParams(), operation.getStatus().toString());
     }
 
     @Override
     public void operationError(Operation operation, Map<String, Object> values, long startTime, long endTime, String exception)
     {
-        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(),
-                startTime, endTime, ACTION_OPERATION,
-                operation.getInfo().getEntityName(), operation.getInfo().getName(),
-                operation.getContext().getOperationParams(), exception);
+        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
+                ACTION_OPERATION, operation.getInfo().getEntityName(), operation.getInfo().getName(),
+                operation.getContext().getOperationParams(), operation.getStatus().toString(), exception);
     }
 
-    private void storeErrorRecord(String user_name, String remoteAddr, long startTime, long endTime,
-                             String action, String entity, String title, Map<String, Object> parameters, String exception)
+    private void storeErrorRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
+                                  String entity, String title, Map<String, Object> parameters, String result, String exception)
     {
         Long id = database.getEntity(EVENT_LOG_TABLE).add(new HashMap<String, Object>() {{
             put("user_name", user_name);
@@ -82,13 +80,14 @@ public class Be5EventDbLogger implements Be5EventLogger
             put("action", action);
             put("entity", entity);
             put("title", title);
+            put("result", result);
             put("exception", exception);
         }});
         storeParams(parameters, id);
     }
 
-    private void storeRecord(String user_name, String remoteAddr, long startTime, long endTime,
-                                 String action, String entity, String title, Map<String, Object> parameters, String result)
+    private void storeRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
+                             String entity, String title, Map<String, Object> parameters, String result)
     {
         Long id = database.getEntity(EVENT_LOG_TABLE).add(new HashMap<String, Object>() {{
             put("user_name", user_name);
