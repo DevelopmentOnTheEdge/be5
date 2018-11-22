@@ -71,7 +71,7 @@ be5events:
            '<sql using="___myid">SELECT CASE WHEN COUNT( p.logID ) > 0 THEN 'Click' ELSE '&nbsp;' END
                 FROM be5eventParams p WHERE p.logID = ?
            </sql>' AS "Parameters",
-           '<ref table="be5eventParams" />' AS ";Parameters",
+           '<ref table="be5eventParams" class="open-in-modal"/>' AS ";Parameters",
            e.IP AS "IP;<quick visible='false'/>",
            e.result AS "Result;",
            e.exception AS "Exception;"

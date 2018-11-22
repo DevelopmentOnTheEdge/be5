@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -103,7 +103,11 @@ public class CellFormatter
                         url = url.named(colsArr[i], resolveValue != null ? resolveValue.toString() : valuesArr[i]);
                     }
                 }
-                cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
+                String utlStr = url.toString();
+                cell.options.put(DatabaseConstants.COL_ATTR_LINK, new HashMap<String, String>() {{
+                        put("url", utlStr);
+                        put("class", linkProperties.get("class"));
+                }});
             }
             catch (Throwable e)
             {
@@ -127,7 +131,11 @@ public class CellFormatter
                     break;
                 }
             }
-            cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
+            String utlStr = url.toString();
+            cell.options.put(DatabaseConstants.COL_ATTR_LINK, new HashMap<String, String>() {{
+                put("url", utlStr);
+                put("class", refProperties.get("class"));
+            }});
         }
 
         return formattedContent;
