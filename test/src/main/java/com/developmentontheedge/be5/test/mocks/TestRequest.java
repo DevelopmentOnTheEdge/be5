@@ -37,7 +37,7 @@ public class TestRequest implements Request
     @Override
     public String getRequestUri()
     {
-        return null;
+        return "";
     }
 
     @Override
