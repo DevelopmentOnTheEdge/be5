@@ -15,6 +15,7 @@ import java.util.Map;
 public class TestRequest implements Request
 {
     private Session session = null;
+    public static String requestUri = "";
 
     @Inject
     public TestRequest(Session session)
@@ -37,7 +38,7 @@ public class TestRequest implements Request
     @Override
     public String getRequestUri()
     {
-        return "";
+        return requestUri;
     }
 
     @Override
