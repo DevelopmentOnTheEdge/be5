@@ -62,7 +62,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
 //        def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
 //                new OperationContext([] as String[], "All records", operationParams))
 //
-//        return executeOperation(operation, presetValues)
+//        return executeOperation(operation, values)
         def dps = new GDynamicPropertySetSupport()
 
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testtableAdmin"), operationParams, presetValues)

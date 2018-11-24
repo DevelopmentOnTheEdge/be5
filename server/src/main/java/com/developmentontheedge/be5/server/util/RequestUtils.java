@@ -14,6 +14,11 @@ import java.nio.charset.StandardCharsets;
 
 public class RequestUtils
 {
+    public static void sendFile(Response res, String filename, String contentType, InputStream in)
+    {
+        sendFile(res, false, filename, contentType, StandardCharsets.UTF_8.name(), in);
+    }
+
     public static void sendFile(Response res, boolean download, String filename, String contentType, String charset, InputStream in)
     {
         HttpServletResponse response = res.getRawResponse();

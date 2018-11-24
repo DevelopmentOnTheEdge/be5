@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
+import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
 import com.developmentontheedge.be5.server.services.MailService;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.services.impl.MailServiceImpl;
@@ -64,6 +65,7 @@ public class ServerModule extends ServletModule
         serve("/api/languageSelector*").with(LanguageSelectorController.class);
         serve("/api/queryBuilder").with(QueryBuilderController.class);
         serve("/api/download").with(DownloadController.class);
+        serve("/api/downloadOperation").with(DownloadOperationController.class);
 
         bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
