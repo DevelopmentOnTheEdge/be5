@@ -7,14 +7,24 @@ import javax.inject.Inject;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static org.mockito.Mockito.mock;
 
 
 public class TestRequest implements Request
 {
     private Session session = null;
+
+    public static Request mock = mock(Request.class);
+
+    public static void newMock()
+    {
+        mock = mock(Request.class);
+    }
 
     @Inject
     public TestRequest(Session session)
@@ -37,102 +47,102 @@ public class TestRequest implements Request
     @Override
     public String getRequestUri()
     {
-        return "";
+        return mock.getRequestUri();
     }
 
     @Override
     public String getRemoteAddr()
     {
-        return null;
+        return mock.getRemoteAddr();
     }
 
     @Override
     public HttpServletRequest getRawRequest()
     {
-        return null;
+        return mock.getRawRequest();
     }
 
     @Override
     public HttpSession getRawSession()
     {
-        return null;
+        return mock.getRawSession();
     }
 
     @Override
     public String getServerUrl()
     {
-        return null;
+        return mock.getServerUrl();
     }
 
     @Override
     public String getServerUrlWithContext()
     {
-        return null;
+        return mock.getServerUrlWithContext();
     }
 
     @Override
     public String getContextPath()
     {
-        return null;
+        return mock.getContextPath();
     }
 
     @Override
     public String getBody()
     {
-        return null;
+        return mock.getBody();
     }
 
     @Override
     public Locale getLocale()
     {
-        return null;
+        return mock.getLocale();
     }
 
     @Override
-    public ServletInputStream getInputStream()
+    public ServletInputStream getInputStream() throws IOException
     {
-        return null;
+        return mock.getInputStream();
     }
 
     @Override
     public Map<String, String[]> getParameters()
     {
-        return null;
+        return mock.getParameters();
     }
 
     @Override
     public String get(String parameter)
     {
-        return null;
+        return mock.get(parameter);
     }
 
     @Override
     public List<String> getList(String parameter)
     {
-        return null;
+        return mock.getList(parameter);
     }
 
     @Override
     public String[] getParameterValues(String name)
     {
-        return new String[0];
+        return mock.getParameterValues(name);
     }
 
     @Override
     public String getSessionId()
     {
-        return null;
+        return session.getSessionId();
     }
 
     @Override
     public Object getAttribute(String name)
     {
-        return null;
+        return session.get(name);
     }
 
     @Override
     public void setAttribute(String name, Object value)
     {
-
+        session.set(name, value);
     }
 }
