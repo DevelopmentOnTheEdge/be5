@@ -11,7 +11,7 @@ public interface OperationBuilder
 
     OperationBuilder setRecords(Object[] records);
 
-    OperationBuilder setPresetValues(Map<String, ?> presetValues);
+    OperationBuilder setValues(Map<String, ?> values);
 
     OperationBuilder setOperationParams(Map<String, Object> operationParams);
 

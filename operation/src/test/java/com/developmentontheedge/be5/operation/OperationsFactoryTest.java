@@ -86,7 +86,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     private void executeAndCheck(String value)
     {
         Operation operation = operations.get("testtableAdmin", "ErrorProcessing")
-                .setPresetValues(Collections.singletonMap("name", value))
+                .setValues(Collections.singletonMap("name", value))
                 .execute();
 
         assertEquals(OperationStatus.ERROR, operation.getStatus());
@@ -96,7 +96,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void executeOk()
     {
         Operation operation = operations.get("testtableAdmin", "ErrorProcessing")
-                .setPresetValues(Collections.emptyMap())
+                .setValues(Collections.emptyMap())
                 .execute();
 
         assertEquals(OperationStatus.FINISHED, operation.getStatus());
@@ -106,7 +106,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void testBuilder()
     {
         Object generate = operations.get("testtableAdmin", "ErrorProcessing")
-                .setPresetValues(Collections.emptyMap())
+                .setValues(Collections.emptyMap())
                 .setQueryName("All records")
                 .setRecords(new Long[]{1L})
                 .setOperationParams(Collections.singletonMap(FrontendConstants.SEARCH_PARAM, false))

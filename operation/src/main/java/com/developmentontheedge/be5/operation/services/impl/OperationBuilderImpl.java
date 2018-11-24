@@ -30,7 +30,7 @@ public class OperationBuilderImpl implements OperationBuilder
     private String queryName;
     private String operationName;
 
-    private Map<String, ?> presetValues = Collections.emptyMap();
+    private Map<String, ?> values = Collections.emptyMap();
     private Map<String, Object> operationParams = Collections.emptyMap();
 
     OperationBuilderImpl(Meta meta, OperationExecutor operationExecutor, String entityName, String operationName)
@@ -57,9 +57,9 @@ public class OperationBuilderImpl implements OperationBuilder
     }
 
     @Override
-    public OperationBuilder setPresetValues(Map<String, ?> presetValues)
+    public OperationBuilder setValues(Map<String, ?> values)
     {
-        this.presetValues = presetValues;
+        this.values = values;
         return this;
     }
 
@@ -76,7 +76,7 @@ public class OperationBuilderImpl implements OperationBuilder
         Operation operation = operationExecutor.create(getOperationInfo(), getOperationContext());
         operation.setResult(OperationResult.generate());
 
-        return operationExecutor.generate(operation, (Map<String, Object>) presetValues);
+        return operationExecutor.generate(operation, (Map<String, Object>) values);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class OperationBuilderImpl implements OperationBuilder
         Operation operation = operationExecutor.create(getOperationInfo(), getOperationContext());
         operation.setResult(OperationResult.execute());
 
-        operationExecutor.execute(operation, (Map<String, Object>) presetValues);
+        operationExecutor.execute(operation, (Map<String, Object>) values);
         if (operation.getStatus() == OperationStatus.ERROR)
         {
             throw (RuntimeException) operation.getResult().getDetails();
