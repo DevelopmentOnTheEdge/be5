@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.server.FrontendActions;
 
 public class SilentDeleteOperation extends DeleteOperation
 {
@@ -8,6 +9,6 @@ public class SilentDeleteOperation extends DeleteOperation
     {
         super.invoke(parameters);
 
-        redirectToTable(getInfo().getEntityName(), getContext().getQueryName());
+        setResultFinished(FrontendActions.goBackOrRedirect(getBackUrl()));
     }
 }

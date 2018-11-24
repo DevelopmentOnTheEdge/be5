@@ -42,6 +42,11 @@ public interface FrontendActions
         return GO_BACK_ACTION;
     }
 
+    static FrontendAction goBackOrRedirect(String url)
+    {
+        return new FrontendAction(GO_BACK, url);
+    }
+
     static FrontendAction redirect(String url)
     {
         Objects.requireNonNull(url);

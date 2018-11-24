@@ -139,7 +139,7 @@ public abstract class BaseOperationSupport implements Operation
     public void redirectThisOperation()
     {
         String url = new HashUrl(FrontendConstants.FORM_ACTION,
-                getInfo().getEntityName(), getContext().getQueryName(), getInfo().getName())
+                info.getEntityName(), context.getQueryName(), info.getName())
                 .named(getRedirectParams()).toString();
         setResult(OperationResult.redirect(url));
     }
@@ -151,8 +151,7 @@ public abstract class BaseOperationSupport implements Operation
 
     public void redirectToTable(String entityName, String queryName, Map<String, Object> params)
     {
-        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName)
-                .named(FilterUtil.getOperationParamsWithoutFilter(params)).toString()));
+        setResult(OperationResult.redirect(getTableUrl(entityName, queryName, params)));
     }
 
     public void redirectToTable(String entityName, String queryName)
@@ -165,11 +164,22 @@ public abstract class BaseOperationSupport implements Operation
         redirectToTable(query.getEntity().getName(), query.getName(), params);
     }
 
+    public String getBackUrl()
+    {
+        return getTableUrl(info.getEntityName(), context.getQueryName(), context.getOperationParams());
+    }
+
+    private String getTableUrl(String entityName, String queryName, Map<String, Object> params)
+    {
+        return new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName)
+                .named(FilterUtil.getOperationParamsWithoutFilter(params)).toString();
+    }
+
     public HashUrl getUrlForNewRecordId(Object newID)
     {
         Map<String, Object> params = getRedirectParams();
         params.put(OperationConstants.SELECTED_ROWS, newID.toString());
-        return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
+        return new HashUrl(FrontendConstants.FORM_ACTION, info.getEntityName(), context.getQueryName(), info.getName())
                 .named(params);
     }
 
