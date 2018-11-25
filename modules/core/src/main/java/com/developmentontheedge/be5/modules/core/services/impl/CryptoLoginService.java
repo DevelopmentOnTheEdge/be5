@@ -22,14 +22,14 @@ public class CryptoLoginService extends LoginServiceImpl
     }
 
     @Override
-    public boolean loginCheck(String username, String rawPassword)
+    public boolean loginCheck(String username, char[] rawPassword)
     {
         Objects.requireNonNull(username);
         Objects.requireNonNull(rawPassword);
-        String storedPassword = db.oneString("SELECT user_pass WHERE user_name = ?", username);
+        String storedPassword = db.oneString("SELECT user_pass FROM users WHERE user_name = ?", username);
         try
         {
-            return passwordEncoder.check(rawPassword.toCharArray(), storedPassword);
+            return passwordEncoder.check(rawPassword, storedPassword);
         }
         catch (Exception e)
         {
@@ -38,12 +38,12 @@ public class CryptoLoginService extends LoginServiceImpl
     }
 
     @Override
-    public String finalPassword(String password)
+    public String finalPassword(char[] rawPassword)
     {
-        Objects.requireNonNull(password);
+        Objects.requireNonNull(rawPassword);
         try
         {
-            return passwordEncoder.encode(password.toCharArray());
+            return passwordEncoder.encode(rawPassword);
         }
         catch (Exception e)
         {

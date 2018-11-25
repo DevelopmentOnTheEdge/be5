@@ -44,6 +44,17 @@ users:
       type: static
       roles: Guest
       value: login
+  - EncodePasswords:
+      invisible: true
+      type: 1D_unknown
+      roles: SystemDeveloper
+      operations:
+      - EncodePasswords
+      code: |-
+        SELECT
+          u.user_name AS "user_name",
+          u.user_pass AS "user_pass"
+        FROM users u
   operations:
   - Delete:
       records: 2
@@ -60,6 +71,9 @@ users:
       records: 1
       roles: [Administrator]
       code: com.developmentontheedge.be5.modules.core.operations.users.EditRoles
+  - EncodePasswords:
+      roles: SystemDeveloper
+      code: com.developmentontheedge.be5.modules.core.operations.users.EncodePasswords
   - Filter:
       roles: [Administrator]
       layout: '{"type":"inlineMiniForm", "bsSize":"sm"}'

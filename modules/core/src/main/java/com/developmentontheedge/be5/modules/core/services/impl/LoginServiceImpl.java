@@ -72,16 +72,18 @@ public class LoginServiceImpl implements LoginService
         );
     }
 
-    public boolean loginCheck(String username, String password)
+    public boolean loginCheck(String username, char[] rawPassword)
     {
         Objects.requireNonNull(username);
-        Objects.requireNonNull(password);
-        return db.countFrom("users WHERE user_name = ? AND user_pass = ?", username, password) == 1L;
+        Objects.requireNonNull(rawPassword);
+        return db.countFrom("users WHERE user_name = ? AND user_pass = ?",
+                username, new String(rawPassword)) == 1L;
     }
 
-    public String finalPassword(String password)
+    @Override
+    public String finalPassword(char[] password)
     {
-        return password;
+        return new String(password);
     }
 
     @Override

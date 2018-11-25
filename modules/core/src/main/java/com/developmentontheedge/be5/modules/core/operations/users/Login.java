@@ -39,7 +39,7 @@ public class Login extends GOperationSupport
     public void invoke(Object parameters) throws Exception
     {
         String username = params.getValueAsString("user_name");
-        if (loginService.loginCheck(username, params.getValueAsString("user_pass")))
+        if (loginService.loginCheck(username, params.getValueAsString("user_pass").toCharArray()))
         {
             loginService.saveUser(username, request);
             postLogin(parameters);

@@ -21,7 +21,8 @@ public class Pbkdf2PasswordEncoder
     public boolean check(char[] rawPassword, String stored) throws Exception
     {
         String[] saltAndHash = stored.split("\\$");
-        if (saltAndHash.length != 2) {
+        if (saltAndHash.length != 2)
+        {
             throw new IllegalStateException("The stored password must have the form 'salt$hash'");
         }
         String hashOfInput = hash(rawPassword, Base64.getDecoder().decode(saltAndHash[0]));

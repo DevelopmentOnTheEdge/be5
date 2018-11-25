@@ -10,7 +10,9 @@ public interface LoginService
 {
     UserInfoModel getUserInfoModel();
 
-    boolean loginCheck(String username, String password);
+    boolean loginCheck(String username, char[] password);
+
+    String finalPassword(char[] password);
 
     void saveUser(String username, Request req);
 
