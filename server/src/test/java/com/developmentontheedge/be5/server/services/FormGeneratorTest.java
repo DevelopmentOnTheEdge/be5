@@ -67,7 +67,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         ResourceData result = formGenerator.execute("testtable", "All records", "Insert", Collections.emptyMap(), map);
         assertEquals(OPERATION_RESULT, result.getType());
-        assertEquals(OperationStatus.REDIRECTED, ((OperationResultPresentation)result.getAttributes())
+        assertEquals(OperationStatus.FINISHED, ((OperationResultPresentation)result.getAttributes())
                 .getOperationResult().getStatus());
         verify(Be5EventTestLogger.mock).operationCompleted(any(), any(), anyLong(), anyLong());
     }

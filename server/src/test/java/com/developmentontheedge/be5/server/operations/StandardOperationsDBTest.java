@@ -4,6 +4,9 @@ import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.server.FrontendActions;
+import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
@@ -29,8 +32,9 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     public void insertOperation()
     {
         InsertOperation operation = (InsertOperation)createOperation("testtable", "All records", "Insert", "");
-        assertEquals(OperationResult.redirect("table/testtable/All records"),
-                executeOperation(operation, "{'name':'test2','value':'2'}").getSecond());
+        OperationResult result = executeOperation(operation, "{'name':'test2','value':'2'}").getSecond();
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
         Long lastInsertID = (Long)operation.getLastInsertID();
         RecordModel<Object> record = database.getEntity("testtable").get(lastInsertID);
@@ -61,11 +65,11 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     @Test
     public void editInvoke()
     {
-        OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),
+        OperationResult result = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),
                 "{'name':'EditName','value':123}").getSecond();
 
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-                operationResult);
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
         assertEquals("EditName,123",
                 db.select("SELECT name, value FROM testtableAdmin WHERE id = ?", new ConcatColumnsParser(), id));

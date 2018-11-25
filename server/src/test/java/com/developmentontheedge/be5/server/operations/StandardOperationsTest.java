@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.operations;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -67,9 +68,11 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         //OperationResult execute = executeOperation(req);
 
-        assertEquals(OperationResult.redirect("table/testtable/All records"),
-                executeOperation("testtable", "All records", "Insert", "",
-                        "{'name':'test','value':'1'}").getSecond());
+        OperationResult result = executeOperation("testtable", "All records", "Insert", "",
+                "{'name':'test','value':'1'}").getSecond();
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
+
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
                 "VALUES (?, ?)", "test", "1");
@@ -112,13 +115,13 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvoke()
     {
-        OperationResult operationResult = executeEditWithParams("{'name':'EditName','value':123}");
+        OperationResult result = executeEditWithParams("{'name':'EditName','value':123}");
 
         verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", 123, 12L);
 
-        assertEquals(OperationStatus.REDIRECTED, operationResult.getStatus());
-        assertEquals("table/testtableAdmin/All records", operationResult.getDetails());
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
     }
 
     @Test
@@ -149,14 +152,14 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         Operation operation = createOperation("testtableAdmin", "All records", "Edit", "12");
 
-        OperationResult operationResult = executeOperation(operation,
+        OperationResult result = executeOperation(operation,
                 params).getSecond();
 
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-                operationResult);
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
 
-        return operationResult;
+        return result;
     }
 }
