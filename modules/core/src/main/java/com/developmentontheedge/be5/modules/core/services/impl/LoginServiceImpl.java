@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -25,14 +24,14 @@ public class LoginServiceImpl implements LoginService
 {
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-    private final DbService db;
+    protected final DbService db;
     private final UserHelper userHelper;
     private final MenuHelper menuHelper;
     private final RoleHelper roleHelper;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public LoginServiceImpl(DbService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper,
+    public LoginServiceImpl(DbService db, UserHelper userHelper, MenuHelper menuHelper,
                             RoleHelper roleHelper, UserInfoProvider userInfoProvider)
     {
         this.db = db;
@@ -78,6 +77,11 @@ public class LoginServiceImpl implements LoginService
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
         return db.countFrom("users WHERE user_name = ? AND user_pass = ?", username, password) == 1L;
+    }
+
+    public String finalPassword(String password)
+    {
+        return password;
     }
 
     @Override
