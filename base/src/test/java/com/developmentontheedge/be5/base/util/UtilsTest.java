@@ -110,4 +110,14 @@ public class UtilsTest
 
         assertArrayEquals(new String[]{"1", "2", "3"}, Utils.changeTypes(new Long[]{1L, 2L, 3L}, String.class));
     }
+
+    @Test
+    public void translit()
+    {
+        assertEquals("Incorrect transliteration", "russkij tekst", Utils.translit("русский текст"));
+        assertEquals( "Incorrect transliteration",
+                "abwgdejozijklmnoprstufhcchshshh_yxejuq", Utils.translit( "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" ) );
+        assertEquals( "Incorrect transliteration",
+                "ABWGDEJOZIJKLMNOPRSTUFHCCHSHSHH_YXEJUQ", Utils.translit( "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" ) );
+    }
 }

@@ -688,9 +688,6 @@ public class Utils
 
     /**
      * Rewrites specified russian string with translit. Russian string is attempting to be in "KOI8-R" encoding.
-     *
-     * @param val
-     * @return
      */
     public static String translit(String val)
     {
