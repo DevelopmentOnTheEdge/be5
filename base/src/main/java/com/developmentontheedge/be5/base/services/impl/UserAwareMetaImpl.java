@@ -154,6 +154,12 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
+    public String getLocalizedInfoMessage(String message)
+    {
+        return localizations.get(getLanguage(), "messages.l10n", "info", message).orElse(message);
+    }
+
+    @Override
     public QuerySettings getQuerySettings(Query query)
     {
         List<String> currentRoles = userInfoProvider.get().getCurrentRoles();

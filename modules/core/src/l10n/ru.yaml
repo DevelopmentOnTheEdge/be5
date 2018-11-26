@@ -32,6 +32,9 @@ ru:
       - Please enter a valid date.: Здесь должна быть корректная дата.
       - Please enter a valid time.: Здесь должно быть указано время (часы:минуты:секунды).
       - Must be monetary amount: Здесь должна быть денежная сумма.
+    - topics: info
+      entries:
+      - Wait for the download to start.: Ожидайте начала загрузки.
   - _homepage_:
     - topics: displayName
       entries:

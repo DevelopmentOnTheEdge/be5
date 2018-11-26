@@ -46,6 +46,8 @@ public interface UserAwareMeta
 
     String getLocalizedExceptionMessage(String message);
 
+    String getLocalizedInfoMessage(String message);
+
     /**
      * Returns a localized title of a column - be4 format.
      */
