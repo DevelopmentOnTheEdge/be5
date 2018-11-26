@@ -20,7 +20,10 @@ ru:
       - 'Operation ''$1.$3'' not assigned to query: ''$2''': 'Операция ''$1.$3'' не доступна для представления ''$2'''
       - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
-      - Access to these records is denied.: 'Доступ к этим записям запрещен.'
+      - Current password not correct: Текущий пароль не правильный
+      - New passwords not equals.: Новые пароли не равны
+      - 'The minimum password length is $1 characters': 'Минимальная длина пароля $1 знаков'
+      - Access to these records is denied.: Доступ к этим записям запрещен.
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.
@@ -84,10 +87,17 @@ ru:
     - topics: operationName
       entries:
       - Login: Авторизация
+      - Change password: Сменить пароль
     - topics: '@AllQueries'
       entries:
       - user_name: Логин
       - user_pass: Пароль
+    - topics:
+      - Insert
+      entries:
+      - Current password: Текущий пароль
+      - New password: Новый пароль
+      - Confirm new password: Подтвердите новый пароль
   - default:
     - topics: operationName
       entries:

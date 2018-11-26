@@ -31,6 +31,7 @@ users:
       - Filter
       - Login
       - Logout
+      - Change password
       code: |-
         SELECT
           u.user_name AS "___ID",
@@ -81,6 +82,9 @@ users:
   - Login:
       roles: Guest
       code: com.developmentontheedge.be5.modules.core.operations.users.Login
+  - Change password:
+      roles: '@AllRolesExceptGuest'
+      code: com.developmentontheedge.be5.modules.core.operations.users.ChangePassword
   - Logout:
       roles: '@AllRoles'
       code: com.developmentontheedge.be5.modules.core.operations.users.Logout
