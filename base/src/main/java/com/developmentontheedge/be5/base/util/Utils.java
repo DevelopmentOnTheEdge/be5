@@ -7,6 +7,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -664,7 +665,7 @@ public class Utils
     /**
      * Generates random password, containing 8 symbols from specified symbols array.
      *
-     * @param pool     symbols to use in password
+     * @param pool symbols to use in password
      * @return generated password
      */
     public static char[] newRandomPassword(String pool)
@@ -682,6 +683,63 @@ public class Utils
         catch (NoSuchAlgorithmException e)
         {
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Rewrites specified russian string with translit. Russian string is attempting to be in "KOI8-R" encoding.
+     *
+     * @param val
+     * @return
+     */
+    public static String translit(String val)
+    {
+        if (val == null)
+        {
+            return null;
+        }
+        try
+        {
+            val = val.replace("\u2116", "N");
+            byte[] bytes = val.getBytes("KOI8-R");
+            for (int i = 0; i < bytes.length; i++)
+            {
+                byte old = bytes[i];
+                bytes[i] &= 0x7f;
+                if (old == bytes[i])
+                {
+                    continue;
+                }
+
+                // inverse case since KOI8-R has it inverted
+                if (bytes[i] >= 0x41 && bytes[i] <= 0x5A)
+                {
+                    bytes[i] += 0x20;
+                }
+                else if (bytes[i] >= 0x61 && bytes[i] <= 0x7A)
+                {
+                    bytes[i] -= 0x20;
+                }
+            }
+            String ret = new String(bytes);
+            ret = ret.replace('\\', 'e').replace("\"", "'")
+                    .replace("~", "CH")
+                    .replace("{", "SH")
+                    .replace("}", "SHH")
+                    .replace("", "_")
+                    .replace("|", "E")
+                    .replace("`", "JU")
+                    .replace("#v", "jo")
+                    .replace("^", "ch")
+                    .replace("[", "sh")
+                    .replace("]", "shh")
+                    .replace("@", "ju")
+                    .replace("3V", "JO");
+            return ret;
+        }
+        catch (UnsupportedEncodingException exc)
+        {
+            throw new RuntimeException(exc);
         }
     }
 }
