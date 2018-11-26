@@ -10,6 +10,8 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -653,30 +654,34 @@ public class Utils
     /**
      * Generates random password, containing 8 symbols using english alphabet and numbers.
      *
-     * @param userName user name
      * @return generated password
      */
-    public static String newRandomPassword(String userName)
+    public static char[] newRandomPassword()
     {
-        return newRandomPassword(userName, "abcdefghijklmnopqrstuvwxyz0123456789");
+        return newRandomPassword("abcdefghijklmnopqrstuvwxyz0123456789");
     }
 
     /**
      * Generates random password, containing 8 symbols from specified symbols array.
      *
-     * @param userName user name
      * @param pool     symbols to use in password
      * @return generated password
      */
-    public static String newRandomPassword(String userName, String pool)
+    public static char[] newRandomPassword(String pool)
     {
-        StringBuffer pass = new StringBuffer();
-        Random random = userName == null ? new Random() : new Random(System.currentTimeMillis() + userName.hashCode());
-        for (int i = 0; i < 8; i++)
+        try
         {
-            pass.append(pool.charAt(random.nextInt(pool.length())));
+            SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+            char[] pass = new char[8];
+            for (int i = 0; i < 8; i++)
+            {
+                pass[i] = pool.charAt(sr.nextInt(pool.length()));
+            }
+            return pass;
         }
-        return pass.toString();
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new IllegalArgumentException(e);
+        }
     }
-
 }
