@@ -9,6 +9,13 @@ public class SilentDeleteOperation extends DeleteOperation
     {
         super.invoke(parameters);
 
-        setResultFinished(FrontendActions.goBackOrRedirect(getBackUrl()));
+        if (parameters == null)
+        {
+            setResultFinished(FrontendActions.refreshDocument());
+        }
+        else
+        {
+            setResultFinished(FrontendActions.goBackOrRedirect(getBackUrl()));
+        }
     }
 }

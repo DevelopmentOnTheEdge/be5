@@ -22,8 +22,10 @@ public interface FrontendActions
     String SET_URL = "SET_URL";
     String REDIRECT = "REDIRECT";
     String DOWNLOAD_OPERATION = "DOWNLOAD_OPERATION";
+    String REFRESH_DOCUMENT = "REFRESH_DOCUMENT";
 
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
+    FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
 
     static FrontendAction setUrl(String url)
     {
@@ -45,6 +47,11 @@ public interface FrontendActions
     static FrontendAction goBackOrRedirect(String url)
     {
         return new FrontendAction(GO_BACK, url);
+    }
+
+    static FrontendAction refreshDocument()
+    {
+        return REFRESH_DOCUMENT_ACTION;
     }
 
     static FrontendAction redirect(String url)
