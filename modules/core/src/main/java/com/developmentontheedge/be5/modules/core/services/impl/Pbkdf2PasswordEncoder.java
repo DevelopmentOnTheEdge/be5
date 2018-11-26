@@ -15,7 +15,8 @@ public class Pbkdf2PasswordEncoder
     public String encode(char[] rawPassword) throws Exception
     {
         byte[] salt = getSalt();
-        return Base64.getEncoder().encodeToString(salt) + "$" + hash(rawPassword, salt);
+        return Base64.getEncoder().encodeToString(salt) + "$" +
+                Base64.getEncoder().encodeToString(hash(rawPassword, salt));
     }
 
     public boolean check(char[] rawPassword, String stored) throws Exception
@@ -25,18 +26,19 @@ public class Pbkdf2PasswordEncoder
         {
             throw new IllegalStateException("The stored password must have the form 'salt$hash'");
         }
-        String hashOfInput = hash(rawPassword, Base64.getDecoder().decode(saltAndHash[0]));
-        return hashOfInput.equals(saltAndHash[1]);
+        byte[] salt = Base64.getDecoder().decode(saltAndHash[0]);
+        byte[] hash = Base64.getDecoder().decode(saltAndHash[1]);
+        byte[] hashOfInput = hash(rawPassword, salt);
+        return slowEquals(hashOfInput, hash);
     }
 
-    private String hash(char[] rawPassword, byte[] salt) throws Exception
+    private byte[] hash(char[] rawPassword, byte[] salt) throws Exception
     {
         if (rawPassword.length == 0)
             throw new IllegalArgumentException("Empty passwords are not supported.");
         SecretKeyFactory f = SecretKeyFactory.getInstance(ALGORITHM);
         PBEKeySpec spec = new PBEKeySpec(rawPassword, salt, iterations, desiredKeyLen);
-        byte[] encoded = f.generateSecret(spec).getEncoded();
-        return Base64.getEncoder().encodeToString(encoded);
+        return f.generateSecret(spec).getEncoded();
     }
 
     private static byte[] getSalt() throws NoSuchAlgorithmException
@@ -45,5 +47,15 @@ public class Pbkdf2PasswordEncoder
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
+    }
+
+    private static boolean slowEquals(byte[] a, byte[] b)
+    {
+        int diff = a.length ^ b.length;
+        for (int i = 0; i < a.length && i < b.length; i++)
+        {
+            diff |= a[i] ^ b[i];
+        }
+        return diff == 0;
     }
 }
