@@ -14,6 +14,8 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
                 getInfo().getEntityName(), context.getQueryName(), getInfo().getName(),
                 context.getOperationParams(), parameters
         );
+        //String message = userAwareMeta.getLocalizedInfoMessage("Wait for the download to start.");
+        //todo after add alertMessageAction
         if (parameters == null)
         {
             setResultFinished(downloadOperationAction);
