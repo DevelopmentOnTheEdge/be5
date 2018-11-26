@@ -1,11 +1,13 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.databasemodel.RecordModel;
+import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.impl.Pbkdf2PasswordEncoder;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.TransactionalOperation;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
@@ -24,17 +26,18 @@ public class EncodePasswords extends OperationSupport implements TransactionalOp
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        if (loginService instanceof Pbkdf2PasswordEncoder)
-        {
-            setResult(OperationResult.error("Pbkdf2PasswordEncoder already used"));
-        }
         dpsHelper.addLabel(params, "Used: " + loginService.getClass().getSimpleName());
-        return params;
+        params.add(new DynamicProperty("input", "Please input 'encode password'", String.class));
+        return DpsUtils.setValues(params, presetValues);
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
+        if (!params.getValueAsString("input").equals("encode password"))
+        {
+            setResult(OperationResult.error("Please input 'encode password'"));
+        }
         List<RecordModel<String>> users = database.<String>getEntity("users").toList();
         Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
         for (RecordModel<String> user : users)
