@@ -207,6 +207,6 @@ public class Be5Exception extends RuntimeException
     public Level getLogLevel()
     {
         if (getCode().isInternal()) return Level.SEVERE;
-        else return Level.FINE;
+        else return Level.INFO;
     }
 }
