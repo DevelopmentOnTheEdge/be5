@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.FilterUtil;
+import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -102,6 +103,14 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
+        if (modelElements instanceof Operation &&
+                LayoutUtils.getLayoutObject((Operation) modelElements).get("properties") != null)
+        {
+            String properties = (String) LayoutUtils.getLayoutObject((Operation) modelElements).get("properties");
+            List<String> columns = Arrays.asList(properties.split(","));
+            return addDpForColumns(dps, modelElements, columns, operationParams);
+        }
+
         List<String> excludedColumns = Collections.emptyList();
         ColumnDef column = meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey());
         if (column != null && column.isAutoIncrement())
