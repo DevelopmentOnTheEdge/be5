@@ -742,9 +742,9 @@ public class Utils
     /**
      * Replace all occurrences of bracketed by the specified opener and closer expressions for the specified replacement string.
      *
-     * @param html text for substitution
-     * @param opener open bracket
-     * @param closer close bracket
+     * @param html        text for substitution
+     * @param opener      open bracket
+     * @param closer      close bracket
      * @param replacement replacement string, can be null
      * @return prepared string
      */
@@ -779,8 +779,8 @@ public class Utils
         return clearHtml.toString();
     }
 
-    private static Map<String, String> entitiesConversion = new LinkedHashMap<String, String>();
-    private static Map<String, String> entitiesBackwardConversion = new LinkedHashMap<String, String>();
+    private static Map<String, String> entitiesConversion = new LinkedHashMap<>();
+    private static Map<String, String> entitiesBackwardConversion = new LinkedHashMap<>();
 
     static
     {
@@ -796,11 +796,10 @@ public class Utils
                         {"&laquo;", "\u00AB"},
                         {"&raquo;", "\u00BB"},
                 };
-        for (int i = 0; i < convTable.length; i++)
+        for (String[] sArr : convTable)
         {
-            String[] sArr = convTable[ i ];
-            entitiesConversion.put(sArr[ 0 ], sArr[ 1 ]);
-            entitiesBackwardConversion.put(sArr[ 1 ], sArr[ 0 ]);
+            entitiesConversion.put(sArr[0], sArr[1]);
+            entitiesBackwardConversion.put(sArr[1], sArr[0]);
         }
         entitiesBackwardConversion.remove(" ");
     }
@@ -818,27 +817,7 @@ public class Utils
      */
     public static String replaceXmlEntities(String xml)
     {
-        if (xml == null)
-        {
-            return null;
-        }
-
-        StringBuilder text = new StringBuilder(xml);
-
-        for (Map.Entry<String, String> entry : entitiesConversion.entrySet())
-        {
-            String repl = entry.getKey();
-            String replTo = entry.getValue();
-            int replLength = repl.length();
-            int replToLength = replTo.length();
-            int pos = text.indexOf(repl);
-            while (pos != -1)
-            {
-                text.replace(pos, pos + replLength, replTo);
-                pos = text.indexOf(repl, pos + replToLength);
-            }
-        }
-        return text.toString();
+        return replaceXmlEntities(xml, entitiesConversion);
     }
 
     /**
@@ -848,19 +827,22 @@ public class Utils
      * ">" is replacement for "&gt;"
      * "&" is replacement for "&amp;"
      *
-     * @param text text for replacing
+     * @param inText text for replacing
      * @return prepared string
      */
     public static String safeXML(String inText)
     {
-        if (inText == null)
+        return replaceXmlEntities(inText, entitiesBackwardConversion);
+    }
+
+    private static String replaceXmlEntities(String xml, Map<String, String> replaceMap)
+    {
+        if (xml == null)
         {
             return null;
         }
-
-        StringBuilder text = new StringBuilder(inText);
-
-        for (Map.Entry<String, String> entry : entitiesBackwardConversion.entrySet())
+        StringBuilder text = new StringBuilder(xml);
+        for (Map.Entry<String, String> entry : replaceMap.entrySet())
         {
             String repl = entry.getKey();
             String replTo = entry.getValue();
@@ -875,5 +857,4 @@ public class Utils
         }
         return text.toString();
     }
-
 }

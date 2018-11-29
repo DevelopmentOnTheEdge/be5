@@ -120,4 +120,32 @@ public class UtilsTest
         assertEquals( "Incorrect transliteration",
                 "ABWGDEJOZIJKLMNOPRSTUFHCCHSHSHH_YXEJUQ", Utils.translit( "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" ) );
     }
+
+    @Test
+    public void testRemoveBracketed()
+    {
+        String from = "\"<Hi<!--Some removed text--> there!>\"";
+        String to = "\"<Hi there!>\"";
+        assertEquals( to, Utils.removeBracketed( from, "<!--", "-->", null ) );
+
+        from = "Обращения граждан<!--Reception-->";
+        to = "Обращения граждан";
+        assertEquals( to, Utils.removeBracketed( from, "<!--", "-->", null ) );
+    }
+
+    @Test
+    public void testSafeXML()
+    {
+        String from = "\"< & >\"";
+        String to = "&quot;&lt; &amp; &gt;&quot;";
+        assertEquals( to, Utils.safeXML( from ) );
+    }
+
+    @Test
+    public void testReplaceHTMLEntities()
+    {
+        String from = "&nbsp;&nbsp;&quot;&lt; &amp; &gt;&quot;";
+        String to = "  \"< & >\"";
+        assertEquals( to, Utils.replaceXmlEntities( from ) );
+    }
 }
