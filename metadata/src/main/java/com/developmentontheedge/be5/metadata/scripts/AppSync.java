@@ -192,7 +192,7 @@ public class AppSync extends ScriptSupport<AppSync>
             }
         }
 
-        logger.info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
+        logger.info("completed, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
     private void createEntities()
