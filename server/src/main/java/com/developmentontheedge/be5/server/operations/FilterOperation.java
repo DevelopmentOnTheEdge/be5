@@ -31,9 +31,8 @@ public class FilterOperation extends OperationSupport
 
     protected DynamicPropertySet getBaseParameters() throws Exception
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(), context.getOperationParams());
-        return dps;
+        return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
+                getInfo().getModel(), context.getOperationParams());
     }
 
     @Override
