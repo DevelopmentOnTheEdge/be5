@@ -1,9 +1,12 @@
 package com.developmentontheedge.be5.server.operations.support;
 
+import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.web.Response;
+
+import java.util.Map;
 
 public abstract class DownloadOperationSupport extends OperationSupport implements Operation
 {
@@ -16,7 +19,8 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
         );
         //String message = userAwareMeta.getLocalizedInfoMessage("Wait for the download to start.");
         //todo after add alertMessageAction
-        if (parameters == null)
+        Map<String, Object> layout = LayoutUtils.getLayoutObject(getInfo().getModel());
+        if (parameters == null || "modalForm".equals(layout.get("type")))
         {
             setResultFinished(downloadOperationAction);
         }
