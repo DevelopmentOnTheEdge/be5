@@ -15,15 +15,25 @@ import static com.developmentontheedge.be5.server.FrontendActions.updateParentDo
 public class FilterOperation extends OperationSupport
 {
     @Inject
-    private FilterHelper filterHelper;
+    protected FilterHelper filterHelper;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
+        DynamicPropertySet dps = getFilterParameters(presetValues);
+        return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams());
+    }
+
+    protected DynamicPropertySet getFilterParameters(Map<String, Object> presetValues) throws Exception
+    {
+        return getBaseParameters();
+    }
+
+    protected DynamicPropertySet getBaseParameters() throws Exception
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(), context.getOperationParams());
-
-        return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams());
+        return dps;
     }
 
     @Override
