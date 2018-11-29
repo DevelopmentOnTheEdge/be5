@@ -29,7 +29,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 public class Utils
 {
     private static final int DATE_PARSING_MODE_DATE = 0;
@@ -742,4 +741,142 @@ public class Utils
             throw new RuntimeException(exc);
         }
     }
+
+    /**
+     * Replace all occurrences of bracketed by the specified opener and closer expressions for the specified replacement string.
+     *
+     * @param html text for substitution
+     * @param opener open bracket
+     * @param closer close bracket
+     * @param replacement replacement string, can be null
+     * @return prepared string
+     */
+    public static String removeBracketed(String html, String opener, String closer, String replacement)
+    {
+        if (html == null)
+        {
+            return null;
+        }
+        StringBuilder clearHtml = new StringBuilder(html);
+        int start = 0;
+        int openerLength = opener.length();
+        int closerLength = closer.length();
+        int replacementLength = replacement != null ? replacement.length() : 0;
+        while ((start = clearHtml.indexOf(opener, start)) >= 0)
+        {
+            int end = clearHtml.indexOf(closer, start + openerLength);
+            if (end == -1)
+            {
+                break; // malformed html
+            }
+            if (replacement != null)
+            {
+                clearHtml.replace(start, end + closerLength, replacement);
+            }
+            else
+            {
+                clearHtml.delete(start, end + closerLength);
+            }
+            start = start + replacementLength;
+        }
+        return clearHtml.toString();
+    }
+
+    private static Map<String, String> entitiesConversion = new LinkedHashMap<String, String>();
+    private static Map<String, String> entitiesBackwardConversion = new LinkedHashMap<String, String>();
+
+    static
+    {
+        String[][] convTable = new String[][]
+                {
+                        {"&amp;", "&"},
+                        {"&quot;", "\""},
+                        {"&lt;", "<"},
+                        {"&gt;", ">"},
+                        {"&nbsp;", " "},
+                        {"&ndash;", "\u2013"},
+                        {"&mdash;", "\u2014"},
+                        {"&laquo;", "\u00AB"},
+                        {"&raquo;", "\u00BB"},
+                };
+        for (int i = 0; i < convTable.length; i++)
+        {
+            String[] sArr = convTable[ i ];
+            entitiesConversion.put(sArr[ 0 ], sArr[ 1 ]);
+            entitiesBackwardConversion.put(sArr[ 1 ], sArr[ 0 ]);
+        }
+        entitiesBackwardConversion.remove(" ");
+    }
+
+    /**
+     * Replaces in the string one expressions to another:
+     * "&quot;" is replacement for "\""
+     * "&lt;" is replacement for "<"
+     * "&gt;" is replacement for ">"
+     * "&nbsp;" is replacement for " "
+     * "&amp;" is replacement for "&"
+     *
+     * @param xml text for replacing
+     * @return prepared string
+     */
+    public static String replaceXmlEntities(String xml)
+    {
+        if (xml == null)
+        {
+            return null;
+        }
+
+        StringBuilder text = new StringBuilder(xml);
+
+        for (Map.Entry<String, String> entry : entitiesConversion.entrySet())
+        {
+            String repl = entry.getKey();
+            String replTo = entry.getValue();
+            int replLength = repl.length();
+            int replToLength = replTo.length();
+            int pos = text.indexOf(repl);
+            while (pos != -1)
+            {
+                text.replace(pos, pos + replLength, replTo);
+                pos = text.indexOf(repl, pos + replToLength);
+            }
+        }
+        return text.toString();
+    }
+
+    /**
+     * Replaces in the string one expressions to another:
+     * "\"" is replacement for "&quot;"
+     * "<" is replacement for "&lt;"
+     * ">" is replacement for "&gt;"
+     * "&" is replacement for "&amp;"
+     *
+     * @param text text for replacing
+     * @return prepared string
+     */
+    public static String safeXML(String inText)
+    {
+        if (inText == null)
+        {
+            return null;
+        }
+
+        StringBuilder text = new StringBuilder(inText);
+
+        for (Map.Entry<String, String> entry : entitiesBackwardConversion.entrySet())
+        {
+            String repl = entry.getKey();
+            String replTo = entry.getValue();
+            int replLength = repl.length();
+            int replToLength = replTo.length();
+            int pos = text.indexOf(repl);
+            while (pos != -1)
+            {
+                text.replace(pos, pos + replLength, replTo);
+                pos = text.indexOf(repl, pos + replToLength);
+            }
+        }
+        return text.toString();
+    }
+
 }
