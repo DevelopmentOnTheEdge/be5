@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.modules.core.operations.users
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
-import com.developmentontheedge.be5.modules.core.model.UserInfoModel
+import com.developmentontheedge.be5.server.FrontendActions
+import com.developmentontheedge.be5.server.model.UserInfoModel
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.web.Request
@@ -36,13 +36,13 @@ class LogoutTest extends CoreBe5ProjectDbMockTest
         assertEquals null, second.getMessage()
         def actions = (FrontendAction[]) second.getDetails()
 
-        assertEquals(CoreFrontendActions.UPDATE_USER_INFO, actions[0].getType())
+        assertEquals(FrontendActions.UPDATE_USER_INFO, actions[0].getType())
 
         def userInfoModel = (UserInfoModel) actions[0].getValue()
         assertEquals RoleType.ROLE_GUEST, userInfoModel.getUserName()
         assertEquals([RoleType.ROLE_GUEST], userInfoModel.getAvailableRoles())
 
-        assertEquals(CoreFrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
+        assertEquals(FrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
     }
 
 }

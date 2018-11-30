@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
+import com.developmentontheedge.be5.modules.core.services.RoleHelperImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.Be5EventDbLogger;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesServiceImpl;
@@ -35,7 +36,7 @@ public class CoreModule extends ServletModule
         serve("/api/quick*").with(SaveQuickColumnSetting.class);
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
-        bind(RoleHelper.class).in(Scopes.SINGLETON);
+        bind(RoleHelper.class).to(RoleHelperImpl.class).in(Scopes.SINGLETON);
         bind(CoreUtils.class).to(CoreUtilsImpl.class).in(Scopes.SINGLETON);
         bind(LoginService.class).to(LoginServiceImpl.class).in(Scopes.SINGLETON);
         bind(CategoriesService.class).to(CategoriesServiceImpl.class).in(Scopes.SINGLETON);

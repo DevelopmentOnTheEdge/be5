@@ -4,12 +4,12 @@ import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.Action;
+import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.web.Request;
 
 import javax.inject.Inject;

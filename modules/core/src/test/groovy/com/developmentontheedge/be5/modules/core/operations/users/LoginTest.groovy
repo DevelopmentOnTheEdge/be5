@@ -5,8 +5,8 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
-import com.developmentontheedge.be5.modules.core.model.UserInfoModel
+import com.developmentontheedge.be5.server.FrontendActions
+import com.developmentontheedge.be5.server.model.UserInfoModel
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
@@ -77,13 +77,13 @@ class LoginTest extends CoreBe5ProjectDbMockTest
 
         def actions = (FrontendAction[]) second.getDetails()
 
-        assertEquals(CoreFrontendActions.UPDATE_USER_INFO, actions[0].getType())
+        assertEquals(FrontendActions.UPDATE_USER_INFO, actions[0].getType())
 
         def userInfoModel = (UserInfoModel) actions[0].getValue()
         assertEquals TEST_USER, userInfoModel.getUserName()
         assertEquals(Arrays.asList("Test1", "Test2"), userInfoModel.getAvailableRoles())
 
-        assertEquals(CoreFrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
+        assertEquals(FrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
     }
 
     @Test

@@ -16,8 +16,8 @@ public class RoleHelperTest extends CoreBe5ProjectDbMockTest
     @Test
     public void parseRoles()
     {
-        assertEquals(Arrays.asList("1", "2"), roleHelper.parseRoles("('1','2')"));
-        assertEquals(Collections.emptyList(), roleHelper.parseRoles("()"));
-        assertEquals(Collections.emptyList(), roleHelper.parseRoles(null));
+        assertEquals(Arrays.asList("1", "2"), ((RoleHelperImpl)roleHelper).parseRoles("('1','2')"));
+        assertEquals(Collections.emptyList(), ((RoleHelperImpl)roleHelper).parseRoles("()"));
+        assertEquals(Collections.emptyList(), ((RoleHelperImpl)roleHelper).parseRoles(null));
     }
 }

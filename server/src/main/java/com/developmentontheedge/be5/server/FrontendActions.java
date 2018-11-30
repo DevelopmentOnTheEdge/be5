@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.server.model.FrontendAction;
+import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.beans.json.JsonFactory;
 
@@ -17,6 +18,10 @@ import static com.developmentontheedge.be5.server.RestApiConstants.VALUES;
 
 public interface FrontendActions
 {
+    String UPDATE_USER_INFO = "UPDATE_USER_INFO";
+    String OPEN_DEFAULT_ROUTE = "OPEN_DEFAULT_ROUTE";
+    FrontendAction OPEN_DEFAULT_ROUTE_ACTION = new FrontendAction(OPEN_DEFAULT_ROUTE, null);
+
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
     String GO_BACK = "GO_BACK";
     String SET_URL = "SET_URL";
@@ -26,6 +31,19 @@ public interface FrontendActions
 
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
     FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
+
+    static FrontendAction updateUserInfo(UserInfoModel userInfoModel)
+    {
+        return new FrontendAction(UPDATE_USER_INFO, userInfoModel);
+    }
+
+    static FrontendAction[] updateUserAndOpenDefaultRoute(UserInfoModel userInfoModel)
+    {
+        return new FrontendAction[]{
+                new FrontendAction(UPDATE_USER_INFO, userInfoModel),
+                OPEN_DEFAULT_ROUTE_ACTION
+        };
+    }
 
     static FrontendAction setUrl(String url)
     {

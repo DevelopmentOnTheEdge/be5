@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.model;
+package com.developmentontheedge.be5.server.model;
 
 import java.time.Instant;
 import java.util.List;

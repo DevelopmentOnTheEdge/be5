@@ -1,67 +1,12 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
-import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.MetadataUtils;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
 
-public class RoleHelper
+public interface RoleHelper
 {
-    private final DbService db;
-    private final CoreUtils coreUtils;
+    void updateCurrentRoles(String userName, List<String> roles);
 
-    @Inject
-    public RoleHelper(DbService db, CoreUtils coreUtils)
-    {
-        this.db = db;
-        this.coreUtils = coreUtils;
-    }
+    List<String> getCurrentRoles(String userName);
 
-    public void updateCurrentRoles(String userName, List<String> roles)
-    {
-        coreUtils.setUserSetting(userName, DatabaseConstants.CURRENT_ROLE_LIST,
-                MetadataUtils.toInClause(roles));
-    }
-
-    public List<String> getCurrentRoles(String userName)
-    {
-        String readCurrentRoles = coreUtils.getUserSetting(userName, DatabaseConstants.CURRENT_ROLE_LIST);
-        List<String> roles = parseRoles(readCurrentRoles);
-        if (roles.size() > 0)
-        {
-            return roles;
-        }
-        else
-        {
-            return getAvailableRoles(userName);
-        }
-    }
-
-    public List<String> getAvailableRoles(String userName)
-    {
-        return db.scalarList("SELECT role_name FROM user_roles WHERE user_name = ?", userName);
-    }
-
-    List<String> parseRoles(String roles)
-    {
-        TreeSet<String> rolesList = new TreeSet<>();
-        if (roles == null || "()".equals(roles))
-        {
-            return Collections.emptyList();
-        }
-        roles = roles.substring(1, roles.length() - 1); // drop starting and trailing '(' ')'
-        StringTokenizer st = new StringTokenizer(roles, ",");
-        while (st.hasMoreTokens())
-        {
-            rolesList.add(st.nextToken().trim().replaceAll("'", ""));
-        }
-        return new ArrayList<>(rolesList);
-    }
+    List<String> getAvailableRoles(String userName);
 }

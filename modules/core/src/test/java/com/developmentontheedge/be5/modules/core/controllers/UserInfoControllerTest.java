@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
-import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
+import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
