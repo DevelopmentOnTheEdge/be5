@@ -23,7 +23,7 @@ public class TableBuilderSupportTest extends ServerBe5ProjectTest
         TableModel tableModel = tableModelService.
                 getTableModel(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>());
 
-        assertEquals("[{'name':'testUser','title':'testUser'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
+        assertEquals("[{'name':'Guest','title':'Guest'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
 
         assertEquals("[{'cells':[{'content':'[Guest]','options':{}}],'id':'0'}]"
                 , oneQuotes(jsonb.toJson(tableModel.getRows())));

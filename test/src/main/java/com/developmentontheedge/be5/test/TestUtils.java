@@ -86,7 +86,7 @@ public abstract class TestUtils extends BaseTestUtils
 
     protected void initGuest()
     {
-        initUserWithRoles(RoleType.ROLE_GUEST);
+        initUserWithNameAndRoles(RoleType.ROLE_GUEST, RoleType.ROLE_GUEST);
     }
 
     protected Request getMockRequest(String requestUri)

@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.web.Request;
 
 import java.util.List;
@@ -8,8 +7,6 @@ import java.util.List;
 
 public interface LoginService
 {
-    UserInfoModel getUserInfoModel();
-
     boolean loginCheck(String username, char[] password);
 
     String finalPassword(char[] password);

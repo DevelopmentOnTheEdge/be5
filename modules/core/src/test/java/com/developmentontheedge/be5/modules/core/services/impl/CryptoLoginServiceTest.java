@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
-import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -13,13 +12,13 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CryptoLoginServiceTest extends CoreBe5ProjectDBTest
 {
     @Inject private DbService db;
     @Inject private UserHelper userHelper;
-    @Inject private MenuHelper menuHelper;
     @Inject private RoleHelper roleHelper;
     @Inject private UserInfoProvider userInfoProvider;
 
@@ -29,7 +28,7 @@ public class CryptoLoginServiceTest extends CoreBe5ProjectDBTest
     @Before
     public void setUp() throws Exception
     {
-        loginService = new CryptoLoginService(db, userHelper, menuHelper, roleHelper, userInfoProvider);
+        loginService = new CryptoLoginService(db, userHelper, roleHelper, userInfoProvider);
         if (database.getEntity("users").count(ImmutableMap.of("user_name", user_name)) == 0)
         {
             database.getEntity("users").add(ImmutableMap.of(

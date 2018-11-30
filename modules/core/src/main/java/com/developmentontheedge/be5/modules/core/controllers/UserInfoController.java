@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
+import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 import com.google.common.base.Splitter;
@@ -14,12 +15,15 @@ import java.util.List;
 public class UserInfoController extends JsonApiController
 {
     private final LoginService loginService;
+    private final UserInfoModelService userInfoModelService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public UserInfoController(LoginService loginService, UserInfoProvider userInfoProvider)
+    public UserInfoController(LoginService loginService, UserInfoModelService userInfoModelService,
+                              UserInfoProvider userInfoProvider)
     {
         this.loginService = loginService;
+        this.userInfoModelService = userInfoModelService;
         this.userInfoProvider = userInfoProvider;
     }
 
@@ -29,7 +33,7 @@ public class UserInfoController extends JsonApiController
         switch (requestSubUrl)
         {
             case "":
-                return loginService.getUserInfoModel();
+                return userInfoModelService.getUserInfoModel();
             case "selectRoles":
                 return selectRolesAndSendNewState(req);
             default:

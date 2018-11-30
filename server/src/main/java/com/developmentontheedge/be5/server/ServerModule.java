@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
 import com.developmentontheedge.be5.server.services.MailService;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.be5.server.services.impl.MailServiceImpl;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
@@ -34,6 +35,7 @@ import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
+import com.developmentontheedge.be5.server.services.impl.UserInfoModelServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
@@ -85,5 +87,6 @@ public class ServerModule extends ServletModule
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(MailService.class).to(MailServiceImpl.class).in(Scopes.SINGLETON);
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
+        bind(UserInfoModelService.class).to(UserInfoModelServiceImpl.class).in(Scopes.SINGLETON);
     }
 }

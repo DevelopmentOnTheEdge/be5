@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -20,6 +21,7 @@ public class SaveQuickColumnSettingTest extends CoreBe5ProjectDBTest
     @Test
     public void test()
     {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
         assertEquals("ok", component.generate(getSpyMockRequest("/api/quick", ImmutableMap.of(
                 "table_name", "users",
                 "query_name", "All records",

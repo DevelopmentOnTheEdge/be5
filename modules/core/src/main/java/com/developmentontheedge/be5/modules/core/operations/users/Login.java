@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
+import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.beans.DynamicProperty;
 
 import javax.inject.Inject;
@@ -20,6 +21,8 @@ public class Login extends GOperationSupport
 {
     @Inject
     protected LoginService loginService;
+    @Inject
+    protected UserInfoModelService userInfoModelService;
     @Inject
     protected CoreUtils coreUtils;
     @Inject
@@ -45,7 +48,7 @@ public class Login extends GOperationSupport
             postLogin(parameters);
             if (context.getOperationParams().get("withoutUpdateUserInfo") == null)
             {
-                setResultFinished(FrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel()));
+                setResultFinished(FrontendActions.updateUserAndOpenDefaultRoute(userInfoModelService.getUserInfoModel()));
             }
             else
             {
