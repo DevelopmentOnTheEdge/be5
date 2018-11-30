@@ -72,6 +72,7 @@ public class LoginServiceImpl implements LoginService
         );
     }
 
+    @Override
     public boolean loginCheck(String username, char[] rawPassword)
     {
         Objects.requireNonNull(username);

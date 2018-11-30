@@ -27,6 +27,7 @@ public class CryptoLoginService extends LoginServiceImpl
         Objects.requireNonNull(username);
         Objects.requireNonNull(rawPassword);
         String storedPassword = db.oneString("SELECT user_pass FROM users WHERE user_name = ?", username);
+        if (storedPassword == null) return false;
         try
         {
             return passwordEncoder.check(rawPassword, storedPassword);
