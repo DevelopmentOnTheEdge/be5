@@ -2,6 +2,9 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+
+import com.developmentontheedge.be5.base.util.Utils;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -21,6 +24,9 @@ public class Pbkdf2PasswordEncoder
 
     public boolean check(char[] rawPassword, String stored) throws Exception
     {
+        if( Utils.isEmpty( stored ) )
+            return false;
+
         String[] saltAndHash = stored.split("\\$");
         if (saltAndHash.length != 2)
         {
