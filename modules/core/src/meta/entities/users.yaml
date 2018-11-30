@@ -22,13 +22,13 @@ users:
   - All records:
       type: 1D
       roles: [Administrator]
-      layout: '{"topForm":"Filter"}'
+      layout: '{"topForm":"TopFilter"}'
       operations:
       - Delete
       - Edit
       - EditRoles
       - Insert
-      - Filter
+      - TopFilter
       - Login
       - Logout
       - Change password
@@ -37,10 +37,6 @@ users:
           u.user_name AS "___ID",
           u.user_name AS "User"
         FROM users u
-        WHERE (1=1)
-        <if parameter="user_name">
-          AND UPPER(u.user_name) LIKE '%<parameter:user_name changeCase="upper"/>%'
-        </if>
   - Login:
       type: static
       roles: Guest
@@ -75,10 +71,10 @@ users:
   - EncodePasswords:
       roles: SystemDeveloper
       code: com.developmentontheedge.be5.modules.core.operations.users.EncodePasswords
-  - Filter:
+  - TopFilter:
       roles: [Administrator]
-      layout: '{"type":"inlineMiniForm", "bsSize":"sm"}'
-      code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
+      layout: '{"properties":"user_name"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Login:
       roles: Guest
       code: com.developmentontheedge.be5.modules.core.operations.users.Login
