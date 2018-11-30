@@ -112,7 +112,7 @@ public class QueryBuilderController extends JsonApiModelController
             {
                 if (req.getBoolean("updateWithoutBeSql", false))
                 {
-                    data = new Data("", history);
+                    data = new Data("", "", history);
                     updateUnsafe(sql);
                 }
                 else
@@ -120,12 +120,11 @@ public class QueryBuilderController extends JsonApiModelController
                     SqlType type = getSqlType(sql);
                     if (type == SqlType.SELECT)
                     {
-                        data = new Data(sql, history);
-                        select(sql, req);
+                        data = new Data(sql, select(sql, req), history);
                     }
                     else
                     {
-                        data = new Data("", history);
+                        data = new Data("", db.format(sql), history);
                         if (execute)
                         {
                             switch (type)
@@ -148,7 +147,7 @@ public class QueryBuilderController extends JsonApiModelController
             }
             catch (Throwable e)
             {
-                data = new Data(sql, history);
+                data = new Data(sql, "", history);
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
@@ -216,7 +215,7 @@ public class QueryBuilderController extends JsonApiModelController
         ));
     }
 
-    private void select(String sql, Request req)
+    private String select(String sql, Request req)
     {
         String userQBuilderQueryName = userInfoProvider.get().getUserName() + "Query";
 
@@ -234,23 +233,7 @@ public class QueryBuilderController extends JsonApiModelController
         }
         DataElementUtils.save(query);
 
-        try
-        {
-            includedData.add(new ResourceData(
-                    "finalSql",
-                    FrontendConstants.STATIC_ACTION,
-                    new StaticPagePresentation(
-                            "Final sql",
-                            queryService.build(query, parameters).getFinalSql().getQuery().toString()
-                    ),
-                    null
-            ));
-        }
-        catch (Be5Exception e)
-        {
-            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
-            errorModelList.add(errorModelHelper.getErrorModel(e));
-        }
+        String finalSql = getFinalSql(query, parameters);
 
         try
         {
@@ -268,6 +251,21 @@ public class QueryBuilderController extends JsonApiModelController
         }
 
         entity.getOrigin().remove(entityName);
+        return finalSql;
+    }
+
+    private String getFinalSql(Query query, Map<String, Object> parameters)
+    {
+        try
+        {
+            return queryService.build(query, parameters).getFinalSql().getQuery().toString();
+        }
+        catch (Be5Exception e)
+        {
+            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
+            errorModelList.add(errorModelHelper.getErrorModel(e));
+            return "";
+        }
     }
 
     private static SqlType getSqlType(String sql)
@@ -306,18 +304,25 @@ public class QueryBuilderController extends JsonApiModelController
 
     public static class Data
     {
-        String sql;
-        List<String> history;
+        final String sql;
+        final String finalSql;
+        final List<String> history;
 
-        public Data(String sql, List<String> history)
+        public Data(String sql, String finalSql, List<String> history)
         {
             this.sql = sql;
+            this.finalSql = finalSql;
             this.history = history;
         }
 
         public String getSql()
         {
             return sql;
+        }
+
+        public String getFinalSql()
+        {
+            return finalSql;
         }
 
         public List<String> getHistory()
