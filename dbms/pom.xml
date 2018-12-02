@@ -23,9 +23,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.zapodot</groupId>
-      <artifactId>embedded-db-junit</artifactId>
-      <version>1.0.0</version>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.193</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

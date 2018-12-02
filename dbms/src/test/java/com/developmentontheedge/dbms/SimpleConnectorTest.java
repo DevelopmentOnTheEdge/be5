@@ -1,32 +1,14 @@
 package com.developmentontheedge.dbms;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.zapodot.junit.db.EmbeddedDatabaseRule.CompatibilityMode.PostgreSQL;
 
-public class SimpleConnectorTest
+public class SimpleConnectorTest extends BaseDbmsTests
 {
-    @Rule
-    public final EmbeddedDatabaseRule databaseRule = EmbeddedDatabaseRule.builder()
-            .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);")
-            .build();
-
-    private SimpleConnector connector;
-
-    @Before
-    public void setUp() throws Exception
-    {
-        connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
-                databaseRule.getConnection());
-    }
-
     @Test
     public void test() throws SQLException
     {
@@ -40,14 +22,6 @@ public class SimpleConnectorTest
     @Test
     public void getConnectString() throws ExtendedSqlException, SQLException
     {
-        assertEquals("jdbc:h2:mem:SimpleConnectorTest", connector.getConnectString());
+        assertEquals("jdbc:h2:mem:SimpleConnectorTest;DB_CLOSE_DELAY=-1;USER=sa;PASSWORD=sa", connector.getConnectString());
     }
-
-    @Test(expected = RuntimeException.class)
-    public void init() throws ExtendedSqlException, SQLException
-    {
-        connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
-                "sa", "");
-    }
-
 }
