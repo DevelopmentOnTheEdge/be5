@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -36,4 +38,9 @@ public class UserInfoTest extends ServerBe5ProjectTest
         assertEquals("ru", userInfoProvider.get().getLanguage());
     }
 
+    @Test
+    public void testSerializable() throws Exception
+    {
+        new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(ui);
+    }
 }
