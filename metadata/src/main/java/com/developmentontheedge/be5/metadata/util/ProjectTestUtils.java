@@ -103,7 +103,7 @@ public class ProjectTestUtils
     public static void createH2Profile(Project project, String name)
     {
         BeConnectionProfile profile = new BeConnectionProfile(name, project.getConnectionProfiles().getLocalProfiles());
-        profile.setConnectionUrl("jdbc:h2:~/" + name + ";AUTO_SERVER=TRUE");
+        profile.setConnectionUrl("jdbc:h2:mem:" + name + ";DB_CLOSE_DELAY=-1");
         profile.setUsername("sa");
         profile.setPassword("");
         profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());

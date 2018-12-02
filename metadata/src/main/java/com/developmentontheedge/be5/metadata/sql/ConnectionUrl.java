@@ -110,19 +110,26 @@ public class ConnectionUrl implements BeElementWithProperties
             // see http://www.orafaq.com/wiki/JDBC#Thin_driver
             String specificPart = uri.getSchemeSpecificPart();
             int pos = specificPart.lastIndexOf(':');
-            if (pos >= -1)
+
+            if (rdbms == Rdbms.H2)
             {
-                String sid = specificPart.substring(pos + 1);
-                setProperty("SID", sid);
+                host = specificPart;
             }
-            pos = specificPart.indexOf('@');
-            if (pos >= -1)
+            else
             {
-                int pos2 = specificPart.indexOf(':', pos);
-                if (rdbms == Rdbms.H2 && pos2 == -1) pos2 = specificPart.length();
-                if (pos2 >= -1)
+                if (pos >= -1)
                 {
-                    host = specificPart.substring(pos + 1, pos2);
+                    String sid = specificPart.substring(pos + 1);
+                    setProperty("SID", sid);
+                }
+                pos = specificPart.indexOf('@');
+                if (pos >= -1)
+                {
+                    int pos2 = specificPart.indexOf(':', pos);
+                    if (pos2 >= -1)
+                    {
+                        host = specificPart.substring(pos + 1, pos2);
+                    }
                 }
             }
         }

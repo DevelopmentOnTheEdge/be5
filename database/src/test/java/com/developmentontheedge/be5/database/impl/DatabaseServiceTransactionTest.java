@@ -30,15 +30,6 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
     }
 
     @Test
-    public void test2()
-    {
-        for (int i = 0; i < 100; i++)
-        {
-            db.one("SELECT count(*) FROM persons WHERE name LIKE 'user1%'");
-        }
-    }
-
-    @Test
     public void testSimpleError()
     {
         try

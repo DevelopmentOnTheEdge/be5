@@ -26,7 +26,7 @@ import java.util.logging.LogManager;
 
 public abstract class DatabaseTest
 {
-    private static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
+    protected static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
             Modules.override(new DatabaseModule()).with(new DatabaseModuleTestModule())
     );
 
