@@ -1,6 +1,6 @@
 connectionProfiles:
   profiles:
     profileForIntegrationTests:
-      connectionUrl: jdbc:h2:~/profileForIntegrationTestsCore
+      connectionUrl: jdbc:h2:~/profileForIntegrationTestsCore;AUTO_SERVER=TRUE
       username: sa
       password: ''

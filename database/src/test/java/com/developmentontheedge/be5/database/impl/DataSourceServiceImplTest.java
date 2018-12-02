@@ -48,7 +48,7 @@ public class DataSourceServiceImplTest extends DatabaseTest
     {
         DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(new ProjectProviderImpl(stage));
         BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
-        assertEquals("jdbc:h2:~/testProfile", dataSource.getUrl());
+        assertEquals("jdbc:h2:~/testProfile;AUTO_SERVER=TRUE", dataSource.getUrl());
         assertEquals("sa", dataSource.getUsername());
         assertEquals(Dbms.H2, dataSourceService.getDbms());
     }

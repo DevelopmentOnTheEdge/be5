@@ -13,7 +13,7 @@ import java.sql.Statement;
 public class TestH2DataSourceService implements DataSourceService
 {
     private final DataSource dataSource;
-    private final String connectionUrl = "jdbc:h2:~/be5_database_tests";
+    private final String connectionUrl = "jdbc:h2:~/be5_database_tests;AUTO_SERVER=TRUE";
 
     public TestH2DataSourceService()
     {

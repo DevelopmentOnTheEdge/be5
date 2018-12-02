@@ -15,11 +15,10 @@ public class SimpleConnectorTest
 {
     @Rule
     public final EmbeddedDatabaseRule databaseRule = EmbeddedDatabaseRule.builder()
-            .withMode(PostgreSQL)
             .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);")
             .build();
 
-    SimpleConnector connector;
+    private SimpleConnector connector;
 
     @Before
     public void setUp() throws Exception
@@ -41,7 +40,7 @@ public class SimpleConnectorTest
     @Test
     public void getConnectString() throws ExtendedSqlException, SQLException
     {
-        assertEquals("jdbc:h2:mem:SimpleConnectorTest;MODE=PostgreSQL", connector.getConnectString());
+        assertEquals("jdbc:h2:mem:SimpleConnectorTest", connector.getConnectString());
     }
 
     @Test(expected = RuntimeException.class)
