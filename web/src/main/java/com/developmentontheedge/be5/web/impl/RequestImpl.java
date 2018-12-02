@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,13 +20,31 @@ import java.util.Map;
 public class RequestImpl implements Request
 {
     private final HttpServletRequest raw;
+    private final Session session;
     private final String remoteAddr;
+
+    class RequestSessionProvider implements Provider<HttpSession>
+    {
+        private final HttpServletRequest request;
+
+        RequestSessionProvider(HttpServletRequest request)
+        {
+            this.request = request;
+        }
+
+        @Override
+        public HttpSession get()
+        {
+            return request.getSession();
+        }
+    }
 
     @Inject
     public RequestImpl(HttpServletRequest raw)
     {
         this.raw = raw;
         this.remoteAddr = getClientIpAddr(raw);
+        this.session = new SessionImpl(new RequestSessionProvider(raw));
     }
 
     @Override
@@ -43,7 +62,8 @@ public class RequestImpl implements Request
     @Override
     public Session getSession()
     {
-        return new SessionImpl(raw.getSession());
+        raw.getSession();
+        return session;
     }
 
     @Override
@@ -51,7 +71,7 @@ public class RequestImpl implements Request
     {
         HttpSession rawSession = raw.getSession(create);
         if (rawSession == null) return null;
-        return new SessionImpl(rawSession);
+        return session;
     }
 
     @Override

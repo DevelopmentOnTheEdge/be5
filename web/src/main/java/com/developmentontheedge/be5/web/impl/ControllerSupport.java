@@ -23,6 +23,7 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
         respond(request, response);
     }
 
+
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
         Request req = new RequestImpl(request);

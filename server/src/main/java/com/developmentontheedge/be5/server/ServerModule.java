@@ -1,19 +1,17 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
-import com.developmentontheedge.be5.server.services.MailService;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.server.services.UserInfoModelService;
-import com.developmentontheedge.be5.server.services.impl.MailServiceImpl;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.controllers.DocumentController;
 import com.developmentontheedge.be5.server.controllers.DownloadController;
+import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
 import com.developmentontheedge.be5.server.controllers.FormController;
 import com.developmentontheedge.be5.server.controllers.LanguageSelectorController;
 import com.developmentontheedge.be5.server.controllers.MenuController;
@@ -30,13 +28,19 @@ import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
 import com.developmentontheedge.be5.server.services.FilterInfoPlugin;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
+import com.developmentontheedge.be5.server.services.MailService;
+import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
+import com.developmentontheedge.be5.server.services.impl.MailServiceImpl;
+import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoModelServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
+import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 
@@ -50,6 +54,8 @@ public class ServerModule extends ServletModule
     protected void configureServlets()
     {
         install(new BaseModule());
+        bind(Session.class).to(SessionImpl.class).in(Scopes.SINGLETON);
+        bind(QuerySession.class).to(QuerySessionImpl.class).in(Scopes.SINGLETON);
 
         EventManager eventManager = new EventManager();
         bind(EventManager.class).toInstance(eventManager);

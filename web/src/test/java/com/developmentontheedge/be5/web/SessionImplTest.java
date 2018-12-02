@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.web.impl.SessionImpl;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,11 +20,20 @@ public class SessionImplTest
     private HttpSession httpSessionMock;
     private SessionImpl session;
 
+    class TestSessionProvider implements Provider<HttpSession>
+    {
+        @Override
+        public HttpSession get()
+        {
+            return httpSessionMock;
+        }
+    }
+
     @Before
     public void setUp() throws Exception
     {
         httpSessionMock = mock(HttpSession.class);
-        session = new SessionImpl(httpSessionMock);
+        session = new SessionImpl(new TestSessionProvider());
     }
 
     @Test

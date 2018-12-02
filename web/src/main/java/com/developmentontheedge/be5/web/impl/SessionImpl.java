@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.web.impl;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -13,10 +14,10 @@ import java.util.Map;
 
 public class SessionImpl implements Session
 {
-    private HttpSession raw;
+    private Provider<HttpSession> raw;
 
     @Inject
-    public SessionImpl(HttpSession session)
+    public SessionImpl(Provider<HttpSession> session)
     {
         this.raw = session;
     }
@@ -24,38 +25,38 @@ public class SessionImpl implements Session
     @Override
     public String getSessionId()
     {
-        return raw.getId();
+        return getRawSession().getId();
     }
 
     @Override
     public Object get(String name)
     {
-        return raw.getAttribute(name);
+        return getRawSession().getAttribute(name);
     }
 
     @Override
     public void set(String name, Object value)
     {
-        raw.setAttribute(name, value);
+        getRawSession().setAttribute(name, value);
     }
 
     @Override
     public void remove(String name)
     {
-        raw.removeAttribute(name);
+        getRawSession().removeAttribute(name);
     }
 
     @Override
     public HttpSession getRawSession()
     {
-        return raw;
+        return raw.get();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<String> getAttributeNames()
     {
-        return Collections.list(raw.getAttributeNames());
+        return Collections.list(getRawSession().getAttributeNames());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class SessionImpl implements Session
     {
         Map<String, Object> map = new HashMap<>();
 
-        Enumeration<String> enumeration = raw.getAttributeNames();
+        Enumeration<String> enumeration = getRawSession().getAttributeNames();
         while (enumeration.hasMoreElements())
         {
             String name = enumeration.nextElement();
@@ -77,6 +78,6 @@ public class SessionImpl implements Session
     @Override
     public void invalidate()
     {
-        raw.invalidate();
+        getRawSession().invalidate();
     }
 }
