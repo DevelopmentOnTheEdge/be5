@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.database.DatabaseTest;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
-import com.developmentontheedge.be5.database.DatabaseTest;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.PreparedStatement;
@@ -25,9 +26,10 @@ public class DbServiceTest extends DatabaseTest
             new TestPerson(rs.getLong("id"), rs.getString("name"),
                     rs.getString("password"), rs.getString("email"));
 
-    @Before
-    public void setUp()
+    @BeforeClass
+    public static void setUpClass()
     {
+        DbService db = injector.getInstance(DbService.class);
         db.update("DELETE FROM persons");
 
         int update = db.update("INSERT INTO persons (name, password) VALUES (?,?)",
