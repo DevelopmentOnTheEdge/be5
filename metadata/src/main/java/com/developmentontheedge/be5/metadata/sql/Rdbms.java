@@ -21,7 +21,6 @@ import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.SqlServerTypeManager;
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.sql.format.dbms.Dbms;
 
@@ -103,11 +102,6 @@ public enum Rdbms
         throw new RuntimeException("Database type not supported or not determined: " + realUrl);
     }
 
-    public static Rdbms getRdbms(DbmsConnector connector)
-    {
-        return getRdbms(connector.getType());
-    }
-
     public static Rdbms getRdbms(DbmsType dbmsType)
     {
         Rdbms[] values = Rdbms.values();
@@ -136,7 +130,7 @@ public enum Rdbms
     private final String driverDefinition;
     private final String version;
 
-    private Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version)
+    Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version)
     {
         this.type = type;
         this.macroProcessor = macroProcessor;
@@ -150,11 +144,6 @@ public enum Rdbms
     public String getName()
     {
         return type.getName();
-    }
-
-    public String getAntName()
-    {
-        return type.getName().equals("postgres") ? "postgresql" : type.getName();
     }
 
     public IMacroProcessorStrategy getMacroProcessorStrategy()
