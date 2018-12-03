@@ -44,18 +44,12 @@
       <artifactId>be5-modules-core</artifactId>
       <version>0.1.1-SNAPSHOT</version>
     </dependency>
-
     <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.0.0</version>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-jetty</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>1.4.193</version>
-    </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-http</artifactId>

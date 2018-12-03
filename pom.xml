@@ -26,6 +26,7 @@
     <module>modules/core</module>
     <module>test</module>
     <module>app</module>
+    <module>jetty</module>
   </modules>
 
   <distributionManagement>
