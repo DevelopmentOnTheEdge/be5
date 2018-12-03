@@ -64,18 +64,6 @@
       <artifactId>be5-jetty</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-http</artifactId>
-      <version>8.1.22.v20160922</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>8.1.22.v20160922</version>
-    </dependency>
-
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-test</artifactId>
