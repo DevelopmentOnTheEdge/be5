@@ -9,6 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
+  <name>be5 jetty</name>
   <artifactId>be5-jetty</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
