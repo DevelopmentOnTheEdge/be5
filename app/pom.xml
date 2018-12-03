@@ -12,6 +12,21 @@
   <name>be5 app</name>
   <description>be5 base app</description>
 
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>dote</id>
+      <name>DOTE Repository</name>
+      <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>dote-snapshots</id>
+      <name>DOTE Snapshots</name>
+      <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
