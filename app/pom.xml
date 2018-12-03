@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.developmentontheedge.be5</groupId>
+  <artifactId>be5-app</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>be5 app</name>
+  <description>be5 base app</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <build.plugins.plugin.version>3.1</build.plugins.plugin.version>
+    <frontend.build.directory>${basedir}/target-frontend</frontend.build.directory>
+    <deployServerName>tomcat7</deployServerName>
+    <deployServerUrl>http://localhost:8080/manager/text</deployServerUrl>
+    <deployPath>app</deployPath>
+    <packaging.type>jar</packaging.type>
+    <logging.file>logging.console.properties</logging.file>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>war</id>
+      <properties>
+        <packaging.type>war</packaging.type>
+        <logging.file>logging.file.properties</logging.file>
+      </properties>
+      <build>
+        <finalName>${project.artifactId}</finalName>
+      </build>
+    </profile>
+  </profiles>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.developmentontheedge.be5.modules</groupId>
+      <artifactId>be5-modules-core</artifactId>
+      <version>0.1.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.193</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-http</artifactId>
+      <version>8.1.22.v20160922</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <version>8.1.22.v20160922</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-test</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}</directory>
+        <excludes>
+          <exclude>.*</exclude>
+          <exclude>src/html/**/*.*</exclude>
+          <exclude>.idea/**/*</exclude>
+          <exclude>src/frontend/**/*</exclude>
+          <exclude>node_modules/**/*</exclude>
+          <exclude>dist/**/*</exclude>
+          <exclude>src/main/**/*.*</exclude>
+          <exclude>target/**/*.*</exclude>
+          <exclude>target-frontend/**/*.*</exclude>
+          <exclude>*.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <url>${deployServerUrl}</url>
+          <server>${deployServerName}</server>
+          <path>/${deployPath}</path>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.developmentontheedge.be5</groupId>
+        <artifactId>be5-maven-plugin</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+        <configuration>
+          <projectPath>./</projectPath>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate-context</goal>
+            </goals>
+            <configuration>
+              <generateContextPath>${project.build.directory}/${project.artifactId}/META-INF</generateContextPath>
+            </configuration>
+          </execution>
+        </executions>
+        <!-- duplicate for (ModuleLoader2.class).getClassLoader().getResources(PROJECT_FILE_NAME); -->
+        <dependencies>
+          <dependency>
+            <groupId>com.developmentontheedge.be5.modules</groupId>
+            <artifactId>be5-modules-core</artifactId>
+            <version>0.1.1-SNAPSHOT</version>
+          </dependency>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.193</version>
+          </dependency>
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.0.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <outputDirectory>distrib</outputDirectory>
+          <overWriteReleases>false</overWriteReleases>
+          <overWriteSnapshots>false</overWriteSnapshots>
+          <overWriteIfNewer>true</overWriteIfNewer>
+          <!-- includeScope>runtime</includeScope> <useSubDirectoryPerScope>true</useSubDirectoryPerScope -->
+        </configuration>
+        <executions>
+          <!--execution> <id>copy-dependencies</id> <phase>package</phase> <goals>
+           <goal>copy-dependencies</goal> </goals> <configuration> <outputDirectory>distrib</outputDirectory>
+           <overWriteReleases>false</overWriteReleases> <overWriteSnapshots>false</overWriteSnapshots>
+           <overWriteIfNewer>true</overWriteIfNewer> </configuration> </execution -->
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.3.v20170317</version>
+        <configuration>
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+          <webApp>
+            <webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
+            <containerIncludeJarPattern>^$</containerIncludeJarPattern>
+            <_initParams>
+              <org.eclipse.jetty.servlet.Default.useFileMappedBuffer>false</org.eclipse.jetty.servlet.Default.useFileMappedBuffer>
+            </_initParams>
+          </webApp>
+          <systemProperties>
+            <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+              <value>100000000</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${build.plugins.plugin.version}</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>addTestSources</goal>
+              <goal>compileTests</goal>
+              <goal>removeTestStubs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/test/groovy</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>add-log-file</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${basedir}/${logging.file}</sourceFile>
+              <destinationFile>${project.build.outputDirectory}/logging.properties</destinationFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <configuration>
+              <target>
+
+                <delete dir="${basedir}/src/main/webapp/WEB-INF/templates"/>
+                <delete dir="${basedir}/src/main/webapp/static"/>
+
+                <copy todir="${basedir}/src/main/webapp/WEB-INF/templates" overwrite="yes" >
+                  <fileset dir="${frontend.build.directory}" includes="**/*.html"/>
+                </copy>
+
+                <copy todir="${basedir}/src/main/webapp/static" >
+                  <fileset dir="${frontend.build.directory}/static" />
+                </copy>
+
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/java/</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+
+  </build>
+</project>

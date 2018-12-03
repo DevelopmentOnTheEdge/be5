@@ -25,6 +25,7 @@
     <module>server</module>
     <module>modules/core</module>
     <module>test</module>
+    <module>app</module>
   </modules>
 
   <distributionManagement>
