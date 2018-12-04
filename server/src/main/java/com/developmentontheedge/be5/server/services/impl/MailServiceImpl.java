@@ -80,7 +80,8 @@ public class MailServiceImpl implements MailService
     {
         try
         {
-            sendEmail(new InternetAddress(from), new InternetAddress[]{new InternetAddress(to)}, subject, body,
+            InternetAddress fromAddress = from != null ? new InternetAddress(from) : null;
+            sendEmail(fromAddress, new InternetAddress[]{new InternetAddress(to)}, subject, body,
                     "text/html");
         }
         catch (Throwable e)
