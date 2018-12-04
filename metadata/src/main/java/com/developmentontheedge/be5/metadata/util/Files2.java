@@ -6,6 +6,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,20 +15,19 @@ import java.util.function.Predicate;
 
 public class Files2
 {
-
     private static class Copier implements FileVisitor<Path>
     {
-
+        private int count = 0;
         private final Path source;
         private final Path target;
         private final Predicate<Path> shouldCopy;
 
-        public Copier(final Path source, final Path target)
+        Copier(final Path source, final Path target)
         {
             this(source, target, path -> true);
         }
 
-        public Copier(final Path source, final Path target, final Predicate<Path> copy)
+        Copier(final Path source, final Path target, final Predicate<Path> copy)
         {
             this.source = source;
             this.target = target;
@@ -67,6 +67,7 @@ public class Files2
                 Files.createDirectories(targetFile.getParent());
                 Files.deleteIfExists(targetFile);
                 Files.copy(file, targetFile);
+                count++;
             }
 
             return FileVisitResult.CONTINUE;
@@ -78,6 +79,10 @@ public class Files2
             return FileVisitResult.CONTINUE;
         }
 
+        public int getCount()
+        {
+            return count;
+        }
     }
 
     private static class Collector implements FileVisitor<Path>
@@ -87,7 +92,7 @@ public class Files2
         private final Predicate<String> select;
         private final List<String> relativePaths;
 
-        public Collector(final Path path, final Predicate<String> select)
+        Collector(final Path path, final Predicate<String> select)
         {
             this.path = path;
             this.select = select;
@@ -130,11 +135,35 @@ public class Files2
             return FileVisitResult.CONTINUE;
         }
 
-        public List<String> getRelativePaths()
+        List<String> getRelativePaths()
         {
             return relativePaths;
         }
+    }
 
+    private static class DeleteFileVisitor extends SimpleFileVisitor<Path>
+    {
+        private int count = 0;
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+        {
+            boolean deleted = Files.deleteIfExists(file);
+            if (deleted) count++;
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+        {
+            Files.deleteIfExists(dir);
+            return FileVisitResult.CONTINUE;
+        }
+
+        public int getCount()
+        {
+            return count;
+        }
     }
 
     /**
@@ -144,14 +173,25 @@ public class Files2
     {
     }
 
-    public static void copyAll(final Path from, final Path to) throws IOException
+    public static int copyAll(final Path from, final Path to) throws IOException
     {
-        Files.walkFileTree(from, new Copier(from, to));
+        Copier copier = new Copier(from, to);
+        Files.walkFileTree(from, copier);
+        return copier.getCount();
     }
 
-    public static void copyAll(final Path from, final Path to, final Predicate<Path> copy) throws IOException
+    public static int copyAll(final Path from, final Path to, final Predicate<Path> copy) throws IOException
     {
-        Files.walkFileTree(from, new Copier(from, to, copy));
+        Copier copier = new Copier(from, to, copy);
+        Files.walkFileTree(from, copier);
+        return copier.getCount();
+    }
+
+    public static int deleteAll(final Path from) throws IOException
+    {
+        DeleteFileVisitor deleteFileVisitor = new DeleteFileVisitor();
+        Files.walkFileTree(from, deleteFileVisitor);
+        return deleteFileVisitor.getCount();
     }
 
     public static String[] collectRelativePaths(final Path path, final Predicate<String> select) throws IOException
@@ -159,7 +199,7 @@ public class Files2
         final Collector collector = new Collector(path, select);
         Files.walkFileTree(path, collector);
 
-        return collector.getRelativePaths().stream().toArray(String[]::new);
+        return collector.getRelativePaths().toArray(new String[0]);
     }
 
     public static Predicate<Path> byExtension(final String extension)

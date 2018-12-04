@@ -15,6 +15,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-metadata</artifactId>
+      <version>0.3.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>
       <version>4.2.0</version>
