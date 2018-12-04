@@ -122,9 +122,11 @@ public class FormGeneratorImpl implements FormGenerator
         }
         else
         {
+            Map<String, Object> layout = LayoutUtils.getLayoutObject(operation.getInfo().getModel());
+            layout.remove("type");
             data = Either.second(new OperationResultPresentation(
                     resultForFrontend(result.getSecond()),
-                    LayoutUtils.getLayoutObject(operation.getInfo().getModel())
+                    layout
             ));
         }
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
