@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.web.Response;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -27,9 +26,9 @@ public class ServerTestResponse implements Response
     }
 
     @Override
-    public void sendErrorAsJson(Object value, int status)
+    public void sendAsJson(Object value, int status)
     {
-        mock.sendErrorAsJson(value, status);
+        mock.sendAsJson(value, status);
     }
 
     @Override

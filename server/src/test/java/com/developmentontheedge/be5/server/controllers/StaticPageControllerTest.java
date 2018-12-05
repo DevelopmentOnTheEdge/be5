@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 
@@ -51,8 +52,6 @@ public class StaticPageControllerTest extends ServerBe5ProjectTest
         String page = "/api/static/foo.be";
         component.generate(getMockRequest(page), ServerTestResponse.mock);
 
-        //todo check error in response
-        verify(ServerTestResponse.mock).sendAsJson(any(JsonApiModel.class));
+        verify(ServerTestResponse.mock).sendAsJson(any(JsonApiModel.class), eq(404));
     }
-
 }

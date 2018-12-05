@@ -3,22 +3,28 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 @Singleton
@@ -43,7 +49,7 @@ public class FormController extends JsonApiModelController
     }
 
     @Override
-    public JsonApiModel generate(Request req, String requestSubUrl)
+    public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
         //todo move to filter
         if (stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
@@ -62,9 +68,25 @@ public class FormController extends JsonApiModelController
             switch (requestSubUrl)
             {
                 case "":
-                    return data(formGenerator.generate(entityName, queryName, operationName, operationParams, values));
+                    ResourceData generateData = formGenerator.generate(entityName, queryName, operationName, operationParams, values);
+                    if (OPERATION_RESULT.equals(generateData.getType()) && ((OperationResultPresentation) generateData.getAttributes()).
+                        getOperationResult().getStatus() == OperationStatus.ERROR)
+                    {
+                        res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    }
+                    return data(generateData);
                 case "apply":
-                    return data(formGenerator.execute(entityName, queryName, operationName, operationParams, values));
+                    ResourceData executeData = formGenerator.execute(entityName, queryName, operationName, operationParams, values);
+                    if (FORM_ACTION.equals(executeData.getType()))
+                    {
+                        res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    }
+                    else if (((OperationResultPresentation) executeData.getAttributes()).
+                            getOperationResult().getStatus() == OperationStatus.ERROR)
+                    {
+                        res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    }
+                    return data(executeData);
                 default:
                     return null;
             }

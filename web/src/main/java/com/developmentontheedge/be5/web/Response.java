@@ -16,7 +16,7 @@ public interface Response
      * @param value  object for send as json
      * @param status {@link javax.servlet.http.HttpServletResponse}
      */
-    void sendErrorAsJson(Object value, int status);
+    void sendAsJson(Object value, int status);
 
     /**
      * @param status {@link javax.servlet.http.HttpServletResponse}

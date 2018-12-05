@@ -6,22 +6,36 @@ import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.web.Response;
 import com.google.common.collect.ImmutableMap;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
-public class FormTest extends ServerBe5ProjectTest
+public class FormControllerTest extends ServerBe5ProjectTest
 {
     @Inject
     private FormController component;
+
+    private Response res;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        res = mock(Response.class);
+    }
 
     @After
     public void tearDown()
@@ -70,25 +84,41 @@ public class FormTest extends ServerBe5ProjectTest
                 jsonApiModel.getErrors()[0].getTitle());
     }
 
+    @Test
+    public void errorOnExecute()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
+
+        JsonApiModel jsonApiModel = generateForQuery("All records", "/api/form/apply", Collections.emptyMap());
+
+        assertNull(jsonApiModel.getErrors());
+        assertNotNull(jsonApiModel.getData());
+
+        verify(res).setStatus(500);
+    }
+
     private JsonApiModel generateForQuery(String queryName)
     {
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(2);
-        map.put("name", "test1");
-        map.put("value", "2");
-        String values = jsonb.toJson(map);
+        Map<String, String> values = new LinkedHashMap<>(2);
+        values.put("name", "test1");
+        values.put("value", "2");
 
-        LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>(1);
-        map1.put("name", "test1");
+        return generateForQuery(queryName, "/api/form/", values);
+    }
 
-        return component.generate(getSpyMockRequest("/api/form/", ImmutableMap.<String, Object>builder()
+    private JsonApiModel generateForQuery(String queryName, String url, Map<String, String> values)
+    {
+        String valuesJson = jsonb.toJson(values);
+
+        return component.generateJson(getSpyMockRequest(url, ImmutableMap.<String, Object>builder()
                 .put(RestApiConstants.ENTITY, "testtableAdmin")
                 .put(RestApiConstants.QUERY, queryName)
                 .put(RestApiConstants.OPERATION, "Insert")
                 .put(OperationConstants.SELECTED_ROWS, "")
-                .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(map1))
+                .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(Collections.emptyMap()))
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())
-                .put(RestApiConstants.VALUES, values)
-                .build()), "");
+                .put(RestApiConstants.VALUES, valuesJson)
+                .build()), res, url.replace("/api/form/", ""));
     }
 
 }

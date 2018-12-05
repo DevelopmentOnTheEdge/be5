@@ -18,7 +18,7 @@ public abstract class JsonApiController extends ApiControllerSupport
         }
         else
         {
-            res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
+            res.sendAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

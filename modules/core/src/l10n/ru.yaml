@@ -15,6 +15,7 @@ ru:
       - 'Internal error occurred during query: $1.$2': 'Произошла внутренняя ошибка в представлении: $1.$2'
       - 'Entity not found: $1': 'Сущность не найдена: $1'
       - 'Operation not found: $1.$2': 'Операция не найдена: $1.$2'
+      - 'Element not found: $1': 'Элемент не найден: $1.$2'
       - 'Query not found: $1.$2': 'Представление не найдено: $1.$2'
       - 'Access denied. $1': 'Доступ запрещен. $1'
       - 'Access denied to query: $1.$2': 'Доступ к представлению запрещен. $1.$2'

@@ -32,7 +32,7 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendErrorAsJson(Object value, int status)
+    public void sendAsJson(Object value, int status)
     {
         setStatus(status);
         sendJson(jsonb.toJson(value));

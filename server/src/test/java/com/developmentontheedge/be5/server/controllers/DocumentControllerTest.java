@@ -37,10 +37,10 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     @Test
     public void generate()
     {
-        JsonApiModel jsonApiModel = documentController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
+        JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 ENTITY, "testtable",
                 QUERY, "All records",
-                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), "");
+                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertEquals("testtable: All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getTitle());
     }
@@ -48,10 +48,10 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     @Test
     public void accessDenied()
     {
-        JsonApiModel jsonApiModel = documentController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
+        JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 ENTITY, "testtableAdmin",
                 QUERY, "All records",
-                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), "");
+                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertEquals(new ErrorModel("403",
                         "Access denied to query: testtableAdmin.All records",
@@ -64,9 +64,9 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
-        JsonApiModel jsonApiModel = documentController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
+        JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 ENTITY, "testtableAdmin", QUERY, "All records",
-                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), "");
+                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertNotNull(jsonApiModel.getData());
         TestCase.assertNull(jsonApiModel.getErrors());
@@ -75,9 +75,9 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     @Test
     public void error()
     {
-        JsonApiModel jsonApiModel = documentController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
+        JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 ENTITY, "testtable", QUERY, "Query with error",
-                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), "");
+                TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertNull(jsonApiModel.getData());
         assertEquals(new ErrorModel("500",

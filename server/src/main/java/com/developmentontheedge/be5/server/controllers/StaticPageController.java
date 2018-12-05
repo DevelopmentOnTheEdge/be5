@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +32,7 @@ public class StaticPageController extends JsonApiModelController
     }
 
     @Override
-    public JsonApiModel generate(Request req, String name)
+    public JsonApiModel generateJson(Request req, Response res, String name)
     {
         String url = new HashUrl(STATIC_ACTION, name).toString();
 

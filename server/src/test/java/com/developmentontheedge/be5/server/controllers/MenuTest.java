@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
 import org.junit.Before;
@@ -53,7 +52,7 @@ public class MenuTest extends ServerBe5ProjectTest
 
         component.generate(getMockRequest("/api/menu/foo"), response);
 
-        verify(response).sendErrorAsJson(eq("Unknown action"), eq(404));
+        verify(response).sendAsJson(eq("Unknown action"), eq(404));
     }
 
 }

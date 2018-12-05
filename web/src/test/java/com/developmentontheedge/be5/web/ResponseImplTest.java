@@ -44,7 +44,7 @@ public class ResponseImplTest
     public void sendError()
     {
         Action call = new Action("call", "test/path");
-        response.sendErrorAsJson(call, HttpServletResponse.SC_FORBIDDEN);
+        response.sendAsJson(call, HttpServletResponse.SC_FORBIDDEN);
 
         verify(rawResponse).setStatus(HttpServletResponse.SC_FORBIDDEN);
         verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));

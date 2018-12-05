@@ -17,7 +17,7 @@ public abstract class JsonApiModelController extends ApiControllerSupport
     @Override
     protected final void generate(Request req, Response res, String subUrl)
     {
-        JsonApiModel jsonApiModel = generate(req, subUrl);
+        JsonApiModel jsonApiModel = generateJson(req, res, subUrl);
         if (jsonApiModel != null)
         {
             if (jsonApiModel.getMeta() == null)
@@ -31,16 +31,16 @@ public abstract class JsonApiModelController extends ApiControllerSupport
             else
             {
                 int status = Integer.parseInt(jsonApiModel.getErrors()[0].getStatus());
-                res.sendErrorAsJson(jsonApiModel, status);
+                res.sendAsJson(jsonApiModel, status);
             }
         }
         else
         {
-            res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
+            res.sendAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
-    protected abstract JsonApiModel generate(Request req, String subUrl);
+    protected abstract JsonApiModel generateJson(Request req, Response res, String subUrl);
 
     protected JsonApiModel data(ResourceData data)
     {

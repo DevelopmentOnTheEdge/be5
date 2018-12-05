@@ -25,9 +25,9 @@ public class TestResponse implements Response
     }
 
     @Override
-    public void sendErrorAsJson(Object value, int status)
+    public void sendAsJson(Object value, int status)
     {
-        mock.sendErrorAsJson(value, status);
+        mock.sendAsJson(value, status);
     }
 
     @Override

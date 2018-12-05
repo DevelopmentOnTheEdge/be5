@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,7 +34,7 @@ public class DocumentController extends JsonApiModelController
     }
 
     @Override
-    public JsonApiModel generate(Request req, String requestSubUrl)
+    public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);

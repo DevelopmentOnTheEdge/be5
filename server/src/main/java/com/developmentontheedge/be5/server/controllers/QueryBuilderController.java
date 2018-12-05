@@ -22,6 +22,7 @@ import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -72,7 +73,7 @@ public class QueryBuilderController extends JsonApiModelController
     }
 
     @Override
-    public JsonApiModel generate(Request req, String requestSubUrl)
+    public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
         includedData = new ArrayList<>();
         errorModelList = new ArrayList<>();
