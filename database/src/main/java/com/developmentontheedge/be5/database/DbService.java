@@ -36,6 +36,8 @@ public interface DbService
 
     String format(String sql);
 
+    String format(AstStart astStart);
+
     <T> T execute(SqlExecutor<T> executor);
 
     <T> T transactionWithResult(SqlExecutor<T> executor);

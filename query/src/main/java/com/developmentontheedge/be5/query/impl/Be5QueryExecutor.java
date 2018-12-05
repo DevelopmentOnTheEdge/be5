@@ -31,6 +31,7 @@ import one.util.streamex.StreamEx;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -228,7 +229,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            QueryUtils.applySort(ast, getSchema(ast.getQuery().toString()), orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryUtils.applySort(ast, getSchema(ast), orderColumn + (selectable ? -1 : 0), orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 
@@ -249,12 +250,17 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private DynamicProperty[] getSchema(String sql)
+    private DynamicProperty[] getSchema(AstStart ast)
     {
         return db.execute(conn -> {
-            try (PreparedStatement ps = conn.prepareStatement(db.format(sql)))
+            String sql = db.format(ast);
+            try (PreparedStatement ps = conn.prepareStatement(sql))
             {
                 return DpsRecordAdapter.createSchema(ps.getMetaData());
+            }
+            catch (SQLException e)
+            {
+                throw Be5Exception.internal(sql, e);
             }
         });
     }

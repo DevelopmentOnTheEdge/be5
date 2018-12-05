@@ -113,4 +113,10 @@ public class DbServiceMock implements DbService
     {
         return sql;
     }
+
+    @Override
+    public String format(AstStart astStart)
+    {
+        return astStart.format();
+    }
 }

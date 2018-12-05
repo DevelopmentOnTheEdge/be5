@@ -117,7 +117,8 @@ public class DbServiceImpl implements DbService
         });
     }
 
-    private String format(AstStart astStart)
+    @Override
+    public String format(AstStart astStart)
     {
         dbmsTransformer.transformAst(astStart);
         return astStart.format();
