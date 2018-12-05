@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
-import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -213,48 +212,45 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public AstStart getFinalSql()
     {
-        DebugQueryLogger dql = new DebugQueryLogger();
-        dql.log("Orig", query.getQuery());
-
         String queryText = query.getFinalQuery();
-        dql.log("FinalQuery", queryText);
         if (queryText.isEmpty()) return null;
-        AstStart ast;
+
+        AstStart ast = parseQuery(queryText);
+        new MacroExpander().expandMacros(ast);
+
+        resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
+        applyFilters(ast, query.getEntity().getName(), parameters, meta);
+        applyCategory(ast);
+
+        contextApplier.applyContext(ast);
+        if (selectable) addIDColumnLabel(ast, query);
+
+        if (executeType == ExecuteType.COUNT)
+        {
+            countFromQuery(ast.getQuery());
+        }
+
+        if (executeType == ExecuteType.DEFAULT)
+        {
+            applySort(ast, getSchema(ast.getQuery().toString()), orderColumn + (selectable ? -1 : 0), orderDir);
+            new LimitsApplier(offset, limit).transform(ast);
+        }
+
+        Simplifier.simplify(ast);
+        return ast;
+    }
+
+    private AstStart parseQuery(String queryText)
+    {
         try
         {
-            ast = SqlQuery.parse(queryText);
-            dql.log("Compiled", ast);
+            return SqlQuery.parse(queryText);
         }
         catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
         }
-        new MacroExpander().expandMacros(ast);
-        resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
-        applyFilters(ast, query.getEntity().getName(), parameters, meta);
-        applyCategory(ast);
-        contextApplier.applyContext(ast);
-        if (selectable) addIDColumnLabel(ast, query);
-        Simplifier.simplify(ast);
-
-        if (executeType == ExecuteType.COUNT)
-        {
-            countFromQuery(ast.getQuery());
-            dql.log("Count(1) from query", ast);
-        }
-
-        if (executeType == ExecuteType.DEFAULT)
-        {
-            // SORT ORDER
-            applySort(ast, getSchema(ast.getQuery().toString()), dql, orderColumn + (selectable ? -1 : 0), orderDir);
-
-            // LIMITS
-            new LimitsApplier(offset, limit).transform(ast);
-            dql.log("With limits", ast);
-        }
-
-        return ast;
     }
 
     private DynamicProperty[] getSchema(String sql)

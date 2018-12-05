@@ -228,8 +228,7 @@ public class QueryUtils
         return sortCol;
     }
 
-    public static void applySort(AstStart ast, DynamicProperty[] schema, DebugQueryLogger dql,
-                                 int orderColumn, String orderDir)
+    public static void applySort(AstStart ast, DynamicProperty[] schema, int orderColumn, String orderDir)
     {
         if (orderColumn >= 0)
         {
@@ -259,7 +258,6 @@ public class QueryUtils
                 orderBy.addChild(oe);
                 orderBy.moveToFront(oe);
             }
-            dql.log("With sort", ast);
         }
     }
 
