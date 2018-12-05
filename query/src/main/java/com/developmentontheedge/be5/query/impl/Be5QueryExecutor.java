@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
+import com.developmentontheedge.be5.query.impl.utils.QueryUtils;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -38,12 +39,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.addIDColumnLabel;
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applyFilters;
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applySort;
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.countFromQuery;
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.resolveTypeOfRefColumn;
 
 
 /**
@@ -218,21 +213,22 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         AstStart ast = parseQuery(queryText);
         new MacroExpander().expandMacros(ast);
 
-        resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
-        applyFilters(ast, query.getEntity().getName(), parameters, meta);
+        QueryUtils.resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
+        QueryUtils.applyFilters(ast, query.getEntity().getName(), parameters, meta);
         applyCategory(ast);
 
         contextApplier.applyContext(ast);
-        if (selectable) addIDColumnLabel(ast, query);
+
+        if (selectable) QueryUtils.addIDColumnLabel(ast, query);
 
         if (executeType == ExecuteType.COUNT)
         {
-            countFromQuery(ast.getQuery());
+            QueryUtils.countFromQuery(ast.getQuery());
         }
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            applySort(ast, getSchema(ast.getQuery().toString()), orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryUtils.applySort(ast, getSchema(ast.getQuery().toString()), orderColumn + (selectable ? -1 : 0), orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 
