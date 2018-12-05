@@ -611,7 +611,15 @@ public class DpsHelper
         dps.forEach(p -> {
             if (p.getValue() != null && !p.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {
-                values.put(p.getName(), p.getValue().toString());
+                if (p.getValue() instanceof Object[])
+                {
+                    values.put(p.getName(), Arrays.stream((Object[]) p.getValue()).map(x -> x + "")
+                            .toArray(String[]::new));
+                }
+                else
+                {
+                    values.put(p.getName(), p.getValue().toString());
+                }
             }
         });
 

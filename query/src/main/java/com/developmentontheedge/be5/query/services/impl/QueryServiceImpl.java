@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.query.services.QueryService;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -59,17 +60,21 @@ public class QueryServiceImpl implements QueryService
     }
 
     @SuppressWarnings("unchecked")
-    private List<Object> getParameterList(Object parameter)
+    private List<Object> getParameterList(Object value)
     {
-        if (parameter == null) return null;
+        if (value == null) return null;
 
-        if (parameter instanceof List)
+        if (value instanceof String[])
         {
-            return (List<Object>) parameter;
+            return Arrays.asList((String[]) value);
+        }
+        else if (value instanceof List)
+        {
+            return (List<Object>) value;
         }
         else
         {
-            return Collections.singletonList(parameter.toString());
+            return Collections.singletonList(value.toString());
         }
     }
 }

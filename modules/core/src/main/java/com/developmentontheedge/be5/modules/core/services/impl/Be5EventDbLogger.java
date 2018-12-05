@@ -106,11 +106,27 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         for (Map.Entry<String, Object> param : parameters.entrySet())
         {
-            database.getEntity(EVENT_LOG_TABLE_PARAMS).add(new HashMap<String, Object>() {{
-                put("logID", id);
-                put("paramName", param.getKey());
-                put("paramValue", param.getValue());
-            }});
+            if (param.getValue() instanceof String[])
+            {
+                String[] values = (String[]) param.getValue();
+                for (String value : values)
+                {
+                    addParam(id, param.getKey(), value);
+                }
+            }
+            else
+            {
+                addParam(id, param.getKey(), param.getValue().toString());
+            }
         }
+    }
+
+    private void addParam(Long id, String name, String value)
+    {
+        database.getEntity(EVENT_LOG_TABLE_PARAMS).add(new HashMap<String, Object>() {{
+            put("logID", id);
+            put("paramName", name);
+            put("paramValue", value);
+        }});
     }
 }
