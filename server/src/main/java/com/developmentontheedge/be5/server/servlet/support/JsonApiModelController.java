@@ -30,7 +30,8 @@ public abstract class JsonApiModelController extends ApiControllerSupport
             }
             else
             {
-                res.sendErrorAsJson(jsonApiModel, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                int status = Integer.parseInt(jsonApiModel.getErrors()[0].getStatus());
+                res.sendErrorAsJson(jsonApiModel, status);
             }
         }
         else
