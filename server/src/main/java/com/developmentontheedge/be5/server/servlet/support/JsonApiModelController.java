@@ -24,7 +24,14 @@ public abstract class JsonApiModelController extends ApiControllerSupport
             {
                 jsonApiModel.setMeta(getDefaultMeta(req));
             }
-            res.sendAsJson(jsonApiModel);
+            if (jsonApiModel.getData() != null)
+            {
+                res.sendAsJson(jsonApiModel);
+            }
+            else
+            {
+                res.sendErrorAsJson(jsonApiModel, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
         else
         {
@@ -33,11 +40,6 @@ public abstract class JsonApiModelController extends ApiControllerSupport
     }
 
     protected abstract JsonApiModel generate(Request req, String subUrl);
-
-//    protected JsonApiModel data(ResourceData data, Object meta)
-//    {
-//        return JsonApiModel.data(data, meta);
-//    }
 
     protected JsonApiModel data(ResourceData data)
     {
@@ -53,12 +55,6 @@ public abstract class JsonApiModelController extends ApiControllerSupport
     {
         return JsonApiModel.data(data, errorModels, included, null);
     }
-
-//
-//    protected JsonApiModel error(ErrorModel error, Object meta)
-//    {
-//        return JsonApiModel.error(error, meta);
-//    }
 
     protected JsonApiModel error(ErrorModel error)
     {
