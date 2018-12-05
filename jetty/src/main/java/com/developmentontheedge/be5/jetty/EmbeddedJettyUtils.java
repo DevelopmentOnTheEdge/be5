@@ -31,6 +31,7 @@ public class EmbeddedJettyUtils
         context.addEventListener(eventListener);
         context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
         context.addServlet(DefaultServlet.class, "/");
+        context.setMaxFormContentSize(1024 * 1024 * 1024);
         server.start();
     }
 }
