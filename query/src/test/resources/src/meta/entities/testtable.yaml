@@ -26,7 +26,7 @@ testtable:
           testtable t
   - withID:
       type: 1D
-      operations: Filter
+      operations: Edit
       roles: '@AllRoles'
       code: |-
         SELECT
@@ -251,3 +251,8 @@ testtable:
       code: |-
         SELECT <@_test_macro 'name'/>, <@_test_macro 'value'/>
         FROM testtable
+  operations:
+  - Edit:
+      records: 1
+      roles: [Administrator]
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation

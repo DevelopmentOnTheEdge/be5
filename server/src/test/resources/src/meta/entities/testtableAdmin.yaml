@@ -32,7 +32,6 @@ testtableAdmin:
       - OperationWithExtend
       - OperationWithExtend2
       - Filter
-      - OldRedirectFilter
       - ServerErrorProcessing
       - TransactionTestOp
       - Delete

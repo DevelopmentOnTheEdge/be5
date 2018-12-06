@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 import java.util.List;
 
@@ -26,16 +25,10 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>, CellModel
     @Override
     protected List<CellModel> createRow(RowModel rowModel, List<CellModel> cells)
     {
-        Builder<CellModel> builder = ImmutableList.builder();
-        if (tableModel.isSelectable())
-        {
-            builder = builder.add(new CellModel(rowModel.getId()));
-        }
-        else
-        {
-            builder = builder.add(new CellModel(""));
-        }
-        return builder.addAll(cells).build();
+        String id = rowModel.getId();
+        return ImmutableList.<CellModel>builder()
+                .add(new CellModel(id != null ? id : ""))
+                .addAll(cells).build();
     }
 
     @Override

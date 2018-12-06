@@ -141,7 +141,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beQuick");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
         assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
                 oneQuotes(jsonb.toJson(table.getColumns())));
@@ -152,7 +152,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beCssFormat");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':1,'options':{'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}]}",
+        assertEquals("{'cells':[{'content':1,'options':{'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
@@ -161,12 +161,12 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beRoles");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
 
         setStaticUserInfo("TestUser2");
         TableModel table2 = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'TestUser2'}}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'TestUser2'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table2.getRows().get(0))));
     }
 
@@ -175,12 +175,12 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beRolesNot");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'!TestUser2'}}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'!TestUser2'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
 
         setStaticUserInfo("TestUser2");
         TableModel table2 = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table2.getRows().get(0))));
     }
 
@@ -189,7 +189,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beGrouping");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{'grouping':{}}}]}",
+        assertEquals("{'cells':[{'content':'user1','options':{'grouping':{}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
@@ -198,8 +198,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beRowCssClass");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("[{'cells':[{'content':1,'options':{'css':{'class':' user1'}}}]}," +
-                              "{'cells':[{'content':2,'options':{'css':{'class':' user2'}}}]}]",
+        assertEquals("[{'cells':[{'content':1,'options':{'css':{'class':' user1'}}}],'id':'123'}," +
+                        "{'cells':[{'content':2,'options':{'css':{'class':' user2'}}}],'id':'123'}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
     }
 
@@ -217,12 +217,15 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     public void testNullInSubQuery()
     {
         db.update("DELETE FROM testtableAdmin");
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null);
+        long id1 = db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);
+        long id2 = db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null);
 
         TableModel table = tableModelService.getTableModel(meta.getQuery("testtableAdmin", "Test null in subQuery"), Collections.emptyMap());
 
-        assertEquals("[" + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':11,'options':{}}," + "{'content':'tableModelTest','options':{}}]}," + "{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'options':{}}," + "{'content':'','options':{}}" + "]}]",
+        assertEquals("[{'cells':[{'content':'tableModelTest','options':{}},{'content':11,'options':{}}," +
+                        "{'content':'tableModelTest','options':{}}],'id':'"+id1+"'}," +
+                        "{'cells':[{'content':'tableModelTest','options':{}}," +
+                        "{'options':{}},{'content':'','options':{}}],'id':'"+id2+"'}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
     }
 

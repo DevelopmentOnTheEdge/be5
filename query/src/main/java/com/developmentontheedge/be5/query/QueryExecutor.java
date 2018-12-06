@@ -71,7 +71,7 @@ public interface QueryExecutor
 
     int getLimit();
 
-    Boolean getSelectable();
+    Boolean isSelectable();
 
 
     //QueryExecutor setContextApplier(ContextApplier contextApplier);

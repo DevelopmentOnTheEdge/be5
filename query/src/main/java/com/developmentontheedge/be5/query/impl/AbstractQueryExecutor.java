@@ -83,7 +83,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     }
 
     @Override
-    public Boolean getSelectable()
+    public Boolean isSelectable()
     {
         return selectable;
     }

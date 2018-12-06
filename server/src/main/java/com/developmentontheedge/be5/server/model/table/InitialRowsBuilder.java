@@ -24,7 +24,7 @@ public class InitialRowsBuilder extends TableRowsBuilder<InitialRow, Object>
     @Override
     protected InitialRow createRow(RowModel rowModel, List<Object> cells)
     {
-        return new InitialRow(tableModel.isSelectable() ? rowModel.getId() : null, cells);
+        return new InitialRow(rowModel.getId(), cells);
     }
 
     @Override

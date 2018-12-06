@@ -89,10 +89,11 @@ public class SqlTableBuilder
 
     public TableModel build()
     {
+        List<DynamicPropertySet> propertiesList = queryExecutor.execute();
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.execute(), columns, rows);
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
 
         boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
@@ -111,7 +112,7 @@ public class SqlTableBuilder
         return new TableModel(
                 columns,
                 rows,
-                queryExecutor.getSelectable(),
+                queryExecutor.isSelectable(),
                 totalNumberOfRows,
                 hasAggregate,
                 queryExecutor.getOffset(),
@@ -290,9 +291,13 @@ public class SqlTableBuilder
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
         List<CellModel> processedCells = processCells(cells); // only visible cells
-        String id = queryExecutor.getSelectable() ? transformer.getRowId() : null;
 
-        return new RowModel(id, processedCells);
+        String rowId = transformer.getRowId();
+        if (queryExecutor.isSelectable() && rowId == null)
+        {
+            throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");
+        }
+        return new RowModel(rowId, processedCells);
     }
 
     private void addRowClass(List<RawCellModel> cells)

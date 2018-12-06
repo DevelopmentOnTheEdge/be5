@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -52,13 +51,7 @@ class PropertiesToRowTransformer
     String getRowId()
     {
         Object idObject = properties.getValue(DatabaseConstants.ID_COLUMN_LABEL);
-
-        if (idObject != null)
-        {
-            return String.valueOf(idObject); //MapParamHelper.mapNameOut( String.valueOf( idObject ) );
-        }
-
-        throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");
+        return idObject != null ? String.valueOf(idObject) : null;
     }
 
     /**
