@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
-public class CellFormatter
+class CellFormatter
 {
     private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
     private final Query query;
@@ -97,11 +97,15 @@ public class CellFormatter
                 {
                     String[] colsArr = cols.split(",");
                     String[] valuesArr = vals.split(",");
+
+                    Map<String, List<String>> mapOfList = new HashMap<>();
                     for (int i = 0; i < colsArr.length; i++)
                     {
                         Object resolveValue = varResolver.resolve(valuesArr[i]);
-                        url = url.named(colsArr[i], resolveValue != null ? resolveValue.toString() : valuesArr[i]);
+                        mapOfList.putIfAbsent(colsArr[i], new ArrayList<>());
+                        mapOfList.get(colsArr[i]).add(resolveValue != null ? resolveValue.toString() : valuesArr[i]);
                     }
+                    url = url.named(mapOfList);
                 }
                 String utlStr = url.toString();
                 cell.options.put(DatabaseConstants.COL_ATTR_LINK, new HashMap<String, String>() {{

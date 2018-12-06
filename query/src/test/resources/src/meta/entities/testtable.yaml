@@ -44,6 +44,26 @@ testtable:
             '<link columns="entity,ID" using="users,___ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
           FROM
             testtable t
+  - beLinkMultiple:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.name AS "Name",
+            '<link columns="ID,ID" using="1,2" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
+          FROM
+            testtable t
+  - beRef:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT
+            123 as "___ID",
+            t.name AS "Name",
+            '<ref table="testtable" />' AS ";Name"
+          FROM
+            testtable t
   - beQuick:
       type: 1D_unknown
       roles: SystemDeveloper

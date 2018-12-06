@@ -114,11 +114,26 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beLink");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{" +
-                        "'link':{'class':null,'url':'table/testtable/Test 1D unknown/entity=users/ID=123'}}}]}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
-        assertEquals("[{'name':'Name','title':'Name'}]",
-                oneQuotes(jsonb.toJson(table.getColumns())));
+        assertEquals("{'class':null,'url':'table/testtable/Test 1D unknown/ID=123/entity=users'}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0).getCells().get(0).options.get("link"))));
+    }
+
+    @Test
+    public void beLinkMultiple()
+    {
+        Query query = meta.getQuery("testtable", "beLinkMultiple");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'class':null,'url':'table/testtable/Test 1D unknown/ID=1,2'}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0).getCells().get(0).options.get("link"))));
+    }
+
+    @Test
+    public void beRef()
+    {
+        Query query = meta.getQuery("testtable", "beRef");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'class':null,'url':'table/testtable/All records'}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0).getCells().get(0).options.get("link"))));
     }
 
     @Test
@@ -241,5 +256,16 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         assertEquals("{'cells':[{'content':'user2','options':{}},{'content':2,'options':{}}]}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
         db.update("DELETE FROM classifications");
+    }
+
+    @Test
+    public void multipleValue()
+    {
+        Query query = meta.getQuery("testtable", "All records");
+        TableModel table = tableModelService.getTableModel(query, Collections.singletonMap("name", new String[]{"user1", "user2"}));
+
+        assertEquals(2, table.getRows().size());
+        assertEquals("user1", table.getRows().get(0).getCells().get(0).content);
+        assertEquals("user2", table.getRows().get(1).getCells().get(0).content);
     }
 }

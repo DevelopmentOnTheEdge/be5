@@ -4,6 +4,7 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -47,7 +48,8 @@ public class HashUrl
 
     private String getValue(Object value)
     {
-        if (value instanceof String[]) return String.join(",", (String[]) value);
+        if (value instanceof List) return String.join(",", (List<String>) value);
+        else if (value instanceof String[]) return String.join(",", (String[]) value);
         else return value.toString();
     }
 
