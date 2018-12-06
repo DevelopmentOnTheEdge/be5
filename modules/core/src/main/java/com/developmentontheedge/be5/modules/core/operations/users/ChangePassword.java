@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.operation.model.TransactionalOperation;
-import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.google.inject.Stage;
@@ -65,6 +64,6 @@ public class ChangePassword extends GOperationSupport implements TransactionalOp
 
         String newPass = loginService.finalPassword(params.getValueAsString("new_user_pass").toCharArray());
         db.update("UPDATE users SET user_pass = ? WHERE user_name = ?", newPass, userInfo.getUserName());
-        setResultFinished(FrontendActions.goBack());
+        setResultFinished(userAwareMeta.getLocalizedExceptionMessage("Password has been changed"));
     }
 }
