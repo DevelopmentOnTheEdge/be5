@@ -24,7 +24,8 @@ ru:
       - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
       - Current password not correct: Текущий пароль не правильный
-      - New passwords not equals.: Новые пароли не равны
+      - Password has been changed: Пароль изменен
+      - New passwords not equals.: Новые пароли не совпадают
       - 'The minimum password length is $1 characters': 'Минимальная длина пароля $1 знаков'
       - Access to these records is denied.: Доступ к этим записям запрещен.
     - topics: validation
