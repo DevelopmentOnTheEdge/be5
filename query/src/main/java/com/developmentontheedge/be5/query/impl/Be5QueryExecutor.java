@@ -229,7 +229,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            QueryUtils.applySort(ast, getSchema(ast), orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryUtils.applySort(ast, getSchema(ast.clone()), orderColumn + (selectable ? -1 : 0), orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 
