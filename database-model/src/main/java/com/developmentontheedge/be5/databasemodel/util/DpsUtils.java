@@ -90,7 +90,8 @@ public class DpsUtils
         return dps;
     }
 
-    public static <V> V getOrDefault(Map<Object, V> values, Object key, V defaultValue) {
+    public static <V> V getOrDefault(Map<Object, V> values, Object key, V defaultValue)
+    {
         V v;
         return ((v = values.get(key)) != null)
                 ? v
