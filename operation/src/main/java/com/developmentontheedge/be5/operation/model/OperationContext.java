@@ -55,6 +55,15 @@ public class OperationContext
         return operationParams;
     }
 
+//    /**
+//     * use getParams()
+//     */
+//    @Deprecated
+//    public Map<String, Object> getOperationParams()
+//    {
+//        return operationParams;
+//    }
+
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId
 
 
