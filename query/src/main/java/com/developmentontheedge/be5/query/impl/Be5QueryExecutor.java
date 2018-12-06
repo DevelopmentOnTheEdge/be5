@@ -162,7 +162,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.contextApplier = new ContextApplier(executorQueryContext);
         this.executeType = ExecuteType.DEFAULT;
 
-        selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
+        selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
+                .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
+                .filter(r -> r == 1 || r == 2).count() > 0;
     }
 
     @Override
