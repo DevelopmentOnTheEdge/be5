@@ -41,6 +41,24 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    public void addDataCustomParam()
+    {
+        Query query = meta.getQuery("testTags", "All records");
+        ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("customParam", "50"));
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Кастомный параметер','value':'50'}]}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
+    @Test
+    public void entity()
+    {
+        Query query = meta.getQuery("testTags", "All records");
+        ResourceData resourceData = filterInfoPlugin.addData(query, ImmutableMap.of("entity", "testTags", "entityID", "1"));
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Property Types','value':'Региональный'}]}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
+    @Test
     public void addDataForPrimaryKey()
     {
         Query query = meta.getQuery("testTags", "All records");

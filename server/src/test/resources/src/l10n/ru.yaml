@@ -78,6 +78,7 @@ ru:
       - Municipal: Муниципальный
       - Regional: Региональный
       - admlevel: Административный уровень
+      - customParam: Кастомный параметер
   - default:
     - topics: operationName
       entries:

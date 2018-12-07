@@ -90,7 +90,7 @@ public class FilterInfoPlugin implements DocumentPlugin
             }
 
             String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");
-            result.add(new FilterItem(k, valueTitle));
+            result.add(new FilterItem(userAwareMeta.getColumnTitle(mainEntityName, k), valueTitle));
         });
         return result;
     }
