@@ -38,6 +38,8 @@ be5events:
     indices:
     - IDX_EVENTS_START:
         columns: startTime
+    - IDX_EVENTS_USER_NAME:
+        columns: user_name
   queries:
   - '*** Selection view ***':
       type: 1D
