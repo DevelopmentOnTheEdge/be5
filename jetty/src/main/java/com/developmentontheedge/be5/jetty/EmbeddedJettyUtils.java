@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.jetty;
 
-import com.developmentontheedge.be5.metadata.scripts.FrontendUtils;
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -17,8 +16,6 @@ public class EmbeddedJettyUtils
 {
     public static void run(EventListener eventListener) throws Exception
     {
-        FrontendUtils.copyToWebApp(System.getProperty("user.dir"));
-
         Server server = new Server(8200);
         server.setHandler(getContextHandler(eventListener));
         server.start();
