@@ -222,7 +222,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         contextApplier.applyContext(ast);
 
-        if (selectable) QueryUtils.addIDColumnLabel(ast, query);
+        if (query.getType() == QueryType.D1) QueryUtils.addIDColumnLabel(ast, query);
 
         if (executeType == ExecuteType.COUNT)
         {
