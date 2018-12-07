@@ -85,7 +85,6 @@
           <exclude>dist/**/*</exclude>
           <exclude>src/main/**/*.*</exclude>
           <exclude>target/**/*.*</exclude>
-
           <exclude>*.properties</exclude>
         </excludes>
       </resource>
