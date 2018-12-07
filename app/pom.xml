@@ -9,8 +9,7 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>be5 app</name>
-  <description>be5 base app</description>
+  <name>be5 app parent</name>
 
   <distributionManagement>
     <repository>
@@ -117,6 +116,13 @@
             <configuration>
               <generateContextPath>${project.build.directory}/${project.artifactId}/META-INF</generateContextPath>
             </configuration>
+          </execution>
+          <execution>
+            <id>validate</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>validate</goal>
+            </goals>
           </execution>
         </executions>
         <!-- duplicate for (ModuleLoader2.class).getClassLoader().getResources(PROJECT_FILE_NAME); -->

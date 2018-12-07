@@ -36,6 +36,11 @@ public class AppValidate extends ScriptSupport<AppValidate>
     @Override
     public void execute() throws ScriptException
     {
+        if (!projectPath.toPath().resolve("project.yaml").toFile().exists())
+        {
+            logger.info("Project not found, validation skipped.");
+            return;
+        }
         initProject();
 
         setRdbms();
