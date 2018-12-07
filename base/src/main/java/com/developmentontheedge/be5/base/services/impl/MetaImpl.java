@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;
@@ -487,6 +488,7 @@ public class MetaImpl implements Meta
         e.setBesql(true);
         DataElementUtils.save(e);
         Query query = new Query("query", e);
+        query.setType(QueryType.D1_UNKNOWN);
         DataElementUtils.save(query);
         query.setQuery(sql);
         return query;

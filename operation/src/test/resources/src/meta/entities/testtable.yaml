@@ -18,8 +18,6 @@ testtable:
       type: 1D_unknown
       roles: '@AllRoles'
       operations:
-      - Edit
-      - Insert
       - Filter
       - OldRedirectFilter
       - CustomOperation

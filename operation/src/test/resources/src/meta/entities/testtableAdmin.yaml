@@ -25,17 +25,12 @@ testtableAdmin:
       - TestGroovyOp
       - OperationWithExtend
       - OperationWithExtend2
-      - Filter
-      - OldRedirectFilter
       - ErrorProcessing
       - ErrorProcessingTransactional
       - TransactionTestOp
-      - Delete
-      - Edit
       - PrintParamsCustomOp
       - TestTransactionalOperation
       - TestOperationProperty
-      - Insert
       code: |2-
             SELECT
               t.ID AS "___ID",
