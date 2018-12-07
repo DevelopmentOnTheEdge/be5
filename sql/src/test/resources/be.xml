@@ -895,6 +895,15 @@ SELECT t.ID AS "Code", '<!--'|| TO_CHAR(( b))||'-->'||'<a href="...">'|| a ||'</
     </parser>
   </test>
 
+  <test name="macro-in-nested-query">
+    <parser>
+      <query><![CDATA[MACRO NESTED_QUERY() (select * from table) END
+SELECT * FROM (NESTED_QUERY()) t]]></query>
+      <format dbms="oracle"><![CDATA[MACRO NESTED_QUERY () (SELECT * FROM table) END
+SELECT * FROM ((SELECT * FROM table)) t]]></format>
+    </parser>
+  </test>
+
   <test name="macro-parameter-tag">
     <parser>
       <query><![CDATA[MACRO A(x)

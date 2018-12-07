@@ -384,7 +384,7 @@ void SelectExpression():
 void NestedQuery() #NestedQuery :
 {}
 {
-    <LEFT_PAREN> Query() <RIGHT_PAREN> 
+    <LEFT_PAREN> (Query() | Function()) <RIGHT_PAREN>
 }
 
 void UnionClause() #Union :
