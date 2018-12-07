@@ -18,12 +18,12 @@ public class EventManager implements MethodInterceptor
     public static final Logger log = Logger.getLogger(EventManager.class.getName());
     public static final String ACTION_QUERY = "query";
     public static final String ACTION_OPERATION = "operation";
-    public static final String ACTION_QUERY_BUILDER = "queryBuilder";
-    public static final String ACTION_LOGGING = "logging";
-    public static final String ACTION_PRINT = "print";
-    public static final String ACTION_SERVLET = "servlet";
-    public static final String ACTION_PROCESS = "process";
-    public static final String ACTION_OTHER = "other";
+//    public static final String ACTION_QUERY_BUILDER = "queryBuilder";
+//    public static final String ACTION_LOGGING = "logging";
+//    public static final String ACTION_PRINT = "print";
+//    public static final String ACTION_SERVLET = "servlet";
+//    public static final String ACTION_PROCESS = "process";
+//    public static final String ACTION_OTHER = "other";
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
@@ -46,6 +46,7 @@ public class EventManager implements MethodInterceptor
     private Object logQuery(MethodInvocation invocation, long startTime, Object[] arguments) throws Throwable
     {
         Query query = (Query) arguments[0];
+        @SuppressWarnings("unchecked")
         Map<String, Object> parameters = (Map<String, Object>) arguments[1];
         try
         {
@@ -62,6 +63,7 @@ public class EventManager implements MethodInterceptor
     private Object logOperation(MethodInvocation invocation, long startTime, Object[] arguments) throws Throwable
     {
         Operation operation = (Operation) arguments[0];
+        @SuppressWarnings("unchecked")
         Map<String, Object> values = (Map<String, Object>) arguments[1];
 
         Object proceed = invocation.proceed();
@@ -76,7 +78,7 @@ public class EventManager implements MethodInterceptor
         return proceed;
     }
 
-    public void operationCompleted(Operation operation, Map<String, Object> values,
+    private void operationCompleted(Operation operation, Map<String, Object> values,
                                    long startTime, long endTime)
     {
         for (Be5EventLogger listener : listeners)
@@ -85,7 +87,7 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void operationError(Operation operation, Map<String, Object> values,
+    private void operationError(Operation operation, Map<String, Object> values,
                                long startTime, long endTime, String exception)
     {
         for (Be5EventLogger listener : listeners)
@@ -94,7 +96,7 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void queryCompleted(Query query, Map<String, Object> parameters, long startTime, long endTime)
+    private void queryCompleted(Query query, Map<String, Object> parameters, long startTime, long endTime)
     {
         for (Be5EventLogger listener : listeners)
         {
@@ -102,7 +104,7 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void queryError(Query query, Map<String, Object> parameters, long startTime, long endTime, String exception)
+    private void queryError(Query query, Map<String, Object> parameters, long startTime, long endTime, String exception)
     {
         for (Be5EventLogger listener : listeners)
         {
