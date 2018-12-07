@@ -290,9 +290,17 @@ public class MetaImpl implements Meta
         Operation operation = getProject().findOperation(entityName, queryName, name);
         if (operation == null)
         {
+            Operation entityOperation = getProject().findOperation(entityName, name);
             if (getProject().findOperation(entityName, name) != null)
             {
-                throw Be5Exception.operationNotAssignedToQuery(entityName, queryName, name);
+                if (getQuery(entityName, queryName).getParametrizingOperationName().equals(entityOperation.getName()))
+                {
+                    return entityOperation;
+                }
+                else
+                {
+                    throw Be5Exception.operationNotAssignedToQuery(entityName, queryName, name);
+                }
             }
             else
             {
@@ -458,12 +466,6 @@ public class MetaImpl implements Meta
     public Project getProject()
     {
         return projectProvider.get();
-    }
-
-    @Override
-    public boolean isParametrizedTable(Query query)
-    {
-        return !query.getParametrizingOperationName().isEmpty();
     }
 
     @Override

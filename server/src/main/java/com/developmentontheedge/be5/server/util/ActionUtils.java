@@ -104,7 +104,15 @@ public final class ActionUtils
                 return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
             }
 
-            return Action.call(new HashUrl("table", query.getEntity().getName(), query.getName()));
+            if (query.getParametrizingOperationName().length() > 0)
+            {
+                return Action.call(new HashUrl("form", query.getEntity().getName(), query.getName(),
+                        query.getParametrizingOperation().getName()));
+            }
+            else
+            {
+                return Action.call(new HashUrl("table", query.getEntity().getName(), query.getName()));
+            }
         }
     }
 

@@ -129,11 +129,6 @@ public interface Meta
      */
     String getTitle(Query query, String language);
 
-    /**
-     * Checks only the specified query, doesn't respolve redirects.
-     */
-    boolean isParametrizedTable(Query query);
-
     Set<String> getProjectRoles();
 
     List<Daemon> getDaemons();
