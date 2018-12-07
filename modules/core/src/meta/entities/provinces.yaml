@@ -47,7 +47,6 @@ provinces:
       roles: Administrator
       code: com.beanexplorer.enterprise.operations.SilentEditOperation
   - Explain Plan:
-      type: Java and .Net
       roles: Administrator
       code: com.beanexplorer.enterprise.operations.ExplainPlan
   - Filter:

@@ -40,16 +40,8 @@ classifications:
   - All records:
       type: 1D
       roles: Administrator
-      operations:
-      - Clone
-      - Delete
-      - Edit
-      - Explain Plan
-      - Filter
-      - Insert
       code: |-
         SELECT
-
          CONCAT( '{{{',e.displayName ,'}}}: ' ,
              COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;'                     ),''        ) ,
              COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;'                     ),''        ) ,

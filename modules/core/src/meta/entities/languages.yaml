@@ -21,7 +21,6 @@ languages:
       - Clone
       - Delete
       - Edit
-      - Explain Plan
       - Filter
       - Insert
       code: |-

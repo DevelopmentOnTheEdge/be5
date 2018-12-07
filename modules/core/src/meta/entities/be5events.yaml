@@ -58,8 +58,6 @@ be5events:
       - Filter
       - TopFilter
       - Filter by Date
-      - Move to Archive
-      - Open in Excel
       code: |-
         SELECT
            e.ID AS "___myid",
