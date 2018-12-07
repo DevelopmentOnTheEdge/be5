@@ -514,6 +514,23 @@ public class Query extends EntityItem implements TemplateElement
         {
             result.add(new ProjectElementException(getCompletePath(), "roles", "Unknown role(s): " + missingEntries));
         }
+
+        for (String operationName : this.getOperationNames().getFinalValues())
+        {
+            if (!this.getEntity().getOperations().contains(operationName))
+            {
+                result.add(new ProjectElementException(getCompletePath(), "operations",
+                        "Operation '" + operationName + "' not found"));
+            }
+        }
+
+        String pOperationName = this.getParametrizingOperationName();
+        if (pOperationName.length() > 0 &&
+                !this.getEntity().getOperations().contains(pOperationName))
+        {
+            result.add(new ProjectElementException(getCompletePath(), "operations",
+                    "Operation '" + pOperationName + "' not found"));
+        }
         return result;
     }
 

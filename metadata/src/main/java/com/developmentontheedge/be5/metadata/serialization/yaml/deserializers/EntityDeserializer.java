@@ -411,29 +411,7 @@ class EntityDeserializer extends FileDeserializer
         }
         checkChildren(query, queryElement, Fields.query(), TAG_EXTRAS, TAG_COMMENT, TAG_CUSTOMIZATIONS, ATTR_ICON, ATTR_QUERY_CODE, TAG_CODE,
                 ATTR_QUERY_OPERATIONS, "quickFilters", ATTR_ROLES, TAG_SETTINGS, "file");
-        checkQueryOperations(entity, query);
-
         return query;
-    }
-
-    private void checkQueryOperations(Entity entity, Query query)
-    {
-        for (String operationName : query.getOperationNames().getFinalValues())
-        {
-            if (!entity.getOperations().contains(operationName))
-            {
-                loadContext.addWarning(new ReadException(path,
-                        "Operation '" + operationName + "' not fount for query: " + query.getName()));
-            }
-        }
-
-        String pOperationName = query.getParametrizingOperationName();
-        if (pOperationName.length() > 0 &&
-                !entity.getOperations().contains(pOperationName))
-        {
-            loadContext.addWarning(new ReadException(path,
-                    "Operation '" + pOperationName + "' not fount for query: " + query.getName()));
-        }
     }
 
     private void readRoles(final Map<String, Object> element, final EntityItem item)
