@@ -892,7 +892,7 @@ WHERE ( c.name || ' - ОГРН: ' || c.ogrn ) LIKE 'test%']]></format>
       <format dbms="mysql">
         <![CDATA[SELECT CAST('2003-09-02' AS DATE), CAST('2002-09-02' AS DATE), CAST('2001-09-02' AS DATE) FROM table t]]></format>
       <format dbms="postgres">
-        <![CDATA[SELECT TO_DATE('2003-09-02', 'YYYY-MM-DD'), TO_DATE('2002-09-02', 'YYYY-MM-DD'), TO_DATE('2001-09-02', 'YYYY-MM-DD') FROM table t]]></format>
+        <![CDATA[SELECT CAST('2003-09-02' AS DATE), CAST('2002-09-02' AS DATE), CAST('2001-09-02' AS DATE) FROM table t]]></format>
       <format dbms="db2"><![CDATA[SELECT '2003-09-02', '2002-09-02', '2001-09-02' FROM table t]]></format>
       <format dbms="sqlserver">
         <![CDATA[SELECT CONVERT(DATE, '2003-09-02', 120), CONVERT(DATE, '2002-09-02', 120), CONVERT(DATE, '2001-09-02', 120) FROM table t]]></format>
@@ -1093,7 +1093,7 @@ WHERE ( c.name || ' - ОГРН: ' || c.ogrn ) LIKE 'test%']]></format>
     <parser>
       <query><![CDATA[SELECT * FROM tbl WHERE a > TO_DATE(d,'YYYY-MM-DD') + (1) * '1 MONTH'::INTERVAL]]></query>
       <format dbms="postgres">
-        <![CDATA[SELECT * FROM tbl WHERE a > (TO_DATE(d, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(1))]]></format>
+        <![CDATA[SELECT * FROM tbl WHERE a > (CAST(d AS DATE)+ INTERVAL '1 MONTH'*(1))]]></format>
     </parser>
   </test>
 
@@ -1126,8 +1126,8 @@ AND DATE_ADD(CAST(CURRENT_DATE AS DATE), INTERVAL - 12 * 18 MONTH)< p.birthDay
 AND wpr.arrangement = '<var:arrangement />']]></format>
       <format dbms="postgres"><![CDATA[SELECT COUNT(*)
 FROM wardPrimaryRegistration wpr, persons p
-WHERE wpr.activeFrom <= TO_DATE('<var:___dateRep />', 'YYYY-MM-DD')
-AND (TO_DATE(CURRENT_DATE, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(- 12 * 18 ))< p.birthDay
+WHERE wpr.activeFrom <= CAST('<var:___dateRep />' AS DATE)
+AND (CAST(CURRENT_DATE AS DATE)+ INTERVAL '1 MONTH'*(- 12 * 18 ))< p.birthDay
 AND wpr.arrangement = '<var:arrangement />']]></format>
     </parser>
   </test>
@@ -1948,7 +1948,7 @@ WHERE ol.table_name = 'utilityPrivileges' AND ol.operation_name = '<parameter:op
        WHERE olp.operLogID = ol.ID AND olp.paramName IN ( 'recalcDate', 'date' ) 
                                    AND olp.paramValue 
 IN ( '<parameter:calcDate />', 
-TO_CHAR(TO_DATE('<parameter:calcDate />', 'DD.MM.YYYY'), 'YYYY-MM-DD')) )
+TO_CHAR(CAST('<parameter:calcDate />' AS DATE), 'YYYY-MM-DD')) )
 
 <if parameter="paymentType">
   AND EXISTS ( SELECT 1 FROM operationLogParams olp 
@@ -1987,8 +1987,8 @@ ORDER BY ol.executedAt DESC
     INNER JOIN assignments a ON p.id = a.personID AND a.companyID = <parameter:companyId refColumn="companies.ID"/>
         AND ( a.activeFrom <> a.activeTo OR a.activeTo IS NULL ) AND
         (
-            a.activeTo = ( TO_DATE('<parameter:endDate />', 'YYYY-MM-DD') + 1 )
-                OR a.activeFrom = ( TO_DATE('<parameter:endDate />', 'YYYY-MM-DD') + 1 )
+            a.activeTo = ( CAST('<parameter:endDate />' AS DATE)+ 1 )
+                OR a.activeFrom = ( CAST('<parameter:endDate />' AS DATE)+ 1 )
         )
         AND ( a.referenceID NOT LIKE 'assignments.%'
             OR NOT EXISTS

@@ -1054,9 +1054,9 @@ GROUP BY guard."___ownerID", CASE WHEN guard.ID IS NOT NULL THEN (
  
 HAVING 1 = 1
 <if parameter="status">
-    AND ( ( (TO_DATE(wr.activeFrom, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(1))> CURRENT_TIMESTAMP AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(1))< CURRENT_TIMESTAMP ) OR
-          ( (TO_DATE(wr.activeFrom, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(12))> CURRENT_TIMESTAMP AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(3))< CURRENT_TIMESTAMP ) OR
-          ( wr.activeFrom < (TO_DATE(CURRENT_TIMESTAMP, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(- 12 )) AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(12))< CURRENT_TIMESTAMP ) )
+    AND ( ( (CAST(wr.activeFrom AS DATE)+ INTERVAL '1 MONTH'*(1))> CURRENT_TIMESTAMP AND (CAST(MAX(wi.activeFrom) AS DATE)+ INTERVAL '1 MONTH'*(1))< CURRENT_TIMESTAMP ) OR
+        ( (CAST(wr.activeFrom AS DATE)+ INTERVAL '1 MONTH'*(12))> CURRENT_TIMESTAMP AND (CAST(MAX(wi.activeFrom) AS DATE)+ INTERVAL '1 MONTH'*(3))< CURRENT_TIMESTAMP ) OR
+        ( wr.activeFrom < (CAST(CURRENT_TIMESTAMP AS DATE)+ INTERVAL '1 MONTH'*(- 12 )) AND (CAST(MAX(wi.activeFrom) AS DATE)+ INTERVAL '1 MONTH'*(12))< CURRENT_TIMESTAMP ) )
 </if>
 <if parameter="month">
     AND CAST(EXTRACT(MONTH FROM  MAX(wi.nextCheckDate)) AS INT) = '<parameter:month />'
@@ -1366,302 +1366,285 @@ GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID
    personIDs:  '<parameter:personIDs />'
    _tcloneid_: '<parameter:_tcloneid_ />' */]]></query>
       <format dbms="postgres"><![CDATA[SELECT
-   COUNT(DISTINCT p.ID) AS "personsCount",
-   (
-  (SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
-    inc.payAmount AS "payAmount"
-FROM persons<parameter:_tcloneid_ default=""/> p
-  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
-    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
-    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
-          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
-        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
-<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
-        AND dg.CODE = wgip.demographicGroupCode
-        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
-          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
- AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
-    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
-      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
-      INNER JOIN (
-        SELECT
-          pay.activeFrom,
-          a.personID,
-          COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
-          wt.welfareGroupCode
-        FROM assignments<parameter:_tcloneid_ default=""/> a
-          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
-          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
-            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
-        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-            AND pay.eventType IN ('14', '26', '68', '15', '16')
-      ) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
-                       AND inc.activeFrom < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-                       AND inc.personID = p.ID
-                       AND inc.welfareGroupCode = i2wgc.income
-WHERE wgip.socialAidFormCode = (
-    SELECT MAX(wgip_1.socialAidFormCode)
-    FROM welfareGroupIncomesPeriods wgip_1
-    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
-          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-) AND p.ID IN (
-    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
-    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
-        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-
-    UNION ALL
-
-    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
-    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
-        AND se.activeTo IS NULL
-)
- ) x)
-+
-  (SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
-    COALESCE( i.amount, 0 ) AS "income"
-FROM persons<parameter:_tcloneid_ default=""/> p
-    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
-    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
-          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
-    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
-    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
-    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
-    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
-        AND i.personID = p.ID
-        AND i.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
-    INNER JOIN territories t ON t.ID = c2t.territoryID
-    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
-        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
-        AND dg.CODE = wgip.demographicGroupCode
-        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
-          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
- AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
-    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
-          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
-
-WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-    AND wgip.socialAidFormCode = (
-        SELECT MAX(wgip_1.socialAidFormCode)
-        FROM welfareGroupIncomesPeriods wgip_1
-        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
-          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    )
-    AND ( i.ID IS NULL OR i.monthDate >= (
-                SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
-                FROM documents<parameter:_tcloneid_ default=""/> doc
-                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
-                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
-                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
-                WHERE doc.typeID = d.typeID
-                    AND soce.personID = se.personID
-                    AND inc.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-            )
-    )
-GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
- ) x)
-)
-     AS "totalFamilyIncome",
-   wgip.incomeMonthCount AS "incomeMonthCount",
+COUNT(DISTINCT p.ID) AS "personsCount",
 (
-  (SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
-    inc.payAmount AS "payAmount"
+(SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
+inc.payAmount AS "payAmount"
 FROM persons<parameter:_tcloneid_ default=""/> p
-  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
-    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
-    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
-          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
-        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+>= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+AND         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
 <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
-        AND dg.CODE = wgip.demographicGroupCode
-        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
-          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
- AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
-    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
-      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
-      INNER JOIN (
-        SELECT
-          pay.activeFrom,
-          a.personID,
-          COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
-          wt.welfareGroupCode
-        FROM assignments<parameter:_tcloneid_ default=""/> a
-          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
-          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
-            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
-        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-            AND pay.eventType IN ('14', '26', '68', '15', '16')
-      ) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
-                       AND inc.activeFrom < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-                       AND inc.personID = p.ID
-                       AND inc.welfareGroupCode = i2wgc.income
+AND dg.CODE = wgip.demographicGroupCode
+AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+(pc.activeFrom IS NULL OR pc.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pc.activeTo IS NULL OR pc.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+INNER JOIN (
+SELECT
+pay.activeFrom,
+a.personID,
+COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
+wt.welfareGroupCode
+FROM assignments<parameter:_tcloneid_ default=""/> a
+INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND pay.eventType IN ('14', '26', '68', '15', '16')
+) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+AND inc.activeFrom < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND inc.personID = p.ID
+AND inc.welfareGroupCode = i2wgc.income
 WHERE wgip.socialAidFormCode = (
-    SELECT MAX(wgip_1.socialAidFormCode)
-    FROM welfareGroupIncomesPeriods wgip_1
-    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
-          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
+SELECT MAX(wgip_1.socialAidFormCode)
+FROM welfareGroupIncomesPeriods wgip_1
+WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+wgip_1.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip_1.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
 ) AND p.ID IN (
-    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
-    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
-        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-
-    UNION ALL
-
-    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
-    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
-        AND se.activeTo IS NULL
+SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+AND se.activeTo >= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+UNION ALL
+SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+AND se.activeTo IS NULL
 )
- ) x)
+) x)
 +
-  (SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
-    COALESCE( i.amount, 0 ) AS "income"
+(SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
+COALESCE( i.amount, 0 ) AS "income"
 FROM persons<parameter:_tcloneid_ default=""/> p
-    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
-    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
-          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
-    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
-    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
-    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
-    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
-        AND i.personID = p.ID
-        AND i.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
-    INNER JOIN territories t ON t.ID = c2t.territoryID
-    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
-        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
- <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
-        AND dg.CODE = wgip.demographicGroupCode
-        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
-          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
- AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
-    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
-          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
-
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE) OR se.activeTo IS NULL )
+LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+AND i.personID = p.ID
+AND i.monthDate < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+INNER JOIN territories t ON t.ID = c2t.territoryID
+INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+>= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+AND         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+AND dg.CODE = wgip.demographicGroupCode
+AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+(pc.activeFrom IS NULL OR pc.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pc.activeTo IS NULL OR pc.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+(pt.activeFrom IS NULL OR pt.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pt.activeTo IS NULL OR pt.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
 WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-    AND wgip.socialAidFormCode = (
-        SELECT MAX(wgip_1.socialAidFormCode)
-        FROM welfareGroupIncomesPeriods wgip_1
-        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
-          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-    )
-    AND ( i.ID IS NULL OR i.monthDate >= (
-                SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
-                FROM documents<parameter:_tcloneid_ default=""/> doc
-                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
-                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
-                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
-                WHERE doc.typeID = d.typeID
-                    AND soce.personID = se.personID
-                    AND inc.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-            )
-    )
+AND wgip.socialAidFormCode = (
+SELECT MAX(wgip_1.socialAidFormCode)
+FROM welfareGroupIncomesPeriods wgip_1
+WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+wgip_1.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip_1.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+)
+AND ( i.ID IS NULL OR i.monthDate >= (
+SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+FROM documents<parameter:_tcloneid_ default=""/> doc
+INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
+INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+WHERE doc.typeID = d.typeID
+AND soce.personID = se.personID
+AND inc.monthDate < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+)
 GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
- ) x)
+) x)
 )
-      / COUNT(DISTINCT p.ID) / wgip.incomeMonthCount AS "monthFamilyIncome",
-   '<currency round="2"/>' AS ";monthFamilyIncome",
-(SELECT SUM(y.amount) FROM (
-   SELECT MIN(pt.amount) AS amount
-    FROM persons<parameter:_tcloneid_ default=""/> p1
-    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> inner_gur ON inner_gur.ID = CAST( <parameter:gurID /> AS BIGINT)
-      INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p1.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
-      INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p1.birthday)) AS INTEGER)
- >= CASE WHEN p1.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
-                                     AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p1.birthday)) AS INTEGER)
- <= CASE WHEN p1.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
-                                     AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p1.ID AND       (
-          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
- AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
-        INNER JOIN povertyThresholds pt ON pt.demographicGroup = dg.CODE AND       (
-          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
-      )
-
-          INNER JOIN territories t ON pt.provinceID = t.provinceID
-            INNER JOIN companies2territories c2t ON t.ID = c2t.territoryID AND c2t.companyID = inner_gur.companyID
-    WHERE p1.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
-    AND EXISTS (
-        SELECT 1 FROM welfareGroupIncomesPeriods inner_wgip
-        WHERE inner_wgip.welfareGroupCode = inner_gur.welfareGroup
-            AND       (
-          inner_wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND inner_wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-            AND dg.CODE = inner_wgip.demographicGroupCode
-    )
-    GROUP BY p1.ID
-  ) y
-)
-      / COUNT(DISTINCT p.ID) AS "familyPovertyThresholds",
-   '<currency round="2"/>' AS ";familyPovertyThresholds"
+AS "totalFamilyIncome",
+wgip.incomeMonthCount AS "incomeMonthCount",
+(
+(SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
+inc.payAmount AS "payAmount"
 FROM persons<parameter:_tcloneid_ default=""/> p
-  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = <parameter:gurID refColumn="governmentUtilityRequests.ID"/>
-    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >=  TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
-    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
-    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
-          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
-      )
-
-        INNER JOIN assignmentRules2socialAidForms ar2saf ON ar2saf.assignmentRuleID = gur.livingSituationCode AND ar2saf.socialAidFormCode = wgip.socialAidFormCode
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+>= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+AND         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+AND dg.CODE = wgip.demographicGroupCode
+AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+(pc.activeFrom IS NULL OR pc.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pc.activeTo IS NULL OR pc.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+INNER JOIN (
+SELECT
+pay.activeFrom,
+a.personID,
+COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
+wt.welfareGroupCode
+FROM assignments<parameter:_tcloneid_ default=""/> a
+INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND pay.eventType IN ('14', '26', '68', '15', '16')
+) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+AND inc.activeFrom < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND inc.personID = p.ID
+AND inc.welfareGroupCode = i2wgc.income
+WHERE wgip.socialAidFormCode = (
+SELECT MAX(wgip_1.socialAidFormCode)
+FROM welfareGroupIncomesPeriods wgip_1
+WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+wgip_1.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip_1.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+) AND p.ID IN (
+SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+AND se.activeTo >= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+UNION ALL
+SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+AND se.activeTo IS NULL
+)
+) x)
++
+(SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
+COALESCE( i.amount, 0 ) AS "income"
+FROM persons<parameter:_tcloneid_ default=""/> p
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE) OR se.activeTo IS NULL )
+LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+AND i.personID = p.ID
+AND i.monthDate < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+INNER JOIN territories t ON t.ID = c2t.territoryID
+INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+>= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+AND         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+AND dg.CODE = wgip.demographicGroupCode
+AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+(pc.activeFrom IS NULL OR pc.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pc.activeTo IS NULL OR pc.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+(pt.activeFrom IS NULL OR pt.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pt.activeTo IS NULL OR pt.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND wgip.socialAidFormCode = (
+SELECT MAX(wgip_1.socialAidFormCode)
+FROM welfareGroupIncomesPeriods wgip_1
+WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+wgip_1.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip_1.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+)
+AND ( i.ID IS NULL OR i.monthDate >= (
+SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+FROM documents<parameter:_tcloneid_ default=""/> doc
+INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
+INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+WHERE doc.typeID = d.typeID
+AND soce.personID = se.personID
+AND inc.monthDate < DATE_TRUNC('MONTH', CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+)
+GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
+) x)
+)
+/ COUNT(DISTINCT p.ID) / wgip.incomeMonthCount AS "monthFamilyIncome",
+'<currency round="2"/>' AS ";monthFamilyIncome",
+(SELECT SUM(y.amount) FROM (
+SELECT MIN(pt.amount) AS amount
+FROM persons<parameter:_tcloneid_ default=""/> p1
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> inner_gur ON inner_gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p1.ID AND ( se.activeTo >= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE) OR se.activeTo IS NULL )
+INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p1.birthday)) AS INTEGER)
+>= CASE WHEN p1.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+AND         CAST(EXTRACT(YEAR FROM AGE(CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE), p1.birthday)) AS INTEGER)
+<= CASE WHEN p1.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p1.ID AND       (
+(pc.activeFrom IS NULL OR pc.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pc.activeTo IS NULL OR pc.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+INNER JOIN povertyThresholds pt ON pt.demographicGroup = dg.CODE AND       (
+(pt.activeFrom IS NULL OR pt.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+AND (pt.activeTo IS NULL OR pt.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE))
+)
+INNER JOIN territories t ON pt.provinceID = t.provinceID
+INNER JOIN companies2territories c2t ON t.ID = c2t.territoryID AND c2t.companyID = inner_gur.companyID
+WHERE p1.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+AND EXISTS (
+SELECT 1 FROM welfareGroupIncomesPeriods inner_wgip
+WHERE inner_wgip.welfareGroupCode = inner_gur.welfareGroup
+AND       (
+inner_wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND inner_wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+AND dg.CODE = inner_wgip.demographicGroupCode
+)
+GROUP BY p1.ID
+) y
+)
+/ COUNT(DISTINCT p.ID) AS "familyPovertyThresholds",
+'<currency round="2"/>' AS ";familyPovertyThresholds"
+FROM persons<parameter:_tcloneid_ default=""/> p
+INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = <parameter:gurID refColumn="governmentUtilityRequests.ID"/>
+INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >=  CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE) OR se.activeTo IS NULL )
+INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+wgip.activeFrom <= CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+AND wgip.activeTo > CAST('<parameter:calcDate type="java.sql.Date"/>' AS DATE)
+)
+INNER JOIN assignmentRules2socialAidForms ar2saf ON ar2saf.assignmentRuleID = gur.livingSituationCode AND ar2saf.socialAidFormCode = wgip.socialAidFormCode
 WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
 GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID, gur.welfareGroup
 /* gurID:      '<parameter:gurID />'
-   calcDate:   '<parameter:calcDate />'
-   personIDs:  '<parameter:personIDs />'
-   _tcloneid_: '<parameter:_tcloneid_ />' */]]></format>
+calcDate:   '<parameter:calcDate />'
+personIDs:  '<parameter:personIDs />'
+_tcloneid_: '<parameter:_tcloneid_ />' */]]></format>
     </parser>
   </test>
 

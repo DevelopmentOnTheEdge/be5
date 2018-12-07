@@ -134,8 +134,7 @@ public class PostgreSqlTransformer extends GenericDbmsTransformer
     @Override
     protected void transformToDate(AstFunNode node)
     {
-        if (node.jjtGetNumChildren() == 1)
-            node.addChild(new AstStringConstant("YYYY-MM-DD"));
+        node.replaceWith(new AstCast(node.child(0), "DATE"));
     }
 
     @Override
@@ -150,8 +149,6 @@ public class PostgreSqlTransformer extends GenericDbmsTransformer
     {
         if (cast.getDataType().equalsIgnoreCase("CHAR"))
             cast.setDataType("VARCHAR");
-        else if (cast.getDataType().equalsIgnoreCase("DATE"))
-            cast.replaceWith(parserContext.getFunction("to_date").node(cast.child(0), new AstStringConstant("YYYY-MM-DD")));
         else if (cast.getDataType().equalsIgnoreCase("KEY"))
             cast.setDataType("BIGINT");
     }
