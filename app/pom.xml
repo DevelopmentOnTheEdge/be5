@@ -32,7 +32,6 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <build.plugins.plugin.version>3.1</build.plugins.plugin.version>
-    <frontend.build.directory>${basedir}/target-frontend</frontend.build.directory>
     <deployServerName>tomcat7</deployServerName>
     <deployServerUrl>http://localhost:8080/manager/text</deployServerUrl>
     <deployPath>app</deployPath>
@@ -86,7 +85,7 @@
           <exclude>dist/**/*</exclude>
           <exclude>src/main/**/*.*</exclude>
           <exclude>target/**/*.*</exclude>
-          <exclude>target-frontend/**/*.*</exclude>
+
           <exclude>*.properties</exclude>
         </excludes>
       </resource>
@@ -241,36 +240,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <configuration>
-              <target>
-
-                <delete dir="${basedir}/src/main/webapp/WEB-INF/templates"/>
-                <delete dir="${basedir}/src/main/webapp/static"/>
-
-                <copy todir="${basedir}/src/main/webapp/WEB-INF/templates" overwrite="yes" >
-                  <fileset dir="${frontend.build.directory}" includes="**/*.html"/>
-                </copy>
-
-                <copy todir="${basedir}/src/main/webapp/static" >
-                  <fileset dir="${frontend.build.directory}/static" />
-                </copy>
-
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
