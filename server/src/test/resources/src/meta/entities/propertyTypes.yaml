@@ -11,7 +11,6 @@ propertyTypes:
         type: VARCHAR(100)
   queries:
   - '*** Selection view ***':
-      operations: Filter
       code: SELECT CODE AS "Code", name AS "Name" FROM propertyTypes
   - All records:
       roles: '@AllRolesExceptGuest'

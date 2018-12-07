@@ -18,10 +18,11 @@ public class EventManager implements MethodInterceptor
     public static final Logger log = Logger.getLogger(EventManager.class.getName());
     public static final String ACTION_QUERY = "query";
     public static final String ACTION_OPERATION = "operation";
+    public static final String ACTION_SERVLET = "servlet";
 //    public static final String ACTION_QUERY_BUILDER = "queryBuilder";
 //    public static final String ACTION_LOGGING = "logging";
 //    public static final String ACTION_PRINT = "print";
-//    public static final String ACTION_SERVLET = "servlet";
+
 //    public static final String ACTION_PROCESS = "process";
 //    public static final String ACTION_OTHER = "other";
 
@@ -53,7 +54,8 @@ public class EventManager implements MethodInterceptor
             Object proceed = invocation.proceed();
             queryCompleted(query, parameters, startTime, System.currentTimeMillis());
             return proceed;
-        } catch (Throwable e)
+        }
+        catch (Throwable e)
         {
             queryError(query, parameters, startTime, System.currentTimeMillis(), e.getMessage());
             throw e;
@@ -79,7 +81,7 @@ public class EventManager implements MethodInterceptor
     }
 
     private void operationCompleted(Operation operation, Map<String, Object> values,
-                                   long startTime, long endTime)
+                                    long startTime, long endTime)
     {
         for (Be5EventLogger listener : listeners)
         {
@@ -88,7 +90,7 @@ public class EventManager implements MethodInterceptor
     }
 
     private void operationError(Operation operation, Map<String, Object> values,
-                               long startTime, long endTime, String exception)
+                                long startTime, long endTime, String exception)
     {
         for (Be5EventLogger listener : listeners)
         {
@@ -112,17 +114,22 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-//    public void servletStarted( ServletInfo si ) //, ...
-//
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//
-//                listener.servletStarted( si );
-//
-//        }
-//    }
-//
+    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.servletCompleted(servletName, requestUri, params, startTime, endTime);
+        }
+    }
+
+    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.servletError(servletName, requestUri, params, startTime, endTime, exception);
+        }
+    }
+
 //    public void servletCompleted( ServletInfo si )
 //    {
 //        for( Be5EventLogger listener : listeners )

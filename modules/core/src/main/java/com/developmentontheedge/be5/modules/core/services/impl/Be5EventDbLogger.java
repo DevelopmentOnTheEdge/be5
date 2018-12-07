@@ -10,6 +10,9 @@ import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +20,7 @@ import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_OPERATION;
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_QUERY;
+import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_SERVLET;
 
 public class Be5EventDbLogger implements Be5EventLogger
 {
@@ -26,13 +30,15 @@ public class Be5EventDbLogger implements Be5EventLogger
     private static final String EVENT_LOG_TABLE_PARAMS = "be5eventParams";
     private final UserInfoProvider userInfoProvider;
     private final DatabaseModel database;
+    private final Provider<HttpServletRequest> request;
 
     @Inject
-    public Be5EventDbLogger(EventManager eventManager, DatabaseModel database,
-                            ProjectProvider projectProvider, UserInfoProvider userInfoProvider)
+    public Be5EventDbLogger(EventManager eventManager, DatabaseModel database, ProjectProvider projectProvider,
+                            UserInfoProvider userInfoProvider, Provider<HttpServletRequest> request)
     {
         this.database = database;
         this.userInfoProvider = userInfoProvider;
+        this.request = request;
         if (projectProvider.get().hasFeature(Features.EVENT_DB_LOGGING_FEATURE))
         {
             eventManager.addListener(this);
@@ -69,8 +75,36 @@ public class Be5EventDbLogger implements Be5EventLogger
                 operation.getContext().getOperationParams(), operation.getStatus().toString(), exception);
     }
 
+    @Override
+    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime)
+    {
+        HttpSession session = request.get().getSession(false);
+        storeRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+                ACTION_SERVLET, servletName, requestUri, params, "");
+    }
+
+    @Override
+    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    {
+        HttpSession session = request.get().getSession(false);
+        storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+                ACTION_SERVLET, servletName, requestUri, params, "", exception);
+    }
+
+    private String getUserName(HttpSession session)
+    {
+        if (session == null)
+        {
+            return "Guest";
+        }
+        else
+        {
+            return userInfoProvider.getUserName();
+        }
+    }
+
     private void storeErrorRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
-                                  String entity, String title, Map<String, Object> parameters, String result, String exception)
+                                  String entity, String title, Map<String, ?> parameters, String result, String exception)
     {
         Long id = database.getEntity(EVENT_LOG_TABLE).add(new HashMap<String, Object>() {{
             put("user_name", user_name);
@@ -87,7 +121,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     private void storeRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
-                             String entity, String title, Map<String, Object> parameters, String result)
+                             String entity, String title, Map<String, ?> parameters, String result)
     {
         Long id = database.getEntity(EVENT_LOG_TABLE).add(new HashMap<String, Object>() {{
             put("user_name", user_name);
@@ -102,9 +136,9 @@ public class Be5EventDbLogger implements Be5EventLogger
         storeParams(parameters, id);
     }
 
-    private void storeParams(Map<String, Object> parameters, Long id)
+    private void storeParams(Map<String, ?> parameters, Long id)
     {
-        for (Map.Entry<String, Object> param : parameters.entrySet())
+        for (Map.Entry<String, ?> param : parameters.entrySet())
         {
             if (param.getValue() instanceof String[])
             {

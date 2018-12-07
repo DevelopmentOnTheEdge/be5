@@ -46,4 +46,16 @@ public class Be5EventTestLogger implements Be5EventLogger
     {
         mock.queryError(query, parameters, startTime, endTime, exception);
     }
+
+    @Override
+    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime)
+    {
+        mock.servletCompleted(servletName, requestUri, params, startTime, endTime);
+    }
+
+    @Override
+    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    {
+        mock.servletError(servletName, requestUri, params, startTime, endTime, exception);
+    }
 }
