@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import javax.inject.Inject;
 import java.util.Map;
 
 
