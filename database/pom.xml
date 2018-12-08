@@ -32,9 +32,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.developmentontheedge.be5</groupId>
-      <artifactId>be5-sql</artifactId>
-      <version>0.0.28-SNAPSHOT</version>
+      <groupId>com.developmentontheedge</groupId>
+      <artifactId>be-sql</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
