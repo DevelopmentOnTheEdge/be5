@@ -17,7 +17,7 @@
     <module>metadata</module>
     <module>maven</module>
     <module>base</module>
-    <module>test-base</module>
+    <module>util/test-base</module>
     <module>operation</module>
     <module>query</module>
     <module>database-model</module>
@@ -25,8 +25,8 @@
     <module>server</module>
     <module>modules/core</module>
     <module>test</module>
-    <module>app</module>
-    <module>jetty</module>
+    <module>util/app</module>
+    <module>util/jetty</module>
   </modules>
 
   <distributionManagement>
