@@ -2,11 +2,15 @@ language: java
 jdk:
   - oraclejdk8
 before_install:
+  - git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git
+    && cd beanexplorer
+    && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    && cd ../
   - git clone https://github.com/DevelopmentOnTheEdge/xmltest.git
     && cd xmltest
     && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     && cd ../
-  - git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git
+  - git clone https://github.com/DevelopmentOnTheEdge/be-sql.git
     && cd beanexplorer
     && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     && cd ../

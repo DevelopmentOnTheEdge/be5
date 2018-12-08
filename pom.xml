@@ -13,7 +13,6 @@
     <module>database</module>
     <module>freemarker-patched</module>
     <module>dbms</module>
-    <module>sql</module>
     <module>metadata</module>
     <module>maven</module>
     <module>base</module>
@@ -147,16 +146,6 @@
           <version>0.7.9</version>
           <configuration>
             <excludes>
-              <exclude>**/*com/developmentontheedge/sql/model/ParseException.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SimpleCharStream.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SqlParser.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SqlParserConstants.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SqlParserTokenManager.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SqlParserTokenManager.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/Token.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/TokenMgrError.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/JJTSqlParserState.*</exclude>
-              <exclude>**/*com/developmentontheedge/sql/model/SqlParserTreeConstants.*</exclude>
               <exclude>**/*com/developmentontheedge/be5/metadata/model/selectors/parser/*</exclude>
             </excludes>
           </configuration>
