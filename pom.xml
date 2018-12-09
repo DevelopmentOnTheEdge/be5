@@ -23,6 +23,7 @@
     <module>web</module>
     <module>server</module>
     <module>modules/core</module>
+    <module>modules/monitoring</module>
     <module>test</module>
     <module>util/app</module>
     <module>util/jetty</module>

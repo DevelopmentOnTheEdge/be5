@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>be5</artifactId>
+    <groupId>com.developmentontheedge.be5</groupId>
+    <version>0.0.3-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>be5-monitoring</artifactId>
+  <name>be5 modules monitoring</name>
+
+  <properties>
+    <metrics.version>4.0.3</metrics.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-server</artifactId>
+      <version>0.1.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-servlets</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-servlet</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.marmelo.dropwizard</groupId>
+      <artifactId>dropwizard-metrics-ui</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.hengyunabc</groupId>
+      <artifactId>metrics-zabbix</artifactId>
+      <version>0.0.5</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <configuration>
+              <configLocation>../../checkstyle.xml</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
