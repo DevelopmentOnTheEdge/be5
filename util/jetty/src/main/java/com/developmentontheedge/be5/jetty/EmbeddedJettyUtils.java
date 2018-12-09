@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.DispatcherType;
 import java.io.File;
@@ -22,6 +23,14 @@ public class EmbeddedJettyUtils
         server.join();
     }
 
+    public static void runWebApp() throws Exception
+    {
+        Server server = new Server(8200);
+        server.setHandler(getWebAppContext());
+        server.start();
+        server.join();
+    }
+
     public static ServletContextHandler getContextHandler(EventListener eventListener) throws IOException
     {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -34,6 +43,17 @@ public class EmbeddedJettyUtils
         context.addEventListener(eventListener);
         context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
         context.addServlet(DefaultServlet.class, "/");
+        context.setMaxFormContentSize(1024 * 1024 * 1024);
+        return context;
+    }
+
+    private static WebAppContext getWebAppContext()
+    {
+        WebAppContext context = new WebAppContext();
+        context.setDescriptor("/WEB-INF/web.xml");
+        context.setResourceBase("src/main/webapp");
+        context.setContextPath("/");
+        context.setParentLoaderPriority(true);
         context.setMaxFormContentSize(1024 * 1024 * 1024);
         return context;
     }
