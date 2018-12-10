@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.scripts.ScriptException;
 import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -108,6 +109,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
                 replaceAll("PASSWORD", connectionPassword != null ? connectionPassword : prof.getPassword()).
                 replaceAll("URL", prof.getConnectionUrl()).
                 replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition()).
+                replaceAll("VALIDATION_QUERY", Rdbms.getRdbms(prof.getConnectionUrl()).getValidationQuery()).
                 replaceAll("PARAMETERS", getParameters());
     }
 

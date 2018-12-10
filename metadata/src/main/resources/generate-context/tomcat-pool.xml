@@ -21,6 +21,8 @@
             maxWait="999"
             factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
             type="javax.sql.DataSource"
+            validationQuery="VALIDATION_QUERY"
+            removeAbandoned="true"
   />
 
 </Context>

@@ -36,37 +36,39 @@ public enum Rdbms
             new Db2TypeManager(),
             new Db2SchemaReader(),
             "org.eclipse.datatools.enablement.ibm.db2.luw.connectionProfile",
-            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97"),
+            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97",
+            "select 1 from sysibm.sysdummy1"),
     MYSQL(DbmsType.MYSQL,
             new MySqlMacroProcessorStrategy(),
             new MySqlTypeManager(),
             new MySqlSchemaReader(),
-            "", "com.mysql.jdbc.Driver", "6"),
+            "", "com.mysql.jdbc.Driver", "6", "SELECT 1"),
     ORACLE(DbmsType.ORACLE,
             new OracleMacroProcessorStrategy(),
             new OracleTypeManager(),
             new OracleSchemaReader(),
-            "", "oracle.jdbc.driver.OracleDriver", "11"),
+            "", "oracle.jdbc.driver.OracleDriver", "11", "select 1 from dual"),
     SQLSERVER(DbmsType.SQLSERVER,
             new SqlServerMacroProcessorStrategy(),
             new SqlServerTypeManager(),
             new SqlServerSchemaReader(),
             "org.eclipse.datatools.enablement.msft.sqlserver.connectionProfile",
-            "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate.Microsoft SQL Server 2008 JDBC Driver", "2008"),
+            "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate.Microsoft SQL Server 2008 JDBC Driver", "2008",
+            "SELECT 1"),
     POSTGRESQL(DbmsType.POSTGRESQL,
             new PostgresMacroProcessorStrategy(),
             new PostgresTypeManager(),
             new PostgresSchemaReader(),
-            "", "org.postgresql.Driver", "91"),
+            "", "org.postgresql.Driver", "91", "SELECT 1"),
     BESQL(DbmsType.BESQL,
             new BeSQLMacroProcessorStrategy(),
             new PostgresTypeManager(),
-            null, "", "", ""),
+            null, "", "", "", "SELECT 1"),
     H2(DbmsType.H2,
             new PostgresMacroProcessorStrategy(),
             new H2TypeManager(),
             new H2SchemaReader(),
-            "", "org.h2.Driver", "");
+            "", "org.h2.Driver", "", "SELECT 1");
 
     private static final Logger log = Logger.getLogger(Rdbms.class.getName());
 
@@ -129,8 +131,9 @@ public enum Rdbms
     private final String providerId;
     private final String driverDefinition;
     private final String version;
+    private final String validationQuery;
 
-    Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version)
+    Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version, String validationQuery)
     {
         this.type = type;
         this.macroProcessor = macroProcessor;
@@ -139,6 +142,7 @@ public enum Rdbms
         this.providerId = providerId;
         this.driverDefinition = driverDefinition;
         this.version = version;
+        this.validationQuery = validationQuery;
     }
 
     public String getName()
@@ -235,5 +239,10 @@ public enum Rdbms
     public String getDefaultVersion()
     {
         return version;
+    }
+
+    public String getValidationQuery()
+    {
+        return validationQuery;
     }
 }
