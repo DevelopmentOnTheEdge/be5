@@ -17,7 +17,7 @@ public class GenerateContextMojo extends Be5Mojo
     boolean skipGenerateContextPath = false;
 
     @Parameter(property = "ENV_NAME")
-    String environmentName;
+    String environmentName = "test";
 
     @Override
     public void execute() throws MojoFailureException
