@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.impl.Be5CachesImpl;
-import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.base.services.impl.MetaImpl;
 import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl;
@@ -35,7 +34,6 @@ public class BaseModule extends AbstractModule
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
         bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);
 
-        bind(LogConfigurator.class).asEagerSingleton();
         bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
     }

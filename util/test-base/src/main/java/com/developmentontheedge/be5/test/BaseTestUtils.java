@@ -1,11 +1,13 @@
 package com.developmentontheedge.be5.test;
 
+import ch.qos.logback.classic.Level;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
@@ -59,6 +61,12 @@ import static org.mockito.Mockito.when;
 
 public abstract class BaseTestUtils
 {
+    static
+    {
+        LogConfigurator.configure();
+        LogConfigurator.setLevel(Level.INFO);
+    }
+
     public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
     private static final String profileForIntegrationTests = "profileForIntegrationTests";
     private static final String ITest_ = "ITest_";

@@ -1,15 +1,22 @@
 package com.developmentontheedge.be5.server.servlet;
 
+import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.google.inject.Stage;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import java.lang.invoke.MethodHandles;
 import java.util.logging.Logger;
 
 
 public abstract class Be5GuiceServletContextListener extends GuiceServletContextListener
 {
-    private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
+    public Be5GuiceServletContextListener()
+    {
+        LogConfigurator.configure();
+    }
 
     protected Stage getStage()
     {

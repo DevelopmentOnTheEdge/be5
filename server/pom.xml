@@ -53,18 +53,6 @@
     </dependency>
 
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <version>1.2.3</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf</artifactId>
       <version>3.0.8.RELEASE</version>

@@ -1,36 +1,23 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
 public class LogConfigurator
 {
-    private static final Logger log = Logger.getLogger(LogConfigurator.class.getName());
-    private static final String path = "/logging.properties";
-
-    public LogConfigurator()
+    public static void configure()
     {
-        try (InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(path))
-        {
-            if (resourceAsStream == null)
-            {
-                log.info("File not found: " + path + ", log not configured.");
-            }
-            else
-            {
-                LogManager.getLogManager().readConfiguration(resourceAsStream);
-            }
-        }
-        catch (IOException e)
-        {
-            throw Be5Exception.internal(e);
-        }
-        String parentLevel = log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
-        log.info("Log root level: " + parentLevel);
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+        java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
+    }
+
+    public static void setLevel(Level level)
+    {
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.INFO);
     }
 }

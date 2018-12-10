@@ -35,7 +35,7 @@
     <deployServerUrl>http://localhost:8080/manager/text</deployServerUrl>
     <deployPath>app</deployPath>
     <packaging.type>jar</packaging.type>
-    <logging.file>logging.console.properties</logging.file>
+    <logging.file>logback-console.xml</logging.file>
   </properties>
 
   <profiles>
@@ -43,10 +43,29 @@
       <id>war</id>
       <properties>
         <packaging.type>war</packaging.type>
-        <logging.file>logging.file.properties</logging.file>
       </properties>
       <build>
         <finalName>${project.artifactId}</finalName>
+        <plugins>
+          <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0.1</version>
+            <executions>
+              <execution>
+                <id>replace-log-file</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>rename</goal>
+                </goals>
+                <configuration>
+                  <sourceFile>${project.build.outputDirectory}/logback-tomcat.xml</sourceFile>
+                  <destinationFile>${project.build.outputDirectory}/logback.xml</destinationFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>
@@ -73,6 +92,9 @@
 
   <build>
     <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
       <resource>
         <directory>${basedir}</directory>
         <excludes>
@@ -217,24 +239,6 @@
               <sources>
                 <source>src/test/groovy</source>
               </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.coderplus.maven.plugins</groupId>
-        <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <id>add-log-file</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <sourceFile>${basedir}/${logging.file}</sourceFile>
-              <destinationFile>${project.build.outputDirectory}/logging.properties</destinationFile>
             </configuration>
           </execution>
         </executions>
