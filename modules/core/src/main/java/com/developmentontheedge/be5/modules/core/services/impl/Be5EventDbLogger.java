@@ -64,7 +64,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_OPERATION, operation.getInfo().getEntityName(), operation.getInfo().getName(),
-                operation.getContext().getOperationParams(), operation.getStatus().toString());
+                operation.getContext().getParams(), operation.getStatus().toString());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_OPERATION, operation.getInfo().getEntityName(), operation.getInfo().getName(),
-                operation.getContext().getOperationParams(), operation.getStatus().toString(), exception);
+                operation.getContext().getParams(), operation.getStatus().toString(), exception);
     }
 
     @Override

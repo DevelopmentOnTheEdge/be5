@@ -22,9 +22,9 @@ public class InsertOperation extends OperationSupport
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(),
-                context.getOperationParams(), presetValues);
+                context.getParams(), presetValues);
 
-        return dpsHelper.setOperationParams(dps, context.getOperationParams());
+        return dpsHelper.setOperationParams(dps, context.getParams());
     }
 
     @Override

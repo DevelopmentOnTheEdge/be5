@@ -19,13 +19,13 @@ public class EditOperation extends OperationSupport
         Entity entity = getInfo().getEntity();
 
         DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
-                getInfo().getModel(), context.getOperationParams());
+                getInfo().getModel(), context.getParams());
 
         setValues(dps, database.getEntity(entity.getName()).get(context.getRecord()));
 
         setValues(dps, presetValues);
 
-        return dpsHelper.setOperationParams(dps, context.getOperationParams());
+        return dpsHelper.setOperationParams(dps, context.getParams());
     }
 
     @Override

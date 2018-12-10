@@ -60,7 +60,7 @@ class DpsHelperCustomOpTest extends ServerBe5ProjectTest
     private String getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
     {
 //        def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
-//                new OperationContext([] as String[], "All records", operationParams))
+//                new OperationContext([] as String[], "All records", params))
 //
 //        return executeOperation(operation, values)
         def dps = new GDynamicPropertySetSupport()

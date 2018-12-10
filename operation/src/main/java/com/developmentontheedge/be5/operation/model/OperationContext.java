@@ -13,16 +13,16 @@ public class OperationContext
 
     private final Object[] records;
     public final String queryName;
-    private final Map<String, Object> operationParams;
+    private final Map<String, Object> params;
 
-    public OperationContext(Object[] records, String queryName, Map<String, Object> operationParams)
+    public OperationContext(Object[] records, String queryName, Map<String, Object> params)
     {
         Objects.requireNonNull(records);
-        Objects.requireNonNull(operationParams);
+        Objects.requireNonNull(params);
 
         this.records = records;
         this.queryName = queryName;
-        this.operationParams = operationParams;
+        this.params = params;
     }
 
     public <T> T[] getRecords()
@@ -50,19 +50,19 @@ public class OperationContext
      *
      * @return map of parameters
      */
-    public Map<String, Object> getOperationParams()
+    public Map<String, Object> getParams()
     {
-        return operationParams;
+        return params;
     }
 
-//    /**
-//     * use getParams()
-//     */
-//    @Deprecated
-//    public Map<String, Object> getOperationParams()
-//    {
-//        return operationParams;
-//    }
+    /**
+     * use getParams()
+     */
+    @Deprecated
+    public Map<String, Object> getOperationParams()
+    {
+        return params;
+    }
 
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId
 

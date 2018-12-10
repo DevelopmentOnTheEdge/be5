@@ -10,7 +10,7 @@ class PrintParamsCustomOp extends BaseOperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        //return dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), context.getOperationParams(), values)
+        //return dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), context.getParams(), values)
         def dps = new GDynamicPropertySetSupport()
         dps.add("name") { value = presetValues.get("name")}
         dps.add("value") { value = presetValues.get("value")}

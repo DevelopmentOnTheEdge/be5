@@ -62,7 +62,7 @@ public class OperationLoggingImpl implements OperationLogging
     private void saveExecutionParametersReal(Long id, Operation operation, Map<String, Object> values)
     {
         saveSessionVars(id);
-        saveContextParams(id, operation.getContext().getOperationParams());
+        saveContextParams(id, operation.getContext().getParams());
         saveInputValues(id, values);
     }
 

@@ -15,7 +15,7 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
     {
         FrontendAction downloadOperationAction = FrontendActions.downloadOperation(
                 getInfo().getEntityName(), context.getQueryName(), getInfo().getName(),
-                context.getOperationParams(), parameters
+                context.getParams(), parameters
         );
         //String message = userAwareMeta.getLocalizedInfoMessage("Wait for the download to start.");
         //todo after add alertMessageAction

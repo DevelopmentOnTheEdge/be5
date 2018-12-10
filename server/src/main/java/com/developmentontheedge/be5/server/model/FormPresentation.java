@@ -27,7 +27,7 @@ public class FormPresentation
         this.query = context.getQueryName();
         this.operation = operationInfo.getName();
         this.title = title;
-        this.operationParams = context.getOperationParams();
+        this.operationParams = context.getParams();
         this.bean = bean;
         this.layout = layout;
         this.operationResult = operationResult;

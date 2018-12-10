@@ -11,7 +11,7 @@ class CustomOperation extends BaseOperationSupport implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        //dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], context.getOperationParams(), values)
+        //dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], context.getParams(), values)
         dps.add("name")
         dps.add("value")
 

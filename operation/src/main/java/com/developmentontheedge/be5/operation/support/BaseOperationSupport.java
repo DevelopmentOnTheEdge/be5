@@ -73,7 +73,7 @@ public abstract class BaseOperationSupport implements Operation
     {
         Map<String, Object> map = new HashMap<>();
 
-        for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
+        for (Map.Entry<String, Object> entry : context.getParams().entrySet())
         {
             if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
             {
@@ -166,7 +166,7 @@ public abstract class BaseOperationSupport implements Operation
 
     public String getBackUrl()
     {
-        return getTableUrl(info.getEntityName(), context.getQueryName(), context.getOperationParams());
+        return getTableUrl(info.getEntityName(), context.getQueryName(), context.getParams());
     }
 
     private String getTableUrl(String entityName, String queryName, Map<String, Object> params)

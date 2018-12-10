@@ -21,7 +21,7 @@ public class FilterOperation extends OperationSupport
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySet dps = getFilterParameters(presetValues);
-        return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams());
+        return filterHelper.processFilterParams(dps, presetValues, context.getParams());
     }
 
     protected DynamicPropertySet getFilterParameters(Map<String, Object> presetValues) throws Exception
@@ -32,14 +32,14 @@ public class FilterOperation extends OperationSupport
     protected DynamicPropertySet getBaseParameters() throws Exception
     {
         return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
-                getInfo().getModel(), context.getOperationParams());
+                getInfo().getModel(), context.getParams());
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
         Map<String, Object> params = dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters);
-        params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getOperationParams()));
+        params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getParams()));
         setResultFinished(updateParentDocument(filterHelper.filterDocument(getQuery(), params)));
     }
 }
