@@ -63,9 +63,12 @@ public class DaemonStarterImpl implements DaemonStarter
         {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.setJobFactory(guiceJobFactory);
-            scheduler.start();
 
-            initQuartzDaemons();
+            if (meta.getDaemons().size() > 0)
+            {
+                scheduler.start();
+                initQuartzDaemons();
+            }
         }
         catch (SchedulerException se)
         {
