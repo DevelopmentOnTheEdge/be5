@@ -64,6 +64,7 @@ public class UserHelper
         ui.setLocale(meta.getLocale(locale));
 
         Session session = requestProvider.get().getSession();
+        session.invalidate();
 
         session.set("remoteAddr", remoteAddr);
         session.set(SessionConstants.USER_INFO, ui);
@@ -80,8 +81,6 @@ public class UserHelper
 
         session.invalidate();
         initGuest();
-
-        log.info("Logout user: " + username);
     }
 
     public void initGuest()
