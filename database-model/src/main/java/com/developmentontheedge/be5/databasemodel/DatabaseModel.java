@@ -24,16 +24,16 @@ public final class DatabaseModel implements EntityAccess
         GroovyRegister.registerMetaClass(DatabaseModelImplMetaClass.class, DatabaseModel.class);
     }
 
-    private final DbService sqlService;
+    private final DbService db;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
     private final Meta meta;
 
     @Inject
-    public DatabaseModel(DbService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper,
+    public DatabaseModel(DbService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper,
                          Meta meta)
     {
-        this.sqlService = sqlService;
+        this.db = db;
         this.sqlHelper = sqlHelper;
         this.columnsHelper = columnsHelper;
         this.meta = meta;
@@ -45,7 +45,7 @@ public final class DatabaseModel implements EntityAccess
         Objects.requireNonNull(entityName);
         Entity entity = meta.getEntity(entityName);
 
-        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, meta, entity);
+        return new EntityModelBase<>(db, sqlHelper, columnsHelper, meta, entity);
     }
 
     public <T> EntityModel<T> getAt(String entityName)
