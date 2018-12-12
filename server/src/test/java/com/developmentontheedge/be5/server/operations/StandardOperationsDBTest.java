@@ -87,7 +87,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
                 "categoryID", 123123L
         ));
 
-        generateOperation("testtableAdmin", "All records", "Delete",
+        executeOperation("testtableAdmin", "All records", "Delete",
                 id.toString(), "").getSecond();
 
         assertEquals(0, database.getEntity("testCollection").count());

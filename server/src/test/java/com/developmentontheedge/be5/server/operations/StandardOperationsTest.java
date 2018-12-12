@@ -26,15 +26,22 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void deleteOperation()
     {
+        whenSelectListTagsContains("FROM testtableAdmin WHERE testtableAdmin.ID = 1 LIMIT 2147483647", "1");
+
         assertEquals(OperationStatus.FINISHED,
-                generateOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
+                executeOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
         verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
         verify(DbServiceMock.mock).update("DELETE FROM testCollection WHERE categoryID IN (?)", 1L);
         verify(DbServiceMock.mock).update("DELETE FROM testGenCollection WHERE recordID IN (?)", "testtableAdmin.1");
+    }
 
-        generateOperation("testtableAdmin", "All records", "Delete",
-                "1,2,3", "").getSecond();
+    @Test
+    public void deleteOperationMany()
+    {
+        whenSelectListTagsContains("FROM testtableAdmin WHERE testtableAdmin.ID = 1 LIMIT 2147483647", "1", "2", "3");
+
+        executeOperation("testtableAdmin", "All records", "Delete", "1,2,3", "").getSecond();
 
         verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }

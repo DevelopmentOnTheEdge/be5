@@ -31,8 +31,16 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
         if (context.getRecords().length == 1 &&
             meta.getQueryNames(getInfo().getEntity()).contains(DatabaseConstants.SELECTION_VIEW))
         {
-            params.add(dpsHelper.getLabelRaw("recordView", queries.getTagsFromSelectionView(getInfo().getEntityName(),
-                    Collections.singletonMap(getInfo().getPrimaryKey(), context.getRecord()))[0][1]));
+            String[][] tags = queries.getTagsFromSelectionView(getInfo().getEntityName(),
+                    Collections.singletonMap(getInfo().getPrimaryKey(), context.getRecord()));
+            if (tags.length == 0)
+            {
+                validator.setError(params.getProperty("info"), "Record not found");
+            }
+            else
+            {
+                params.add(dpsHelper.getLabelRaw("recordView", tags[0][1]));
+            }
         }
         return params;
     }

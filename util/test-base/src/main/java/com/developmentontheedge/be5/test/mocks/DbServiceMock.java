@@ -59,7 +59,7 @@ public class DbServiceMock implements DbService
     public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
     {
         log.fine(astStart.getQuery().toString() + Arrays.toString(params));
-        return mock.list(astStart, parser, params);
+        return mock.list(astStart.format(), parser, params);
     }
 
     @Override
