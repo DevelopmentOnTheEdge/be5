@@ -1,12 +1,15 @@
 package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.TransactionalOperation;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +24,31 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        return null;
+        DynamicPropertySetSupport params = new DynamicPropertySetSupport();
+        String text = getDeleteInfoText();
+        params.add(dpsHelper.getLabelRaw("info", text));
+
+        if (context.getRecords().length == 1 &&
+            meta.getQueryNames(getInfo().getEntity()).contains(DatabaseConstants.SELECTION_VIEW))
+        {
+            params.add(dpsHelper.getLabelRaw("recordView", queries.getTagsFromSelectionView(getInfo().getEntityName(),
+                    Collections.singletonMap(getInfo().getPrimaryKey(), context.getRecord()))[0][1]));
+        }
+        return params;
+    }
+
+    private String getDeleteInfoText()
+    {
+        if (context.getRecords().length == 1)
+        {
+            return userAwareMeta.getLocalizedInfoMessage("$1 record will be deleted")
+                    .replace("$1", "1");
+        }
+        else
+        {
+            return userAwareMeta.getLocalizedInfoMessage("$1 records will be deleted")
+                    .replace("$1", context.getRecords().length + "");
+        }
     }
 
     @Override

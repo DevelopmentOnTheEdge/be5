@@ -42,6 +42,8 @@ ru:
     - topics: info
       entries:
       - Wait for the download to start.: Ожидайте начала загрузки.
+      - '$1 records will be deleted': $1 записей будет удалено
+      - '$1 record will be deleted': $1 запись будет удалена
   - _homepage_:
     - topics: displayName
       entries:
