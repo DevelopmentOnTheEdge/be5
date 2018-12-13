@@ -103,12 +103,9 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
-        if (modelElements instanceof Operation &&
-                LayoutUtils.getLayoutObject((Operation) modelElements).get("properties") != null)
+        if (isHasOperationProperties(modelElements))
         {
-            String properties = (String) LayoutUtils.getLayoutObject((Operation) modelElements).get("properties");
-            List<String> columns = Arrays.asList(properties.split(","));
-            return addDpForColumns(dps, modelElements, columns, operationParams);
+            return addDpForColumns(dps, modelElements, getOperationProperties((Operation) modelElements), operationParams);
         }
 
         List<String> excludedColumns = Collections.emptyList();
@@ -119,6 +116,18 @@ public class DpsHelper
         }
 
         return addDpExcludeColumns(dps, modelElements, excludedColumns, operationParams);
+    }
+
+    private List<String> getOperationProperties(Operation modelElements)
+    {
+        String properties = (String) LayoutUtils.getLayoutObject(modelElements).get("properties");
+        return Arrays.asList(properties.split(","));
+    }
+
+    private boolean isHasOperationProperties(BeModelElement modelElements)
+    {
+        return modelElements instanceof Operation &&
+                LayoutUtils.getLayoutObject((Operation) modelElements).get("properties") != null;
     }
 
     public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
@@ -329,6 +338,12 @@ public class DpsHelper
         }
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
+        if (isHasOperationProperties(modelElements))
+        {
+            List<String> operationProperties = getOperationProperties((Operation) modelElements);
+            usedParams.removeIf(name -> !operationProperties.contains(name));
+        }
+
         Map<String, ColumnDef> entityColumns = meta.getColumns(getEntity(modelElements));
         for (String param: usedParams)
         {
