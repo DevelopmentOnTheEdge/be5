@@ -240,6 +240,15 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void readAsRecordsFromQuerySqlTestFilter()
+    {
+        List<QRec> list = queries.readAsRecordsFromQuery("SELECT * FROM testTags",
+                Collections.singletonMap("admlevel", "Federal"));
+
+        assertEquals(1, list.size());
+    }
+
+    @Test
     public void readAsListTest()
     {
         List<List<Object>> lists = queries.listOfLists("SELECT code, admlevel FROM testTags");

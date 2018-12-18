@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.function.Function.identity;
 
 
 public class FilterInfoPlugin implements DocumentPlugin
@@ -62,6 +64,12 @@ public class FilterInfoPlugin implements DocumentPlugin
             String entityTitle = userAwareMeta.getLocalizedEntityTitle(column.getTableFrom());
             if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
         }
+
+        AstStart ast = SqlQuery.parse(query.getFinalQuery());
+        Map<String, AstBeParameterTag> usedParams = ast.tree()
+                .select(AstBeParameterTag.class)
+                .collect(Collectors.toMap(AstBeParameterTag::getName, identity()));
+
         params.forEach((k, v) -> {
             ColumnDef column = meta.getColumn(mainEntityName, k);
             if (column != null)
@@ -72,15 +80,9 @@ public class FilterInfoPlugin implements DocumentPlugin
 
             if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
             {
-                AstStart ast = SqlQuery.parse(query.getFinalQuery());
-                Optional<AstBeParameterTag> usedParam = ast.tree()
-                        .select(AstBeParameterTag.class)
-                        .filter(x -> x.getName().equals(k))
-                        .findFirst();
-
-                if (usedParam.isPresent())
+                if (usedParams.containsKey(k))
                 {
-                    ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParam.get(), mainEntityName, meta);
+                    ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParams.get(k), meta);
                     if (column2 != null)
                     {
                         result.add(getValueTitle(column2, mainEntityName, k, v));

@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.QueryUtils;
-import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -29,9 +28,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import one.util.streamex.StreamEx;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -216,8 +213,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         AstStart ast = parseQuery(queryText);
         new MacroExpander().expandMacros(ast);
 
-        QueryUtils.resolveTypeOfRefColumn(ast, query.getEntity().getName(), meta);
-        QueryUtils.applyFilters(ast, query.getEntity().getName(), parameters, meta);
+        QueryUtils.resolveTypeOfRefColumn(ast, meta);
+        QueryUtils.applyFilters(ast, parameters, meta);
         applyCategory(ast);
 
         contextApplier.applyContext(ast);

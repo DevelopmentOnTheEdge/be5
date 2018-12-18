@@ -2,11 +2,9 @@ package com.developmentontheedge.be5.query.impl.utils;
 
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
-import com.developmentontheedge.be5.base.util.annotations.DirtyRealization;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -39,11 +37,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-//TODO get mainEntityName from query -> FROM name
 public class QueryUtils
 {
-    public static void applyFilters(AstStart ast, String entityName, Map<String, List<Object>> parameters, Meta meta)
+    public static void applyFilters(AstStart ast, Map<String, List<Object>> parameters, Meta meta)
     {
+        String fromTableDef = getFromTableDefName(ast);
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<String, String> aliasToTable = getAliasToTable(ast);
@@ -51,8 +49,8 @@ public class QueryUtils
         Map<ColumnRef, List<Object>> rawFilters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(QueryUtils::isNotQueryParameters)
-                .removeKeys(k -> isNotContainsInQuery(entityName, aliasToTable, meta, k))
-                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : entityName + "." + k))
+                .removeKeys(k -> isNotContainsInQuery(fromTableDef, aliasToTable, meta, k))
+                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : fromTableDef + "." + k))
                 .nonNullKeys()
                 .toMap();
 
@@ -64,7 +62,7 @@ public class QueryUtils
         }
     }
 
-    public static Map<String, String> getAliasToTable(AstStart ast)
+    private static Map<String, String> getAliasToTable(AstStart ast)
     {
         return ast.tree()
                     .select(AstTableRef.class)
@@ -73,7 +71,6 @@ public class QueryUtils
                             (address1, address2) -> address1));
     }
 
-    @DirtyRealization(comment = "")
     private static boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, Meta meta, String key)
     {
         String[] split = key.split("\\.");
@@ -110,10 +107,11 @@ public class QueryUtils
         query.replaceWith(new AstQuery(select));
     }
 
-    public static void resolveTypeOfRefColumn(AstStart ast, String entityName, Meta meta)
+    public static void resolveTypeOfRefColumn(AstStart ast, Meta meta)
     {
+        String fromTableDef = getFromTableDefName(ast);
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
-            ColumnDef columnDef = getColumnDef(ast, tag, entityName, meta);
+            ColumnDef columnDef = getColumnDef(ast, tag, fromTableDef, meta);
             if (columnDef != null)
             {
                 tag.setType(meta.getColumnType(columnDef).getName());
@@ -121,7 +119,19 @@ public class QueryUtils
         });
     }
 
-    public static ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName, Meta meta)
+    private static String getFromTableDefName(AstStart ast)
+    {
+        return ast.getQuery().tree()
+                .select(AstTableRef.class)
+                .findFirst().get().getTable();
+    }
+
+    public static ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, Meta meta)
+    {
+        return getColumnDef(ast, beParameterTag, getFromTableDefName(ast), meta);
+    }
+
+    private static ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName, Meta meta)
     {
         if (beParameterTag.getRefColumn() != null)
         {
@@ -146,7 +156,7 @@ public class QueryUtils
         }
     }
 
-    public static ColumnDef getColumnDef(AstStart ast, String rawColumnDef, String mainEntityName, Meta meta)
+    private static ColumnDef getColumnDef(AstStart ast, String rawColumnDef, String mainEntityName, Meta meta)
     {
         String[] split = rawColumnDef.split("\\.");
         String entityName, column;
@@ -265,7 +275,7 @@ public class QueryUtils
         }
     }
 
-    public static boolean hasColumnWithLabel(AstStart ast, String idColumnLabel)
+    static boolean hasColumnWithLabel(AstStart ast, String idColumnLabel)
     {
         AstQuery query = ast.getQuery();
         Optional<AstSelect> selectOpt = query.children().select(AstSelect.class).collect(MoreCollectors.onlyOne());

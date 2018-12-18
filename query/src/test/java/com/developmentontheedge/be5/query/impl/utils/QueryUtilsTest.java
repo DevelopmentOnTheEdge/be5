@@ -26,7 +26,7 @@ public class QueryUtilsTest extends QueryBe5ProjectDBTest
     public void resolveTypeOfRefColumn()
     {
         QueryUtils.resolveTypeOfRefColumn(SqlQuery.parse("select * from filterTestTable t " +
-              "WHERE CONCAT(t.firstName, ' ', t.lastName) LIKE CONCAT('%<parameter:queryString/>%')"), "filterTestTable", meta);
+              "WHERE CONCAT(t.firstName, ' ', t.lastName) LIKE CONCAT('%<parameter:queryString/>%')"), meta);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class QueryUtilsTest extends QueryBe5ProjectDBTest
     {
         AstStart sql = SqlQuery.parse("select * from classifications " +
                 "WHERE FORMAT_DATE(creationDate___) = '<parameter:creationDate___ />'");
-        QueryUtils.resolveTypeOfRefColumn(sql, "classifications", meta);
+        QueryUtils.resolveTypeOfRefColumn(sql, meta);
         assertEquals("SELECT * FROM classifications " +
                 "WHERE FORMAT_DATE(creationDate___) = '<parameter:creationDate___ />'", sql.format());
     }
