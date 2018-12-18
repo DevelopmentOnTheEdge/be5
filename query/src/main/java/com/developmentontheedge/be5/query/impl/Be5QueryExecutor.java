@@ -368,7 +368,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
         catch (Throwable e)
         {
-            //TODO only for Document presentation, for operations must be error throw
             Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);
             log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
 
