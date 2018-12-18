@@ -51,7 +51,7 @@ testtable:
       - FilterByParamsInQueryOperation
       roles: SystemDeveloper
       code: |-
-         SELECT 1
+         SELECT 1 FROM testtable
   - TestMultipleColumn:
       type: 1D_unknown
       invisible: true

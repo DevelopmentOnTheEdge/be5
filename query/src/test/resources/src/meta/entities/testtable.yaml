@@ -133,12 +133,6 @@ testtable:
             '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
           FROM
             testtable t
-  - TableWithFilter:
-      type: 1D_unknown
-      layout: '{"topForm":"FilterByParamsInQueryOperation"}'
-      roles: SystemDeveloper
-      code: |-
-         SELECT 1
   - Sub Query:
       type: 1D_unknown
       roles: SystemDeveloper
