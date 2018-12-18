@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.impl.utils.QueryUtils;
+import com.developmentontheedge.be5.query.services.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -29,15 +29,17 @@ public class FilterInfoPlugin implements DocumentPlugin
     private final QueriesService queries;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
+    private final QueryMetaHelper queryMetaHelper;
     protected static final String DOCUMENT_FILTER_INFO_PLUGIN = "filterInfo";
 
     @Inject
     public FilterInfoPlugin(QueriesService queries, Meta meta, UserAwareMeta userAwareMeta,
-                            DocumentGenerator documentGenerator)
+                            DocumentGenerator documentGenerator, QueryMetaHelper queryMetaHelper)
     {
         this.queries = queries;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
+        this.queryMetaHelper = queryMetaHelper;
         documentGenerator.addDocumentPlugin(DOCUMENT_FILTER_INFO_PLUGIN, this);
     }
 
@@ -82,7 +84,7 @@ public class FilterInfoPlugin implements DocumentPlugin
             {
                 if (usedParams.containsKey(k))
                 {
-                    ColumnDef column2 = QueryUtils.getColumnDef(ast, usedParams.get(k), meta);
+                    ColumnDef column2 = queryMetaHelper.getColumnDef(ast, usedParams.get(k));
                     if (column2 != null)
                     {
                         result.add(getValueTitle(column2, mainEntityName, k, v));

@@ -1,32 +1,37 @@
-package com.developmentontheedge.be5.query.impl.utils;
+package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
+import com.developmentontheedge.be5.query.services.QueryMetaHelper;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import static org.junit.Assert.*;
 
-public class QueryUtilsTest extends QueryBe5ProjectDBTest
+public class QueryMetaHelperTest extends QueryBe5ProjectDBTest
 {
+    @Inject private QueryMetaHelper queryMetaHelper;
+
     @Test
     public void hasColumnWithLabel()
     {
-        assertFalse(QueryUtils.hasColumnWithLabel(SqlQuery.parse(
+        assertFalse(QueryMetaHelper.hasColumnWithLabel(SqlQuery.parse(
                 "select * from table"), "___ID"));
 
-        assertTrue(QueryUtils.hasColumnWithLabel(SqlQuery.parse(
+        assertTrue(QueryMetaHelper.hasColumnWithLabel(SqlQuery.parse(
                 "select id AS \"___ID\" from table"), "___ID"));
 
-        assertTrue(QueryUtils.hasColumnWithLabel(SqlQuery.parse(
+        assertTrue(QueryMetaHelper.hasColumnWithLabel(SqlQuery.parse(
                 "select id AS \"___id\" from table"), "___ID"));
     }
 
     @Test
     public void resolveTypeOfRefColumn()
     {
-        QueryUtils.resolveTypeOfRefColumn(SqlQuery.parse("select * from filterTestTable t " +
-              "WHERE CONCAT(t.firstName, ' ', t.lastName) LIKE CONCAT('%<parameter:queryString/>%')"), meta);
+        queryMetaHelper.resolveTypeOfRefColumn(SqlQuery.parse("select * from filterTestTable t " +
+              "WHERE CONCAT(t.firstName, ' ', t.lastName) LIKE CONCAT('%<parameter:queryString/>%')"));
     }
 
     @Test
@@ -34,7 +39,7 @@ public class QueryUtilsTest extends QueryBe5ProjectDBTest
     {
         AstStart sql = SqlQuery.parse("select * from classifications " +
                 "WHERE FORMAT_DATE(creationDate___) = '<parameter:creationDate___ />'");
-        QueryUtils.resolveTypeOfRefColumn(sql, meta);
+        queryMetaHelper.resolveTypeOfRefColumn(sql);
         assertEquals("SELECT * FROM classifications " +
                 "WHERE FORMAT_DATE(creationDate___) = '<parameter:creationDate___ />'", sql.format());
     }

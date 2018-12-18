@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueryService;
 
 import javax.inject.Inject;
@@ -25,15 +26,18 @@ public class QueryServiceImpl implements QueryService
     private final UserAwareMeta userAwareMeta;
     private final Provider<QuerySession> querySession;
     private final UserInfoProvider userInfoProvider;
+    private final QueryMetaHelper queryMetaHelper;
 
     @Inject
-    public QueryServiceImpl(Meta meta, DbService db, UserAwareMeta userAwareMeta, Provider<QuerySession> querySession, UserInfoProvider userInfoProvider)
+    public QueryServiceImpl(Meta meta, DbService db, UserAwareMeta userAwareMeta, Provider<QuerySession> querySession,
+                            UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper)
     {
         this.meta = meta;
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.querySession = querySession;
         this.userInfoProvider = userInfoProvider;
+        this.queryMetaHelper = queryMetaHelper;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class QueryServiceImpl implements QueryService
         Map<String, List<Object>> listParams = getMapOfList(parameters);
 
         return new Be5QueryExecutor(query, listParams, userInfoProvider.get(),
-                querySession.get(), meta, userAwareMeta, db);
+                querySession.get(), meta, userAwareMeta, db, queryMetaHelper);
     }
 
     @Override

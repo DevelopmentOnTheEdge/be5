@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
-import com.developmentontheedge.be5.query.impl.utils.QueryUtils;
+import com.developmentontheedge.be5.query.services.QueryMetaHelper;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -136,6 +136,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Map<String, List<Object>> parameters;
     private final UserInfo userInfo;
     private final QuerySession querySession;
+    private final QueryMetaHelper queryMetaHelper;
 
     private ExecutorQueryContext executorQueryContext;
     private ContextApplier contextApplier;
@@ -143,7 +144,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, List<Object>> parameters, UserInfo userInfo,
-                            QuerySession querySession, Meta meta, UserAwareMeta userAwareMeta, DbService db)
+                            QuerySession querySession, Meta meta, UserAwareMeta userAwareMeta, DbService db, QueryMetaHelper queryMetaHelper)
     {
         super(query);
 
@@ -154,6 +155,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.db = db;
+        this.queryMetaHelper = queryMetaHelper;
 
         this.executorQueryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier(executorQueryContext);
@@ -213,22 +215,22 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         AstStart ast = parseQuery(queryText);
         new MacroExpander().expandMacros(ast);
 
-        QueryUtils.resolveTypeOfRefColumn(ast, meta);
-        QueryUtils.applyFilters(ast, parameters, meta);
+        queryMetaHelper.resolveTypeOfRefColumn(ast);
+        queryMetaHelper.applyFilters(ast, parameters);
         applyCategory(ast);
 
         contextApplier.applyContext(ast);
 
-        if (query.getType() == QueryType.D1) QueryUtils.addIDColumnLabel(ast, query);
+        if (query.getType() == QueryType.D1) QueryMetaHelper.addIDColumnLabel(ast, query);
 
         if (executeType == ExecuteType.COUNT)
         {
-            QueryUtils.countFromQuery(ast.getQuery());
+            QueryMetaHelper.countFromQuery(ast.getQuery());
         }
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            QueryUtils.applySort(ast, orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryMetaHelper.applySort(ast, orderColumn + (selectable ? -1 : 0), orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 
