@@ -61,7 +61,7 @@ public interface QueryExecutor
      */
     List<String> getColumnNames();
 
-    List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver);
+    List<DynamicPropertySet> executeSubQuery(String subQueryName, VarResolver varResolver);
 
     int getOrderColumn();
 

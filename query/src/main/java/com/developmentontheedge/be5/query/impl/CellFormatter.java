@@ -212,9 +212,9 @@ class CellFormatter
     /**
      * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
      */
-    private List<List<Object>> toTable(String subquery, VarResolver varResolver)
+    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver)
     {
-        List<DynamicPropertySet> list = queryExecutor.executeSubQuery(subquery, varResolver);
+        List<DynamicPropertySet> list = queryExecutor.executeSubQuery(subQueryName, varResolver);
 
         List<List<Object>> lists = new ArrayList<>();
 

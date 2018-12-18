@@ -113,7 +113,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
-            throw new RuntimeException("todo");
+            throw new UnsupportedOperationException();
 //            EntityModel entityModel = database.get().getEntity(tagName);
 //            RecordModel row = entityModel.getBy(conditions);
 //
@@ -293,9 +293,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver)
+    public List<DynamicPropertySet> executeSubQuery(String subQueryName, VarResolver varResolver)
     {
-        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subqueryName, x -> {
+        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
             Object value = varResolver.resolve(x);
             return value != null ? value.toString() : null;
         });
