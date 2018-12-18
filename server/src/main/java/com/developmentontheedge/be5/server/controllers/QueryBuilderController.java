@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -145,10 +146,11 @@ public class QueryBuilderController extends JsonApiModelController
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
+            Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
             ResourceData resourceData = new ResourceData(
                     "queryBuilder",
                     data,
-                    Collections.singletonMap(SELF_LINK, "queryBuilder")
+                    Collections.singletonMap(SELF_LINK, new HashUrl("queryBuilder").named(parameters).toString())
             );
 
             return data(
