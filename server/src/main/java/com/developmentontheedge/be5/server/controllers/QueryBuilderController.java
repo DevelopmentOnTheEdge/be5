@@ -41,9 +41,6 @@ import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER
 @Singleton
 public class QueryBuilderController extends JsonApiModelController
 {
-    private List<ResourceData> includedData;
-    private List<ErrorModel> errorModelList;
-
     private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final Meta meta;
@@ -69,8 +66,8 @@ public class QueryBuilderController extends JsonApiModelController
     @Override
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
-        includedData = new ArrayList<>();
-        errorModelList = new ArrayList<>();
+        List<ResourceData> includedData = new ArrayList<>();
+        List<ErrorModel> errorModelList = new ArrayList<>();
 
         if (userInfoProvider.isSystemDeveloper())
         {
@@ -110,14 +107,14 @@ public class QueryBuilderController extends JsonApiModelController
                 if (req.getBoolean("updateWithoutBeSql", false))
                 {
                     data = new Data("", "", history);
-                    updateUnsafe(sql);
+                    updateUnsafe(includedData, sql);
                 }
                 else
                 {
                     SqlType type = getSqlType(sql);
                     if (type == SqlType.SELECT)
                     {
-                        data = new Data(sql, select(sql, req), history);
+                        data = new Data(sql, select(includedData, errorModelList, sql, req), history);
                     }
                     else
                     {
@@ -127,13 +124,13 @@ public class QueryBuilderController extends JsonApiModelController
                             switch (type)
                             {
                                 case INSERT:
-                                    insert(sql);
+                                    insert(includedData, sql);
                                     break;
                                 case UPDATE:
-                                    update(sql);
+                                    update(includedData, sql);
                                     break;
                                 case DELETE:
-                                    update(sql);
+                                    update(includedData, sql);
                                     break;
                                 default:
                                     return null;
@@ -167,7 +164,7 @@ public class QueryBuilderController extends JsonApiModelController
         }
     }
 
-    private void insert(String sql)
+    private void insert(List<ResourceData> includedData, String sql)
     {
         Object id = db.insert(sql);
 
@@ -182,7 +179,7 @@ public class QueryBuilderController extends JsonApiModelController
         ));
     }
 
-    private void update(String sql)
+    private void update(List<ResourceData> includedData, String sql)
     {
         Object id = db.update(sql);
 
@@ -197,7 +194,7 @@ public class QueryBuilderController extends JsonApiModelController
         ));
     }
 
-    private void updateUnsafe(String sql)
+    private void updateUnsafe(List<ResourceData> includedData, String sql)
     {
         Object id = db.updateUnsafe(sql);
 
@@ -212,11 +209,11 @@ public class QueryBuilderController extends JsonApiModelController
         ));
     }
 
-    private String select(String sql, Request req)
+    private String select(List<ResourceData> includedData, List<ErrorModel> errorModelList, String sql, Request req)
     {
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
         Query query = meta.createQueryFromSql(sql);
-        String finalSql = getFinalSql(query, parameters);
+        String finalSql = getFinalSql(errorModelList, query, parameters);
 
         try
         {
@@ -234,7 +231,7 @@ public class QueryBuilderController extends JsonApiModelController
         return finalSql;
     }
 
-    private String getFinalSql(Query query, Map<String, Object> parameters)
+    private String getFinalSql(List<ErrorModel> errorModelList, Query query, Map<String, Object> parameters)
     {
         try
         {
