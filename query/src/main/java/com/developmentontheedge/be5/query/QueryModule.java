@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.be5.query.services.QueryMetaHelper;
+import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.query.services.TableModelService;

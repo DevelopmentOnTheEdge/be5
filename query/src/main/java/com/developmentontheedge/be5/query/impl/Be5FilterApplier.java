@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.utils;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.format.FilterApplier;

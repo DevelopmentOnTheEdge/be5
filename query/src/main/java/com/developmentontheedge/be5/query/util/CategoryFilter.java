@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.utils;
+package com.developmentontheedge.be5.query.util;
 
 import com.developmentontheedge.sql.model.AstConcatExpression;
 import com.developmentontheedge.sql.model.AstFieldReference;

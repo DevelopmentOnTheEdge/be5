@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
@@ -12,8 +11,6 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
-import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
-import com.developmentontheedge.be5.query.services.QueryMetaHelper;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -37,6 +34,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 
 
 /**
@@ -138,7 +137,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final QuerySession querySession;
     private final QueryMetaHelper queryMetaHelper;
 
-    private ExecutorQueryContext executorQueryContext;
+    private ExecutorQueryContext context;
     private ContextApplier contextApplier;
     private ExecuteType executeType;
 
@@ -157,8 +156,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.db = db;
         this.queryMetaHelper = queryMetaHelper;
 
-        this.executorQueryContext = new ExecutorQueryContext();
-        this.contextApplier = new ContextApplier(executorQueryContext);
+        this.context = new ExecutorQueryContext();
+        this.contextApplier = new ContextApplier(context);
         this.executeType = ExecuteType.DEFAULT;
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
@@ -217,7 +216,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         queryMetaHelper.resolveTypeOfRefColumn(ast);
         queryMetaHelper.applyFilters(ast, parameters);
-        applyCategory(ast);
+        QueryMetaHelper.applyCategory(query, ast, context.getParameter(CATEGORY_ID_PARAM));
 
         contextApplier.applyContext(ast);
 
@@ -248,26 +247,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
-        }
-    }
-
-    private void applyCategory(AstStart ast)
-    {
-        String categoryString = executorQueryContext.getParameter(FrontendConstants.CATEGORY_ID_PARAM);
-        if (categoryString != null)
-        {
-            long categoryId;
-            try
-            {
-                categoryId = Long.parseLong(categoryString);
-            }
-            catch (NumberFormatException e)
-            {
-                throw Be5Exception.internalInQuery(query,
-                        new IllegalArgumentException("Invalid category: " + categoryString, e));
-            }
-
-            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply(ast);
         }
     }
 

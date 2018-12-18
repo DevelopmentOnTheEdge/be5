@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
-import com.developmentontheedge.be5.query.services.QueryMetaHelper;
+import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueryService;
 
 import javax.inject.Inject;

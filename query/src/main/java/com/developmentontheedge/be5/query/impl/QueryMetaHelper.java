@@ -1,11 +1,11 @@
-package com.developmentontheedge.be5.query.services;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.impl.utils.Be5FilterApplier;
+import com.developmentontheedge.be5.query.util.CategoryFilter;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -27,7 +27,6 @@ import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.SimpleNode;
 import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.EntryStream;
-import one.util.streamex.MoreCollectors;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -71,6 +70,15 @@ public class QueryMetaHelper
         }
     }
 
+    static void applyCategory(Query query, AstStart ast, String categoryString)
+    {
+        if (categoryString != null)
+        {
+            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(),
+                    Long.parseLong(categoryString)).apply(ast);
+        }
+    }
+
     private static Map<String, String> getAliasToTable(AstStart ast)
     {
         return ast.tree()
@@ -107,7 +115,7 @@ public class QueryMetaHelper
         return key.startsWith("_") && key.endsWith("_");
     }
 
-    public static void countFromQuery(AstQuery query)
+    static void countFromQuery(AstQuery query)
     {
         AstSelect select = Ast.selectCount().from(AstTableRef.as(
                 new AstParenthesis(query.clone()),
@@ -251,7 +259,7 @@ public class QueryMetaHelper
         return sortCol;
     }
 
-    public static void applySort(AstStart ast, int orderColumn, String orderDir)
+    static void applySort(AstStart ast, int orderColumn, String orderDir)
     {
         if (orderColumn >= 0)
         {
@@ -284,22 +292,7 @@ public class QueryMetaHelper
         }
     }
 
-    static boolean hasColumnWithLabel(AstStart ast, String idColumnLabel)
-    {
-        AstQuery query = ast.getQuery();
-        Optional<AstSelect> selectOpt = query.children().select(AstSelect.class).collect(MoreCollectors.onlyOne());
-        if (!selectOpt.isPresent())
-            return false;
-        AstSelect select = selectOpt.get();
-        return select.getSelectList().children()
-                .select(AstDerivedColumn.class)
-                .map(AstDerivedColumn::getAlias)
-                .nonNull()
-                .map(String::toUpperCase)
-                .has(idColumnLabel);
-    }
-
-    public static void addIDColumnLabel(AstStart ast, Query query)
+    static void addIDColumnLabel(AstStart ast, Query query)
     {
         new ColumnAdder().addColumn(ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
                 DatabaseConstants.ID_COLUMN_LABEL);

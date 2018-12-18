@@ -1,6 +1,7 @@
-package com.developmentontheedge.be5.query.services;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
+import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Test;
