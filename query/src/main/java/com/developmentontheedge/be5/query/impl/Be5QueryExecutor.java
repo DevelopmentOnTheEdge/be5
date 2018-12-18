@@ -231,7 +231,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            QueryUtils.applySort(ast, getSchema(ast.clone()), orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryUtils.applySort(ast, orderColumn + (selectable ? -1 : 0), orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 
@@ -250,21 +250,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
             throw Be5Exception.internalInQuery(query, e);
         }
-    }
-
-    private DynamicProperty[] getSchema(AstStart ast)
-    {
-        return db.execute(conn -> {
-            String sql = db.format(ast);
-            try (PreparedStatement ps = conn.prepareStatement(sql))
-            {
-                return DpsRecordAdapter.createSchema(ps.getMetaData());
-            }
-            catch (SQLException e)
-            {
-                throw Be5Exception.internal(sql, e);
-            }
-        });
     }
 
     private void applyCategory(AstStart ast)

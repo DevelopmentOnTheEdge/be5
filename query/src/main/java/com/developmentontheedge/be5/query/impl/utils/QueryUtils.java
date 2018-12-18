@@ -21,6 +21,7 @@ import com.developmentontheedge.sql.model.AstOrderingElement;
 import com.developmentontheedge.sql.model.AstParenthesis;
 import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstSelectList;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstStringConstant;
 import com.developmentontheedge.sql.model.AstTableRef;
@@ -211,13 +212,16 @@ public class QueryUtils
         return map;
     }
 
-    public static int getQuerySortingColumn(DynamicProperty[] schema, int orderColumn)
+    private static int getQuerySortingColumn(AstStart ast, int orderColumn)
     {
+        AstSelectList selectList = ast.getQuery().getSelect().getSelectList();
+        if (selectList.isAllColumns()) return orderColumn;
+
         int sortCol = -1;
         int restCols = orderColumn;
-        for (int i = 0; i < schema.length; i++)
+        for (int i = 0; i < selectList.jjtGetNumChildren(); i++)
         {
-            if (schema[i].isHidden()) continue;
+            if (((AstDerivedColumn) selectList.child(i)).getAlias().startsWith(";")) continue;
 
             if (restCols-- == 0)
             {
@@ -228,11 +232,11 @@ public class QueryUtils
         return sortCol;
     }
 
-    public static void applySort(AstStart ast, DynamicProperty[] schema, int orderColumn, String orderDir)
+    public static void applySort(AstStart ast, int orderColumn, String orderDir)
     {
         if (orderColumn >= 0)
         {
-            int sortCol = getQuerySortingColumn(schema, orderColumn);
+            int sortCol = getQuerySortingColumn(ast, orderColumn);
             if (sortCol > 0)
             {
                 AstSelect sel = (AstSelect) ast.getQuery().jjtGetChild(
