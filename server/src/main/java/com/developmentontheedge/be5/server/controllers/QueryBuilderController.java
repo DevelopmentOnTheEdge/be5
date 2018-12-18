@@ -2,14 +2,10 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -45,27 +41,25 @@ import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER
 @Singleton
 public class QueryBuilderController extends JsonApiModelController
 {
-    private static final String entityName = "queryBuilderComponent";
-
     private List<ResourceData> includedData;
     private List<ErrorModel> errorModelList;
 
     private final DbService db;
     private final DocumentGenerator documentGenerator;
-    private final ProjectProvider projectProvider;
+    private final Meta meta;
     private final QueryService queryService;
     private final ErrorModelHelper errorModelHelper;
     private final UserInfoProvider userInfoProvider;
     private final Stage stage;
 
     @Inject
-    public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
+    public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, Meta meta,
                                   QueryService queryService, ErrorModelHelper errorModelHelper,
                                   UserInfoProvider userInfoProvider, Stage stage)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
-        this.projectProvider = projectProvider;
+        this.meta = meta;
         this.queryService = queryService;
         this.errorModelHelper = errorModelHelper;
         this.userInfoProvider = userInfoProvider;
@@ -86,7 +80,9 @@ public class QueryBuilderController extends JsonApiModelController
             List<String> history;
             if (req.getSession().get(QUERY_BUILDER_HISTORY) != null)
             {
-                history = (List<String>) req.getSession().get(QUERY_BUILDER_HISTORY);
+                @SuppressWarnings("unchecked")
+                List<String> historyFromSession = (List<String>) req.getSession().get(QUERY_BUILDER_HISTORY);
+                history = historyFromSession;
             }
             else
             {
@@ -218,29 +214,14 @@ public class QueryBuilderController extends JsonApiModelController
 
     private String select(String sql, Request req)
     {
-        String userQBuilderQueryName = userInfoProvider.get().getUserName() + "Query";
-
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
-
-        Entity entity = new Entity(entityName, projectProvider.get().getApplication(), EntityType.TABLE);
-        DataElementUtils.save(entity);
-
-        Query query = new Query(userQBuilderQueryName, entity);
-        query.setType(QueryType.D1_UNKNOWN);
-
-        if (sql != null)
-        {
-            query.setQuery(sql);
-        }
-        DataElementUtils.save(query);
-
+        Query query = meta.createQueryFromSql(sql);
         String finalSql = getFinalSql(query, parameters);
 
         try
         {
             JsonApiModel document = documentGenerator.getDocument(query, parameters);
 
-            //todo refactor documentGenerator
             document.getData().setId("result");
             includedData.add(document.getData());
             includedData.addAll(Arrays.asList(document.getIncluded()));
@@ -250,8 +231,6 @@ public class QueryBuilderController extends JsonApiModelController
             if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
         }
-
-        entity.getOrigin().remove(entityName);
         return finalSql;
     }
 

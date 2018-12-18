@@ -83,11 +83,14 @@ public class MetaImpl implements Meta
     private static final Pattern MENU_ITEM_PATTERN = Pattern.compile("<!--\\S+?-->");
 
     private final ProjectProvider projectProvider;
+    private final Entity be5DynamicQueriesEntity;
 
     @Inject
     public MetaImpl(ProjectProvider projectProvider)
     {
         this.projectProvider = projectProvider;
+        be5DynamicQueriesEntity = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);
+        DataElementUtils.save(be5DynamicQueriesEntity);
     }
 
     @Override
@@ -484,12 +487,17 @@ public class MetaImpl implements Meta
     @Override
     public Query createQueryFromSql(String sql)
     {
-        Entity e = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);
-        e.setBesql(true);
-        DataElementUtils.save(e);
-        Query query = new Query("query", e);
-        query.setType(QueryType.D1_UNKNOWN);
-        DataElementUtils.save(query);
+        String queryName = "threadQuery" + Thread.currentThread().getId();
+        Query query = be5DynamicQueriesEntity.getQueries().get(queryName);
+        if (query == null)
+        {
+            synchronized (be5DynamicQueriesEntity)
+            {
+                query = new Query(queryName, be5DynamicQueriesEntity);
+                query.setType(QueryType.D1_UNKNOWN);
+                DataElementUtils.save(query);
+            }
+        }
         query.setQuery(sql);
         return query;
     }
