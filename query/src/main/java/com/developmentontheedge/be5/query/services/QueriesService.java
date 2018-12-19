@@ -9,22 +9,24 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.RowModel;
-import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.HIDDEN_COLUMN_PREFIX;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
 
@@ -37,17 +39,15 @@ public class QueriesService
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final QueryService queryService;
-    private final TableModelService tableModelService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                          TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
+                          QueryService queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
-        this.tableModelService = tableModelService;
         this.queryService = queryService;
 
         tagsCache = be5Caches.createCache("Tags");
@@ -162,28 +162,37 @@ public class QueriesService
     {
         String entityName = query.getEntity().getName();
 
-        TableModel tableModel;
+        List<DynamicPropertySet> list;
         if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
         {
-            tableModel = tableModelService.getTableModel(query, parameters);
+            throw new NotImplementedException();
+            //tableModel = tableModelService.getTableModel(query, parameters);
         }
         else
         {
-            tableModel = tableModelService.builder(query, parameters)
+            list = queryService.build(query, parameters)
                     .limit(Integer.MAX_VALUE)
                     .selectable(false)
-                    .build();
+                    .execute();
         }
 
-        String[][] stockArr = new String[tableModel.getRows().size()][2];
+        String[][] stockArr = new String[list.size()][2];
 
         int i = 0;
-        for (RowModel row : tableModel.getRows())
+        for (DynamicPropertySet dps : list)
         {
-            String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
-            String second = row.getCells().size() >= 2 && row.getCells().get(1).content != null ?
-                    row.getCells().get(1).content.toString() : "";
-            stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(entityName, second)};
+            Iterator<DynamicProperty> iterator = dps.iterator();
+            iterator.hasNext();
+            DynamicProperty property = iterator.next();
+            if (property.getName().startsWith(HIDDEN_COLUMN_PREFIX))
+            {
+                iterator.hasNext();
+                property = iterator.next();
+            }
+            String key = property.getValue().toString();
+            Object value = iterator.hasNext() ? iterator.next().getValue() : "";
+            String second = value != null ? value.toString() : "";
+            stockArr[i++] = new String[]{key, userAwareMeta.getColumnTitle(entityName, second)};
         }
 
         return stockArr;
