@@ -5,14 +5,19 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.be5.query.sql.TagsMapHandler;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -30,29 +35,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.SELECTION_VIEW;
+import static java.util.Collections.emptyMap;
 
 public class CellFormatter
 {
     private static final Logger log = Logger.getLogger(CellFormatter.class.getName());
+
+    /**
+     * The prefix constant for localized message.
+     * <br/>This "{{{".
+     */
+    private static final String LOC_MSG_PREFIX = "{{{";
+
+    /**
+     * The postfix constant for localized message.
+     * <br/>This "}}}".
+     */
+    private static final String LOC_MSG_POSTFIX = "}}}";
+
+    private static final Pattern MESSAGE_PATTERN = MoreStrings.variablePattern(LOC_MSG_PREFIX, LOC_MSG_POSTFIX);
     private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
 
     private final DbService db;
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
+    private final QueryService queryService;
 
     @Inject
-    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider)
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueryService queryService)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.userInfoProvider = userInfoProvider;
+        this.queryService = queryService;
     }
 
     /**
@@ -74,7 +98,7 @@ public class CellFormatter
         //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
         if (formattedContent instanceof String)
         {
-            formattedContent = userAwareMeta.getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
+            formattedContent = getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
         }
         //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
 
@@ -359,5 +383,46 @@ public class CellFormatter
         {
             return dynamicPropertySets;
         }
+    }
+
+    /**
+     * Returns a localized title of an operation in user's preferred language.
+     */
+    public String getLocalizedCell(String entityName, String queryName, String content)
+    {
+        String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
+                userAwareMeta.getLocalization(entityName, queryName, message)
+                        .orElseGet(() -> localizeDictionaryValues(entityName, message)
+                                .orElse(message))
+        );
+
+        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
+        {
+            String clearContent = localized.substring(3, localized.length() - 3);
+            return userAwareMeta.getLocalization(entityName, queryName, clearContent)
+                    .orElse(clearContent);
+        }
+
+        return localized;
+    }
+
+    private Optional<String> localizeDictionaryValues(String entityName, String key)
+    {
+        for (TableReference reference : meta.getEntity(entityName).getAllReferences())
+        {
+            String tableTo = reference.getTableTo();
+            Entity entity = tableTo != null ? meta.getEntity(tableTo) : null;
+            if (entity != null && entity.getType() == EntityType.DICTIONARY)
+            {
+                Map<String, String> tags = queryService.build(meta.getQuery(entity.getName(), SELECTION_VIEW), emptyMap())
+                        .query(new TagsMapHandler());
+                String value = tags.get(key);
+                if (value != null)
+                {
+                    return Optional.of(value);
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

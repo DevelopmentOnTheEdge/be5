@@ -15,7 +15,6 @@ classifications:
           view: ''
     - categoryID:
         type: KEYTYPE
-        reference: categories
     - importID:
         type: KEYTYPE
         canBeNull: true

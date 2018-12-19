@@ -16,7 +16,7 @@ filterTestTable:
         canBeNull: true
     - user_name:
         type: VARCHAR(100)
-        reference: users
+        reference: testTags
         canBeNull: true
     - recordID:
         type: VARCHAR(200)

@@ -6,6 +6,8 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 
+import java.util.Optional;
+
 //TODO rename UserMeta
 public interface UserAwareMeta
 {
@@ -37,10 +39,7 @@ public interface UserAwareMeta
 
     String getLocalizedOperationField(String entityName, String operationName, String name);
 
-    /**
-     * Returns a localized title of an operation in user's preferred language.
-     */
-    String getLocalizedCell(String entityName, String queryName, String content);
+    Optional<String> getLocalization(String entityName, String queryName, String message);
 
     String getLocalizedValidationMessage(String message);
 

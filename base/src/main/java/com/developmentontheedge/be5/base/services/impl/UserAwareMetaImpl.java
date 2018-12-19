@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -18,25 +17,10 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 
 public class UserAwareMetaImpl implements UserAwareMeta
 {
-    /**
-     * The prefix constant for localized message.
-     * <br/>This "{{{".
-     */
-    private static final String LOC_MSG_PREFIX = "{{{";
-
-    /**
-     * The postfix constant for localized message.
-     * <br/>This "}}}".
-     */
-    private static final String LOC_MSG_POSTFIX = "}}}";
-
-    private static final Pattern MESSAGE_PATTERN = MoreStrings.variablePattern(LOC_MSG_PREFIX, LOC_MSG_POSTFIX);
-
     private CompiledLocalizations localizations;
 
     private final Meta meta;
@@ -125,20 +109,9 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public String getLocalizedCell(String entityName, String queryName, String content)
+    public Optional<String> getLocalization(String entityName, String queryName, String message)
     {
-        String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
-                localizations.get(getLanguage(), entityName, queryName, message).orElse(message)
-        );
-
-        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
-        {
-            String clearContent = localized.substring(3, localized.length() - 3);
-            return localizations.get(getLanguage(), entityName, queryName, clearContent)
-                    .orElse(clearContent);
-        }
-
-        return localized;
+        return localizations.get(getLanguage(), entityName, queryName, message);
     }
 
     @Override

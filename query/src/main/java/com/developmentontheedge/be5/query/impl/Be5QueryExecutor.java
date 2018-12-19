@@ -15,6 +15,7 @@ import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 
 /**
  * A modern query executor that uses our new parser.
+ * TODO refactor to Be5QueryGenerator only, execute with DbService
  */
 public class Be5QueryExecutor extends AbstractQueryExecutor
 {
@@ -75,6 +77,24 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             try
             {
                 return db.list(getFinalSql(executeType), parser);
+            }
+            catch (RuntimeException e)
+            {
+                throw Be5Exception.internalInQuery(query, e);
+            }
+        }
+
+        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
+    }
+
+    @Override
+    public <T> T query(ResultSetHandler<T> rsh)
+    {
+        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
+        {
+            try
+            {
+                return db.query(getFinalSql(ExecuteType.DEFAULT).format(), rsh);
             }
             catch (RuntimeException e)
             {

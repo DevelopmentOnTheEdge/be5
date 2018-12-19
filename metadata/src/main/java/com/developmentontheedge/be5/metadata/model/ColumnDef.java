@@ -223,6 +223,16 @@ public class ColumnDef extends TableRef
                         + oldName + "'."));
             }
         }
+        if (isAvailable())
+        {
+            if (getTableTo() != null)
+            {
+                if (!getProject().getEntityNames().contains(getTableTo()))
+                {
+                    errors.add(new ProjectElementException(getCompletePath(), "reference", "Entity not exists: " + getTableTo()));
+                }
+            }
+        }
         return errors;
     }
 

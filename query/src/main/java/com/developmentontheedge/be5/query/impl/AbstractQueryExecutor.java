@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.sql.model.AstStart;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.util.Objects;
 
@@ -87,6 +88,8 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     {
         return selectable;
     }
+
+    public abstract <T> T query(ResultSetHandler<T> rsh);
 
     public abstract AstStart getFinalSql();
 }
