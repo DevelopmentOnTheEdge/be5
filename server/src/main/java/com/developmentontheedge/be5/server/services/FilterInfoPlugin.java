@@ -67,35 +67,38 @@ public class FilterInfoPlugin implements DocumentPlugin
             if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
         }
 
-        AstStart ast = SqlQuery.parse(query.getFinalQuery());
-        Map<String, AstBeParameterTag> usedParams = ast.tree()
-                .select(AstBeParameterTag.class)
-                .collect(Collectors.toMap(AstBeParameterTag::getName, identity()));
+        if (query.getType() == QueryType.D1 || query.getType() == QueryType.D1_UNKNOWN)
+        {
+            AstStart ast = SqlQuery.parse(query.getFinalQuery());
+            Map<String, AstBeParameterTag> usedParams = ast.tree()
+                    .select(AstBeParameterTag.class)
+                    .collect(Collectors.toMap(AstBeParameterTag::getName, identity()));
 
-        params.forEach((k, v) -> {
-            ColumnDef column = meta.getColumn(mainEntityName, k);
-            if (column != null)
-            {
-                result.add(getValueTitle(column, mainEntityName, k, v));
-                return;
-            }
-
-            if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
-            {
-                if (usedParams.containsKey(k))
+            params.forEach((k, v) -> {
+                ColumnDef column = meta.getColumn(mainEntityName, k);
+                if (column != null)
                 {
-                    ColumnDef column2 = queryMetaHelper.getColumnDef(ast, usedParams.get(k));
-                    if (column2 != null)
+                    result.add(getValueTitle(column, mainEntityName, k, v));
+                    return;
+                }
+
+                if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
+                {
+                    if (usedParams.containsKey(k))
                     {
-                        result.add(getValueTitle(column2, mainEntityName, k, v));
-                        return;
+                        ColumnDef column2 = queryMetaHelper.getColumnDef(ast, usedParams.get(k));
+                        if (column2 != null)
+                        {
+                            result.add(getValueTitle(column2, mainEntityName, k, v));
+                            return;
+                        }
                     }
                 }
-            }
 
-            String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");
-            result.add(new FilterItem(userAwareMeta.getColumnTitle(mainEntityName, k), valueTitle));
-        });
+                String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");
+                result.add(new FilterItem(userAwareMeta.getColumnTitle(mainEntityName, k), valueTitle));
+            });
+        }
         return result;
     }
 
