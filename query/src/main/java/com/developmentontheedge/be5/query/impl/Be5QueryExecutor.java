@@ -4,9 +4,11 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
@@ -19,6 +21,8 @@ import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,7 +33,6 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 
 /**
  * A modern query executor that uses our new parser.
- * TODO refactor to Be5QueryGenerator only, execute with DbService
  */
 public class Be5QueryExecutor extends AbstractQueryExecutor
 {
@@ -195,13 +198,17 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> execute()
     {
-        return execute(new DynamicPropertySetSimpleStringParser());
+        List<DynamicPropertySet> list = execute(new DynamicPropertySetSimpleStringParser());
+        if (list.size() > 0) filterWithRoles(list.get(0), contextApplier.getContext().roles());
+        return list;
     }
 
     @Override
     public List<DynamicPropertySet> executeAggregate()
     {
-        return execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
+        List<DynamicPropertySet> list = execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
+        if (list.size() > 0) filterWithRoles(list.get(0), contextApplier.getContext().roles());
+        return list;
     }
 
     @Override
@@ -213,7 +220,59 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public DynamicPropertySet getRow()
     {
+        DynamicPropertySet row = getRow(new DynamicPropertySetSimpleStringParser());
+        if (row != null) filterWithRoles(row, contextApplier.getContext().roles());
         return getRow(new DynamicPropertySetSimpleStringParser());
     }
 
+    private void filterWithRoles(DynamicPropertySet dps, List<String> currentRoles)
+    {
+        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext(); )
+        {
+            DynamicProperty prop = props.next();
+            Map<String, String> info = DynamicPropertyMeta.get(prop).get(DatabaseConstants.COL_ATTR_ROLES);
+            if (info == null)
+            {
+                continue;
+            }
+
+            String roles = info.get("name");
+            List<String> roleList = Arrays.asList(roles.split(","));
+            List<String> forbiddenRoles = new ArrayList<>();
+            for (String userRole : roleList)
+            {
+                if (userRole.startsWith("!"))
+                {
+                    forbiddenRoles.add(userRole.substring(1));
+                }
+            }
+            roleList.removeAll(forbiddenRoles);
+
+            boolean hasAccess = false;
+            for (String role : roleList)
+            {
+                if (currentRoles.contains(role))
+                {
+                    hasAccess = true;
+                    break;
+                }
+            }
+            if (!hasAccess && !forbiddenRoles.isEmpty())
+            {
+                for (String currRole : currentRoles)
+                {
+                    if (!forbiddenRoles.contains(currRole))
+                    {
+                        hasAccess = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasAccess)
+            {
+                prop.setHidden(true);
+            }
+
+        }
+    }
 }

@@ -130,7 +130,7 @@ class PropertiesToRowTransformer
         {
             String cellName = property.getName();
             Object cellContent = formatValue(property);
-            boolean hidden = shouldBeSkipped(cellName);
+            boolean hidden = shouldBeSkipped(property);
             Map<String, Map<String, String>> options = removeUnnecessaryCellOptions(DynamicPropertyMeta.get(property));
             cells.add(new RawCellModel(cellName, cellContent, options, hidden));
         }
@@ -208,13 +208,8 @@ class PropertiesToRowTransformer
 
     private boolean shouldBeSkipped(DynamicProperty property)
     {
-        return shouldBeSkipped(property.getDisplayName());
+        String name = property.getName();
+        return property.isHidden() || MoreStrings.startsWithAny(name, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
+                DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
     }
-
-    private boolean shouldBeSkipped(String propertyName)
-    {
-        return MoreStrings.startsWithAny(propertyName, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX, DatabaseConstants.HIDDEN_COLUMN_PREFIX,
-                DatabaseConstants.GLUE_COLUMN_PREFIX);
-    }
-
 }

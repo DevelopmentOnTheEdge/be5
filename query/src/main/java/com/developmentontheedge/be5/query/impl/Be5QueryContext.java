@@ -42,9 +42,9 @@ public class Be5QueryContext implements QueryContext
     }
 
     @Override
-    public StreamEx<String> roles()
+    public List<String> roles()
     {
-        return StreamEx.of(userInfo.getCurrentRoles());
+        return userInfo.getCurrentRoles();
     }
 
     @Override

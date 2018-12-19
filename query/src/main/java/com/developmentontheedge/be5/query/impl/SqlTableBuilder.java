@@ -21,13 +21,11 @@ import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SqlTableBuilder
 {
@@ -105,8 +103,6 @@ public class SqlTableBuilder
 
         boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
-        filterWithRoles(columns, rows);
-
         Long totalNumberOfRows;
         if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
         {
@@ -127,56 +123,6 @@ public class SqlTableBuilder
                 queryExecutor.getLimit(),
                 queryExecutor.getOrderColumn(),
                 queryExecutor.getOrderDir());
-    }
-
-    /*
-     * com.developmentontheedge.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
-     * */
-    private void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows)
-    {
-        if (rows.size() == 0) return;
-        List<String> currRoles = userInfo.getCurrentRoles();
-
-        List<CellModel> firstLine = rows.get(0).getCells();
-        for (int i = firstLine.size() - 1; i >= 0; i--)
-        {
-            Map<String, String> columnRoles = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_ROLES);
-
-            if (columnRoles == null)
-            {
-                continue;
-            }
-
-            String roles = columnRoles.get("name");
-            List<String> roleList = new ArrayList<>(Arrays.asList(roles.split(",")));
-            List<String> forbiddenRoles = roleList.stream()
-                    .filter(x -> x.startsWith("!"))
-                    .map(x -> x.substring(1))
-                    .collect(Collectors.toList());
-
-            roleList.removeIf(x -> x.startsWith("!"));
-
-            boolean hasAccess = false;
-
-            if (roleList.stream().anyMatch(currRoles::contains))
-            {
-                hasAccess = true;
-            }
-
-            if (!hasAccess && !forbiddenRoles.isEmpty() && currRoles.stream().anyMatch(x -> !forbiddenRoles.contains(x)))
-            {
-                hasAccess = true;
-            }
-
-            if (!hasAccess)
-            {
-                for (RowModel rowModel : rows)
-                {
-                    rowModel.getCells().remove(i);
-                }
-                columns.remove(i);
-            }
-        }
     }
 
     private boolean addAggregateRowIfNeeded(List<RowModel> rows)
