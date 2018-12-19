@@ -38,11 +38,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 {
     private static final Logger log = Logger.getLogger(Be5QueryExecutor.class.getName());
 
-    enum ExecuteType
-    {
-        DEFAULT, COUNT, AGGREGATE
-    }
-
     private final DbService db;
 
     private final Map<String, List<Object>> parameters;
@@ -227,7 +222,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void filterWithRoles(DynamicPropertySet dps, List<String> currentRoles)
     {
-        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext(); )
+        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
         {
             DynamicProperty prop = props.next();
             Map<String, String> info = DynamicPropertyMeta.get(prop).get(DatabaseConstants.COL_ATTR_ROLES);

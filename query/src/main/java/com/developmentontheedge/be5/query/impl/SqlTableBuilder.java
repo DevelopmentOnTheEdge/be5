@@ -99,7 +99,7 @@ public class SqlTableBuilder
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows, ExecuteType.DEFAULT);
 
         boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
@@ -130,7 +130,7 @@ public class SqlTableBuilder
         if (rows.size() == 0 || rows.get(0).getCells().stream()
                 .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE))) return false;
         List<RowModel> aggregateRow = new ArrayList<>();
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow);
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow, ExecuteType.AGGREGATE);
 
         List<CellModel> firstLine = aggregateRow.get(0).getCells();
         double[] resD = new double[firstLine.size()];
@@ -227,7 +227,7 @@ public class SqlTableBuilder
     }
 
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
-                                       List<RowModel> rows)
+                                       List<RowModel> rows, ExecuteType executeType)
     {
         for (DynamicPropertySet properties : list)
         {
@@ -235,16 +235,16 @@ public class SqlTableBuilder
             {
                 columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils).collectColumns());
             }
-            rows.add(generateRow(entityName, queryName, properties));
+            rows.add(generateRow(entityName, queryName, properties, executeType));
         }
     }
 
-    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties) throws AssertionError
+    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties, ExecuteType executeType) throws AssertionError
     {
         PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
-        List<CellModel> processedCells = processCells(cells); // only visible cells
+        List<CellModel> processedCells = processCells(cells, executeType); // only visible cells
 
         String rowId = transformer.getRowId();
         if (queryExecutor.isSelectable() && rowId == null)
@@ -280,14 +280,18 @@ public class SqlTableBuilder
      * @param cells raw cells
      *              columns.size() == cells.size()
      */
-    private List<CellModel> processCells(List<RawCellModel> cells)
+    private List<CellModel> processCells(List<RawCellModel> cells, ExecuteType executeType)
     {
         List<CellModel> processedCells = new ArrayList<>();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
         for (RawCellModel cell : cells)
         {
-            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
+            Object processedContent;
+            if (executeType == ExecuteType.DEFAULT)
+                processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
+            else
+                processedContent = cell.content;
             previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
                     : processedContent.getClass(), processedContent));
             if (!cell.hidden)
