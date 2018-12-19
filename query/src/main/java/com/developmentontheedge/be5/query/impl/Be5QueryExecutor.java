@@ -33,7 +33,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 {
     private static final Logger log = Logger.getLogger(Be5QueryExecutor.class.getName());
 
-    private enum ExecuteType
+    enum ExecuteType
     {
         DEFAULT, COUNT, AGGREGATE
     }
@@ -44,7 +44,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final QueryMetaHelper queryMetaHelper;
 
     private ContextApplier contextApplier;
-    private ExecuteType executeType;
 
     public Be5QueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
                             QueryMetaHelper queryMetaHelper)
@@ -56,7 +55,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.db = db;
         this.queryMetaHelper = queryMetaHelper;
 
-        this.executeType = ExecuteType.DEFAULT;
         this.contextApplier = new ContextApplier(queryContext);
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
@@ -67,11 +65,16 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public <T> List<T> execute(ResultSetParser<T> parser)
     {
+        return execute(ExecuteType.DEFAULT, parser);
+    }
+
+    private <T> List<T> execute(ExecuteType executeType, ResultSetParser<T> parser)
+    {
         if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
         {
             try
             {
-                return db.list(getFinalSql(), parser);
+                return db.list(getFinalSql(executeType), parser);
             }
             catch (RuntimeException e)
             {
@@ -106,6 +109,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     @Override
     public AstStart getFinalSql()
+    {
+        return getFinalSql(ExecuteType.DEFAULT);
+    }
+
+    AstStart getFinalSql(ExecuteType executeType)
     {
         String queryText = query.getFinalQuery();
         if (queryText.isEmpty()) return null;
@@ -167,22 +175,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> execute()
     {
-        executeType = ExecuteType.DEFAULT;
         return execute(new DynamicPropertySetSimpleStringParser());
     }
 
     @Override
     public List<DynamicPropertySet> executeAggregate()
     {
-        executeType = ExecuteType.AGGREGATE;
-        return execute(new DynamicPropertySetSimpleStringParser());
+        return execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
     }
 
     @Override
     public long count()
     {
-        executeType = ExecuteType.COUNT;
-        return (Long) execute(new DynamicPropertySetSimpleStringParser()).get(0).asMap().get("count");
+        return (Long) execute(ExecuteType.COUNT, new DynamicPropertySetSimpleStringParser()).get(0).asMap().get("count");
     }
 
     @Override

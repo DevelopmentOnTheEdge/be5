@@ -36,7 +36,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Before
     public void insertOneRow()
     {
-        query = projectProvider.get().getEntity("testtable").getQueries().get("All records");
+        query = meta.getQuery("testtable", "All records");
         db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)",
                 "testBe5QueryExecutor", "1");
@@ -62,14 +62,9 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = queryService.build(query, emptyMap());
+        Be5QueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
 
         assertTrue(be5QueryExecutor.count() > 0);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
-                "  t.name AS \"Name\",\n" +
-                "  t.value AS \"Value\"\n" +
-                "FROM\n" +
-                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql().getQuery().toString());
     }
 
     @Test
