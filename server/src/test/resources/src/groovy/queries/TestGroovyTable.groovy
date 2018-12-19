@@ -1,10 +1,9 @@
 package src.groovy.queries
 
 import com.developmentontheedge.be5.query.model.TableModel
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport
 
-
-class TestGroovyTable extends TableBuilderSupport
+class TestGroovyTable extends DpsTableBuilderSupport
 {
     @Override
     TableModel getTableModel()
@@ -13,6 +12,6 @@ class TestGroovyTable extends TableBuilderSupport
 
         addRow(cells(userInfo.getCurrentRoles().toString()))
 
-        return table(columns, rows)
+        return table()
     }
 }

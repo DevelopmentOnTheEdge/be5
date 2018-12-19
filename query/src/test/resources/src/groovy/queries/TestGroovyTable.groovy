@@ -1,10 +1,9 @@
 package src.groovy.queries
 
 import com.developmentontheedge.be5.query.model.TableModel
-import com.developmentontheedge.be5.query.support.BaseTableBuilderSupport
+import com.developmentontheedge.be5.query.support.BaseDpsTableBuilderSupport
 
-
-class TestGroovyTable extends BaseTableBuilderSupport
+class TestGroovyTable extends BaseDpsTableBuilderSupport
 {
     @Override
     TableModel getTableModel()
@@ -14,6 +13,6 @@ class TestGroovyTable extends BaseTableBuilderSupport
         addRow(cells("a1", "b1"))
         addRow(cells("a2", "b2"))
 
-        return table(columns, rows)
+        return table()
     }
 }

@@ -8,8 +8,8 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.DpsTableBuilder;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
@@ -111,14 +111,14 @@ public class TableModelServiceImpl implements TableModelService
 
     private TableModel getFromTableBuilder(Query query, Map<String, Object> parameters)
     {
-        TableBuilder tableBuilder;
+        DpsTableBuilder tableBuilder;
 
         switch (query.getType())
         {
             case JAVA:
                 try
                 {
-                    tableBuilder = (TableBuilder) Class.forName(query.getQuery()).newInstance();
+                    tableBuilder = (DpsTableBuilder) Class.forName(query.getQuery()).newInstance();
                     break;
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
@@ -133,7 +133,7 @@ public class TableModelServiceImpl implements TableModelService
 
                     if (aClass != null)
                     {
-                        tableBuilder = (TableBuilder) aClass.newInstance();
+                        tableBuilder = (DpsTableBuilder) aClass.newInstance();
                         break;
                     }
                     else
