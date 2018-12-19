@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -44,7 +45,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testExecute()
     {
-        List<DynamicPropertySet> dps = queryService.build(query).execute();
+        List<DynamicPropertySet> dps = queryService.build(query, emptyMap()).execute();
         assertTrue(dps.size() > 0);
 
         assertEquals(String.class, dps.get(0).getProperty("name").getType());
@@ -53,7 +54,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testColumnNames()
     {
-        List<String> columnNames = queryService.build(query).getColumnNames();
+        List<String> columnNames = queryService.build(query, emptyMap()).getColumnNames();
         assertEquals(2, columnNames.size());
         assertEquals("NAME", columnNames.get(0));
     }
@@ -61,7 +62,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = queryService.build(query);
+        Be5QueryExecutor be5QueryExecutor = queryService.build(query, emptyMap());
 
         assertTrue(be5QueryExecutor.count() > 0);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +

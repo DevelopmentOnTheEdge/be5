@@ -163,7 +163,7 @@ public class QueriesService
         String entityName = query.getEntity().getName();
 
         TableModel tableModel;
-        if (query.getType() == QueryType.GROOVY)
+        if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
         {
             tableModel = tableModelService.getTableModel(query, parameters);
         }

@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
@@ -17,6 +18,7 @@ import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+import com.developmentontheedge.sql.format.ContextApplier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,18 +40,24 @@ public class SqlTableBuilder
     private final CellFormatter cellFormatter;
     private final CoreUtils coreUtils;
 
+    private ContextApplier contextApplier;
+
     public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
-                           UserAwareMeta userAwareMeta, Meta meta, CoreUtils coreUtils)
+                           UserAwareMeta userAwareMeta, Meta meta, CellFormatter cellFormatter, CoreUtils coreUtils,
+                           QuerySession querySession)
     {
         this.query = query;
         this.parameters = parameters;
         this.userInfo = userInfo;
 
         this.queryService = queryService;
+        this.cellFormatter = cellFormatter;
         this.coreUtils = coreUtils;
-        this.queryExecutor = queryService.build(query, parameters);
+
+        Be5QueryContext context = new Be5QueryContext(query, parameters, querySession, userInfo, meta);
+        this.contextApplier = new ContextApplier(context);
+        this.queryExecutor = queryService.build(query, context);
         this.userAwareMeta = userAwareMeta;
-        this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, meta);
     }
 
     public SqlTableBuilder offset(int offset)
@@ -333,7 +341,7 @@ public class SqlTableBuilder
 
         for (RawCellModel cell : cells)
         {
-            Object processedContent = cellFormatter.formatCell(cell, previousCells);
+            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
             previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
                     : processedContent.getClass(), processedContent));
             if (!cell.hidden)

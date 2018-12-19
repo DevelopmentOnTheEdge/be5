@@ -5,12 +5,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
-/**
- * A way to run queries from the project model.
- * Note that a query executor has its state. Don't reuse the same executor for several requests.
- *
- * @author asko
- */
 public interface QueryExecutor
 {
     /**
@@ -61,8 +55,6 @@ public interface QueryExecutor
      */
     List<String> getColumnNames();
 
-    List<DynamicPropertySet> executeSubQuery(String subQueryName, VarResolver varResolver);
-
     int getOrderColumn();
 
     String getOrderDir();
@@ -72,7 +64,4 @@ public interface QueryExecutor
     int getLimit();
 
     Boolean isSelectable();
-
-
-    //QueryExecutor setContextApplier(ContextApplier contextApplier);
 }

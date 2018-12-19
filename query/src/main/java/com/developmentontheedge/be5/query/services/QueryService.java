@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.query.services;
 
-
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
+import com.developmentontheedge.sql.format.QueryContext;
 
 import java.util.Map;
 
@@ -10,5 +10,5 @@ public interface QueryService
 {
     Be5QueryExecutor build(Query query, Map<String, ?> parameters);
 
-    Be5QueryExecutor build(Query query);
+    Be5QueryExecutor build(Query query, QueryContext queryContext);
 }

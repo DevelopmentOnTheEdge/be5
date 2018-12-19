@@ -8,7 +8,9 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.TableBuilder;
+import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.QueryService;
@@ -33,10 +35,13 @@ public class TableModelServiceImpl implements TableModelService
     private final Injector injector;
     private final QueryService queryService;
     private final UserInfoProvider userInfoProvider;
+    private final CellFormatter cellFormatter;
+    private final QuerySession querySession;
 
     @Inject
     public TableModelServiceImpl(Meta meta, UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
-                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider)
+                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider,
+                                 CellFormatter cellFormatter, QuerySession querySession)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
@@ -45,6 +50,8 @@ public class TableModelServiceImpl implements TableModelService
         this.injector = injector;
         this.queryService = queryService;
         this.userInfoProvider = userInfoProvider;
+        this.cellFormatter = cellFormatter;
+        this.querySession = querySession;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class TableModelServiceImpl implements TableModelService
     public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
         return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService,
-                userAwareMeta, meta, coreUtils);
+                userAwareMeta, meta, cellFormatter, coreUtils, querySession);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
@@ -90,12 +97,12 @@ public class TableModelServiceImpl implements TableModelService
 
         if (limit == Integer.MAX_VALUE)
         {
-            //todo move defaultPageLimit, to getQuerySettings(query)
             limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta, meta, coreUtils)
+        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService,
+                userAwareMeta, meta, cellFormatter, coreUtils, querySession)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))

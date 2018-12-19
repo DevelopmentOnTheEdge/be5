@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
@@ -9,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 
 
@@ -72,7 +71,7 @@ public class QueryServiceMacroTest extends QueryBe5ProjectDBTest
             start = System.currentTimeMillis();
             for (int i = 0; i < count; i++)
             {
-                queryService.build(query).getFinalSql().format();
+                queryService.build(query, emptyMap()).getFinalSql().format();
             }
             System.out.println(diff + "\t " + diff2 + "\t " + (System.currentTimeMillis() - start));
         }

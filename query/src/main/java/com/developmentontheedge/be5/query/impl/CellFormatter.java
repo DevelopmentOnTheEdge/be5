@@ -3,58 +3,71 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
-import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.sql.format.ContextApplier;
+import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
-class CellFormatter
+public class CellFormatter
 {
+    private static final Logger log = Logger.getLogger(CellFormatter.class.getName());
     private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
-    private final Query query;
+
+    private final DbService db;
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
-    private final QueryExecutor queryExecutor;
+    private final UserInfoProvider userInfoProvider;
 
-    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta, Meta meta)
+    @Inject
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider)
     {
-        this.query = query;
+        this.db = db;
         this.userAwareMeta = userAwareMeta;
-        this.queryExecutor = queryExecutor;
         this.meta = meta;
+        this.userInfoProvider = userInfoProvider;
     }
 
     /**
      * Executes subqueries of the cell or returns the cell content itself.
      */
-    Object formatCell(RawCellModel cell, DynamicPropertySet previousCells)
+    Object formatCell(RawCellModel cell, DynamicPropertySet previousCells, Query query, ContextApplier contextApplier)
     {
-        return format(cell, new RootVarResolver(previousCells));
+        return format(cell, new RootVarResolver(previousCells), query, contextApplier);
     }
 
-    private Object format(RawCellModel cell, VarResolver varResolver)
+    private Object format(RawCellModel cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         //ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cell, varResolver);
 
-        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver);
+        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier);
 //        if(formattedContent == null) {
 //            return null;
 //        }
@@ -145,7 +158,7 @@ class CellFormatter
         return formattedContent;
     }
 
-    private Object getFormattedPartsWithoutLink(RawCellModel cell, VarResolver varResolver)
+    private Object getFormattedPartsWithoutLink(RawCellModel cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         Objects.requireNonNull(cell);
 
@@ -168,7 +181,7 @@ class CellFormatter
         if (cell.content instanceof String)
         {
             unzipper.unzip((String) cell.content, builder::add, subquery ->
-                    builder.add(toTable(subquery, varResolver))
+                    builder.add(toTable(subquery, varResolver, query, contextApplier))
             );
             ImmutableList<Object> formattedParts = builder.build();
             content = StreamEx.of(formattedParts).map(this::print).joining();
@@ -212,15 +225,15 @@ class CellFormatter
     /**
      * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
      */
-    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver)
+    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
-        List<DynamicPropertySet> list = queryExecutor.executeSubQuery(subQueryName, varResolver);
+        List<DynamicPropertySet> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
 
         List<List<Object>> lists = new ArrayList<>();
 
         for (DynamicPropertySet dps : list)
         {
-            List<Object> objects = toRow(dps, varResolver);
+            List<Object> objects = toRow(dps, varResolver, query, contextApplier);
             lists.add(objects);
         }
 
@@ -230,14 +243,16 @@ class CellFormatter
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver)
+    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
         return StreamEx.of(dps.spliterator()).map(property -> {
             String name = property.getName();
             Object value = property.getValue();
-            Object processedCell = format(new RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
+            RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
+            CompositeVarResolver compositeVarResolver = new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
+            Object processedCell = format(rawCellModel, compositeVarResolver, query, contextApplier);
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
         }).toList();
@@ -283,4 +298,66 @@ class CellFormatter
         }
     }
 
+    private List<DynamicPropertySet> executeSubQuery(String subQueryName, VarResolver varResolver,
+                                                     Query query, ContextApplier contextApplier)
+    {
+        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
+            Object value = varResolver.resolve(x);
+            return value != null ? value.toString() : null;
+        });
+
+        if (subQuery.getQuery() == null)
+        {
+            return Collections.emptyList();
+        }
+
+        String finalSql = subQuery.getQuery().toString();
+
+        List<DynamicPropertySet> dynamicPropertySets;
+
+        Object[] params;
+        String usingParamNames = subQuery.getUsingParamNames();
+        if (usingParamNames != null)
+        {
+            String[] paramNames = usingParamNames.split(",");
+            params = new Object[paramNames.length];
+            for (int i = 0; i < paramNames.length; i++)
+            {
+                params[i] = varResolver.resolve(paramNames[i]);
+            }
+        }
+        else
+        {
+            params = new Object[]{};
+        }
+
+        try
+        {
+            dynamicPropertySets = db.list(finalSql, new DynamicPropertySetSimpleStringParser(), params);
+        }
+        catch (Throwable e)
+        {
+            Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);
+            log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
+
+            DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+            dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
+            dynamicProperties.add(new DynamicProperty("error", String.class,
+                    userInfoProvider.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
+            dynamicPropertySets = Collections.singletonList(dynamicProperties);
+        }
+
+        if (dynamicPropertySets.size() == 0 && subQuery.getParameter("default") != null)
+        {
+            String value = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
+                    subQuery.getParameter("default"));
+            DynamicPropertySetSupport dpsWithMessage = new DynamicPropertySetSupport();
+            dpsWithMessage.add(new DynamicProperty("message", String.class, value));
+            return Collections.singletonList(dpsWithMessage);
+        }
+        else
+        {
+            return dynamicPropertySets;
+        }
+    }
 }
