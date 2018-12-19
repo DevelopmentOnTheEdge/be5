@@ -40,7 +40,7 @@ public interface UserAwareMeta
     /**
      * Returns a localized title of an operation in user's preferred language.
      */
-    String getLocalizedCell(String content, String entityName, String queryName);
+    String getLocalizedCell(String entityName, String queryName, String content);
 
     String getLocalizedValidationMessage(String message);
 
@@ -61,7 +61,7 @@ public interface UserAwareMeta
      * Returns a query.
      * Throws an exception if there's no such query or it is not awailable due to lack of rights.
      */
-    Query getQuery(String entity, String name);
+    Query getQuery(String entityName, String queryName);
 
     /**
      * Finds some settings of the query that corresponds to the roles of the user or returns empty settings.
@@ -72,15 +72,15 @@ public interface UserAwareMeta
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    Operation getOperation(String entity, String name);
+    Operation getOperation(String entityName, String operationName);
 
-    boolean hasAccessToOperation(String entityName, String queryName, String name);
+    boolean hasAccessToOperation(String entityName, String queryName, String operationName);
 
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    Operation getOperation(String entityName, String queryName, String name);
+    Operation getOperation(String entityName, String queryName, String operationName);
 
     String getStaticPageContent(String name);
 }

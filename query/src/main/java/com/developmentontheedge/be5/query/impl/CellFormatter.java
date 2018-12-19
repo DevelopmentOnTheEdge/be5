@@ -74,7 +74,7 @@ public class CellFormatter
         //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
         if (formattedContent instanceof String)
         {
-            formattedContent = userAwareMeta.getLocalizedCell((String) formattedContent, query.getEntity().getName(), query.getName());
+            formattedContent = userAwareMeta.getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
         }
         //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
 

@@ -100,9 +100,9 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public String getLocalizedQueryTitle(String entity, String query)
+    public String getLocalizedQueryTitle(String entityName, String queryName)
     {
-        return localizations.getQueryTitle(getLanguage(), entity, query);
+        return localizations.getQueryTitle(getLanguage(), entityName, queryName);
     }
 
     @Override
@@ -125,16 +125,16 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public String getLocalizedCell(String content, String entity, String query)
+    public String getLocalizedCell(String entityName, String queryName, String content)
     {
         String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
-                localizations.get(getLanguage(), entity, query, message).orElse(message)
+                localizations.get(getLanguage(), entityName, queryName, message).orElse(message)
         );
 
         if (localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
             String clearContent = localized.substring(3, localized.length() - 3);
-            return localizations.get(getLanguage(), entity, query, clearContent)
+            return localizations.get(getLanguage(), entityName, queryName, clearContent)
                     .orElse(clearContent);
         }
 
@@ -178,28 +178,28 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public Operation getOperation(String entityName, String name)
+    public Operation getOperation(String entityName, String operationName)
     {
-        Operation operation = meta.getOperation(entityName, name);
+        Operation operation = meta.getOperation(entityName, operationName);
         if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5Exception.accessDeniedToOperation(entityName, name);
+            throw Be5Exception.accessDeniedToOperation(entityName, operationName);
 
         return operation;
     }
 
     @Override
-    public boolean hasAccessToOperation(String entityName, String queryName, String name)
+    public boolean hasAccessToOperation(String entityName, String queryName, String operationName)
     {
-        Operation operation = meta.getOperation(entityName, queryName, name);
+        Operation operation = meta.getOperation(entityName, queryName, operationName);
         return meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles());
     }
 
     @Override
-    public Operation getOperation(String entityName, String queryName, String name)
+    public Operation getOperation(String entityName, String queryName, String operationName)
     {
-        Operation operation = meta.getOperation(entityName, queryName, name);
+        Operation operation = meta.getOperation(entityName, queryName, operationName);
         if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5Exception.accessDeniedToOperation(entityName, name);
+            throw Be5Exception.accessDeniedToOperation(entityName, operationName);
 
         return operation;
     }
