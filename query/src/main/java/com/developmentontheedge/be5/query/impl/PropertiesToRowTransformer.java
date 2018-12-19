@@ -32,8 +32,6 @@ class PropertiesToRowTransformer
 
     /**
      * @param properties represent a row
-     * @param userInfo
-     * @param coreUtils
      */
     PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo, UserAwareMeta userAwareMeta, CoreUtils coreUtils)
     {

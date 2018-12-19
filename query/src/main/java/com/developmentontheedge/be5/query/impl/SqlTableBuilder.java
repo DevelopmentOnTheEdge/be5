@@ -132,7 +132,7 @@ public class SqlTableBuilder
     /*
      * com.developmentontheedge.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
      * */
-    void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows)
+    private void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows)
     {
         if (rows.size() == 0) return;
         List<String> currRoles = userInfo.getCurrentRoles();

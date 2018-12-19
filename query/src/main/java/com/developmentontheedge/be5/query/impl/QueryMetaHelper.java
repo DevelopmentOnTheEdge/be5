@@ -47,7 +47,7 @@ public class QueryMetaHelper
         this.meta = meta;
     }
 
-    public void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
+    void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
     {
         String fromTableDef = getFromTableDefName(ast);
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
@@ -124,7 +124,7 @@ public class QueryMetaHelper
         query.replaceWith(new AstQuery(select));
     }
 
-    public void resolveTypeOfRefColumn(AstStart ast)
+    void resolveTypeOfRefColumn(AstStart ast)
     {
         String fromTableDef = getFromTableDefName(ast);
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
