@@ -34,6 +34,11 @@ testtable:
           t.value AS "Value"
         FROM
           testtable t
+  - emptyQuery:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+         SELECT * FROM testtable t WHERE 1 = 2
   - beLink:
       type: 1D_unknown
       roles: SystemDeveloper

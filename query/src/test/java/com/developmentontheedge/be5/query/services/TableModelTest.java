@@ -110,6 +110,14 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void emptyQuery()
+    {
+        Query query = meta.getQuery("testtable", "emptyQuery");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals(0, table.getRows().size());
+    }
+
+    @Test
     public void beLink()
     {
         Query query = meta.getQuery("testtable", "beLink");
