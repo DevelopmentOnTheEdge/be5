@@ -16,9 +16,8 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
-import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
+import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
-import com.developmentontheedge.be5.query.sql.TagsMapHandler;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -42,10 +41,9 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.SELECTION_VIEW;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
-import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 
 public class CellFormatter
 {
@@ -70,16 +68,16 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
-    private final QueryExecutorFactory queryService;
+    private final QueriesService queries;
 
     @Inject
-    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueryExecutorFactory queryService)
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueriesService queries)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.userInfoProvider = userInfoProvider;
-        this.queryService = queryService;
+        this.queries = queries;
     }
 
     /**
@@ -393,20 +391,11 @@ public class CellFormatter
      */
     public String getLocalizedCell(String entityName, String queryName, String content)
     {
-        String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
+        return MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
                 userAwareMeta.getLocalization(entityName, queryName, message)
                         .orElseGet(() -> localizeDictionaryValues(entityName, message)
                                 .orElse(message))
         );
-
-        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
-        {
-            String clearContent = localized.substring(3, localized.length() - 3);
-            return userAwareMeta.getLocalization(entityName, queryName, clearContent)
-                    .orElse(clearContent);
-        }
-
-        return localized;
     }
 
     private Optional<String> localizeDictionaryValues(String entityName, String key)
@@ -417,12 +406,11 @@ public class CellFormatter
             Entity entity = tableTo != null ? meta.getEntity(tableTo) : null;
             if (entity != null && entity.getType() == EntityType.DICTIONARY)
             {
-                Map<String, String> tags = queryService.build(meta.getQuery(entity.getName(), SELECTION_VIEW), emptyMap())
-                        .query(new TagsMapHandler());
-                String value = tags.get(key);
-                if (value != null)
+                String primaryKey = entity.getPrimaryKey();
+                String[][] tags = queries.getTagsFromSelectionView(entity.getName(), singletonMap(primaryKey, key));
+                if (tags.length > 0)
                 {
-                    return Optional.of(value);
+                    return Optional.of(tags[0][1]);
                 }
             }
         }

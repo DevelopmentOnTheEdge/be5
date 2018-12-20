@@ -57,6 +57,18 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void dictionaryLocalization()
+    {
+        Query query = projectProvider.get().getEntity("testTags").getQueries().get("dictionaryLocalization");
+        TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
+
+        assertEquals("'Региональный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(0).content)));
+        assertEquals("'Региональный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(1).getCells().get(0).content)));
+        assertEquals("'Муниципальный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(2).getCells().get(0).content)));
+        assertEquals("'Муниципальный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(3).getCells().get(0).content)));
+    }
+
+    @Test
     public void subQueryDefault()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query default");

@@ -7,7 +7,7 @@ import org.junit.Test;
 import javax.inject.Inject;
 
 import static java.util.Collections.emptyMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class Be5QueryExecutorTest extends QueryBe5ProjectDBTest
 {
@@ -17,7 +17,8 @@ public class Be5QueryExecutorTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5SqlQueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
+        Be5SqlQueryExecutor be5QueryExecutor =
+                (Be5SqlQueryExecutor) queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
 
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
                 "  t.name AS \"Name\",\n" +

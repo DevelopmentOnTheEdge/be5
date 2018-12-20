@@ -19,7 +19,6 @@ import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
-import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
@@ -90,23 +89,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
-    public <T> T query(ResultSetHandler<T> rsh)
-    {
-        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
-        {
-            try
-            {
-                return db.query(getFinalSql(ExecuteType.DEFAULT).format(), rsh);
-            }
-            catch (RuntimeException e)
-            {
-                throw Be5Exception.internalInQuery(query, e);
-            }
-        }
-
-        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
-    }
-
     @Override
     public <T> T getRow(ResultSetParser<T> parser)
     {
@@ -129,6 +111,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
+    @Override
     public AstStart getFinalSql()
     {
         return getFinalSql(ExecuteType.DEFAULT);

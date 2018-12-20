@@ -2,10 +2,11 @@ package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.sql.model.AstStart;
 
 import java.util.List;
 
-public interface SqlQueryExecutor
+public interface SqlQueryExecutor extends QueryExecutor
 {
     /**
      * Executes the query.
@@ -25,4 +26,6 @@ public interface SqlQueryExecutor
      * Returns a list of column names.
      */
     List<String> getColumnNames();
+
+    AstStart getFinalSql();
 }

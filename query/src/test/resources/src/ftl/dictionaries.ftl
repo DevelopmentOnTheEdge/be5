@@ -1,4 +1,4 @@
-INSERT INTO testTags (CODE, payable, admlevel) VALUES ('01', 'yes', 'Regional');
-INSERT INTO testTags (CODE, payable, admlevel) VALUES ('02', 'yes', 'Municipal');
-INSERT INTO testTags (CODE, payable, admlevel) VALUES ('03', 'no', 'Federal');
-INSERT INTO testTags (CODE, payable, admlevel) VALUES ('04', 'no', 'Regional');
+INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES ('01', 'yes', 'Regional', '01');
+INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES ('02', 'yes', 'Municipal', '01');
+INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES ('03', 'no', 'Federal', '02');
+INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES ('04', 'no', 'Regional', '02');

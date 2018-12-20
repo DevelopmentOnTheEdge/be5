@@ -31,6 +31,12 @@ testTags:
       code: |-
         SELECT *
         FROM testTags
+  - dictionaryLocalization:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT CONCAT('{{{', referenceTest, '}}}') AS "referenceTest"
+        FROM testTags
   - With parameter:
       type: 1D_unknown
       invisible: true

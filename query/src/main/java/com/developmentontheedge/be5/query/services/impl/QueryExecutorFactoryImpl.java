@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5QueryContext;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
@@ -35,14 +36,14 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     }
 
     @Override
-    public Be5SqlQueryExecutor build(Query query, Map<String, ?> parameters)
+    public SqlQueryExecutor build(Query query, Map<String, ?> parameters)
     {
         QueryContext context = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
         return build(query, context);
     }
 
     @Override
-    public Be5SqlQueryExecutor build(Query query, QueryContext queryContext)
+    public SqlQueryExecutor build(Query query, QueryContext queryContext)
     {
         return new Be5SqlQueryExecutor(query, queryContext, meta, db, queryMetaHelper);
     }
