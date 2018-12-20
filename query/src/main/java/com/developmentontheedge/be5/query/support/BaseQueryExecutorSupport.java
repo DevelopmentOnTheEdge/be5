@@ -21,7 +21,7 @@ public abstract class BaseQueryExecutorSupport extends AbstractOrderedQueryExecu
 {
     protected Query query;
     protected Map<String, Object> parameters;
-    protected boolean selectable;
+    private boolean selectable;
 
     protected List<String> columns = new ArrayList<>();
     protected List<DynamicPropertySet> properties = new ArrayList<>();

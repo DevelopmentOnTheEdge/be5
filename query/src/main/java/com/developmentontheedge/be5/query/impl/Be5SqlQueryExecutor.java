@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
+import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
@@ -24,6 +25,7 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
@@ -34,8 +36,10 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 /**
  * A modern query executor that uses our new parser.
  */
-public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
+public class Be5SqlQueryExecutor extends AbstractOrderedQueryExecutor implements SqlQueryExecutor
 {
+    protected final Query query;
+
     private static final Logger log = Logger.getLogger(Be5SqlQueryExecutor.class.getName());
 
     private final DbService db;
@@ -44,11 +48,12 @@ public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
     private final QueryMetaHelper queryMetaHelper;
 
     private ContextApplier contextApplier;
+    private final Boolean selectable;
 
     public Be5SqlQueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
                                QueryMetaHelper queryMetaHelper)
     {
-        super(query);
+        this.query = Objects.requireNonNull(query);
 
         this.parameters = queryContext.getParameters();
 
@@ -85,7 +90,6 @@ public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
-    @Override
     public <T> T query(ResultSetHandler<T> rsh)
     {
         if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
@@ -125,7 +129,6 @@ public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
-    @Override
     public AstStart getFinalSql()
     {
         return getFinalSql(ExecuteType.DEFAULT);
@@ -219,6 +222,12 @@ public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
     public DynamicPropertySet getRow()
     {
         return getRow(new DynamicPropertySetSimpleStringParser());
+    }
+
+    @Override
+    public Boolean isSelectable()
+    {
+        return selectable;
     }
 
     enum ExecuteType

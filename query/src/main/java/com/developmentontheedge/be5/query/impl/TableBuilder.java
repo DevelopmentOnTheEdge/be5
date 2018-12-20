@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.OrderedQueryExecutor;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
@@ -17,6 +16,7 @@ import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
+import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -42,7 +42,7 @@ public class TableBuilder
     private final UserInfo userInfo;
     private final Map<String, Object> parameters;
     private final QueryExecutorFactory queryService;
-    private final OrderedQueryExecutor queryExecutor;
+    private final QueryExecutor queryExecutor;
     private final UserAwareMeta userAwareMeta;
     private final CellFormatter cellFormatter;
     private final CoreUtils coreUtils;
@@ -212,14 +212,14 @@ public class TableBuilder
 
     private QueryExecutor getQueryBuilder(Query query, Map<String, Object> parameters)
     {
-        QueryExecutor tableBuilder;
+        BaseQueryExecutorSupport tableBuilder;
 
         switch (query.getType())
         {
             case JAVA:
                 try
                 {
-                    tableBuilder = (QueryExecutor) Class.forName(query.getQuery()).newInstance();
+                    tableBuilder = (BaseQueryExecutorSupport) Class.forName(query.getQuery()).newInstance();
                     break;
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
@@ -234,7 +234,7 @@ public class TableBuilder
 
                     if (aClass != null)
                     {
-                        tableBuilder = (QueryExecutor) aClass.newInstance();
+                        tableBuilder = (BaseQueryExecutorSupport) aClass.newInstance();
                         break;
                     }
                     else

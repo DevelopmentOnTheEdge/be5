@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.query.OrderedQueryExecutor;
+import com.developmentontheedge.be5.query.QueryExecutor;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 
-public abstract class AbstractOrderedQueryExecutor implements OrderedQueryExecutor
+public abstract class AbstractOrderedQueryExecutor implements QueryExecutor
 {
     protected int offset = 0;
     protected int limit = Integer.MAX_VALUE;
@@ -14,7 +14,7 @@ public abstract class AbstractOrderedQueryExecutor implements OrderedQueryExecut
     protected String orderDir = "asc";
 
     @Override
-    public final OrderedQueryExecutor offset(int offset)
+    public final QueryExecutor offset(int offset)
     {
         checkArgument(offset >= 0);
         this.offset = offset;
@@ -22,7 +22,7 @@ public abstract class AbstractOrderedQueryExecutor implements OrderedQueryExecut
     }
 
     @Override
-    public final OrderedQueryExecutor limit(int limit)
+    public final QueryExecutor limit(int limit)
     {
         checkArgument(limit >= 0);
         this.limit = limit;
@@ -30,7 +30,7 @@ public abstract class AbstractOrderedQueryExecutor implements OrderedQueryExecut
     }
 
     @Override
-    public final OrderedQueryExecutor order(int orderColumn, String orderDir)
+    public final QueryExecutor order(int orderColumn, String orderDir)
     {
         checkArgument(orderColumn >= -2);
         this.orderColumn = orderColumn;
