@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.query.support;
 
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
-import com.developmentontheedge.be5.query.impl.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;

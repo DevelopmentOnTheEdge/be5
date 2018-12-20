@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl;
+package com.developmentontheedge.be5.query.sql;
 
 import java.util.Collections;
 import java.util.Locale;
