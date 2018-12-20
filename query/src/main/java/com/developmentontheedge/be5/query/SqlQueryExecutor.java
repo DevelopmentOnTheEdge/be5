@@ -10,11 +10,6 @@ public interface SqlQueryExecutor
     /**
      * Executes the query.
      */
-    List<DynamicPropertySet> execute();
-
-    /**
-     * Executes the query.
-     */
     <T> List<T> execute(ResultSetParser<T> parser);
 
     <T> T getRow(ResultSetParser<T> parser);
