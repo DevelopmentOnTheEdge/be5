@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.query.support;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.DpsTableBuilder;
+import com.developmentontheedge.be5.query.QueryExecutor;
+import com.developmentontheedge.be5.query.impl.AbstractOrderedQueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -16,15 +17,16 @@ import java.util.Map;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
 
-public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
+public abstract class BaseQueryBuilderSupport extends AbstractOrderedQueryExecutor implements QueryExecutor
 {
     protected Query query;
     protected Map<String, Object> parameters;
+    protected boolean selectable;
 
     protected List<String> columns = new ArrayList<>();
     protected List<DynamicPropertySet> properties = new ArrayList<>();
 
-    public DpsTableBuilder initialize(Query query, Map<String, Object> parameters)
+    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
     {
         this.query = query;
         this.parameters = parameters;
@@ -116,25 +118,28 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
 
     public List<DynamicPropertySet> table()
     {
-        return getSimpleTable(false, (long) properties.size(), false);
+        return getSimpleTable(false, (long) properties.size());
     }
 
     public List<DynamicPropertySet> table(boolean selectable)
     {
-        return getSimpleTable(selectable, (long) properties.size(), false);
+        return getSimpleTable(selectable, (long) properties.size());
     }
 
-    public List<DynamicPropertySet> table(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    public List<DynamicPropertySet> table(boolean selectable, Long totalNumberOfRows)
     {
-        return getSimpleTable(selectable, totalNumberOfRows, hasAggregate);
+        return getSimpleTable(selectable, totalNumberOfRows);
     }
 
-    private List<DynamicPropertySet> getSimpleTable(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    private List<DynamicPropertySet> getSimpleTable(boolean selectable, Long totalNumberOfRows)
     {
-//        List<ColumnModel> columns = new ArrayList<>();
-//        List<RowModel> rows = new ArrayList<>();
-//        return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
-//                0, Integer.MAX_VALUE, -1, "asc");
+        this.selectable = selectable;
         return properties;
+    }
+
+    @Override
+    public Boolean isSelectable()
+    {
+        return selectable;
     }
 }

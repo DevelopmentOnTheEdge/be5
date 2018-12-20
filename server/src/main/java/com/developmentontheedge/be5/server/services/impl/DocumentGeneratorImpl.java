@@ -127,7 +127,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 title, entityName, queryName, tableModel.isSelectable(),
                 columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
-                parameters, totalNumberOfRows, tableModel.isHasAggregate(),
+                parameters, totalNumberOfRows,
                 LayoutUtils.getLayoutObject(query));
     }
 

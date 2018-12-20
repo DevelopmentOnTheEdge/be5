@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -17,12 +17,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class DataSourceTable extends DpsTableBuilderSupport
+public class DataSourceTable extends QueryBuilderSupport
 {
     @Inject private DataSourceService databaseService;
 
     @Override
-    public List<DynamicPropertySet> getTableModel()
+    public List<DynamicPropertySet> execute()
     {
         addColumns("name", "value");
         if (databaseService.getDataSource() instanceof BasicDataSource)

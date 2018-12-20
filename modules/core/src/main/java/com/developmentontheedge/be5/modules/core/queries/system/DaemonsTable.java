@@ -2,19 +2,19 @@ package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.inject.Inject;
 import java.util.List;
 
 
-public class DaemonsTable extends DpsTableBuilderSupport
+public class DaemonsTable extends QueryBuilderSupport
 {
     @Inject private DaemonStarter daemonStarter;
 
     @Override
-    public List<DynamicPropertySet> getTableModel()
+    public List<DynamicPropertySet> execute()
     {
         addColumns("Name", "Type", "Status", "Running", "Meta");
 

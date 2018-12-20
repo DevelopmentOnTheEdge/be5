@@ -1,67 +1,15 @@
 package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
+import java.util.Map;
 
-public interface QueryExecutor
+
+public interface QueryExecutor extends OrderedQueryExecutor
 {
-    /**
-     * Sets a limit (changes state). Returns the query executor itself.
-     */
-    QueryExecutor limit(int limit);
+    QueryExecutor initialize(Query query, Map<String, Object> parameters);
 
-    /**
-     * Sets an offset (changes state). Returns the query executor itself.
-     */
-    QueryExecutor offset(int offset);
-
-    /**
-     * Sets sort order (changes state). Returns the query executor itself.
-     */
-    QueryExecutor order(int orderColumn, String orderDir);
-
-    QueryExecutor selectable(boolean selectable);
-
-    /**
-     * Executes the query.
-     */
     List<DynamicPropertySet> execute();
-
-    //List<DynamicPropertySet> execute(Object... params);
-
-    /**
-     * Executes the query for aggregate.
-     */
-    List<DynamicPropertySet> executeAggregate();
-
-    /**
-     * Executes the query.
-     */
-    <T> List<T> execute(ResultSetParser<T> parser);
-
-    <T> T getRow(ResultSetParser<T> parser);
-
-    /**
-     * Counts the number of resulting rows.
-     */
-    long count();
-
-    DynamicPropertySet getRow();
-
-    /**
-     * Returns a list of column names.
-     */
-    List<String> getColumnNames();
-
-    int getOrderColumn();
-
-    String getOrderDir();
-
-    int getOffset();
-
-    int getLimit();
-
-    Boolean isSelectable();
 }

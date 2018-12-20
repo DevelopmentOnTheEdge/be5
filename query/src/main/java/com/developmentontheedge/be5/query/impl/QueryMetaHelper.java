@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -40,11 +41,13 @@ import java.util.stream.Collectors;
 public class QueryMetaHelper
 {
     private final Meta meta;
+    private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public QueryMetaHelper(Meta meta)
+    public QueryMetaHelper(Meta meta, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
+        this.userAwareMeta = userAwareMeta;
     }
 
     void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
@@ -296,5 +299,10 @@ public class QueryMetaHelper
     {
         new ColumnAdder().addColumn(ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
                 DatabaseConstants.ID_COLUMN_LABEL);
+    }
+
+    String getTotalTitle(Query query)
+    {
+        return userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), "total");
     }
 }

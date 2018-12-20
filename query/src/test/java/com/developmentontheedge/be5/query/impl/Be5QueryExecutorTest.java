@@ -17,12 +17,12 @@ public class Be5QueryExecutorTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
+        Be5SqlQueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
 
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
                 "  t.name AS \"Name\",\n" +
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
-                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql(Be5QueryExecutor.ExecuteType.COUNT).getQuery().toString());
+                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql(Be5SqlQueryExecutor.ExecuteType.COUNT).getQuery().toString());
     }
 }

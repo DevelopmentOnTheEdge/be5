@@ -171,7 +171,6 @@ public class QueriesService
         {
             list = queryService.build(query, parameters)
                     .limit(Integer.MAX_VALUE)
-                    .selectable(false)
                     .execute();
         }
 

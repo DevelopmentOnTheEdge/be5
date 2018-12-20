@@ -22,7 +22,7 @@ public class TablePresentation
 
     private final Map<String, Object> parameters;
     private final Long totalNumberOfRows;
-    private final boolean hasAggregate;
+    //private final boolean hasAggregate;
     private final Object layout;
 
     public TablePresentation(
@@ -38,7 +38,6 @@ public class TablePresentation
             int length,
             Map<String, Object> parameters,
             Long totalNumberOfRows,
-            boolean hasAggregate,
             Object layout)
     {
         this.title = title;
@@ -53,7 +52,6 @@ public class TablePresentation
         this.length = length;
         this.parameters = parameters;
         this.totalNumberOfRows = totalNumberOfRows;
-        this.hasAggregate = hasAggregate;
         this.layout = layout;
     }
 
@@ -115,11 +113,6 @@ public class TablePresentation
     public Long getTotalNumberOfRows()
     {
         return totalNumberOfRows;
-    }
-
-    public boolean isHasAggregate()
-    {
-        return hasAggregate;
     }
 
     public Object getLayout()

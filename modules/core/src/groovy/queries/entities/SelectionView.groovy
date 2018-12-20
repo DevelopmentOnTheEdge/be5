@@ -1,13 +1,13 @@
 package entities
 
 import com.developmentontheedge.be5.metadata.model.Entity
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 
-class SelectionView extends DpsTableBuilderSupport
+class SelectionView extends QueryBuilderSupport
 {
     @Override
-    List<DynamicPropertySet> getTableModel()
+    List<DynamicPropertySet> execute()
     {
         addColumns("Code", "Name")
 

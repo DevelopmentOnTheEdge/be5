@@ -1,12 +1,12 @@
 package src.groovy.queries
 
-import com.developmentontheedge.be5.query.support.BaseDpsTableBuilderSupport
+import com.developmentontheedge.be5.query.support.BaseQueryBuilderSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 
-class TestGroovyTable extends BaseDpsTableBuilderSupport
+class TestGroovyTable extends BaseQueryBuilderSupport
 {
     @Override
-    List<DynamicPropertySet> getTableModel()
+    List<DynamicPropertySet> execute()
     {
         addColumns("name", "value")
 

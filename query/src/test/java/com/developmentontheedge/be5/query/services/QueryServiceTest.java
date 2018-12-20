@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
+import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -64,7 +64,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
+        Be5SqlQueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
 
         assertTrue(be5QueryExecutor.count() > 0);
     }
@@ -126,7 +126,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     public void testResolveTypeOfRefColumnError()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
-        Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
+        Be5SqlQueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
     }
@@ -135,7 +135,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     public void testResolveTypeOfRefColumnNPE()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
-        Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
+        Be5SqlQueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
         assertEquals("", be5QueryExecutor.getFinalSql().getQuery().toString());

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CacheTable extends DpsTableBuilderSupport
+public class CacheTable extends QueryBuilderSupport
 {
     @Inject
     private Be5Caches be5Caches;
 
     @Override
-    public List<DynamicPropertySet> getTableModel()
+    public List<DynamicPropertySet> execute()
     {
         addColumns("Name",
                 "Size",

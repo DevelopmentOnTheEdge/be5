@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.modules.core.queries.system.meta;
 
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
 
-public class OperationsTable extends DpsTableBuilderSupport
+public class OperationsTable extends QueryBuilderSupport
 {
     @Override
-    public List<DynamicPropertySet> getTableModel()
+    public List<DynamicPropertySet> execute()
     {
         addColumns("EntityName", "Name", "Type", "Roles");
 

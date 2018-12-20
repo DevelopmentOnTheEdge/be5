@@ -4,9 +4,12 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 
@@ -30,9 +34,9 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 /**
  * A modern query executor that uses our new parser.
  */
-public class Be5QueryExecutor extends AbstractQueryExecutor
+public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
 {
-    private static final Logger log = Logger.getLogger(Be5QueryExecutor.class.getName());
+    private static final Logger log = Logger.getLogger(Be5SqlQueryExecutor.class.getName());
 
     private final DbService db;
 
@@ -41,8 +45,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private ContextApplier contextApplier;
 
-    public Be5QueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
-                            QueryMetaHelper queryMetaHelper)
+    public Be5SqlQueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
+                               QueryMetaHelper queryMetaHelper)
     {
         super(query);
 
@@ -189,13 +193,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> execute()
     {
-        return execute(new DynamicPropertySetSimpleStringParser());
+        List<DynamicPropertySet> rows = execute(new DynamicPropertySetSimpleStringParser());
+        addAggregateRowIfNeeded(rows);
+        return rows;
     }
 
-    @Override
-    public List<DynamicPropertySet> executeAggregate()
+    private void addAggregateRowIfNeeded(List<DynamicPropertySet> propertiesList)
     {
-        return execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
+        if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+        {
+
+            List<DynamicPropertySet> aggregateRows = execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
+            TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
+        }
     }
 
     @Override

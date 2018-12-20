@@ -6,9 +6,9 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
-import com.developmentontheedge.be5.query.DpsTableBuilder;
+import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.query.support.BaseDpsTableBuilderSupport;
+import com.developmentontheedge.be5.query.support.BaseQueryBuilderSupport;
 import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 
-public abstract class DpsTableBuilderSupport extends BaseDpsTableBuilderSupport
+public abstract class QueryBuilderSupport extends BaseQueryBuilderSupport
 {
     @Inject
     public DatabaseModel database;
@@ -40,7 +40,7 @@ public abstract class DpsTableBuilderSupport extends BaseDpsTableBuilderSupport
 
     protected UserInfo userInfo;
 
-    public DpsTableBuilder initialize(Query query, Map<String, Object> parameters)
+    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
     {
         super.initialize(query, parameters);
 
@@ -48,5 +48,4 @@ public abstract class DpsTableBuilderSupport extends BaseDpsTableBuilderSupport
 
         return this;
     }
-
 }

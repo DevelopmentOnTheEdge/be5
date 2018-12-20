@@ -59,7 +59,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         JsonApiModel document = documentGenerator.getDocument(query, Collections.emptyMap());
 
-        assertEquals("{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
+        assertEquals("{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
                         "'length':10,'offset':0,'orderColumn':-1,'orderDir':'asc'," +
                         "'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}",
                 oneQuotes(jsonb.toJson(document.getData())));

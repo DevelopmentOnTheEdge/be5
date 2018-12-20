@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
 
-public class ThreadsTable extends DpsTableBuilderSupport
+public class ThreadsTable extends QueryBuilderSupport
 {
     @Override
-    public List<DynamicPropertySet> getTableModel()
+    public List<DynamicPropertySet> execute()
     {
         addColumns("name", "groupName", "state", "alive", "priority", "threadGroup", "id");
 
