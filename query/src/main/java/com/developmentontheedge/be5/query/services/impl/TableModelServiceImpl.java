@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryExecutor;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.google.inject.Injector;
 
@@ -33,14 +33,14 @@ public class TableModelServiceImpl implements TableModelService
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
     private final Injector injector;
-    private final QueryService queryService;
+    private final QueryExecutor queryService;
     private final UserInfoProvider userInfoProvider;
     private final CellFormatter cellFormatter;
     private final QuerySession querySession;
 
     @Inject
     public TableModelServiceImpl(Meta meta, UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
-                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider,
+                                 Injector injector, QueryExecutor queryService, UserInfoProvider userInfoProvider,
                                  CellFormatter cellFormatter, QuerySession querySession)
     {
         this.meta = meta;

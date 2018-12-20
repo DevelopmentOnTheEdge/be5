@@ -38,12 +38,12 @@ public class QueriesService
     private final DbService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final QueryService queryService;
+    private final QueryExecutor queryService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                          QueryService queryService, UserInfoProvider userInfoProvider)
+                          QueryExecutor queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;

@@ -6,7 +6,7 @@ import com.developmentontheedge.sql.format.QueryContext;
 
 import java.util.Map;
 
-public interface QueryService
+public interface QueryExecutor
 {
     Be5QueryExecutor build(Query query, Map<String, ?> parameters);
 

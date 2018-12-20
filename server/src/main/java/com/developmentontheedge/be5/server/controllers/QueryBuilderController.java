@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryExecutor;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
@@ -45,14 +45,14 @@ public class QueryBuilderController extends JsonApiModelController
     private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final Meta meta;
-    private final QueryService queryService;
+    private final QueryExecutor queryService;
     private final ErrorModelHelper errorModelHelper;
     private final UserInfoProvider userInfoProvider;
     private final Stage stage;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, Meta meta,
-                                  QueryService queryService, ErrorModelHelper errorModelHelper,
+                                  QueryExecutor queryService, ErrorModelHelper errorModelHelper,
                                   UserInfoProvider userInfoProvider, Stage stage)
     {
         this.db = db;

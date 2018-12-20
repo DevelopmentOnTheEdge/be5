@@ -7,14 +7,13 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryExecutor;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -36,15 +35,15 @@ public class SqlTableBuilder
     private final Query query;
     private final UserInfo userInfo;
     private final Map<String, Object> parameters;
-    private final QueryService queryService;
-    private final QueryExecutor queryExecutor;
+    private final QueryExecutor queryService;
+    private final com.developmentontheedge.be5.query.QueryExecutor queryExecutor;
     private final UserAwareMeta userAwareMeta;
     private final CellFormatter cellFormatter;
     private final CoreUtils coreUtils;
 
     private ContextApplier contextApplier;
 
-    public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
+    public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryExecutor queryService,
                            UserAwareMeta userAwareMeta, Meta meta, CellFormatter cellFormatter, CoreUtils coreUtils,
                            QuerySession querySession)
     {

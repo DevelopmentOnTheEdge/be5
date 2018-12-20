@@ -8,14 +8,14 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.Be5QueryContext;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
-import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryExecutor;
 import com.developmentontheedge.sql.format.QueryContext;
 
 import javax.inject.Inject;
 import java.util.Map;
 
 
-public class QueryServiceImpl implements QueryService
+public class QueryServiceImpl implements QueryExecutor
 {
     private final Meta meta;
     private final DbService db;
