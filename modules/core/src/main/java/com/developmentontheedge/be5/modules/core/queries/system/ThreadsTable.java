@@ -1,13 +1,15 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
+
+import java.util.List;
 
 
-public class ThreadsTable extends TableBuilderSupport
+public class ThreadsTable extends DpsTableBuilderSupport
 {
     @Override
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("name", "groupName", "state", "alive", "priority", "threadGroup", "id");
 
@@ -23,7 +25,7 @@ public class ThreadsTable extends TableBuilderSupport
                     thread.getId()
             ));
         }
-        return table(columns, rows);
+        return table();
     }
 
 }

@@ -1,16 +1,17 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Enumeration;
+import java.util.List;
 
 
-public class HttpHeadersTable extends TableBuilderSupport
+public class HttpHeadersTable extends DpsTableBuilderSupport
 {
     @Override
     @SuppressWarnings("unchecked")
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("name", "value");
 
@@ -23,6 +24,6 @@ public class HttpHeadersTable extends TableBuilderSupport
                 addRow(cells(key, request.getRawRequest().getHeader(key)));
             }
         }
-        return table(columns, rows);
+        return table();
     }
 }

@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.modules.core.queries.system.meta;
 
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
 
-public class OperationsTable extends TableBuilderSupport
+public class OperationsTable extends DpsTableBuilderSupport
 {
     @Override
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("EntityName", "Name", "Type", "Roles");
 
@@ -25,7 +25,7 @@ public class OperationsTable extends TableBuilderSupport
                     e -> addOperations(e.getName())
             );
         }
-        return table(columns, rows);
+        return table();
     }
 
     public void addOperations(String entityName)

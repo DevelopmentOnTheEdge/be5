@@ -3,12 +3,12 @@ package com.developmentontheedge.be5.query.support;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.DpsTableBuilder;
 import com.developmentontheedge.be5.query.model.CellModel;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
         columns.add(firstName);
         if (columnNames != null)
         {
-            columns.addAll(Arrays.asList(columnNames));
+            Collections.addAll(columns, columnNames);
         }
     }
 
@@ -45,7 +45,7 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
     {
         List<Object> allCells = new ArrayList<>();
         allCells.add(cell);
-        allCells.addAll(Arrays.asList(otherCells));
+        Collections.addAll(allCells, otherCells);
 
         List<DynamicProperty> cells = new ArrayList<>();
 
@@ -54,6 +54,13 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
             if (allCells.get(i) instanceof DynamicProperty)
             {
                 cells.add((DynamicProperty) allCells.get(i));
+            }
+            else if (allCells.get(i) instanceof CellModel)
+            {
+                CellModel item = (CellModel) allCells.get(i);
+                DynamicProperty property = new DynamicProperty(columns.get(i), String.class, item.content);
+                DynamicPropertyMeta.set(property, item.options);
+                cells.add(property);
             }
             else
             {
@@ -64,12 +71,19 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
         return Collections.unmodifiableList(cells);
     }
 
-    public List<CellModel> cells(CellModel firstCell, CellModel... cells)
+    public List<DynamicProperty> cells(CellModel firstCell, CellModel... otherCells)
     {
-        List<CellModel> columns = new ArrayList<>();
-        columns.add(firstCell);
-        Collections.addAll(columns, cells);
-        return Collections.unmodifiableList(columns);
+        List<CellModel> cells = new ArrayList<>();
+        cells.add(firstCell);
+        Collections.addAll(cells, otherCells);
+        List<DynamicProperty> list = new ArrayList<>();
+        for (int i = 0; i < cells.size(); i++)
+        {
+            DynamicProperty property = new DynamicProperty(columns.get(i), String.class, cells.get(i).content);
+            DynamicPropertyMeta.set(property, cells.get(i).options);
+            list.add(property);
+        }
+        return list;
     }
 
     public CellModel cell(Object content)

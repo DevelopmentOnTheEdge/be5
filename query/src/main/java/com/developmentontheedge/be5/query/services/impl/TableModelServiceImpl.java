@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query.services.impl;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
@@ -69,43 +70,18 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new TableBuilder(query, parameters, userInfoProvider.get(), queryService,
-                userAwareMeta, meta, cellFormatter, coreUtils, querySession, groovyRegister, injector)
-                .sortOrder(orderColumn, orderDir)
-                .offset(offset)
-                .limit(Math.min(limit, maxLimit))
-                .build();
+        try
+        {
+            return new TableBuilder(query, parameters, userInfoProvider.get(), queryService,
+                    userAwareMeta, meta, cellFormatter, coreUtils, querySession, groovyRegister, injector)
+                    .sortOrder(orderColumn, orderDir)
+                    .offset(offset)
+                    .limit(Math.min(limit, maxLimit))
+                    .build();
+        }
+        catch (Throwable e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
+        }
     }
-
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public TableBuilder builder(Query query, Map<String, ?> parameters)
-//    {
-//        return new TableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService,
-//                userAwareMeta, meta, cellFormatter, coreUtils, querySession, groovyRegister, injector);
-//    }
-
-//    private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
-//    {
-//        int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
-//        String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
-//        int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
-//        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
-//
-//        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-//
-//        if (limit == Integer.MAX_VALUE)
-//        {
-//            limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
-//                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
-//        }
-//
-//        return new TableBuilder(query, parameters, userInfoProvider.get(), queryService,
-//                userAwareMeta, meta, cellFormatter, coreUtils, querySession, groovyRegister, injector)
-//                .sortOrder(orderColumn, orderDir)
-//                .offset(offset)
-//                .limit(Math.min(limit, maxLimit))
-//                .build();
-//    }
-
 }

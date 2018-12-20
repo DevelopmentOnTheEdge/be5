@@ -40,6 +40,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.COL_ATTR_LINK;
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.COL_ATTR_URL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.SELECTION_VIEW;
 import static java.util.Collections.emptyMap;
@@ -121,8 +123,8 @@ public class CellFormatter
             }
         }
 
-        Map<String, String> linkProperties = cell.options.get(DatabaseConstants.COL_ATTR_LINK);
-        if (linkProperties != null)
+        Map<String, String> linkProperties = cell.options.get(COL_ATTR_LINK);
+        if (linkProperties != null && !linkProperties.containsKey(COL_ATTR_URL))
         {
             try
             {
@@ -145,8 +147,8 @@ public class CellFormatter
                     url = url.named(mapOfList);
                 }
                 String utlStr = url.toString();
-                cell.options.put(DatabaseConstants.COL_ATTR_LINK, new HashMap<String, String>() {{
-                        put("url", utlStr);
+                cell.options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
+                        put(COL_ATTR_URL, utlStr);
                         put("class", linkProperties.get("class"));
                 }});
             }
@@ -173,8 +175,8 @@ public class CellFormatter
                 }
             }
             String utlStr = url.toString();
-            cell.options.put(DatabaseConstants.COL_ATTR_LINK, new HashMap<String, String>() {{
-                put("url", utlStr);
+            cell.options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
+                put(COL_ATTR_URL, utlStr);
                 put("class", refProperties.get("class"));
             }});
         }

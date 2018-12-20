@@ -33,6 +33,10 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+import static com.developmentontheedge.be5.metadata.QueryType.D1;
+import static com.developmentontheedge.be5.metadata.QueryType.D1_UNKNOWN;
+import static com.developmentontheedge.be5.metadata.QueryType.GROOVY;
+import static com.developmentontheedge.be5.metadata.QueryType.JAVA;
 
 public class TableBuilder
 {
@@ -107,61 +111,70 @@ public class TableBuilder
     public TableModel build()
     {
         List<DynamicPropertySet> propertiesList;
-        boolean hasAggregate = false;
-
-        try
-        {
-            switch (query.getType())
-            {
-                case D1:
-                case D1_UNKNOWN:
-                    propertiesList = queryExecutor.execute();
-                    if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
-                            .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
-                    {
-                        hasAggregate = true;
-                        String totalTitle = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), "total");
-                        TableUtils.addAggregateRowIfNeeded(propertiesList, queryExecutor.executeAggregate(), totalTitle);
-                    }
-                    break;
-                case JAVA:
-                case GROOVY:
-                    propertiesList = getFromTableBuilder(query, parameters);
-                    break;
-                default:
-                    throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
-            }
-        }
-        catch (Throwable e)
-        {
-            throw Be5Exception.internalInQuery(query, e);
-        }
-
+        boolean hasAggregate;
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
-
-        Long totalNumberOfRows;
-        if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
+        if(query.getType() == D1 || query.getType() == D1_UNKNOWN)
         {
-            totalNumberOfRows = (long) rows.size();
+            propertiesList = queryExecutor.execute();
+            hasAggregate = addAggregateRowIfNeeded(propertiesList);
+
+            collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
+
+            Long totalNumberOfRows;
+            if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
+            {
+                totalNumberOfRows = (long) rows.size();
+            }
+            else
+            {
+                totalNumberOfRows = queryService.build(query, parameters).count();
+            }
+
+            return new TableModel(
+                    columns,
+                    rows,
+                    queryExecutor.isSelectable(),
+                    totalNumberOfRows,
+                    hasAggregate,
+                    queryExecutor.getOffset(),
+                    queryExecutor.getLimit(),
+                    queryExecutor.getOrderColumn(),
+                    queryExecutor.getOrderDir());
+        }
+        else if (query.getType() == JAVA || query.getType() == GROOVY)
+        {
+            DpsTableBuilder tableBuilder = getFromTableBuilder(query, parameters);
+            propertiesList = tableBuilder.getTableModel();
+            collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
+            return new TableModel(
+                    columns,
+                    rows,
+                    queryExecutor.isSelectable(),
+                    (long) rows.size(),
+                    false,
+                    queryExecutor.getOffset(),
+                    queryExecutor.getLimit(),
+                    queryExecutor.getOrderColumn(),
+                    queryExecutor.getOrderDir());
         }
         else
         {
-            totalNumberOfRows = queryService.build(query, parameters).count();
+            throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
+    }
 
-        return new TableModel(
-                columns,
-                rows,
-                queryExecutor.isSelectable(),
-                totalNumberOfRows,
-                hasAggregate,
-                queryExecutor.getOffset(),
-                queryExecutor.getLimit(),
-                queryExecutor.getOrderColumn(),
-                queryExecutor.getOrderDir());
+    private boolean addAggregateRowIfNeeded(List<DynamicPropertySet> propertiesList)
+    {
+        if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+        {
+            String totalTitle = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), "total");
+            TableUtils.addAggregateRowIfNeeded(propertiesList, queryExecutor.executeAggregate(), totalTitle);
+            return true;
+        }
+        return false;
     }
 
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
@@ -238,7 +251,7 @@ public class TableBuilder
         return processedCells;
     }
 
-    private List<DynamicPropertySet> getFromTableBuilder(Query query, Map<String, Object> parameters)
+    private DpsTableBuilder getFromTableBuilder(Query query, Map<String, Object> parameters)
     {
         DpsTableBuilder tableBuilder;
 
@@ -281,6 +294,6 @@ public class TableBuilder
         injector.injectMembers(tableBuilder);
         tableBuilder.initialize(query, parameters);
 
-        return tableBuilder.getTableModel();
+        return tableBuilder;
     }
 }

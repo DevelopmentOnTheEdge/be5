@@ -1,21 +1,22 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 
-public class CacheTable extends TableBuilderSupport
+public class CacheTable extends DpsTableBuilderSupport
 {
     @Inject
     private Be5Caches be5Caches;
 
     @Override
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("Name",
                 "Size",
@@ -39,6 +40,6 @@ public class CacheTable extends TableBuilderSupport
                     entry.getValue().stats().loadFailureCount()
             ));
         }
-        return table(columns, rows);
+        return table();
     }
 }

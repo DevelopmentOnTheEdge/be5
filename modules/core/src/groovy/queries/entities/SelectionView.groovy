@@ -1,13 +1,13 @@
 package entities
 
 import com.developmentontheedge.be5.metadata.model.Entity
-import com.developmentontheedge.be5.query.model.TableModel
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport
+import com.developmentontheedge.beans.DynamicPropertySet
 
-class SelectionView extends TableBuilderSupport
+class SelectionView extends DpsTableBuilderSupport
 {
     @Override
-    TableModel getTableModel()
+    List<DynamicPropertySet> getTableModel()
     {
         addColumns("Code", "Name")
 
@@ -15,6 +15,6 @@ class SelectionView extends TableBuilderSupport
             addRow(cells(entity.getName(), entity.getName()))
         }
 
-        return table(columns, rows)
+        return table()
     }
 }

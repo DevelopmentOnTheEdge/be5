@@ -5,19 +5,19 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.CellModel;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
 import com.developmentontheedge.be5.server.util.ActionUtils;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 
 
-public class EntitiesTable extends TableBuilderSupport
+public class EntitiesTable extends DpsTableBuilderSupport
 {
     @Override
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("Name", "Type", "Columns", "Queries", "Operations");
 
@@ -43,6 +43,6 @@ public class EntitiesTable extends TableBuilderSupport
                                             .named("entity", entity.getName()).toString())
             ));
         }
-        return table(columns, rows);
+        return table();
     }
 }

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.DpsTableBuilderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.inject.Inject;
@@ -11,17 +11,18 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 
-public class DataSourceTable extends TableBuilderSupport
+public class DataSourceTable extends DpsTableBuilderSupport
 {
     @Inject private DataSourceService databaseService;
 
     @Override
-    public TableModel getTableModel()
+    public List<DynamicPropertySet> getTableModel()
     {
         addColumns("name", "value");
         if (databaseService.getDataSource() instanceof BasicDataSource)
@@ -32,7 +33,7 @@ public class DataSourceTable extends TableBuilderSupport
         {
             getMBeanInfo();
         }
-        return table(columns, rows);
+        return table();
     }
 
     private void getMBeanInfo()

@@ -29,6 +29,7 @@ public interface DatabaseConstants
     String COL_ATTR_NULLIF = "nullif";
     String COL_ATTR_LINK = "link";
     String COL_ATTR_REF = "ref";
+    String COL_ATTR_URL = "url";
 
     String L10N_TOPIC_DISPLAY_NAME = "displayName";
     String L10N_TOPIC_VIEW_NAME = "viewName";
