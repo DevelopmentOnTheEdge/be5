@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.services;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
@@ -36,6 +37,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Before
     public void insertOneRow()
     {
+        setStaticUserInfo(RoleType.ROLE_GUEST);
         query = meta.getQuery("testtable", "All records");
         db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)",
