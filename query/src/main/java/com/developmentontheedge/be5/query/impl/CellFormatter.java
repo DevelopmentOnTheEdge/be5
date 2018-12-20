@@ -41,10 +41,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
-import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.SELECTION_VIEW;
+import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
+import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
 import static java.util.Collections.emptyMap;
 
 public class CellFormatter

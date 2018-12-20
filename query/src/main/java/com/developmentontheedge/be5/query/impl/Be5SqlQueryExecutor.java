@@ -36,7 +36,7 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 /**
  * A modern query executor that uses our new parser.
  */
-public class Be5SqlQueryExecutor extends AbstractOrderedQueryExecutor implements SqlQueryExecutor
+public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQueryExecutor
 {
     protected final Query query;
 

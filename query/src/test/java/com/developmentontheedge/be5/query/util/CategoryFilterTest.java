@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.query.util;
 
-import com.developmentontheedge.be5.query.util.CategoryFilter;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Test;

@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.query.QueryExecutor;
 import static com.google.common.base.Preconditions.checkArgument;
 
 
-public abstract class AbstractOrderedQueryExecutor implements QueryExecutor
+public abstract class AbstractQueryExecutor implements QueryExecutor
 {
     protected int offset = 0;
     protected int limit = Integer.MAX_VALUE;
