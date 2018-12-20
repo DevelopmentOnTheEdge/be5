@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class DataSourceTable extends QueryBuilderSupport
+public class DataSourceTable extends QueryExecutorSupport
 {
     @Inject private DataSourceService databaseService;
 

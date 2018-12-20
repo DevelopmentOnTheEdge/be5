@@ -1,9 +1,9 @@
 package roles
 
-import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport
+import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 
-class SelectionView extends QueryBuilderSupport
+class SelectionView extends QueryExecutorSupport
 {
     @Override
     List<DynamicPropertySet> execute()

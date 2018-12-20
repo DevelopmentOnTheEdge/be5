@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.CellModel;
-import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
 import com.developmentontheedge.be5.server.util.ActionUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 
 
-public class EntitiesTable extends QueryBuilderSupport
+public class EntitiesTable extends QueryExecutorSupport
 {
     @Override
     public List<DynamicPropertySet> execute()

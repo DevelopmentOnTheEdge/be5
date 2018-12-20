@@ -1,9 +1,9 @@
 package src.groovy.queries
 
-import com.developmentontheedge.be5.query.support.BaseQueryBuilderSupport
+import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 
-class TestGroovyTable extends BaseQueryBuilderSupport
+class TestGroovyTable extends BaseQueryExecutorSupport
 {
     @Override
     List<DynamicPropertySet> execute()

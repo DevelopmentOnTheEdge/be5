@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.server.queries.support.QueryBuilderSupport;
+import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
 
-public class SessionVariablesTable extends QueryBuilderSupport
+public class SessionVariablesTable extends QueryExecutorSupport
 {
     @Override
     public List<DynamicPropertySet> execute()

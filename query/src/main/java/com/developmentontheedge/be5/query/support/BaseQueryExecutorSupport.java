@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
 
-public abstract class BaseQueryBuilderSupport extends AbstractOrderedQueryExecutor implements QueryExecutor
+public abstract class BaseQueryExecutorSupport extends AbstractOrderedQueryExecutor implements QueryExecutor
 {
     protected Query query;
     protected Map<String, Object> parameters;

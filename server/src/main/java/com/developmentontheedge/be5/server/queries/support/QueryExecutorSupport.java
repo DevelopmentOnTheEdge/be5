@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.query.support.BaseQueryBuilderSupport;
+import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
 import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 
-public abstract class QueryBuilderSupport extends BaseQueryBuilderSupport
+public abstract class QueryExecutorSupport extends BaseQueryExecutorSupport
 {
     @Inject
     public DatabaseModel database;
