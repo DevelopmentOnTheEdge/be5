@@ -4,9 +4,9 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
@@ -201,7 +201,7 @@ public class Be5SqlQueryExecutor extends AbstractSqlQueryExecutor
     private void addAggregateRowIfNeeded(List<DynamicPropertySet> propertiesList)
     {
         if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
-                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
 
             List<DynamicPropertySet> aggregateRows = execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());

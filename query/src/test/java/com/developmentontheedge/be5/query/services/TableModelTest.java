@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
-import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 import static org.junit.Assert.assertEquals;
 
 

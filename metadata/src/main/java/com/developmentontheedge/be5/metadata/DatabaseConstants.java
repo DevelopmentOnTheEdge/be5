@@ -15,21 +15,9 @@ public interface DatabaseConstants
     String ALL_RECORDS_VIEW = "All records";
     String SELECTION_VIEW = "*** Selection view ***";
 
-    String COL_ATTR_AGGREGATE = "aggregate";
-    String COL_ATTR_ROLES = "roles";
-    String COL_ATTR_BLANKNULLS = "blankNulls";
-
-    String CSS_ROW_CLASS = HIDDEN_COLUMN_PREFIX + "css_class";
-
     String CURRENT_ROLE_LIST = "current-role-list";
 
     String ID_COLUMN_LABEL = HIDDEN_COLUMN_PREFIX + "ID";
-
-    //TODO create enum COL_ATTR
-    String COL_ATTR_NULLIF = "nullif";
-    String COL_ATTR_LINK = "link";
-    String COL_ATTR_REF = "ref";
-    String COL_ATTR_URL = "url";
 
     String L10N_TOPIC_DISPLAY_NAME = "displayName";
     String L10N_TOPIC_VIEW_NAME = "viewName";
@@ -42,8 +30,6 @@ public interface DatabaseConstants
     String L10N_TOPIC_SCHEME = "scheme";
     String L10N_TOPIC_ATTRIBUTE = "attribute";
     String L10N_TOPIC_INSERT = "Insert";
-
-    String PLATFORM_HTML = "HTML";
 
     String WHO_INSERTED_COLUMN_NAME = "whoInserted___";
     String WHO_MODIFIED_COLUMN_NAME = "whoModified___";

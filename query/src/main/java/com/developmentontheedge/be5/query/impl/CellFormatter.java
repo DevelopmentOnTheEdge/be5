@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
+import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
@@ -40,8 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.COL_ATTR_LINK;
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.COL_ATTR_URL;
+import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
+import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.SELECTION_VIEW;
 import static java.util.Collections.emptyMap;
@@ -104,7 +105,7 @@ public class CellFormatter
         }
         //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
 
-        Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
+        Map<String, String> blankNullsProperties = cell.options.get(QueryConstants.COL_ATTR_BLANKNULLS);
         if (blankNullsProperties != null)
         {
             if (formattedContent == null || formattedContent.equals("null"))
@@ -114,7 +115,7 @@ public class CellFormatter
         }
 
 
-        Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
+        Map<String, String> nullIfProperties = cell.options.get(QueryConstants.COL_ATTR_NULLIF);
         if (nullIfProperties != null)
         {
             if (formattedContent == null || formattedContent.equals(nullIfProperties.get("value")))
@@ -159,7 +160,7 @@ public class CellFormatter
             }
         }
 
-        Map<String, String> refProperties = cell.options.get(DatabaseConstants.COL_ATTR_REF);
+        Map<String, String> refProperties = cell.options.get(QueryConstants.COL_ATTR_REF);
         if (refProperties != null)
         {
             String table = refProperties.get("table");

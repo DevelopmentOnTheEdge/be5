@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.util;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -24,7 +25,7 @@ public class TableUtils
         for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
         {
             DynamicProperty prop = props.next();
-            Map<String, String> info = DynamicPropertyMeta.get(prop).get(DatabaseConstants.COL_ATTR_ROLES);
+            Map<String, String> info = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_ROLES);
             if (info == null)
             {
                 continue;
@@ -141,7 +142,7 @@ public class TableUtils
 
             if (aggregateValues.containsKey(name))
             {
-                Map<String, String> aggregate = DynamicPropertyMeta.get(prop).get(DatabaseConstants.COL_ATTR_AGGREGATE);
+                Map<String, String> aggregate = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_AGGREGATE);
 
                 aggregateProp = new DynamicProperty(name, Double.class, aggregateValues.get(name));
                 Map<String, Map<String, String>> options = new HashMap<>();
@@ -187,7 +188,7 @@ public class TableUtils
         for (DynamicProperty dp : firstRow)
         {
             Map<String, Map<String, String>> meta = DynamicPropertyMeta.get(dp);
-            Map<String, String> aggregateMeta = meta.get(DatabaseConstants.COL_ATTR_AGGREGATE);
+            Map<String, String> aggregateMeta = meta.get(QueryConstants.COL_ATTR_AGGREGATE);
             if (aggregateMeta != null) aggregateColumnNames.put(dp.getName(), aggregateMeta);
         }
         return aggregateColumnNames;

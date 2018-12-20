@@ -6,9 +6,9 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.OrderedQueryExecutor;
+import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.CellModel;
@@ -168,7 +168,7 @@ public class TableBuilder
     private void addRowClass(List<RawCellModel> cells)
     {
         Optional<Object> addClassName = cells.stream()
-                .filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS) && x.content != null)
+                .filter(x -> x.name.equals(QueryConstants.CSS_ROW_CLASS) && x.content != null)
                 .map(x -> x.content).findFirst();
 
         if (addClassName.isPresent())

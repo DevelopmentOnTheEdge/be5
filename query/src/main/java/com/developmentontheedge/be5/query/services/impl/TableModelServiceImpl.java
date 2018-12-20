@@ -19,10 +19,10 @@ import com.google.inject.Injector;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
-import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
-import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 
 public class TableModelServiceImpl implements TableModelService
