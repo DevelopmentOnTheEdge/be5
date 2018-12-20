@@ -23,6 +23,6 @@ public class Be5QueryExecutorTest extends QueryBe5ProjectDBTest
                 "  t.name AS \"Name\",\n" +
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
-                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql(ExecuteType.COUNT).getQuery().toString());
+                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql(Be5QueryExecutor.ExecuteType.COUNT).getQuery().toString());
     }
 }

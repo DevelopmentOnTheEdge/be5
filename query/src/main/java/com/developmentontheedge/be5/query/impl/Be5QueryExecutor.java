@@ -209,4 +209,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         return getRow(new DynamicPropertySetSimpleStringParser());
     }
+
+    enum ExecuteType
+    {
+        DEFAULT, COUNT, AGGREGATE
+    }
 }

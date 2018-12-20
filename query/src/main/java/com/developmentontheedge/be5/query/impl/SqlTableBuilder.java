@@ -113,7 +113,7 @@ public class SqlTableBuilder
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows, ExecuteType.DEFAULT);
+        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
 
         Long totalNumberOfRows;
         if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
@@ -138,7 +138,7 @@ public class SqlTableBuilder
     }
 
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
-                                       List<RowModel> rows, ExecuteType executeType)
+                                       List<RowModel> rows)
     {
         list.forEach(dps -> TableUtils.filterBeanWithRoles(dps, userInfo.getCurrentRoles()));
         for (DynamicPropertySet properties : list)
@@ -147,16 +147,16 @@ public class SqlTableBuilder
             {
                 columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils).collectColumns());
             }
-            rows.add(generateRow(entityName, queryName, properties, executeType));
+            rows.add(generateRow(entityName, queryName, properties));
         }
     }
 
-    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties, ExecuteType executeType) throws AssertionError
+    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties) throws AssertionError
     {
         PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
-        List<CellModel> processedCells = processCells(cells, executeType); // only visible cells
+        List<CellModel> processedCells = processCells(cells); // only visible cells
 
         String rowId = transformer.getRowId();
         if (queryExecutor.isSelectable() && rowId == null)
@@ -192,18 +192,14 @@ public class SqlTableBuilder
      * @param cells raw cells
      *              columns.size() == cells.size()
      */
-    private List<CellModel> processCells(List<RawCellModel> cells, ExecuteType executeType)
+    private List<CellModel> processCells(List<RawCellModel> cells)
     {
         List<CellModel> processedCells = new ArrayList<>();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
         for (RawCellModel cell : cells)
         {
-            Object processedContent;
-            if (executeType == ExecuteType.DEFAULT)
-                processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
-            else
-                processedContent = cell.content;
+            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
             previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
                     : processedContent.getClass(), processedContent));
             if (!cell.hidden)
