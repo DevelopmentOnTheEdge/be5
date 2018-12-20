@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.server.controllers.FormController;
 import com.developmentontheedge.be5.server.controllers.LanguageSelectorController;
 import com.developmentontheedge.be5.server.controllers.MenuController;
 import com.developmentontheedge.be5.server.controllers.QueryBuilderController;
+import com.developmentontheedge.be5.server.controllers.ReloadProjectController;
 import com.developmentontheedge.be5.server.controllers.StaticPageController;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
@@ -74,6 +75,7 @@ public class ServerModule extends ServletModule
         serve("/api/queryBuilder").with(QueryBuilderController.class);
         serve("/api/download").with(DownloadController.class);
         serve("/api/downloadOperation").with(DownloadOperationController.class);
+        serve("/api/reloadProject").with(ReloadProjectController.class);
 
         bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
