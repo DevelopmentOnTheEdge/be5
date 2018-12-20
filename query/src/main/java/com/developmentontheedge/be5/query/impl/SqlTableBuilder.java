@@ -101,7 +101,7 @@ public class SqlTableBuilder
         List<DynamicPropertySet> propertiesList = queryExecutor.execute();
 
         boolean hasAggregate = false;
-        if (StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+        if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
         {
             hasAggregate = true;
