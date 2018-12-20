@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.query.impl.BeTagParser;
-import com.developmentontheedge.be5.query.impl.DynamicPropertyMeta;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

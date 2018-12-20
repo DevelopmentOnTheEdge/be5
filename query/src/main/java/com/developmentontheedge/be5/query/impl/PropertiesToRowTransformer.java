@@ -3,11 +3,12 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -61,7 +62,7 @@ class PropertiesToRowTransformer
 
         for (DynamicProperty property : properties)
         {
-            if (!shouldBeSkipped(property))
+            if (!TableUtils.shouldBeSkipped(property))
             {
                 String quick = getQuickOptionState(property);
                 columns.add(new ColumnModel(
@@ -130,7 +131,7 @@ class PropertiesToRowTransformer
         {
             String cellName = property.getName();
             Object cellContent = formatValue(property);
-            boolean hidden = shouldBeSkipped(property);
+            boolean hidden = TableUtils.shouldBeSkipped(property);
             Map<String, Map<String, String>> options = removeUnnecessaryCellOptions(DynamicPropertyMeta.get(property));
             cells.add(new RawCellModel(cellName, cellContent, options, hidden));
         }
@@ -206,10 +207,4 @@ class PropertiesToRowTransformer
         return value;
     }
 
-    private boolean shouldBeSkipped(DynamicProperty property)
-    {
-        String name = property.getName();
-        return property.isHidden() || MoreStrings.startsWithAny(name, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
-                DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
-    }
 }
