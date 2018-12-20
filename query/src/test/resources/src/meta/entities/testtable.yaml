@@ -128,7 +128,18 @@ testtable:
       roles: SystemDeveloper
       code: |-
          SELECT
+            t.value AS "Value",
+            '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
+          FROM
+            testtable t
+  - beAggregate1D:
+      type: 1D
+      roles: SystemDeveloper
+      code: |-
+         SELECT
             123 as "___ID",
+            'test' AS "Test",
+            'test2' AS "Test2",
             t.value AS "Value",
             '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
           FROM

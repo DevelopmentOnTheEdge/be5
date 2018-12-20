@@ -207,7 +207,7 @@ class PropertiesToRowTransformer
         return value;
     }
 
-    private boolean shouldBeSkipped(DynamicProperty property)
+    public static boolean shouldBeSkipped(DynamicProperty property)
     {
         String name = property.getName();
         return property.isHidden() || MoreStrings.startsWithAny(name, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,

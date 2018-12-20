@@ -210,8 +210,19 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beAggregate");
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':3.0,'options':{'css':{'class':'currency'}," +
-                        "'format':{'mask':'###,###,##0.00'}}}],'id':'aggregate'}",
+        assertEquals("{'cells':[{'content':3.0,'options':{'format':{'mask':'###,###,##0.00'}," +
+                        "'css':{'class':'currency'}}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(2))));
+    }
+
+    @Test
+    public void beAggregate1D()
+    {
+        Query query = meta.getQuery("testtable", "beAggregate1D");
+        TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
+        assertEquals("{'cells':[{'content':'Итого','options':{}},{'options':{}}," +
+                        "{'content':3.0,'options':{" +
+                            "'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}],'id':'aggregate'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(2))));
     }
 

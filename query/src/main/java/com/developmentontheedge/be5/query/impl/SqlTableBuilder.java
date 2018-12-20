@@ -15,18 +15,25 @@ import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.RoleFilter;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.ContextApplier;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+import static com.developmentontheedge.be5.query.impl.PropertiesToRowTransformer.shouldBeSkipped;
 
 public class SqlTableBuilder
 {
@@ -97,12 +104,19 @@ public class SqlTableBuilder
     public TableModel build()
     {
         List<DynamicPropertySet> propertiesList = queryExecutor.execute();
+
+        boolean hasAggregate = false;
+        if (StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+        {
+            hasAggregate = true;
+            addAggregateRowIfNeeded(propertiesList, queryExecutor.executeAggregate());
+        }
+
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
         collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows, ExecuteType.DEFAULT);
-
-        boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
         Long totalNumberOfRows;
         if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
@@ -126,69 +140,29 @@ public class SqlTableBuilder
                 queryExecutor.getOrderDir());
     }
 
-    private boolean addAggregateRowIfNeeded(List<RowModel> rows)
+    private void addAggregateRowIfNeeded(List<DynamicPropertySet> rows, List<DynamicPropertySet> aggregateRows)
     {
-        if (rows.size() == 0 || rows.get(0).getCells().stream()
-                .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE))) return false;
-        List<RowModel> aggregateRow = new ArrayList<>();
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow, ExecuteType.AGGREGATE);
+        DynamicPropertySet firstRow = aggregateRows.get(0);
+        Map<String, Map<String, String>> aggregateColumnNames = getAggregateColumnNames(rows.get(0));
+        Map<String, Double> aggregateValues = new HashMap<>();
 
-        List<CellModel> firstLine = aggregateRow.get(0).getCells();
-        double[] resD = new double[firstLine.size()];
-
-        for (RowModel row : aggregateRow)
+        for (DynamicPropertySet row: aggregateRows)
         {
-            for (int i = 0; i < firstLine.size(); i++)
+            for (Map.Entry<String, Map<String, String>> aggregateColumn: aggregateColumnNames.entrySet())
             {
-                Map<String, String> aggregate = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_AGGREGATE);
-                if (aggregate != null)
-                {
-                    Double add;
-                    if (row.getCells().get(i).content instanceof List)
-                    {
-                        add = Double.parseDouble((String) ((List) ((List) row.getCells().get(i).content).get(0)).get(0));
-                    }
-                    else
-                    {
-                        if (row.getCells().get(i).content != null) add = Double.parseDouble("" + row.getCells().get(i).content);
-                        else add = 0.0;
-                    }
-                    if ("Number".equals(aggregate.get("type")))
-                    {
-                        switch (aggregate.get("function"))
-                        {
-                            case "COUNT":
-                                resD[i]++;
-                                break;
-                            case "SUM":
-                            case "AVG":
-                                resD[i] += add;
-                                break;
-                            default:
-                                throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
-                        }
-                    }
-                    else
-                    {
-                        throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < firstLine.size(); i++)
-        {
-            Map<String, String> aggregate = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_AGGREGATE);
-            if (aggregate != null)
-            {
+                String name = aggregateColumn.getKey();
+                Map<String, String> aggregate = aggregateColumn.getValue();
+                Object value = row.getValue(aggregateColumn.getKey());
                 if ("Number".equals(aggregate.get("type")))
                 {
                     switch (aggregate.get("function"))
                     {
-                        case "SUM":
                         case "COUNT":
+                            aggregateValues.put(name, aggregateValues.getOrDefault(name, 0.0) + 1);
                             break;
+                        case "SUM":
                         case "AVG":
-                            resD[i] /= aggregateRow.size();
+                            aggregateValues.put(name, aggregateValues.getOrDefault(name, 0.0) + getDoubleValue(value));
                             break;
                         default:
                             throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
@@ -200,31 +174,95 @@ public class SqlTableBuilder
                 }
             }
         }
-        List<CellModel> res = new ArrayList<>();
-        for (int i = 0; i < firstLine.size(); i++)
+        for (Map.Entry<String, Map<String, String>> aggregateColumn: aggregateColumnNames.entrySet())
         {
-            Map<String, String> aggregate = firstLine.get(i).options.get(DatabaseConstants.COL_ATTR_AGGREGATE);
-            Map<String, Map<String, String>> options = new HashMap<>();
-            Object content = "";
-            if (aggregate != null)
+            String name = aggregateColumn.getKey();
+            Map<String, String> aggregate = aggregateColumn.getValue();
+            if ("Number".equals(aggregate.get("type")))
             {
-                content = resD[i];
-                options.put("css", Collections.singletonMap("class", aggregate.getOrDefault("cssClass", "")));
-                options.put("format", Collections.singletonMap("mask", aggregate.getOrDefault("format", "")));
+                switch (aggregate.get("function"))
+                {
+                    case "SUM":
+                    case "COUNT":
+                        break;
+                    case "AVG":
+                        aggregateValues.put(name, aggregateValues.get(name) / aggregateRows.size());
+                        break;
+                    default:
+                        throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
+                }
             }
             else
             {
-                if (i == 0)
+                throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
+            }
+        }
+        rows.add(getTotalRow(firstRow, aggregateValues));
+    }
+
+    private DynamicPropertySet getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues)
+    {
+        DynamicPropertySet res = new DynamicPropertySetSupport();
+        boolean totalTitleAdded = false;
+        for (Iterator<DynamicProperty> props = firstRow.propertyIterator(); props.hasNext();)
+        {
+            DynamicProperty prop = props.next();
+            String name = prop.getName();
+            DynamicProperty aggregateProp;
+
+            if (aggregateValues.containsKey(name))
+            {
+                Map<String, String> aggregate = DynamicPropertyMeta.get(prop).get(DatabaseConstants.COL_ATTR_AGGREGATE);
+
+                aggregateProp = new DynamicProperty(name, Double.class, aggregateValues.get(name));
+                Map<String, Map<String, String>> options = new HashMap<>();
+                options.put("css", Collections.singletonMap("class", aggregate.getOrDefault("cssClass", "")));
+                options.put("format", Collections.singletonMap("mask", aggregate.getOrDefault("format", "")));
+                DynamicPropertyMeta.set(aggregateProp, options);
+            }
+            else
+            {
+                aggregateProp = new DynamicProperty(name, prop.getType(), null);
+
+                if (!totalTitleAdded && !shouldBeSkipped(prop))
                 {
-                    content = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
-                            "total");
+                    totalTitleAdded = true;
+                    aggregateProp.setValue(userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
+                            "total"));
+                    aggregateProp.setType(String.class);
                 }
             }
-            res.add(new CellModel(content, options));
+            res.add(aggregateProp);
         }
+        if (res.getProperty(ID_COLUMN_LABEL) != null) res.setValue(ID_COLUMN_LABEL, "aggregate");
+        return res;
+    }
 
-        rows.add(new RowModel("aggregate", res));
-        return true;
+    private Double getDoubleValue(Object value)
+    {
+        Double add;
+        if (value instanceof List)
+        {
+            add = Double.parseDouble((String) ((List) ((List) value).get(0)).get(0));
+        }
+        else
+        {
+            if (value != null) add = Double.parseDouble("" + value);
+            else add = 0.0;
+        }
+        return add;
+    }
+
+    private Map<String, Map<String, String>> getAggregateColumnNames(DynamicPropertySet firstRow)
+    {
+        Map<String, Map<String, String>> aggregateColumnNames = new HashMap<>();
+        for (DynamicProperty dp : firstRow)
+        {
+            Map<String, Map<String, String>> meta = DynamicPropertyMeta.get(dp);
+            Map<String, String> aggregateMeta = meta.get(DatabaseConstants.COL_ATTR_AGGREGATE);
+            if (aggregateMeta != null) aggregateColumnNames.put(dp.getName(), aggregateMeta);
+        }
+        return aggregateColumnNames;
     }
 
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
@@ -251,7 +289,7 @@ public class SqlTableBuilder
         String rowId = transformer.getRowId();
         if (queryExecutor.isSelectable() && rowId == null)
         {
-            throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");
+            throw Be5Exception.internal(ID_COLUMN_LABEL + " not found.");
         }
         return new RowModel(rowId, processedCells);
     }
