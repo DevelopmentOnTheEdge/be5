@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.util.RoleFilter;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -229,6 +230,7 @@ public class SqlTableBuilder
     private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
                                        List<RowModel> rows, ExecuteType executeType)
     {
+        list.forEach(dps -> RoleFilter.filterBeanWithRoles(dps, userInfo.getCurrentRoles()));
         for (DynamicPropertySet properties : list)
         {
             if (columns.isEmpty())

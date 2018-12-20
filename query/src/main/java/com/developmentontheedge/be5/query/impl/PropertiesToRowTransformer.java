@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 

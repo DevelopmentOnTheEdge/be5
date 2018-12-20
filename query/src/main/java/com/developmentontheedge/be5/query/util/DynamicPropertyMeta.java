@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl;
+package com.developmentontheedge.be5.query.util;
 
 import com.developmentontheedge.beans.DynamicProperty;
 
@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class DynamicPropertyMeta
 {
-
     private static final String META_INFO_PROPERTY = "metaInfo";
 
     @SuppressWarnings("unchecked")
@@ -43,5 +42,4 @@ public class DynamicPropertyMeta
             property.setAttribute(META_INFO_PROPERTY, new HashMap<>(meta));
         }
     }
-
 }
