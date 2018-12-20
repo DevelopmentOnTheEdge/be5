@@ -43,7 +43,7 @@ public class TableModel
     }
 
     /**
-     * Returns prepared rows. Note that this table doesn't contain all the SQL table rows.
+     * Returns prepared rows. Note that this table doesn't contain all the SQL table properties.
      *
      * @see TableModel#getTotalNumberOfRows()
      */

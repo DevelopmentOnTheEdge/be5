@@ -30,7 +30,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Inject
     private DbService db;
     @Inject
-    private QueryExecutor queryService;
+    private QueryExecutorFactory queryService;
 
     private Query query;
 

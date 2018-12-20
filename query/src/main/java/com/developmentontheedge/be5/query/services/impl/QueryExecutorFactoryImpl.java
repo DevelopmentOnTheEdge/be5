@@ -8,14 +8,14 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.Be5QueryContext;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
-import com.developmentontheedge.be5.query.services.QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.sql.format.QueryContext;
 
 import javax.inject.Inject;
 import java.util.Map;
 
 
-public class QueryServiceImpl implements QueryExecutor
+public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 {
     private final Meta meta;
     private final DbService db;
@@ -24,8 +24,8 @@ public class QueryServiceImpl implements QueryExecutor
     private final QueryMetaHelper queryMetaHelper;
 
     @Inject
-    public QueryServiceImpl(Meta meta, DbService db, QuerySession querySession,
-                            UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper)
+    public QueryExecutorFactoryImpl(Meta meta, DbService db, QuerySession querySession,
+                                    UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper)
     {
         this.meta = meta;
         this.db = db;

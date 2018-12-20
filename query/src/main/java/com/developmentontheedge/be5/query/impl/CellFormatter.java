@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.model.RawCellModel;
-import com.developmentontheedge.be5.query.services.QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.be5.query.sql.TagsMapHandler;
 import com.developmentontheedge.be5.query.util.Unzipper;
@@ -67,10 +67,10 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
-    private final QueryExecutor queryService;
+    private final QueryExecutorFactory queryService;
 
     @Inject
-    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueryExecutor queryService)
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueryExecutorFactory queryService)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;

@@ -3,9 +3,6 @@ package com.developmentontheedge.be5.query.support;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.DpsTableBuilder;
 import com.developmentontheedge.be5.query.model.CellModel;
-import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.query.model.RowModel;
-import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -16,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+
 
 public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
 {
@@ -23,7 +22,7 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
     protected Map<String, Object> parameters;
 
     protected List<String> columns = new ArrayList<>();
-    protected List<DynamicPropertySet> rows = new ArrayList<>();
+    protected List<DynamicPropertySet> properties = new ArrayList<>();
 
     public DpsTableBuilder initialize(Query query, Map<String, Object> parameters)
     {
@@ -82,45 +81,46 @@ public abstract class BaseDpsTableBuilderSupport implements DpsTableBuilder
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         cells.forEach(dps::add);
-        rows.add(dps);
+        properties.add(dps);
     }
 
-    public void addRow(Integer id, List<DynamicProperty> cells)
+    public void addRow(Long id, List<DynamicProperty> cells)
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("___ID", String.class, id.toString()));
+        dps.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, id.toString()));
         cells.forEach(dps::add);
-        rows.add(dps);
+        properties.add(dps);
     }
 
     public void addRow(String id, List<DynamicProperty> cells)
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.add(new DynamicProperty("___ID", String.class, id));
+        dps.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, id));
         cells.forEach(dps::add);
-        rows.add(dps);
+        properties.add(dps);
     }
 
-    public TableModel table()
+    public List<DynamicPropertySet> table()
     {
-        return getSimpleTable(false, (long) rows.size(), false);
+        return getSimpleTable(false, (long) properties.size(), false);
     }
 
-    public TableModel table(boolean selectable)
+    public List<DynamicPropertySet> table(boolean selectable)
     {
-        return getSimpleTable(selectable, (long) rows.size(), false);
+        return getSimpleTable(selectable, (long) properties.size(), false);
     }
 
-    public TableModel table(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    public List<DynamicPropertySet> table(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
         return getSimpleTable(selectable, totalNumberOfRows, hasAggregate);
     }
 
-    private TableModel getSimpleTable(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    private List<DynamicPropertySet> getSimpleTable(boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
-        List<ColumnModel> columns = new ArrayList<>();
-        List<RowModel> rows = new ArrayList<>();
-        return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
-                0, Integer.MAX_VALUE, -1, "asc");
+//        List<ColumnModel> columns = new ArrayList<>();
+//        List<RowModel> rows = new ArrayList<>();
+//        return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
+//                0, Integer.MAX_VALUE, -1, "asc");
+        return properties;
     }
 }

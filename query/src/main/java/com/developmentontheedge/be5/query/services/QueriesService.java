@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,12 +37,12 @@ public class QueriesService
     private final DbService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final QueryExecutor queryService;
+    private final QueryExecutorFactory queryService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                          QueryExecutor queryService, UserInfoProvider userInfoProvider)
+                          QueryExecutorFactory queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
@@ -165,7 +164,7 @@ public class QueriesService
         List<DynamicPropertySet> list;
         if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
         {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
             //tableModel = tableModelService.getTableModel(query, parameters);
         }
         else

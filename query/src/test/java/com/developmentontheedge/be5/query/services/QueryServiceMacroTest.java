@@ -20,7 +20,7 @@ public class QueryServiceMacroTest extends QueryBe5ProjectDBTest
     @Inject
     private DbService db;
     @Inject
-    private QueryExecutor queryService;
+    private QueryExecutorFactory queryService;
 
     @Before
     public void insertOneRow()

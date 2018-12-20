@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
 import com.developmentontheedge.be5.modules.core.util.Generators;
-import com.developmentontheedge.be5.query.services.QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.model.Category;
 import com.google.common.collect.ImmutableList;
@@ -18,10 +18,10 @@ import java.util.Optional;
 public class CategoriesServiceImpl implements CategoriesService
 {
     private final Meta meta;
-    private final QueryExecutor queryService;
+    private final QueryExecutorFactory queryService;
 
     @Inject
-    public CategoriesServiceImpl(Meta meta, QueryExecutor queryService)
+    public CategoriesServiceImpl(Meta meta, QueryExecutorFactory queryService)
     {
         this.meta = meta;
         this.queryService = queryService;

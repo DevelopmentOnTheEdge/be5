@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.services.QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class Be5QueryExecutorTest extends QueryBe5ProjectDBTest
 {
     @Inject
-    private QueryExecutor queryService;
+    private QueryExecutorFactory queryService;
 
     @Test
     public void testCountFromQuery()

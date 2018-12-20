@@ -25,7 +25,7 @@ public class TableBuilderSupportTest extends ServerBe5ProjectTest
 
         assertEquals("[{'name':'Guest','title':'Guest'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
 
-        assertEquals("[{'cells':[{'content':'[Guest]','options':{}}],'id':'0'}]"
+        assertEquals("[{'cells':[{'content':'[Guest]','options':{}}]}]"
                 , oneQuotes(jsonb.toJson(tableModel.getRows())));
     }
 

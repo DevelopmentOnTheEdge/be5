@@ -50,9 +50,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     public void testExecuteSubQuery()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query");
-        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
-                .limit(20)
-                .build();
+        TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
 
         assertEquals("{'content':'1<br/> 2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
@@ -62,9 +60,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     public void subQueryDefault()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query default");
-        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
-                .limit(20)
-                .build();
+        TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
 
         assertEquals("{'content':'defaultValue','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(0))));
@@ -75,9 +71,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries()
                 .get("Sub Query with prepare params");
-        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
-                .limit(20)
-                .build();
+        TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
 
         assertEquals("{'content':'1<br/> 2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
@@ -88,10 +82,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries()
                 .get("Sub Query with long prepare params");
-        TableModel tableModel = tableModelService.builder(query, new HashMap<>())
-                .limit(20)
-                .build();
-
+        TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
         assertEquals("{'content':'1','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
     }
@@ -104,8 +95,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
 
         assertEquals("[{'name':'name','title':'name'},{'name':'value','title':'value'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
 
-        assertEquals("[{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}],'id':'0'}," +
-                        "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}],'id':'0'}]"
+        assertEquals("[{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}],'id':'1'}," +
+                        "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}],'id':'2'}]"
                 , oneQuotes(jsonb.toJson(tableModel.getRows())));
     }
 

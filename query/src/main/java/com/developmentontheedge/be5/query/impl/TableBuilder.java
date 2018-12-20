@@ -3,23 +3,27 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.DpsTableBuilder;
+import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
+import com.google.inject.Injector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,22 +34,24 @@ import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
-public class SqlTableBuilder
+public class TableBuilder
 {
     private final Query query;
     private final UserInfo userInfo;
     private final Map<String, Object> parameters;
-    private final QueryExecutor queryService;
-    private final com.developmentontheedge.be5.query.QueryExecutor queryExecutor;
+    private final QueryExecutorFactory queryService;
+    private final QueryExecutor queryExecutor;
     private final UserAwareMeta userAwareMeta;
     private final CellFormatter cellFormatter;
     private final CoreUtils coreUtils;
+    private final GroovyRegister groovyRegister;
+    private final Injector injector;
 
     private ContextApplier contextApplier;
 
-    public SqlTableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryExecutor queryService,
-                           UserAwareMeta userAwareMeta, Meta meta, CellFormatter cellFormatter, CoreUtils coreUtils,
-                           QuerySession querySession)
+    public TableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryExecutorFactory queryService,
+                        UserAwareMeta userAwareMeta, Meta meta, CellFormatter cellFormatter, CoreUtils coreUtils,
+                        QuerySession querySession, GroovyRegister groovyRegister, Injector injector)
     {
         this.query = query;
         this.parameters = parameters;
@@ -54,6 +60,8 @@ public class SqlTableBuilder
         this.queryService = queryService;
         this.cellFormatter = cellFormatter;
         this.coreUtils = coreUtils;
+        this.groovyRegister = groovyRegister;
+        this.injector = injector;
 
         Be5QueryContext context = new Be5QueryContext(query, parameters, querySession, userInfo, meta);
         this.contextApplier = new ContextApplier(context);
@@ -61,25 +69,25 @@ public class SqlTableBuilder
         this.userAwareMeta = userAwareMeta;
     }
 
-    public SqlTableBuilder offset(int offset)
+    public TableBuilder offset(int offset)
     {
         this.queryExecutor.offset(offset);
         return this;
     }
 
-    public SqlTableBuilder limit(int limit)
+    public TableBuilder limit(int limit)
     {
         this.queryExecutor.limit(limit);
         return this;
     }
 
-    public SqlTableBuilder sortOrder(int orderColumn, String orderDir)
+    public TableBuilder sortOrder(int orderColumn, String orderDir)
     {
         queryExecutor.order(orderColumn, orderDir);
         return this;
     }
 
-    public SqlTableBuilder selectable(boolean selectable)
+    public TableBuilder selectable(boolean selectable)
     {
         queryExecutor.selectable(selectable);
         return this;
@@ -98,15 +106,35 @@ public class SqlTableBuilder
 
     public TableModel build()
     {
-        List<DynamicPropertySet> propertiesList = queryExecutor.execute();
-
+        List<DynamicPropertySet> propertiesList;
         boolean hasAggregate = false;
-        if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
-                .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+
+        try
         {
-            hasAggregate = true;
-            String totalTitle = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), "total");
-            TableUtils.addAggregateRowIfNeeded(propertiesList, queryExecutor.executeAggregate(), totalTitle);
+            switch (query.getType())
+            {
+                case D1:
+                case D1_UNKNOWN:
+                    propertiesList = queryExecutor.execute();
+                    if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+                            .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))
+                    {
+                        hasAggregate = true;
+                        String totalTitle = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), "total");
+                        TableUtils.addAggregateRowIfNeeded(propertiesList, queryExecutor.executeAggregate(), totalTitle);
+                    }
+                    break;
+                case JAVA:
+                case GROOVY:
+                    propertiesList = getFromTableBuilder(query, parameters);
+                    break;
+                default:
+                    throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+            }
+        }
+        catch (Throwable e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
         }
 
         List<ColumnModel> columns = new ArrayList<>();
@@ -210,4 +238,49 @@ public class SqlTableBuilder
         return processedCells;
     }
 
+    private List<DynamicPropertySet> getFromTableBuilder(Query query, Map<String, Object> parameters)
+    {
+        DpsTableBuilder tableBuilder;
+
+        switch (query.getType())
+        {
+            case JAVA:
+                try
+                {
+                    tableBuilder = (DpsTableBuilder) Class.forName(query.getQuery()).newInstance();
+                    break;
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                {
+                    throw Be5Exception.internalInQuery(query, e);
+                }
+            case GROOVY:
+                try
+                {
+                    Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
+                            query.getQuery(), query.getFileName());
+
+                    if (aClass != null)
+                    {
+                        tableBuilder = (DpsTableBuilder) aClass.newInstance();
+                        break;
+                    }
+                    else
+                    {
+                        throw Be5Exception.internal("Class " + query.getQuery() + " is null.");
+                    }
+                }
+                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                {
+                    throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                }
+            default:
+                throw Be5Exception.internal("Not support operation type: " + query.getType());
+        }
+
+        injector.injectMembers(tableBuilder);
+        tableBuilder.initialize(query, parameters);
+
+        return tableBuilder.getTableModel();
+    }
 }
