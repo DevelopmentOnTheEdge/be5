@@ -194,7 +194,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<DynamicPropertySet> execute()
     {
         List<DynamicPropertySet> list = execute(new DynamicPropertySetSimpleStringParser());
-        if (list.size() > 0) filterWithRoles(list.get(0), contextApplier.getContext().roles());
+        list.forEach(dps -> filterWithRoles(dps, contextApplier.getContext().roles()));
         return list;
     }
 
@@ -202,7 +202,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<DynamicPropertySet> executeAggregate()
     {
         List<DynamicPropertySet> list = execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
-        if (list.size() > 0) filterWithRoles(list.get(0), contextApplier.getContext().roles());
+        list.forEach(dps -> filterWithRoles(dps, contextApplier.getContext().roles()));
         return list;
     }
 
@@ -217,7 +217,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         DynamicPropertySet row = getRow(new DynamicPropertySetSimpleStringParser());
         if (row != null) filterWithRoles(row, contextApplier.getContext().roles());
-        return getRow(new DynamicPropertySetSimpleStringParser());
+        return row;
     }
 
     private void filterWithRoles(DynamicPropertySet dps, List<String> currentRoles)

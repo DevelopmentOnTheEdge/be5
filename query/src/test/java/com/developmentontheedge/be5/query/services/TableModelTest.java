@@ -163,6 +163,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         TableModel table = tableModelService.getTableModel(query, Collections.emptyMap());
         assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        assertEquals("{'cells':[{'content':'user2','options':{}}],'id':'123'}",
+                oneQuotes(jsonb.toJson(table.getRows().get(1))));
 
         setStaticUserInfo("TestUser2");
         TableModel table2 = tableModelService.getTableModel(query, Collections.emptyMap());
