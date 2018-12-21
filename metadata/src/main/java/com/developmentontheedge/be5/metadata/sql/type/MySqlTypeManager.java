@@ -10,8 +10,10 @@ public class MySqlTypeManager extends DefaultTypeManager
     {
         StringBuilder sb = new StringBuilder();
         ColumnDef newColumn = (ColumnDef) column.clone(column.getOrigin(), newName);
-        sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" CHANGE COLUMN ")
-                .append(normalizeIdentifier(column.getName())).append(' ').append(getColumnDefinitionClause(newColumn)).append(';');
+        sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName()))
+                .append(" CHANGE COLUMN ")
+                .append(normalizeIdentifier(column.getName())).append(' ')
+                .append(getColumnDefinitionClause(newColumn)).append(';');
         // TODO: check whether it's necessary to update existing null values
         return sb.toString();
     }
@@ -20,7 +22,8 @@ public class MySqlTypeManager extends DefaultTypeManager
     public String getAlterColumnStatements(ColumnDef newColumn, ColumnDef oldColumn)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(normalizeIdentifier(newColumn.getTable().getEntityName())).append(" MODIFY COLUMN ").append(getColumnDefinitionClause(newColumn)).append(';');
+        sb.append("ALTER TABLE ").append(normalizeIdentifier(newColumn.getTable().getEntityName()))
+                .append(" MODIFY COLUMN ").append(getColumnDefinitionClause(newColumn)).append(';');
         // TODO: check whether it's necessary to update existing null values
         return sb.toString();
     }

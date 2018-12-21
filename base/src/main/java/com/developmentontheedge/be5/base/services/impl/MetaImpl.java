@@ -381,7 +381,8 @@ public class MetaImpl implements Meta
 
         if (scheme instanceof TableDef)
         {
-            BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
+            BeCaseInsensitiveCollection<ColumnDef> columns =
+                    (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
 
             return StreamSupport.stream(columns.spliterator(), false).collect(
                     Utils.toLinkedMap(ColumnDef::getName, Function.identity())

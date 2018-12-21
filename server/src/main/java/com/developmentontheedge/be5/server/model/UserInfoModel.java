@@ -14,7 +14,8 @@ public class UserInfoModel
     private final Instant creationTime;
     private final String defaultRoute;
 
-    public UserInfoModel(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Instant creationTime, String defaultRoute)
+    public UserInfoModel(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles,
+                         Instant creationTime, String defaultRoute)
     {
         this.loggedIn = loggedIn;
         this.userName = userName;

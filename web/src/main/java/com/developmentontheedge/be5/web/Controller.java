@@ -2,8 +2,10 @@ package com.developmentontheedge.be5.web;
 
 /**
  * <p>This is the general interface for controllers.</p>
- * <p>The identifier of the component is used to route requests to the component, e.g. <code>GET /api/socialLogin/fasebookAppId</code>
- * will use the <code>socialLogin</code> component and result of calling the {@link Request#getRequestUri()} will be <code>facebookAppId</code>.</p>
+ * <p>The identifier of the component is used to route requests to the component, e.g.
+ * <code>GET /api/socialLogin/fasebookAppId</code>
+ * will use the <code>socialLogin</code> component and result of calling the
+ * {@link Request#getRequestUri()} will be <code>facebookAppId</code>.</p>
  *
  * @see Request
  * @see Response

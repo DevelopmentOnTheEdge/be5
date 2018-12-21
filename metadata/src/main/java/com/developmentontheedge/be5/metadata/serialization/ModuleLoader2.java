@@ -118,7 +118,8 @@ public class ModuleLoader2
                             allowedFreemarkerMacros.stream().filter(queryCode::contains).count() == 0)
                     {
                         throw new IllegalArgumentException("Project used " + BE_SQL_QUERIES +
-                                " feature, please use be-sql instead freemarker.\n" + "Compile freemarker for query:" + queryCode + "\n==============\n" + queryAfterFreemarker);
+                                " feature, please use be-sql instead freemarker.\n" + "Compile freemarker for query:"
+                                + queryCode + "\n==============\n" + queryAfterFreemarker);
                     }
                     query.setQuery(queryAfterFreemarker);
                 }
@@ -236,7 +237,8 @@ public class ModuleLoader2
         }
     }
 
-    public static List<Project> loadModules(Project application, ProcessController logger, LoadContext loadContext) throws ProjectLoadException
+    public static List<Project> loadModules(Project application, ProcessController logger, LoadContext loadContext)
+            throws ProjectLoadException
     {
         List<Project> result = new ArrayList<>();
         for (Module module : application.getModules())
@@ -286,7 +288,8 @@ public class ModuleLoader2
         mergeAllModules(model, loadModules(model, logger, context), context);
     }
 
-    public static void mergeAllModules(final Project model, List<Project> modules, final LoadContext context) throws ProjectLoadException
+    public static void mergeAllModules(final Project model, List<Project> modules, final LoadContext context)
+            throws ProjectLoadException
     {
         modules = new LinkedList<>(modules);
 
@@ -316,7 +319,8 @@ public class ModuleLoader2
             if (compositeModule != null)
             {
                 module.getModules().merge(compositeModule.getModules(), true, true);
-                module.getApplication().merge(compositeModule.getModule(module.getProjectOrigin()), true, true);
+                module.getApplication().merge(compositeModule.getModule(module.getProjectOrigin()),
+                        true, true);
             }
 
             module.applyMassChanges(context);
@@ -369,7 +373,8 @@ public class ModuleLoader2
 
         if (project.getModules().getSize() > 0)
         {
-            sb.append("\nModules     : ").append(project.getModules().getNameList().stream().collect(joining(", ")));
+            sb.append("\nModules     : ").append(project.getModules().getNameList().stream()
+                    .collect(joining(", ")));
         }
         sb.append("\nLoading time: ")
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
@@ -403,7 +408,8 @@ public class ModuleLoader2
                         used = true;
                         started = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
-                        sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i)).append(" - replace");
+                        sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i))
+                                .append(" - replace");
                     }
                 }
                 if (!used)
@@ -425,7 +431,8 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     private static String getProjectName(URL url) throws IOException
     {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(),
+                StandardCharsets.UTF_8)))
         {
             Map<String, Object> module = new Yaml().load(reader);
             return module.entrySet().iterator().next().getKey();
@@ -457,7 +464,8 @@ public class ModuleLoader2
     @SuppressWarnings("unchecked")
     static void readDevPathsToSourceProjects(URL url) throws IOException
     {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(),
+                StandardCharsets.UTF_8)))
         {
             Map<String, Object> content = new Yaml().load(reader);
 

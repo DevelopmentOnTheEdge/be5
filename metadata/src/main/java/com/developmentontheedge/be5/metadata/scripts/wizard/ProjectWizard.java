@@ -184,7 +184,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //            new MenuAction( "Change create Login and Logout", new Runnable() {
 //                @Override
 //                public void run() {
-//                    parameters.setCreateLoginAndLogoutOperations( !parameters.shouldCreateLoginAndLogoutOperations() );
+//                    parameters.setCreateLoginAndLogoutOperations(!parameters.shouldCreateLoginAndLogoutOperations());
 //                }
 //            } ),
                 finishAction
@@ -268,7 +268,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
             {
                 //final LanguagesService languagesService = new LanguagesService();
 //                if ( !Arrays.asList( languagesService.getLanguageCodes() ).contains( value ) )
-//                    return "Unknown language code '" + value + "'. Use one of " + Joiner.on( ", " ).join( languagesService.getLanguageCodes() ) + ".";
+//                    return "Unknown language code '" + value + "'. Use one of " + Joiner.on( ", " )
+// .join( languagesService.getLanguageCodes() ) + ".";
 
                 return null;
             }
@@ -547,7 +548,8 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
                 if (!(minimum <= integer && integer <= maximum))
                 {
-                    out.println("The integer should be between " + minimum + " and " + maximum + " (inclusive). Write again:");
+                    out.println("The integer should be between " +
+                            minimum + " and " + maximum + " (inclusive). Write again:");
                     continue;
                 }
 

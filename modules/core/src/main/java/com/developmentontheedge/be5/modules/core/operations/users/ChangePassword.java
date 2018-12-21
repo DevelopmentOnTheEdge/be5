@@ -24,15 +24,18 @@ public class ChangePassword extends GOperationSupport implements TransactionalOp
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         params.add(new DynamicPropertyBuilder("user_pass", String.class)
-                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(), getInfo().getName(), "Current password"))
+                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(),
+                        getInfo().getName(), "Current password"))
                 .attr(PASSWORD_FIELD, true).get());
 
         params.add(new DynamicPropertyBuilder("new_user_pass", String.class)
-                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(), getInfo().getName(), "New password"))
+                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(),
+                        getInfo().getName(), "New password"))
                 .attr(PASSWORD_FIELD, true).get());
 
         params.add(new DynamicPropertyBuilder("new_user_pass2", String.class)
-                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(), getInfo().getName(), "Confirm new password"))
+                .title(userAwareMeta.getLocalizedOperationField(getInfo().getEntityName(),
+                        getInfo().getName(), "Confirm new password"))
                 .attr(PASSWORD_FIELD, true).get());
 
         if (stage == Stage.PRODUCTION)

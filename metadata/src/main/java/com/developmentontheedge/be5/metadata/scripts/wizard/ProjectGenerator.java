@@ -276,7 +276,8 @@ public class ProjectGenerator
 //
 //        if ( !includes.isEmpty() )
 //        {
-//            final FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY, project.getMacroCollection() );
+//            final FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY,
+// project.getMacroCollection() );
 //            script.setSource( includes );
 //            DataElementUtils.saveQuiet( script );
 //        }
@@ -287,7 +288,8 @@ public class ProjectGenerator
 //        final FreemarkerCatalog scripts = project.getApplication().getFreemarkerScripts();
 //        final FreemarkerScript securityScript = new FreemarkerScript( "security", scripts );
 //
-//        securityScript.setSource( "INSERT INTO users (user_name, user_pass) VALUES( '$LOGIN', '$PASSWORD' );\nINSERT INTO user_roles VALUES( '$LOGIN', '$ROLE' );\n"
+//        securityScript.setSource( "INSERT INTO users (user_name, user_pass) VALUES( '$LOGIN', '$PASSWORD' );
+// \nINSERT INTO user_roles VALUES( '$LOGIN', '$ROLE' );\n"
 //            .replace( "$LOGIN", parameters.getTestUserLogin() )
 //            .replace( "$PASSWORD", parameters.getTestUserPassword() )
 //            .replace( "$ROLE", parameters.getTestUserRole() ) );
@@ -332,7 +334,8 @@ public class ProjectGenerator
 ////        forgotPassword.getRoles().add( "Guest" );
 ////        forgotPassword.setParametrizingOperationName( "Send password" );
 ////        DataElementUtils.saveQuiet( forgotPassword );
-////        Operation sendPassword = Operation.createOperation( "Send password", Operation.OPERATION_TYPE_JAVA, usersEntity );
+////        Operation sendPassword = Operation.createOperation( "Send password",
+// Operation.OPERATION_TYPE_JAVA, usersEntity );
 ////        sendPassword.setCode( SendPassword.class.getName() );
 ////        DataElementUtils.saveQuiet( sendPassword );
 //    }
@@ -356,23 +359,27 @@ public class ProjectGenerator
 ////        {
 ////            // build.xml (@project@)
 ////            // .project
-////            final Function<String, String> process = template -> template.replace( "@project@", parameters.getProjectName() );
+////            final Function<String, String> process = template -> template.
+// replace( "@project@", parameters.getProjectName() );
 ////            processTemplate( target, "src/build.xml", process );
 ////            processTemplate( target, ".project", process );
 ////        }
 ////
 ////        {
 ////            // index.html/protected.html (@title@)
-////            final Function<String, String> process = template -> template.replace( "@title@", parameters.getProjectName() );
+////            final Function<String, String> process = template -> template.
+// replace( "@title@", parameters.getProjectName() );
 ////            processTemplate( target, "src/html/index.html", process );
 ////            processTemplate( target, "src/html/protected.html", process );
 ////        }
 //    }
 //
-//    private void processTemplate( final Path targetSrc, final String fileName, final Function<String, String> process ) throws IOException
+//    private void processTemplate( final Path targetSrc, final String fileName,
+// final Function<String, String> process ) throws IOException
 //    {
 //        final Path file = targetSrc.resolve( fileName );
-//        final String template = CharStreams.toString( new InputStreamReader( Files.newInputStream( file ), Charsets.UTF_8 ) );
+//        final String template = CharStreams.toString(
+// new InputStreamReader( Files.newInputStream( file ), Charsets.UTF_8 ) );
 //        final String content = process.apply( template );
 //        Files.write( file, content.getBytes( Charsets.UTF_8 ) );
 //    }

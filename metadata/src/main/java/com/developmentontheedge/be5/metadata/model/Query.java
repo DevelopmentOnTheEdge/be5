@@ -31,10 +31,11 @@ public class Query extends EntityItem implements TemplateElement
     public static final String SPECIAL_LOST_RECORDS = "Lost records";
     public static final String SPECIAL_TABLE_DEFINITION = "Table definition";
 
-    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("menuName",
-            "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure", "slow", "cacheable", "replicated", "defaultView",
-            "contextID", "categoryID", "templateQueryName", "shortDescription", "messageWhenEmpty", "parametrizingOperationName",
-            "wellKnownName", "operationNames", "query", "roles", "icon", "querySettings", "layout")));
+    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<>(
+            Arrays.asList("menuName", "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure",
+                    "slow", "cacheable", "replicated", "defaultView", "contextID", "categoryID", "templateQueryName",
+                    "shortDescription", "messageWhenEmpty", "parametrizingOperationName", "wellKnownName",
+                    "operationNames", "query", "roles", "icon", "querySettings", "layout")));
 
     public static String[] getQueryTypes()
     {
@@ -271,7 +272,8 @@ public class Query extends EntityItem implements TemplateElement
 
     public void setTemplateQueryName(String templateQueryName)
     {
-        this.templateQueryName = customizeProperty("templateQueryName", this.templateQueryName, Strings2.nullToEmpty(templateQueryName));
+        this.templateQueryName = customizeProperty("templateQueryName", this.templateQueryName,
+                Strings2.nullToEmpty(templateQueryName));
         fireChanged();
     }
 
@@ -334,7 +336,8 @@ public class Query extends EntityItem implements TemplateElement
 
     public QuickFilter[] getQuickFilters()
     {
-        BeModelCollection<QuickFilter> filterCollection = getCollection(QuickFilter.QUICK_FILTERS_COLLECTION, QuickFilter.class);
+        BeModelCollection<QuickFilter> filterCollection =
+                getCollection(QuickFilter.QUICK_FILTERS_COLLECTION, QuickFilter.class);
         if (filterCollection == null)
         {
             return new QuickFilter[0];
@@ -346,7 +349,8 @@ public class Query extends EntityItem implements TemplateElement
     public QuerySettings[] getQuerySettings()
     {
         return getValue("querySettings",
-                querySettings == null ? new QuerySettings[0] : querySettings.toArray(new QuerySettings[querySettings.size()]),
+                querySettings == null ? new QuerySettings[0]
+                        : querySettings.toArray(new QuerySettings[querySettings.size()]),
                 new QuerySettings[0],
                 () -> ((Query) prototype).getQuerySettings());
     }
@@ -413,7 +417,8 @@ public class Query extends EntityItem implements TemplateElement
 
     public void setParametrizingOperationName(String name)
     {
-        this.parametrizingOperationName = customizeProperty("parametrizingOperationName", this.parametrizingOperationName, Strings2.nullToEmpty(name));
+        this.parametrizingOperationName = customizeProperty("parametrizingOperationName",
+                this.parametrizingOperationName, Strings2.nullToEmpty(name));
         fireChanged();
     }
 
@@ -506,7 +511,8 @@ public class Query extends EntityItem implements TemplateElement
             int pos = templateQueryName.indexOf('.');
             if (pos < 0)
             {
-                result.add(new ProjectElementException(getCompletePath(), "templateQueryName", new IllegalArgumentException("templateQueryName must have format <entity>:<query>")));
+                result.add(new ProjectElementException(getCompletePath(), "templateQueryName",
+                        new IllegalArgumentException("templateQueryName must have format <entity>:<query>")));
             }
         }
         Set<String> missingEntries = getRoles().getMissingEntries();

@@ -36,7 +36,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
     /**
      * A normal way to create the deserializer.
      */
-    ConnectionProfilesDeserializer(LoadContext loadContext, final Path path, final BeConnectionProfileType type, final BeConnectionProfilesRoot target) throws ReadException
+    ConnectionProfilesDeserializer(LoadContext loadContext, final Path path, final BeConnectionProfileType type,
+                                   final BeConnectionProfilesRoot target) throws ReadException
     {
         super(loadContext, path);
         this.target = new BeConnectionProfiles(type, target);
@@ -45,8 +46,10 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
     @Override
     protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        final Map<String, Object> serializedConnectionProfilesBody = asMap(asMap(serializedRoot).get(TAG_CONNECTION_PROFILES));
-        final Map<String, Object> profilesMap = asMap(serializedConnectionProfilesBody.get(TAG_CONNECTION_PROFILES_INNER));
+        final Map<String, Object> serializedConnectionProfilesBody =
+                asMap(asMap(serializedRoot).get(TAG_CONNECTION_PROFILES));
+        final Map<String, Object> profilesMap =
+                asMap(serializedConnectionProfilesBody.get(TAG_CONNECTION_PROFILES_INNER));
 
         for (Map.Entry<String, Object> serializedProfile : profilesMap.entrySet())
         {
@@ -54,7 +57,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
             {
                 final String profileName = serializedProfile.getKey();
                 final Map<String, Object> serializedProfileBody = asMap(serializedProfile.getValue());
-                final BeConnectionProfile connectionProfile = deserializeConnectionProfile(profileName, serializedProfileBody);
+                final BeConnectionProfile connectionProfile =
+                        deserializeConnectionProfile(profileName, serializedProfileBody);
 
                 save(connectionProfile);
             }
@@ -73,10 +77,12 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
         }
         DataElementUtils.saveQuiet(target);
 
-        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.CONNECTION_PROFILES);
+        target.getProject().getAutomaticDeserializationService()
+                .registerFile(path, ManagedFileType.CONNECTION_PROFILES);
     }
 
-    public BeConnectionProfile deserializeConnectionProfile(final String profileName, final Map<String, Object> serializedProfileBody) throws ReadException
+    public BeConnectionProfile deserializeConnectionProfile(final String profileName,
+                                final Map<String, Object> serializedProfileBody) throws ReadException
     {
         final BeConnectionProfile connectionProfile = new BeConnectionProfile(profileName, target);
         readFields(connectionProfile, serializedProfileBody, Fields.connectionProfile());
@@ -87,7 +93,8 @@ public class ConnectionProfilesDeserializer extends FileDeserializer
 
         if (propertiesToRequest != null)
         {
-            connectionProfile.setPropertiesToRequest(propertiesToRequest.toArray(new String[propertiesToRequest.size()]));
+            connectionProfile.setPropertiesToRequest(
+                    propertiesToRequest.toArray(new String[propertiesToRequest.size()]));
         }
 
         if (Strings2.isNullOrEmpty(connectionProfile.getProviderId()))

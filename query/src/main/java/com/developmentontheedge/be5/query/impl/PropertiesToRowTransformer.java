@@ -34,7 +34,8 @@ class PropertiesToRowTransformer
     /**
      * @param properties represent a row
      */
-    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo, UserAwareMeta userAwareMeta, CoreUtils coreUtils)
+    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo,
+                               UserAwareMeta userAwareMeta, CoreUtils coreUtils)
     {
         this.entityName = entityName;
         this.queryName = queryName;

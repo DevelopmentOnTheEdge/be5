@@ -17,7 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Example url
- * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
+ * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name
+ *          &_dataColumn_=data&_download_=yes&ID=7326
  */
 @Singleton
 public class DownloadController extends ApiControllerSupport implements Controller

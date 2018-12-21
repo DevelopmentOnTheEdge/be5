@@ -13,7 +13,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getRenameColumnStatements(ColumnDef column, String newName)
     {
-        return "EXEC sp_RENAME '[" + column.getTable().getEntityName() + "].[" + column.getName() + "]', '" + newName + "', 'COLUMN';\n";
+        return "EXEC sp_RENAME '[" + column.getTable().getEntityName() + "].[" + column.getName() + "]', " +
+                "'" + newName + "', 'COLUMN';\n";
     }
 
     @Override
@@ -21,7 +22,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     {
         String tableName = column.getTable().getEntityName();
         String columnName = column.getName();
-        String prefix = "ALTER TABLE " + normalizeIdentifier(tableName) + " ALTER COLUMN " + normalizeIdentifier(columnName) + " ";
+        String prefix = "ALTER TABLE " + normalizeIdentifier(tableName) +
+                " ALTER COLUMN " + normalizeIdentifier(columnName) + " ";
         StringBuilder sb = new StringBuilder();
         StringBuilder endSb = new StringBuilder();
         for (IndexDef index : oldColumn.getTable().getIndices().getAvailableElements())
@@ -47,7 +49,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
             if (oldColumn.isCanBeNull() && !Strings2.isNullOrEmpty(column.getDefaultValue()))
             {
                 sb.append("UPDATE ").append(normalizeIdentifier(tableName)).append(" SET ")
-                        .append(normalizeIdentifier(columnName)).append('=').append(column.getDefaultValue()).append(" WHERE ")
+                        .append(normalizeIdentifier(columnName)).append('=')
+                        .append(column.getDefaultValue()).append(" WHERE ")
                         .append(normalizeIdentifier(columnName)).append(" IS NULL;");
             }
             sb.append(prefix).append(getTypeClause(column.getType())).append(" NOT NULL;");
@@ -62,7 +65,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
             {
                 sb.append("ALTER TABLE ").append(normalizeIdentifier(tableName)).append(" ADD CONSTRAINT df_")
                         .append(tableName).append('_').append(columnName).append(" DEFAULT ")
-                        .append(column.getDefaultValue()).append(" FOR ").append(normalizeIdentifier(columnName)).append(';');
+                        .append(column.getDefaultValue()).append(" FOR ")
+                        .append(normalizeIdentifier(columnName)).append(';');
             }
         }
         sb.append(endSb);
@@ -126,7 +130,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getDropTableStatements(String table)
     {
-        return "IF EXISTS (SELECT ID FROM sysobjects WHERE id = OBJECT_ID(N'" + table + "') AND OBJECTPROPERTY(id, N'IsUserTable') = 1 )\n"
+        return "IF EXISTS (SELECT ID FROM sysobjects WHERE id = OBJECT_ID(N'" + table + "') " +
+                "AND OBJECTPROPERTY(id, N'IsUserTable') = 1 )\n"
                 + "DROP TABLE " + table + ";\n";
     }
 
@@ -150,7 +155,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getAddColumnStatements(ColumnDef column)
     {
-        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " ADD " + getColumnDefinitionClause(column) + ";";
+        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " ADD " + getColumnDefinitionClause(column) + ";";
     }
 
     @Override
@@ -199,7 +205,8 @@ public class SqlServerTypeManager extends DefaultTypeManager
     @Override
     public String getStartingIncrementDefinition(String table, String column, long startValue)
     {
-        return "ALTER TABLE " + normalizeIdentifier(table) + " ALTER COLUMN " + normalizeIdentifier(column) + " IDENTITY(" + startValue + ", 1);\n";
+        return "ALTER TABLE " + normalizeIdentifier(table) +
+                " ALTER COLUMN " + normalizeIdentifier(column) + " IDENTITY(" + startValue + ", 1);\n";
     }
 
     @Override

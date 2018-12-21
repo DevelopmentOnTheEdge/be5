@@ -319,7 +319,8 @@ public abstract class BeModelElementSupport implements BeModelElement
 //        }
 //        catch ( Exception e )
 //        {
-//            throw new RuntimeException( "Unexpected exception when retrieving property '" + propertyName + "' of " + getCompletePath() + ": "
+//            throw new RuntimeException( "Unexpected exception when retrieving property '" +
+// propertyName + "' of " + getCompletePath() + ": "
 //                + e, e );
 //        }
 //    }

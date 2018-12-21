@@ -72,7 +72,8 @@ public class CellFormatter
     private final Provider<QueriesService> queries;
 
     @Inject
-    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, Provider<QueriesService> queries)
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider,
+                         Provider<QueriesService> queries)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
@@ -179,7 +180,8 @@ public class CellFormatter
         return formattedContent;
     }
 
-    private Object getFormattedPartsWithoutLink(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private Object getFormattedPartsWithoutLink(DynamicProperty cell, VarResolver varResolver, Query query,
+                                                ContextApplier contextApplier)
     {
         Objects.requireNonNull(cell);
         Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
@@ -230,7 +232,8 @@ public class CellFormatter
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" ")).joining("<br/> ");
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
+                    .joining("<br/> ");
 //            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
 //                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
         }
@@ -243,7 +246,8 @@ public class CellFormatter
     /**
      * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
      */
-    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver, Query query,
+                                       ContextApplier contextApplier)
     {
         List<DynamicPropertySet> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
 
@@ -261,7 +265,8 @@ public class CellFormatter
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query,
+                               ContextApplier contextApplier)
     {
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
@@ -270,7 +275,8 @@ public class CellFormatter
             Object value = property.getValue();
             //RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
             if (value == null) property.setValue("");
-            CompositeVarResolver compositeVarResolver = new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
+            CompositeVarResolver compositeVarResolver =
+                    new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
             Object processedCell = format(property, compositeVarResolver, query, contextApplier);
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
@@ -362,7 +368,8 @@ public class CellFormatter
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, "-1"));
             dynamicProperties.add(new DynamicProperty("error", String.class,
-                    userInfoProvider.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
+                    userInfoProvider.getCurrentRoles()
+                            .contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
             dynamicPropertySets = Collections.singletonList(dynamicProperties);
         }
 

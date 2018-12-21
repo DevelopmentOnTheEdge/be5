@@ -140,12 +140,15 @@ public class AppTools extends ScriptSupport<AppTools>
                 .ofIndices(cols)
                 .map(col -> StreamEx.of(cols.get(col)).append(StreamEx.of(rows).map(row -> row.get(col)))
                         .mapToInt(String::length).max().orElse(1)).toArray();
-        out.println(IntStreamEx.ofIndices(cols).mapToObj(col -> String.format(Locale.ENGLISH, "%-" + lengths[col] + "s", cols.get(col)))
+        out.println(IntStreamEx.ofIndices(cols).mapToObj(col -> String.format(Locale.ENGLISH,
+                "%-" + lengths[col] + "s", cols.get(col)))
                 .joining(" | ", "| ", " |"));
-        out.println(IntStreamEx.of(lengths).mapToObj(len -> StreamEx.constant("-", len).joining()).joining("-|-", "|-", "-|"));
+        out.println(IntStreamEx.of(lengths).mapToObj(len -> StreamEx.constant("-", len).joining())
+                .joining("-|-", "|-", "-|"));
         for (List<String> row : rows)
         {
-            out.println(IntStreamEx.ofIndices(cols).mapToObj(col -> String.format(Locale.ENGLISH, "%-" + lengths[col] + "s", row.get(col)))
+            out.println(IntStreamEx.ofIndices(cols).mapToObj(col -> String.format(Locale.ENGLISH,
+                    "%-" + lengths[col] + "s", row.get(col)))
                     .joining(" | ", "| ", " |"));
         }
         if (ellipsis)

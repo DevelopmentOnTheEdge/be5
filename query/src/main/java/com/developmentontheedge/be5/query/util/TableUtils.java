@@ -70,7 +70,8 @@ public class TableUtils
         }
     }
 
-    public static void addAggregateRowIfNeeded(List<DynamicPropertySet> rows, List<DynamicPropertySet> aggregateRows, String totalTitle)
+    public static void addAggregateRowIfNeeded(List<DynamicPropertySet> rows, List<DynamicPropertySet> aggregateRows,
+                                               String totalTitle)
     {
         DynamicPropertySet firstRow = aggregateRows.get(0);
         Map<String, Map<String, String>> aggregateColumnNames = getAggregateColumnNames(rows.get(0));
@@ -130,7 +131,8 @@ public class TableUtils
         rows.add(getTotalRow(firstRow, aggregateValues, totalTitle));
     }
 
-    private static DynamicPropertySet getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues, String totalTitle)
+    private static DynamicPropertySet getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues,
+                                                  String totalTitle)
     {
         DynamicPropertySet res = new DynamicPropertySetSupport();
         boolean totalTitleAdded = false;

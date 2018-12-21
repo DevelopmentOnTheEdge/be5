@@ -94,7 +94,8 @@ public class QuickFilter extends BeModelElementSupport
     @Override
     public boolean isCustomized()
     {
-        return !getOriginModuleName().equals(getModule().getName()) && getOriginModuleName().equals(getProject().getProjectOrigin());
+        return !getOriginModuleName().equals(getModule().getName())
+                && getOriginModuleName().equals(getProject().getProjectOrigin());
     }
 
     @Override
@@ -135,7 +136,8 @@ public class QuickFilter extends BeModelElementSupport
 
     protected void fireChanged()
     {
-        final BeModelCollection<QuickFilter> quickFilters = getQuery().getCollection(QUICK_FILTERS_COLLECTION, QuickFilter.class);
+        final BeModelCollection<QuickFilter> quickFilters = getQuery()
+                .getCollection(QUICK_FILTERS_COLLECTION, QuickFilter.class);
         if (quickFilters != null && quickFilters.contains(getName()))
             getQuery().fireCodeChanged();
     }

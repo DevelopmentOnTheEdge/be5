@@ -101,7 +101,8 @@ public abstract class TestUtils extends BaseTestUtils
         return getSpyMockRequest(requestUri, parameters, new HashMap<>());
     }
 
-    protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters, Map<String, Object> sessionValues)
+    protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters,
+                                        Map<String, Object> sessionValues)
     {
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
@@ -126,20 +127,21 @@ public abstract class TestUtils extends BaseTestUtils
         return getDps(new QRec(), nameValues);
     }
 
-    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                String selectedRows)
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName,
+                                                    String operationName, String selectedRows)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
-    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                String selectedRows, String values)
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName,
+                                                    String operationName, String selectedRows, String values)
     {
-        return generateOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
+        return generateOperation(entityName, queryName, operationName, selectedRows,
+                ParseRequestUtils.getValuesFromJson(values));
     }
 
-    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
-                                                                String selectedRows, Map<String, Object> presetValues)
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName,
+                                    String operationName, String selectedRows, Map<String, Object> presetValues)
     {
         return generateOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
@@ -159,20 +161,21 @@ public abstract class TestUtils extends BaseTestUtils
         return operationService.generate(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                               String selectedRows)
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName,
+                                       String operationName, String selectedRows)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
-    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                               String selectedRows, String values)
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName,
+                                       String operationName, String selectedRows, String values)
     {
-        return executeOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
+        return executeOperation(entityName, queryName, operationName, selectedRows,
+                ParseRequestUtils.getValuesFromJson(values));
     }
 
-    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
-                                                               String selectedRows, Map<String, Object> presetValues)
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName,
+                                       String operationName, String selectedRows, Map<String, Object> presetValues)
     {
         return executeOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
@@ -206,7 +209,8 @@ public abstract class TestUtils extends BaseTestUtils
         return createOperation(entityName, queryName, operationName, params);
     }
 
-    protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, ?> operationParams)
+    protected Operation createOperation(String entityName, String queryName, String operationName,
+                                        Map<String, ?> operationParams)
     {
         OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
@@ -243,7 +247,8 @@ public abstract class TestUtils extends BaseTestUtils
                 sb.append("Created operations:");
                 operations.forEach(o ->
                 {
-                    String line = "\n" + o.getClass().getCanonicalName() + "(" + o.getClass().getSimpleName() + extension(o) + ":0)";
+                    String line = "\n" + o.getClass().getCanonicalName() +
+                            "(" + o.getClass().getSimpleName() + extension(o) + ":0)";
                     sb.append(line);
                 });
                 log.info(sb.toString());

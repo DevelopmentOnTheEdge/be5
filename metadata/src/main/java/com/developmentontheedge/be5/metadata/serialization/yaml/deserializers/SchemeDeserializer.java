@@ -51,7 +51,8 @@ class SchemeDeserializer extends BaseDeserializer
         readReferences(serializedEntityBody, entity);
     }
 
-    private void readReferences(final Map<String, Object> serializedEntityBody, final Entity entity) throws ReadException
+    private void readReferences(final Map<String, Object> serializedEntityBody, final Entity entity)
+            throws ReadException
     {
         final Map<String, Object> serializedReferences;
 
@@ -168,7 +169,8 @@ class SchemeDeserializer extends BaseDeserializer
         }
     }
 
-    public ColumnDef readColumnDef(String columnName, Map<String, Object> columnElement, BeVectorCollection<ColumnDef> parent) throws ReadException
+    public ColumnDef readColumnDef(String columnName, Map<String, Object> columnElement,
+                                   BeVectorCollection<ColumnDef> parent) throws ReadException
     {
         ColumnDef column = new ColumnDef(columnName, parent);
         readDocumentation(columnElement, column);
@@ -197,7 +199,8 @@ class SchemeDeserializer extends BaseDeserializer
         return column;
     }
 
-    public IndexDef readIndexDef(String indexName, Map<String, Object> indexElement, BeVectorCollection<IndexDef> parent) throws ReadException
+    public IndexDef readIndexDef(String indexName, Map<String, Object> indexElement,
+                                 BeVectorCollection<IndexDef> parent) throws ReadException
     {
         IndexDef index = new IndexDef(indexName, parent);
         index.setOriginModuleName(index.getProject().getProjectOrigin());

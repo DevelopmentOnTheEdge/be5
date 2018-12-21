@@ -50,7 +50,8 @@ class BaseDeserializer
 
         for (final Field field : fields)
         {
-            if (field.name.equals("name") || (customizableProperties.contains(field.name) && !content.containsKey(field.name)))
+            if (field.name.equals("name") ||
+                    (customizableProperties.contains(field.name) && !content.containsKey(field.name)))
             {
                 continue;
             }
@@ -96,7 +97,8 @@ class BaseDeserializer
         }
     }
 
-    private /*static*/ Object castValue(final Class<?> klass, final String value) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    private /*static*/ Object castValue(final Class<?> klass, final String value)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         if (klass == Boolean.class || klass == boolean.class)
         {
@@ -140,12 +142,14 @@ class BaseDeserializer
         {
             final List<String> extras = asStrList(serializedExtras);
             if (extras.contains(""))
-                loadContext.addWarning(new ReadException(target, path, "Extras tag contains empty string: probably it's incorrectly specified in YAML"));
+                loadContext.addWarning(new ReadException(target, path,
+                        "Extras tag contains empty string: probably it's incorrectly specified in YAML"));
             target.setUsedInExtras(extras.toArray(new String[extras.size()]));
         }
     }
 
-    protected void readProperties(final Map<String, Object> elementBody, final BeElementWithProperties target) throws ReadException
+    protected void readProperties(final Map<String, Object> elementBody, final BeElementWithProperties target)
+            throws ReadException
     {
         final Object serializedProperties = elementBody.get(TAG_PROPERTIES);
 
@@ -353,12 +357,15 @@ class BaseDeserializer
                 throw new IllegalArgumentException("Invalid file format: map expected");
             Map<String, Object> topLevelMap = (Map<String, Object>) object;
             if (!topLevelMap.containsKey(name))
-                throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be present");
+                throw new IllegalArgumentException(
+                        "Invalid file format: top-level element '" + name + "' must be present");
             if (topLevelMap.size() > 1)
-                throw new IllegalArgumentException("Invalid file format: there must be only one top-level element '" + name + "'");
+                throw new IllegalArgumentException(
+                        "Invalid file format: there must be only one top-level element '" + name + "'");
             Object rootObject = topLevelMap.get(name);
             if (!(rootObject instanceof Map))
-                throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be a map");
+                throw new IllegalArgumentException(
+                        "Invalid file format: top-level element '" + name + "' must be a map");
             return (Map<String, Object>) rootObject;
         }
         catch (IllegalArgumentException e)

@@ -78,7 +78,8 @@ public class Utils
 
     /**
      * Check given object for an empty value.
-     * <br/>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols, except spaces.
+     * <br/>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols,
+     * except spaces.
      *
      * @param value value
      * @return returns true, if value is empty, otherwise value is false
@@ -740,7 +741,8 @@ public class Utils
     }
 
     /**
-     * Replace all occurrences of bracketed by the specified opener and closer expressions for the specified replacement string.
+     * Replace all occurrences of bracketed by the specified opener and closer expressions
+     * for the specified replacement string.
      *
      * @param html        text for substitution
      * @param opener      open bracket

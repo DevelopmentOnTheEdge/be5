@@ -88,7 +88,8 @@ public class DocumentOperationsPlugin implements DocumentPlugin
             action = operation.getCode();
         }
 
-        return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation, isClientSide, action);
+        return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation,
+                isClientSide, action);
     }
 
     private static String determineWhenVisible(Operation operation)

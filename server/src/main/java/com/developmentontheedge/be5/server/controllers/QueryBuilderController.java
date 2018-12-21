@@ -74,20 +74,7 @@ public class QueryBuilderController extends JsonApiModelController
         {
             String sql = req.get("sql");
             boolean execute = sql != null;
-
-            List<String> history;
-            if (req.getSession().get(QUERY_BUILDER_HISTORY) != null)
-            {
-                @SuppressWarnings("unchecked")
-                List<String> historyFromSession = (List<String>) req.getSession().get(QUERY_BUILDER_HISTORY);
-                history = historyFromSession;
-            }
-            else
-            {
-                history = new ArrayList<String>() {{
-                    add("select * from users");
-                }};
-            }
+            List<String> history = getHistory(req);
 
             if (sql == null)
             {
@@ -161,8 +148,25 @@ public class QueryBuilderController extends JsonApiModelController
         }
         else
         {
-            return error(errorModelHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
-                    Collections.singletonMap(SELF_LINK, "queryBuilder")));
+            return error(errorModelHelper.getErrorModel(
+                    Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
+                    Collections.singletonMap(SELF_LINK, "queryBuilder"))
+            );
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> getHistory(Request req)
+    {
+        if (req.getSession().get(QUERY_BUILDER_HISTORY) != null)
+        {
+            return (List<String>) req.getSession().get(QUERY_BUILDER_HISTORY);
+        }
+        else
+        {
+            return new ArrayList<String>() {{
+                add("select * from users");
+            }};
         }
     }
 

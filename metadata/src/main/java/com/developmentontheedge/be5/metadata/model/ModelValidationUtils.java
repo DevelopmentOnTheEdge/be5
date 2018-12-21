@@ -5,7 +5,8 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 
 public class ModelValidationUtils
 {
-    public static void checkValueInSet(BeModelElement source, String property, Object value, Object[] set) throws ProjectElementException
+    public static void checkValueInSet(BeModelElement source, String property, Object value, Object[] set)
+            throws ProjectElementException
     {
         for (Object element : set)
         {

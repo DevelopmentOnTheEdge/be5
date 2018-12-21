@@ -19,7 +19,8 @@ public class ProjectElementException extends RuntimeException implements Formatt
     private final int row;
     private final int column;
 
-    public ProjectElementException(DataElementPath path, String property, int row, int column, String message, Throwable cause)
+    public ProjectElementException(DataElementPath path, String property, int row, int column, String message,
+                                   Throwable cause)
     {
         super(message, cause);
         this.path = path;
@@ -126,13 +127,14 @@ public class ProjectElementException extends RuntimeException implements Formatt
 
     public static ProjectElementException notSpecified(BeModelElement de, String property)
     {
-        return new ProjectElementException(de.getCompletePath(), property, new IllegalArgumentException("Not specified"));
+        return new ProjectElementException(de.getCompletePath(), property,
+                new IllegalArgumentException("Not specified"));
     }
 
     public static ProjectElementException invalidValue(BeModelElement de, String property, Object value)
     {
-        return new ProjectElementException(de.getCompletePath(), property, new IllegalArgumentException("Invalid " + property + ": "
-                + value));
+        return new ProjectElementException(de.getCompletePath(), property,
+                new IllegalArgumentException("Invalid " + property + ": " + value));
     }
 
     @Override

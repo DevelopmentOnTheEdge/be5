@@ -22,9 +22,11 @@ public class QueryBeanInfo extends BeanInfoEx
         add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("type", QueryTypeSelector.class);
         addHidden("query", "isQueryHidden");
-        addHidden(new PropertyDescriptorEx("queryClass", beanClass, "getQuery", "setQuery"), ClassSelector.class, "isQueryClassHidden");
+        addHidden(new PropertyDescriptorEx("queryClass", beanClass, "getQuery", "setQuery"),
+                ClassSelector.class, "isQueryClassHidden");
         findPropertyDescriptor("queryClass").setDisplayName("Query class");
-        findPropertyDescriptor("queryClass").setShortDescription("Must extend com.developmentontheedge.enterprise.query.QueryIterator");
+        findPropertyDescriptor("queryClass").
+                setShortDescription("Must extend com.developmentontheedge.enterprise.query.QueryIterator");
 
         add(new PropertyDescriptorEx("queryCompiled", beanClass, "getQueryCompiled", null));
         findPropertyDescriptor("queryCompiled").setHidden(true);

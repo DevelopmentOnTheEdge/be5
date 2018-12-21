@@ -20,7 +20,8 @@ public class SessionVariablesEdit extends OperationSupport
         Object variable = session.get(context.getRecord());
         if (variable == null)
         {
-            setResult(OperationResult.error("Session variable \'" + String.valueOf(getContext().getRecords()[0]) + "\' not found"));
+            setResult(OperationResult.error("Session variable \'" +
+                    String.valueOf(getContext().getRecords()[0]) + "\' not found"));
             return null;
         }
 

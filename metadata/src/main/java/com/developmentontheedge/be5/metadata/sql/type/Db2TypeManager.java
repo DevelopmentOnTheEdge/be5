@@ -10,8 +10,9 @@ import java.util.Set;
 
 public class Db2TypeManager extends DefaultTypeManager
 {
-    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE", "GROUP", "FROM", "TO",
-            "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "COMMENT", "START", "END", "INDEX", "DATE", "LEVEL"));
+    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE",
+            "GROUP", "FROM", "TO", "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "COMMENT",
+            "START", "END", "INDEX", "DATE", "LEVEL"));
 
     @Override
     public void correctType(SqlColumnType type)
@@ -145,7 +146,8 @@ public class Db2TypeManager extends DefaultTypeManager
     @Override
     public String getDropTableStatements(String table)
     {
-        return "BEGIN DECLARE CONTINUE HANDLER FOR SQLSTATE '42704' BEGIN END; EXECUTE IMMEDIATE 'DROP TABLE " + normalizeIdentifier(table) + "'; END;\n";
+        return "BEGIN DECLARE CONTINUE HANDLER FOR SQLSTATE '42704' BEGIN END; " +
+                "EXECUTE IMMEDIATE 'DROP TABLE " + normalizeIdentifier(table) + "'; END;\n";
     }
 
     @Override

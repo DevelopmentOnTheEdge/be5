@@ -30,8 +30,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     public static final String QUERIES = "Queries";
     private static final String REFERENCES = "References";
     static final String SCHEME = "Scheme";
-    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("type", "displayName",
-            "primaryKey", "order", "icon")));
+    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList("type", "displayName", "primaryKey", "order", "icon")));
 
     private EntityType type = null;
     private String displayName = "";
@@ -360,7 +360,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
             final Entity duplicate = module.getEntity(getName());
             if (duplicate != null)
             {
-                errors.add(new ProjectElementException(getCompletePath(), "name", "Entity with name '" + getName() + "' already exists."));
+                errors.add(new ProjectElementException(getCompletePath(), "name",
+                        "Entity with name '" + getName() + "' already exists."));
                 break;
             }
         }

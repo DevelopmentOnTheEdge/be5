@@ -96,23 +96,26 @@ public class TableBuilder
         return totalNumberOfRows;
     }
 
-    private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
-                                       List<RowModel> rows)
+    private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list,
+                                       List<ColumnModel> columns, List<RowModel> rows)
     {
         list.forEach(dps -> TableUtils.filterBeanWithRoles(dps, userInfo.getCurrentRoles()));
         for (DynamicPropertySet properties : list)
         {
             if (columns.isEmpty())
             {
-                columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils).collectColumns());
+                columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo,
+                        userAwareMeta, coreUtils).collectColumns());
             }
             rows.add(generateRow(entityName, queryName, properties));
         }
     }
 
-    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties) throws AssertionError
+    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties)
+            throws AssertionError
     {
-        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userInfo, userAwareMeta, coreUtils);
+        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties,
+                userInfo, userAwareMeta, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
         List<CellModel> processedCells = processCells(cells); // only visible cells

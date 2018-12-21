@@ -73,7 +73,8 @@ public class ConfigurationProvider
         try
         {
             //String text = Files.asCharSource(projectSource.resolve(CONFIG_FILE).toFile(), Charsets.UTF_8).read();
-            //String text = Files.asCharSource(getClass().getClassLoader().getResources(CONFIG_FILE), Charsets.UTF_8).read();
+            //String text = Files.asCharSource(getClass().getClassLoader().getResources(CONFIG_FILE),
+            // Charsets.UTF_8).read();
 
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONFIG_FILE));
 
@@ -84,9 +85,11 @@ public class ConfigurationProvider
                 return configurations;
             }
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), StandardCharsets.UTF_8)))
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(urls.get(0).openStream(), StandardCharsets.UTF_8)))
             {
-                Map<String, Object> config = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
+                Map<String, Object> config = (Map<String, Object>)
+                        ((Map<String, Object>) new Yaml().load(reader)).get("config");
                 if (config != null)
                 {
                     for (Map.Entry<String, Object> entry : config.entrySet())

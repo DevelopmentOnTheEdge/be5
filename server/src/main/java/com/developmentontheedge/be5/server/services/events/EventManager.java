@@ -114,7 +114,8 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime)
+    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params,
+                                 long startTime, long endTime)
     {
         for (Be5EventLogger listener : listeners)
         {
@@ -122,7 +123,8 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    public void servletError(String servletName, String requestUri, Map<String, ?> params,
+                             long startTime, long endTime, String exception)
     {
         for (Be5EventLogger listener : listeners)
         {

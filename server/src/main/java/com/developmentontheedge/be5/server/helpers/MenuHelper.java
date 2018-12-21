@@ -143,7 +143,8 @@ public class MenuHelper
         }
     }
 
-    private List<QueryNode> generateEntityQueries(List<Query> permittedQueries, String language, Meta meta, boolean withIds)
+    private List<QueryNode> generateEntityQueries(List<Query> permittedQueries, String language, Meta meta,
+                                                  boolean withIds)
     {
         List<OrderedQuery> queries = new ArrayList<>();
 
@@ -166,7 +167,8 @@ public class MenuHelper
                 id = new Id(permittedQuery.getEntity().getName(), permittedQuery.getName());
             }
 
-            children.add(new QueryNode(id, query.title, ActionUtils.toAction(permittedQuery), permittedQuery.isDefaultView()));
+            children.add(new QueryNode(id, query.title, ActionUtils.toAction(permittedQuery),
+                    permittedQuery.isDefaultView()));
         }
 
         return children;
@@ -238,7 +240,8 @@ public class MenuHelper
             return new RootNode(id, title, false, null, children, operations);
         }
 
-        private RootNode(Id id, String title, boolean isDefault, Action action, List<QueryNode> children, List<OperationNode> operations)
+        private RootNode(Id id, String title, boolean isDefault, Action action, List<QueryNode> children,
+                         List<OperationNode> operations)
         {
             this.id = id;
             this.title = title;

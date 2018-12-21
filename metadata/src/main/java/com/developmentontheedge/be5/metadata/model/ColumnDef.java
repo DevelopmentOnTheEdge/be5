@@ -24,7 +24,8 @@ public class ColumnDef extends TableRef
     private String defaultValue;
     private String[] oldNames = new String[0];
 
-    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("type", "canBeNull", "defaultValue")));
+    private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList("type", "canBeNull", "defaultValue")));
 
     public ColumnDef(String name, BeModelCollection<? extends ColumnDef> origin)
     {
@@ -198,7 +199,9 @@ public class ColumnDef extends TableRef
 
         if (getName().length() > Constants.MAX_ID_LENGTH)
         {
-            errors.add(new ProjectElementException(getCompletePath(), "name", "Column name is too long: " + getName().length() + " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
+            errors.add(new ProjectElementException(getCompletePath(), "name",
+                    "Column name is too long: " + getName().length() +
+                    " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
         }
 
         if (!hasReference() && getRawType() == null)
@@ -219,8 +222,8 @@ public class ColumnDef extends TableRef
         {
             if (getTable().getColumns().getCaseInsensitive(oldName) != null)
             {
-                errors.add(new ProjectElementException(getCompletePath(), "oldNames", "List of old names contains existing column name '"
-                        + oldName + "'."));
+                errors.add(new ProjectElementException(getCompletePath(), "oldNames",
+                        "List of old names contains existing column name '" + oldName + "'."));
             }
         }
         if (isAvailable())
@@ -229,7 +232,8 @@ public class ColumnDef extends TableRef
             {
                 if (!getProject().getEntityNames().contains(getTableTo()))
                 {
-                    errors.add(new ProjectElementException(getCompletePath(), "reference", "Entity not exists: " + getTableTo()));
+                    errors.add(new ProjectElementException(getCompletePath(), "reference",
+                            "Entity not exists: " + getTableTo()));
                 }
             }
         }
@@ -278,7 +282,7 @@ public class ColumnDef extends TableRef
     private boolean references(final TableRef tableRef)
     {
         return getTable().getEntityName().equals(tableRef.getTableFrom()) && getName().equals(tableRef.getColumnsFrom())
-                || getTable().getEntityName().equals(tableRef.getTableTo()) && getName().equals(tableRef.getColumnsTo());
+            || getTable().getEntityName().equals(tableRef.getTableTo()) && getName().equals(tableRef.getColumnsTo());
     }
 
     public boolean hasReference()

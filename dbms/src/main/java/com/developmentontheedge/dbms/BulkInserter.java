@@ -9,7 +9,8 @@ public class BulkInserter
 //
 //    private static final Pattern INIT_PATTERN = Pattern.compile( "INSERT INTO (\\w+)", Pattern.CASE_INSENSITIVE );
 //    private static final String[] ORACLE_TOKENS = {"SELECT ", " FROM DUAL UNION ALL SELECT ", " FROM DUAL"};
-//    private static final String[] ORACLE_ID_TOKENS = {"SELECT beIDGenerator.NEXTVAL,s.* FROM(SELECT ", " FROM DUAL UNION ALL SELECT ", " FROM DUAL) s"};
+//    private static final String[] ORACLE_ID_TOKENS = {"SELECT beIDGenerator.NEXTVAL,s.* FROM(SELECT ",
+//                                                      " FROM DUAL UNION ALL SELECT ", " FROM DUAL) s"};
 //    private static final String[] DEFAULT_TOKENS = {"VALUES(", "),(", ")"};
 //
 //    private final DbmsConnector connector;
@@ -55,7 +56,8 @@ public class BulkInserter
 //        this.delimiter = tokens[DELIMITER_INDEX];
 //        this.terminator = tokens[TERMINATOR_INDEX];
 //        this.valuesTemplate = valuesTemplate.replace( "beIDGenerator.NEXTVAL,", "" );
-//        this.firstRecordValuesTemplate = valuesTemplate.startsWith( "beIDGenerator.NEXTVAL," )?addColumnNames(this.valuesTemplate):this.valuesTemplate;
+//        this.firstRecordValuesTemplate = valuesTemplate.startsWith( "beIDGenerator.NEXTVAL," )
+//                                          ?addColumnNames(this.valuesTemplate):this.valuesTemplate;
 //        this.sb = new StringBuilder();
 //        this.log = log;
 //        this.maxLen = type == DbmsType.ORACLE ? 60000 : 20000;

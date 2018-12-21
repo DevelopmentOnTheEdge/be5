@@ -26,7 +26,8 @@ public class SelectorUtils
             boolean underscore = c == '_';
             boolean high = c >= 0xA0;
             if (alpha || underscore || high
-                    || (digit && i > 0 && (i > 1 || result.charAt(0) != '-') || (hyphen && (i != 1 || result.charAt(0) != '-'))))
+                    || (digit && i > 0 && (i > 1 || result.charAt(0) != '-')
+                    || (hyphen && (i != 1 || result.charAt(0) != '-'))))
             {
                 result.append(c);
             }
@@ -136,7 +137,8 @@ public class SelectorUtils
             boolean hyphen = c == '-';
             boolean underscore = c == '_';
             boolean high = c >= 0xA0;
-            if ((!alpha && !digit && !hyphen && !underscore && !high) || (digit && i == 0 || (i == 1 && input.charAt(0) == '-'))
+            if ((!alpha && !digit && !hyphen && !underscore && !high) || (digit && i == 0
+                    || (i == 1 && input.charAt(0) == '-'))
                     || (hyphen && i == 1 && input.charAt(0) == '-'))
                 return false;
         }
@@ -149,7 +151,8 @@ public class SelectorUtils
     }
 
     @SuppressWarnings("unchecked")
-    private static void select(List<BeModelElement> result, BeModelCollection<? extends BeModelElement> collection, SelectorRule selector)
+    private static void select(List<BeModelElement> result,
+                               BeModelCollection<? extends BeModelElement> collection, SelectorRule selector)
     {
         for (BeModelElement element : collection)
         {

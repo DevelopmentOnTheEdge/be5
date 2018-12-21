@@ -36,14 +36,19 @@ public class HashUrl
 
     public HashUrl positional(String[] values)
     {
-        return new HashUrl(StreamEx.of(components).append(values).peek(Objects::requireNonNull).toArray(String[]::new), keyValues);
+        return new HashUrl(StreamEx.of(components)
+                .append(values)
+                .peek(Objects::requireNonNull)
+                .toArray(String[]::new), keyValues);
     }
 
     public HashUrl named(String key, Object value)
     {
         Objects.requireNonNull(key, "Null key supplied");
         Objects.requireNonNull(value, () -> "Null value supplied for key " + key);
-        return new HashUrl(components, StreamEx.of(keyValues).append(key, getValue(value)).toArray(String[]::new));
+        return new HashUrl(components, StreamEx.of(keyValues)
+                .append(key, getValue(value))
+                .toArray(String[]::new));
     }
 
     private String getValue(Object value)
@@ -57,7 +62,8 @@ public class HashUrl
     {
         if (args == null)
             return this;
-        return new HashUrl(components, EntryStream.of(args).flatMap(entry -> Stream.of(entry.getKey(), getValue(entry.getValue()))).
+        return new HashUrl(components, EntryStream.of(args)
+                .flatMap(entry -> Stream.of(entry.getKey(), getValue(entry.getValue()))).
                 peek(Objects::requireNonNull).prepend(keyValues).toArray(String[]::new));
     }
 

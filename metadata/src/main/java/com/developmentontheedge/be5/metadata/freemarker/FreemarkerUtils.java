@@ -402,7 +402,8 @@ public final class FreemarkerUtils
         return new ProjectElementException(DataElementPath.create(name), property, row, column, result);
     }
 
-    public static String mergeTemplate(String name, String code, Map<String, Object> context, Configuration configuration) throws ProjectElementException
+    public static String mergeTemplate(String name, String code, Map<String, Object> context,
+                                       Configuration configuration) throws ProjectElementException
     {
         try
         {
@@ -427,7 +428,8 @@ public final class FreemarkerUtils
         }
     }
 
-    public static void mergeTemplateByPath(String name, Map<String, Object> context, Configuration configuration, Writer out) throws ProjectElementException
+    public static void mergeTemplateByPath(String name, Map<String, Object> context, Configuration configuration,
+                                           Writer out) throws ProjectElementException
     {
         try
         {
@@ -449,7 +451,8 @@ public final class FreemarkerUtils
         }
     }
 
-    public static String mergeTemplateByPath(String name, Map<String, Object> context, Configuration configuration) throws ProjectElementException
+    public static String mergeTemplateByPath(String name, Map<String, Object> context, Configuration configuration)
+            throws ProjectElementException
     {
         ResultWriter out = new ResultWriter();
         mergeTemplateByPath(name, context, configuration, out);

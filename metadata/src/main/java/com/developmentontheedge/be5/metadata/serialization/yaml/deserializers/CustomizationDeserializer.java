@@ -15,7 +15,8 @@ class CustomizationDeserializer extends FileDeserializer
     private final Module target;
     private boolean replace = false;
 
-    CustomizationDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path, final Module target) throws ReadException
+    CustomizationDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path,
+                              final Module target) throws ReadException
     {
         super(loadContext, path, true);
         this.yamlDeserializer = yamlDeserializer;

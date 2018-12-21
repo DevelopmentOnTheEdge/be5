@@ -13,7 +13,8 @@ public class OracleTypeManager extends DefaultTypeManager
     @Override
     public String getRenameColumnStatements(ColumnDef column, String newName)
     {
-        return "RENAME COLUMN " + normalizeIdentifier(column.getTable().getEntityName()) + "." + normalizeIdentifier(column.getName())
+        return "RENAME COLUMN " + normalizeIdentifier(column.getTable().getEntityName())
+                + "." + normalizeIdentifier(column.getName())
                 + " TO " + normalizeIdentifier(newName) + ";\n";
     }
 
@@ -44,11 +45,13 @@ public class OracleTypeManager extends DefaultTypeManager
     @Override
     public String getAddColumnStatements(ColumnDef column)
     {
-        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " ADD " + getColumnDefinitionClause(column) + ";\n";
+        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " ADD " + getColumnDefinitionClause(column) + ";\n";
     }
 
-    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE", "GROUP", "FROM", "TO",
-            "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "COMMENT", "START", "END", "INDEX", "DATE", "LEVEL"));
+    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE",
+            "GROUP", "FROM", "TO", "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "COMMENT",
+            "START", "END", "INDEX", "DATE", "LEVEL"));
 
     @Override
     public void correctType(SqlColumnType type)
@@ -176,7 +179,8 @@ public class OracleTypeManager extends DefaultTypeManager
         if (ColumnFunction.TRANSFORM_GENERIC.equals(function.getTransform()))
         {
             return "CREATE OR REPLACE TRIGGER " + getTriggerName(column) +
-                    "\nBEFORE INSERT OR UPDATE OF " + normalizeIdentifier(function.getColumnName()) + " ON " + normalizeIdentifier(column.getEntity().getName()) +
+                    "\nBEFORE INSERT OR UPDATE OF " + normalizeIdentifier(function.getColumnName())
+                    + " ON " + normalizeIdentifier(column.getEntity().getName()) +
                     "\nFOR EACH ROW" +
                     "\nBEGIN" +
                     "\n   :new." + normalizeIdentifier(column.getName()) + " := '" + column.getEntity().getName() +
@@ -193,7 +197,8 @@ public class OracleTypeManager extends DefaultTypeManager
         String name = column.getEntity().getName() + "_" + column.getName();
         if (maxTriggerNameLength < (name.length() + postfix.length()))
         {
-            name = column.getEntity().getName().substring(0, 1) + Integer.toHexString(column.getEntity().getName().hashCode()) + "_"
+            name = column.getEntity().getName().substring(0, 1) +
+                    Integer.toHexString(column.getEntity().getName().hashCode()) + "_"
                     + column.getName().substring(0, 1) + Integer.toHexString(column.getName().hashCode());
         }
         return normalizeIdentifier(name + postfix);

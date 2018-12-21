@@ -23,7 +23,8 @@ public final class ActionUtils
         }
         else if (isViewBlob(query))
         {
-            return Action.open(new HashUrl("api", "download", query.getEntity().getName(), query.getName()).toString());
+            return Action.open(new HashUrl("api", "download",
+                    query.getEntity().getName(), query.getName()).toString());
         }
         else if (isAction(query))
         {
@@ -138,24 +139,28 @@ public final class ActionUtils
 
     public static boolean isStaticPage(Query query)
     {
-        return query.getType() == QueryType.STATIC && (query.getQuery().endsWith(".be") || query.getQuery().startsWith("static/"));
+        return query.getType() == QueryType.STATIC &&
+                (query.getQuery().endsWith(".be") || query.getQuery().startsWith("static/"));
     }
 
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");
 
     private static boolean isExternalRef(Query query)
     {
-        return query.getType() == QueryType.STATIC && (query.getQuery().startsWith("http://") || query.getQuery().startsWith("https://"));
+        return query.getType() == QueryType.STATIC &&
+                (query.getQuery().startsWith("http://") || query.getQuery().startsWith("https://"));
     }
 
     private static boolean isAction(Query query)
     {
-        return query.getType() == QueryType.STATIC && ACTION_PATTERN.matcher(query.getQuery()).matches();
+        return query.getType() == QueryType.STATIC &&
+                ACTION_PATTERN.matcher(query.getQuery()).matches();
     }
 
     private static boolean isViewBlob(Query query)
     {
-        return query.getType() == QueryType.STATIC && (query.getQuery() != null && query.getQuery().startsWith("viewBlob?"));
+        return query.getType() == QueryType.STATIC &&
+                (query.getQuery() != null && query.getQuery().startsWith("viewBlob?"));
     }
 
 }

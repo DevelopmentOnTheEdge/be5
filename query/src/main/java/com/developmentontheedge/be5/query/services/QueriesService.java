@@ -70,7 +70,8 @@ public class QueriesService
         return stockArr;
     }
 
-//    public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName, String placeholder)
+//    public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName,
+// String placeholder)
 //    {
 //        ImmutableList.Builder<Option> options = ImmutableList.builder();
 //        options.add(new Option("", placeholder));
@@ -191,7 +192,10 @@ public class QueriesService
     public String[][] localizeTags(String tableName, Map<String, String> tags)
     {
         String[][] stockArr = new String[tags.size()][2];
-        tags.entrySet().stream().map(tag -> new String[]{tag.getKey(), tag.getValue()}).collect(Collectors.toList()).toArray(stockArr);
+        tags.entrySet().stream()
+                .map(tag -> new String[]{tag.getKey(), tag.getValue()})
+                .collect(Collectors.toList())
+                .toArray(stockArr);
         return localizeTags(tableName, stockArr);
     }
 
@@ -225,7 +229,8 @@ public class QueriesService
     public String[][] getTagsFromEnum(ColumnDef columnDef)
     {
         String tableName = columnDef.getEntity().getName();
-        return tagsCache.get(tableName + "getTagsFromEnum" + columnDef.getName() + userInfoProvider.get().getLanguage(), k ->
+        String key = tableName + "getTagsFromEnum" + columnDef.getName() + userInfoProvider.get().getLanguage();
+        return tagsCache.get(key, k ->
         {
             String[] enumValues = columnDef.getType().getEnumValues();
 

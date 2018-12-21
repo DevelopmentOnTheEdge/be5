@@ -13,8 +13,9 @@ import java.util.Set;
 
 public class PostgresTypeManager extends DefaultTypeManager
 {
-    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE", "GROUP", "FROM", "TO",
-            "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "START", "END", "INDEX", "DATE", "LEVEL", "COLUMN"));
+    private static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("SELECT", "KEY", "ORDER", "TABLE", "WHERE",
+            "GROUP", "FROM", "TO", "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT",
+            "START", "END", "INDEX", "DATE", "LEVEL", "COLUMN"));
 
     @Override
     public void correctType(SqlColumnType type)
@@ -98,7 +99,8 @@ public class PostgresTypeManager extends DefaultTypeManager
     @Override
     public String getColumnDefinitionClause(ColumnDef column)
     {
-        if (column.isAutoIncrement() && column.isPrimaryKey() && column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY))
+        if (column.isAutoIncrement() && column.isPrimaryKey() &&
+                column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY))
             return normalizeIdentifier(column.getName()) + " BIGSERIAL PRIMARY KEY";
         return super.getColumnDefinitionClause(column);
     }
@@ -135,21 +137,25 @@ public class PostgresTypeManager extends DefaultTypeManager
     {
         String dropColumnStatements = super.getDropColumnStatements(column);
         if (column.isAutoIncrement())
-            dropColumnStatements += "DROP SEQUENCE IF EXISTS " + getSequenceName(column.getEntity().getName(), column.getName()) + ";\n";
+            dropColumnStatements += "DROP SEQUENCE IF EXISTS " +
+                    getSequenceName(column.getEntity().getName(), column.getName()) + ";\n";
         if (column.isPrimaryKey())
-            dropColumnStatements += getDropIndexClause(column.getEntity().getName() + "_pkey", column.getEntity().getName()) + ";\n";
+            dropColumnStatements += getDropIndexClause(column.getEntity().getName() + "_pkey",
+                    column.getEntity().getName()) + ";\n";
         return dropColumnStatements;
     }
 
     @Override
     public String getAddColumnStatements(ColumnDef column)
     {
-        if (column.isAutoIncrement() && column.isPrimaryKey() && column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY))
+        if (column.isAutoIncrement() && column.isPrimaryKey() &&
+                column.getType().getTypeName().equals(SqlColumnType.TYPE_KEY))
         {
             String seq = getSequenceName(column.getEntity().getName(), column.getName());
-            return "DROP SEQUENCE IF EXISTS " + seq + ";\nCREATE SEQUENCE " + seq + ";\nALTER TABLE "
-                    + normalizeIdentifier(column.getTable().getEntityName()) + " ADD COLUMN " + normalizeIdentifier(column.getName())
-                    + " BIGINT DEFAULT nextval('" + seq + "'::regclass) PRIMARY KEY;\n";
+            return "DROP SEQUENCE IF EXISTS " + seq + ";\nCREATE SEQUENCE " + seq +
+                    ";\nALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                    " ADD COLUMN " + normalizeIdentifier(column.getName()) +
+                    " BIGINT DEFAULT nextval('" + seq + "'::regclass) PRIMARY KEY;\n";
         }
         return super.getAddColumnStatements(column);
     }
@@ -157,7 +163,8 @@ public class PostgresTypeManager extends DefaultTypeManager
     @Override
     public String getCreateIndexClause(IndexDef indexDef)
     {
-        Optional<IndexColumnDef> col = indexDef.stream().collect(MoreCollectors.onlyOne()).filter(c -> !c.isFunctional());
+        Optional<IndexColumnDef> col = indexDef.stream().collect(MoreCollectors.onlyOne())
+                .filter(c -> !c.isFunctional());
         if (col.isPresent())
         {
             ColumnDef columnDef = indexDef.getTable().getColumns().get(col.get().getName());
@@ -179,6 +186,4 @@ public class PostgresTypeManager extends DefaultTypeManager
         }
         return super.getCreateIndexClause(indexDef);
     }
-
-
 }

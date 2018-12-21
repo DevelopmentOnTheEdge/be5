@@ -109,7 +109,8 @@ public class MassChange extends BeModelElementSupport
                     realData = new HashMap<>(data);
                     realData.put("type", oldOperation.getType());
                 }
-                Operation newOperation = YamlDeserializer.readOperation(loadContext, oldOperation.getName(), realData, oldOperation.getEntity());
+                Operation newOperation = YamlDeserializer.
+                        readOperation(loadContext, oldOperation.getName(), realData, oldOperation.getEntity());
                 DataElementUtils.saveQuiet(newOperation);
                 newOperation.merge(oldOperation, false, true);
                 newOperation.setOriginModuleName(oldOperation.getOriginModuleName());
@@ -124,7 +125,8 @@ public class MassChange extends BeModelElementSupport
                     realData = new HashMap<>(data);
                     realData.put("type", oldEntity.getType().getSqlName());
                 }
-                Entity newEntity = YamlDeserializer.readEntity(loadContext, oldEntity.getName(), realData, oldEntity.getModule());
+                Entity newEntity = YamlDeserializer.
+                        readEntity(loadContext, oldEntity.getName(), realData, oldEntity.getModule());
                 for (EntityItem q : newEntity.getQueries())
                     q.setOriginModuleName(oldEntity.getModule().getName());
                 for (EntityItem o : newEntity.getOperations())
@@ -134,7 +136,8 @@ public class MassChange extends BeModelElementSupport
             }
             else
             {
-                loadContext.addWarning(new ReadException(element, null, "Mass change is not supported for type " + element.getClass().getSimpleName()));
+                loadContext.addWarning(new ReadException(element, null,
+                        "Mass change is not supported for type " + element.getClass().getSimpleName()));
                 continue;
             }
             changedElements.add(element);

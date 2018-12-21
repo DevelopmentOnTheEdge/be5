@@ -17,7 +17,8 @@ public class SecurityCollection extends BeVectorCollection<BeModelElement>
     {
         super(name, BeModelElement.class, parent, true);
         DataElementUtils.saveQuiet(new BeVectorCollection<>(ROLES, Role.class, this).propagateCodeChange());
-        BeVectorCollection<RoleGroup> roleGroups = new BeVectorCollection<>(ROLE_GROUPS, RoleGroup.class, this).propagateCodeChange();
+        BeVectorCollection<RoleGroup> roleGroups = new BeVectorCollection<>(ROLE_GROUPS, RoleGroup.class, this)
+                .propagateCodeChange();
         DataElementUtils.saveQuiet(roleGroups);
         DataElementUtils.saveQuiet(new SpecialRoleGroup(SpecialRoleGroup.ALL_ROLES_GROUP, roleGroups));
         DataElementUtils.saveQuiet(new SpecialRoleGroup(SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, roleGroups));

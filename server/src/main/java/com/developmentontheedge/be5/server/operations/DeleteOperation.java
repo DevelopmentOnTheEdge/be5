@@ -64,13 +64,15 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     {
         int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.getRecords());
 
-        out.append("" + updateCount + " " + ("records were deleted from") + " <i>" + getInfo().getEntityName() + "</i><br />");
+        out.append("" + updateCount + " " + ("records were deleted from") +
+                " <i>" + getInfo().getEntityName() + "</i><br />");
 
         List<TableReference> collectionRefs = meta.getTableReferences(COLLECTION);
 
         for (TableReference reference : collectionRefs)
         {
-            if (getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
+            if (getInfo().getEntityName().equals(reference.getTableTo())
+                    && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
             {
                 int updateCount1 = database.getEntity(reference.getTableFrom())
                         .removeWhereColumnIn(reference.getColumnsFrom(), context.getRecords());
@@ -79,7 +81,8 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                 {
                     //todo localizedMessage
                     out.append("" + updateCount1 +
-                            " " + ("records were deleted from the collection") + " <i>" + reference.getTableFrom() + "</i><br />");
+                            " " + ("records were deleted from the collection") +
+                            " <i>" + reference.getTableFrom() + "</i><br />");
                 }
             }
         }
@@ -99,7 +102,8 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                     if (updateCount1 > 0)
                     {
                         out.append("" + updateCount1 +
-                                " " + ("records were deleted from the generic collection") + " <i>" + reference.getTableFrom() + "</i><br />");
+                                " " + ("records were deleted from the generic collection") +
+                                " <i>" + reference.getTableFrom() + "</i><br />");
                     }
                 }
             }

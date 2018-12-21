@@ -17,7 +17,8 @@ public class StaticPagesDeserializer extends FileDeserializer
     private YamlDeserializer yamlDeserializer;
     private final BeModelCollection<LanguageStaticPages> target;
 
-    StaticPagesDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path, final BeModelCollection<LanguageStaticPages> target) throws ReadException
+    StaticPagesDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path,
+                            final BeModelCollection<LanguageStaticPages> target) throws ReadException
     {
         super(loadContext, path, true);
         this.yamlDeserializer = yamlDeserializer;

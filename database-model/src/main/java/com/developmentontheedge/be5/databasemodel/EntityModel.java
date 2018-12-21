@@ -244,7 +244,8 @@ public interface EntityModel<T>
 //     * Spreads collection and collect elements from function to list.<br>
 //     * For example:<br>
 //     * <code>List<DynamicPropertySet> list =
-//     *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null, Collections.<String, Object>.emptyMap() );
+//     *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null,
+//                  Collections.<String, Object>.emptyMap() );
 //     * </code>
 //     * @param conditions condition values
 //     * @param lambda handler

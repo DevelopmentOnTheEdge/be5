@@ -41,8 +41,10 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
     public TableDef(Entity entity)
     {
         super(Entity.SCHEME, BeModelElement.class, entity);
-        DataElementUtils.saveQuiet(new BeCaseInsensitiveCollection<>(COLUMN_COLLECTION, ColumnDef.class, this, true).propagateCodeChange());
-        DataElementUtils.saveQuiet(new BeCaseInsensitiveCollection<>(INDEX_COLLECTION, IndexDef.class, this, true).propagateCodeChange());
+        DataElementUtils.saveQuiet(new BeCaseInsensitiveCollection<>(COLUMN_COLLECTION,
+                ColumnDef.class, this, true).propagateCodeChange());
+        DataElementUtils.saveQuiet(new BeCaseInsensitiveCollection<>(INDEX_COLLECTION,
+                IndexDef.class, this, true).propagateCodeChange());
         propagateCodeChange();
     }
 
@@ -192,7 +194,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             String value = getStartId();
             if (value != null)
-                sb.append(typeManager.getStartingIncrementDefinition(getEntityName(), autoincrementColumn.getName(), Long.parseLong(value)));
+                sb.append(typeManager.getStartingIncrementDefinition(getEntityName(), autoincrementColumn.getName(),
+                        Long.parseLong(value)));
         }
         sb.append(triggers);
         List<String> indexDdls = new ArrayList<>();
@@ -227,7 +230,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             return indicesDiff;
         }
-        if (getModule().getName().equals(getProject().getProjectOrigin()) && sql != null && sql.isEmpty(getEntityName()))
+        if (getModule().getName().equals(getProject().getProjectOrigin()) && sql != null
+                && sql.isEmpty(getEntityName()))
         {
             return def.getDropDdl() + getCreateDdl();
         }
@@ -290,7 +294,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         return sb.toString();
     }
 
-    private String getColumnsDiff(TableDef def, DbmsTypeManager typeManager, boolean dangerousOnly, SqlExecutor sql) throws ExtendedSqlException
+    private String getColumnsDiff(TableDef def, DbmsTypeManager typeManager, boolean dangerousOnly, SqlExecutor sql)
+            throws ExtendedSqlException
     {
         StringBuilder sb = new StringBuilder();
         Map<String, ColumnDef> oldColumnNames = new HashMap<>();
@@ -317,7 +322,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         if (!hasOldColumn && !oldColumnNames.isEmpty())
             return null;
 
-        getColumnsDiffFromOldColumns(def, typeManager, dangerousOnly, sb, oldColumnNames, preservedColumns, knownOldNames);
+        getColumnsDiffFromOldColumns(def, typeManager, dangerousOnly, sb, oldColumnNames,
+                preservedColumns, knownOldNames);
 
         getColumnsDiffFromCurrentColumns(typeManager, dangerousOnly, sql, sb, preservedColumns);
         // TODO: preserve column order
@@ -325,7 +331,9 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         return sb.toString();
     }
 
-    private void getColumnsDiffFromOldColumns(TableDef def, DbmsTypeManager typeManager, boolean dangerousOnly, StringBuilder sb, Map<String, ColumnDef> oldColumnNames, Map<String, ColumnDef> preservedColumns, Map<String, ColumnDef> knownOldNames)
+    private void getColumnsDiffFromOldColumns(TableDef def, DbmsTypeManager typeManager, boolean dangerousOnly,
+          StringBuilder sb, Map<String, ColumnDef> oldColumnNames, Map<String, ColumnDef> preservedColumns,
+                                              Map<String, ColumnDef> knownOldNames)
     {
         for (ColumnDef oldColumn : oldColumnNames.values())
         {
@@ -353,7 +361,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
     }
 
-    private void getColumnsDiffFromCurrentColumns(DbmsTypeManager typeManager, boolean dangerousOnly, SqlExecutor sql, StringBuilder sb, Map<String, ColumnDef> preservedColumns) throws ExtendedSqlException
+    private void getColumnsDiffFromCurrentColumns(DbmsTypeManager typeManager, boolean dangerousOnly, SqlExecutor sql,
+                            StringBuilder sb, Map<String, ColumnDef> preservedColumns) throws ExtendedSqlException
     {
         for (ColumnDef column : getColumns().getAvailableElements())
         {
@@ -362,8 +371,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             ColumnDef oldColumn = preservedColumns.get(columnName);
             if (oldColumn != null)
             {
-                ColumnDef oldColumnNewName = column.getName().equals(oldColumn.getName()) ? oldColumn : (ColumnDef) oldColumn.clone(
-                        oldColumn.getOrigin(), column.getName());
+                ColumnDef oldColumnNewName = column.getName().equals(oldColumn.getName()) ? oldColumn :
+                        (ColumnDef) oldColumn.clone(oldColumn.getOrigin(), column.getName());
                 String oldColumnDef = typeManager.getColumnDefinitionClause(oldColumnNewName);
                 String oldTriggers = typeManager.getColumnTriggerDefinition(oldColumnNewName);
                 String newTriggers = typeManager.getColumnTriggerDefinition(column);
@@ -376,11 +385,14 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                     continue;
                 if (getProject().getDebugStream() != null)
                 {
-                    getProject().getDebugStream().println("Table " + getEntityName() + ": column " + column.getName() + " differs in DDL");
+                    getProject().getDebugStream().println("Table " + getEntityName() + ": column " +
+                            column.getName() + " differs in DDL");
                     getProject().getDebugStream().println("- old: " + oldColumnDef);
                     getProject().getDebugStream().println("- new: " + columnDef);
                 }
-                if (isSafeTypeUpdate(oldColumn, column, typeManager, sql) && oldColumn.isPrimaryKey() == column.isPrimaryKey() && oldColumn.isAutoIncrement() == column.isAutoIncrement())
+                if (isSafeTypeUpdate(oldColumn, column, typeManager, sql)
+                        && oldColumn.isPrimaryKey() == column.isPrimaryKey()
+                        && oldColumn.isAutoIncrement() == column.isAutoIncrement())
                 {
                     if (!dangerousOnly)
                         sb.append(typeManager.getAlterColumnStatements(column, oldColumnNewName));
@@ -428,7 +440,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
     }
 
-    private void addDropColumnStatements(DbmsTypeManager typeManager, ColumnDef oldColumn, StringBuilder sb, boolean dangerousOnly)
+    private void addDropColumnStatements(DbmsTypeManager typeManager, ColumnDef oldColumn, StringBuilder sb,
+                                         boolean dangerousOnly)
     {
         if (!dangerousOnly)
         {
@@ -438,14 +451,16 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             if (!dangerousOnly)
             {
-                sb.append(typeManager.getDropIndexClause(index.getName(), oldColumn.getEntity().getName())).append(";\n");
+                sb.append(typeManager.getDropIndexClause(index.getName(),
+                        oldColumn.getEntity().getName())).append(";\n");
             }
             DataElementUtils.remove(index);
         }
         sb.append(typeManager.getDropColumnStatements(oldColumn));
     }
 
-    private boolean isSafeTypeUpdate(ColumnDef oldColumn, ColumnDef column, DbmsTypeManager typeManager, SqlExecutor sql) throws ExtendedSqlException
+    private boolean isSafeTypeUpdate(ColumnDef oldColumn, ColumnDef column, DbmsTypeManager typeManager,
+                                     SqlExecutor sql) throws ExtendedSqlException
     {
         SqlColumnType oldType = oldColumn.getType();
         SqlColumnType type = column.getType();
@@ -457,7 +472,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             if (type.getSize() >= oldType.getSize())
                 return true;
-            return sql != null && !sql.hasResult("sql.select.longer", typeManager.normalizeIdentifier(getEntityName()),
+            return sql != null && !sql.hasResult("sql.select.longer",
+                    typeManager.normalizeIdentifier(getEntityName()),
                     typeManager.normalizeIdentifier(oldColumn.getName()), type.getSize());
         }
 
@@ -469,13 +485,16 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
 
         }
         // Adding new variants for ENUM column
-        if ((oldType.getTypeName().equals(TYPE_ENUM) || oldType.getTypeName().equals(TYPE_BOOL) || oldType.getTypeName().equals(TYPE_VARCHAR)) &&
+        if ((oldType.getTypeName().equals(TYPE_ENUM) || oldType.getTypeName().equals(TYPE_BOOL)
+                || oldType.getTypeName().equals(TYPE_VARCHAR)) &&
                 (type.getTypeName().equals(TYPE_ENUM) || type.getTypeName().equals(TYPE_BOOL)))
         {
             List<String> newValues = Arrays.asList(type.getEnumValues());
-            if (!oldType.getTypeName().equals(TYPE_VARCHAR) && newValues.containsAll(Arrays.asList(oldType.getEnumValues())))
+            if (!oldType.getTypeName().equals(TYPE_VARCHAR)
+                    && newValues.containsAll(Arrays.asList(oldType.getEnumValues())))
                 return true;
-            return sql != null && !sql.hasResult("sql.select.not.in.range", typeManager.normalizeIdentifier(getEntityName()),
+            return sql != null && !sql.hasResult("sql.select.not.in.range",
+                    typeManager.normalizeIdentifier(getEntityName()),
                     typeManager.normalizeIdentifier(oldColumn.getName()), MetadataUtils.toInClause(newValues));
         }
 
@@ -490,7 +509,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             }
             if (type.getSize() >= len)
                 return true;
-            return sql != null && !sql.hasResult("sql.select.longer", typeManager.normalizeIdentifier(getEntityName()),
+            return sql != null && !sql.hasResult("sql.select.longer",
+                    typeManager.normalizeIdentifier(getEntityName()),
                     typeManager.normalizeIdentifier(oldColumn.getName()), type.getSize());
         }
 
@@ -518,7 +538,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
         catch (Exception e1)
         {
-            errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Unable to calculate start value"));
+            errors.add(new ProjectElementException(getCompletePath(), "startIdVariable",
+                    "Unable to calculate start value"));
         }
         if (startValue != null)
         {
@@ -528,8 +549,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             }
             catch (NumberFormatException e)
             {
-                errors.add(new ProjectElementException(getCompletePath(), "startIdVariable", "Invalid start id value (must be number): "
-                        + startValue));
+                errors.add(new ProjectElementException(getCompletePath(), "startIdVariable",
+                        "Invalid start id value (must be number): " + startValue));
             }
         }
         return errors;
@@ -621,7 +642,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             {
                 if (index.isFunctional())
                 {
-                    warnings.add(new ProjectElementException(index, "Functional indices are not supported by " + rdbms));
+                    warnings.add(new ProjectElementException(index,
+                            "Functional indices are not supported by " + rdbms));
                 }
             }
         }
@@ -631,7 +653,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             {
                 if (index.getName().length() > Rdbms.DB2_INDEX_LENGTH)
                 {
-                    warnings.add(new ProjectElementException(index, "Index name too long for DB2 (" + index.getName().length() + ">"
+                    warnings.add(new ProjectElementException(index,
+                            "Index name too long for DB2 (" + index.getName().length() + ">"
                             + Rdbms.DB2_INDEX_LENGTH + "); will be skipped"));
                 }
             }
@@ -641,7 +664,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             ColumnDef autoincrementColumn = getAutoincrementColumn();
             if (autoincrementColumn != null && getStartId() != null)
             {
-                warnings.add(new ProjectElementException(autoincrementColumn, "Custom starting autoincrement value is not supported by "
+                warnings.add(new ProjectElementException(autoincrementColumn,
+                        "Custom starting autoincrement value is not supported by "
                         + rdbms));
             }
         }
@@ -649,7 +673,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         {
             if (def.getType().getTypeName().equals(TYPE_UNKNOWN))
             {
-                warnings.add(new ProjectElementException(def, "Cannot determine column type: probably it references to invalid table or column"));
+                warnings.add(new ProjectElementException(def,
+                        "Cannot determine column type: probably it references to invalid table or column"));
             }
         }
         for (IndexDef def : getIndices().getAvailableElements())

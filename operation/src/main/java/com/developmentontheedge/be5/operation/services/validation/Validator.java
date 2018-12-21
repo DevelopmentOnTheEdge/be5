@@ -101,7 +101,8 @@ public class Validator
             if (!(property.getValue() instanceof Object[]))
             {
                 setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
-                throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST)" + toStringProperty(property));
+                throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST)" +
+                        toStringProperty(property));
             }
 
             Object[] values = (Object[]) property.getValue();
@@ -333,7 +334,8 @@ public class Validator
 //        String value;
 //        if(property.getValue() != null)
 //        {
-//            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : property.getValue().toString();
+//            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) :
+// property.getValue().toString();
 //            value += " (" + property.getValue().getClass().getSimpleName() + ")";
 //        }
 //        else

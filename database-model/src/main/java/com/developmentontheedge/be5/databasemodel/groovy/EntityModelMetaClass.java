@@ -57,7 +57,8 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //    }
 
 //    @Experimental( comment = "Под вопросом имя метода" )
-//    public static Object runOperation( EntityModel self, MessageHandler output, String opName, Closure closure ) throws Exception
+//    public static Object runOperation( EntityModel self, MessageHandler output, String opName, Closure closure )
+// throws Exception
 //    {
 //        OperationModel operation = self.getOperation( opName );
 //        //operation.setOut( output );

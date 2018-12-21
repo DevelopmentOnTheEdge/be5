@@ -25,9 +25,11 @@ import java.lang.reflect.Type;
  * </pre>
  * </p>
  * <p>Any way your class implements <code>{@code Configurable<MyConfiguration>}</code>,
- * and the <code>MyConfiguration</code> will be created and filled automatically, then the <code>void configure(MyConfiguration config)</code> will be called.
+ * and the <code>MyConfiguration</code> will be created and filled automatically,
+ * then the <code>void configure(MyConfiguration config)</code> will be called.
  * It is called after newInstance and injectAnnotatedFields
- * or right after creation of the service. The concrete configuration will be parsed with Gson, so it can contain strings, numbers, lists, maps, your POJO classes, etc.
+ * or right after creation of the service. The concrete configuration will be parsed with Gson,
+ * so it can contain strings, numbers, lists, maps, your POJO classes, etc.
  * </p>
  *
  * @author asko

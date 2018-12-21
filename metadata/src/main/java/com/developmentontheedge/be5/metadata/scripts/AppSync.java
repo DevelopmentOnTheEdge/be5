@@ -74,7 +74,8 @@ public class AppSync extends ScriptSupport<AppSync>
             {
                 be5Project.getDebugStream().println("Modules and extras for " + be5Project.getName() + ":");
                 be5Project.allModules()
-                        .map(m -> "- " + m.getName() + ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())))
+                        .map(m -> "- " + m.getName() +
+                                ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())))
                         .forEach(be5Project.getDebugStream()::println);
             }
 
@@ -111,7 +112,7 @@ public class AppSync extends ScriptSupport<AppSync>
             checkSynchronizationStatus();
             logger.setOperationName("Finished");
         }
-        catch (FreemarkerSqlException | ExtendedSqlException | SQLException e) //ReadException | ProjectLoadException | SQLException e )
+        catch (FreemarkerSqlException | ExtendedSqlException | SQLException e)
         {
             if (debug)
                 throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
@@ -143,7 +144,8 @@ public class AppSync extends ScriptSupport<AppSync>
 /*        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
         if(!warnings.isEmpty())
         {
-            logger.error( "Synchronization of " + databaseSynchronizer.getProject().getName()+" produced "+warnings.size()+" warning(s):" );
+            logger.error( "Synchronization of " + databaseSynchronizer.getProject().getName()+
+            " produced "+warnings.size()+" warning(s):" );
             for(ProjectElementException warning : warnings)
             {
                 displayError( warning );
@@ -183,7 +185,8 @@ public class AppSync extends ScriptSupport<AppSync>
         {
             if (!warnings.isEmpty())
             {
-                logger.error(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString());
+                logger.error(warnings.size() + " warning(s) during loading the project from " +
+                        sqlExecutor.getConnector().getConnectString());
                 Collections.sort(warnings);
                 for (String warning : warnings)
                 {
@@ -198,7 +201,8 @@ public class AppSync extends ScriptSupport<AppSync>
     private void createEntities()
     {
         Rdbms databaseSystem = DatabaseUtils.getRdbms(connector);
-        DbmsTypeManager typeManager = databaseSystem == null ? new DefaultTypeManager() : databaseSystem.getTypeManager();
+        DbmsTypeManager typeManager = databaseSystem == null ?
+                new DefaultTypeManager() : databaseSystem.getTypeManager();
         boolean casePreserved = typeManager.normalizeIdentifierCase("aA").equals("aA");
 
         entities = new ArrayList<>();
@@ -232,7 +236,8 @@ public class AppSync extends ScriptSupport<AppSync>
                 {
                     column.setDefaultValue(defaultValue);
                 }
-                if (column.isPrimaryKey() && typeManager.getKeyType().equals(typeManager.getTypeClause(column.getType())))
+                if (column.isPrimaryKey() && typeManager.getKeyType().equals(
+                        typeManager.getTypeClause(column.getType())))
                 {
                     column.getType().setTypeName(SqlColumnType.TYPE_KEY);
                 }
@@ -259,8 +264,8 @@ public class AppSync extends ScriptSupport<AppSync>
                         {
                             if (debug)
                             {
-                                warnings.add("Unsupported functional index found: " + index.getName() + " (problem is here: "
-                                        + indexCol + "); skipped");
+                                warnings.add("Unsupported functional index found: " + index.getName() +
+                                        " (problem is here: " + indexCol + "); skipped");
                             }
                             continue INDEX;
                         }
@@ -498,7 +503,8 @@ public class AppSync extends ScriptSupport<AppSync>
             ColumnDef orphanPk = orphanDdl.getColumns().getCaseInsensitive(pk.getName());
             if (orphanPk != null)
             {
-                orphanDdl.getIndicesUsingColumn(orphanPk.getName()).stream().filter(idx -> idx.getSize() == 1 && idx.isUnique())
+                orphanDdl.getIndicesUsingColumn(orphanPk.getName()).stream().
+                        filter(idx -> idx.getSize() == 1 && idx.isUnique())
                         .findFirst().ifPresent(idx -> {
                     // Remove primary key index
                     DataElementUtils.remove(idx);
@@ -537,9 +543,11 @@ public class AppSync extends ScriptSupport<AppSync>
 //        }
 //
 //        // Map indexes as clone indexes may have different names
-//        Function<? super IndexDef, ? extends List<String>> classifier = indexDef -> indexDef.stream().map( IndexColumnDef::getDefinition )
+//        Function<? super IndexDef, ? extends List<String>> classifier =
+// indexDef -> indexDef.stream().map( IndexColumnDef::getDefinition )
 //                .toList();
-//        Map<List<String>, Deque<IndexDef>> ddlMap = cloneDdl.getIndices().stream().groupingTo( classifier, ArrayDeque::new );
+//        Map<List<String>, Deque<IndexDef>> ddlMap = cloneDdl.getIndices().stream()
+// .groupingTo( classifier, ArrayDeque::new );
 //        for ( IndexDef indexDef : mainDdl.getIndices().stream().toList() )
 //        {
 //            List<String> key = classifier.apply( indexDef );

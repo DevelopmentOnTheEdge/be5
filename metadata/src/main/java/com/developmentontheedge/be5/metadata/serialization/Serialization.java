@@ -173,7 +173,8 @@ public class Serialization
 //        Objects.requireNonNull( proj.getLocation(), "Project location is null (project name is "+proj.getName()+")" );
 //        if(!canBeLoaded( proj.getLocation() ))
 //        {
-//            throw new IllegalArgumentException( "Project "+proj.getName()+" cannot be loaded from "+proj.getLocation() );
+//            throw new IllegalArgumentException( "Project "+proj.getName()+" cannot be loaded from
+// "+proj.getLocation() );
 //        }
 //    }
 //
@@ -197,7 +198,8 @@ public class Serialization
      * @param fuseTemplates whether to fuse templates into entities (useful for modules loading)
      * @see Serialization#canBeLoaded(Path)
      */
-    public static Project load(final Path root, final boolean fuseTemplates, final LoadContext loadContext) throws ProjectLoadException
+    public static Project load(final Path root, final boolean fuseTemplates, final LoadContext loadContext)
+            throws ProjectLoadException
     {
         Objects.requireNonNull(root);
 
@@ -205,7 +207,8 @@ public class Serialization
 
         try
         {
-            return new YamlDeserializer(loadContext == null ? new LoadContext() : loadContext, fuseTemplates).readProject(root);
+            return new YamlDeserializer(loadContext == null ? new LoadContext() : loadContext, fuseTemplates)
+                    .readProject(root);
         }
         catch (final ReadException e)
         {
@@ -233,7 +236,8 @@ public class Serialization
 //        }
 //    }
 //
-//    public static LanguageLocalizations reloadLocalization( final Path file, final Localizations localizations ) throws ReadException
+//    public static LanguageLocalizations reloadLocalization( final Path file, final Localizations localizations )
+// throws ReadException
 //    {
 //        checkProject( localizations.getProject() );
 //
@@ -281,7 +285,8 @@ public class Serialization
 //        }
 //    }
 //
-//    public static BeConnectionProfiles reloadConnectionProfiles( final Path file, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
+//    public static BeConnectionProfiles reloadConnectionProfiles( final Path file, final BeConnectionProfileType type,
+// final BeConnectionProfilesRoot target ) throws ReadException
 //    {
 //        checkProject( target.getProject() );
 //

@@ -5,7 +5,8 @@ import com.developmentontheedge.beans.annot.PropertyName;
 public abstract class SourceFileOperationExtender extends OperationExtender
 {
     protected String namespace;
-    private String fileName = getOperation().getEntity().getName() + " - " + getOperation().getName() + " - " + getName() + getFileExtension();
+    private String fileName = getOperation().getEntity().getName() + " - " +
+            getOperation().getName() + " - " + getName() + getFileExtension();
     private SourceFile file;
 
     public abstract String getFileExtension();

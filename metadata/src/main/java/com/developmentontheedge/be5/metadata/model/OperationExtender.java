@@ -85,7 +85,8 @@ public class OperationExtender extends BeModelElementSupport
     @Override
     public boolean isCustomized()
     {
-        return !getOriginModuleName().equals(getModule().getName()) && getOriginModuleName().equals(getProject().getProjectOrigin());
+        return !getOriginModuleName().equals(getModule().getName()) &&
+                getOriginModuleName().equals(getProject().getProjectOrigin());
     }
 
     @Override

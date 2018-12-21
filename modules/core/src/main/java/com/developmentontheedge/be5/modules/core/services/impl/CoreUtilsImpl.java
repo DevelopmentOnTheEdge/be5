@@ -40,7 +40,8 @@ public class CoreUtilsImpl implements CoreUtils
     }
 
     /**
-     * This method is working like calling method {@link #getSystemSettingInSection(String, String, String) getSystemSettingInSection}
+     * This method is working like calling method
+     * {@link #getSystemSettingInSection(String, String, String) getSystemSettingInSection}
      * with parameter defValue = null
      *
      * @param section system settings section name

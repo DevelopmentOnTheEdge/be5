@@ -10,7 +10,8 @@ public class TableOperationPresentation
     public final boolean clientSide;
     public final String action;
 
-    public TableOperationPresentation(String name, String title, String visibleWhen, boolean requiresConfirmation, boolean clientSide, String action)
+    public TableOperationPresentation(String name, String title, String visibleWhen, boolean requiresConfirmation,
+                                      boolean clientSide, String action)
     {
         this.name = name;
         this.title = title;

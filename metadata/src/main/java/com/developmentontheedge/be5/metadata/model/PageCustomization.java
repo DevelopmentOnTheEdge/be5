@@ -36,11 +36,24 @@ public class PageCustomization extends BeModelElementSupport implements Template
     public static final String DOMAIN_STATIC_PAGE_HEADER = "static_page.header";
     public static final String DOMAIN_STATIC_PAGE_FOOTER = "static_page.footer";
 
-    private static final String[] MODULE_DOMAIN_LIST = new String[]{DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER, DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER, DOMAIN_PRINT, DOMAIN_PRINT_HEADER, DOMAIN_PRINT_FOOTER, DOMAIN_INDEX_HEADER, DOMAIN_INDEX_FOOTER, DOMAIN_INDEX};
-    private static final String[] ENTITY_DOMAIN_LIST = new String[]{DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER, DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER};
-    private static final String[] QUERY_DOMAIN_LIST = new String[]{DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER, DOMAIN_PRINT, DOMAIN_PRINT_HEADER, DOMAIN_PRINT_FOOTER};
-    private static final String[] OPERATION_DOMAIN_LIST = new String[]{DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER};
-    private static final String[] STATIC_PAGE_DOMAIN_LIST = new String[]{DOMAIN_STATIC_PAGE_HEADER, DOMAIN_STATIC_PAGE_FOOTER};
+    private static final String[] MODULE_DOMAIN_LIST = new String[]{
+            DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER,
+            DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER, DOMAIN_PRINT, DOMAIN_PRINT_HEADER,
+            DOMAIN_PRINT_FOOTER, DOMAIN_INDEX_HEADER, DOMAIN_INDEX_FOOTER, DOMAIN_INDEX};
+
+    private static final String[] ENTITY_DOMAIN_LIST = new String[]{
+            DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER,
+            DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER};
+
+    private static final String[] QUERY_DOMAIN_LIST = new String[]{
+            DOMAIN_QUERY, DOMAIN_QUERY_TOP, DOMAIN_QUERY_HEADER, DOMAIN_QUERY_FOOTER, DOMAIN_PRINT, DOMAIN_PRINT_HEADER,
+            DOMAIN_PRINT_FOOTER};
+
+    private static final String[] OPERATION_DOMAIN_LIST = new String[]{
+            DOMAIN_OPERATION, DOMAIN_OPERATION_FORM, DOMAIN_OPERATION_BUTTONS_HEADER, DOMAIN_OPERATION_BUTTONS_FOOTER};
+
+    private static final String[] STATIC_PAGE_DOMAIN_LIST = new String[]{
+            DOMAIN_STATIC_PAGE_HEADER, DOMAIN_STATIC_PAGE_FOOTER};
 
     public static final String TYPE_CSS = "css";
     public static final String TYPE_JS = "js";
@@ -279,7 +292,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
             return false;
         }
         Module module = getModule();
-        return !getOriginModuleName().equals(module.getName()) && getOriginModuleName().equals(module.getProject().getProjectOrigin());
+        return !getOriginModuleName().equals(module.getName())
+                && getOriginModuleName().equals(module.getProject().getProjectOrigin());
     }
 
     @Override
@@ -340,7 +354,8 @@ public class PageCustomization extends BeModelElementSupport implements Template
             return;
         }
 
-        if (origin.getOrigin() instanceof EntityItem && origin.getOrigin().get(PageCustomization.CUSTOMIZATIONS_COLLECTION) == origin)
+        if (origin.getOrigin() instanceof EntityItem
+                && origin.getOrigin().get(PageCustomization.CUSTOMIZATIONS_COLLECTION) == origin)
         {
             ((EntityItem) origin.getOrigin()).fireChanged();
             return;

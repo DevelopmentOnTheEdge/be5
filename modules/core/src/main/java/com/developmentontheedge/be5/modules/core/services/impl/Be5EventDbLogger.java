@@ -68,7 +68,8 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     @Override
-    public void operationError(Operation operation, Map<String, Object> values, long startTime, long endTime, String exception)
+    public void operationError(Operation operation, Map<String, Object> values, long startTime,
+                               long endTime, String exception)
     {
         storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_OPERATION, operation.getInfo().getEntityName(), operation.getInfo().getName(),
@@ -76,7 +77,8 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     @Override
-    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime)
+    public void servletCompleted(String servletName, String requestUri, Map<String, ?> params,
+                                 long startTime, long endTime)
     {
         HttpSession session = request.get().getSession(false);
         storeRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
@@ -84,7 +86,8 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     @Override
-    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    public void servletError(String servletName, String requestUri, Map<String, ?> params,
+                             long startTime, long endTime, String exception)
     {
         HttpSession session = request.get().getSession(false);
         storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
@@ -104,7 +107,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     }
 
     private void storeErrorRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
-                                  String entity, String title, Map<String, ?> parameters, String result, String exception)
+                              String entity, String title, Map<String, ?> parameters, String result, String exception)
     {
         Long id = database.getEntity(EVENT_LOG_TABLE).add(new HashMap<String, Object>() {{
             put("user_name", user_name);

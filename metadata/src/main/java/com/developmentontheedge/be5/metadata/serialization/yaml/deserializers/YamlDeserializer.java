@@ -69,24 +69,29 @@ public class YamlDeserializer
         return result;
     }
 
-    public static TableDef readTableDef(final LoadContext loadContext, Project project, String tableName, Map<String, Object> tableDefHash) throws ReadException
+    public static TableDef readTableDef(final LoadContext loadContext, Project project, String tableName,
+                                        Map<String, Object> tableDefHash) throws ReadException
     {
         /*
-         * Information about primary key is contained in an entity, so any entity is required to deserialize some set of columns.
+         * Information about primary key is contained in an entity,
+         * so any entity is required to deserialize some set of columns.
          * See ColumnDef#isPrimaryKey().
          */
         Entity entity = new Entity(tableName, project.getApplication(), EntityType.TABLE);
         return schemeDeserializer(loadContext).readTableDef(tableDefHash, entity);
     }
 
-    public static ColumnDef readColumnDef(final LoadContext loadContext, Project project, final String columnName, final Map<String, Object> columnContent) throws ReadException
+    public static ColumnDef readColumnDef(final LoadContext loadContext, Project project, final String columnName,
+                                          final Map<String, Object> columnContent) throws ReadException
     {
         /*
-         * Information about primary key is contained in an entity, so any entity is required to deserialize some set of columns.
+         * Information about primary key is contained in an entity,
+         * so any entity is required to deserialize some set of columns.
          * See ColumnDef#isPrimaryKey().
          */
         Entity entity = new Entity("table", project.getApplication(), EntityType.TABLE);
-        return schemeDeserializer(loadContext).readColumnDef(columnName, columnContent, new TableDef(entity).getColumns());
+        return schemeDeserializer(loadContext).readColumnDef(columnName, columnContent,
+                new TableDef(entity).getColumns());
     }
 
     private static SchemeDeserializer schemeDeserializer(final LoadContext loadContext)
@@ -94,7 +99,8 @@ public class YamlDeserializer
         return new SchemeDeserializer(new YamlDeserializer(loadContext), loadContext);
     }
 
-    public static Entity readEntity(final LoadContext loadContext, final String entityName, final Map<String, Object> content, final Module module)
+    public static Entity readEntity(final LoadContext loadContext, final String entityName,
+                                    final Map<String, Object> content, final Module module)
     {
         YamlDeserializer yamlDeserializer = new YamlDeserializer(loadContext);
         yamlDeserializer.setProject(module.getProject());
@@ -112,7 +118,8 @@ public class YamlDeserializer
         }
     }
 
-    public static Query readQuery(final LoadContext loadContext, final String queryName, final Map<String, Object> content, final Entity entity)
+    public static Query readQuery(final LoadContext loadContext, final String queryName,
+                                  final Map<String, Object> content, final Entity entity)
     {
         YamlDeserializer yamlDeserializer = new YamlDeserializer(loadContext);
         yamlDeserializer.setProject(entity.getProject());
@@ -129,7 +136,8 @@ public class YamlDeserializer
         }
     }
 
-    public static Operation readOperation(final LoadContext loadContext, final String operationName, final Map<String, Object> content, final Entity entity)
+    public static Operation readOperation(final LoadContext loadContext, final String operationName,
+                                          final Map<String, Object> content, final Entity entity)
     {
         YamlDeserializer yamlDeserializer = new YamlDeserializer(loadContext);
         yamlDeserializer.setProject(entity.getProject());
@@ -157,13 +165,15 @@ public class YamlDeserializer
      * @see Fields#connectionProfile()
      * @see Fields#connectionProfileRead()
      */
-    public static BeConnectionProfile deserializeConnectionProfile(final LoadContext loadContext, final String serialized, final Project project) throws ReadException
+    public static BeConnectionProfile deserializeConnectionProfile(final LoadContext loadContext,
+                                               final String serialized, final Project project) throws ReadException
     {
         final LinkedHashMap<String, Object> namedProfile = new Yaml().load(serialized);
         final String profileName = namedProfile.keySet().iterator().next();
         @SuppressWarnings("unchecked") // unsafe
         final Map<String, Object> serializedProfileBody = (Map<String, Object>) namedProfile.get(profileName);
-        final BeConnectionProfile profile = readConnectionProfile(loadContext, profileName, serializedProfileBody, project);
+        final BeConnectionProfile profile =
+                readConnectionProfile(loadContext, profileName, serializedProfileBody, project);
         return profile;
     }
 
@@ -172,12 +182,14 @@ public class YamlDeserializer
      *
      * @param serializedProfileBody just a map of properties
      */
-    private static BeConnectionProfile readConnectionProfile(final LoadContext loadContext, final String profileName, final Map<String, Object> serializedProfileBody, final Project project) throws ReadException
+    private static BeConnectionProfile readConnectionProfile(final LoadContext loadContext, final String profileName,
+                     final Map<String, Object> serializedProfileBody, final Project project) throws ReadException
     {
-        final ConnectionProfilesDeserializer connectionProfilesDeserializer = new ConnectionProfilesDeserializer(loadContext, project
+        final ConnectionProfilesDeserializer connectionProfilesDeserializer =
+                new ConnectionProfilesDeserializer(loadContext, project
                 .getConnectionProfiles().getLocalProfiles());
-        final BeConnectionProfile connectionProfile = connectionProfilesDeserializer.deserializeConnectionProfile(profileName,
-                serializedProfileBody);
+        final BeConnectionProfile connectionProfile = connectionProfilesDeserializer.
+                deserializeConnectionProfile(profileName, serializedProfileBody);
 
         return connectionProfile;
     }
@@ -205,7 +217,8 @@ public class YamlDeserializer
 
     public Project readProject(final Path root) throws ReadException
     {
-        final ProjectDeserializer projectDeserializer = new ProjectDeserializer(this, loadContext, ProjectFileSystem.getProjectFile(root));
+        final ProjectDeserializer projectDeserializer =
+                new ProjectDeserializer(this, loadContext, ProjectFileSystem.getProjectFile(root));
         projectDeserializer.deserialize();
 
         return this.project;
@@ -221,7 +234,8 @@ public class YamlDeserializer
 //        if ( oldEntity.getPrototype() != null )
 //        {
 //            @SuppressWarnings( "unchecked" )
-//            final BeModelCollection<BeModelElement> prototype = ( BeModelCollection<BeModelElement> ) oldEntity.getPrototype();
+//            final BeModelCollection<BeModelElement> prototype =
+// ( BeModelCollection<BeModelElement> ) oldEntity.getPrototype();
 //            entity.merge( prototype, true, true );
 //        }
 //
@@ -230,10 +244,12 @@ public class YamlDeserializer
 //        return entity;
 //    }
 //
-//    public LanguageLocalizations reloadLocalization( final Path path, final Localizations localizations ) throws ReadException
+//    public LanguageLocalizations reloadLocalization( final Path path, final Localizations localizations )
+// throws ReadException
 //    {
 //        final String lang = path.getFileName().toString().replaceFirst( "\\.\\w+$", "" );
-//        final LocalizationDeserializer localizationDeserializer = new LocalizationDeserializer( lang, path, localizations );
+//        final LocalizationDeserializer localizationDeserializer =
+// new LocalizationDeserializer( lang, path, localizations );
 //        localizationDeserializer.deserialize();
 //
 //        return localizationDeserializer.getResult();
@@ -259,9 +275,11 @@ public class YamlDeserializer
 //        return securityDeserializer.getResult();
 //    }
 //
-//    public BeConnectionProfiles reloadConnectionProfiles( final Path path, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
+//    public BeConnectionProfiles reloadConnectionProfiles( final Path path, final BeConnectionProfileType type,
+// final BeConnectionProfilesRoot target ) throws ReadException
 //    {
-//        final ConnectionProfilesDeserializer profilesDeserializer = new ConnectionProfilesDeserializer( path, type, target );
+//        final ConnectionProfilesDeserializer profilesDeserializer =
+// new ConnectionProfilesDeserializer( path, type, target );
 //        profilesDeserializer.deserialize();
 //
 //        return profilesDeserializer.getResult();
@@ -333,7 +351,8 @@ public class YamlDeserializer
     {
         try
         {
-            final EntityDeserializer entityDeserializer = new EntityDeserializer(this, loadContext, module, name);
+            final EntityDeserializer entityDeserializer =
+                    new EntityDeserializer(this, loadContext, module, name);
             entityDeserializer.deserialize();
             return entityDeserializer.getEntity();
         }
@@ -350,7 +369,8 @@ public class YamlDeserializer
 
         try
         {
-            new StaticPagesDeserializer(this, loadContext, getFileSystem().getStaticPagesFile(), target).deserialize();
+            new StaticPagesDeserializer(this, loadContext, getFileSystem().getStaticPagesFile(),
+                    target).deserialize();
         }
         catch (final ReadException e)
         {
@@ -380,7 +400,8 @@ public class YamlDeserializer
 
         try
         {
-            new CustomizationDeserializer(this, loadContext, getFileSystem().getCustomizationFile(), target).deserialize();
+            new CustomizationDeserializer(this, loadContext, getFileSystem().getCustomizationFile(),
+                    target).deserialize();
         }
         catch (final ReadException e)
         {
@@ -406,7 +427,8 @@ public class YamlDeserializer
         if (serializedCustomizations == null || serializedCustomizations.isEmpty())
             return;
 
-        final BeVectorCollection<PageCustomization> customizations = replace ? new PageCustomizations(target) : target.getOrCreateCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class);
+        final BeVectorCollection<PageCustomization> customizations = replace ? new PageCustomizations(target)
+                : target.getOrCreateCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class);
 
         try
         {
@@ -460,7 +482,8 @@ public class YamlDeserializer
     {
         try
         {
-            new MassChangesDeserializer(loadContext, getFileSystem().getMassChangesFile(), massChangeCollection).deserialize();
+            new MassChangesDeserializer(loadContext, getFileSystem().getMassChangesFile(),
+                    massChangeCollection).deserialize();
         }
         catch (final ReadException e)
         {
@@ -483,7 +506,8 @@ public class YamlDeserializer
         }
     }
 
-    private void readConnectionProfiles(BeConnectionProfileType type, BeConnectionProfilesRoot target) throws ReadException
+    private void readConnectionProfiles(BeConnectionProfileType type, BeConnectionProfilesRoot target)
+            throws ReadException
     {
         Path connectionProfilesFile = getFileSystem().getConnectionProfilesFile(type);
 
@@ -517,7 +541,8 @@ public class YamlDeserializer
         {
             try
             {
-                new LocalizationDeserializer(loadContext, lang, getFileSystem().getLocalizationFile(lang), localizations).deserialize();
+                new LocalizationDeserializer(loadContext, lang,
+                        getFileSystem().getLocalizationFile(lang), localizations).deserialize();
             }
             catch (ReadException e)
             {
@@ -526,7 +551,8 @@ public class YamlDeserializer
         }
     }
 
-    void readMacroFiles(BaseDeserializer deserializer, Map<String, Object> serializedModuleBody, FreemarkerCatalog macroFiles) throws ReadException
+    void readMacroFiles(BaseDeserializer deserializer, Map<String, Object> serializedModuleBody,
+                        FreemarkerCatalog macroFiles) throws ReadException
     {
         final Object includes = serializedModuleBody.get(TAG_MACRO_FILES);
 
@@ -548,12 +574,14 @@ public class YamlDeserializer
             }
             catch (final Exception e)
             {
-                loadContext.addWarning(new ReadException(e, macroFiles.getCompletePath().getChildPath(scriptName), macroFile));
+                loadContext.addWarning(new ReadException(e,
+                        macroFiles.getCompletePath().getChildPath(scriptName), macroFile));
             }
         }
     }
 
-    ProjectFileStructure readProjectFileStructure(BaseDeserializer deserializer, final Map<String, Object> serializedPfs, final Project project)
+    ProjectFileStructure readProjectFileStructure(BaseDeserializer deserializer,
+                                                  final Map<String, Object> serializedPfs, final Project project)
     {
         final ProjectFileStructure pfs = new ProjectFileStructure(project);
         deserializer.readFields(pfs, serializedPfs, Fields.projectFileStructure());

@@ -108,19 +108,22 @@ public class CoreUtilsForTest implements CoreUtils
     }
 
     @Override
-    public Map<String, Object> getColumnSettingForUser(String table_name, String query_name, String column_name, String user_name)
+    public Map<String, Object> getColumnSettingForUser(String table_name, String query_name,
+                                                       String column_name, String user_name)
     {
         return Collections.emptyMap();
     }
 
     @Override
-    public void setColumnSettingForUser(String table_name, String query_name, String column_name, String user_name, Map<String, Object> values)
+    public void setColumnSettingForUser(String table_name, String query_name,
+                                        String column_name, String user_name, Map<String, Object> values)
     {
 
     }
 
     @Override
-    public void removeColumnSettingForUser(String table_name, String query_name, String column_name, String user_name)
+    public void removeColumnSettingForUser(String table_name, String query_name,
+                                           String column_name, String user_name)
     {
 
     }

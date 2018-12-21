@@ -330,7 +330,8 @@ public class YamlSerializer
             }
         }
 
-        private String toString(final BeVectorCollection<LanguageStaticPages> pages, final boolean saveReferencedFiles) throws WriteException
+        private String toString(final BeVectorCollection<LanguageStaticPages> pages, final boolean saveReferencedFiles)
+                throws WriteException
         {
             final Map<String, Object> root = map();
             final Map<String, Object> content = map();
@@ -366,7 +367,8 @@ public class YamlSerializer
             return string;
         }
 
-        private Object getContentOrFileReference(final StaticPage page, final boolean saveReferencedFiles) throws WriteException
+        private Object getContentOrFileReference(final StaticPage page, final boolean saveReferencedFiles)
+                throws WriteException
         {
             if (!Strings2.isNullOrEmpty(page.getFileName()))
             {
@@ -588,14 +590,16 @@ public class YamlSerializer
                 final Entity entity = project.getEntity(tableRef.getTableTo());
 
                 // don't save the columnTo if this column is primary key
-                if (entity != null && !Strings2.isNullOrEmpty(entity.getPrimaryKey()) && entity.getPrimaryKey().toLowerCase().equals(tableRef.getColumnsTo().toLowerCase()))
+                if (entity != null && !Strings2.isNullOrEmpty(entity.getPrimaryKey())
+                        && entity.getPrimaryKey().toLowerCase().equals(tableRef.getColumnsTo().toLowerCase()))
                     return tableRef.getTableTo();
 
                 return tableRef.getTableTo() + "." + tableRef.getColumnsTo();
             }
             else
             {
-                final String[] permittedTables = tableRef.getPermittedTables() == null ? Strings2.EMPTY : tableRef.getPermittedTables();
+                final String[] permittedTables = tableRef.getPermittedTables() == null ? Strings2.EMPTY
+                        : tableRef.getPermittedTables();
                 return list(permittedTables);
             }
         }
@@ -882,7 +886,8 @@ public class YamlSerializer
             }
         }
 
-        private String serializeToString(final Entity entity, final boolean serializeReferencedFiles) throws WriteException
+        private String serializeToString(final Entity entity, final boolean serializeReferencedFiles)
+                throws WriteException
         {
             this.projectOrigin = module.getProject().getProjectOrigin();
 
@@ -951,7 +956,8 @@ public class YamlSerializer
             return stringContent;
         }
 
-        private Object serializeQuery(final Query query, final boolean serializeReferencedFiles) throws WriteException
+        private Object serializeQuery(final Query query, final boolean serializeReferencedFiles)
+                throws WriteException
         {
             final Map<String, Object> root = map();
             final Map<String, Object> content = map();
@@ -983,7 +989,8 @@ public class YamlSerializer
 
             if (customizedProperties.contains("querySettings"))
             {
-                content.put("settings", serializeSettings(query.getQuerySettings(), new HashSet<>(query.getProject().getRoles())));
+                content.put("settings", serializeSettings(query.getQuerySettings(),
+                        new HashSet<>(query.getProject().getRoles())));
             }
 
             serializeCustomizationsStatement(query, content);
@@ -1018,7 +1025,8 @@ public class YamlSerializer
             return root;
         }
 
-        private void jsQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content) throws WriteException
+        private void jsQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content)
+                throws WriteException
         {
             if (query.getFileName().isEmpty())
                 query.setFileName(query.getName() + ".js");
@@ -1059,7 +1067,8 @@ public class YamlSerializer
             }
         }
 
-        private void groovyQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content) throws WriteException
+        private void groovyQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content)
+                throws WriteException
         {
             if (query.getFileName().isEmpty())
                 query.setFileName(query.getName() + "groovy");
@@ -1203,7 +1212,8 @@ public class YamlSerializer
             return serializedExtender;
         }
 
-        private void writeRoles(final Collection<String> customizedProperties, final EntityItem item, final Map<String, Object> target)
+        private void writeRoles(final Collection<String> customizedProperties, final EntityItem item,
+                                final Map<String, Object> target)
         {
             if (customizedProperties.contains("roles"))
             {
@@ -1331,7 +1341,8 @@ public class YamlSerializer
 //        new CustomizationSerializer().serialize( customizations.getModule() );
 //    }
 //
-//    public String toString( @SuppressWarnings( "unused" ) final PageCustomizations customizations, final Module application )
+//    public String toString( @SuppressWarnings( "unused" ) final PageCustomizations customizations,
+// final Module application )
 //    {
 //        this.fileSystem = new ProjectFileSystem( application.getProject() );
 //        return new CustomizationSerializer().toString( application );
@@ -1393,7 +1404,8 @@ public class YamlSerializer
 //        }
 //    }
 //
-    private void serialize(final Project project, final boolean serializeReferencedFiles) throws WriteException, AssertionError
+    private void serialize(final Project project, final boolean serializeReferencedFiles)
+            throws WriteException, AssertionError
     {
         final String string = serializeToString(project, serializeReferencedFiles);
 
@@ -1407,7 +1419,8 @@ public class YamlSerializer
         }
     }
 
-    private String serializeToString(final Project project, final boolean serializeReferencedFiles) throws WriteException, AssertionError
+    private String serializeToString(final Project project, final boolean serializeReferencedFiles)
+            throws WriteException, AssertionError
     {
         final Object serialized = serializeToObject(project, serializeReferencedFiles);
 
@@ -1419,7 +1432,8 @@ public class YamlSerializer
         return string;
     }
 
-    private Object serializeToObject(final Project project, final boolean serializeReferencedFiles) throws WriteException
+    private Object serializeToObject(final Project project, final boolean serializeReferencedFiles)
+            throws WriteException
     {
         final Map<String, Object> root = map();
         final Map<String, Object> content = map();
@@ -1439,11 +1453,13 @@ public class YamlSerializer
         content.put(TAG_MODULES, serializeModules(project.getModules(), serializeReferencedFiles));
         content.put(TAG_APPLICATION, serializeApplication(project.getApplication(), serializeReferencedFiles));
 
-        final List<Object> scriptNames = serializeScripts(project.getApplication().getFreemarkerScripts(), serializeReferencedFiles);
+        final List<Object> scriptNames = serializeScripts(project.getApplication().getFreemarkerScripts(),
+                serializeReferencedFiles);
         if (!scriptNames.isEmpty())
             content.put(TAG_SCRIPTS, scriptNames);
 
-        final List<Object> macroFilesNames = serializeMacroFiles(project.getApplication().getMacroCollection(), serializeReferencedFiles);
+        final List<Object> macroFilesNames = serializeMacroFiles(project.getApplication().getMacroCollection(),
+                serializeReferencedFiles);
         if (!macroFilesNames.isEmpty())
             content.put(TAG_MACRO_FILES, macroFilesNames);
 
@@ -1505,7 +1521,8 @@ public class YamlSerializer
         return pfs;
     }
 
-    private Object serializeModules(final BeModelCollection<Module> modules, boolean serializeReferencedFiles) throws WriteException
+    private Object serializeModules(final BeModelCollection<Module> modules, boolean serializeReferencedFiles)
+            throws WriteException
     {
         final List<Object> serializedModules = list();
 
@@ -1539,7 +1556,8 @@ public class YamlSerializer
         return serializedModules;
     }
 
-    private Object serializeApplication(final Module application, boolean serializeReferencedFiles) throws WriteException
+    private Object serializeApplication(final Module application, boolean serializeReferencedFiles)
+            throws WriteException
     {
         final List<Object> serializedEntities = list();
         final Iterable<Entity> entities = application.getEntities();
@@ -1553,17 +1571,20 @@ public class YamlSerializer
         return serializedEntities;
     }
 
-    private List<Object> serializeScripts(final FreemarkerCatalog scripts, boolean serializeReferencedFiles) throws WriteException
+    private List<Object> serializeScripts(final FreemarkerCatalog scripts, boolean serializeReferencedFiles)
+            throws WriteException
     {
         return serialize(scripts, fileSystem::getScriptFile, serializeReferencedFiles);
     }
 
-    private List<Object> serializeMacroFiles(final FreemarkerCatalog scripts, boolean serializeReferencedFiles) throws WriteException
+    private List<Object> serializeMacroFiles(final FreemarkerCatalog scripts, boolean serializeReferencedFiles)
+            throws WriteException
     {
         return serialize(scripts, fileSystem::getMacroFile, serializeReferencedFiles);
     }
 
-    private List<Object> serialize(final FreemarkerCatalog scripts, Function<String, Path> getPath, final boolean serializeReferencedFiles) throws WriteException
+    private List<Object> serialize(final FreemarkerCatalog scripts, Function<String, Path> getPath,
+                                   final boolean serializeReferencedFiles) throws WriteException
     {
         List<Object> paths = list();
         for (final FreemarkerScript script : scripts.getScripts())
@@ -1595,7 +1616,8 @@ public class YamlSerializer
         return paths;
     }
 
-    private void write(final Path scriptFile, final FreemarkerScript script) throws IOException, UnsupportedEncodingException
+    private void write(final Path scriptFile, final FreemarkerScript script)
+            throws IOException, UnsupportedEncodingException
     {
         try
         {
@@ -1781,7 +1803,8 @@ public class YamlSerializer
             {
                 final Object fieldValue = Beans.getBeanPropertyValue(model, field.name);
 
-                if (fieldValue != null && (!fieldValue.equals(field.defaultValue) || customizedProperties.contains(field.name)))
+                if (fieldValue != null &&
+                        (!fieldValue.equals(field.defaultValue) || customizedProperties.contains(field.name)))
                 {
                     if (fieldValue instanceof Integer || fieldValue instanceof Boolean || fieldValue instanceof String)
                         target.put(field.name, fieldValue);
@@ -1791,7 +1814,8 @@ public class YamlSerializer
             }
             catch (final Exception e)
             {
-                throw new RuntimeException("Unexpected error when serializing '" + field.name + "' of " + model.getCompletePath(), e);
+                throw new RuntimeException("Unexpected error when serializing '" + field.name +
+                        "' of " + model.getCompletePath(), e);
             }
         }
     }

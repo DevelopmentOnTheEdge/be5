@@ -410,7 +410,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (" ".equals(element.getTemplateCode()))
                 return new ParseResult(" ");
             final DataElementPath path = element.getCompletePath();
-            final String merged = FreemarkerUtils.mergeTemplateByPath(path.toString(), getContext(element), getConfiguration());
+            final String merged = FreemarkerUtils.mergeTemplateByPath(path.toString(), getContext(element),
+                    getConfiguration());
             return new ParseResult(merged);
         }
         catch (ProjectElementException e)
@@ -606,7 +607,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             {
                 String[] parts = value.split("::", 2);
                 Module module = getModule(parts[0]);
-                result = parts.length == 2 && module != null && module.getExtras() != null && StreamEx.of(module.getExtras()).has(parts[1]);
+                result = parts.length == 2 && module != null && module.getExtras() != null &&
+                        StreamEx.of(module.getExtras()).has(parts[1]);
                 break;
             }
             case "module":
@@ -697,7 +699,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     {
         final String nl = System.getProperty("line.separator");
 
-        msg.append(prefix + collection.getName() + "[" + collection.getSize() + "], " + collection.getCompletePath() + nl);
+        msg.append(prefix + collection.getName() + "[" + collection.getSize() + "], " +
+                collection.getCompletePath() + nl);
 
         final String newPrefix = prefix + shift;
 
@@ -743,7 +746,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             if (connectionProfileName == null || connectionProfileName.isEmpty())
                 errors.add(ProjectElementException.notSpecified(this, "connectionProfileName"));
             else if (getConnectionProfile() == null)
-                errors.add(ProjectElementException.invalidValue(this, "connectionProfileName", connectionProfileName));
+                errors.add(ProjectElementException.
+                        invalidValue(this, "connectionProfileName", connectionProfileName));
         }
         return errors;
     }
@@ -787,7 +791,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     public void mergeHostProject(Project applicationProject)
     {
         assert isModuleProject();
-        DataElementUtils.saveQuiet(applicationProject.getSecurityCollection().getRoleCollection().clone(getSecurityCollection(), SecurityCollection.ROLES));
+        DataElementUtils.saveQuiet(applicationProject.getSecurityCollection().getRoleCollection()
+                .clone(getSecurityCollection(), SecurityCollection.ROLES));
         for (RoleGroup group : applicationProject.getRoleGroups())
         {
             if (group.isPredefined())
@@ -867,7 +872,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public String[] getProfileNames()
     {
-        return getConnectionProfiles().getLocalProfiles().names().append(getConnectionProfiles().getRemoteProfiles().names())
+        return getConnectionProfiles().getLocalProfiles().names()
+                .append(getConnectionProfiles().getRemoteProfiles().names())
                 .toArray(String[]::new);
     }
 
@@ -1080,8 +1086,9 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             List<String> messages = parser.getMessages();
             if (!messages.isEmpty())
             {
-                throw new IllegalArgumentException(("SQL Macro cannot be parsed:\nMacro:" + sqlMacro + "\nErrors: " + String.join("\n",
-                        messages)).replace("\r", "").replace("\n", System.lineSeparator()));
+                throw new IllegalArgumentException(("SQL Macro cannot be parsed:\nMacro:" + sqlMacro +
+                        "\nErrors: " + String.join("\n", messages)).
+                        replace("\r", "").replace("\n", System.lineSeparator()));
             }
         }
     }

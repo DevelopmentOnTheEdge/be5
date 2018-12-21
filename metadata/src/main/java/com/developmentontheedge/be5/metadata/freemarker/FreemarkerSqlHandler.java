@@ -60,7 +60,8 @@ public class FreemarkerSqlHandler implements SqlHandler
         if (!newIncludeChain.equals(includeChain))
         {
             int i = 0;
-            while (newIncludeChain.size() > i && includeChain.size() > i && newIncludeChain.get(i).equals(includeChain.get(i)))
+            while (newIncludeChain.size() > i && includeChain.size() > i
+                    && newIncludeChain.get(i).equals(includeChain.get(i)))
             {
                 i++;
             }
@@ -138,7 +139,8 @@ public class FreemarkerSqlHandler implements SqlHandler
                 toLine = endElement.getBeginLine() + lineOffset;
                 toColumn = (lineOffset == 0 ? endElement.getBeginColumn() : 1) + columnOffset;
             }
-            positions.add(new Position(path, startElement == endElement ? startElement.getNodeName() : "", fromLine, fromColumn, toLine, toColumn));
+            positions.add(new Position(path, startElement == endElement ? startElement.getNodeName() : "",
+                    fromLine, fromColumn, toLine, toColumn));
             if (startElement != endElement)
                 break;
         }
@@ -162,8 +164,10 @@ public class FreemarkerSqlHandler implements SqlHandler
         }
         sqlExecutor.comment("Execute " + path);
         Project project = freemarkerScript.getProject();
-        ResultToConsumerWriter out = new ResultToConsumerWriter(new MultiSqlConsumer(project.getDatabaseSystem().getType(), this));
-        FreemarkerUtils.mergeTemplateByPath(path.toString(), project.getContext(freemarkerScript), project.getConfiguration(), out);
+        ResultToConsumerWriter out = new ResultToConsumerWriter(
+                new MultiSqlConsumer(project.getDatabaseSystem().getType(), this));
+        FreemarkerUtils.mergeTemplateByPath(path.toString(), project.getContext(freemarkerScript),
+                project.getConfiguration(), out);
         for (int j = includeChain.size() - 1; j >= 0; j--)
         {
             sqlExecutor.comment("End of included " + includeChain.get(j), false);

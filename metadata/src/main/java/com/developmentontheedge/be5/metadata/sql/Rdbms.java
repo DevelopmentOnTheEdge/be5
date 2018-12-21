@@ -36,7 +36,8 @@ public enum Rdbms
             new Db2TypeManager(),
             new Db2SchemaReader(),
             "org.eclipse.datatools.enablement.ibm.db2.luw.connectionProfile",
-            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97",
+            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM " +
+                    "Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97",
             "select 1 from sysibm.sysdummy1"),
     MYSQL(DbmsType.MYSQL,
             new MySqlMacroProcessorStrategy(),
@@ -53,7 +54,8 @@ public enum Rdbms
             new SqlServerTypeManager(),
             new SqlServerSchemaReader(),
             "org.eclipse.datatools.enablement.msft.sqlserver.connectionProfile",
-            "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate.Microsoft SQL Server 2008 JDBC Driver", "2008",
+            "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate." +
+                    "Microsoft SQL Server 2008 JDBC Driver", "2008",
             "SELECT 1"),
     POSTGRESQL(DbmsType.POSTGRESQL,
             new PostgresMacroProcessorStrategy(),
@@ -95,7 +97,8 @@ public enum Rdbms
         {
             return Rdbms.H2;
         }
-        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:"))
+        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:")
+                || realUrl.startsWith("jtds:sqlserver:"))
         {
             return Rdbms.SQLSERVER;
         }
@@ -133,7 +136,9 @@ public enum Rdbms
     private final String version;
     private final String validationQuery;
 
-    Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version, String validationQuery)
+    Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager,
+          DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version,
+          String validationQuery)
     {
         this.type = type;
         this.macroProcessor = macroProcessor;
@@ -185,19 +190,21 @@ public enum Rdbms
         return type.getDefaultPort();
     }
 
-    public String createConnectionUrl(boolean forContext, String host, int port, String database, Map<String, String> properties)
+    public String createConnectionUrl(boolean forContext, String host, int port, String database,
+                                      Map<String, String> properties)
     {
         switch (this)
         {
             case ORACLE:
-                return "jdbc:oracle:thin:@" + host + ":" + port + ":" + (database == null ? properties.get("SID") : database);
+                return "jdbc:oracle:thin:@" + host + ":" + port + ":" +
+                        (database == null ? properties.get("SID") : database);
             case H2:
                 return "jdbc:h2:" + host;
             case SQLSERVER:
                 if ("jtds".equals(properties.get("driver")))
                 {
-                    StringBuilder url = new StringBuilder("jdbc:jtds:sqlserver://").append(host).append(':').append(port).append('/')
-                            .append(database);
+                    StringBuilder url = new StringBuilder("jdbc:jtds:sqlserver://").append(host)
+                            .append(':').append(port).append('/').append(database);
                     for (Entry<String, String> entry : properties.entrySet())
                     {
                         if (!entry.getKey().equals("driver"))
@@ -207,7 +214,8 @@ public enum Rdbms
                 }
                 return "jdbc:sqlserver://" + host + ":" + port + ";databaseName=" + database;
             default:
-                StringBuilder url = new StringBuilder("jdbc:").append(toString().toLowerCase()).append("://").append(host).append(':')
+                StringBuilder url = new StringBuilder("jdbc:").append(toString().toLowerCase())
+                        .append("://").append(host).append(':')
                         .append(port).append('/').append(database);
                 if (!properties.isEmpty())
                 {

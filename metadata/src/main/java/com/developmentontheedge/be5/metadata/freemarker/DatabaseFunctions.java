@@ -140,7 +140,8 @@ public class DatabaseFunctions
         {
             if (args.length < 2 || args.length > 3)
             {
-                throw new TemplateModelException("if: 2 or 3 arguments expected (condition, trueExpression[, falseExpression)");
+                throw new TemplateModelException("if: 2 or 3 arguments expected " +
+                        "(condition, trueExpression[, falseExpression)");
             }
             return "CASE WHEN " + args[0] + " THEN " + args[1] + " ELSE " + (args.length > 2 ? args[2] : "''") + " END";
         }
@@ -309,7 +310,8 @@ public class DatabaseFunctions
         {
             if (arguments.size() != 2)
             {
-                throw new TemplateModelException("columnDef: Two arguments required: column name and column definition hash");
+                throw new TemplateModelException("columnDef: Two arguments required: " +
+                        "column name and column definition hash");
             }
             Object arg = arguments.get(0);
             if (!(arg instanceof TemplateScalarModel))
@@ -347,7 +349,8 @@ public class DatabaseFunctions
         {
             if (arguments.size() < 2 || arguments.size() > 3)
             {
-                throw new TemplateModelException("tableDef: 2 or 3 argument required: table name, column definitions hash, index definitions hash (optional)");
+                throw new TemplateModelException("tableDef: 2 or 3 argument required: table name, " +
+                        "column definitions hash, index definitions hash (optional)");
             }
             Object arg = arguments.get(0);
             if (!(arg instanceof TemplateScalarModel))

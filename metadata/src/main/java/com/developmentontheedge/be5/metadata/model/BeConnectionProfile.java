@@ -404,9 +404,11 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
         return "http://localhost:8080/manager/text/reload?path=/" + PROJECT_NAME_PLACEHOLDER;
     }
 
-    public static String getTomcatManagerReloadUrlByTemplate(final String projectName, final String tomcatManagerReloadUrlTemplate)
+    public static String getTomcatManagerReloadUrlByTemplate(final String projectName,
+                                                             final String tomcatManagerReloadUrlTemplate)
     {
-        final String tomcatManagerReloadUrl = tomcatManagerReloadUrlTemplate.replace(PROJECT_NAME_PLACEHOLDER, projectName);
+        final String tomcatManagerReloadUrl = tomcatManagerReloadUrlTemplate.
+                replace(PROJECT_NAME_PLACEHOLDER, projectName);
 
         return tomcatManagerReloadUrl;
     }

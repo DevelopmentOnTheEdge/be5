@@ -19,7 +19,8 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
         super(dps);
         if (dps.getProperty(entityModel.getPrimaryKeyName()) == null)
         {
-            throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModel.getPrimaryKeyName() + "'");
+            throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" +
+                    entityModel.getPrimaryKeyName() + "'");
         }
         this.id = id;
         this.entityModel = entityModel;
@@ -40,7 +41,8 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public String toString()
     {
-        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModel.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
+        return super.toString() + " { " + this.getClass().getSimpleName() +
+                " [ " + entityModel.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
     }
 
     @Override
@@ -68,7 +70,8 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public void setValue(String propertyName, Object value)
     {
-        throw new IllegalAccessError("You can't use this operation. Use EntityModel#set() to update value in database.");
+        throw new IllegalAccessError("You can't use this operation. " +
+                "Use EntityModel#set() to update value in database.");
     }
 //
 //    public class MethodProviderBase implements MethodProvider

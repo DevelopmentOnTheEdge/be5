@@ -8,7 +8,8 @@ import java.util.Map;
 public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVectorCollection<T>
 {
 
-    public BeCaseInsensitiveCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent, boolean saveOrder)
+    public BeCaseInsensitiveCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent,
+                                       boolean saveOrder)
     {
         super(name, elementClass, parent, saveOrder);
     }
@@ -55,7 +56,8 @@ public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVec
                 // Do not merge EntityItems with the same origin as our project:
                 // Probably it's some element we deleted from project, but didn't synchronized with db yet
                 if (ignoreMyItems && otherElement instanceof BeElementWithOriginModule
-                        && ((BeElementWithOriginModule) otherElement).getOriginModuleName().equals(getProject().getProjectOrigin()))
+                        && ((BeElementWithOriginModule) otherElement).getOriginModuleName()
+                                .equals(getProject().getProjectOrigin()))
                     continue;
                 saveClone(otherElement, inherit);
             }

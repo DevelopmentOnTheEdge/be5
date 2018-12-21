@@ -28,7 +28,8 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     private DataElementPath completeName = null;
     private boolean propagateCodeChange = false;
 
-    public BeVectorCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent, boolean saveOrder)
+    public BeVectorCollection(String name, Class<? extends T> elementClass, BeModelCollection<?> parent,
+                              boolean saveOrder)
     {
         super(name, parent);
         this.elementClass = elementClass;
@@ -154,7 +155,8 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
                 // Probably it's some element we deleted from project, but
                 // didn't synchronized with db yet
                 if (ignoreMyItems && otherElement instanceof BeElementWithOriginModule
-                        && ((BeElementWithOriginModule) otherElement).getOriginModuleName().equals(getProject().getProjectOrigin()))
+                        && ((BeElementWithOriginModule) otherElement)
+                        .getOriginModuleName().equals(getProject().getProjectOrigin()))
                     continue;
                 saveClone(otherElement, inherit);
             }
@@ -332,7 +334,8 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
         if (completeName == null)
         {
             BeModelCollection<?> origin = getOrigin();
-            completeName = (origin == null ? DataElementPath.EMPTY_PATH : origin.getCompletePath()).getChildPath(getName());
+            completeName = (origin == null ?
+                    DataElementPath.EMPTY_PATH : origin.getCompletePath()).getChildPath(getName());
         }
         return completeName;
     }
@@ -374,7 +377,8 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param primaryEvent
      * @throws Exception
      */
-    protected void fireElementChanged(Object source, BeModelCollection<?> owner, String dataElementName, BeModelElement oldElement)
+    protected void fireElementChanged(Object source, BeModelCollection<?> owner, String dataElementName,
+                                      BeModelElement oldElement)
     {
         fireCodeChanged();
     }

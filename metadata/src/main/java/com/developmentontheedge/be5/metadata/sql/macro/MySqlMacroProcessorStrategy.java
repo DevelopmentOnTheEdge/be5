@@ -126,7 +126,8 @@ public class MySqlMacroProcessorStrategy extends MacroProcessorStrategySupport
     @Override
     public String str(String val)
     {
-        return "\'" + val.replace("\\", "\\\\").replace("\'", "\'\'") + "\'";
+        return "\'" + val.replace("\\", "\\\\")
+                .replace("\'", "\'\'") + "\'";
     }
 
     @Override
@@ -144,7 +145,8 @@ public class MySqlMacroProcessorStrategy extends MacroProcessorStrategySupport
     @Override
     public String joinGenericRef(String table, String alias, String fromField)
     {
-        return "LEFT JOIN " + table + "<parameter:_tcloneid_ default=\"\"/> " + alias + " ON " + fromField + " LIKE '" + table + ".%' AND "
+        return "LEFT JOIN " + table + "<parameter:_tcloneid_ default=\"\"/> " + alias +
+                " ON " + fromField + " LIKE '" + table + ".%' AND "
                 + castAsPrimaryKey(substring(fromField, String.valueOf(table.length() + 2))) + " = " + alias + ".ID";
     }
 

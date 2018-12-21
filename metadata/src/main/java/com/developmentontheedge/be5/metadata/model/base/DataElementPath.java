@@ -129,14 +129,16 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     }
 
     /**
-     * Converts path relative to current to absolute path and returns it. Handy replacement for series of getChildPath/getSiblingPath/getParentPath
+     * Converts path relative to current to absolute path and returns it.
+     * Handy replacement for series of getChildPath/getSiblingPath/getParentPath
      *
      * @param relativePath - relative path. May contain ".." to go up or "." to stay.
      * @return created path
      */
     public DataElementPath getRelativePath(String relativePath)
     {
-        //if(!relativePath.startsWith("./") && !relativePath.startsWith("../")) return new DataElementPath(relativePath);
+        //if(!relativePath.startsWith("./") && !relativePath.startsWith("../"))
+        // return new DataElementPath(relativePath);
         if (relativePath.isEmpty())
             return this;
         String[] elements = relativePath.split(PATH_SEPARATOR);
@@ -333,7 +335,8 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     }
 
     /**
-     * Returns DataElementPath constructed by existing DataCollection and its child name if argument is not null (otherwise return null)
+     * Returns DataElementPath constructed by existing DataCollection
+     * and its child name if argument is not null (otherwise return null)
      *
      * @param dc        - parent DataCollection
      * @param childName - name of the child item (child may not exist)
@@ -346,10 +349,12 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     }
 
     /**
-     * Construct from array of paths. Equivalent to new DataElementPath(basePath).getRelativePath(path[0]).getRelativePath(path[1])...
+     * Construct from array of paths. Equivalent to new DataElementPath(basePath)
+     * .getRelativePath(path[0]).getRelativePath(path[1])...
      *
      * @param basePath - first slice. If null, then null will be returned
-     * @param path     - list of path slices. Note that it's path slices, not names, thus they should be escaped even if they contain only one path component
+     * @param path     - list of path slices. Note that it's path slices, not names,
+     *                 thus they should be escaped even if they contain only one path component
      */
     public static DataElementPath create(String basePath, String... path)
     {

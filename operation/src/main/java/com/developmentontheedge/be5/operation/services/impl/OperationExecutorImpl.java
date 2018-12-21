@@ -102,7 +102,8 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
-    private Object callOperation(Operation operation, List<OperationExtender> extenders, Map<String, Object> presetValues)
+    private Object callOperation(Operation operation, List<OperationExtender> extenders,
+                                 Map<String, Object> presetValues)
     {
         Object parameters = generateWithExtenders(operation, extenders, presetValues);
 
@@ -160,7 +161,8 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
-    private void doInvokeWithExtenders(Operation op, List<OperationExtender> extenders, Object parameters) throws Exception
+    private void doInvokeWithExtenders(Operation op, List<OperationExtender> extenders, Object parameters)
+            throws Exception
     {
         invokeExtenders("preInvoke", op, extenders, parameters);
         if (op.getStatus() == OperationStatus.ERROR) return;
@@ -245,7 +247,8 @@ public class OperationExecutorImpl implements OperationExecutor
         return operationExtenders;
     }
 
-    private boolean invokeExtenders(String action, Operation curOp, List<OperationExtender> operationExtenders, Object parameters) throws Exception
+    private boolean invokeExtenders(String action, Operation curOp, List<OperationExtender> operationExtenders,
+                                    Object parameters) throws Exception
     {
         for (OperationExtender ext : operationExtenders)
         {
@@ -269,9 +272,11 @@ public class OperationExecutorImpl implements OperationExecutor
 
     @Override
     @SuppressWarnings("unchecked")
-    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName, Map<String, ?> operationParams)
+    public OperationContext getOperationContext(OperationInfo operationInfo, String queryName,
+                                                Map<String, ?> operationParams)
     {
-        Object[] selectedRows = OperationUtils.selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
+        Object[] selectedRows = OperationUtils.
+                selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
         if (selectedRows.length > 0)
         {
             if (!operationInfo.getEntityName().startsWith("_"))
@@ -279,9 +284,11 @@ public class OperationExecutorImpl implements OperationExecutor
                 if (!operationInfo.getEntity().hasPrimaryKey())
                 {
                     throw Be5Exception.internalInOperation(operationInfo.getModel(),
-                            new RuntimeException("Entity '" + operationInfo.getEntity().getName() + "' does not have primary key."));
+                            new RuntimeException("Entity '" + operationInfo.getEntity().getName() +
+                                    "' does not have primary key."));
                 }
-                Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
+                Class<?> primaryKeyColumnType = meta.
+                        getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
                 selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
             }
         }

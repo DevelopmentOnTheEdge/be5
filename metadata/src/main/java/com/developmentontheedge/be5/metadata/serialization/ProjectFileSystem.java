@@ -55,7 +55,8 @@ public class ProjectFileSystem
     public static class Fn
     {
 
-        public static Function<ProjectFileSystem, Path> languageLocalizationsPath(final LanguageLocalizations languageLocalizations)
+        public static Function<ProjectFileSystem, Path> languageLocalizationsPath(
+                final LanguageLocalizations languageLocalizations)
         {
             return fs -> fs.getLocalizationFile(languageLocalizations.getName());
         }
@@ -65,7 +66,8 @@ public class ProjectFileSystem
             return fs -> fs.getEntityFile(entity.getModule().getName(), entity.getName());
         }
 
-        public static Function<ProjectFileSystem, Path> connectionProfilesPath(final BeConnectionProfiles connectionProfiles)
+        public static Function<ProjectFileSystem, Path> connectionProfilesPath(
+                final BeConnectionProfiles connectionProfiles)
         {
             return fs -> fs.getConnectionProfilesFile(connectionProfiles.getType());
         }
@@ -129,7 +131,8 @@ public class ProjectFileSystem
 
     public static boolean canBeLoaded(final Path projectRoot)
     {
-        final String projectFileName = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX;
+        final String projectFileName = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX +
+                ProjectFileStructure.FORMAT_SUFFIX;
         final Path projectFile = projectRoot.resolve(projectFileName);
 
         return Files.isRegularFile(projectFile);
@@ -149,20 +152,21 @@ public class ProjectFileSystem
     {
         NavigableMap<Path, Boolean> result = new TreeMap<>();
 
-        List<String> files = Arrays.asList(structure.getSecurityFile(), structure.getDaemonsFile(), structure.getPagesFile(),
-                structure.getLocalConnectionProfilesFile(), structure.getRemoteConnectionProfilesFile(), structure.getMassChangesFile(),
+        List<String> files = Arrays.asList(structure.getSecurityFile(), structure.getDaemonsFile(),
+                structure.getPagesFile(), structure.getLocalConnectionProfilesFile(),
+                structure.getRemoteConnectionProfilesFile(), structure.getMassChangesFile(),
                 structure.getCustomizationFile(), structure.getSelectedProfileFile(), structure.getDevFile());
         StreamEx.of(files).map(path -> resolve(root, path)).map(Path::getParent).forEach(p -> result.put(p, false));
 
         List<String> dirs = Arrays.asList(
                 structure.getDataDir(), structure.getEntitiesDir(),
-                structure.getJsExtendersDir(), structure.getJsFormsDir(), structure.getJsOperationsDir(), structure.getJsQueriesDir(),
-                structure.getL10nDir());
+                structure.getJsExtendersDir(), structure.getJsFormsDir(), structure.getJsOperationsDir(),
+                structure.getJsQueriesDir(), structure.getL10nDir());
         StreamEx.of(dirs).map(path -> resolve(root, path)).append(root).forEach(p -> result.put(p, false));
 
-        List<String> recursiveDirs = Arrays.asList(structure.getScriptsDir(), structure.getModulesDir(), structure.getMacroDir(),
-                structure.getGroovyOperationsDir(), structure.getGroovyExtendersDir(), structure.getGroovyQueriesDir(),
-                structure.getPagesDir());
+        List<String> recursiveDirs = Arrays.asList(structure.getScriptsDir(), structure.getModulesDir(),
+                structure.getMacroDir(), structure.getGroovyOperationsDir(), structure.getGroovyExtendersDir(),
+                structure.getGroovyQueriesDir(), structure.getPagesDir());
         StreamEx.of(recursiveDirs).map(path -> resolve(root, path)).forEach(p -> {
             result.keySet().removeIf(pp -> pp.startsWith(p));
             if (!EntryStream.of(result).anyMatch(entry -> entry.getValue() && p.startsWith(entry.getKey())))
@@ -242,7 +246,8 @@ public class ProjectFileSystem
 
     public static Path getProjectFile(final Path projectRoot)
     {
-        return projectRoot.resolve(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
+        return projectRoot.resolve(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX +
+                ProjectFileStructure.FORMAT_SUFFIX);
     }
 
     public void writeProject(final String content) throws IOException
@@ -274,7 +279,8 @@ public class ProjectFileSystem
     private boolean isFromMacroCollection(final FreemarkerScript freemarkerScript)
     {
         final FreemarkerCatalog macros = freemarkerScript.getModule().getMacroCollection();
-        final boolean isFromMacroCollection = macros != null && macros.getCompletePath().isAncestorOf(freemarkerScript.getCompletePath());
+        final boolean isFromMacroCollection = macros != null &&
+                macros.getCompletePath().isAncestorOf(freemarkerScript.getCompletePath());
 
         return isFromMacroCollection;
     }
@@ -282,7 +288,8 @@ public class ProjectFileSystem
     private boolean isFromFreemarkerScripts(final FreemarkerScript freemarkerScript)
     {
         final FreemarkerCatalog scripts = freemarkerScript.getModule().getFreemarkerScripts();
-        final boolean isFromFreemarkerScripts = scripts != null && scripts.getCompletePath().isAncestorOf(freemarkerScript.getCompletePath());
+        final boolean isFromFreemarkerScripts = scripts != null &&
+                scripts.getCompletePath().isAncestorOf(freemarkerScript.getCompletePath());
 
         return isFromFreemarkerScripts;
     }
@@ -682,11 +689,13 @@ public class ProjectFileSystem
         }
         catch (UnmappableCharacterException e)
         {
-            throw new ReadException(new Exception("Unmappable character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
+            throw new ReadException(new Exception("Unmappable character at " + calcPosition(decoded)), file,
+                    ReadException.LEE_ENCODING_ERROR);
         }
         catch (CharacterCodingException e)
         {
-            throw new ReadException(new Exception("Malformed character at " + calcPosition(decoded)), file, ReadException.LEE_ENCODING_ERROR);
+            throw new ReadException(new Exception("Malformed character at " + calcPosition(decoded)), file,
+                    ReadException.LEE_ENCODING_ERROR);
         }
         int start = 0;
         if (resultArray.length > 0 && resultArray[0] == '\uFEFF') // Ignore BOM

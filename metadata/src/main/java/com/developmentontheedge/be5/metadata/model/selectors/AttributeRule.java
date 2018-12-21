@@ -19,7 +19,8 @@ public class AttributeRule implements SelectorRule
     {
         assert attribute != null;
         assert value != null;
-        assert OP_EQUALS.equals(operator) || OP_STARTS.equals(operator) || OP_ENDS.equals(operator) || OP_CONTAINS.equals(operator);
+        assert OP_EQUALS.equals(operator) || OP_STARTS.equals(operator) ||
+                OP_ENDS.equals(operator) || OP_CONTAINS.equals(operator);
         this.attribute = attribute;
         this.operator = operator;
         this.value = value.toLowerCase();
@@ -82,6 +83,7 @@ public class AttributeRule implements SelectorRule
             return "#" + valueOriginal;
         if (OP_EQUALS.equals(operator) && attribute.equals("type") && identifier)
             return "." + valueOriginal;
-        return '[' + SelectorUtils.escapeIdentifier(attribute) + operator + '=' + (identifier ? valueOriginal : SelectorUtils.escapeString(valueOriginal)) + ']';
+        return '[' + SelectorUtils.escapeIdentifier(attribute) + operator + '='
+                + (identifier ? valueOriginal : SelectorUtils.escapeString(valueOriginal)) + ']';
     }
 }

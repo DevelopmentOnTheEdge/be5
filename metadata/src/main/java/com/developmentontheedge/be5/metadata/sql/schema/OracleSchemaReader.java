@@ -25,12 +25,15 @@ public class OracleSchemaReader extends DefaultSchemaReader
     private static final Pattern LOWER_INDEX_PATTERN = Pattern.compile("^LOWER\\(\"(\\w+)\"\\)$");
     private static final Pattern UPPER_INDEX_PATTERN = Pattern.compile("^UPPER\\(\"(\\w+)\"\\)$");
 
-    private static final Pattern DEFAULT_DATE_PATTERN = Pattern.compile("^TO_DATE\\('(\\d+\\-\\d+\\-\\d+)','YYYY-MM-DD'\\)$");
+    private static final Pattern DEFAULT_DATE_PATTERN =
+            Pattern.compile("^TO_DATE\\('(\\d+\\-\\d+\\-\\d+)','YYYY-MM-DD'\\)$");
 
-    private static final Pattern GENERATED_TRIGGER_PATTERN = Pattern.compile("^BEGIN :new\\.\"?(\\w+)\"? := '(\\w+)\\.' \\|\\| :new\\.(\\w+); END;");
+    private static final Pattern GENERATED_TRIGGER_PATTERN =
+            Pattern.compile("^BEGIN :new\\.\"?(\\w+)\"? := '(\\w+)\\.' \\|\\| :new\\.(\\w+); END;");
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> columns = new HashMap<>();
@@ -240,7 +243,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
+    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
@@ -276,7 +280,8 @@ public class OracleSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();

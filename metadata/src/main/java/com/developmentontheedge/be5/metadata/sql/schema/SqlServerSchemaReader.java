@@ -24,9 +24,11 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
 {
     private static final Pattern ENUM_VALUES_PATTERN = Pattern.compile("=\'(.+?)\'");
 
-    private static final Pattern DATE_DEFVALUE_PATTERN = Pattern.compile("^CONVERT\\(\\[date\\],'(\\d+\\-\\d+\\-\\d+)',\\(120\\)\\)$");
+    private static final Pattern DATE_DEFVALUE_PATTERN =
+            Pattern.compile("^CONVERT\\(\\[date\\],'(\\d+\\-\\d+\\-\\d+)',\\(120\\)\\)$");
 
-    private static final Pattern GENERIC_REF_COLUMN_PATTERN = Pattern.compile("\\('(\\w+)\\.'\\+CONVERT\\([^,]+,\\[(\\w+)\\]\\)\\)");
+    private static final Pattern GENERIC_REF_COLUMN_PATTERN =
+            Pattern.compile("\\('(\\w+)\\.'\\+CONVERT\\([^,]+,\\[(\\w+)\\]\\)\\)");
 
     @Override
     public String getDefaultSchema(SqlExecutor sql) throws ExtendedSqlException
@@ -35,7 +37,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
@@ -47,7 +50,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
                 + "JOIN sys.tables st ON (si.object_ID=st.object_ID) "
                 + "JOIN sys.index_columns sic ON (sic.object_id=si.object_id AND sic.index_id = si.index_id) "
                 + "JOIN sys.columns sc ON (sc.object_id=sic.object_id AND sc.column_id=sic.column_id) "
-                + "JOIN sys.schemas ss ON (st.schema_id=ss.schema_id) " + (defSchema == null ? "" : "WHERE ss.name='" + defSchema + "' ")
+                + "JOIN sys.schemas ss ON (st.schema_id=ss.schema_id) "
+                + (defSchema == null ? "" : "WHERE ss.name='" + defSchema + "' ")
                 + "ORDER by st.object_id,si.index_id,sic.key_ordinal ");
         try
         {
@@ -83,7 +87,8 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
@@ -101,11 +106,14 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
                 "scc.definition " +
                 "FROM information_schema.columns c " +
                 "JOIN sys.columns sc ON (sc.object_id=object_id(c.table_name) AND sc.name = c.column_name) " +
-                "LEFT JOIN sys.computed_columns scc ON (scc.object_id=object_id(c.table_name) AND scc.name = c.column_name) " +
-                "LEFT JOIN information_schema.constraint_column_usage cc ON (cc.table_name=c.table_name AND cc.table_schema=c.table_schema AND cc.column_name=c.column_name) " +
+                "LEFT JOIN sys.computed_columns scc ON (scc.object_id=object_id(c.table_name)" +
+                    "AND scc.name = c.column_name) " +
+                "LEFT JOIN information_schema.constraint_column_usage cc ON (cc.table_name=c.table_name " +
+                    "AND cc.table_schema=c.table_schema AND cc.column_name=c.column_name) " +
                 "LEFT JOIN information_schema.table_constraints tc ON (cc.constraint_name = tc.constraint_name) " +
                 "LEFT JOIN information_schema.check_constraints ch ON (cc.constraint_name = ch.constraint_name) " +
-                "WHERE (ch.check_clause IS NULL OR tc.constraint_type = 'CHECK') " + (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
+                "WHERE (ch.check_clause IS NULL OR tc.constraint_type = 'CHECK') "
+                + (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
                 "ORDER BY c.table_name,c.ordinal_position");
         try
         {
@@ -176,11 +184,13 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
+    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT table_name,table_type FROM information_schema.tables t WHERE table_schema='" + defSchema + "' AND table_type IN ('BASE TABLE','VIEW')");
+        ResultSet rs = connector.executeQuery("SELECT table_name,table_type FROM information_schema.tables t " +
+                "WHERE table_schema='" + defSchema + "' AND table_type IN ('BASE TABLE','VIEW')");
         try
         {
             while (rs.next())

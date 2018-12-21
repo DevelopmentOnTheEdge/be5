@@ -138,7 +138,8 @@ public class DataElementUtils
      */
     public static BeModelElement fromPath(final Project root, final DataElementPath path)
     {
-        final BeModelCollection<BeModelElement> wrapper = new BeVectorCollection<>("wrapper", BeModelElement.class, null);
+        final BeModelCollection<BeModelElement> wrapper =
+                new BeVectorCollection<>("wrapper", BeModelElement.class, null);
         putQuiet(wrapper, root);
         final Iterable<String> pathParts = Arrays.asList(path.getPathComponents());
         final Iterator<String> pathIterator = pathParts.iterator();
@@ -160,7 +161,8 @@ public class DataElementUtils
         if (!(node instanceof BeModelCollection))
             return null; // need but can't go further
 
-        @SuppressWarnings("unchecked") final BeModelCollection<BeModelElement> collection = (BeModelCollection<BeModelElement>) node;
+        @SuppressWarnings("unchecked")
+        final BeModelCollection<BeModelElement> collection = (BeModelCollection<BeModelElement>) node;
 
         if (!collection.contains(pathPart))
             return null; // not found
@@ -170,7 +172,8 @@ public class DataElementUtils
         return traversePath(pathIterator, nextNode);
     }
 
-    public static boolean equals(BeModelCollection<? extends BeModelElement> c1, BeModelCollection<? extends BeModelElement> c2)
+    public static boolean equals(BeModelCollection<? extends BeModelElement> c1,
+                                 BeModelCollection<? extends BeModelElement> c2)
     {
         if (c1 == null && c2 == null)
             return true;

@@ -19,7 +19,8 @@ public class RequestUtils
         sendFile(res, false, filename, contentType, StandardCharsets.UTF_8.name(), in);
     }
 
-    public static void sendFile(Response res, boolean download, String filename, String contentType, String charset, InputStream in)
+    public static void sendFile(Response res, boolean download, String filename, String contentType, String charset,
+                                InputStream in)
     {
         HttpServletResponse response = res.getRawResponse();
 
@@ -28,11 +29,13 @@ public class RequestUtils
 
         if (download)
         {
-            response.setHeader("Content-disposition", "attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+            response.setHeader("Content-disposition", "attachment; filename=" +
+                    UrlEscapers.urlFormParameterEscaper().escape(filename));
         }
         else
         {
-            response.setHeader("Content-disposition", "filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+            response.setHeader("Content-disposition", "filename=" +
+                    UrlEscapers.urlFormParameterEscaper().escape(filename));
         }
 
         try

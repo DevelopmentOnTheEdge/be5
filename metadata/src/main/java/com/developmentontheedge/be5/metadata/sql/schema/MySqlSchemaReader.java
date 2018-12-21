@@ -22,12 +22,13 @@ public class MySqlSchemaReader extends DefaultSchemaReader
     private static final Pattern UNNECESSARY_TYPE_LENGTH_PATTERN = Pattern.compile("^(\\w+)\\([\\d,]+\\)");
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT table_name,column_name,column_type,column_default,is_nullable,"
-                + "numeric_precision,numeric_scale,character_maximum_length,extra "
+        ResultSet rs = connector.executeQuery("SELECT table_name,column_name,column_type,column_default," +
+                "is_nullable,numeric_precision,numeric_scale,character_maximum_length,extra "
                 + "FROM information_schema.columns "
                 + "WHERE table_schema='" + defSchema + "' ORDER BY table_name, ordinal_position");
         try
@@ -98,12 +99,14 @@ public class MySqlSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT table_name,index_name,column_name,non_unique FROM information_schema.statistics "
-                + "WHERE table_schema='" + defSchema + "' ORDER BY table_name,index_name,seq_in_index");
+        ResultSet rs = connector.executeQuery("SELECT table_name,index_name,column_name,non_unique " +
+                "FROM information_schema.statistics " +
+                "WHERE table_schema='" + defSchema + "' ORDER BY table_name,index_name,seq_in_index");
         try
         {
             IndexInfo curIndex = null;

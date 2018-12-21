@@ -19,7 +19,8 @@ class LocalizationDeserializer extends FileDeserializer
     private final String lang;
     private final LanguageLocalizations target;
 
-    LocalizationDeserializer(LoadContext loadContext, final String lang, final Path path, final Localizations target) throws ReadException
+    LocalizationDeserializer(LoadContext loadContext, final String lang, final Path path, final Localizations target)
+            throws ReadException
     {
         super(loadContext, path);
         this.lang = lang;
@@ -51,7 +52,8 @@ class LocalizationDeserializer extends FileDeserializer
     {
         if (serializedEntityLocalization.size() != 1)
         {
-            loadContext.addWarning(new ReadException(path, "Each entity localization should have only one key that reperesents an entity name"));
+            loadContext.addWarning(new ReadException(path,
+                    "Each entity localization should have only one key that reperesents an entity name"));
             return;
         }
 
@@ -87,7 +89,8 @@ class LocalizationDeserializer extends FileDeserializer
         }
     }
 
-    private void readEntry(String entityName, List<String> topics, Map<String, Object> serializedEntry) throws ReadException
+    private void readEntry(String entityName, List<String> topics, Map<String, Object> serializedEntry)
+            throws ReadException
     {
         if (serializedEntry.size() != 1)
         {
@@ -100,7 +103,8 @@ class LocalizationDeserializer extends FileDeserializer
 
         if (!target.addLocalization(entityName, topics, name, value))
         {
-            loadContext.addWarning(new ReadException(target.get(entityName), path, "Duplicate localization: topics = " + topics + "; name = " + name));
+            loadContext.addWarning(new ReadException(target.get(entityName), path,
+                    "Duplicate localization: topics = " + topics + "; name = " + name));
         }
     }
 

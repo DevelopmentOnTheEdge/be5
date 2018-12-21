@@ -14,8 +14,8 @@ public abstract class MacroProcessorStrategySupport implements IMacroProcessorSt
         if (!"ID".equalsIgnoreCase(pair[pair.length - 1]))
             return null;
         String prefix = pair.length == 2 ? pair[0] + "." : "";
-        return "<if columnExists=\"" + entity + ".___ownerID\">" + prefix + quoteIdentifier("___ownerID") + "</if><unless columnExists=\""
-                + entity + ".___ownerID\">" + genericRefLowLevel(entity, id) + "</unless>";
+        return "<if columnExists=\"" + entity + ".___ownerID\">" + prefix + quoteIdentifier("___ownerID") + "</if>" +
+                "<unless columnExists=\"" + entity + ".___ownerID\">" + genericRefLowLevel(entity, id) + "</unless>";
     }
 
     @Override

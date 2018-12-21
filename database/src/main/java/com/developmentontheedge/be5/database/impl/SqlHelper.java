@@ -72,13 +72,15 @@ public class SqlHelper
         return Ast.insert(tableName).fields(columns).values(valuePlaceholders).format();
     }
 
-    private String generateUpdateSql(String tableName, Map<String, String> conditionsPlaceholders, Map<String, String> valuePlaceholders)
+    private String generateUpdateSql(String tableName, Map<String, String> conditionsPlaceholders,
+                                     Map<String, String> valuePlaceholders)
     {
         return Ast.update(tableName).set(valuePlaceholders)
                 .where(conditionsPlaceholders).format();
     }
 
-    private String generateUpdateInSql(String tableName, String primaryKeyName, int count, Map<String, String> valuePlaceholders)
+    private String generateUpdateInSql(String tableName, String primaryKeyName, int count,
+                                       Map<String, String> valuePlaceholders)
     {
         return Ast.update(tableName).set(valuePlaceholders)
                 .whereInWithReplacementParameter(primaryKeyName, count).format();

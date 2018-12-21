@@ -41,18 +41,21 @@ public class ProjectDeserializer extends FileDeserializer
 
     private YamlDeserializer yamlDeserializer;
 
-    ProjectDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path) throws ReadException
+    ProjectDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path)
+            throws ReadException
     {
         super(loadContext, path);
         this.yamlDeserializer = yamlDeserializer;
     }
 
-    private void readMacroFiles(final Map<String, Object> serializedModuleBody, final FreemarkerCatalog macroFiles) throws ReadException
+    private void readMacroFiles(final Map<String, Object> serializedModuleBody, final FreemarkerCatalog macroFiles)
+            throws ReadException
     {
         yamlDeserializer.readMacroFiles(this, serializedModuleBody, macroFiles);
     }
 
-    private ProjectFileStructure readProjectFileStructure(final Map<String, Object> serializedPfs, final Project project)
+    private ProjectFileStructure readProjectFileStructure(final Map<String, Object> serializedPfs,
+                                                          final Project project)
     {
         return yamlDeserializer.readProjectFileStructure(this, serializedPfs, project);
     }
@@ -61,9 +64,10 @@ public class ProjectDeserializer extends FileDeserializer
     protected void doDeserialize(Object serializedRoot) throws ReadException
     {
         final Map<String, Object> serializedProject = asMap(serializedRoot);
-        final String projectName = serializedProject.keySet().iterator().next(); // ignore root.getFileName().toString();
+        final String projectName = serializedProject.keySet().iterator().next(); //ignore root.getFileName().toString();
         final Map<String, Object> serializedProjectBody = asMap(serializedProject.get(projectName));
-        final Project project = new Project(projectName, nullableAsBool(serializedProjectBody.get(ATTR_MODULE_PROJECT)));
+        final Project project = new Project(projectName,
+                nullableAsBool(serializedProjectBody.get(ATTR_MODULE_PROJECT)));
         project.setLocation(path.getParent());
 
         // Read the file structure
@@ -134,7 +138,8 @@ public class ProjectDeserializer extends FileDeserializer
         project.getAutomaticDeserializationService().registerFile(path, ManagedFileType.PROJECT);
     }
 
-    private void readLocalizations(final Map<String, Object> serializedProjectBody, final Project project) throws ReadException
+    private void readLocalizations(final Map<String, Object> serializedProjectBody, final Project project)
+            throws ReadException
     {
         final Object serializedL10ns = serializedProjectBody.get(ATTR_LOCALIZATIONS);
 
@@ -154,7 +159,8 @@ public class ProjectDeserializer extends FileDeserializer
         yamlDeserializer.readSecurity(securityCollection);
     }
 
-    private List<Module> readModuleReferences(final Map<String, Object> projectElement, final Project project) throws ReadException
+    private List<Module> readModuleReferences(final Map<String, Object> projectElement, final Project project)
+            throws ReadException
     {
         final List<Module> modules = new ArrayList<>();
         final Object serializedModules = projectElement.get(TAG_MODULES);
@@ -174,14 +180,16 @@ public class ProjectDeserializer extends FileDeserializer
             }
             catch (Exception e)
             {
-                loadContext.addWarning(new ReadException(e, name == null ? modulesPath : modulesPath.getChildPath(name), path));
+                loadContext.addWarning(new ReadException(e,
+                        name == null ? modulesPath : modulesPath.getChildPath(name), path));
             }
         }
 
         return modules;
     }
 
-    private Module readModuleReference(final String moduleName, final Map<String, Object> serializedModuleBody, final Project project) throws ReadException
+    private Module readModuleReference(final String moduleName, final Map<String, Object> serializedModuleBody,
+                                       final Project project) throws ReadException
     {
         final Module module = new Module(moduleName, project.getModules());
         final Object entities = serializedModuleBody.get(TAG_ENTITIES);
@@ -237,7 +245,8 @@ public class ProjectDeserializer extends FileDeserializer
         }
     }
 
-    private void readScripts(final Map<String, Object> serializedProjectBody, final FreemarkerCatalog scripts) throws ReadException
+    private void readScripts(final Map<String, Object> serializedProjectBody, final FreemarkerCatalog scripts)
+            throws ReadException
     {
         final Object serializedScripts = serializedProjectBody.get(TAG_SCRIPTS);
 
@@ -256,7 +265,9 @@ public class ProjectDeserializer extends FileDeserializer
                     FreemarkerScriptOrCatalog newParent = parent.get(pathComponents[i]);
                     if (newParent instanceof FreemarkerScript)
                     {
-                        loadContext.addWarning(new ReadException(new Exception("Cannot create catalog for script " + scriptName + ": script with the same name exists"), newParent.getCompletePath(), path));
+                        loadContext.addWarning(new ReadException(new Exception("Cannot create catalog for script "
+                                + scriptName + ": script with the same name exists"),
+                                newParent.getCompletePath(), path));
                         continue;
                     }
                     if (newParent == null)
@@ -269,7 +280,8 @@ public class ProjectDeserializer extends FileDeserializer
                 FreemarkerScriptOrCatalog scriptOrCatalog = parent.get(pathComponents[pathComponents.length - 1]);
                 if (scriptOrCatalog instanceof FreemarkerCatalog)
                 {
-                    loadContext.addWarning(new ReadException(new Exception("Cannot create script " + scriptName + ": catalog with the same name exists"), scriptOrCatalog.getCompletePath(), path));
+                    loadContext.addWarning(new ReadException(new Exception("Cannot create script " + scriptName +
+                            ": catalog with the same name exists"), scriptOrCatalog.getCompletePath(), path));
                     continue;
                 }
                 final FreemarkerScript script = new FreemarkerScript(pathComponents[pathComponents.length - 1], parent);
@@ -281,7 +293,8 @@ public class ProjectDeserializer extends FileDeserializer
             }
             catch (final Exception e)
             {
-                loadContext.addWarning(new ReadException(e, scripts.getCompletePath().getChildPath(scriptName), scriptsFile));
+                loadContext.addWarning(new ReadException(e,
+                        scripts.getCompletePath().getChildPath(scriptName), scriptsFile));
             }
         }
     }

@@ -76,7 +76,8 @@ public class DefaultTypeManager implements DbmsTypeManager
     @Override
     public String getConstraintClause(ColumnDef column)
     {
-        if (column.getType().getTypeName().equals(SqlColumnType.TYPE_ENUM) || column.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL))
+        if (column.getType().getTypeName().equals(SqlColumnType.TYPE_ENUM)
+                || column.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL))
         {
             StringBuilder sb = new StringBuilder();
             sb.append("CHECK(").append(normalizeIdentifier(column.getName())).append(" IN (");
@@ -114,7 +115,9 @@ public class DefaultTypeManager implements DbmsTypeManager
                 if (getGeneratedPrefix() != null)
                 {
                     sb.append(' ').append(getGeneratedPrefix()).append(' ')
-                            .append(function.getDefinition(column.getProject().getDatabaseSystem(), column.getEntity().getName()));
+                            .append(function.getDefinition(
+                                    column.getProject().getDatabaseSystem(),
+                                    column.getEntity().getName()));
                 }
             }
             else
@@ -190,7 +193,8 @@ public class DefaultTypeManager implements DbmsTypeManager
     public String getAlterColumnStatements(ColumnDef column, ColumnDef oldColumn)
     {
         // Works for Postgres and Db2
-        String prefix = "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " ALTER COLUMN " + normalizeIdentifier(column.getName()) + " ";
+        String prefix = "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " ALTER COLUMN " + normalizeIdentifier(column.getName()) + " ";
         StringBuilder sb = new StringBuilder();
         if (!getTypeClause(column.getType()).equals(getTypeClause(oldColumn.getType())))
         {
@@ -203,12 +207,14 @@ public class DefaultTypeManager implements DbmsTypeManager
             String constraintName = normalizeIdentifier(column.getTableFrom() + "_" + column.getName() + "_check");
             if (!oldConstraintClause.isEmpty())
             {
-                sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" DROP CONSTRAINT ")
+                sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName()))
+                        .append(" DROP CONSTRAINT ")
                         .append(constraintName).append(";\n");
             }
             if (!constraintClause.isEmpty())
             {
-                sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" ADD CONSTRAINT ")
+                sb.append("ALTER TABLE ").append(normalizeIdentifier(column.getTable().getEntityName()))
+                        .append(" ADD CONSTRAINT ")
                         .append(constraintName).append(' ').append(constraintClause).append(";\n");
             }
         }
@@ -220,8 +226,10 @@ public class DefaultTypeManager implements DbmsTypeManager
         {
             if (!Strings2.isNullOrEmpty(column.getDefaultValue()))
             {
-                sb.append("UPDATE ").append(normalizeIdentifier(column.getTable().getEntityName())).append(" SET ")
-                        .append(normalizeIdentifier(column.getName())).append('=').append(column.getDefaultValue()).append(" WHERE ")
+                sb.append("UPDATE ").append(normalizeIdentifier(column.getTable().getEntityName()))
+                        .append(" SET ")
+                        .append(normalizeIdentifier(column.getName())).append('=')
+                        .append(column.getDefaultValue()).append(" WHERE ")
                         .append(normalizeIdentifier(column.getName())).append(" IS NULL;");
             }
             sb.append(prefix).append("SET NOT NULL;");
@@ -243,19 +251,22 @@ public class DefaultTypeManager implements DbmsTypeManager
     @Override
     public String getDropColumnStatements(ColumnDef column)
     {
-        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " DROP COLUMN " + normalizeIdentifier(column.getName()) + ";\n";
+        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " DROP COLUMN " + normalizeIdentifier(column.getName()) + ";\n";
     }
 
     @Override
     public String getAddColumnStatements(ColumnDef column)
     {
-        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " ADD COLUMN " + getColumnDefinitionClause(column) + ";\n";
+        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " ADD COLUMN " + getColumnDefinitionClause(column) + ";\n";
     }
 
     @Override
     public String getRenameColumnStatements(ColumnDef column, String newName)
     {
-        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) + " RENAME COLUMN "
+        return "ALTER TABLE " + normalizeIdentifier(column.getTable().getEntityName()) +
+                " RENAME COLUMN "
                 + normalizeIdentifier(column.getName()) + " TO " + normalizeIdentifier(newName) + ";\n";
     }
 

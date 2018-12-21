@@ -18,18 +18,22 @@ import java.util.regex.Pattern;
 
 public class PostgresSchemaReader extends DefaultSchemaReader
 {
-    private static final Pattern GENERIC_REF_INDEX_PATTERN = Pattern.compile("^\\(\\('(\\w+)\\.'::text \\|\\| \\(?\\(?\"?(\\w+)\"?\\)(::character varying\\)|)(::text\\)|)\\)$");
+    private static final Pattern GENERIC_REF_INDEX_PATTERN =
+            Pattern.compile("^\\(\\('(\\w+)\\.'::text \\|\\| \\(?\\(?\"?(\\w+)\"?\\)" +
+                    "(::character varying\\)|)(::text\\)|)\\)$");
     private static final Pattern LOWER_INDEX_PATTERN = Pattern.compile("^lower\\(\\(\"?(\\w+)\"?\\)::text\\)$");
     private static final Pattern UPPER_INDEX_PATTERN = Pattern.compile("^upper\\(\\(\"?(\\w+)\"?\\)::text\\)$");
     private static final Pattern QUOTE_INDEX_PATTERN = Pattern.compile("^\"?(\\w+)\"?");
 
-    private static final Pattern DEFAULT_DATE_PATTERN = Pattern.compile("^to_date\\('(\\d+\\-\\d+\\-\\d+)'::text, 'YYYY-MM-DD'::text\\)$");
+    private static final Pattern DEFAULT_DATE_PATTERN =
+            Pattern.compile("^to_date\\('(\\d+\\-\\d+\\-\\d+)'::text, 'YYYY-MM-DD'::text\\)$");
     private static final String[] SUFFICES = {"::character varying", "::date", "::text", "::integer"};
 
     private static final Pattern ENUM_VALUES_PATTERN = Pattern.compile("\'(.+?)\'::(character varying|text)");
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
@@ -44,10 +48,12 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 "c.is_nullable, " +
                 "ch.check_clause " +
                 "FROM information_schema.columns c " +
-                "LEFT JOIN information_schema.constraint_column_usage cc ON (cc.table_name=c.table_name AND cc.table_schema=c.table_schema AND cc.column_name=c.column_name) " +
+                "LEFT JOIN information_schema.constraint_column_usage cc ON (cc.table_name=c.table_name " +
+                    "AND cc.table_schema=c.table_schema AND cc.column_name=c.column_name) " +
                 "LEFT JOIN information_schema.table_constraints tc ON (cc.constraint_name = tc.constraint_name) " +
                 "LEFT JOIN information_schema.check_constraints ch ON (cc.constraint_name = ch.constraint_name) " +
-                "WHERE (ch.check_clause IS NULL OR tc.constraint_type = 'CHECK') " + (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
+                "WHERE (ch.check_clause IS NULL OR tc.constraint_type = 'CHECK') " +
+                        (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
                 "ORDER BY c.table_name,c.ordinal_position");
         try
         {
@@ -134,11 +140,13 @@ public class PostgresSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
+    public Map<String, String> readTableNames(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT table_name,table_type FROM information_schema.tables t WHERE table_schema='" + defSchema + "' AND table_type IN ('BASE TABLE','VIEW')");
+        ResultSet rs = connector.executeQuery("SELECT table_name,table_type FROM information_schema.tables t " +
+                "WHERE table_schema='" + defSchema + "' AND table_type IN ('BASE TABLE','VIEW')");
         try
         {
             while (rs.next())
@@ -162,11 +170,13 @@ public class PostgresSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT ct.relname AS TABLE_NAME, i.indisunique AS IS_UNIQUE, ci.relname AS INDEX_NAME, " +
+        ResultSet rs = connector.executeQuery(
+                "SELECT ct.relname AS TABLE_NAME, i.indisunique AS IS_UNIQUE, ci.relname AS INDEX_NAME, " +
                 "pg_catalog.pg_get_indexdef(ci.oid, (i.keys).n, false) AS COLUMN_NAME, (i.keys).n AS ORDINAL " +
                 "FROM pg_catalog.pg_class ct " +
                 "JOIN pg_catalog.pg_namespace n " +

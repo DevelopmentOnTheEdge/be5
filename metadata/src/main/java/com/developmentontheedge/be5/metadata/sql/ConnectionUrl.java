@@ -18,9 +18,12 @@ import java.util.regex.Pattern;
 
 public class ConnectionUrl implements BeElementWithProperties
 {
-    private static final Pattern DB_NAME_EXTRACTOR = Pattern.compile("/([a-zA-Z0-9_\\-]+)([\\;\\:\\?].*|)");
-    private static final Pattern SQL_SERVER_PATTERN = Pattern.compile("jdbc:sqlserver:\\/\\/([^:;]+)(:(\\d+)|);databaseName=([a-zA-Z0-9_\\-]+)");
-    private static final Pattern SQL_SERVER_JTDS_PATTERN = Pattern.compile("jdbc:jtds:sqlserver:\\/\\/([^:;]+)(:(\\d+)|)/([a-zA-Z0-9_\\-]+)(;.+|)");
+    private static final Pattern DB_NAME_EXTRACTOR = Pattern.compile(
+            "/([a-zA-Z0-9_\\-]+)([\\;\\:\\?].*|)");
+    private static final Pattern SQL_SERVER_PATTERN = Pattern.compile(
+            "jdbc:sqlserver:\\/\\/([^:;]+)(:(\\d+)|);databaseName=([a-zA-Z0-9_\\-]+)");
+    private static final Pattern SQL_SERVER_JTDS_PATTERN = Pattern.compile(
+            "jdbc:jtds:sqlserver:\\/\\/([^:;]+)(:(\\d+)|)/([a-zA-Z0-9_\\-]+)(;.+|)");
 
     private final Rdbms rdbms;
     private String host;

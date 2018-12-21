@@ -90,7 +90,8 @@ public class GroovyRegister
             {
                 metaClass = constructor.newInstance(clazz);
             }
-            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+            catch (InstantiationException | IllegalAccessException |
+                    IllegalArgumentException | InvocationTargetException e)
             {
                 throw new RuntimeException(e);
             }
@@ -134,7 +135,8 @@ public class GroovyRegister
 //                // if constructor or initialize block:methodName = "<init>"
 //                String methodName = s.getMethodName();
 //
-//                String code = new QRec( connector, "SELECT code FROM groovyHooks WHERE className = '" + className + "' AND methodName = '" + methodName + "'" ).getString();
+//                String code = new QRec( connector, "SELECT code FROM groovyHooks WHERE className = '" +
+// className + "' AND methodName = '" + methodName + "'" ).getString();
 //                Object o = eval( code, map );
 //                return o instanceof Boolean && ( ( Boolean )o );
 //            }

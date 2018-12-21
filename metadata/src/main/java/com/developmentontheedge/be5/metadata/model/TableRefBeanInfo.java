@@ -54,7 +54,8 @@ public class TableRefBeanInfo extends BeanInfoEx
             try
             {
                 TableRef tableRef = (TableRef) getBean();
-                return tableRef.getProject().getEntity(tableRef.getTableTo()).getQueries().names().prepend("").toArray(String[]::new);
+                return tableRef.getProject().getEntity(tableRef.getTableTo()).getQueries().names().prepend("")
+                        .toArray(String[]::new);
             }
             catch (Exception e)
             {

@@ -19,5 +19,6 @@ public interface Be5EventLogger
 
     void servletCompleted(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime);
 
-    void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception);
+    void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime,
+                      String exception);
 }

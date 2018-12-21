@@ -11,7 +11,8 @@ import com.developmentontheedge.dbms.SqlExecutor;
 import java.util.Collections;
 import java.util.List;
 
-public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implements DdlElement, BeElementWithOriginModule
+public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implements DdlElement,
+                                                                                     BeElementWithOriginModule
 {
     private boolean unique;
     private String originModuleName;
@@ -91,7 +92,9 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
         List<ProjectElementException> errors = super.getErrors();
         if (getName().length() > Constants.MAX_ID_LENGTH)
         {
-            errors.add(new ProjectElementException(getCompletePath(), "name", "Index name is too long: " + getName().length() + " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
+            errors.add(new ProjectElementException(getCompletePath(), "name",
+                    "Index name is too long: " + getName().length() +
+                    " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
         }
         if (getSize() == 0)
         {
@@ -141,7 +144,8 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     @Override
     public boolean isCustomized()
     {
-        return getProject().getProjectOrigin().equals(originModuleName) && !getModule().getName().equals(originModuleName);
+        return getProject().getProjectOrigin().equals(originModuleName)
+                && !getModule().getName().equals(originModuleName);
     }
 
     @Override

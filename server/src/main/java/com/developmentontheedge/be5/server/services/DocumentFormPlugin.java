@@ -35,7 +35,8 @@ public class DocumentFormPlugin implements DocumentPlugin
         {
             if (userAwareMeta.hasAccessToOperation(query.getEntity().getName(), query.getName(), topForm))
             {
-                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, parameters, Collections.emptyMap());
+                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(),
+                        query.getName(), topForm, parameters, Collections.emptyMap());
                 operationResourceData.setId("topForm");
 
                 return operationResourceData;

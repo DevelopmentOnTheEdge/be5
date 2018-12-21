@@ -551,7 +551,8 @@ public class SqlExecutor
         {
             if (arg instanceof byte[])
                 return true;
-            if (oracle && arg != null && arg.toString().getBytes(StandardCharsets.UTF_8).length > MAX_ORACLE_STRING_LENGTH)
+            if (oracle && arg != null
+                    && arg.toString().getBytes(StandardCharsets.UTF_8).length > MAX_ORACLE_STRING_LENGTH)
                 return true;
         }
         return false;
@@ -584,7 +585,8 @@ public class SqlExecutor
 
         if (null == query)
         {
-            throw new IllegalArgumentException("Cannot find query with name \"" + queryName + "\" for " + platform + " platform."
+            throw new IllegalArgumentException("Cannot find query with name \"" + queryName +
+                    "\" for " + platform + " platform."
                     + " Please add it in sql.properties.");
         }
         return query;

@@ -60,7 +60,8 @@ public class FormController extends JsonApiModelController
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
+        Map<String, Object> operationParams = ParseRequestUtils.
+                getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
         try
@@ -68,15 +69,18 @@ public class FormController extends JsonApiModelController
             switch (requestSubUrl)
             {
                 case "":
-                    ResourceData generateData = formGenerator.generate(entityName, queryName, operationName, operationParams, values);
-                    if (OPERATION_RESULT.equals(generateData.getType()) && ((OperationResultPresentation) generateData.getAttributes()).
-                        getOperationResult().getStatus() == OperationStatus.ERROR)
+                    ResourceData generateData = formGenerator.generate(entityName, queryName, operationName,
+                            operationParams, values);
+                    if (OPERATION_RESULT.equals(generateData.getType()) &&
+                            ((OperationResultPresentation) generateData.getAttributes()).getOperationResult()
+                                    .getStatus() == OperationStatus.ERROR)
                     {
                         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     }
                     return data(generateData);
                 case "apply":
-                    ResourceData executeData = formGenerator.execute(entityName, queryName, operationName, operationParams, values);
+                    ResourceData executeData = formGenerator.execute(entityName, queryName, operationName,
+                            operationParams, values);
                     if (FORM_ACTION.equals(executeData.getType()))
                     {
                         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -95,7 +99,8 @@ public class FormController extends JsonApiModelController
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
                     .named(operationParams);
-            log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            log.log(e.getLogLevel(), "Error in operation: " + url +
+                    ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));
         }
     }

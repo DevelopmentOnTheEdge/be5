@@ -27,7 +27,8 @@ public class Projects
      * @param topic
      * @return
      */
-    public static List<String> searchLocalizations(final Project project, final String entity, final String key, final String topic)
+    public static List<String> searchLocalizations(final Project project, final String entity,
+                                                   final String key, final String topic)
     {
         final List<String> values = new ArrayList<>();
 

@@ -54,9 +54,9 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     private ContextApplier contextApplier;
     private final Boolean selectable;
 
-    public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession, UserInfoProvider userInfoProvider,
-                               Meta meta, DbService db, QueryMetaHelper queryMetaHelper,
-                               CellFormatter cellFormatter)
+    public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession,
+                               UserInfoProvider userInfoProvider, Meta meta, DbService db,
+                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter)
     {
         this.query = Objects.requireNonNull(query);
         QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);

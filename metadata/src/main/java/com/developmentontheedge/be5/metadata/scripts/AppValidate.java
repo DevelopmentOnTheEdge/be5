@@ -60,7 +60,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
         {
             logger.error("=== WARNING! ===");
             logger.error("You are using the protected profile '" + be5Project.getConnectionProfileName() + "'");
-            logger.error("The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
+            logger.error("The following database may be modified due to this command: " +
+                    be5Project.getConnectionProfile().getConnectionUrl());
             logger.error("Type the profile name to confirm its usage:");
             String line = "";
             try
@@ -126,7 +127,8 @@ public class AppValidate extends ScriptSupport<AppValidate>
 //                    if(moduleTo != null && prj.getModule( moduleTo ) == null)
 //                    {
 //                        moduleErrors.add( new ProjectElementException( ref, "Reference to entity '" + ref.getTableTo()
-//                            + "' which is defined in module '" + moduleTo + "' which is not specified in dependencies of module '"
+//                            + "' which is defined in module '" + moduleTo +
+// "' which is not specified in dependencies of module '"
 //                            + prj.getName() + "'" ) );
 //                    }
 //                }

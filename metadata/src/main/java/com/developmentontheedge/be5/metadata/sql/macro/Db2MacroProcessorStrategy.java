@@ -129,8 +129,10 @@ public class Db2MacroProcessorStrategy extends MacroProcessorStrategySupport
     @Override
     public String joinGenericRef(String table, String alias, String fromField)
     {
-        return "LEFT JOIN " + table + "<parameter:_tcloneid_ default=\"\"/> " + alias + " ON " + fromField + " LIKE '" + table + ".%' AND "
-                + substring(fromField, String.valueOf(table.length() + 2)) + " = " + castIntToVarchar(alias + ".ID");
+        return "LEFT JOIN " + table + "<parameter:_tcloneid_ default=\"\"/> " + alias +
+                " ON " + fromField + " LIKE '" + table + ".%' AND "
+                + substring(fromField, String.valueOf(table.length() + 2)) + " = " +
+                castIntToVarchar(alias + ".ID");
     }
 
     @Override

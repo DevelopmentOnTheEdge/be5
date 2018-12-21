@@ -41,7 +41,8 @@ public class CompiledLocalizations
         }
     }
 
-    private static void collectLocalizations(LanguageLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all)
+    private static void collectLocalizations(LanguageLocalizations localizations, Table<String, String,
+            CompiledEntityLocalizations> all)
     {
         String language = localizations.getName();
 
@@ -51,7 +52,8 @@ public class CompiledLocalizations
         }
     }
 
-    private static void collectLocalizations(String language, EntityLocalizations localizations, Table<String, String, CompiledEntityLocalizations> all)
+    private static void collectLocalizations(String language, EntityLocalizations localizations, Table<String, String,
+            CompiledEntityLocalizations> all)
     {
         String entityName = localizations.getName();
         Table<String, String, String> targetEntityLocalizations = toTable(localizations);
@@ -94,7 +96,8 @@ public class CompiledLocalizations
             return entityLocalizations -> entityLocalizations.getFirstByTopic(topic);
         }
 
-        public static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(final String topic, final String key)
+        public static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(
+                final String topic, final String key)
         {
             return entityLocalizations -> entityLocalizations.getByTopicAndKey(topic, key);
         }
@@ -153,7 +156,8 @@ public class CompiledLocalizations
                 .orElse(queryName));
     }
 
-    public Optional<String> getFieldTitle(String language, String entityName, String operationName, String queryName, String name)
+    public Optional<String> getFieldTitle(String language, String entityName, String operationName,
+                                          String queryName, String name)
     {
         Optional<String> title = get(language, entityName, operationName, name);
 
@@ -214,7 +218,8 @@ public class CompiledLocalizations
         return localization;
     }
 
-    private Optional<String> findLocalization(String language, String entityName, Function<CompiledEntityLocalizations, String> continuation)
+    private Optional<String> findLocalization(String language, String entityName,
+                                              Function<CompiledEntityLocalizations, String> continuation)
     {
         CompiledEntityLocalizations entityLocalizations = all.get(language.toLowerCase(Locale.US), entityName);
 

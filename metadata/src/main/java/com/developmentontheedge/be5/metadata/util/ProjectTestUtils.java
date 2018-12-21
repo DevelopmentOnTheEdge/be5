@@ -56,7 +56,8 @@ public class ProjectTestUtils
     {
         Operation operation = Operation.createOperation(name, Operation.OPERATION_TYPE_JAVA, entity);
         DataElementUtils.save(operation);
-        PageCustomization customization = new PageCustomization(PageCustomization.TYPE_CSS, PageCustomization.DOMAIN_OPERATION_FORM,
+        PageCustomization customization = new PageCustomization(PageCustomization.TYPE_CSS,
+                PageCustomization.DOMAIN_OPERATION_FORM,
                 operation.getOrCreateCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class));
         customization.setCode("form {color: #f1f1f1}");
         DataElementUtils.save(customization);
@@ -83,7 +84,8 @@ public class ProjectTestUtils
 
     public static StaticPage createStaticPage(Project project, String lang, String name, String content)
     {
-        LanguageStaticPages lsp = new LanguageStaticPages("en", project.getApplication().getStaticPageCollection());
+        LanguageStaticPages lsp = new LanguageStaticPages("en",
+                project.getApplication().getStaticPageCollection());
         DataElementUtils.save(lsp);
         StaticPage staticPage = new StaticPage(name, lsp);
         DataElementUtils.save(staticPage);

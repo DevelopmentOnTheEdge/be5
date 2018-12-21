@@ -23,7 +23,8 @@ import java.util.regex.Pattern;
 
 public class Db2SchemaReader extends DefaultSchemaReader
 {
-    private static final Pattern GENERIC_COLUMN_PATTERN = Pattern.compile("^AS \\(\\s*\'(\\w+)\\.\' \\|\\| RTRIM\\( CAST\\( (\\w+) AS CHAR\\( \\d+ \\) \\) \\) \\)$");
+    private static final Pattern GENERIC_COLUMN_PATTERN =
+            Pattern.compile("^AS \\(\\s*\'(\\w+)\\.\' \\|\\| RTRIM\\( CAST\\( (\\w+) AS CHAR\\( \\d+ \\) \\) \\) \\)$");
 
     @Override
     public String getDefaultSchema(SqlExecutor sql) throws ExtendedSqlException
@@ -32,11 +33,13 @@ public class Db2SchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT tabname,colname,typename,nulls,default,length,scale,identity,text FROM syscat.columns c " +
+        ResultSet rs = connector.executeQuery(
+                "SELECT tabname,colname,typename,nulls,default,length,scale,identity,text FROM syscat.columns c " +
                 (defSchema == null ? "" : "WHERE c.tabschema='" + defSchema + "' ") + " ORDER BY c.tabname,c.colno");
         try
         {
@@ -86,14 +89,16 @@ public class Db2SchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
+    public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT i.tabname,i.indname,ic.colname,i.uniquerule "
                 + "FROM syscat.indexes i "
                 + "JOIN syscat.indexcoluse ic ON (i.indschema=ic.indschema AND i.indname=ic.indname) " +
-                (defSchema == null ? "" : "WHERE i.tabschema='" + defSchema + "' ") + " ORDER BY i.tabname,i.indname,ic.colseq");
+                (defSchema == null ? "" : "WHERE i.tabschema='" + defSchema + "' ") +
+                " ORDER BY i.tabname,i.indname,ic.colseq");
         try
         {
             IndexInfo curIndex = null;

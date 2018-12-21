@@ -28,7 +28,8 @@ public class DatabaseUtils
         {
             return Rdbms.POSTGRESQL;
         }
-        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:"))
+        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") ||
+                realUrl.startsWith("jtds:sqlserver:"))
         {
             return Rdbms.SQLSERVER;
         }
@@ -59,7 +60,8 @@ public class DatabaseUtils
         }
     }
 
-    public static void setSystemSetting(final SqlExecutor sql, final String category, final String name, final String value) throws ExtendedSqlException
+    public static void setSystemSetting(final SqlExecutor sql, final String category, final String name,
+                                        final String value) throws ExtendedSqlException
     {
         sql.exec("sql.delete.system.setting", category, name);
         sql.exec("sql.insert.system.setting", category, name, value);
@@ -91,7 +93,8 @@ public class DatabaseUtils
         }
     }
 
-    public static void setSystemSetting(final SqlExecutor sqlExecutor, final String name, final String value) throws ExtendedSqlException
+    public static void setSystemSetting(final SqlExecutor sqlExecutor, final String name, final String value)
+            throws ExtendedSqlException
     {
         setSystemSetting(sqlExecutor, "system", name, value);
     }

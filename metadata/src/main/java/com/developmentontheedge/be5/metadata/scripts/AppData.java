@@ -34,7 +34,8 @@ public class AppData extends ScriptSupport<AppData>
         PrintStream ps = null;
         try
         {
-            ps = createPrintStream(be5Project.getName() + "_scripts_" + script.replace(';', '_').replace(':', '.') + ".sql");
+            ps = createPrintStream(be5Project.getName() + "_scripts_" +
+                    script.replace(';', '_').replace(':', '.') + ".sql");
 
             ModuleLoader2.addModuleScripts(be5Project);
 
@@ -59,7 +60,8 @@ public class AppData extends ScriptSupport<AppData>
                                 continue;
                             scripts.add(script);
                         }
-                        FreemarkerScript script = be5Project.getApplication().getFreemarkerScripts().optScript(scriptName);
+                        FreemarkerScript script = be5Project.getApplication()
+                                .getFreemarkerScripts().optScript(scriptName);
                         if (script != null)
                         {
                             scripts.add(script);
@@ -121,15 +123,15 @@ public class AppData extends ScriptSupport<AppData>
         logSqlFilePath();
     }
 
-    protected void executeScript(final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript) throws ProjectElementException, IOException
+    protected void executeScript(final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript)
+            throws ProjectElementException, IOException
     {
         String compiled = freemarkerScript.getResult().validate();
         if (sqlPath != null)
         {
-            Files.write(
-                    sqlPath.toPath().resolve(
-                            be5Project.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
-                                    + freemarkerScript.getName() + ".compiled"), compiled.getBytes(StandardCharsets.UTF_8));
+            Files.write(sqlPath.toPath().resolve(
+                    be5Project.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
+                            + freemarkerScript.getName() + ".compiled"), compiled.getBytes(StandardCharsets.UTF_8));
         }
         String sql = compiled.trim();
         if (sql.isEmpty())

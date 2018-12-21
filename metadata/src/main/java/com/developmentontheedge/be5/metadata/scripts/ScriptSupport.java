@@ -79,7 +79,8 @@ public abstract class ScriptSupport<T>
                     profile.getJdbcUrl().createConnectionUrl(false), profile.getUsername(),
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
-            logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
+            logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(),
+                    profile.getUsername(), "xxxxx"));
         }
         else
         {
@@ -137,7 +138,8 @@ public abstract class ScriptSupport<T>
 
         try
         {
-            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
+            LogManager.getLogManager().readConfiguration(
+                    new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
         }
         catch (IOException e)
         {
@@ -186,7 +188,8 @@ public abstract class ScriptSupport<T>
 //                    logger.error("Error: " + exception.getMessage());
 //                }
 //            }
-//            throw new ScriptException(messageTemplate.replace("%d", String.valueOf(loadContext.getWarnings().size())));
+//            throw new ScriptException(messageTemplate.replace("%d",
+// String.valueOf(loadContext.getWarnings().size())));
 //        }
 //    }
 
