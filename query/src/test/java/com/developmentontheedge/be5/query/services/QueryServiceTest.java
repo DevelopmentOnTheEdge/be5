@@ -54,14 +54,6 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void testColumnNames()
-    {
-        List<String> columnNames = queryService.build(query, emptyMap()).getColumnNames();
-        assertEquals(2, columnNames.size());
-        assertEquals("NAME", columnNames.get(0));
-    }
-
-    @Test
     public void testCountFromQuery()
     {
         SqlQueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());

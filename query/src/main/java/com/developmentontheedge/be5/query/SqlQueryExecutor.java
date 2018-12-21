@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.model.AstStart;
 
 import java.util.List;
@@ -19,13 +18,6 @@ public interface SqlQueryExecutor extends QueryExecutor
      * Counts the number of resulting rows.
      */
     long count();
-
-    DynamicPropertySet getRow();
-
-    /**
-     * Returns a list of column names.
-     */
-    List<String> getColumnNames();
 
     AstStart getFinalSql();
 }

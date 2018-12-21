@@ -21,8 +21,6 @@ import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -105,14 +103,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     }
 
     @Override
-    public List<String> getColumnNames() throws Be5Exception
-    {
-        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
-            return getColumnNames(getFinalSql().getQuery().toString());
-        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
-    }
-
-    @Override
     public AstStart getFinalSql()
     {
         return getFinalSql(ExecuteType.DEFAULT);
@@ -162,21 +152,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         }
     }
 
-    private List<String> getColumnNames(String sql)
-    {
-        return db.select(sql, rs -> {
-            List<String> result = new ArrayList<>();
-            ResultSetMetaData meta = rs.getMetaData();
-
-            for (int column = 1, count = meta.getColumnCount(); column <= count; column++)
-            {
-                result.add(meta.getColumnName(column));
-            }
-
-            return result;
-        });
-    }
-
     @Override
     public List<DynamicPropertySet> execute()
     {
@@ -200,12 +175,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     public long count()
     {
         return (Long) execute(ExecuteType.COUNT, new DynamicPropertySetSimpleStringParser()).get(0).asMap().get("count");
-    }
-
-    @Override
-    public DynamicPropertySet getRow()
-    {
-        return getRow(new DynamicPropertySetSimpleStringParser());
     }
 
     @Override
