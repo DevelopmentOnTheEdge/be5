@@ -42,8 +42,6 @@ class DpsRecordAdapter
                     continue;
                 }
                 Object val = SqlUtils.getSqlValue(dp.getType(), resultSet, i + 1);
-                //todo test Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
-                //metaProcessor.process(val, metaInfo);
                 DynamicProperty property = DynamicPropertySetSupport.cloneProperty(dp);
                 property.setValue(val);
                 dps.add(property);
@@ -73,7 +71,6 @@ class DpsRecordAdapter
             int count = metaData.getColumnCount();
             DynamicProperty[] schema = new DynamicProperty[count];
             Set<String> names = new HashSet<>();
-            // TODO: support ";ColumnName" declarations
             for (int i = 1; i <= count; i++)
             {
                 String columnLabel = metaData.getColumnLabel(i);
@@ -96,7 +93,6 @@ class DpsRecordAdapter
                 if (parts.length == 2)
                     BeTagParser.parseTags(tags, parts[1]);
                 DynamicPropertyMeta.set(dp, tags);
-                // TODO: support various types, attributes, tags, meta
                 schema[i - 1] = dp;
             }
             return schema;
