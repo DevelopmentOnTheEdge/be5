@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5QueryContext;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
+import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.sql.format.QueryContext;
@@ -23,28 +24,24 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     private final QuerySession querySession;
     private final UserInfoProvider userInfoProvider;
     private final QueryMetaHelper queryMetaHelper;
+    private final CellFormatter cellFormatter;
 
     @Inject
     public QueryExecutorFactoryImpl(Meta meta, DbService db, QuerySession querySession,
-                                    UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper)
+                                    UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter)
     {
         this.meta = meta;
         this.db = db;
         this.querySession = querySession;
         this.userInfoProvider = userInfoProvider;
         this.queryMetaHelper = queryMetaHelper;
+        this.cellFormatter = cellFormatter;
     }
 
     @Override
     public SqlQueryExecutor build(Query query, Map<String, ?> parameters)
     {
         QueryContext context = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
-        return build(query, context);
-    }
-
-    @Override
-    public SqlQueryExecutor build(Query query, QueryContext queryContext)
-    {
-        return new Be5SqlQueryExecutor(query, queryContext, meta, db, queryMetaHelper);
+        return new Be5SqlQueryExecutor(query, context, meta, db, queryMetaHelper, cellFormatter);
     }
 }

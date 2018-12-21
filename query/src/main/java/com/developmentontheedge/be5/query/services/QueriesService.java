@@ -37,17 +37,17 @@ public class QueriesService
     private final DbService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final QueryExecutorFactory queryService;
+    private final QueryExecutorFactory queryExecutorFactory;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                          QueryExecutorFactory queryService, UserInfoProvider userInfoProvider)
+                          QueryExecutorFactory queryExecutorFactory, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
-        this.queryService = queryService;
+        this.queryExecutorFactory = queryExecutorFactory;
 
         tagsCache = be5Caches.createCache("Tags");
         this.userInfoProvider = userInfoProvider;
@@ -169,7 +169,7 @@ public class QueriesService
         }
         else
         {
-            list = queryService.build(query, parameters)
+            list = queryExecutorFactory.build(query, parameters)
                     .limit(Integer.MAX_VALUE)
                     .execute();
         }
@@ -330,7 +330,7 @@ public class QueriesService
 
     public <T> List<T> list(Query query, ResultSetParser<T> parser, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).execute(parser);
+        return queryExecutorFactory.build(query, parameters).execute(parser);
     }
 */
     public List<List<Object>> listOfLists(String sql, Object... params)
@@ -376,7 +376,7 @@ public class QueriesService
 
     public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).execute(new QRecParser());
+        return queryExecutorFactory.build(query, parameters).execute(new QRecParser());
     }
 
     //TODO rename one()
@@ -392,7 +392,7 @@ public class QueriesService
 
     public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
-        return queryService.build(query, parameters).getRow(new QRecParser());
+        return queryExecutorFactory.build(query, parameters).getRow(new QRecParser());
     }
 
 //    public QRec withCache( String sql, Object... params )

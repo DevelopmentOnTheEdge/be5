@@ -12,7 +12,10 @@ import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringPars
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.MacroExpander;
@@ -21,6 +24,7 @@ import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +33,6 @@ import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
-
 
 /**
  * A modern query executor that uses our new parser.
@@ -44,12 +47,13 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
 
     private final Map<String, List<Object>> parameters;
     private final QueryMetaHelper queryMetaHelper;
+    private final CellFormatter cellFormatter;
 
     private ContextApplier contextApplier;
     private final Boolean selectable;
 
     public Be5SqlQueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
-                               QueryMetaHelper queryMetaHelper)
+                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter)
     {
         this.query = Objects.requireNonNull(query);
 
@@ -59,6 +63,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         this.queryMetaHelper = queryMetaHelper;
 
         this.contextApplier = new ContextApplier(queryContext);
+        this.cellFormatter = cellFormatter;
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
@@ -157,7 +162,35 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     {
         List<DynamicPropertySet> rows = execute(new DynamicPropertySetSimpleStringParser());
         addAggregateRowIfNeeded(rows);
-        return rows;
+        return processRows(rows);
+    }
+
+    private List<DynamicPropertySet> processRows(List<DynamicPropertySet> rows)
+    {
+        List<DynamicPropertySet> res = new ArrayList<>();
+        rows.forEach(cells -> res.add(processCells(cells)));
+        return res;
+    }
+
+    private DynamicPropertySet processCells(DynamicPropertySet cells)
+    {
+        DynamicPropertySet resultCells = new DynamicPropertySetSupport();
+        DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
+
+        for (DynamicProperty cell : cells)
+        {
+            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
+            DynamicProperty property = new DynamicProperty(cell.getName(), processedContent == null ? String.class
+                    : processedContent.getClass(), processedContent);
+            DynamicPropertyMeta.set(property, DynamicPropertyMeta.get(cell));
+            previousCells.add(property);
+            if (!cell.isHidden())
+            {
+                resultCells.add(property);
+            }
+        }
+
+        return resultCells;
     }
 
     private void addAggregateRowIfNeeded(List<DynamicPropertySet> propertiesList)

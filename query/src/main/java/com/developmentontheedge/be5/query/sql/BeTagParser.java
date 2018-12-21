@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * BE tags parser like <blahbla/>;<foo bar="baz" a="b" c="d"/>;<oneMoreTag/>
  */
-public class BeTagParser
+class BeTagParser
 {
     private enum TokenType
     {
@@ -67,7 +67,7 @@ public class BeTagParser
         }
     }
 
-    public static void parseTags(Map<String, Map<String, String>> map, String tagString)
+    static void parseTags(Map<String, Map<String, String>> map, String tagString)
     {
         if (tagString == null) return;
 

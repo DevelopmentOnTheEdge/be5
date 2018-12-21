@@ -15,9 +15,9 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
-import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,10 +69,10 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
-    private final QueriesService queries;
+    private final Provider<QueriesService> queries;
 
     @Inject
-    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, QueriesService queries)
+    public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider, Provider<QueriesService> queries)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
@@ -83,27 +84,22 @@ public class CellFormatter
     /**
      * Executes subqueries of the cell or returns the cell content itself.
      */
-    Object formatCell(RawCellModel cell, DynamicPropertySet previousCells, Query query, ContextApplier contextApplier)
+    Object formatCell(DynamicProperty cell, DynamicPropertySet previousCells, Query query, ContextApplier contextApplier)
     {
         return format(cell, new RootVarResolver(previousCells), query, contextApplier);
     }
 
-    private Object format(RawCellModel cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
-        //ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cell, varResolver);
-
         Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier);
-//        if(formattedContent == null) {
-//            return null;
-//        }
-        //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
+
         if (formattedContent instanceof String)
         {
             formattedContent = getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
         }
-        //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
 
-        Map<String, String> blankNullsProperties = cell.options.get(QueryConstants.COL_ATTR_BLANKNULLS);
+        Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
+        Map<String, String> blankNullsProperties = options.get(QueryConstants.COL_ATTR_BLANKNULLS);
         if (blankNullsProperties != null)
         {
             if (formattedContent == null || formattedContent.equals("null"))
@@ -113,7 +109,7 @@ public class CellFormatter
         }
 
 
-        Map<String, String> nullIfProperties = cell.options.get(QueryConstants.COL_ATTR_NULLIF);
+        Map<String, String> nullIfProperties = options.get(QueryConstants.COL_ATTR_NULLIF);
         if (nullIfProperties != null)
         {
             if (formattedContent == null || formattedContent.equals(nullIfProperties.get("value")))
@@ -122,7 +118,7 @@ public class CellFormatter
             }
         }
 
-        Map<String, String> linkProperties = cell.options.get(COL_ATTR_LINK);
+        Map<String, String> linkProperties = options.get(COL_ATTR_LINK);
         if (linkProperties != null && !linkProperties.containsKey(COL_ATTR_URL))
         {
             try
@@ -146,7 +142,7 @@ public class CellFormatter
                     url = url.named(mapOfList);
                 }
                 String utlStr = url.toString();
-                cell.options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
+                options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
                         put(COL_ATTR_URL, utlStr);
                         put("class", linkProperties.get("class"));
                 }});
@@ -154,11 +150,11 @@ public class CellFormatter
             catch (Throwable e)
             {
                 throw Be5Exception.internalInQuery(query,
-                        new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
+                        new RuntimeException("Error in process COL_ATTR_LINK: " + cell.getName(), e));
             }
         }
 
-        Map<String, String> refProperties = cell.options.get(QueryConstants.COL_ATTR_REF);
+        Map<String, String> refProperties = options.get(QueryConstants.COL_ATTR_REF);
         if (refProperties != null)
         {
             String table = refProperties.get("table");
@@ -174,7 +170,7 @@ public class CellFormatter
                 }
             }
             String utlStr = url.toString();
-            cell.options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
+            options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
                 put(COL_ATTR_URL, utlStr);
                 put("class", refProperties.get("class"));
             }});
@@ -183,29 +179,30 @@ public class CellFormatter
         return formattedContent;
     }
 
-    private Object getFormattedPartsWithoutLink(RawCellModel cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private Object getFormattedPartsWithoutLink(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         Objects.requireNonNull(cell);
+        Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
 
-        boolean hasLink = cell.options.containsKey("link");
+        boolean hasLink = options.containsKey("link");
         Map<String, String> link = null;
         if (hasLink)
         {
-            link = cell.options.get("link");
-            cell.options.remove("link");
+            link = options.get("link");
+            options.remove("link");
         }
 
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
 
-        if (cell.content == null)
+        if (cell.getValue() == null)
         {
             return null;
         }
 
         Object content;
-        if (cell.content instanceof String)
+        if (cell.getValue() instanceof String)
         {
-            unzipper.unzip((String) cell.content, builder::add, subquery ->
+            unzipper.unzip((String) cell.getValue(), builder::add, subquery ->
                     builder.add(toTable(subquery, varResolver, query, contextApplier))
             );
             ImmutableList<Object> formattedParts = builder.build();
@@ -213,12 +210,12 @@ public class CellFormatter
         }
         else
         {
-            content = cell.content;
+            content = cell.getValue();
         }
 
         if (hasLink)
         {
-            cell.options.put("link", link);
+            options.put("link", link);
         }
         return content;
     }
@@ -228,11 +225,7 @@ public class CellFormatter
      */
     private String print(Object formattedPart)
     {
-        if (formattedPart instanceof String)
-        {
-            return (String) formattedPart;
-        }
-        else if (formattedPart instanceof List)
+        if (formattedPart instanceof List)
         {
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
@@ -243,7 +236,7 @@ public class CellFormatter
         }
         else
         {
-            throw new AssertionError(formattedPart.getClass().getName());
+            return formattedPart.toString();
         }
     }
 
@@ -275,9 +268,10 @@ public class CellFormatter
         return StreamEx.of(dps.spliterator()).map(property -> {
             String name = property.getName();
             Object value = property.getValue();
-            RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
+            //RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
+            if (value == null) property.setValue("");
             CompositeVarResolver compositeVarResolver = new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
-            Object processedCell = format(rawCellModel, compositeVarResolver, query, contextApplier);
+            Object processedCell = format(property, compositeVarResolver, query, contextApplier);
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
         }).toList();
@@ -366,7 +360,7 @@ public class CellFormatter
             log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
-            dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
+            dynamicProperties.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, "-1"));
             dynamicProperties.add(new DynamicProperty("error", String.class,
                     userInfoProvider.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
             dynamicPropertySets = Collections.singletonList(dynamicProperties);
@@ -407,7 +401,7 @@ public class CellFormatter
             if (entity != null && entity.getType() == EntityType.DICTIONARY)
             {
                 String primaryKey = entity.getPrimaryKey();
-                String[][] tags = queries.getTagsFromSelectionView(entity.getName(), singletonMap(primaryKey, key));
+                String[][] tags = queries.get().getTagsFromSelectionView(entity.getName(), singletonMap(primaryKey, key));
                 if (tags.length > 0)
                 {
                     return Optional.of(tags[0][1]);

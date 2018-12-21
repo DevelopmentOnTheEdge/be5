@@ -47,7 +47,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void testExecuteSubQuery()
+    public void subQuery()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query");
         TableModel tableModel = tableModelService.getTableModel(query, new HashMap<>());
@@ -79,7 +79,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void testExecuteSubQueryWithPrepareParams()
+    public void subQueryWithPrepareParams()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries()
                 .get("Sub Query with prepare params");
@@ -90,7 +90,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void testExecuteSubQueryWithLongPrepareParams()
+    public void subQueryWithLongPrepareParams()
     {
         Query query = projectProvider.get().getEntity("testtable").getQueries()
                 .get("Sub Query with long prepare params");
@@ -238,7 +238,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void testNullInSubQuery()
+    public void subQueryTestNull()
     {
         db.update("DELETE FROM testtableAdmin");
         long id1 = db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);

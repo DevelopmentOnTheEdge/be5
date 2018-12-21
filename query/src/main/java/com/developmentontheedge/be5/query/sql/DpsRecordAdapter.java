@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.query.sql;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -18,7 +17,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-public class DpsRecordAdapter
+class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
@@ -62,7 +61,7 @@ public class DpsRecordAdapter
         return createSchema(metaData, SqlUtils::getSimpleStringTypeClass);
     }
 
-    public static DynamicProperty[] createSchema(ResultSetMetaData metaData)
+    static DynamicProperty[] createSchema(ResultSetMetaData metaData)
     {
         return createSchema(metaData, SqlUtils::getTypeClass);
     }
@@ -93,10 +92,6 @@ public class DpsRecordAdapter
                 String name = getUniqueName(names, parts[0]);
                 Class<?> clazz = getTypeClassFun.apply(metaData.getColumnType(i));
                 DynamicProperty dp = new DynamicProperty(name, clazz);
-                if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX))
-                {
-                    dp.setHidden(true);
-                }
                 Map<String, Map<String, String>> tags = new TreeMap<>();
                 if (parts.length == 2)
                     BeTagParser.parseTags(tags, parts[1]);
