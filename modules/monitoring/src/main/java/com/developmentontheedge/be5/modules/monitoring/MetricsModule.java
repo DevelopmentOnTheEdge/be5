@@ -53,6 +53,8 @@ public class MetricsModule extends ServletModule
         METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS,
                 new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
 
+//        final JmxReporter reporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
+//        reporter.start();
 
 //        final InstrumentedAppender metrics = new InstrumentedAppender(METRIC_REGISTRY);
 //        metrics.setContext(root.getLoggerContext());

@@ -43,6 +43,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-jmx</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.marmelo.dropwizard</groupId>
       <artifactId>dropwizard-metrics-ui</artifactId>
       <version>1.0</version>
