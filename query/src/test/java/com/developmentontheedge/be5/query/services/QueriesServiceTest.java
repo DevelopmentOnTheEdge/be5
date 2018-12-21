@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -202,8 +204,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsFromQueryTest()
     {
-        List<QRec> list = queries.readAsRecordsFromQuery("testTags", "With parameter",
-                Collections.emptyMap());
+        List<QRec> list = queries.query("testTags", "With parameter", emptyMap());
 
         assertEquals("01", list.get(0).getValue("ID"));
         assertEquals("Regional", list.get(0).getValue("Name"));
@@ -214,15 +215,15 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsWithLongFilter()
     {
-        List<QRec> list = queries.readAsRecordsFromQuery("filterTestTable", "Simple",
-                Collections.singletonMap("ID", Collections.singletonList(123L)));
+        List<QRec> list = queries.query("filterTestTable", "Simple",
+                singletonMap("ID", Collections.singletonList(123L)));
         assertEquals(0, list.size());
     }
 
     @Test
     public void readOneRecordTest()
     {
-        QRec qRec = queries.qRecFromQuery("testTags", "With parameter", Collections.emptyMap());
+        QRec qRec = queries.queryRecord("testTags", "With parameter", emptyMap());
 
         assertEquals("01", qRec.getValue("ID"));
         assertEquals("Regional", qRec.getValue("Name"));
@@ -231,14 +232,14 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsFromQuerySqlTest()
     {
-        List<QRec> list = queries.readAsRecordsFromQuery(
+        List<QRec> list = queries.query(
                 "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
                         "        FROM testTags\n" +
                         "        WHERE 1=1\n" +
                         "        <if parameter=\"payable\">\n" +
                         "          AND payable = <parameter:payable/>\n" +
                         "        </if>",
-                Collections.emptyMap());
+                emptyMap());
 
         assertEquals("01", list.get(0).getValue("ID"));
         assertEquals("Regional", list.get(0).getValue("Name"));
@@ -249,8 +250,8 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsRecordsFromQuerySqlTestFilter()
     {
-        List<QRec> list = queries.readAsRecordsFromQuery("SELECT * FROM testTags",
-                Collections.singletonMap("admlevel", "Federal"));
+        List<QRec> list = queries.query("SELECT * FROM testTags",
+                singletonMap("admlevel", "Federal"));
 
         assertEquals(1, list.size());
     }

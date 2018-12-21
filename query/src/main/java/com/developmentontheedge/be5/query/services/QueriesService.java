@@ -52,11 +52,6 @@ public class QueriesService
         this.userInfoProvider = userInfoProvider;
     }
 
-//    public HashUrl createQueryUrl(Request req)
-//    {
-//        return new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY));
-//    }
-
     /**
      * Creates a list of options by a table name and columns that are used for optiion value and text respectively.
      */
@@ -354,40 +349,33 @@ public class QueriesService
         return values;
     }
 
-    public List<QRec> readAsRecordsFromQuery(String sql, Map<String, ?> parameters)
+    public List<QRec> query(String sql, Map<String, ?> parameters)
     {
-        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
+        return query(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<QRec> readAsRecordsFromQuery(String tableName, String queryName, Map<String, ?> parameters)
+    public List<QRec> query(String tableName, String queryName, Map<String, ?> parameters)
     {
-        return readAsRecordsFromQuery(meta.getQuery(tableName, queryName), parameters);
+        return query(meta.getQuery(tableName, queryName), parameters);
     }
 
-    public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
+    public List<QRec> query(Query query, Map<String, ?> parameters)
     {
         return queryExecutorFactory.getSqlQueryBuilder(query, parameters).execute(new QRecParser());
     }
 
-    public QRec qRecFromQuery(String sql, Map<String, ?> parameters)
+    public QRec queryRecord(String sql, Map<String, ?> parameters)
     {
-        return qRecFromQuery(meta.createQueryFromSql(sql), parameters);
+        return queryRecord(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec qRecFromQuery(String tableName, String queryName, Map<String, ?> parameters)
+    public QRec queryRecord(String tableName, String queryName, Map<String, ?> parameters)
     {
-        return qRecFromQuery(meta.getQuery(tableName, queryName), parameters);
+        return queryRecord(meta.getQuery(tableName, queryName), parameters);
     }
 
-    public QRec qRecFromQuery(Query query, Map<String, ?> parameters)
+    public QRec queryRecord(Query query, Map<String, ?> parameters)
     {
         return queryExecutorFactory.getSqlQueryBuilder(query, parameters).getRow(new QRecParser());
     }
-
-//    public QRec withCache( String sql, Object... params )
-//    {
-//        throw Be5Exception.internal("not implemented");
-//        //return withCache( sql, null );
-//    }
-
 }

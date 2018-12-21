@@ -38,7 +38,7 @@ public class QRecTest extends QueryBe5ProjectDBTest
         db.update("delete from testSubQuery");
         db.insert("insert into testSubQuery (name, value, commentTEXT) VALUES (?, ?, ?)",
                 "test", 1, "test2");
-        QRec qRec = queries.qRecFromQuery("select * from testSubQuery", Collections.emptyMap());
+        QRec qRec = queries.queryRecord("select * from testSubQuery", Collections.emptyMap());
 
         assertEquals("test2", new BufferedReader(
                 new InputStreamReader(qRec.getBinaryStream("commentTEXT"), StandardCharsets.UTF_8)).lines()
@@ -53,7 +53,7 @@ public class QRecTest extends QueryBe5ProjectDBTest
 
         db.insert("insert into testSubQuery (name, value, commentBLOB) VALUES (?, ?, ?)",
                 "test", 1, test1);
-        QRec qRec = queries.qRecFromQuery("select * from testSubQuery", Collections.emptyMap());
+        QRec qRec = queries.queryRecord("select * from testSubQuery", Collections.emptyMap());
 
 //        assertEquals("test1", new BufferedReader(
 //                new InputStreamReader(qRec.getBinaryStream("commentBLOB"))).lines()

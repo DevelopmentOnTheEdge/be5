@@ -78,7 +78,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             List<Object> records = Arrays.asList(op.getContext().getRecords());
             Set<Object> disabledRecords = new HashSet<>(records);
 
-            List<QRec> dps = queries.readAsRecordsFromQuery(query,
+            List<QRec> dps = queries.query(query,
                     Collections.singletonMap(op.getInfo().getPrimaryKey(), records));
 
             for (QRec row : dps)
