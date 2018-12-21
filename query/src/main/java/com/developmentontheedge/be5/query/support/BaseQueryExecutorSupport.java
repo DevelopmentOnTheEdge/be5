@@ -141,4 +141,10 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
     {
         return selectable;
     }
+
+    @Override
+    public long count()
+    {
+        return getLimit();
+    }
 }

@@ -2,11 +2,13 @@ package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
@@ -52,11 +54,12 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     private ContextApplier contextApplier;
     private final Boolean selectable;
 
-    public Be5SqlQueryExecutor(Query query, QueryContext queryContext, Meta meta, DbService db,
-                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter)
+    public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession, UserInfoProvider userInfoProvider,
+                               Meta meta, DbService db, QueryMetaHelper queryMetaHelper,
+                               CellFormatter cellFormatter)
     {
         this.query = Objects.requireNonNull(query);
-
+        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
         this.parameters = queryContext.getParameters();
 
         this.db = db;

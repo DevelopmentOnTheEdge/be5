@@ -237,7 +237,7 @@ public class QueryBuilderController extends JsonApiModelController
     {
         try
         {
-            return queryService.build(query, parameters).getFinalSql().getQuery().toString();
+            return queryService.getSqlQueryBuilder(query, parameters).getFinalSql().getQuery().toString();
         }
         catch (Be5Exception e)
         {

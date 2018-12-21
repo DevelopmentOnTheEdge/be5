@@ -31,7 +31,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getCategoriesForest(String entityName, boolean hideEmpty)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQuery("_categoriesService_", "getCategoriesForest"),
+                .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getCategoriesForest"),
                         Collections.singletonMap("entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
@@ -42,7 +42,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getRootCategory(String entityName)
     {
         return queryService
-                .build(meta.getQuery("_categoriesService_", "getRootCategory"),
+                .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getRootCategory"),
                         Collections.singletonMap("entity", entityName))
                 .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
@@ -51,7 +51,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getCategoryNavigation(String entityName, long categoryID)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
+                .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
                         ImmutableMap.of("categoryID", "" + categoryID, "entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
@@ -108,7 +108,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private boolean hasAnyItem(MutableCategory category)
     {
         return (Long) queryService
-                .build(meta.getQuery("_categoriesService_", "hasAnyItem"),
+                .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "hasAnyItem"),
                         Collections.singletonMap("categoryID", "" + category.id))
                 .execute().get(0).asMap().get("count") > 0;
     }

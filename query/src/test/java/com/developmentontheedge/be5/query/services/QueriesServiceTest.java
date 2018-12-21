@@ -97,6 +97,13 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void getTagsFromGroovyQuery()
+    {
+        String[][] tagsFromEnum = queries.getTagsFromCustomSelectionView("testtableAdmin", "TestGroovyTable");
+        assertArrayEquals(new String[][]{{"a1", "b1"}, {"a2", "b2"}}, tagsFromEnum);
+    }
+
+    @Test
     public void getTagsYesNo()
     {
         String[][] strings = new String[][]{{"yes", "да"}, {"no", "нет"}};
@@ -215,7 +222,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readOneRecordTest()
     {
-        QRec qRec = queries.readOneRecord("testTags", "With parameter", Collections.emptyMap());
+        QRec qRec = queries.qRecFromQuery("testTags", "With parameter", Collections.emptyMap());
 
         assertEquals("01", qRec.getValue("ID"));
         assertEquals("Regional", qRec.getValue("Name"));

@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
+import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testExecute()
     {
-        List<DynamicPropertySet> dps = queryService.build(query, emptyMap()).execute();
+        List<DynamicPropertySet> dps = queryService.get(query, emptyMap()).execute();
         assertTrue(dps.size() > 0);
 
         assertEquals(String.class, dps.get(0).getProperty("name").getType());
@@ -56,9 +57,9 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        SqlQueryExecutor be5QueryExecutor = queryService.build(meta.getQuery("testtable", "All records"), emptyMap());
+        QueryExecutor sqlQueryBuilder = queryService.get(meta.getQuery("testtable", "All records"), emptyMap());
 
-        assertTrue(be5QueryExecutor.count() > 0);
+        assertTrue(sqlQueryBuilder.count() > 0);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE name IN ('test1', 'test2') LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql().getQuery().toString());
+                getSqlQueryBuilder(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -80,7 +81,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE ID IN (1, 2) LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql().getQuery().toString());
+                getSqlQueryBuilder(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -91,7 +92,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
+                getSqlQueryBuilder(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -103,14 +104,14 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable t\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                build(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
+                getSqlQueryBuilder(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
     public void testIgnoreUnknownColumn()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumn");
-        List<DynamicPropertySet> list = queryService.build(query, Collections.singletonMap("unknownColumn", "test")).execute();
+        List<DynamicPropertySet> list = queryService.get(query, Collections.singletonMap("unknownColumn", "test")).execute();
         assertEquals(list.size(), 0);
     }
 
@@ -118,7 +119,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     public void testResolveTypeOfRefColumnError()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
-        SqlQueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
+        QueryExecutor be5QueryExecutor = queryService.get(query, new HashMap<>());
 
         be5QueryExecutor.execute();
     }
@@ -127,7 +128,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     public void testResolveTypeOfRefColumnNPE()
     {
         query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
-        SqlQueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
+        SqlQueryExecutor be5QueryExecutor = queryService.getSqlQueryBuilder(query, new HashMap<>());
 
         be5QueryExecutor.execute();
         assertEquals("", be5QueryExecutor.getFinalSql().getQuery().toString());

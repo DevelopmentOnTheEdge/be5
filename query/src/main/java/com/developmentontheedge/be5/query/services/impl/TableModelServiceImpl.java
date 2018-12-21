@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.query.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
-import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
@@ -11,7 +10,6 @@ import com.developmentontheedge.be5.query.impl.TableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.query.services.TableModelService;
-import com.google.inject.Injector;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -26,19 +24,15 @@ public class TableModelServiceImpl implements TableModelService
 {
     private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
-    private final GroovyRegister groovyRegister;
-    private final Injector injector;
     private final QueryExecutorFactory queryService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
-                                 Injector injector, QueryExecutorFactory queryService, UserInfoProvider userInfoProvider)
+    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils,
+                                 QueryExecutorFactory queryService, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
-        this.groovyRegister = groovyRegister;
-        this.injector = injector;
         this.queryService = queryService;
         this.userInfoProvider = userInfoProvider;
     }
@@ -63,11 +57,11 @@ public class TableModelServiceImpl implements TableModelService
         try
         {
             return new TableBuilder(query, parameters, userInfoProvider.get(), queryService,
-                    userAwareMeta, coreUtils, groovyRegister, injector)
+                    userAwareMeta, coreUtils)
                     .sortOrder(orderColumn, orderDir)
                     .offset(offset)
                     .limit(Math.min(limit, maxLimit))
-                    .build();
+                    .get();
         }
         catch (Throwable e)
         {

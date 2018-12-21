@@ -14,10 +14,5 @@ public interface SqlQueryExecutor extends QueryExecutor
 
     <T> T getRow(ResultSetParser<T> parser);
 
-    /**
-     * Counts the number of resulting rows.
-     */
-    long count();
-
     AstStart getFinalSql();
 }

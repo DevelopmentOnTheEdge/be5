@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.beans.QRec;
@@ -161,18 +160,9 @@ public class QueriesService
     {
         String entityName = query.getEntity().getName();
 
-        List<DynamicPropertySet> list;
-        if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
-        {
-            throw new UnsupportedOperationException();
-            //tableModel = tableModelService.getTableModel(query, parameters);
-        }
-        else
-        {
-            list = queryExecutorFactory.build(query, parameters)
-                    .limit(Integer.MAX_VALUE)
-                    .execute();
-        }
+        List<DynamicPropertySet> list = queryExecutorFactory.get(query, parameters)
+                .limit(Integer.MAX_VALUE)
+                .execute();
 
         String[][] stockArr = new String[list.size()][2];
 
@@ -376,23 +366,22 @@ public class QueriesService
 
     public List<QRec> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
-        return queryExecutorFactory.build(query, parameters).execute(new QRecParser());
+        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).execute(new QRecParser());
     }
 
-    //TODO rename one()
-    public QRec readOneRecord(String sql, Map<String, ?> parameters)
+    public QRec qRecFromQuery(String sql, Map<String, ?> parameters)
     {
-        return readOneRecord(meta.createQueryFromSql(sql), parameters);
+        return qRecFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec readOneRecord(String tableName, String queryName, Map<String, ?> parameters)
+    public QRec qRecFromQuery(String tableName, String queryName, Map<String, ?> parameters)
     {
-        return readOneRecord(meta.getQuery(tableName, queryName), parameters);
+        return qRecFromQuery(meta.getQuery(tableName, queryName), parameters);
     }
 
-    public QRec readOneRecord(Query query, Map<String, ?> parameters)
+    public QRec qRecFromQuery(Query query, Map<String, ?> parameters)
     {
-        return queryExecutorFactory.build(query, parameters).getRow(new QRecParser());
+        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).getRow(new QRecParser());
     }
 
 //    public QRec withCache( String sql, Object... params )

@@ -35,4 +35,9 @@ public interface QueryExecutor
      * Executes the query.
      */
     List<DynamicPropertySet> execute();
+
+    /**
+     * Counts the number of resulting rows.
+     */
+    long count();
 }

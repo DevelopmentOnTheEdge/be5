@@ -71,7 +71,7 @@ public class QueryServiceMacroTest extends QueryBe5ProjectDBTest
             start = System.currentTimeMillis();
             for (int i = 0; i < count; i++)
             {
-                queryService.build(query, emptyMap()).getFinalSql().format();
+                queryService.getSqlQueryBuilder(query, emptyMap()).getFinalSql().format();
             }
             System.out.println(diff + "\t " + diff2 + "\t " + (System.currentTimeMillis() - start));
         }
