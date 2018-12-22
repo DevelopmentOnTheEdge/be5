@@ -19,6 +19,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-base</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-http</artifactId>
       <version>${jetty.version}</version>
