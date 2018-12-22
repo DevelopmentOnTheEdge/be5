@@ -199,6 +199,8 @@
               <value>100000000</value>
             </systemProperty>
           </systemProperties>
+          <stopKey>stop</stopKey>
+          <stopPort>8201</stopPort>
         </configuration>
       </plugin>
       <plugin>
