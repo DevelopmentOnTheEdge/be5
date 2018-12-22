@@ -50,7 +50,7 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public synchronized Project get()
     {
-        if (dirty || project == null)
+        if (dirty)
         {
             Project oldProject = project;
             project = loadProject();

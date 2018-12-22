@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.services;
 
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -19,6 +20,7 @@ public class GroovyOperationLoader
 {
     private final Meta meta;
     private final GroovyRegister groovyRegister;
+    private final ProjectProvider projectProvider;
 
     private Map<String, GroovyOperation> groovyOperationsMap;
 
@@ -27,7 +29,12 @@ public class GroovyOperationLoader
     {
         this.groovyRegister = groovyRegister;
         this.meta = meta;
+        this.projectProvider = projectProvider;
+    }
 
+    @Start(order = 30)
+    public void start() throws Exception
+    {
         projectProvider.addToReload(this::initOperationMap);
         initOperationMap();
     }
