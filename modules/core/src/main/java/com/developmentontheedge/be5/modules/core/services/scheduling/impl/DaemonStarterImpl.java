@@ -51,7 +51,7 @@ public class DaemonStarterImpl implements DaemonStarter
 
     private final Meta meta;
     private final CoreUtils coreUtils;
-    private final Scheduler scheduler;
+    private Scheduler scheduler;
 
     @Inject
     public DaemonStarterImpl(Meta meta, CoreUtils coreUtils, GuiceJobFactory guiceJobFactory)
@@ -61,11 +61,10 @@ public class DaemonStarterImpl implements DaemonStarter
 
         try
         {
-            scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.setJobFactory(guiceJobFactory);
-
             if (meta.getDaemons().size() > 0)
             {
+                scheduler = StdSchedulerFactory.getDefaultScheduler();
+                scheduler.setJobFactory(guiceJobFactory);
                 scheduler.start();
                 initQuartzDaemons();
             }
