@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.base.services;
 
-import com.developmentontheedge.be5.base.Service;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -18,7 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public interface Meta extends Service
+public interface Meta
 {
     Project getProject();
 

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.base;
 
+import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.base.services.Be5Caches;
@@ -30,6 +31,7 @@ public class BaseModule extends AbstractModule
     @Override
     protected void configure()
     {
+        install(LifecycleSupport.getModule());
         bind(ProjectProvider.class).to(ProjectProviderImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
         bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);

@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.database;
 
-import com.developmentontheedge.be5.base.Service;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
@@ -14,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public interface DbService extends Service
+public interface DbService
 {
     @Nullable
     <T> T query(String sql, ResultSetHandler<T> rsh, Object... params);

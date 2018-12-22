@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
@@ -48,7 +49,7 @@ public class DbServiceImpl implements DbService
         this.be5Caches = be5Caches;
     }
 
-    @Override
+    @Start(order = 20)
     public void start() throws Exception
     {
         queryRunner = new QueryRunner();

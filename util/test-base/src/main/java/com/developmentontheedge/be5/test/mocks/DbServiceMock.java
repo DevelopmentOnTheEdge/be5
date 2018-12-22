@@ -29,12 +29,6 @@ public class DbServiceMock implements DbService
         this.connectionService = connectionService;
     }
 
-    @Override
-    public void start() throws Exception
-    {
-
-    }
-
     public static void clearMock()
     {
         mock = mock(DbService.class);

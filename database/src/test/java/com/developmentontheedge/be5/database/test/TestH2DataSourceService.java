@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.database.test;
 
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.sql.format.dbms.Dbms;
 import org.h2.jdbcx.JdbcDataSource;
@@ -37,7 +38,7 @@ public class TestH2DataSourceService implements DataSourceService
         return connectionUrl;
     }
 
-    @Override
+    @Start(order = 10)
     public void start() throws Exception
     {
         JdbcDataSource ds = new JdbcDataSource();

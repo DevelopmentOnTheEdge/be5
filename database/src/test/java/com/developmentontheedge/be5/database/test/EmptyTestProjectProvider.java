@@ -7,12 +7,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 public class EmptyTestProjectProvider implements ProjectProvider
 {
     @Override
-    public void start() throws Exception
-    {
-
-    }
-
-    @Override
     public Project get()
     {
         return null;

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.util.Utils;
@@ -91,7 +92,7 @@ public class MetaImpl implements Meta
         this.projectProvider = projectProvider;
     }
 
-    @Override
+    @Start(order = 20)
     public void start() throws Exception
     {
         be5DynamicQueriesEntity = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);

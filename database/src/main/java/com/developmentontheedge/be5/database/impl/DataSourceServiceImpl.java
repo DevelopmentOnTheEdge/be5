@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -53,7 +54,7 @@ public class DataSourceServiceImpl implements DataSourceService
         return connectionUrl;
     }
 
-    @Override
+    @Start(order = 10)
     public void start() throws Exception
     {
         Project project = projectProvider.get();
