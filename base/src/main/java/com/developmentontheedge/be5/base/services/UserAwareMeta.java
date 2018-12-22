@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.base.services;
 
+import com.developmentontheedge.be5.base.Service;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -8,8 +9,7 @@ import com.developmentontheedge.be5.metadata.model.QuerySettings;
 
 import java.util.Optional;
 
-//TODO rename UserMeta
-public interface UserAwareMeta
+public interface UserAwareMeta extends Service
 {
     void compileLocalizations();
 

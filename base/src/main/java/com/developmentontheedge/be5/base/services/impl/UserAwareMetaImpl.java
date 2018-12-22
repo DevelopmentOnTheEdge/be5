@@ -33,16 +33,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
         this.meta = meta;
         this.projectProvider = projectProvider;
         this.userInfoProvider = userInfoProvider;
+    }
 
+    @Override
+    public void start() throws Exception
+    {
         projectProvider.addToReload(this::compileLocalizations);
         compileLocalizations();
     }
-
-//    @Override
-//    public void configure(String config)
-//    {
-//        compileLocalizations();
-//    }
 
     @Override
     public void compileLocalizations()

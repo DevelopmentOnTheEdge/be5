@@ -12,10 +12,33 @@ import java.sql.Statement;
 
 public class TestH2DataSourceService implements DataSourceService
 {
-    private final DataSource dataSource;
+    private DataSource dataSource;
     private final String connectionUrl = "jdbc:h2:mem:be5_database_tests;DB_CLOSE_DELAY=-1";
 
     public TestH2DataSourceService()
+    {
+    }
+
+    @Override
+    public Dbms getDbms()
+    {
+        return Dbms.H2;
+    }
+
+    @Override
+    public DataSource getDataSource()
+    {
+        return dataSource;
+    }
+
+    @Override
+    public String getConnectionUrl()
+    {
+        return connectionUrl;
+    }
+
+    @Override
+    public void start() throws Exception
     {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL(connectionUrl);
@@ -39,23 +62,5 @@ public class TestH2DataSourceService implements DataSourceService
         }
 
         dataSource = ds;
-    }
-
-    @Override
-    public Dbms getDbms()
-    {
-        return Dbms.H2;
-    }
-
-    @Override
-    public DataSource getDataSource()
-    {
-        return dataSource;
-    }
-
-    @Override
-    public String getConnectionUrl()
-    {
-        return connectionUrl;
     }
 }

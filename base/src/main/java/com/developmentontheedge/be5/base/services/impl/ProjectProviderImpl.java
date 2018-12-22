@@ -35,6 +35,12 @@ public class ProjectProviderImpl implements ProjectProvider
     }
 
     @Override
+    public void start() throws Exception
+    {
+        project = loadProject();
+    }
+
+    @Override
     public void addToReload(Runnable supplier)
     {
         callOnReload.add(supplier);
@@ -43,7 +49,7 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public synchronized Project get()
     {
-        if (dirty || project == null)
+        if (dirty)
         {
             Project oldProject = project;
             project = loadProject();

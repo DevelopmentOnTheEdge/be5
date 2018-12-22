@@ -32,19 +32,28 @@ public class DbServiceImpl implements DbService
 {
     private static final Logger log = Logger.getLogger(DbServiceImpl.class.getName());
 
-    private final Cache<String, String> formatSqlCache;
+    private Cache<String, String> formatSqlCache;
 
+    private final ConnectionService connectionService;
+    private final DataSourceService dataSourceService;
+    private final Be5Caches be5Caches;
     private QueryRunner queryRunner;
-    private ConnectionService connectionService;
     private DbmsTransformer dbmsTransformer;
 
     @Inject
-    public DbServiceImpl(ConnectionService connectionService, DataSourceService databaseService, Be5Caches be5Caches)
+    public DbServiceImpl(ConnectionService connectionService, DataSourceService dataSourceService, Be5Caches be5Caches)
     {
         this.connectionService = connectionService;
+        this.dataSourceService = dataSourceService;
+        this.be5Caches = be5Caches;
+    }
+
+    @Override
+    public void start() throws Exception
+    {
         queryRunner = new QueryRunner();
         formatSqlCache = be5Caches.createCache("Format sql");
-        Context context = new Context(databaseService.getDbms());
+        Context context = new Context(dataSourceService.getDbms());
         this.dbmsTransformer = context.getDbmsTransformer();
         dbmsTransformer.setParserContext(DefaultParserContext.getInstance());
     }

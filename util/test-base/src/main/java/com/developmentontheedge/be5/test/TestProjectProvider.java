@@ -12,8 +12,8 @@ public class TestProjectProvider implements ProjectProvider
 {
     private Project project;
 
-    @Inject
-    public TestProjectProvider()
+    @Override
+    public void start() throws Exception
     {
         try
         {
@@ -25,7 +25,6 @@ public class TestProjectProvider implements ProjectProvider
             throw new RuntimeException(e);
         }
     }
-
 
     @Override
     public Project get()

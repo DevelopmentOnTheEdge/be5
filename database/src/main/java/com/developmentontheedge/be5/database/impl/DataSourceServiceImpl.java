@@ -19,10 +19,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-
 public class DataSourceServiceImpl implements DataSourceService
 {
     private static final Logger log = Logger.getLogger(DataSourceServiceImpl.class.getName());
+
+    private final ProjectProvider projectProvider;
 
     private DataSource dataSource;
     private String connectionUrl;
@@ -30,6 +31,30 @@ public class DataSourceServiceImpl implements DataSourceService
 
     @Inject
     public DataSourceServiceImpl(ProjectProvider projectProvider)
+    {
+        this.projectProvider = projectProvider;
+    }
+
+    @Override
+    public DataSource getDataSource()
+    {
+        return dataSource;
+    }
+
+    @Override
+    public Dbms getDbms()
+    {
+        return type.getDbms();
+    }
+
+    @Override
+    public String getConnectionUrl()
+    {
+        return connectionUrl;
+    }
+
+    @Override
+    public void start() throws Exception
     {
         Project project = projectProvider.get();
         String configInfo;
@@ -99,23 +124,5 @@ public class DataSourceServiceImpl implements DataSourceService
 
         log.info("ConfigInfo: " + configInfo);
         log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
-    }
-
-    @Override
-    public DataSource getDataSource()
-    {
-        return dataSource;
-    }
-
-    @Override
-    public Dbms getDbms()
-    {
-        return type.getDbms();
-    }
-
-    @Override
-    public String getConnectionUrl()
-    {
-        return connectionUrl;
     }
 }

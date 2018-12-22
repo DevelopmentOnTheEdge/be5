@@ -83,12 +83,17 @@ public class MetaImpl implements Meta
     private static final Pattern MENU_ITEM_PATTERN = Pattern.compile("<!--\\S+?-->");
 
     private final ProjectProvider projectProvider;
-    private final Entity be5DynamicQueriesEntity;
+    private Entity be5DynamicQueriesEntity;
 
     @Inject
     public MetaImpl(ProjectProvider projectProvider)
     {
         this.projectProvider = projectProvider;
+    }
+
+    @Override
+    public void start() throws Exception
+    {
         be5DynamicQueriesEntity = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);
         DataElementUtils.save(be5DynamicQueriesEntity);
     }

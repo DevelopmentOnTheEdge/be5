@@ -25,4 +25,10 @@ public class DataSourceServiceMock implements DataSourceService
     {
         return "";
     }
+
+    @Override
+    public void start() throws Exception
+    {
+
+    }
 }
