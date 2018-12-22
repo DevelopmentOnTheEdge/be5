@@ -47,11 +47,11 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
 
         if (file.exists() && !file.isDirectory())
         {
-            log.info("Generate skipped, file exists: " + fileName);
+            logger.info("Generate skipped, file exists: " + fileName);
             return;
         }
 
-        log.info("File '" + file.toString() + "' not found, generate...");
+        logger.info("File '" + file.toString() + "' not found, generate...");
 
         try
         {
@@ -62,7 +62,7 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
             e.printStackTrace();
         }
 
-        log.info("Generate successful: " + entityCount + " entities added.\n" + file.getAbsolutePath());
+        logger.info("Generate successful: " + entityCount + " entities added.\n" + file.getAbsolutePath());
     }
 
     private void createDSL(String fileName, Configuration cfg) throws IOException, ProjectLoadException

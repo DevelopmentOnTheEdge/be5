@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 
 
@@ -46,21 +47,23 @@ public class ModuleLoader2
     private static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
     private static List<String> devRoles = new ArrayList<>();
 
-    public static Project loadProjectWithModules(Path projectPath) throws ProjectLoadException, MalformedURLException
+    public static Project loadProjectWithModules(Path projectPath, ProcessController logger)
+            throws ProjectLoadException, MalformedURLException
     {
-        loadAllProjects(false, Collections.singletonList(projectPath.resolve("project.yaml").toUri().toURL()));
+        loadAllProjects(false, singletonList(projectPath.resolve("project.yaml").toUri().toURL()), logger);
 
-        return findProjectAndMergeModules();
+        return findProjectAndMergeModules(logger);
     }
 
     public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
     {
-        loadAllProjects(dirty);
+        JULLogger julLogger = new JULLogger(log);
+        loadAllProjects(dirty, julLogger);
 
-        return findProjectAndMergeModules();
+        return findProjectAndMergeModules(julLogger);
     }
 
-    private static Project findProjectAndMergeModules() throws ProjectLoadException
+    private static Project findProjectAndMergeModules(ProcessController logger) throws ProjectLoadException
     {
         Project project = null;
 
@@ -87,11 +90,11 @@ public class ModuleLoader2
         if (project == null)
         {
             //todo create new not module project for tests?
-            log.info("Project not found, try load main module.");
+            logger.info("Project not found, try load main module.");
             project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
         }
 
-        ModuleLoader2.mergeModules(project, new JULLogger(log));
+        ModuleLoader2.mergeModules(project, logger);
 
         project.validate();
         project.initBeSqlMacros();
@@ -139,12 +142,12 @@ public class ModuleLoader2
         devRoles = new ArrayList<>();
     }
 
-    private static synchronized void loadAllProjects(boolean dirty)
+    private static synchronized void loadAllProjects(boolean dirty, ProcessController logger)
     {
-        loadAllProjects(dirty, Collections.emptyList());
+        loadAllProjects(dirty, Collections.emptyList(), logger);
     }
 
-    private static synchronized void loadAllProjects(boolean dirty, List<URL> additionalUrls)
+    private static synchronized void loadAllProjects(boolean dirty, List<URL> additionalUrls, ProcessController logger)
     {
         if (modulesMap != null && !dirty)
             return;
@@ -155,8 +158,8 @@ public class ModuleLoader2
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
 
             urls.addAll(additionalUrls);
-            replaceAndAddURLtoSource(urls);
-            loadAllProjects(urls);
+            replaceAndAddURLtoSource(urls, logger);
+            loadAllProjects(urls, logger);
         }
         catch (IOException e)
         {
@@ -165,6 +168,11 @@ public class ModuleLoader2
     }
 
     public static void loadAllProjects(List<URL> urls)
+    {
+        loadAllProjects(urls, new JULLogger(log));
+    }
+
+    public static void loadAllProjects(List<URL> urls, ProcessController logger)
     {
         modulesMap = null;
         try
@@ -180,7 +188,7 @@ public class ModuleLoader2
                 {
                     Path path = Paths.get(url.toURI()).getParent();
                     module = Serialization.load(path, loadContext);
-                    log.fine("Load module from dir: " + path);
+                    logger.debug("Load module from dir: " + path);
                 }
                 else // war or jar file
                 {
@@ -194,13 +202,13 @@ public class ModuleLoader2
                     catch (FileSystemAlreadyExistsException e)
                     {
                         fs = FileSystems.getFileSystem(URI.create(jar));
-                        log.fine("Get exists FileSystem after exception");
+                        logger.debug("Get exists FileSystem after exception");
                     }
 
                     Path path = fs.getPath("./");
                     module = Serialization.load(path, loadContext);
 
-                    log.fine("Load module from " + url.toExternalForm() + ", path=" + path);
+                    logger.debug("Load module from " + url.toExternalForm() + ", path=" + path);
                 }
                 loadContext.check();
                 newModulesMap.put(module.getAppName(), module);
@@ -213,23 +221,28 @@ public class ModuleLoader2
         }
     }
 
-    public static boolean containsModule(String name)
+    public static boolean containsModule(String name, ProcessController logger)
     {
-        loadAllProjects(false);
+        loadAllProjects(false, logger);
 
         return modulesMap.containsKey(name);
     }
 
     public static Path getModulePath(String name)
     {
-        loadAllProjects(false);
+        return getModulePath(name, new JULLogger(log));
+    }
+
+    public static Path getModulePath(String name, ProcessController logger)
+    {
+        loadAllProjects(false, new JULLogger(log));
 
         return modulesMap.get(name).getLocation();
     }
 
-    public static void addModuleScripts(Project project) throws ReadException
+    public static void addModuleScripts(Project project, ProcessController logger) throws ReadException
     {
-        loadAllProjects(false);
+        loadAllProjects(false, logger);
 
         for (Module module : project.getModules())
         {
@@ -243,7 +256,7 @@ public class ModuleLoader2
         List<Project> result = new ArrayList<>();
         for (Module module : application.getModules())
         {
-            if (containsModule(module.getName()))
+            if (containsModule(module.getName(), logger))
             {
                 Project moduleProject = modulesMap.get(module.getName());
                 result.add(moduleProject);
@@ -277,7 +290,7 @@ public class ModuleLoader2
             throw new ProjectLoadException("Merge modules", e);
         }
         loadContext.check();
-        log.info(ModuleLoader2.logLoadedProject(be5Project, startTime));
+        ModuleLoader2.logLoadedProject(be5Project, startTime, logger);
     }
 
     private static void mergeAllModules(
@@ -357,28 +370,26 @@ public class ModuleLoader2
         return null;
     }
 
-    private static String logLoadedProject(Project project, long startTime)
+    private static void logLoadedProject(Project project, long startTime, ProcessController logger)
     {
-        StringBuilder sb = new StringBuilder();
+        logger.info("------------------------------------------------------------------------");
         if (project.isModuleProject())
         {
-            sb.append("Module      : ");
+            logger.info("Module      : " + project.getName());
         }
         else
         {
-            sb.append("Project     : ");
+            logger.info("Project     : " + project.getName());
         }
-
-        sb.append(project.getName());
 
         if (project.getModules().getSize() > 0)
         {
-            sb.append("\nModules     : ").append(project.getModules().getNameList().stream()
+            logger.info("Modules     : " + project.getModules().getNameList().stream()
                     .collect(joining(", ")));
         }
-        sb.append("\nLoading time: ")
-                .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
-        return JULLogger.infoBlock(sb.toString());
+        long time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        logger.info("Loading time: " + time + " ms");
+        logger.info("------------------------------------------------------------------------");
     }
 
     /**
@@ -386,15 +397,17 @@ public class ModuleLoader2
      *
      * @param urls projects URL
      */
-    private static void replaceAndAddURLtoSource(List<URL> urls)
+    private static void replaceAndAddURLtoSource(List<URL> urls, ProcessController logger)
     {
         try
         {
-            readDevPathsToSourceProjects();
+            readDevPathsToSourceProjects(logger);
             if (pathsToProjectsToHotReload.isEmpty()) return;
 
             StringBuilder sb = new StringBuilder();
-            sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
+            sb.append("\n------------------------------------------------------------------------");
+            sb.append("\nReplace project path for hot reload (dev.yaml):");
+            sb.append("\n------------------------------------------------------------------------");
             boolean started = false;
 
             for (Map.Entry<String, Path> moduleSource : pathsToProjectsToHotReload.entrySet())
@@ -420,7 +433,7 @@ public class ModuleLoader2
                 }
             }
             sb.append("\n");
-            if (started) log.info(sb.toString());
+            if (started) logger.info(sb.toString());
         }
         catch (IOException e)
         {
@@ -439,18 +452,18 @@ public class ModuleLoader2
         }
     }
 
-    private static void readDevPathsToSourceProjects() throws IOException
+    private static void readDevPathsToSourceProjects(ProcessController logger) throws IOException
     {
         ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
         if (urls.size() > 1)
         {
-            log.severe("dev.yaml should be only in the project.");
+            logger.error("dev.yaml should be only in the project.");
             throw new RuntimeException("dev.yaml should be only in the project.");
         }
 
         if (urls.size() == 1)
         {
-            readDevPathsToSourceProjects(urls.get(0));
+            readDevPathsToSourceProjects(urls.get(0), logger);
         }
     }
 
@@ -462,18 +475,18 @@ public class ModuleLoader2
      * - SystemDeveloper
      */
     @SuppressWarnings("unchecked")
-    static void readDevPathsToSourceProjects(URL url) throws IOException
+    static void readDevPathsToSourceProjects(URL url, ProcessController logger) throws IOException
     {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(),
                 StandardCharsets.UTF_8)))
         {
             Map<String, Object> content = new Yaml().load(reader);
 
-            initPathsForDev(content);
+            initPathsForDev(content, logger);
             if (content.get("roles") != null)
             {
                 devRoles = (List<String>) content.get("roles");
-                log.info("Dev roles read - " + devRoles.toString());
+                logger.info("Dev roles read - " + devRoles.toString());
             }
             else
             {
@@ -483,7 +496,7 @@ public class ModuleLoader2
     }
 
     @SuppressWarnings("unchecked")
-    private static void initPathsForDev(Map<String, Object> content)
+    private static void initPathsForDev(Map<String, Object> content, ProcessController logger)
     {
         Map<String, String> paths = (Map<String, String>) content.get("paths");
         if (paths != null)
@@ -496,7 +509,7 @@ public class ModuleLoader2
                 }
                 else
                 {
-                    log.severe("Error path in dev.yaml for " + entry.getKey());
+                    logger.error("Error path in dev.yaml for " + entry.getKey());
                 }
             }
         }

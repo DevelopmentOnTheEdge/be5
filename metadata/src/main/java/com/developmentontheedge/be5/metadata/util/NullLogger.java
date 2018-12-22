@@ -23,6 +23,11 @@ public class NullLogger implements ProcessController
     }
 
     @Override
+    public void debug(String msg)
+    {
+    }
+
+    @Override
     public void error(String msg)
     {
     }

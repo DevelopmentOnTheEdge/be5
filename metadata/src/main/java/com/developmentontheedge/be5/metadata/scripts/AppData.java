@@ -37,7 +37,7 @@ public class AppData extends ScriptSupport<AppData>
             ps = createPrintStream(be5Project.getName() + "_scripts_" +
                     script.replace(';', '_').replace(':', '.') + ".sql");
 
-            ModuleLoader2.addModuleScripts(be5Project);
+            ModuleLoader2.addModuleScripts(be5Project, logger);
 
             List<FreemarkerScript> scripts = new ArrayList<>();
             for (String scriptName : script.split(";"))

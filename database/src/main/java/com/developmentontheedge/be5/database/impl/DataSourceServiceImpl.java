@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.sql.format.dbms.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -78,7 +77,7 @@ public class DataSourceServiceImpl implements DataSourceService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            configInfo = "connection profile form 'profile.local' or set in code - " + profile.getName();
+            configInfo = "connection profile - " + profile.getName();
         }
         finally
         {
@@ -98,10 +97,8 @@ public class DataSourceServiceImpl implements DataSourceService
         project.setDatabaseSystem(type);
         projectProvider.addToReload(() -> project.setDatabaseSystem(type));
 
-        log.info(JULLogger.infoBlock(
-                "ConfigInfo: " + configInfo +
-                        "\nUsing connection:   " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx")
-        ));
+        log.info("ConfigInfo: " + configInfo);
+        log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
     }
 
     @Override

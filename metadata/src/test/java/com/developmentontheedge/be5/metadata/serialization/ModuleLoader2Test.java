@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.metadata.serialization;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ModuleLoader2Test
 {
+    private static final Logger log = Logger.getLogger(ModuleLoader2Test.class.getName());
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -47,7 +51,7 @@ public class ModuleLoader2Test
         }
 
         ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));
-        ModuleLoader2.readDevPathsToSourceProjects(path.resolve("dev.yaml").toUri().toURL());
+        ModuleLoader2.readDevPathsToSourceProjects(path.resolve("dev.yaml").toUri().toURL(), new JULLogger(log));
 
         assertTrue(ModuleLoader2.getPathsToProjectsToHotReload().toString().startsWith("{test="));
         assertEquals(1, ModuleLoader2.getPathsToProjectsToHotReload().size());
