@@ -106,7 +106,7 @@ public abstract class BaseTestUtils
 
     protected static Injector initInjector(Module... modules)
     {
-        return Guice.createInjector(Stage.DEVELOPMENT, modules);
+        return Guice.createInjector(Stage.PRODUCTION, modules);
     }
 
     protected static String oneQuotes(Object s)

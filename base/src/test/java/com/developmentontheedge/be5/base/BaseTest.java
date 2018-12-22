@@ -26,7 +26,7 @@ public abstract class BaseTest
         LogConfigurator.setLevel(Level.INFO);
     }
 
-    private static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
+    private static final Injector injector = Guice.createInjector(Stage.PRODUCTION,
             Modules.override(new BaseModule()).with(new BaseTestModule())
     );
 
