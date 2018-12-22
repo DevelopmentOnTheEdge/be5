@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class UserHelper
 {
-    public final Logger log = Logger.getLogger(UserHelper.class.getName());
+    private static final Logger log = Logger.getLogger(UserHelper.class.getName());
 
     private final Meta meta;
     private final Stage stage;

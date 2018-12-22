@@ -16,13 +16,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.logging.Logger;
 
 
 public class ErrorModelHelper
 {
-    public final Logger log = Logger.getLogger(ErrorModelHelper.class.getName());
-
     private final UserInfoProvider userInfoProvider;
     private final GroovyOperationLoader groovyOperationLoader;
     private final UserAwareMeta userAwareMeta;
