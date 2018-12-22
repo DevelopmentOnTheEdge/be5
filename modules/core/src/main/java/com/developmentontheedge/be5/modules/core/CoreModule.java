@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.modules.core.services.impl.CategoriesService
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.OperationLoggingImpl;
-import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
+import com.developmentontheedge.be5.server.services.DaemonStarter;
 import com.developmentontheedge.be5.modules.core.services.scheduling.impl.DaemonStarterImpl;
 import com.developmentontheedge.be5.modules.core.services.scheduling.impl.GuiceJobFactory;
 import com.developmentontheedge.be5.server.ServerModule;

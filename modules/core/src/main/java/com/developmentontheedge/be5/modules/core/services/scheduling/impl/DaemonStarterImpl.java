@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.modules.core.model.scheduling.Process;
-import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
+import com.developmentontheedge.be5.server.services.DaemonStarter;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -124,7 +124,7 @@ public class DaemonStarterImpl implements DaemonStarter
         //todo stop jobs
         try
         {
-            scheduler.shutdown();
+            if (scheduler != null)scheduler.shutdown();
         }
         catch (SchedulerException se)
         {
