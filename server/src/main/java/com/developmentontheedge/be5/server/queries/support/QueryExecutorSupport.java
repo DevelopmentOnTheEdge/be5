@@ -4,18 +4,14 @@ import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
-import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
-import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
-import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
-import java.util.Map;
 
 
 public abstract class QueryExecutorSupport extends BaseQueryExecutorSupport
@@ -37,15 +33,6 @@ public abstract class QueryExecutorSupport extends BaseQueryExecutorSupport
     protected Request request;
     @Inject
     protected Session session;
-
+    @Inject
     protected UserInfo userInfo;
-
-    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
-    {
-        super.initialize(query, parameters);
-
-        this.userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
-
-        return this;
-    }
 }

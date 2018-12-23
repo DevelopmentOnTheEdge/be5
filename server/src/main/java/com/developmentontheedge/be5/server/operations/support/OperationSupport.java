@@ -7,14 +7,11 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationContext;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.web.Request;
@@ -46,16 +43,8 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     protected Session session;
     @Inject
     protected Request request;
-
+    @Inject
     protected UserInfo userInfo;
-
-    @Override
-    public final void initialize(OperationInfo info, OperationContext context, OperationResult operationResult)
-    {
-        super.initialize(info, context, operationResult);
-
-        this.userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
-    }
 
     public Query getQuery()
     {
