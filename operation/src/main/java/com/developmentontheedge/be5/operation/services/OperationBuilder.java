@@ -34,7 +34,7 @@ public class OperationBuilder
     private Map<String, Object> operationParams = Collections.emptyMap();
 
     @Inject
-    public OperationBuilder(Meta meta, OperationExecutor operationExecutor,
+    OperationBuilder(Meta meta, OperationExecutor operationExecutor,
                             @Assisted("entityName") String entityName,
                             @Assisted("operationName") String operationName)
     {

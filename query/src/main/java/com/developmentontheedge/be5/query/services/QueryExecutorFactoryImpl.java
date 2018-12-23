@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.services.impl;
+package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
-import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
 import com.google.inject.Injector;
 

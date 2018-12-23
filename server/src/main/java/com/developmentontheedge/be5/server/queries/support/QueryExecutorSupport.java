@@ -32,7 +32,8 @@ public abstract class QueryExecutorSupport extends BaseQueryExecutorSupport
     @Inject
     protected void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
                        DpsHelper dpsHelper, Validator validator, QueriesService queries,
-                       Session session, Request request, UserInfo userInfo) {
+                       Session session, Request request, UserInfo userInfo)
+    {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.db = db;

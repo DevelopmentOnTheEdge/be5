@@ -34,7 +34,8 @@ public abstract class OperationExtenderSupport extends BaseOperationExtenderSupp
     @Inject
     protected void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
                        DpsHelper dpsHelper, Validator validator, OperationBuilder.OperationsFactory operations,
-                       QueriesService queries, Session session, Request request, UserInfo userInfo) {
+                       QueriesService queries, Session session, Request request, UserInfo userInfo)
+    {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.db = db;

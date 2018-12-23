@@ -1,9 +1,10 @@
-package com.developmentontheedge.be5.query.impl;
+package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
@@ -12,9 +13,10 @@ import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +25,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 public class TableBuilder
 {
@@ -32,8 +38,9 @@ public class TableBuilder
     private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
 
-    public TableBuilder(Query query, Map<String, Object> parameters, UserInfo userInfo,
-                        QueryExecutorFactory queryService, UserAwareMeta userAwareMeta, CoreUtils coreUtils)
+    @Inject
+    TableBuilder(UserInfo userInfo, QueryExecutorFactory queryService, UserAwareMeta userAwareMeta,
+                 CoreUtils coreUtils, @Assisted Query query, @Assisted Map<String, Object> parameters)
     {
         this.query = query;
         this.userInfo = userInfo;
@@ -42,24 +49,32 @@ public class TableBuilder
         this.userAwareMeta = userAwareMeta;
 
         this.queryExecutor = queryService.get(query, parameters);
+        config(query, parameters);
     }
 
-    public TableBuilder offset(int offset)
+    public interface TableModelFactory
     {
-        this.queryExecutor.offset(offset);
-        return this;
+        TableBuilder create(Query query, Map<String, Object> parameters);
     }
 
-    public TableBuilder limit(int limit)
+    private void config(Query query, Map<String, Object> parameters)
     {
-        this.queryExecutor.limit(limit);
-        return this;
-    }
+        int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
+        String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
+        int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
+        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
-    public TableBuilder sortOrder(int orderColumn, String orderDir)
-    {
+        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
+
+        if (limit == Integer.MAX_VALUE)
+        {
+            limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
+                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
+        }
+
         queryExecutor.order(orderColumn, orderDir);
-        return this;
+        queryExecutor.offset(offset);
+        queryExecutor.limit(Math.min(limit, maxLimit));
     }
 
     public TableModel get()
@@ -160,9 +175,6 @@ public class TableBuilder
 
         for (RawCellModel cell : cells)
         {
-//            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
-//            previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
-//                    : processedContent.getClass(), processedContent));
             if (!cell.hidden)
             {
                 processedCells.add(new CellModel(cell.content, cell.options));

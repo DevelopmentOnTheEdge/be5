@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core.queries.system
 
-import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
@@ -18,8 +17,6 @@ class QueriesTest extends CoreBe5ProjectDBTest
 {
     @Inject
     TableModelService tableModelService
-    @Inject
-    Meta meta
 
     @Before
     void setUp()
@@ -32,7 +29,7 @@ class QueriesTest extends CoreBe5ProjectDBTest
     {
         Query query = meta.getQuery("_system_", "Entities")
 
-        def table = tableModelService.getTableModel(query, Collections.emptyMap())
+        def table = tableModelService.create(query, Collections.emptyMap())
 
         assertTrue(table.getRows().stream()
                 .filter({ x -> ((CellModel) x.cells.get(0)).getContent() == "_system_" })
@@ -45,7 +42,7 @@ class QueriesTest extends CoreBe5ProjectDBTest
         session.set("test", "value")
         Query query = meta.getQuery("_system_", "Session variables")
 
-        def table = tableModelService.getTableModel(query, Collections.emptyMap())
+        def table = tableModelService.create(query, Collections.emptyMap())
 
         assertEquals(true, table.getRows().stream()
                 .map({ x -> x.id })
