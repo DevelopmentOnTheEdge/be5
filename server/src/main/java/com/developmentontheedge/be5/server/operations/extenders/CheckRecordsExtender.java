@@ -87,7 +87,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             }
             if (disabledRecords.size() > 0)
             {
-                if (userInfoProvider.isAdmin())
+                if (userInfo.isAdmin())
                 {
                     message = "Cannot execute operation " + op.getInfo().getName() +
                             ": the following records are not found or not accessible: " + disabledRecords;

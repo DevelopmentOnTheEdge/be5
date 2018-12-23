@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.services.OperationsFactory;
+import com.developmentontheedge.be5.operation.services.OperationBuilder;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
@@ -22,22 +22,22 @@ import javax.inject.Inject;
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
 {
-    public Meta meta;
-    public UserAwareMeta userAwareMeta;
-    public DbService db;
-    public DatabaseModel database;
-    public DpsHelper dpsHelper;
-    public Validator validator;
-    public OperationsFactory operations;
-    public QueriesService queries;
+    protected Meta meta;
+    protected UserAwareMeta userAwareMeta;
+    protected DbService db;
+    protected DatabaseModel database;
+    protected DpsHelper dpsHelper;
+    protected Validator validator;
+    protected OperationBuilder.OperationsFactory operations;
+    protected QueriesService queries;
 
     protected Session session;
     protected Request request;
     protected UserInfo userInfo;
 
     @Inject
-    public void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
-                       DpsHelper dpsHelper, Validator validator, OperationsFactory operations,
+    protected void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
+                       DpsHelper dpsHelper, Validator validator, OperationBuilder.OperationsFactory operations,
                        QueriesService queries, Session session, Request request, UserInfo userInfo) {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
@@ -52,27 +52,27 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         this.userInfo = userInfo;
     }
 
-    public Query getQuery()
+    protected Query getQuery()
     {
         return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
 
-    public void setResultFinished()
+    protected void setResultFinished()
     {
         setResult(OperationResult.finished());
     }
 
-    public void setResultFinished(String message)
+    protected void setResultFinished(String message)
     {
         setResult(OperationResult.finished(message));
     }
 
-    public void setResultFinished(String message, FrontendAction... frontendActions)
+    protected void setResultFinished(String message, FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(message, frontendActions));
     }
 
-    public void setResultFinished(FrontendAction... frontendActions)
+    protected void setResultFinished(FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(null, frontendActions));
     }

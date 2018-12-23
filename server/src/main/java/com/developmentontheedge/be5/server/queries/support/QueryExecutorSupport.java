@@ -17,20 +17,20 @@ import javax.inject.Inject;
 
 public abstract class QueryExecutorSupport extends BaseQueryExecutorSupport
 {
-    public DatabaseModel database;
-    public DbService db;
-    public DpsHelper dpsHelper;
-    public Meta meta;
-    public UserAwareMeta userAwareMeta;
-    public QueriesService queries;
-    public Validator validator;
+    protected DatabaseModel database;
+    protected DbService db;
+    protected DpsHelper dpsHelper;
+    protected Meta meta;
+    protected UserAwareMeta userAwareMeta;
+    protected QueriesService queries;
+    protected Validator validator;
 
     protected Request request;
     protected Session session;
     protected UserInfo userInfo;
 
     @Inject
-    public void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
+    protected void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
                        DpsHelper dpsHelper, Validator validator, QueriesService queries,
                        Session session, Request request, UserInfo userInfo) {
         this.meta = meta;
