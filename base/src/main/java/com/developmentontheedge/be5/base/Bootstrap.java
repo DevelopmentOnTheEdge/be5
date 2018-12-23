@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.server;
+package com.developmentontheedge.be5.base;
 
 import com.developmentontheedge.be5.base.lifecycle.LifecycleService;
-import com.developmentontheedge.be5.server.services.DaemonStarter;
 import com.google.inject.Injector;
 
 public class Bootstrap
@@ -32,7 +31,6 @@ public class Bootstrap
 
     public synchronized void shutdown()
     {
-        injector.getInstance(DaemonStarter.class).shutdown();
+        injector.getInstance(LifecycleService.class).stop();
     }
-
 }

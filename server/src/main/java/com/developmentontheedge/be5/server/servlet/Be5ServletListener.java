@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.servlet;
 
+import com.developmentontheedge.be5.base.Bootstrap;
 import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.server.Bootstrap;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -34,14 +34,12 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
     public void contextInitialized(ServletContextEvent sce)
     {
         long startTime = System.currentTimeMillis();
-        super.contextInitialized(sce);
-        long injectorStartupTime = System.currentTimeMillis() - startTime;
-        log.info("Be5 injector started in " + injectorStartupTime + " ms.");
 
+        super.contextInitialized(sce);
         be5Bootstrap = new Bootstrap(getCurrentInjector(sce));
         be5Bootstrap.boot();
-        long bootstrappedTime = System.currentTimeMillis() - startTime;
-        log.info("Be5 application bootstrapped in " + bootstrappedTime + " ms.");
+
+        log.info("Be5 application bootstrapped in " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
     @Override
