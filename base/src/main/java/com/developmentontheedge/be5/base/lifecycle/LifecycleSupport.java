@@ -45,6 +45,10 @@ public class LifecycleSupport
         return new LifecycleSupport().constructModule();
     }
 
+    private LifecycleSupport()
+    {
+    }
+
     private class LifecycleAnnotatedListener implements TypeListener
     {
         @Override

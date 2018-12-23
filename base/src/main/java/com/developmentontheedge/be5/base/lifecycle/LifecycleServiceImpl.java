@@ -73,9 +73,9 @@ public class LifecycleServiceImpl implements LifecycleService
                     if (scope.equals(Scopes.SINGLETON))
                     {
                         Object target = injector.getInstance(binding.getKey());
-                        if (binding.getProvider() instanceof ProviderInstanceBinding)
+                        if (binding instanceof ProviderInstanceBinding)
                         {
-                            Provider providerInstance = binding.getProvider();
+                            Provider providerInstance = ((ProviderInstanceBinding) binding).getProviderInstance();
                             if (providerInstance instanceof ProviderMethod)
                             {
                                 // @Provides methods don't get picked up by TypeListeners, so we need to manually register them
