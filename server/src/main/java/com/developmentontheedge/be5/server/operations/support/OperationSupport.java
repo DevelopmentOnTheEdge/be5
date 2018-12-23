@@ -22,29 +22,35 @@ import javax.inject.Inject;
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
 {
-    @Inject
     public Meta meta;
-    @Inject
     public UserAwareMeta userAwareMeta;
-    @Inject
     public DbService db;
-    @Inject
     public DatabaseModel database;
-    @Inject
     public DpsHelper dpsHelper;
-    @Inject
     public Validator validator;
-    @Inject
     public OperationsFactory operations;
-    @Inject
     public QueriesService queries;
 
-    @Inject
     protected Session session;
-    @Inject
     protected Request request;
-    @Inject
     protected UserInfo userInfo;
+
+    @Inject
+    public void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
+                       DpsHelper dpsHelper, Validator validator, OperationsFactory operations,
+                       QueriesService queries, Session session, Request request, UserInfo userInfo) {
+        this.meta = meta;
+        this.userAwareMeta = userAwareMeta;
+        this.db = db;
+        this.database = database;
+        this.dpsHelper = dpsHelper;
+        this.validator = validator;
+        this.operations = operations;
+        this.queries = queries;
+        this.session = session;
+        this.request = request;
+        this.userInfo = userInfo;
+    }
 
     public Query getQuery()
     {
