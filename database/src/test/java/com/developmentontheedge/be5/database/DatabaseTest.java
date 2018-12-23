@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.database;
 
+import com.developmentontheedge.be5.base.Bootstrap;
+import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -15,20 +17,27 @@ import com.developmentontheedge.be5.database.test.TestH2DataSourceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import org.junit.Before;
 
 import javax.inject.Inject;
-import java.util.logging.LogManager;
 
 
 public abstract class DatabaseTest
 {
-    protected static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
+    protected static final Injector injector = initInjector(
             Modules.override(new DatabaseModule()).with(new DatabaseModuleTestModule())
     );
+
+    protected static Injector initInjector(Module... modules)
+    {
+        Injector injector = Guice.createInjector(Stage.PRODUCTION, modules);
+        new Bootstrap(injector).boot();
+        return injector;
+    }
 
     @Inject
     protected DbService db;
@@ -36,15 +45,7 @@ public abstract class DatabaseTest
     @Before
     public void setUpBaseTestUtils()
     {
-        if (getInjector() != null)
-        {
-            getInjector().injectMembers(this);
-        }
-    }
-
-    public Injector getInjector()
-    {
-        return injector;
+        injector.injectMembers(this);
     }
 
     public static class DatabaseModuleTestModule extends AbstractModule
@@ -52,6 +53,7 @@ public abstract class DatabaseTest
         @Override
         protected void configure()
         {
+            install(LifecycleSupport.getModule());
             bind(DataSourceService.class).to(TestH2DataSourceService.class).in(Scopes.SINGLETON);
             bind(TestTransactionService.class).in(Scopes.SINGLETON);
             bind(TestTransaction2Service.class).to(TestTransaction2ServiceImpl.class).in(Scopes.SINGLETON);
@@ -61,10 +63,4 @@ public abstract class DatabaseTest
             bind(ProjectProvider.class).to(EmptyTestProjectProvider.class).in(Scopes.SINGLETON);
         }
     }
-
-    static
-    {
-        LogManager.getLogManager().reset();
-    }
-
 }

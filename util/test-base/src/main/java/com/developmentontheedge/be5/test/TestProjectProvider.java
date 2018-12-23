@@ -6,8 +6,6 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
-import javax.inject.Inject;
-
 
 public class TestProjectProvider implements ProjectProvider
 {
@@ -19,7 +17,7 @@ public class TestProjectProvider implements ProjectProvider
         try
         {
             project = ModuleLoader2.findAndLoadProjectWithModules(false);
-            BaseTestUtils.addH2Profile(project);
+            BaseTest.addH2Profile(project);
         }
         catch (ProjectLoadException e)
         {

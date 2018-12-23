@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
-import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

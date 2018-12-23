@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.databasemodel;
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DatabaseModule;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.BaseTest;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -13,7 +13,7 @@ import com.google.inject.util.Modules;
 import javax.inject.Inject;
 
 
-public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
+public abstract class DatabaseModelProjectDbTest extends BaseTest
 {
     @Inject protected DatabaseModel database;
 

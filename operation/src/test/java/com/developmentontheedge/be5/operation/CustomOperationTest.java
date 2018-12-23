@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
@@ -35,6 +34,6 @@ public class CustomOperationTest extends OperationsSqlMockProjectTest
     void oneAssert(Either<Object, OperationResult> generate)
     {
         Assert.assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name'},'/value':{'displayName':'value','readOnly':true}},'order':['/name','/value']}",
-                BaseTestUtils.oneQuotes(JsonFactory.bean(generate.getFirst())));
+                oneQuotes(JsonFactory.bean(generate.getFirst())));
     }
 }

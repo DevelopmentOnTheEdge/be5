@@ -3,13 +3,11 @@ package com.developmentontheedge.be5.operation;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.BaseTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class TransactionalOperationTest extends OperationBe5ProjectDBTest
@@ -28,7 +26,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 ImmutableMap.of("name", "test", "value", 5));
 
         Assert.assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
-                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(result.getSecond())));
+                oneQuotes(BaseTest.jsonb.toJson(result.getSecond())));
     }
 
     @Test
@@ -39,7 +37,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 ImmutableMap.of("nullValues", "yes"));
 
         Assert.assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
-                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(result.getSecond())));
+                BaseTest.oneQuotes(BaseTest.jsonb.toJson(result.getSecond())));
     }
 
 

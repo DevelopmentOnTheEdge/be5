@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DatabaseModule;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.BaseTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
@@ -13,7 +13,7 @@ import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
 
-public abstract class QueryBe5ProjectDBTest extends BaseTestUtils
+public abstract class QueryBe5ProjectDBTest extends BaseTest
 {
     private static final Injector injector = initInjector(
             Modules.override(new BaseModule()).with(new TestQueryModule()),
