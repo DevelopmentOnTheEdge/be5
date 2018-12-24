@@ -28,6 +28,7 @@ ru:
       - New passwords not equals.: Новые пароли не совпадают
       - 'The minimum password length is $1 characters': 'Минимальная длина пароля $1 знаков'
       - Access to these records is denied.: Доступ к этим записям запрещен.
+      - Entity does not support record recovery: Сущность не поддерживает восстановление записей
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.
@@ -115,6 +116,7 @@ ru:
       - Filter: Фильтр
       - Print: Печать
       - Insert: Добавить
+      - Restore: Восстановить
       - TopFilter: ''
       - +/- category: +/- категории
       - AddRemoveCategory: +/- категории
