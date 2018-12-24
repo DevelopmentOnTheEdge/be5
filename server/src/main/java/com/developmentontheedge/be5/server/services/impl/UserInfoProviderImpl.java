@@ -3,8 +3,8 @@ package com.developmentontheedge.be5.server.services.impl;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.server.SessionConstants;
+import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo>
+public class UserInfoProviderImpl implements UserInfoProvider
 {
     private final Provider<Session> session;
 

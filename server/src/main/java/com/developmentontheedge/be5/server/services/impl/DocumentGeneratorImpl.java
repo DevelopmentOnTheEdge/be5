@@ -108,7 +108,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
     {
-        return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
+        return getTablePresentation(query, parameters, tableModelService.create(query, parameters));
     }
 
     private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
@@ -148,7 +148,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
 
         Map<String, Object> params = processQueryParams(query, parameters);
-        TableModel tableModel = tableModelService.getTableModel(query, params);
+        TableModel tableModel = tableModelService.create(query, params);
 
         return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
                 tableModel.getTotalNumberOfRows().intValue(),

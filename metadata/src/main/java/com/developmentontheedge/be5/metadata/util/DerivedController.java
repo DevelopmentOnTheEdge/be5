@@ -52,4 +52,10 @@ public class DerivedController implements ProcessController
     {
         primary.error(msg);
     }
+
+    @Override
+    public void debug(String msg)
+    {
+        primary.debug(msg);
+    }
 }

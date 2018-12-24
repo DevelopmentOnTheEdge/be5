@@ -11,21 +11,18 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SimpleConnector;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 
 public abstract class ScriptSupport<T>
 {
-    private static final Logger log = Logger.getLogger(ScriptSupport.class.getName());
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     public abstract void execute() throws ScriptException;
 
@@ -79,6 +76,7 @@ public abstract class ScriptSupport<T>
                     profile.getJdbcUrl().createConnectionUrl(false), profile.getUsername(),
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
+            logger.info("ConfigInfo: connection profile - " + profile.getName());
             logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(),
                     profile.getUsername(), "xxxxx"));
         }
@@ -93,8 +91,6 @@ public abstract class ScriptSupport<T>
 
     protected void initProject()
     {
-        initLogging();
-
         if (be5Project == null)
         {
             if (projectPath == null)
@@ -104,7 +100,7 @@ public abstract class ScriptSupport<T>
 
             try
             {
-                be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath());
+                be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath(), logger);
             }
             catch (ProjectLoadException | MalformedURLException e)
             {
@@ -115,35 +111,6 @@ public abstract class ScriptSupport<T>
             {
                 be5Project.setDebugStream(System.err);
             }
-        }
-    }
-
-    /**
-     * Configures JUL (java.util.logging).
-     */
-    private void initLogging()
-    {
-        // configure JUL logging
-        String ln = System.lineSeparator();
-        String level = debug ? "FINEST" : "INFO";
-        String logConfig =
-//              ".level=" + level +
-                "handlers= java.util.logging.ConsoleHandler" + ln +
-                        "java.util.logging.ConsoleHandler.level = " + level + ln +
-                        "java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter" + ln +
-                        "java.util.logging.SimpleFormatter.format =%1$TT %4$s: %5$s%n";
-
-        // JUL - String.format(format, date, source, logger, level, message, thrown);
-        //                             1     2       3       4      5        6
-
-        try
-        {
-            LogManager.getLogManager().readConfiguration(
-                    new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (IOException e)
-        {
-            logger.error("Could not setup logger configuration: " + e.toString());
         }
     }
 

@@ -95,7 +95,7 @@ public class AppDb extends ScriptSupport<AppDb>
         {
             for (Module module : be5Project.getModules())
             {
-                if (ModuleLoader2.containsModule(module.getName()))
+                if (ModuleLoader2.containsModule(module.getName(), logger))
                     processModule.accept(module);
             }
             processModule.accept(be5Project.getApplication());

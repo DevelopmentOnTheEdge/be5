@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals
 class OperationExecutorTest extends OperationBe5ProjectDBTest
 {
     @Inject
-    OperationsFactory operations
+    OperationBuilder.OperationsFactory operations
     @Inject
     OperationExecutor operationExecutor
     @Inject
@@ -39,7 +39,7 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     @Test(expected = Be5Exception)
     void executeWithDatabase()
     {
-        operations.get("testtableAdmin", "TransactionTestOp").execute()
+        operations.create("testtableAdmin", "TransactionTestOp").execute()
     }
 
     @Test

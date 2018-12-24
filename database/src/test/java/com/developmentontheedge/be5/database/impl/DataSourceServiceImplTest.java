@@ -46,7 +46,10 @@ public class DataSourceServiceImplTest extends DatabaseTest
     @Test
     public void test() throws Exception
     {
-        DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(new ProjectProviderImpl(stage));
+        ProjectProviderImpl projectProvider = new ProjectProviderImpl(stage);
+        projectProvider.start();
+        DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(projectProvider);
+        dataSourceService.start();
         BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
         assertEquals("jdbc:h2:mem:DataSourceServiceImplTest;DB_CLOSE_DELAY=-1", dataSource.getUrl());
         assertEquals("sa", dataSource.getUsername());

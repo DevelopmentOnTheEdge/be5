@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
@@ -30,6 +31,8 @@ public class Be5EventDbLogger implements Be5EventLogger
     private static final String EVENT_LOG_TABLE_PARAMS = "be5eventParams";
     private final UserInfoProvider userInfoProvider;
     private final DatabaseModel database;
+    private final EventManager eventManager;
+    private final ProjectProvider projectProvider;
     private final Provider<HttpServletRequest> request;
 
     @Inject
@@ -38,7 +41,14 @@ public class Be5EventDbLogger implements Be5EventLogger
     {
         this.database = database;
         this.userInfoProvider = userInfoProvider;
+        this.eventManager = eventManager;
+        this.projectProvider = projectProvider;
         this.request = request;
+    }
+
+    @Start(order = 30)
+    public void start() throws Exception
+    {
         if (projectProvider.get().hasFeature(Features.EVENT_DB_LOGGING_FEATURE))
         {
             eventManager.addListener(this);

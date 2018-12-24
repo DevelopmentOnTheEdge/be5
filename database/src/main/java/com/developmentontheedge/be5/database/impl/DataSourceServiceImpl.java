@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.sql.format.dbms.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -20,10 +20,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-
 public class DataSourceServiceImpl implements DataSourceService
 {
     private static final Logger log = Logger.getLogger(DataSourceServiceImpl.class.getName());
+
+    private final ProjectProvider projectProvider;
 
     private DataSource dataSource;
     private String connectionUrl;
@@ -31,6 +32,30 @@ public class DataSourceServiceImpl implements DataSourceService
 
     @Inject
     public DataSourceServiceImpl(ProjectProvider projectProvider)
+    {
+        this.projectProvider = projectProvider;
+    }
+
+    @Override
+    public DataSource getDataSource()
+    {
+        return dataSource;
+    }
+
+    @Override
+    public Dbms getDbms()
+    {
+        return type.getDbms();
+    }
+
+    @Override
+    public String getConnectionUrl()
+    {
+        return connectionUrl;
+    }
+
+    @Start(order = 10)
+    public void start() throws Exception
     {
         Project project = projectProvider.get();
         String configInfo;
@@ -78,7 +103,7 @@ public class DataSourceServiceImpl implements DataSourceService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            configInfo = "connection profile form 'profile.local' or set in code - " + profile.getName();
+            configInfo = "connection profile - " + profile.getName();
         }
         finally
         {
@@ -98,27 +123,7 @@ public class DataSourceServiceImpl implements DataSourceService
         project.setDatabaseSystem(type);
         projectProvider.addToReload(() -> project.setDatabaseSystem(type));
 
-        log.info(JULLogger.infoBlock(
-                "ConfigInfo: " + configInfo +
-                        "\nUsing connection:   " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx")
-        ));
-    }
-
-    @Override
-    public DataSource getDataSource()
-    {
-        return dataSource;
-    }
-
-    @Override
-    public Dbms getDbms()
-    {
-        return type.getDbms();
-    }
-
-    @Override
-    public String getConnectionUrl()
-    {
-        return connectionUrl;
+        log.info("ConfigInfo: " + configInfo);
+        log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
     }
 }

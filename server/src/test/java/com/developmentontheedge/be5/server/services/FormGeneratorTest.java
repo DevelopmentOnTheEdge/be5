@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,7 +81,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", Collections.emptyMap(), map);
         FormPresentation formPresentation = (FormPresentation) result.getAttributes();
-        assertEquals("{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}", BaseTestUtils.oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString()));
+        assertEquals("{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}", BaseTest.oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString()));
 
         assertEquals(OperationStatus.ERROR, formPresentation.getOperationResult().getStatus());
         assertEquals("Error in property (getParameters)", formPresentation.getOperationResult().getMessage());

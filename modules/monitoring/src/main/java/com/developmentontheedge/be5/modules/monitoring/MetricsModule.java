@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.modules.monitoring;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.jvm.BufferPoolMetricSet;
 import com.codahale.metrics.jvm.ClassLoadingGaugeSet;
 import com.codahale.metrics.jvm.FileDescriptorRatioGauge;
@@ -7,11 +9,13 @@ import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.JvmAttributeGaugeSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
+import com.codahale.metrics.logback.InstrumentedAppender;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.AdminServlet;
 import com.codahale.metrics.servlets.MetricsServlet;
 import com.google.inject.servlet.ServletModule;
 import org.marmelo.dropwizard.metrics.servlets.MetricsUIServlet;
+import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
 
@@ -53,11 +57,15 @@ public class MetricsModule extends ServletModule
         METRIC_REGISTRY.register(PROP_METRIC_REG_JVM_BUFFERS,
                 new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
 
+        final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
+        final Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
+        final InstrumentedAppender metrics = new InstrumentedAppender(METRIC_REGISTRY);
+        metrics.setContext(root.getLoggerContext());
+        metrics.start();
+        root.addAppender(metrics);
 
-//        final InstrumentedAppender metrics = new InstrumentedAppender(METRIC_REGISTRY);
-//        metrics.setContext(root.getLoggerContext());
-//        metrics.start();
-//        root.addAppender(metrics);
+//        final JmxReporter reporter = JmxReporter.forRegistry(METRIC_REGISTRY).build();
+//        reporter.start();
 
 //        String hostName = "192.168.66.29";
 //        ZabbixSender zabbixSender = new ZabbixSender("https://zabbix.dote.ru/", 10051);

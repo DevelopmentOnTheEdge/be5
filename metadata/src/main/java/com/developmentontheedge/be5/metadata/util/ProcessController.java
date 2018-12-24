@@ -10,5 +10,7 @@ public interface ProcessController
 
     void info(String msg);
 
+    void debug(String msg);
+
     void error(String msg);
 }

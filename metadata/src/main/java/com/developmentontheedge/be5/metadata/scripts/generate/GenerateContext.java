@@ -35,13 +35,13 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     {
         if (skipGenerateContextPath)
         {
-            log.info("Generate context.xml skipped.");
+            logger.info("Generate context.xml skipped.");
             return;
         }
 
         if (connectionProfileName == null)
         {
-            log.info("Generate context.xml skipped - BE5_PROFILE not specified.");
+            logger.info("Generate context.xml skipped - BE5_PROFILE not specified.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
 
         if (file.exists() && !file.isDirectory())
         {
-            log.info("Generate context.xml skipped, file exists: " + generateFilePath);
+            logger.info("Generate context.xml skipped, file exists: " + generateFilePath);
             return;
         }
 

@@ -37,6 +37,12 @@ public class WriterLogger implements ProcessController
     }
 
     @Override
+    public void debug(String msg)
+    {
+        ps.println(msg);
+    }
+
+    @Override
     public void error(String msg)
     {
         ps.println(msg);

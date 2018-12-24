@@ -3,8 +3,7 @@ package com.developmentontheedge.be5.operation;
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.services.OperationsFactory;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.operation.services.OperationBuilder;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -19,7 +18,7 @@ import org.junit.rules.TemporaryFolder;
 public abstract class OperationsSqlMockProjectTest extends OperationTestUtils
 {
     private static Injector injector;
-    protected static OperationsFactory operations;
+    protected static OperationBuilder.OperationsFactory operations;
 
     @ClassRule
     public static TemporaryFolder tmp = new TemporaryFolder();
@@ -34,7 +33,7 @@ public abstract class OperationsSqlMockProjectTest extends OperationTestUtils
                 new OperationModule()
         );
 
-        operations = injector.getInstance(OperationsFactory.class);
+        operations = injector.getInstance(OperationBuilder.OperationsFactory.class);
     }
 
     @Before

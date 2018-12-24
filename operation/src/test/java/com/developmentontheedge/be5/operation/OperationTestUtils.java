@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.BaseTest;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -25,7 +25,7 @@ import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.operation.util.OperationUtils.replaceEmptyStringToNull;
 
-public class OperationTestUtils extends BaseTestUtils
+public abstract class OperationTestUtils extends BaseTest
 {
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();

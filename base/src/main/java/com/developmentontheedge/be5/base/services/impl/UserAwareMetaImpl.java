@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -33,16 +34,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
         this.meta = meta;
         this.projectProvider = projectProvider;
         this.userInfoProvider = userInfoProvider;
+    }
 
+    @Start(order = 20)
+    public void start() throws Exception
+    {
         projectProvider.addToReload(this::compileLocalizations);
         compileLocalizations();
     }
-
-//    @Override
-//    public void configure(String config)
-//    {
-//        compileLocalizations();
-//    }
 
     @Override
     public void compileLocalizations()

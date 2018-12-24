@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.modules.core.services.scheduling.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.lifecycle.Dispose;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
@@ -51,21 +53,26 @@ public class DaemonStarterImpl implements DaemonStarter
 
     private final Meta meta;
     private final CoreUtils coreUtils;
-    private final Scheduler scheduler;
+    private final GuiceJobFactory guiceJobFactory;
+    private Scheduler scheduler;
 
     @Inject
     public DaemonStarterImpl(Meta meta, CoreUtils coreUtils, GuiceJobFactory guiceJobFactory)
     {
         this.meta = meta;
         this.coreUtils = coreUtils;
+        this.guiceJobFactory = guiceJobFactory;
+    }
 
+    @Start(order = 30)
+    public void start() throws Exception
+    {
         try
         {
-            scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.setJobFactory(guiceJobFactory);
-
             if (meta.getDaemons().size() > 0)
             {
+                scheduler = StdSchedulerFactory.getDefaultScheduler();
+                scheduler.setJobFactory(guiceJobFactory);
                 scheduler.start();
                 initQuartzDaemons();
             }
@@ -120,12 +127,13 @@ public class DaemonStarterImpl implements DaemonStarter
     }
 
     @Override
+    @Dispose(order = 30)
     public void shutdown()
     {
         //todo stop jobs
         try
         {
-            scheduler.shutdown();
+            if (scheduler != null)scheduler.shutdown();
         }
         catch (SchedulerException se)
         {

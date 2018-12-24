@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.metadata.model.QuerySettings;
 
 import java.util.Optional;
 
-//TODO rename UserMeta
 public interface UserAwareMeta
 {
     void compileLocalizations();

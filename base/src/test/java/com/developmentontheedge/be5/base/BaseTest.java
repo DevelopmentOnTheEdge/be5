@@ -10,10 +10,12 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import java.util.Arrays;
 
@@ -26,9 +28,16 @@ public abstract class BaseTest
         LogConfigurator.setLevel(Level.INFO);
     }
 
-    private static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
+    private static final Injector injector = initInjector(
             Modules.override(new BaseModule()).with(new BaseTestModule())
     );
+
+    protected static Injector initInjector(Module... modules)
+    {
+        Injector injector = Guice.createInjector(Stage.PRODUCTION, modules);
+        new Bootstrap(injector).boot();
+        return injector;
+    }
 
     @Before
     public void setUpBaseTestUtils()

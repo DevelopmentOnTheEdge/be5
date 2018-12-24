@@ -1,12 +1,7 @@
 package com.developmentontheedge.be5.operation
 
-import com.developmentontheedge.be5.base.FrontendConstants
-import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
-import com.developmentontheedge.be5.operation.model.Operation
-import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
-import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import com.google.common.collect.ImmutableMap

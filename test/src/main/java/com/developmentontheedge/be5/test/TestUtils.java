@@ -52,7 +52,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public abstract class TestUtils extends BaseTestUtils
+public abstract class TestUtils extends BaseTest
 {
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();

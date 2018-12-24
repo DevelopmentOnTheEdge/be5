@@ -43,6 +43,11 @@ public abstract class ApiControllerSupport extends ControllerSupport
             log.log(e.getLogLevel(), "Error in controller", e);
             res.sendAsJson(e.getMessage(), Integer.parseInt(e.getHttpStatusCode()));
         }
+        catch (IllegalArgumentException e)
+        {
+            log.log(Level.SEVERE, "Error in controller", e);
+            res.sendAsJson(e.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         catch (Throwable e)
         {
             log.log(Level.SEVERE, "Error in controller", e);
@@ -53,14 +58,7 @@ public abstract class ApiControllerSupport extends ControllerSupport
     @Override
     public final void generate(Request req, Response res)
     {
-        try
-        {
-            generate(req, res, getApiSubUrl(req));
-        }
-        catch (IllegalArgumentException e)
-        {
-            res.sendAsJson(e.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        generate(req, res, getApiSubUrl(req));
     }
 
     protected abstract void generate(Request req, Response res, String subUrl);

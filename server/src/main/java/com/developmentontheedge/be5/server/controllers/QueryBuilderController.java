@@ -129,6 +129,7 @@ public class QueryBuilderController extends JsonApiModelController
             }
             catch (Throwable e)
             {
+                log.log(Level.SEVERE, "error on getFinalSql", e);
                 data = new Data(sql, "", history);
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
@@ -231,7 +232,7 @@ public class QueryBuilderController extends JsonApiModelController
         }
         catch (Be5Exception e)
         {
-            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
+            log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
         }
         return finalSql;
@@ -245,7 +246,7 @@ public class QueryBuilderController extends JsonApiModelController
         }
         catch (Be5Exception e)
         {
-            if (stage == Stage.DEVELOPMENT) log.log(Level.SEVERE, "Error in queryBuilder", e);
+            log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(errorModelHelper.getErrorModel(e));
             return "";
         }

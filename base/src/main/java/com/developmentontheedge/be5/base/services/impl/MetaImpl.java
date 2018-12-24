@@ -46,6 +46,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
+
 
 public class MetaImpl implements Meta
 {
@@ -83,14 +85,16 @@ public class MetaImpl implements Meta
     private static final Pattern MENU_ITEM_PATTERN = Pattern.compile("<!--\\S+?-->");
 
     private final ProjectProvider projectProvider;
-    private final Entity be5DynamicQueriesEntity;
+    private final Entity dynamicQueriesEntity;
 
     @Inject
     public MetaImpl(ProjectProvider projectProvider)
     {
         this.projectProvider = projectProvider;
-        be5DynamicQueriesEntity = new Entity("be5DynamicQueries", getProject().getApplication(), EntityType.TABLE);
-        DataElementUtils.save(be5DynamicQueriesEntity);
+        Project dynamicQueriesProject = new Project("dynamicQueriesProject", false);
+        dynamicQueriesProject.setFeatures(Collections.singletonList(BE_SQL_QUERIES));
+        dynamicQueriesEntity = new Entity("be5DynamicQueries",
+                dynamicQueriesProject.getApplication(), EntityType.TABLE);
     }
 
     @Override
@@ -489,12 +493,12 @@ public class MetaImpl implements Meta
     public Query createQueryFromSql(String sql)
     {
         String queryName = "threadQuery" + Thread.currentThread().getId();
-        Query query = be5DynamicQueriesEntity.getQueries().get(queryName);
+        Query query = dynamicQueriesEntity.getQueries().get(queryName);
         if (query == null)
         {
-            synchronized (be5DynamicQueriesEntity)
+            synchronized (dynamicQueriesEntity)
             {
-                query = new Query(queryName, be5DynamicQueriesEntity);
+                query = new Query(queryName, dynamicQueriesEntity);
                 query.setType(QueryType.D1_UNKNOWN);
                 DataElementUtils.save(query);
             }

@@ -55,9 +55,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public abstract class ServerTestUtils extends BaseTestUtils
+public abstract class ServerTestUtils extends BaseTest
 {
-    public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
+    public static final Logger log = Logger.getLogger(BaseTest.class.getName());
 
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
@@ -137,38 +137,6 @@ public abstract class ServerTestUtils extends BaseTestUtils
         }
 
         return request;
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.OPERATION, operation,
-                OperationConstants.SELECTED_ROWS, selectedRows,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values)
-    {
-        return getSpyMockRecForQuery(entity, query, values, new HashMap<>());
-    }
-
-    protected Request getSpyMockRecForQuery(String entity, String query, String values, Map<String, Object> sessionValues)
-    {
-        return getSpyMockRequest("", ImmutableMap.of(
-                RestApiConstants.ENTITY, entity,
-                RestApiConstants.QUERY, query,
-                RestApiConstants.VALUES, values),
-                sessionValues
-        );
-    }
-
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
-    {
-        return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
     public static QRec getQRec(Map<String, Object> nameValues)

@@ -19,7 +19,7 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private static final Logger log = Logger.getLogger(ConnectionServiceImpl.class.getName());
 
-    private DataSourceService databaseService;
+    private final DataSourceService databaseService;
 
     @Inject
     public ConnectionServiceImpl(DataSourceService databaseService)

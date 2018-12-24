@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -34,6 +35,12 @@ public class ProjectProviderImpl implements ProjectProvider
         this.stage = stage;
     }
 
+    @Start(order = 10)
+    public void start() throws Exception
+    {
+        project = loadProject();
+    }
+
     @Override
     public void addToReload(Runnable supplier)
     {
@@ -43,7 +50,7 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public synchronized Project get()
     {
-        if (dirty || project == null)
+        if (dirty)
         {
             Project oldProject = project;
             project = loadProject();

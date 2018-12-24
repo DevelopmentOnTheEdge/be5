@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services;
 
+import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -18,12 +19,21 @@ import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PA
 public class DocumentCategoriesPlugin implements DocumentPlugin
 {
     private final CategoriesService categoriesService;
+    private final DocumentGenerator documentGenerator;
+    private final ProjectProvider projectProvider;
 
     @Inject
     public DocumentCategoriesPlugin(CategoriesService categoriesService, DocumentGenerator documentGenerator,
                                     ProjectProvider projectProvider)
     {
         this.categoriesService = categoriesService;
+        this.documentGenerator = documentGenerator;
+        this.projectProvider = projectProvider;
+    }
+
+    @Start(order = 30)
+    public void start() throws Exception
+    {
         if (projectProvider.get().hasFeature(Features.DOCUMENT_CATEGORIES))
         {
             documentGenerator.addDocumentPlugin(Features.DOCUMENT_CATEGORIES, this);
