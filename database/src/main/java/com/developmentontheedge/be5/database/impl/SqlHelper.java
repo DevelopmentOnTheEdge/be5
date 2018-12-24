@@ -42,13 +42,13 @@ public class SqlHelper
                 ObjectArrays.concat(values.values().toArray(), conditions.values().toArray(), Object.class));
     }
 
-    public int updateIn(String tableName, String primaryKeyName, Object[] primaryKeyValue, Map<String, ?> values)
+    public int updateIn(String tableName, String conditionColumn, Object[] conditionValues, Map<String, ?> values)
     {
         Map<String, String> valuePlaceholders = values.entrySet().stream()
                 .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
 
-        return db.update(generateUpdateInSql(tableName, primaryKeyName, primaryKeyValue.length, valuePlaceholders),
-                ObjectArrays.concat(values.values().toArray(), primaryKeyValue, Object.class));
+        return db.update(generateUpdateInSql(tableName, conditionColumn, conditionValues.length, valuePlaceholders),
+                ObjectArrays.concat(values.values().toArray(), conditionValues, Object.class));
     }
 
     public int delete(String tableName, Map<String, ?> conditions)
