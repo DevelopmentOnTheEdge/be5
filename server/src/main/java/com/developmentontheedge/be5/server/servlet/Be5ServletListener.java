@@ -34,12 +34,11 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
     public void contextInitialized(ServletContextEvent sce)
     {
         long startTime = System.currentTimeMillis();
-
         super.contextInitialized(sce);
+        log.info("Injector created in " + (System.currentTimeMillis() - startTime) + " ms.");
+
         be5Bootstrap = new Bootstrap(getCurrentInjector(sce));
         be5Bootstrap.boot();
-
-        log.info("Be5 application bootstrapped in " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
     @Override
