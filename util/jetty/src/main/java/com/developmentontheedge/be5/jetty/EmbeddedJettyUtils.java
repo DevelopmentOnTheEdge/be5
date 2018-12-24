@@ -17,17 +17,17 @@ public class EmbeddedJettyUtils
     private static final String descriptorPath = "/WEB-INF/web.xml";
 
     private Server jetty;
-    private String name = "Be5Jetty";
-    private int post = 8200;
+    private int port = 8200;
 
+    @Deprecated
     public static void runWebApp()
     {
         new EmbeddedJettyUtils().run();
-
     }
 
     public final void run()
     {
+        String name = "Be5Jetty";
         Thread.currentThread().setName(name);
 
         LogConfigurator.configure();
@@ -36,7 +36,7 @@ public class EmbeddedJettyUtils
         try
         {
             long startTime = System.currentTimeMillis();
-            jetty = new Server(8200);
+            jetty = new Server(port);
             jetty.setHandler(getWebAppContext());
             doStart();
             logStarted(startTime);
@@ -69,7 +69,7 @@ public class EmbeddedJettyUtils
     {
         log.info("-------------------------------------------------------");
         log.info("Be5 application running at");
-        log.info(" => http://localhost:" + post);
+        log.info(" => http://localhost:" + port);
         log.info((System.currentTimeMillis() - startTime) + " ms");
         log.info("-------------------------------------------------------");
     }
@@ -97,10 +97,17 @@ public class EmbeddedJettyUtils
     private static void checkDescriptor()
     {
         File descriptor = new File(resourceBase + descriptorPath);
-        if (!descriptor.exists()) {
+        if (!descriptor.exists())
+        {
             log.severe("The file " + descriptor.getAbsolutePath() + " does not exists.\n" +
                     "Please set the correct working directory. Current: " + new File("").getAbsolutePath());
             System.exit(0);
         }
+    }
+
+    public EmbeddedJettyUtils setPort(int port)
+    {
+        this.port = port;
+        return this;
     }
 }
