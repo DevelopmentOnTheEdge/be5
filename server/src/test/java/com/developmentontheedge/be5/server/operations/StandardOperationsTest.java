@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
@@ -11,11 +13,17 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+import org.mockito.Matchers;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -168,5 +176,15 @@ public class StandardOperationsTest extends SqlMockOperationTest
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
 
         return result;
+    }
+
+    protected static void whenSelectListTagsContains(String containsSql, String... tagValues)
+    {
+        List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
+                .map(tagValue -> getDps(new QRec(), ImmutableMap.of("CODE", tagValue, "Name", tagValue)))
+                .collect(Collectors.toList());
+
+        when(DbServiceMock.mock.list(contains(containsSql),
+                Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 }

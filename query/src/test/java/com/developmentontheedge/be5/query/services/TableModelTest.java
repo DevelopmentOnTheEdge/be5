@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
@@ -11,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -22,10 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TableModelTest extends QueryBe5ProjectDBTest
 {
-    @Inject
-    private DbService db;
-    @Inject
-    private ProjectProvider projectProvider;
     @Inject
     private TableModelService tableModelService;
 
@@ -47,9 +44,25 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void testData()
+    {
+        InputStream data = new ByteArrayInputStream("blob data".getBytes(StandardCharsets.UTF_8));
+        db.insert("INSERT INTO testData (name, textCol, dataCol) VALUES (?, ?, ?)", "test name", "test text", data);
+
+        Query query = meta.getQuery("testData", "All records");
+        TableModel table = tableModelService.create(query, Collections.emptyMap());
+        assertEquals("{'cells':[" +
+                        "{'content':'test name','options':{}}," +
+                        "{'content':'test text','options':{}}," +
+                        "{'content':'Blob','options':{}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+        db.update("DELETE FROM testData");
+    }
+
+    @Test
     public void subQuery()
     {
-        Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query");
+        Query query = meta.getQuery("testtable", "Sub Query");
         TableModel tableModel = tableModelService.create(query, new HashMap<>());
 
         assertEquals("{'content':'1<br/> 2','options':{}}",
@@ -57,21 +70,9 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void dictionaryLocalization()
-    {
-        Query query = projectProvider.get().getEntity("testTags").getQueries().get("dictionaryLocalization");
-        TableModel tableModel = tableModelService.create(query, new HashMap<>());
-
-        assertEquals("'Региональный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(0).content)));
-        assertEquals("'Региональный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(1).getCells().get(0).content)));
-        assertEquals("'Муниципальный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(2).getCells().get(0).content)));
-        assertEquals("'Муниципальный'", oneQuotes(jsonb.toJson(tableModel.getRows().get(3).getCells().get(0).content)));
-    }
-
-    @Test
     public void subQueryDefault()
     {
-        Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query default");
+        Query query = meta.getQuery("testtable", "Sub Query default");
         TableModel tableModel = tableModelService.create(query, new HashMap<>());
 
         assertEquals("{'content':'defaultValue','options':{}}",
@@ -81,8 +82,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     @Test
     public void subQueryWithPrepareParams()
     {
-        Query query = projectProvider.get().getEntity("testtable").getQueries()
-                .get("Sub Query with prepare params");
+        Query query = meta.getQuery("testtable", "Sub Query with prepare params");
         TableModel tableModel = tableModelService.create(query, new HashMap<>());
 
         assertEquals("{'content':'1<br/> 2','options':{}}",
@@ -92,8 +92,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     @Test
     public void subQueryWithLongPrepareParams()
     {
-        Query query = projectProvider.get().getEntity("testtable").getQueries()
-                .get("Sub Query with long prepare params");
+        Query query = meta.getQuery("testtable", "Sub Query with long prepare params");
         TableModel tableModel = tableModelService.create(query, new HashMap<>());
         assertEquals("{'content':'1','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));

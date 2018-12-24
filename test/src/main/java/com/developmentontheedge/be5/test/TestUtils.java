@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
@@ -17,6 +18,7 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.MailService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
 import com.developmentontheedge.be5.test.mocks.TestMailService;
 import com.developmentontheedge.be5.test.mocks.TestQuerySession;
@@ -27,12 +29,15 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Inject;
@@ -45,9 +50,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.operation.util.OperationUtils.replaceEmptyStringToNull;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -122,9 +130,19 @@ public abstract class TestUtils extends BaseTest
         return request;
     }
 
-    public static QRec getQRec(Map<String, ?> nameValues)
+    protected static QRec getQRec(Map<String, ?> nameValues)
     {
         return getDps(new QRec(), nameValues);
+    }
+
+    protected static void whenSelectListTagsContains(String containsSql, String... tagValues)
+    {
+        List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
+                .map(tagValue -> getQRec(ImmutableMap.of("CODE", tagValue, "Name", tagValue)))
+                .collect(Collectors.toList());
+
+        when(DbServiceMock.mock.list(contains(containsSql),
+                Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName,

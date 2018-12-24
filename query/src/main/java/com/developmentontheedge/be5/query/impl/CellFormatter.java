@@ -15,14 +15,14 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.google.common.collect.ImmutableList;
@@ -249,7 +249,7 @@ public class CellFormatter
     private List<List<Object>> toTable(String subQueryName, VarResolver varResolver, Query query,
                                        ContextApplier contextApplier)
     {
-        List<DynamicPropertySet> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
+        List<QRec> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
 
         List<List<Object>> lists = new ArrayList<>();
 
@@ -323,7 +323,7 @@ public class CellFormatter
         }
     }
 
-    private List<DynamicPropertySet> executeSubQuery(String subQueryName, VarResolver varResolver,
+    private List<QRec> executeSubQuery(String subQueryName, VarResolver varResolver,
                                                      Query query, ContextApplier contextApplier)
     {
         AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
@@ -338,7 +338,7 @@ public class CellFormatter
 
         String finalSql = subQuery.getQuery().toString();
 
-        List<DynamicPropertySet> dynamicPropertySets;
+        List<QRec> dynamicPropertySets;
 
         Object[] params;
         String usingParamNames = subQuery.getUsingParamNames();
@@ -358,14 +358,14 @@ public class CellFormatter
 
         try
         {
-            dynamicPropertySets = db.list(finalSql, new DynamicPropertySetSimpleStringParser(), params);
+            dynamicPropertySets = db.list(finalSql, new QRecParser(), params);
         }
         catch (Throwable e)
         {
             Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);
             log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
 
-            DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+            QRec dynamicProperties = new QRec();
             dynamicProperties.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, "-1"));
             dynamicProperties.add(new DynamicProperty("error", String.class,
                     userInfoProvider.getCurrentRoles()
@@ -377,7 +377,7 @@ public class CellFormatter
         {
             String value = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
                     subQuery.getParameter("default"));
-            DynamicPropertySetSupport dpsWithMessage = new DynamicPropertySetSupport();
+            QRec dpsWithMessage = new QRec();
             dpsWithMessage.add(new DynamicProperty("message", String.class, value));
             return Collections.singletonList(dpsWithMessage);
         }

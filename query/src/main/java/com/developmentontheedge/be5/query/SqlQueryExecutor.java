@@ -12,7 +12,5 @@ public interface SqlQueryExecutor extends QueryExecutor
      */
     <T> List<T> execute(ResultSetParser<T> parser);
 
-    <T> T getRow(ResultSetParser<T> parser);
-
     AstStart getFinalSql();
 }

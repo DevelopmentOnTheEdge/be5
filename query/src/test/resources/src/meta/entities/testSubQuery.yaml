@@ -13,9 +13,3 @@ testSubQuery:
         type: VARCHAR(20)
     - value:
         type: KEYTYPE
-    - commentTEXT:
-        type: TEXT
-        canBeNull: true
-    - commentBLOB:
-        type: BLOB
-        canBeNull: true

@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
@@ -22,6 +23,7 @@ import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
 import com.developmentontheedge.be5.test.mocks.ServerTestSession;
@@ -29,12 +31,15 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.inject.Inject;
@@ -48,9 +53,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.operation.util.OperationUtils.replaceEmptyStringToNull;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -137,11 +145,6 @@ public abstract class ServerTestUtils extends BaseTest
         }
 
         return request;
-    }
-
-    public static QRec getQRec(Map<String, Object> nameValues)
-    {
-        return getDps(new QRec(), nameValues);
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,

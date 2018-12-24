@@ -3,10 +3,9 @@ package com.developmentontheedge.be5.query.support;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +22,7 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
     private boolean selectable;
 
     protected List<String> columns = new ArrayList<>();
-    protected List<DynamicPropertySet> properties = new ArrayList<>();
+    protected List<QRec> properties = new ArrayList<>();
 
     public QueryExecutor initialize(Query query, Map<String, Object> parameters)
     {
@@ -94,14 +93,14 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
 
     public void addRow(List<DynamicProperty> cells)
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        QRec dps = new QRec();
         cells.forEach(dps::add);
         properties.add(dps);
     }
 
     public void addRow(Long id, List<DynamicProperty> cells)
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        QRec dps = new QRec();
         dps.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, id.toString()));
         cells.forEach(dps::add);
         properties.add(dps);
@@ -109,28 +108,28 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
 
     public void addRow(String id, List<DynamicProperty> cells)
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        QRec dps = new QRec();
         dps.add(new DynamicProperty(ID_COLUMN_LABEL, String.class, id));
         cells.forEach(dps::add);
         properties.add(dps);
     }
 
-    public List<DynamicPropertySet> table()
+    public List<QRec> table()
     {
         return getSimpleTable(false, (long) properties.size());
     }
 
-    public List<DynamicPropertySet> table(boolean selectable)
+    public List<QRec> table(boolean selectable)
     {
         return getSimpleTable(selectable, (long) properties.size());
     }
 
-    public List<DynamicPropertySet> table(boolean selectable, Long totalNumberOfRows)
+    public List<QRec> table(boolean selectable, Long totalNumberOfRows)
     {
         return getSimpleTable(selectable, totalNumberOfRows);
     }
 
-    private List<DynamicPropertySet> getSimpleTable(boolean selectable, Long totalNumberOfRows)
+    private List<QRec> getSimpleTable(boolean selectable, Long totalNumberOfRows)
     {
         this.selectable = selectable;
         return properties;

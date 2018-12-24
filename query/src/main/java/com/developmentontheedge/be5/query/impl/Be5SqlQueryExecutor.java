@@ -10,14 +10,14 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.SqlQueryExecutor;
-import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser;
+import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.MacroExpander;
@@ -97,20 +97,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     }
 
     @Override
-    public <T> T getRow(ResultSetParser<T> parser)
-    {
-        List<T> list = execute(parser);
-        if (list.size() == 0)
-        {
-            return null;
-        }
-        else
-        {
-            return list.get(0);
-        }
-    }
-
-    @Override
     public AstStart getFinalSql()
     {
         return getFinalSql(ExecuteType.DEFAULT);
@@ -161,23 +147,23 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     }
 
     @Override
-    public List<DynamicPropertySet> execute()
+    public List<QRec> execute()
     {
-        List<DynamicPropertySet> rows = execute(new DynamicPropertySetSimpleStringParser());
+        List<QRec> rows = execute(new QRecParser());
         addAggregateRowIfNeeded(rows);
         return processRows(rows);
     }
 
-    private List<DynamicPropertySet> processRows(List<DynamicPropertySet> rows)
+    private List<QRec> processRows(List<QRec> rows)
     {
-        List<DynamicPropertySet> res = new ArrayList<>();
+        List<QRec> res = new ArrayList<>();
         rows.forEach(cells -> res.add(processCells(cells)));
         return res;
     }
 
-    private DynamicPropertySet processCells(DynamicPropertySet cells)
+    private QRec processCells(DynamicPropertySet cells)
     {
-        DynamicPropertySet resultCells = new DynamicPropertySetSupport();
+        QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
         for (DynamicProperty cell : cells)
@@ -196,13 +182,13 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         return resultCells;
     }
 
-    private void addAggregateRowIfNeeded(List<DynamicPropertySet> propertiesList)
+    private void addAggregateRowIfNeeded(List<QRec> propertiesList)
     {
         if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
 
-            List<DynamicPropertySet> aggregateRows = execute(ExecuteType.AGGREGATE, new DynamicPropertySetSimpleStringParser());
+            List<QRec> aggregateRows = execute(ExecuteType.AGGREGATE, new QRecParser());
             TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
@@ -210,7 +196,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     @Override
     public long count()
     {
-        return (Long) execute(ExecuteType.COUNT, new DynamicPropertySetSimpleStringParser()).get(0).asMap().get("count");
+        return (Long) execute(ExecuteType.COUNT, new QRecParser()).get(0).asMap().get("count");
     }
 
     @Override

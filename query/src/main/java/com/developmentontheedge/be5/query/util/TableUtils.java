@@ -4,10 +4,11 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.query.QueryConstants;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class TableUtils
         }
     }
 
-    public static void addAggregateRowIfNeeded(List<DynamicPropertySet> rows, List<DynamicPropertySet> aggregateRows,
+    public static void addAggregateRowIfNeeded(List<QRec> rows, List<QRec> aggregateRows,
                                                String totalTitle)
     {
         DynamicPropertySet firstRow = aggregateRows.get(0);
@@ -131,10 +132,10 @@ public class TableUtils
         rows.add(getTotalRow(firstRow, aggregateValues, totalTitle));
     }
 
-    private static DynamicPropertySet getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues,
+    private static QRec getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues,
                                                   String totalTitle)
     {
-        DynamicPropertySet res = new DynamicPropertySetSupport();
+        QRec res = new QRec();
         boolean totalTitleAdded = false;
         for (Iterator<DynamicProperty> props = firstRow.propertyIterator(); props.hasNext();)
         {
@@ -201,5 +202,18 @@ public class TableUtils
         String name = property.getName();
         return property.isHidden() || MoreStrings.startsWithAny(name, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
                 DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
+    }
+
+    public static void replaceBlob(DynamicPropertySet properties)
+    {
+        for (DynamicProperty dp : properties)
+        {
+            if (dp.getValue() == null) continue;
+            if (dp.getValue().getClass() == byte[].class || dp.getValue() instanceof Blob)
+            {
+                dp.setValue("Blob");
+                dp.setType(String.class);
+            }
+        }
     }
 }

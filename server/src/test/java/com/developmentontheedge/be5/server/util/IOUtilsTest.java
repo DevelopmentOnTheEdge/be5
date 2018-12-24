@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class IOUtilsTest
 {
@@ -15,7 +15,7 @@ public class IOUtilsTest
     public void test() throws IOException
     {
         String initialString = "text\nline2";
-        InputStream inputStream = new ByteArrayInputStream(initialString.getBytes());
+        InputStream inputStream = new ByteArrayInputStream(initialString.getBytes(StandardCharsets.UTF_8));
         assertEquals(initialString, IOUtils.toString(inputStream, StandardCharsets.UTF_8));
     }
 

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -30,7 +31,7 @@ public class DownloadControllerTest extends ServerBe5ProjectTest
                 "id", 1,
                 "mimeType", "testMimeType",
                 "name", "name",
-                "data", "test data".getBytes()
+                "data", "test data".getBytes(StandardCharsets.UTF_8)
         )));
         Response response = mock(Response.class);
         when(response.getRawResponse()).thenReturn(mock(HttpServletResponse.class));

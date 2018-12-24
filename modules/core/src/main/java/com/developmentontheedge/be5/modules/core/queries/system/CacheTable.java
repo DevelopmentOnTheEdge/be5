@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public class CacheTable extends QueryExecutorSupport
     private Be5Caches be5Caches;
 
     @Override
-    public List<DynamicPropertySet> execute()
+    public List<QRec> execute()
     {
         addColumns("Name",
                 "Size",

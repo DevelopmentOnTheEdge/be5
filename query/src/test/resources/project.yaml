@@ -5,6 +5,7 @@ queryTestProject:
   modules: []
   application:
   - classifications
+  - testData
   - testtable
   - testtableAdmin
   - testSubQuery

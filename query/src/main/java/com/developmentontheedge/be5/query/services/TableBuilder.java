@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.inject.Inject;
@@ -79,7 +80,7 @@ public class TableBuilder
 
     public TableModel get()
     {
-        List<DynamicPropertySet> propertiesList;
+        List<QRec> propertiesList;
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
@@ -111,12 +112,13 @@ public class TableBuilder
         return totalNumberOfRows;
     }
 
-    private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list,
+    private void collectColumnsAndRows(String entityName, String queryName, List<QRec> list,
                                        List<ColumnModel> columns, List<RowModel> rows)
     {
-        list.forEach(dps -> TableUtils.filterBeanWithRoles(dps, userInfo.getCurrentRoles()));
         for (DynamicPropertySet properties : list)
         {
+            TableUtils.replaceBlob(properties);
+            TableUtils.filterBeanWithRoles(properties, userInfo.getCurrentRoles());
             if (columns.isEmpty())
             {
                 columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo,

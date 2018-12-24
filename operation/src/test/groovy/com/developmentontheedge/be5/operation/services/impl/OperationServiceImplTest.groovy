@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.operation.services.impl
 
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
+import com.developmentontheedge.beans.DynamicProperty
+import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Test
 
@@ -49,4 +51,12 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
         assertArrayEquals([1, "2"] as Object[], dps.asMap().get("test6"))
     }
 
+    static <T extends DynamicPropertySet> T getDps(T dps, Map<String, ?> nameValues)
+    {
+        for (Map.Entry<String, ?> entry : nameValues.entrySet())
+        {
+            dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
+        }
+        return dps;
+    }
 }

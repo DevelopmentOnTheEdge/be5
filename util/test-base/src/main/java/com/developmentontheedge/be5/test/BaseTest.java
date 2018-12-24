@@ -186,5 +186,4 @@ public abstract class BaseTest extends BaseTestUtils implements InjectedTestUtil
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
         }
     }
-
 }

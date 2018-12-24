@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.server.helpers
 
 import com.developmentontheedge.be5.base.services.Meta
-import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser
-import com.developmentontheedge.be5.query.sql.DynamicPropertySetSimpleStringParser
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -17,7 +15,11 @@ import org.junit.Test
 import javax.inject.Inject
 
 import static com.developmentontheedge.beans.BeanInfoConstants.TAG_LIST_ATTR
-import static org.junit.Assert.*
+import static org.junit.Assert.assertArrayEquals
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertNull
+import static org.junit.Assert.assertTrue
 
 class DpsHelperTest extends ServerBe5ProjectDBTest
 {

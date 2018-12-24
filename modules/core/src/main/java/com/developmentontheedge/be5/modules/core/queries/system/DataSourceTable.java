@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.database.DataSourceService;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ public class DataSourceTable extends QueryExecutorSupport
     @Inject private DataSourceService databaseService;
 
     @Override
-    public List<DynamicPropertySet> execute()
+    public List<QRec> execute()
     {
         addColumns("name", "value");
         if (databaseService.getDataSource() instanceof BasicDataSource)

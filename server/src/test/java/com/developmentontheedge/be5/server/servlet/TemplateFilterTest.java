@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.SessionConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -79,7 +80,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
         when(req.getContextPath()).thenReturn("/");
 
         when(servletContext.getResourceAsStream("/WEB-INF/templates/index.html"))
-                .thenReturn(new ByteArrayInputStream(html.getBytes()));
+                .thenReturn(new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8)));
         when(res.getRawResponse()).thenReturn(mock(HttpServletResponse.class));
 
         templateFilter.filter(req, res, filterChain);

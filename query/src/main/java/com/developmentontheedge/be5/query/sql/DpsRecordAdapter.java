@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.query.sql;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import one.util.streamex.IntStreamEx;
 
 import java.sql.ResultSet;
@@ -42,7 +42,7 @@ class DpsRecordAdapter
                     continue;
                 }
                 Object val = SqlUtils.getSqlValue(dp.getType(), resultSet, i + 1);
-                DynamicProperty property = DynamicPropertySetSupport.cloneProperty(dp);
+                DynamicProperty property = QRec.cloneProperty(dp);
                 property.setValue(val);
                 dps.add(property);
             }
@@ -52,11 +52,6 @@ class DpsRecordAdapter
         {
             throw Be5Exception.internal(e);
         }
-    }
-
-    static DynamicProperty[] createSimpleStringSchema(ResultSetMetaData metaData)
-    {
-        return createSchema(metaData, SqlUtils::getSimpleStringTypeClass);
     }
 
     static DynamicProperty[] createSchema(ResultSetMetaData metaData)

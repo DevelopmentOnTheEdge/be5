@@ -156,7 +156,7 @@ public class QueriesService
     {
         String entityName = query.getEntity().getName();
 
-        List<DynamicPropertySet> list = queryExecutorFactory.get(query, parameters)
+        List<QRec> list = queryExecutorFactory.get(query, parameters)
                 .limit(Integer.MAX_VALUE)
                 .execute();
 
@@ -366,7 +366,7 @@ public class QueriesService
 
     public List<QRec> query(Query query, Map<String, ?> parameters)
     {
-        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).execute(new QRecParser());
+        return queryExecutorFactory.get(query, parameters).execute();
     }
 
     public QRec queryRecord(String sql, Map<String, ?> parameters)
@@ -381,6 +381,14 @@ public class QueriesService
 
     public QRec queryRecord(Query query, Map<String, ?> parameters)
     {
-        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).getRow(new QRecParser());
+        List<QRec> list = queryExecutorFactory.get(query, parameters).execute();
+        if (list.size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return list.get(0);
+        }
     }
 }

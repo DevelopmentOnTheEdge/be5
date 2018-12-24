@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    List<DynamicPropertySet> execute();
+    List<QRec> execute();
 
     /**
      * Counts the number of resulting rows.

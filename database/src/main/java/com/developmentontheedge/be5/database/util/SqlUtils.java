@@ -144,11 +144,10 @@ public class SqlUtils
                 return Time.class;
             case Types.TIMESTAMP:
                 return Timestamp.class;
-            case Types.CLOB:
-                return Clob.class;
             case Types.BLOB:
                 return Blob.class;
             case Types.BINARY:
+            case Types.VARBINARY:
                 return byte[].class;
             default:
                 return String.class;
@@ -159,9 +158,9 @@ public class SqlUtils
     {
         switch (columnType)
         {
-            case Types.CLOB:
             case Types.BLOB:
             case Types.BINARY:
+            case Types.VARBINARY:
                 return String.class;
             default:
                 return getTypeClass(columnType);

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public class ThreadsTable extends QueryExecutorSupport
 {
     @Override
-    public List<DynamicPropertySet> execute()
+    public List<QRec> execute()
     {
         addColumns("name", "groupName", "state", "alive", "priority", "threadGroup", "id");
 
