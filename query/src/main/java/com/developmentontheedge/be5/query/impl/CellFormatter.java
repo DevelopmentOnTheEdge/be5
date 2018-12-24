@@ -401,6 +401,8 @@ public class CellFormatter
 
     private Optional<String> localizeDictionaryValues(String entityName, String key)
     {
+        if (!meta.getProject().getEntityNames().contains(entityName)) return Optional.empty();
+
         for (TableReference reference : meta.getEntity(entityName).getAllReferences())
         {
             String tableTo = reference.getTableTo();

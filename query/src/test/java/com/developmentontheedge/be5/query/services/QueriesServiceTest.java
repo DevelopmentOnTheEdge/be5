@@ -257,6 +257,20 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void testLocalization()
+    {
+        QRec list = queries.queryRecord("SELECT '{{{message}}}' AS \"test\" FROM testTags LIMIT 1", emptyMap());
+        assertEquals("Сообщение", list.getString("test"));
+    }
+
+    @Test
+    public void dynamicQuerySkipDictionaryLocalization()
+    {
+        QRec list = queries.queryRecord("SELECT '{{{testValue}}}' AS \"test\" FROM testTags LIMIT 1", emptyMap());
+        assertEquals("testValue", list.getString("test"));
+    }
+
+    @Test
     public void readAsListTest()
     {
         List<List<Object>> lists = queries.listOfLists("SELECT code, admlevel FROM testTags");
