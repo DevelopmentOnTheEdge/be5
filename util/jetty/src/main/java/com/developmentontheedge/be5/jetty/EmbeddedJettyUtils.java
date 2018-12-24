@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,11 +13,14 @@ import java.util.logging.Logger;
 public class EmbeddedJettyUtils
 {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    private static final String resourceBase = "src/main/webapp";
+    private static final String descriptorPath = "/WEB-INF/web.xml";
+
     private Server jetty;
     private String name = "Be5Jetty";
     private int post = 8200;
 
-    public static void runWebApp() throws Exception
+    public static void runWebApp()
     {
         new EmbeddedJettyUtils().run();
 
@@ -27,6 +31,7 @@ public class EmbeddedJettyUtils
         Thread.currentThread().setName(name);
 
         LogConfigurator.configure();
+        checkDescriptor();
 
         try
         {
@@ -72,7 +77,7 @@ public class EmbeddedJettyUtils
     private static WebAppContext getWebAppContext()
     {
         WebAppContext context = new WebAppContext();
-        context.setDescriptor("/WEB-INF/web.xml");
+        context.setDescriptor(descriptorPath);
         context.setParentLoaderPriority(true);
         setBaseProps(context);
         return context;
@@ -85,7 +90,17 @@ public class EmbeddedJettyUtils
             context.getInitParams().put("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         }
         context.setContextPath("/");
-        context.setResourceBase("src/main/webapp");
+        context.setResourceBase(resourceBase);
         context.setMaxFormContentSize(1024 * 1024 * 1024);
+    }
+
+    private static void checkDescriptor()
+    {
+        File descriptor = new File(resourceBase + descriptorPath);
+        if (!descriptor.exists()) {
+            log.severe("The file " + descriptor.getAbsolutePath() + " does not exists.\n" +
+                    "Please set the correct working directory. Current: " + new File("").getAbsolutePath());
+            System.exit(0);
+        }
     }
 }
