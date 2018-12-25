@@ -30,9 +30,10 @@ public class EmbeddedJetty
         {
             long startTime = System.currentTimeMillis();
             jetty = new Server(port);
-            jetty.setHandler(getWebAppContext());
+            WebAppContext webAppContext = getWebAppContext();
+            jetty.setHandler(webAppContext);
             doStart();
-            logStarted(startTime);
+            logStarted(webAppContext, startTime);
         }
         catch (Exception e)
         {
@@ -55,15 +56,15 @@ public class EmbeddedJetty
         String version = jetty.getClass().getPackage().getImplementationVersion();
         log.info("Trying to start jetty v" + version);
         jetty.start();
-        log.info("Started jetty v" + version);
     }
 
-    private void logStarted(long startTime)
+    private void logStarted(WebAppContext webAppContext, long startTime)
     {
         log.info("-------------------------------------------------------");
-        log.info("Be5 application running at");
-        log.info(" => http://localhost:" + port);
+        log.info(webAppContext.toString());
         log.info((System.currentTimeMillis() - startTime) + " ms");
+        log.info("Started Jetty Server");
+        log.info(" => http://localhost:" + port);
         log.info("-------------------------------------------------------");
     }
 
