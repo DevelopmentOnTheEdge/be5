@@ -188,7 +188,7 @@ public class QueryMetaHelper
         else
         {
             String entityName = Strings2.joinWithoutTail(".", splittedTo);
-            final String column = splittedTo.get(splittedTo.size() -1);
+            final String column = splittedTo.get(splittedTo.size() - 1);
             Set<String> entityNames = meta.getProject().getEntityNames();
             if (!entityNames.contains(entityName))
             {
