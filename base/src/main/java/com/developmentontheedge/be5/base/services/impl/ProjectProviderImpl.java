@@ -73,14 +73,11 @@ public class ProjectProviderImpl implements ProjectProvider
             try
             {
                 Project project = ModuleLoader2.findAndLoadProjectWithModules(dirty);
+                dirty = false;
                 return project;
             }
             catch (RuntimeException e)
             {
-                if (stage == Stage.DEVELOPMENT)
-                {
-                    project = null;
-                }
                 throw Be5Exception.internal("Can't load project", e);
             }
             finally
@@ -99,10 +96,6 @@ public class ProjectProviderImpl implements ProjectProvider
         catch (ProjectLoadException | IOException e)
         {
             throw Be5Exception.internal("Can not load project", e);
-        }
-        finally
-        {
-            dirty = false;
         }
     }
 

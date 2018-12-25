@@ -43,6 +43,7 @@ public class ModuleLoader2
 {
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
+    private static List<URL> urls;
     private static Map<String, Project> modulesMap;
     private static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
     private static List<String> devRoles = new ArrayList<>();
@@ -94,14 +95,15 @@ public class ModuleLoader2
             project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
         }
 
+        long startTime = System.nanoTime();
         ModuleLoader2.mergeModules(project, logger);
-
         project.validate();
         project.initBeSqlMacros();
         if (project.hasFeature(BE_SQL_QUERIES))
         {
             processOldFreemarkerMacros(project);
         }
+        ModuleLoader2.logLoadedProject(project, startTime, logger);
         return project;
     }
 
@@ -154,17 +156,22 @@ public class ModuleLoader2
 
         try
         {
-            ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
-                    ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
-
-            urls.addAll(additionalUrls);
-            replaceAndAddURLtoSource(urls, logger);
+            if (urls == null) urls = getProjectUrls(additionalUrls, logger);
             loadAllProjects(urls, logger);
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    private static List<URL> getProjectUrls(List<URL> additionalUrls, ProcessController logger) throws IOException
+    {
+        List<URL> list = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
+                ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
+        list.addAll(additionalUrls);
+        replaceAndAddURLtoSource(list, logger);
+        return list;
     }
 
     public static void loadAllProjects(List<URL> urls)
@@ -279,7 +286,6 @@ public class ModuleLoader2
 
     public static void mergeModules(Project be5Project, ProcessController logger) throws ProjectLoadException
     {
-        long startTime = System.nanoTime();
         LoadContext loadContext = new LoadContext();
         try
         {
@@ -290,7 +296,6 @@ public class ModuleLoader2
             throw new ProjectLoadException("Merge modules", e);
         }
         loadContext.check();
-        ModuleLoader2.logLoadedProject(be5Project, startTime, logger);
     }
 
     private static void mergeAllModules(
