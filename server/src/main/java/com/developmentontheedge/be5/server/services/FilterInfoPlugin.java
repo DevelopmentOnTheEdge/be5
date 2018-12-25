@@ -72,7 +72,8 @@ public class FilterInfoPlugin implements DocumentPlugin
             AstStart ast = SqlQuery.parse(query.getFinalQuery());
             Map<String, AstBeParameterTag> usedParams = ast.tree()
                     .select(AstBeParameterTag.class)
-                    .collect(Collectors.toMap(AstBeParameterTag::getName, identity()));
+                    .collect(Collectors.toMap(AstBeParameterTag::getName, identity(),
+                            (param1, param2) -> param1));
 
             params.forEach((k, v) -> {
                 ColumnDef column = meta.getColumn(mainEntityName, k);
