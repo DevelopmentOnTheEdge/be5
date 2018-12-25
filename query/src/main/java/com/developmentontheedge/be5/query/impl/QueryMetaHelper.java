@@ -133,6 +133,7 @@ public class QueryMetaHelper
     {
         String fromTableDef = getFromTableDefName(ast);
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
+            if (tag.getType() != null) return;
             ColumnDef columnDef = getColumnDef(ast, tag, fromTableDef);
             if (columnDef != null)
             {
