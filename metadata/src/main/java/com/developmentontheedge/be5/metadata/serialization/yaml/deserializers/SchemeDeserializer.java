@@ -256,7 +256,7 @@ class SchemeDeserializer extends BaseDeserializer
             if (splittedTo.size() >= 2)
             {
                 final String tableTo = Strings2.joinWithoutTail(".", splittedTo);
-                final String columnTo = splittedTo.get(splittedTo.size() -1);
+                final String columnTo = splittedTo.get(splittedTo.size() - 1);
                 tableRef.tableTo = tableTo;
                 tableRef.columnTo = columnTo;
 
@@ -306,7 +306,7 @@ class SchemeDeserializer extends BaseDeserializer
                 if (splittedTo.size() >= 2)
                 {
                     final String tableTo = Strings2.joinWithoutTail(".", splittedTo);
-                    final String columnTo = splittedTo.get(splittedTo.size() -1);
+                    final String columnTo = splittedTo.get(splittedTo.size() - 1);
                     tableRef.tableTo = tableTo;
                     tableRef.columnTo = columnTo;
 

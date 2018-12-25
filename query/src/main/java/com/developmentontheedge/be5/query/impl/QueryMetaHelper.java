@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.query.util.CategoryFilter;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.ColumnAdder;
@@ -28,6 +29,7 @@ import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.SimpleNode;
 import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -178,32 +180,26 @@ public class QueryMetaHelper
 
     private ColumnDef getColumnDef(AstStart ast, String rawColumnDef, String mainEntityName)
     {
-        String[] split = rawColumnDef.split("\\.");
-        String entityName, column;
-        if (split.length == 2)
+        final List<String> splittedTo = StreamEx.split(rawColumnDef, "\\.").toList();
+        if (splittedTo.size() == 1)
         {
-            entityName = split[0];
-            column = split[1];
-        }
-        else if (split.length == 3)
-        {
-            entityName = split[0] + "." + split[1];
-            column = split[2];
+            return meta.getColumn(mainEntityName, splittedTo.get(0));
         }
         else
         {
-            return meta.getColumn(mainEntityName, split[0]);
-        }
-        Set<String> entityNames = meta.getProject().getEntityNames();
-        if (!entityNames.contains(entityName))
-        {
-            if (getAliasToTable(ast).get(entityName) == null)
+            String entityName = Strings2.joinWithoutTail(".", splittedTo);
+            final String column = splittedTo.get(splittedTo.size() -1);
+            Set<String> entityNames = meta.getProject().getEntityNames();
+            if (!entityNames.contains(entityName))
             {
-                throw new RuntimeException("Entity with alias '" + entityName + "' not found.");
+                if (getAliasToTable(ast).get(entityName) == null)
+                {
+                    throw new RuntimeException("Entity with alias '" + entityName + "' not found.");
+                }
+                entityName = getAliasToTable(ast).get(entityName);
             }
-            entityName = getAliasToTable(ast).get(entityName);
+            return meta.getColumn(entityName, column);
         }
-        return meta.getColumn(entityName, column);
     }
 
     private Map<ColumnRef, List<Object>> resolveTypes(Map<ColumnRef, List<Object>> parameters,
