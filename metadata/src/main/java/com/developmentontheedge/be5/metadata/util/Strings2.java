@@ -57,4 +57,9 @@ public class Strings2
         return StreamEx.of(splitted).skip(1).joining(separator);
     }
 
+    public static String joinWithoutTail(final String separator, final List<String> splitted)
+    {
+        return StreamEx.of(splitted).limit(splitted.size() - 1).joining(separator);
+    }
+
 }
