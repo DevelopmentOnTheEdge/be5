@@ -46,34 +46,4 @@ public class QueryServiceMacroTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT name || ' test', value || ' test'\n" +
                 "FROM testtable", db.format(query.getQueryCompiled().validate()));
     }
-
-    @Test
-    public void testTime()
-    {
-        int count = 1;
-        Query query = meta.getQuery("testtable", "testBeSqlMacros");
-        Query query2 = meta.getQuery("testtable", "testFreemarkerMacros");
-        long start;
-        for (int j = 0; j < 5; j++)
-        {
-            start = System.currentTimeMillis();
-            for (int i = 0; i < count; i++)
-            {
-                query2.getQueryCompiled().validate();
-            }
-            long diff = (System.currentTimeMillis() - start);
-            start = System.currentTimeMillis();
-            for (int i = 0; i < count; i++)
-            {
-                db.format(query.getQuery());
-            }
-            long diff2 = (System.currentTimeMillis() - start);
-            start = System.currentTimeMillis();
-            for (int i = 0; i < count; i++)
-            {
-                queryService.getSqlQueryBuilder(query, emptyMap()).getFinalSql().format();
-            }
-            System.out.println(diff + "\t " + diff2 + "\t " + (System.currentTimeMillis() - start));
-        }
-    }
 }

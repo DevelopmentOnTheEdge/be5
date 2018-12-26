@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.SqlQueryExecutor;
-import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,11 +14,12 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -30,6 +30,8 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     private DbService db;
     @Inject
     private QueryExecutorFactory queryService;
+    @Inject
+    private QueriesService queries;
 
     @Before
     public void insertOneRow()
@@ -72,10 +74,10 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "TestMultipleColumn");
 
-        assertEquals("SELECT *\n" +
-                "FROM testtable\n" +
-                "WHERE name IN ('test1', 'test2') LIMIT 2147483647", queryService.
-                getSqlQueryBuilder(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql().getQuery().toString());
+        assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
+                "WHERE name IN ('test1', 'test2') LIMIT 2147483647",
+                queryService.getSqlQueryBuilder(query, singletonMap("name",
+                        Arrays.asList("test1", "test2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -83,10 +85,9 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "TestMultipleColumnLong");
 
-        assertEquals("SELECT *\n" +
-                "FROM testtable\n" +
-                "WHERE ID IN (1, 2) LIMIT 2147483647", queryService.
-                getSqlQueryBuilder(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql().getQuery().toString());
+        assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
+                "WHERE ID IN (1, 2) LIMIT 2147483647", queryService.getSqlQueryBuilder(query,
+                singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -94,10 +95,9 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "TestResolveRefColumn");
 
-        assertEquals("SELECT *\n" +
-                "FROM testtable\n" +
-                "WHERE name = 'test' LIMIT 2147483647", queryService.
-                getSqlQueryBuilder(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
+        assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
+                "WHERE name = 'test' LIMIT 2147483647", queryService.getSqlQueryBuilder(query,
+                singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
@@ -109,15 +109,34 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
         assertEquals("SELECT *\n" +
                 "FROM testtable t\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
-                getSqlQueryBuilder(query, Collections.singletonMap("name", "test")).getFinalSql().getQuery().toString());
+                getSqlQueryBuilder(query, singletonMap("name", "test")).getFinalSql().getQuery().toString());
     }
 
     @Test
     public void testIgnoreUnknownColumn()
     {
         Query query = meta.getQuery("testtable", "TestResolveRefColumn");
-        List<QRec> list = queryService.get(query, Collections.singletonMap("unknownColumn", "test")).execute();
+        List<QRec> list = queryService.get(query, of("unknownColumn", "test")).execute();
         assertEquals(list.size(), 0);
+    }
+
+    @Test
+    @Ignore
+    public void orderParam()
+    {
+        Query query = meta.createQueryFromSql("SELECT * FROM testtable " +
+                "ORDER BY name <parameter:order />");
+        assertEquals("SELECT * FROM testtable ORDER BY name desc LIMIT 2147483647",
+                queryService.getSqlQueryBuilder(query, singletonMap("order", "desc")).getFinalSql().format());
+    }
+
+    @Test
+    public void unknownColumnOrderParam()
+    {
+        Query query = meta.createQueryFromSql("SELECT * FROM testtable " +
+                "ORDER BY unknownColumn <parameter:order />");
+        assertEquals("SELECT * FROM testtable ORDER BY unknownColumn desc LIMIT 2147483647",
+                queryService.getSqlQueryBuilder(query, singletonMap("order", "desc")).getFinalSql().format());
     }
 
     @Test(expected = Be5Exception.class)
