@@ -184,7 +184,7 @@ public class QueryMetaHelper
                 if (getAliasToTable(ast).get(entityName) == null)
                 {
                     throw new RuntimeException("Entity with alias '" + entityName + "' not found, " +
-                            "for refColumn=\"" + rawColumnDef + "\"");
+                            "for " + rawColumnDef);
                 }
                 entityName = getAliasToTable(ast).get(entityName);
             }
