@@ -20,9 +20,6 @@ public class EmbeddedJetty
 
     public void run()
     {
-        String name = "Be5Jetty";
-        Thread.currentThread().setName(name);
-
         LogConfigurator.configure();
         checkDescriptor();
 
@@ -37,7 +34,7 @@ public class EmbeddedJetty
         }
         catch (Exception e)
         {
-            log.log(Level.SEVERE, "Unable to start " + name, e);
+            log.log(Level.SEVERE, "Unable to start jetty", e);
             System.exit(1);
         }
 
