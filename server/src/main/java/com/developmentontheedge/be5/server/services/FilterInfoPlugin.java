@@ -54,18 +54,6 @@ public class FilterInfoPlugin implements DocumentPlugin
     {
         Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
         List<FilterItem> result = new ArrayList<>();
-        String mainEntityName = query.getEntity().getName();
-        if (params.containsKey("entity") && params.containsKey("entityID"))
-        {
-            String entity = (String) params.remove("entity");
-            String entityID = (String) params.remove("entityID");
-            ColumnDef column = meta.getColumn(entity, meta.getEntity(entity).getPrimaryKey());
-
-            String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
-                    Collections.singletonMap(column.getName(), entityID));
-            String entityTitle = userAwareMeta.getLocalizedEntityTitle(column.getTableFrom());
-            if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
-        }
 
         if (query.getType() == QueryType.D1 || query.getType() == QueryType.D1_UNKNOWN)
         {
@@ -75,29 +63,45 @@ public class FilterInfoPlugin implements DocumentPlugin
                     .collect(Collectors.toMap(AstBeParameterTag::getName, identity(),
                             (param1, param2) -> param1));
 
+            if (params.containsKey("entity") && params.containsKey("entityID"))
+            {
+                String entity = (String) params.remove("entity");
+                String entityID = (String) params.remove("entityID");
+                ColumnDef column = meta.getColumn(entity, meta.getEntity(entity).getPrimaryKey());
+
+                String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
+                        Collections.singletonMap(column.getName(), entityID));
+                String entityTitle = userAwareMeta.getLocalizedEntityTitle(column.getTableFrom());
+                if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
+            }
+
+            String mainTableDefName = QueryMetaHelper.getMainTableDefName(ast);
             params.forEach((k, v) -> {
-                ColumnDef column = meta.getColumn(mainEntityName, k);
-                if (column != null)
+                if (meta.hasEntity(mainTableDefName))
                 {
-                    result.add(getValueTitle(column, mainEntityName, k, v));
-                    return;
+                    ColumnDef column = meta.getColumn(mainTableDefName, k);
+                    if (column != null)
+                    {
+                        result.add(getValueTitle(column, mainTableDefName, k, v));
+                        return;
+                    }
                 }
 
                 if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
                 {
                     if (usedParams.containsKey(k))
                     {
-                        ColumnDef column2 = queryMetaHelper.getColumnDef(ast, usedParams.get(k));
+                        ColumnDef column2 = queryMetaHelper.getColumnDef(ast, usedParams.get(k), mainTableDefName);
                         if (column2 != null)
                         {
-                            result.add(getValueTitle(column2, mainEntityName, k, v));
+                            result.add(getValueTitle(column2, mainTableDefName, k, v));
                             return;
                         }
                     }
                 }
 
-                String valueTitle = userAwareMeta.getColumnTitle(mainEntityName, query.getName(), v + "");
-                result.add(new FilterItem(userAwareMeta.getColumnTitle(mainEntityName, k), valueTitle));
+                String valueTitle = userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), v + "");
+                result.add(new FilterItem(userAwareMeta.getColumnTitle(mainTableDefName, k), valueTitle));
             });
         }
         return result;

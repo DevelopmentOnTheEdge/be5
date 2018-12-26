@@ -44,6 +44,8 @@ public interface Meta
      */
     Entity getEntity(String entityName);
 
+    boolean hasEntity(String entityName);
+
     Locale getLocale(Locale locale);
 
     List<String> getOperationNames(Entity entity);

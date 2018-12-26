@@ -54,7 +54,7 @@ public class QueryMetaHelper
 
     void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
     {
-        String fromTableDef = getFromTableDefName(ast);
+        String mainTableDefName = getMainTableDefName(ast);
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<String, String> aliasToTable = getAliasToTable(ast);
@@ -62,8 +62,8 @@ public class QueryMetaHelper
         Map<ColumnRef, List<Object>> rawFilters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(QueryMetaHelper::isNotQueryParameters)
-                .removeKeys(k -> isNotContainsInQuery(fromTableDef, aliasToTable, k))
-                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : fromTableDef + "." + k))
+                .removeKeys(k -> isNotContainsInQuery(mainTableDefName, aliasToTable, k))
+                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainTableDefName + "." + k))
                 .nonNullKeys()
                 .toMap();
 
@@ -95,23 +95,16 @@ public class QueryMetaHelper
 
     private boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, String key)
     {
-        String[] split = key.split("\\.");
-        if (split.length == 1)
+        List<String> split = StreamEx.split(key, "\\.").toList();
+        if (split.size() == 1)
         {
-            return meta.getColumn(mainEntityName, split[0]) == null;
+            return meta.getColumn(mainEntityName, split.get(0)) == null;
         }
         else
         {
-            String entityName;
-            if (aliasToTable.get(split[0]) != null)
-            {
-                entityName = aliasToTable.get(split[0]);
-            }
-            else
-            {
-                entityName = split[0];
-            }
-            return meta.getColumn(entityName, split[1]) == null;
+            final String entityName = Strings2.joinWithoutTail(".", split);
+            final String columnName = split.get(split.size() - 1);
+            return meta.getColumn(entityName, columnName) == null;
         }
     }
 
@@ -131,10 +124,10 @@ public class QueryMetaHelper
 
     void resolveTypeOfRefColumn(AstStart ast)
     {
-        String fromTableDef = getFromTableDefName(ast);
+        String mainTableDefName = getMainTableDefName(ast);
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if (tag.getType() != null) return;
-            ColumnDef columnDef = getColumnDef(ast, tag, fromTableDef);
+            ColumnDef columnDef = getColumnDef(ast, tag, mainTableDefName);
             if (columnDef != null)
             {
                 tag.setType(meta.getColumnType(columnDef).getName());
@@ -142,19 +135,14 @@ public class QueryMetaHelper
         });
     }
 
-    private static String getFromTableDefName(AstStart ast)
+    public static String getMainTableDefName(AstStart ast)
     {
         return ast.getQuery().tree()
                 .select(AstTableRef.class)
                 .findFirst().get().getTable();
     }
 
-    public ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag)
-    {
-        return getColumnDef(ast, beParameterTag, getFromTableDefName(ast));
-    }
-
-    private ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName)
+    public ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName)
     {
         if (beParameterTag.getRefColumn() != null)
         {
@@ -195,7 +183,8 @@ public class QueryMetaHelper
             {
                 if (getAliasToTable(ast).get(entityName) == null)
                 {
-                    throw new RuntimeException("Entity with alias '" + entityName + "' not found.");
+                    throw new RuntimeException("Entity with alias '" + entityName + "' not found, " +
+                            "for refColumn=\"" + rawColumnDef + "\"");
                 }
                 entityName = getAliasToTable(ast).get(entityName);
             }

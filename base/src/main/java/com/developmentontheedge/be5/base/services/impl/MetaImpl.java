@@ -109,6 +109,12 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public boolean hasEntity(String entityName)
+    {
+        return getProject().getEntity(entityName) != null;
+    }
+
+    @Override
     public boolean hasAccess(RoleSet roles, List<String> availableRoles)
     {
         Set<String> finalRoles = roles.getFinalRoles();
