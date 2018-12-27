@@ -104,17 +104,6 @@ public abstract class TestUtils extends BaseTest
         return request;
     }
 
-    protected Request getMockRequest(String requestUri, Map<String, String> parameters)
-    {
-        Request request = mock(Request.class);
-        when(request.getRequestUri()).thenReturn(requestUri);
-        for (Map.Entry<String, String> entry : parameters.entrySet())
-        {
-            when(request.get(entry.getKey())).thenReturn(entry.getValue());
-        }
-        return request;
-    }
-
     protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters)
     {
         return getSpyMockRequest(requestUri, parameters, new HashMap<>());
