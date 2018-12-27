@@ -19,23 +19,16 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
-import com.developmentontheedge.sql.format.LimitsApplier;
-import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.format.QueryContext;
-import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.SqlQuery;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
-
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 
 /**
  * A modern query executor that uses our new parser.
@@ -48,25 +41,28 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
 
     private final DbService db;
 
-    private final Map<String, List<Object>> parameters;
     private final QueryMetaHelper queryMetaHelper;
     private final CellFormatter cellFormatter;
+    private final QuerySqlGenerator queryProcessor;
 
     private ContextApplier contextApplier;
+    private final QueryContext queryContext;
     private final Boolean selectable;
 
     public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession,
                                UserInfoProvider userInfoProvider, Meta meta, DbService db,
-                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter)
+                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter,
+                               QuerySqlGenerator queryProcessor)
     {
         this.query = Objects.requireNonNull(query);
-        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
-        this.parameters = queryContext.getParameters();
+        this.queryProcessor = queryProcessor;
+
+        queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        contextApplier = new ContextApplier(queryContext);
 
         this.db = db;
         this.queryMetaHelper = queryMetaHelper;
 
-        this.contextApplier = new ContextApplier(queryContext);
         this.cellFormatter = cellFormatter;
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
@@ -123,46 +119,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
 
     AstStart getFinalSql(ExecuteType executeType)
     {
-        String queryText = query.getFinalQuery();
-        if (queryText.isEmpty()) return null;
-
-        AstStart ast = parseQuery(queryText);
-        new MacroExpander().expandMacros(ast);
-
-        queryMetaHelper.resolveTypeOfRefColumn(ast);
-        queryMetaHelper.applyFilters(ast, parameters);
-        QueryMetaHelper.applyCategory(query, ast, contextApplier.getContext().getParameter(CATEGORY_ID_PARAM));
-
-        contextApplier.applyContext(ast);
-
-        if (query.getType() == QueryType.D1) QueryMetaHelper.addIDColumnLabel(ast, query);
-
-        if (executeType == ExecuteType.COUNT)
-        {
-            QueryMetaHelper.countFromQuery(ast.getQuery());
-        }
-
-        if (executeType == ExecuteType.DEFAULT)
-        {
-            QueryMetaHelper.applySort(ast, orderColumn + (selectable ? -1 : 0), orderDir);
-            new LimitsApplier(offset, limit).transform(ast);
-        }
-
-        Simplifier.simplify(ast);
-        return ast;
-    }
-
-    private AstStart parseQuery(String queryText)
-    {
-        try
-        {
-            return SqlQuery.parse(queryText);
-        }
-        catch (RuntimeException e)
-        {
-            log.log(Level.SEVERE, "SqlQuery.parse error: ", e);
-            throw Be5Exception.internalInQuery(query, e);
-        }
+        return queryProcessor.getSql(query, queryContext, executeType);
     }
 
     @Override

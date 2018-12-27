@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
+import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
 import com.google.inject.Injector;
 
@@ -32,12 +33,14 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     private final QueryMetaHelper queryMetaHelper;
     private final CellFormatter cellFormatter;
     private final GroovyRegister groovyRegister;
+    private final QuerySqlGenerator queryProcessor;
     private final Injector injector;
 
     @Inject
     public QueryExecutorFactoryImpl(Meta meta, DbService db, QuerySession querySession,
                                     UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper,
-                                    CellFormatter cellFormatter, GroovyRegister groovyRegister, Injector injector)
+                                    CellFormatter cellFormatter, GroovyRegister groovyRegister,
+                                    QuerySqlGenerator queryProcessor, Injector injector)
     {
         this.meta = meta;
         this.db = db;
@@ -46,6 +49,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         this.queryMetaHelper = queryMetaHelper;
         this.cellFormatter = cellFormatter;
         this.groovyRegister = groovyRegister;
+        this.queryProcessor = queryProcessor;
         this.injector = injector;
     }
 
@@ -53,7 +57,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     public SqlQueryExecutor getSqlQueryBuilder(Query query, Map<String, ?> parameters)
     {
         return new Be5SqlQueryExecutor(query, parameters, querySession, userInfoProvider, meta, db, queryMetaHelper,
-                cellFormatter);
+                cellFormatter, queryProcessor);
     }
 
     @Override
@@ -66,7 +70,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         else if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
         {
             return new Be5SqlQueryExecutor(query, parameters, querySession, userInfoProvider, meta, db, queryMetaHelper,
-                    cellFormatter);
+                    cellFormatter, queryProcessor);
         }
         else
         {
