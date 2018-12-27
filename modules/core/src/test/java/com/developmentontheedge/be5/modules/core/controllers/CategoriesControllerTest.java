@@ -18,12 +18,12 @@ public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
     public void generate()
     {
         assertEquals(new ArrayList<>(),
-                component.generate(getMockRequest("/api/categories/forest"), "forest"));
+                component.generate(getMockRequest("/api/categories/forest")));
     }
 
     @Test
     public void sendUnknownActionError()
     {
-        assertEquals(null, component.generate(getMockRequest("/api/categories/"), ""));
+        assertEquals(null, component.generate(getMockRequest("/api/categories/")));
     }
 }

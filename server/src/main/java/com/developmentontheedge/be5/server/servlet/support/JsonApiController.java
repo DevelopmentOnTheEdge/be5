@@ -6,12 +6,12 @@ import com.developmentontheedge.be5.web.Response;
 import javax.servlet.http.HttpServletResponse;
 
 
-public abstract class JsonApiController extends ApiControllerSupport
+public abstract class JsonApiController extends BaseControllerSupport
 {
     @Override
-    protected final void generate(Request req, Response res, String subUrl)
+    public void generate(Request req, Response res)
     {
-        Object object = generate(req, subUrl);
+        Object object = generate(req);
         if (object != null)
         {
             res.sendAsJson(object);
@@ -22,5 +22,10 @@ public abstract class JsonApiController extends ApiControllerSupport
         }
     }
 
-    protected abstract Object generate(Request req, String subUrl);
+    public Object generate(Request req)
+    {
+        return generate(req, getApiSubUrl(req));
+    }
+
+    protected abstract Object generate(Request req, String action);
 }

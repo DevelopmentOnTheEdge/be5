@@ -28,9 +28,9 @@ public class UserInfoController extends JsonApiController
     }
 
     @Override
-    public Object generate(Request req, String requestSubUrl)
+    protected Object generate(Request req, String action)
     {
-        switch (requestSubUrl)
+        switch (action)
         {
             case "":
                 return userInfoModelService.getUserInfoModel();

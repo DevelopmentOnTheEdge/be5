@@ -34,9 +34,9 @@ public class MenuController extends JsonApiController
      * </pre>
      */
     @Override
-    public Object generate(Request req, String requestSubUrl)
+    protected Object generate(Request req, String action)
     {
-        switch (requestSubUrl)
+        switch (action)
         {
             case "":
                 return new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE));

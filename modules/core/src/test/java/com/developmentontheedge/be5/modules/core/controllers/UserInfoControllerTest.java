@@ -136,7 +136,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Request request = getSpyMockRequest("/api/userInfo/selectRoles",
                 ImmutableMap.of("roles", ROLE_ADMINISTRATOR + "," + ROLE_SYSTEM_DEVELOPER));
-        component.generate(request, "selectRoles");
+        component.generate(request);
 
         assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
     }
@@ -146,7 +146,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Request request = getSpyMockRequest("/api/userInfo/selectRoles",
                 ImmutableMap.of("roles", ""));
-        component.generate(request, "selectRoles");
+        component.generate(request);
 
         assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
     }

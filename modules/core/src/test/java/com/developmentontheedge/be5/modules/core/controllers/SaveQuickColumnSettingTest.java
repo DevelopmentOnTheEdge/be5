@@ -27,7 +27,7 @@ public class SaveQuickColumnSettingTest extends CoreBe5ProjectDBTest
                 "query_name", "All records",
                 "column_name", "User",
                 "quick", "yes"
-        )), ""));
+        ))));
         assertEquals("yes", coreUtils.getColumnSettingForUser(
                 "users", "All records", "User", TEST_USER).get("quick"));
 
@@ -36,7 +36,7 @@ public class SaveQuickColumnSettingTest extends CoreBe5ProjectDBTest
                 "query_name", "All records",
                 "column_name", "User",
                 "quick", "no"
-        )), ""));
+        ))));
         assertEquals("no", coreUtils.getColumnSettingForUser(
                 "users", "All records", "User", TEST_USER).get("quick"));
     }

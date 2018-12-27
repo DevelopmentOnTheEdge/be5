@@ -38,7 +38,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     {
         LanguageSelectorResponse generate =
                 (LanguageSelectorResponse)
-                        component.generate(getMockRequest("/api/languageSelector/"), "");
+                        component.generate(getMockRequest("/api/languageSelector/"));
 
         assertEquals(languageSelectorResponse, generate);
     }
@@ -52,7 +52,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("Invalid request: parameter language is missing.");
 
-        component.generate(getSpyMockRequest("/api/languageSelector/select"), "select");
+        component.generate(getSpyMockRequest("/api/languageSelector/select"));
     }
 
     @Test
@@ -65,6 +65,6 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
             put("no", "нет");
             put("yes", "да");
             put("fio", "Ф.И.О.");
-        }}), component.generate(request, "select"));
+        }}), component.generate(request));
     }
 }

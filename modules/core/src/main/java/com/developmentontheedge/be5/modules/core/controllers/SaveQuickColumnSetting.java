@@ -24,7 +24,7 @@ public class SaveQuickColumnSetting extends JsonApiController
     }
 
     @Override
-    public Object generate(Request req, String requestSubUrl)
+    protected Object generate(Request req, String action)
     {
         UserInfo userInfo = userInfoProvider.get();
         String table_name = req.get("table_name");

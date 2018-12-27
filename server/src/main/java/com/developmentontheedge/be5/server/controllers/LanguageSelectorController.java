@@ -88,9 +88,9 @@ public class LanguageSelectorController extends JsonApiController implements Con
     }
 
     @Override
-    public Object generate(Request req, String requestSubUrl)
+    protected Object generate(Request req, String action)
     {
-        switch (requestSubUrl)
+        switch (action)
         {
             case "":
                 return getInitialData();
