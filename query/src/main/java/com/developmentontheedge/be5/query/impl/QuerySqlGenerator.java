@@ -15,7 +15,6 @@ import com.developmentontheedge.sql.model.SqlQuery;
 
 import javax.inject.Inject;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
@@ -25,8 +24,6 @@ import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 public class QuerySqlGenerator
 {
-    private static final Logger log = Logger.getLogger(QuerySqlGenerator.class.getName());
-
     private final QuerySession querySession;
     private final UserInfoProvider userInfoProvider;
     private final Meta meta;
@@ -48,7 +45,13 @@ public class QuerySqlGenerator
         return getSql(query, queryContext, Be5SqlQueryExecutor.ExecuteType.DEFAULT);
     }
 
-    public AstStart getSql(Query query, QueryContext queryContext, Be5SqlQueryExecutor.ExecuteType executeType)
+    AstStart getSql(Query query, Map<String, ?> parameters, Be5SqlQueryExecutor.ExecuteType executeType)
+    {
+        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        return getSql(query, queryContext, executeType);
+    }
+
+    AstStart getSql(Query query, QueryContext queryContext, Be5SqlQueryExecutor.ExecuteType executeType)
     {
         ContextApplier contextApplier = new ContextApplier(queryContext);
         String queryText = query.getFinalQuery();
@@ -74,8 +77,8 @@ public class QuerySqlGenerator
         {
             int orderColumn = Integer.parseInt(getOrDefault(queryContext, ORDER_COLUMN, "-1"));
             String orderDir = getOrDefault(queryContext, ORDER_DIR, "asc");
-            int offset = Integer.parseInt( getOrDefault(queryContext, OFFSET, "0"));
-            int limit = Integer.parseInt( getOrDefault(queryContext, LIMIT, Integer.toString(Integer.MAX_VALUE)));
+            int offset = Integer.parseInt(getOrDefault(queryContext, OFFSET, "0"));
+            int limit = Integer.parseInt(getOrDefault(queryContext, LIMIT, Integer.toString(Integer.MAX_VALUE)));
             QueryMetaHelper.applySort(ast, orderColumn, orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }

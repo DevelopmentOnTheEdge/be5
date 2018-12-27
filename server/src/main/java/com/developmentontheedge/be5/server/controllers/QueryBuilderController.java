@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
+import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
@@ -45,22 +45,22 @@ public class QueryBuilderController extends JsonApiModelController
     private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final Meta meta;
-    private final QueryExecutorFactory queryService;
     private final ErrorModelHelper errorModelHelper;
     private final UserInfoProvider userInfoProvider;
+    private final QuerySqlGenerator querySqlGenerator;
     private final Stage stage;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, Meta meta,
-                                  QueryExecutorFactory queryService, ErrorModelHelper errorModelHelper,
-                                  UserInfoProvider userInfoProvider, Stage stage)
+                                  ErrorModelHelper errorModelHelper, UserInfoProvider userInfoProvider,
+                                  QuerySqlGenerator querySqlGenerator, Stage stage)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
         this.meta = meta;
-        this.queryService = queryService;
         this.errorModelHelper = errorModelHelper;
         this.userInfoProvider = userInfoProvider;
+        this.querySqlGenerator = querySqlGenerator;
         this.stage = stage;
     }
 
@@ -242,7 +242,7 @@ public class QueryBuilderController extends JsonApiModelController
     {
         try
         {
-            return queryService.getSqlQueryBuilder(query, parameters).getFinalSql().getQuery().toString();
+            return querySqlGenerator.getSql(query, parameters).format();
         }
         catch (Be5Exception e)
         {

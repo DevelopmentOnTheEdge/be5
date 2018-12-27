@@ -8,8 +8,8 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
+import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
@@ -20,8 +20,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.QueryContext;
-import com.developmentontheedge.sql.model.AstStart;
-import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ import java.util.stream.StreamSupport;
 /**
  * A modern query executor that uses our new parser.
  */
-public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQueryExecutor
+public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryExecutor
 {
     protected final Query query;
 
@@ -70,28 +68,9 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
                 .filter(r -> r == 1 || r == 2).count() > 0;
     }
 
-    @Override
-    public <T> List<T> list(ResultSetParser<T> parser)
+    private <T> List<T> list(ResultSetParser<T> parser)
     {
         return list(ExecuteType.DEFAULT, parser);
-    }
-
-    @Override
-    public <T> T query(ResultSetHandler<T> rsh)
-    {
-        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
-        {
-            try
-            {
-                return db.query(getFinalSql(ExecuteType.DEFAULT).format(), rsh);
-            }
-            catch (RuntimeException e)
-            {
-                throw Be5Exception.internalInQuery(query, e);
-            }
-        }
-
-        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
     private <T> List<T> list(ExecuteType executeType, ResultSetParser<T> parser)
@@ -100,7 +79,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         {
             try
             {
-                return db.list(getFinalSql(executeType), parser);
+                return db.list(queryProcessor.getSql(query, queryContext, executeType), parser);
             }
             catch (RuntimeException e)
             {
@@ -109,17 +88,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
         }
 
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
-    }
-
-    @Override
-    public AstStart getFinalSql()
-    {
-        return getFinalSql(ExecuteType.DEFAULT);
-    }
-
-    AstStart getFinalSql(ExecuteType executeType)
-    {
-        return queryProcessor.getSql(query, queryContext, executeType);
     }
 
     @Override

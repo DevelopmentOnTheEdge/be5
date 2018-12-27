@@ -5,9 +5,11 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -15,6 +17,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.apache.commons.dbutils.ResultSetHandler;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,16 +40,19 @@ public class QueriesService
     private final DbService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
+    private final QuerySqlGenerator querySqlGenerator;
     private final QueryExecutorFactory queryExecutorFactory;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                          QueryExecutorFactory queryExecutorFactory, UserInfoProvider userInfoProvider)
+                          QuerySqlGenerator querySqlGenerator, QueryExecutorFactory queryExecutorFactory,
+                          UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
+        this.querySqlGenerator = querySqlGenerator;
         this.queryExecutorFactory = queryExecutorFactory;
 
         tagsCache = be5Caches.createCache("Tags");
@@ -365,10 +371,27 @@ public class QueriesService
         return query(meta.getQuery(tableName, queryName), parameters);
     }
 
+    @Nullable
     public <T> T query(String tableName, String queryName, Map<String, ?> parameters, ResultSetHandler<T> rsh)
     {
         Query query = meta.getQuery(tableName, queryName);
-        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).query(rsh);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.query(sql, rsh);
+    }
+
+    public <T> List<T> list(String tableName, String queryName, Map<String, ?> parameters, ResultSetParser<T> parser)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.list(sql, parser);
+    }
+
+    @Nullable
+    public <T> T one(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.one(sql);
     }
 
     public List<QRec> query(Query query, Map<String, ?> parameters)

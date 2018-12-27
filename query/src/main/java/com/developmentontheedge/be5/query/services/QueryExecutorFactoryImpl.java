@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
 import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
@@ -51,13 +50,6 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         this.groovyRegister = groovyRegister;
         this.queryProcessor = queryProcessor;
         this.injector = injector;
-    }
-
-    @Override
-    public SqlQueryExecutor getSqlQueryBuilder(Query query, Map<String, ?> parameters)
-    {
-        return new Be5SqlQueryExecutor(query, parameters, querySession, userInfoProvider, meta, db, queryMetaHelper,
-                cellFormatter, queryProcessor);
     }
 
     @Override
