@@ -8,6 +8,8 @@ import org.junit.Test;
 import javax.inject.Inject;
 import java.util.Collections;
 
+import static com.google.common.collect.ImmutableMap.of;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 
 
@@ -16,7 +18,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     @Inject private QueryMetaHelper queryMetaHelper;
 
     @Test
-    public void empty() throws Exception
+    public void empty()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, Collections.emptyMap());
@@ -26,50 +28,50 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void simpleFilterIntColumn() throws Exception
+    public void simpleFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("value", Collections.singletonList("123")));
+        queryMetaHelper.applyFilters(ast, singletonMap("value", Collections.singletonList("123")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
     }
 
     @Test
-    public void selectAllFilterIntColumn() throws Exception
+    public void selectAllFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Select all").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("value", Collections.singletonList("123")));
+        queryMetaHelper.applyFilters(ast, singletonMap("value", Collections.singletonList("123")));
 
         assertEquals("SELECT *\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
     }
 
     @Test
-    public void selectAllFilterByID() throws Exception
+    public void selectAllFilterByID()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Select all").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("ID", Collections.singletonList("1")));
+        queryMetaHelper.applyFilters(ast, singletonMap("ID", Collections.singletonList("1")));
 
         assertEquals("SELECT *\n" +
                 "FROM filterTestTable ft WHERE ft.ID = 1", ast.format());
     }
 
     @Test
-    public void selectAllWithSchemaFilterByID() throws Exception
+    public void selectAllWithSchemaFilterByID()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("public.filterTestTable2", "All records").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("ID", Collections.singletonList("1")));
+        queryMetaHelper.applyFilters(ast, singletonMap("ID", Collections.singletonList("1")));
 
         assertEquals("SELECT *\n" +
                 "FROM public.filterTestTable2 ft WHERE ft.ID = 1", ast.format());
     }
 
     @Test
-    public void filterStringColumn() throws Exception
+    public void filterStringColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("name", Collections.singletonList("test")));
+        queryMetaHelper.applyFilters(ast, singletonMap("name", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE UPPER(ft.name) LIKE UPPER('%test%')", ast.format());
@@ -79,7 +81,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     public void filterStringColumnWithReference()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("user_name", Collections.singletonList("test")));
+        queryMetaHelper.applyFilters(ast, singletonMap("user_name", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.user_name ='test'", ast.format());
@@ -89,7 +91,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     public void filterStringColumnWithGenericReferences()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("recordID", Collections.singletonList("test")));
+        queryMetaHelper.applyFilters(ast, singletonMap("recordID", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.recordID ='test'", ast.format());
@@ -99,37 +101,46 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     public void filterStringColumnWithTags()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("activeStatus", Collections.singletonList("yes")));
+        queryMetaHelper.applyFilters(ast, singletonMap("activeStatus", Collections.singletonList("yes")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.activeStatus ='yes'", ast.format());
     }
 
     @Test
-    public void ignoreKeywords() throws Exception
+    public void ignoreKeywords()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("_test_", Collections.singletonList("test")));
+        queryMetaHelper.applyFilters(ast, singletonMap("_test_", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft", ast.format());
     }
 
     @Test
-    public void isNotContainsInQuery() throws Exception
+    public void isNotContainsInQuery()
     {
-        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("testtable.productID", Collections.singletonList("1")));
+        assertEquals(true, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", of("ft", "filterTestTable"), "testtable.productID"));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
-                "FROM filterTestTable ft", ast.format());
+        assertEquals(true, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", of("ft", "filterTestTable"), "testtable.productID"));
     }
 
     @Test
-    public void ignoreUsedParams() throws Exception
+    public void isNotContainsInQueryFalse()
+    {
+        assertEquals(false, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", of(), "filterTestTable.name"));
+        assertEquals(false, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", of("ft", "filterTestTable"), "ft.name"));
+    }
+
+    @Test
+    public void ignoreUsedParams()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "With Parameter").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, Collections.singletonMap("name", Collections.singletonList("test")));
+        queryMetaHelper.applyFilters(ast, singletonMap("name", Collections.singletonList("test")));
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft\n" +
@@ -138,4 +149,5 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
                 "  AND ft.name LIKE <parameter:name />\n" +
                 "</if>", ast.format());
     }
+
 }

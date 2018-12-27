@@ -87,7 +87,7 @@ public class FilterInfoPlugin implements DocumentPlugin
                     }
                 }
 
-                if (query.getType() != QueryType.GROOVY && query.getType() != QueryType.JAVA)
+                if (query.getType() == QueryType.D1 || query.getType() != QueryType.D1_UNKNOWN)
                 {
                     if (usedParams.containsKey(k))
                     {

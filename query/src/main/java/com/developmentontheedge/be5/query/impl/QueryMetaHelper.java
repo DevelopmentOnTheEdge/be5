@@ -93,17 +93,21 @@ public class QueryMetaHelper
                             (address1, address2) -> address1));
     }
 
-    private boolean isNotContainsInQuery(String mainEntityName, Map<String, String> aliasToTable, String key)
+    boolean isNotContainsInQuery(String mainTableDefName, Map<String, String> aliasToTable, String key)
     {
         List<String> split = StreamEx.split(key, "\\.").toList();
         if (split.size() == 1)
         {
-            return meta.getColumn(mainEntityName, split.get(0)) == null;
+            return meta.getColumn(mainTableDefName, split.get(0)) == null;
         }
         else
         {
-            final String entityName = Strings2.joinWithoutTail(".", split);
+            String entityName = Strings2.joinWithoutTail(".", split);
             final String columnName = split.get(split.size() - 1);
+            if (aliasToTable.get(entityName) != null)
+            {
+                entityName = aliasToTable.get(entityName);
+            }
             return meta.getColumn(entityName, columnName) == null;
         }
     }
