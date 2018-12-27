@@ -108,7 +108,7 @@ public class QueryMetaHelper
             {
                 entityName = aliasToTable.get(entityName);
             }
-            return meta.getColumn(entityName, columnName) == null;
+            return !meta.hasEntity(entityName) || meta.getColumn(entityName, columnName) == null;
         }
     }
 

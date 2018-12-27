@@ -128,6 +128,13 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void isNotContainsInQueryUnknownAlias()
+    {
+        assertEquals(true, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", of(), "t.productID"));
+    }
+
+    @Test
     public void isNotContainsInQueryFalse()
     {
         assertEquals(false, queryMetaHelper.isNotContainsInQuery(
