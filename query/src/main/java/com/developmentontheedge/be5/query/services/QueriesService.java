@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -362,6 +363,12 @@ public class QueriesService
     public List<QRec> query(String tableName, String queryName, Map<String, ?> parameters)
     {
         return query(meta.getQuery(tableName, queryName), parameters);
+    }
+
+    public <T> T query(String tableName, String queryName, Map<String, ?> parameters, ResultSetHandler<T> rsh)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        return queryExecutorFactory.getSqlQueryBuilder(query, parameters).query(rsh);
     }
 
     public List<QRec> query(Query query, Map<String, ?> parameters)

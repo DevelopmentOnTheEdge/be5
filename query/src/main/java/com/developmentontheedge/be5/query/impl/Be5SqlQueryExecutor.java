@@ -25,6 +25,7 @@ import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +75,30 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     }
 
     @Override
-    public <T> List<T> execute(ResultSetParser<T> parser)
+    public <T> List<T> list(ResultSetParser<T> parser)
     {
-        return execute(ExecuteType.DEFAULT, parser);
+        return list(ExecuteType.DEFAULT, parser);
     }
 
-    private <T> List<T> execute(ExecuteType executeType, ResultSetParser<T> parser)
+    @Override
+    public <T> T query(ResultSetHandler<T> rsh)
+    {
+        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
+        {
+            try
+            {
+                return db.query(getFinalSql(ExecuteType.DEFAULT).format(), rsh);
+            }
+            catch (RuntimeException e)
+            {
+                throw Be5Exception.internalInQuery(query, e);
+            }
+        }
+
+        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
+    }
+
+    private <T> List<T> list(ExecuteType executeType, ResultSetParser<T> parser)
     {
         if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
         {
@@ -149,7 +168,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     @Override
     public List<QRec> execute()
     {
-        List<QRec> rows = execute(new QRecParser());
+        List<QRec> rows = list(new QRecParser());
         addAggregateRowIfNeeded(rows);
         return processRows(rows);
     }
@@ -188,7 +207,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
 
-            List<QRec> aggregateRows = execute(ExecuteType.AGGREGATE, new QRecParser());
+            List<QRec> aggregateRows = list(ExecuteType.AGGREGATE, new QRecParser());
             TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
@@ -196,7 +215,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
     @Override
     public long count()
     {
-        return (Long) execute(ExecuteType.COUNT, new QRecParser()).get(0).asMap().get("count");
+        return (Long) list(ExecuteType.COUNT, new QRecParser()).get(0).asMap().get("count");
     }
 
     @Override

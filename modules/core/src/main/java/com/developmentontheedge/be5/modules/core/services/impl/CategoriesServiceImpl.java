@@ -33,7 +33,7 @@ public class CategoriesServiceImpl implements CategoriesService
         List<MutableCategory> categories = queryService
                 .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getCategoriesForest"),
                         Collections.singletonMap("entity", entityName))
-                .execute(MutableCategory::fromResultSet);
+                .list(MutableCategory::fromResultSet);
 
         return getCategories(categories, hideEmpty);
     }
@@ -44,7 +44,7 @@ public class CategoriesServiceImpl implements CategoriesService
         return queryService
                 .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getRootCategory"),
                         Collections.singletonMap("entity", entityName))
-                .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
+                .list(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CategoriesServiceImpl implements CategoriesService
         List<MutableCategory> categories = queryService
                 .getSqlQueryBuilder(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
                         ImmutableMap.of("categoryID", "" + categoryID, "entity", entityName))
-                .execute(MutableCategory::fromResultSet);
+                .list(MutableCategory::fromResultSet);
 
         return getCategories(categories, false);
     }
