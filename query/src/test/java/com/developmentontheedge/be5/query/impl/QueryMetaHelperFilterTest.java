@@ -7,10 +7,12 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
@@ -135,6 +137,26 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void isNotContainsInQueryUnknownTable()
+    {
+        assertEquals(false, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", singletonMap("t", null), "t.productID"));
+    }
+
+    @Test
+    public void isNotContainsInQueryFromSubQuery()
+    {
+        assertEquals(true, queryMetaHelper.isNotContainsInQuery(
+                "unknownAlias", of(), "productID"));
+
+        Map<String, String> aliasToTable = QueryMetaHelper.getAliasToTable(
+                SqlQuery.parse("SELECT * FROM (SELECT * FROM test t) u"));
+        assertTrue(aliasToTable.containsKey("u"));
+        assertEquals(false, queryMetaHelper.isNotContainsInQuery(
+                "filterTestTable", aliasToTable, "t.productID"));
+    }
+
+    @Test
     public void isNotContainsInQueryFalse()
     {
         assertEquals(false, queryMetaHelper.isNotContainsInQuery(
@@ -157,4 +179,17 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
                 "</if>", ast.format());
     }
 
+    @Test
+    public void getMainTableRef()
+    {
+        assertEquals("users", QueryMetaHelper.getMainTableRef(SqlQuery.parse(
+                "SELECT * FROM users u")));
+    }
+
+    @Test
+    public void getMainTableRefFromSubQuery()
+    {
+        assertEquals("u", QueryMetaHelper.getMainTableRef(SqlQuery.parse(
+                "SELECT * FROM (SELECT * FROM test t) u")));
+    }
 }

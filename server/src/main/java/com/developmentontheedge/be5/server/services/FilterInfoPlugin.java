@@ -75,7 +75,7 @@ public class FilterInfoPlugin implements DocumentPlugin
                 if (tags.length > 0) result.add(new FilterItem(entityTitle, tags[0][1]));
             }
 
-            String mainTableDefName = QueryMetaHelper.getMainTableDefName(ast);
+            String mainTableDefName = QueryMetaHelper.getMainTableRef(ast);
             params.forEach((k, v) -> {
                 if (meta.hasEntity(mainTableDefName))
                 {

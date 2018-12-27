@@ -54,15 +54,16 @@ public class QueryMetaHelper
 
     void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
     {
-        String mainTableDefName = getMainTableDefName(ast);
+        String mainTableDefName = getMainTableRef(ast);
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<String, String> aliasToTable = getAliasToTable(ast);
 
         Map<ColumnRef, List<Object>> rawFilters = EntryStream.of(parameters)
-                .removeKeys(usedParams::contains)
-                .removeKeys(QueryMetaHelper::isNotQueryParameters)
-                .removeKeys(k -> isNotContainsInQuery(mainTableDefName, aliasToTable, k))
+                .removeKeys(k ->
+                    usedParams.contains(k) ||
+                    isNotQueryParameters(k) ||
+                    isNotContainsInQuery(mainTableDefName, aliasToTable, k))
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainTableDefName + "." + k))
                 .nonNullKeys()
                 .toMap();
@@ -84,13 +85,20 @@ public class QueryMetaHelper
         }
     }
 
-    private static Map<String, String> getAliasToTable(AstStart ast)
+    static Map<String, String> getAliasToTable(AstStart ast)
     {
         return ast.tree()
                     .select(AstTableRef.class)
                     .filter(t -> t.getTable() != null && t.getAlias() != null)
                     .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable,
                             (address1, address2) -> address1));
+//        List<AstTableRef> astTableRefs = ast.tree().select(AstTableRef.class).toList();
+//        Map<String, String> res = new HashMap<>();
+//        for (AstTableRef tableRef: astTableRefs)
+//        {
+//            if (tableRef.getAlias() != null) res.put(tableRef.getAlias(), tableRef.getTable());
+//        }
+//        return res;
     }
 
     boolean isNotContainsInQuery(String mainTableDefName, Map<String, String> aliasToTable, String key)
@@ -98,7 +106,7 @@ public class QueryMetaHelper
         List<String> split = StreamEx.split(key, "\\.").toList();
         if (split.size() == 1)
         {
-            return meta.getColumn(mainTableDefName, split.get(0)) == null;
+            return !meta.hasEntity(mainTableDefName) || meta.getColumn(mainTableDefName, split.get(0)) == null;
         }
         else
         {
@@ -110,6 +118,27 @@ public class QueryMetaHelper
             }
             return !meta.hasEntity(entityName) || meta.getColumn(entityName, columnName) == null;
         }
+
+//        List<String> split = StreamEx.split(key, "\\.").toList();
+//        if (split.size() == 1)
+//        {
+//            String entityName = aliasToTable.getOrDefault(mainTableDefName, mainTableDefName);
+//            return !meta.hasEntity(entityName) || meta.getColumn(entityName, split.get(0)) == null;
+//        }
+//        else
+//        {
+//            String entityName = Strings2.joinWithoutTail(".", split);
+//            final String columnName = split.get(split.size() - 1);
+//            if (aliasToTable.containsKey(entityName) && aliasToTable.get(entityName) == null)
+//            {
+//                return false;
+//            }
+//            if (aliasToTable.get(entityName) != null)
+//            {
+//                entityName = aliasToTable.get(entityName);
+//            }
+//            return meta.hasEntity(entityName) && meta.getColumn(entityName, columnName) == null;
+//        }
     }
 
     private static boolean isNotQueryParameters(String key)
@@ -128,7 +157,7 @@ public class QueryMetaHelper
 
     void resolveTypeOfRefColumn(AstStart ast)
     {
-        String mainTableDefName = getMainTableDefName(ast);
+        String mainTableDefName = getMainTableRef(ast);
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if (tag.getType() != null) return;
             ColumnDef columnDef = getColumnDef(ast, tag, mainTableDefName);
@@ -139,11 +168,15 @@ public class QueryMetaHelper
         });
     }
 
-    public static String getMainTableDefName(AstStart ast)
+    public static String getMainTableRef(AstStart ast)
     {
         return ast.getQuery().tree()
                 .select(AstTableRef.class)
                 .findFirst().get().getTable();
+//        AstTableRef tableRef = ast.getQuery().tree()
+//                .select(AstTableRef.class)
+//                .findFirst().get();
+//        return tableRef.getTable() != null ? tableRef.getTable() : tableRef.getAlias();
     }
 
     public ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName)
