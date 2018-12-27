@@ -65,9 +65,10 @@ public class DataSourceServiceImpl implements DataSourceService
 
         try
         {
+            String name = "jdbc/" + project.getAppName();
             InitialContext ic = new InitialContext();
             Context xmlContext = (Context) ic.lookup("java:comp/env");
-            dataSource = (DataSource) xmlContext.lookup("jdbc/" + project.getAppName());
+            dataSource = (DataSource) xmlContext.lookup(name);
 
             conn = dataSource.getConnection();
             connectionUrl = conn.getMetaData().getURL();
@@ -75,7 +76,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
             type = Rdbms.getRdbms(connectionUrl);
 
-            configInfo = "xml context : " + "'jdbc/" + project.getAppName() + "'";
+            configInfo = "Context Configuration (context.xml): " + "'" + name + "'";
         }
         catch (SQLException e)
         {
@@ -103,7 +104,7 @@ public class DataSourceServiceImpl implements DataSourceService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            configInfo = "connection profile - " + profile.getName();
+            configInfo = "Connection profile - " + profile.getName();
         }
         finally
         {
@@ -123,7 +124,7 @@ public class DataSourceServiceImpl implements DataSourceService
         project.setDatabaseSystem(type);
         projectProvider.addToReload(() -> project.setDatabaseSystem(type));
 
-        log.info("ConfigInfo: " + configInfo);
+        log.info(configInfo);
         log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
     }
 }
