@@ -98,7 +98,7 @@ public class QueryMetaHelper
         List<String> split = StreamEx.split(key, "\\.").toList();
         if (split.size() == 1)
         {
-            return meta.getColumn(mainTableDefName, split.get(0)) == null;
+            return mainTableDefName == null || meta.getColumn(mainTableDefName, split.get(0)) == null;
         }
         else
         {

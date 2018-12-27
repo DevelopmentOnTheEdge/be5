@@ -76,4 +76,10 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
                 oneQuotes(jsonb.toJson(resourceData.getAttributes())));
     }
 
+    @Test
+    public void sqlSubQuery()
+    {
+        Query query = meta.getQuery("testtable", "sqlSubQuery");
+        filterInfoPlugin.addData(query, Collections.singletonMap("name", "value"));
+    }
 }

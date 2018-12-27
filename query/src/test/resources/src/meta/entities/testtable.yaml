@@ -217,6 +217,13 @@ testtable:
       code: |-
         SELECT ID AS "___ID", name FROM testtable WHERE 1=1
           AND name = <parameter:name refColumn="testtable.unknownColumn" />
+  - sqlSubQuery:
+      type: 1D_unknown
+      code: |-
+        SELECT
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM (select * from testtable) t
   - testBeSqlMacros:
       type: 1D_unknown
       invisible: true

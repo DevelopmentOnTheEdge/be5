@@ -295,4 +295,13 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         assertEquals("user1", table.getRows().get(0).getCells().get(0).content);
         assertEquals("user2", table.getRows().get(1).getCells().get(0).content);
     }
+
+    @Test
+    public void sqlSubQuery()
+    {
+        Query query = meta.getQuery("testtable", "sqlSubQuery");
+        TableModel table = tableModelService.create(query, Collections.singletonMap("name", "value"));
+        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':2,'options':{}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(1))));
+    }
 }

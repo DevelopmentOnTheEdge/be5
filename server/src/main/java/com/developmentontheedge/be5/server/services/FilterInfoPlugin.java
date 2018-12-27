@@ -77,7 +77,7 @@ public class FilterInfoPlugin implements DocumentPlugin
 
             String mainTableDefName = QueryMetaHelper.getMainTableDefName(ast);
             params.forEach((k, v) -> {
-                if (meta.hasEntity(mainTableDefName))
+                if (mainTableDefName != null && meta.hasEntity(mainTableDefName))
                 {
                     ColumnDef column = meta.getColumn(mainTableDefName, k);
                     if (column != null)
@@ -100,8 +100,10 @@ public class FilterInfoPlugin implements DocumentPlugin
                     }
                 }
 
-                String valueTitle = userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), v + "");
-                result.add(new FilterItem(userAwareMeta.getColumnTitle(mainTableDefName, k), valueTitle));
+                String valueTitle = mainTableDefName != null ?
+                        userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), v + "") : v + "";
+                result.add(new FilterItem(mainTableDefName != null ?
+                        userAwareMeta.getColumnTitle(mainTableDefName, k) : k, valueTitle));
             });
         }
         return result;

@@ -58,6 +58,13 @@ testtable:
       roles: '@AllRoles'
       code: |-
         Query with error
+  - sqlSubQuery:
+      type: 1D_unknown
+      code: |-
+        SELECT
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM (select * from testtable) t
   - usedParam filter info:
       code: |-
         SELECT *
