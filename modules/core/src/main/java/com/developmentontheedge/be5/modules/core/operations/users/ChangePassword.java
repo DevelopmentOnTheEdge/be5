@@ -40,7 +40,7 @@ public class ChangePassword extends GOperationSupport implements TransactionalOp
 
         if (stage == Stage.PRODUCTION)
         {
-            params.getAsBuilder("new_user_pass").attr(VALIDATION_RULES, pattern(".{6}", userAwareMeta
+            params.getAsBuilder("new_user_pass").attr(VALIDATION_RULES, pattern(".{6,}", userAwareMeta
                     .getLocalizedExceptionMessage("The minimum password length is $1 characters")
                     .replace("$1", "6")));
         }

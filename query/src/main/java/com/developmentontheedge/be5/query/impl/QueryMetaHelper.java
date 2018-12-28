@@ -40,6 +40,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.query.util.TableUtils.shouldBeSkipped;
+
 public class QueryMetaHelper
 {
     private final Meta meta;
@@ -238,10 +240,11 @@ public class QueryMetaHelper
         if (selectList.isAllColumns()) return orderColumn;
 
         int sortCol = -1;
-        int restCols = orderColumn;
+        int restCols = orderColumn - 1;
         for (int i = 0; i < selectList.jjtGetNumChildren(); i++)
         {
-            if (((AstDerivedColumn) selectList.child(i)).getAlias().startsWith(";")) continue;
+            String alias = ((AstDerivedColumn) selectList.child(i)).getAlias();
+            if (alias != null && shouldBeSkipped(alias)) continue;
 
             if (restCols-- == 0)
             {

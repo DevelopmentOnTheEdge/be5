@@ -18,6 +18,7 @@ import java.util.HashMap;
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
+import static com.google.common.collect.ImmutableMap.*;
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,8 +36,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("delete from testtable");
-        user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 1L);
-        user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 2L);
+        user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 2L);
+        user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 1L);
 
         db.update("delete from testSubQuery");
         db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 1L);
@@ -94,7 +95,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "Sub Query with long prepare params");
         TableModel tableModel = tableModelService.create(query, new HashMap<>());
-        assertEquals("{'content':'1','options':{}}",
+        assertEquals("{'content':'2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
     }
 
@@ -163,7 +164,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beCssFormat");
         TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':1,'options':{'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}],'id':'123'}",
+        assertEquals("{'cells':[{'content':2,'options':{'format':{'mask':'###,###,##0.00'},'css':{'class':'currency'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
@@ -179,7 +180,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
 
         setStaticUserInfo("TestUser2");
         TableModel table2 = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'TestUser2'}}}],'id':'123'}",
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{'roles':{'name':'TestUser2'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table2.getRows().get(0))));
     }
 
@@ -188,7 +189,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beRolesNot");
         TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{'roles':{'name':'!TestUser2'}}}],'id':'123'}",
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{'roles':{'name':'!TestUser2'}}}],'id':'123'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
 
         setStaticUserInfo("TestUser2");
@@ -211,8 +212,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "beRowCssClass");
         TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("[{'cells':[{'content':1,'options':{'css':{'class':' user1'}}}],'id':'123'}," +
-                        "{'cells':[{'content':2,'options':{'css':{'class':' user2'}}}],'id':'123'}]",
+        assertEquals("[{'cells':[{'content':2,'options':{'css':{'class':' user1'}}}],'id':'123'}," +
+                        "{'cells':[{'content':1,'options':{'css':{'class':' user2'}}}],'id':'123'}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
     }
 
@@ -258,18 +259,27 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "withID");
         TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':1,'options':{}}]," +
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{}}]," +
                         "'id':'"+user1ID+"'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
     @Test
-    public void withOrder()
+    public void order()
     {
         Query query = meta.getQuery("testtable", "All records");
-        TableModel table = tableModelService.create(query, ImmutableMap.
-                of(ORDER_COLUMN, "1", ORDER_DIR, "desc"));
-        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':2,'options':{}}]}",
+        TableModel table = tableModelService.create(query,
+                of(ORDER_COLUMN, "2", ORDER_DIR, "desc"));
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{}}]}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+    }
+
+    @Test
+    public void testOrderWithHiddenColumns()
+    {
+        Query query = meta.getQuery("testtable", "testOrderWithHiddenColumns");
+        TableModel table = tableModelService.create(query, of(ORDER_COLUMN, "2", ORDER_DIR, "desc"));
+        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{}}],'id':'"+user1ID+"'}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
     }
 
@@ -278,9 +288,9 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         db.insert("insert into classifications (categoryID, recordID) VALUES (?, ?)", 123, "testtable." + user2ID);
         Query query = meta.getQuery("testtable", "All records");
-        TableModel table = tableModelService.create(query, ImmutableMap.
+        TableModel table = tableModelService.create(query,
                 of(CATEGORY_ID_PARAM, "123"));
-        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':2,'options':{}}]}",
+        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':1,'options':{}}]}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0))));
         db.update("DELETE FROM classifications");
     }
@@ -301,7 +311,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "sqlSubQuery");
         TableModel table = tableModelService.create(query, Collections.singletonMap("name", "value"));
-        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':2,'options':{}}]}",
+        assertEquals("{'cells':[{'content':'user2','options':{}},{'content':1,'options':{}}]}",
                 oneQuotes(jsonb.toJson(table.getRows().get(1))));
     }
 }
