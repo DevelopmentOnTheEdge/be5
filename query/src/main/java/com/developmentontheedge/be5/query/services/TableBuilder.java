@@ -28,9 +28,6 @@ import java.util.Optional;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
-import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
-import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 public class TableBuilder
 {
