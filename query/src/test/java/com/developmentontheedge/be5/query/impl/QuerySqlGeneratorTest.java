@@ -66,7 +66,6 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    @Ignore
     public void orderParam()
     {
         Query query = meta.createQueryFromSql("SELECT * FROM testtable " +

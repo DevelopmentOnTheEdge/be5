@@ -169,6 +169,10 @@ public class QueryMetaHelper
             {
                 node = node.jjtGetParent();
             }
+            if (node.jjtGetParent().getClass() == AstOrderBy.class)
+            {
+                return null;
+            }
             Optional<AstFieldReference> first = node.children().select(AstFieldReference.class).findFirst();
             if (first.isPresent())
             {
