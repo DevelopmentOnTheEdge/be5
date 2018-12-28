@@ -347,7 +347,7 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     {
         final List<ProjectElementException> errors = new ArrayList<>();
 
-        if (getName().length() > Constants.MAX_ID_LENGTH)
+        if (getTableName(getName()).length() > Constants.MAX_ID_LENGTH)
         {
             errors.add(new ProjectElementException(getCompletePath(), "name", "Entity name is too long."));
         }
@@ -381,6 +381,14 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
             errors.addAll(operation.getErrors());
         }
         return errors;
+    }
+
+    private String getTableName(String name)
+    {
+        if (name.contains("."))
+            return name.split("\\.")[1];
+        else
+            return name;
     }
 
     @Override

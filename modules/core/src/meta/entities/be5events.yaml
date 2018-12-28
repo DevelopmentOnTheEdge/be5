@@ -24,7 +24,7 @@ be5events:
     - action:
         type: ENUM('logging','operation','query','print','servlet','queryBuilder','process','other')
     - entity:
-        type: VARCHAR(30)
+        type: VARCHAR(40)
         canBeNull: true
     - title:
         type: VARCHAR(255)
