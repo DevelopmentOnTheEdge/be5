@@ -144,7 +144,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements SqlQue
 
         if (executeType == ExecuteType.DEFAULT)
         {
-            QueryMetaHelper.applySort(ast, orderColumn + (selectable ? -1 : 0), orderDir);
+            QueryMetaHelper.applySort(ast, orderColumn, orderDir);
             new LimitsApplier(offset, limit).transform(ast);
         }
 

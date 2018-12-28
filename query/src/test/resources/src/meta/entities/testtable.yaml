@@ -24,6 +24,15 @@ testtable:
           t.value AS "Value"
         FROM
           testtable t
+  - testOrderWithHiddenColumns:
+      code: |-
+        SELECT
+          t.ID AS "___ID",
+          t.ID AS "___testID",
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM
+          testtable t
   - withID:
       type: 1D
       operations: Edit

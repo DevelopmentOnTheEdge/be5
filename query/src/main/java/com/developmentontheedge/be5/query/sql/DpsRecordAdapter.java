@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX;
+
 class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
@@ -69,18 +71,17 @@ class DpsRecordAdapter
             for (int i = 1; i <= count; i++)
             {
                 String columnLabel = metaData.getColumnLabel(i);
-                if (columnLabel.startsWith(";"))
+                if (columnLabel.startsWith(EXTRA_HEADER_COLUMN_PREFIX))
                 {
                     String refName = columnLabel.substring(1);
                     int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
                             .findAny().orElseThrow(() -> Be5Exception.internal("no previous column with name " + refName));
                     DynamicProperty dp = new DynamicProperty(columnLabel, String.class);
                     dp.setAttribute(COLUMN_REF_IDX_PROPERTY, refId);
-                    dp.setHidden(true);
                     schema[i - 1] = dp;
                     continue;
                 }
-                String[] parts = columnLabel.split(";", 2);
+                String[] parts = columnLabel.split(EXTRA_HEADER_COLUMN_PREFIX, 2);
                 String name = getUniqueName(names, parts[0]);
                 Class<?> clazz = getTypeClassFun.apply(metaData.getColumnType(i));
                 DynamicProperty dp = new DynamicProperty(name, clazz);

@@ -204,6 +204,12 @@ public class TableUtils
                 DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
     }
 
+    public static boolean shouldBeSkipped(String alias)
+    {
+        return MoreStrings.startsWithAny(alias, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
+                DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
+    }
+
     public static void replaceBlob(DynamicPropertySet properties)
     {
         for (DynamicProperty dp : properties)
