@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
@@ -85,7 +86,7 @@ public class TableBuilder
         List<RowModel> rows = new ArrayList<>();
 
         propertiesList = queryExecutor.execute();
-        collectColumnsAndRows(query.getEntity().getName(), query.getName(), propertiesList, columns, rows);
+        collectColumnsAndRows(query, propertiesList, columns, rows);
 
         return new TableModel(
                 columns,
@@ -112,7 +113,7 @@ public class TableBuilder
         return totalNumberOfRows;
     }
 
-    private void collectColumnsAndRows(String entityName, String queryName, List<QRec> list,
+    private void collectColumnsAndRows(Query query, List<QRec> list,
                                        List<ColumnModel> columns, List<RowModel> rows)
     {
         for (DynamicPropertySet properties : list)
@@ -121,24 +122,24 @@ public class TableBuilder
             TableUtils.filterBeanWithRoles(properties, userInfo.getCurrentRoles());
             if (columns.isEmpty())
             {
-                columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userInfo,
-                        userAwareMeta, coreUtils).collectColumns());
+                columns.addAll(new PropertiesToRowTransformer(query.getEntity().getName(), query.getName(),
+                        properties, userInfo, userAwareMeta, coreUtils).collectColumns());
             }
-            rows.add(generateRow(entityName, queryName, properties));
+            rows.add(generateRow(query, properties));
         }
     }
 
-    private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties)
+    private RowModel generateRow(Query query, DynamicPropertySet properties)
             throws AssertionError
     {
-        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties,
-                userInfo, userAwareMeta, coreUtils);
+        PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(query.getEntity().getName(),
+                query.getName(), properties, userInfo, userAwareMeta, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         addRowClass(cells);
         List<CellModel> processedCells = processCells(cells); // only visible cells
 
         String rowId = transformer.getRowId();
-        if (queryExecutor.isSelectable() && rowId == null)
+        if (query.getType() == QueryType.D1 && rowId == null)
         {
             throw Be5Exception.internal(ID_COLUMN_LABEL + " not found.");
         }
