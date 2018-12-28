@@ -146,4 +146,9 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
     {
         return getLimit();
     }
+
+    public Map<String, Object> getParameters()
+    {
+        return parameters;
+    }
 }

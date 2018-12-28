@@ -2,63 +2,35 @@ package com.developmentontheedge.be5.query.support;
 
 import com.developmentontheedge.be5.query.QueryExecutor;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 
 public abstract class AbstractQueryExecutor implements QueryExecutor
 {
-    protected int offset = 0;
-    protected int limit = Integer.MAX_VALUE;
-
-    protected int orderColumn = -1;
-    protected String orderDir = "asc";
-
-    @Override
-    public final QueryExecutor offset(int offset)
-    {
-        checkArgument(offset >= 0);
-        this.offset = offset;
-        return this;
-    }
-
-    @Override
-    public final QueryExecutor limit(int limit)
-    {
-        checkArgument(limit >= 0);
-        this.limit = limit;
-        return this;
-    }
-
-    @Override
-    public final QueryExecutor order(int orderColumn, String orderDir)
-    {
-        checkArgument(orderColumn >= -2);
-        this.orderColumn = orderColumn;
-        this.orderDir = orderDir;
-        return this;
-    }
-
     @Override
     public int getOrderColumn()
     {
-        return orderColumn;
+        return Integer.parseInt((String) getParameters().getOrDefault(ORDER_COLUMN, "-1"));
     }
 
     @Override
     public String getOrderDir()
     {
-        return orderDir;
+        return (String) getParameters().getOrDefault(ORDER_DIR, "asc");
     }
 
     @Override
     public int getOffset()
     {
-        return offset;
+        return Integer.parseInt((String) getParameters().getOrDefault(OFFSET, "0"));
     }
 
     @Override
     public int getLimit()
     {
-        return limit;
+        return Integer.parseInt((String) getParameters().getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
     }
 }

@@ -45,6 +45,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
 
     private ContextApplier contextApplier;
     private final QueryContext queryContext;
+    private final Map<String, ?> parameters;
     private final Boolean selectable;
 
     public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession,
@@ -53,6 +54,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
                                QuerySqlGenerator querySqlGenerator)
     {
         this.query = Objects.requireNonNull(query);
+        this.parameters = Objects.requireNonNull(parameters);
         this.querySqlGenerator = querySqlGenerator;
 
         queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
@@ -147,6 +149,13 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     public Boolean isSelectable()
     {
         return selectable;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getParameters()
+    {
+        return (Map<String, Object>) parameters;
     }
 
     enum ExecuteType

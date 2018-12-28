@@ -50,8 +50,7 @@ public class TableBuilder
         this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
 
-        this.queryExecutor = queryService.get(query, parameters);
-        config(query, parameters);
+        this.queryExecutor = queryService.get(query, updateLimit(query, parameters));
     }
 
     public interface TableModelFactory
@@ -59,12 +58,10 @@ public class TableBuilder
         TableBuilder create(Query query, Map<String, Object> parameters);
     }
 
-    private void config(Query query, Map<String, Object> parameters)
+    private Map<String, Object> updateLimit(Query query, Map<String, Object> parameters)
     {
-        int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
-        String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
-        int offset = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
-        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
+        HashMap<String, Object> newParams = new HashMap<>(parameters);
+        int limit = Integer.parseInt((String) newParams.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
@@ -73,10 +70,8 @@ public class TableBuilder
             limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
-
-        queryExecutor.order(orderColumn, orderDir);
-        queryExecutor.offset(offset);
-        queryExecutor.limit(Math.min(limit, maxLimit));
+        newParams.put(LIMIT, Math.min(limit, maxLimit) + "");
+        return newParams;
     }
 
     public TableModel get()

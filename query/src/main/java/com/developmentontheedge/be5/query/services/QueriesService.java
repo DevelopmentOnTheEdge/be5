@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.HIDDEN_COLUMN_PREFIX;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 
 
 public class QueriesService
@@ -163,9 +165,9 @@ public class QueriesService
     {
         String entityName = query.getEntity().getName();
 
-        List<QRec> list = queryExecutorFactory.get(query, parameters)
-                .limit(Integer.MAX_VALUE)
-                .execute();
+        Map<String, Object> newParams = new HashMap<>(parameters);
+        newParams.put(LIMIT, Integer.MAX_VALUE + "");
+        List<QRec> list = queryExecutorFactory.get(query, newParams).execute();
 
         String[][] stockArr = new String[list.size()][2];
 

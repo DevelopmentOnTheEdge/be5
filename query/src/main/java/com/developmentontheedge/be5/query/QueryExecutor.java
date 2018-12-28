@@ -3,23 +3,11 @@ package com.developmentontheedge.be5.query;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 
 import java.util.List;
+import java.util.Map;
 
 public interface QueryExecutor
 {
-    /**
-     * Sets a limit (changes state). Returns the query executor itself.
-     */
-    QueryExecutor limit(int limit);
-
-    /**
-     * Sets an offset (changes state). Returns the query executor itself.
-     */
-    QueryExecutor offset(int offset);
-
-    /**
-     * Sets sort order (changes state). Returns the query executor itself.
-     */
-    QueryExecutor order(int orderColumn, String orderDir);
+    Map<String, Object> getParameters();
 
     int getOrderColumn();
 
@@ -29,6 +17,7 @@ public interface QueryExecutor
 
     int getLimit();
 
+    @Deprecated//TODO move logic to frontend
     Boolean isSelectable();
 
     /**
