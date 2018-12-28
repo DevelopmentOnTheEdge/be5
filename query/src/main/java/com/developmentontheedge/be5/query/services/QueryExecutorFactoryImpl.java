@@ -32,14 +32,14 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     private final QueryMetaHelper queryMetaHelper;
     private final CellFormatter cellFormatter;
     private final GroovyRegister groovyRegister;
-    private final QuerySqlGenerator queryProcessor;
+    private final QuerySqlGenerator querySqlGenerator;
     private final Injector injector;
 
     @Inject
     public QueryExecutorFactoryImpl(Meta meta, DbService db, QuerySession querySession,
                                     UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper,
                                     CellFormatter cellFormatter, GroovyRegister groovyRegister,
-                                    QuerySqlGenerator queryProcessor, Injector injector)
+                                    QuerySqlGenerator querySqlGenerator, Injector injector)
     {
         this.meta = meta;
         this.db = db;
@@ -48,7 +48,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         this.queryMetaHelper = queryMetaHelper;
         this.cellFormatter = cellFormatter;
         this.groovyRegister = groovyRegister;
-        this.queryProcessor = queryProcessor;
+        this.querySqlGenerator = querySqlGenerator;
         this.injector = injector;
     }
 
@@ -62,7 +62,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         else if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
         {
             return new Be5SqlQueryExecutor(query, parameters, querySession, userInfoProvider, meta, db, queryMetaHelper,
-                    cellFormatter, queryProcessor);
+                    cellFormatter, querySqlGenerator);
         }
         else
         {

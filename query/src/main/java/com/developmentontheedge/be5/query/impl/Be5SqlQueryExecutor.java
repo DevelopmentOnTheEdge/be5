@@ -41,7 +41,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
 
     private final QueryMetaHelper queryMetaHelper;
     private final CellFormatter cellFormatter;
-    private final QuerySqlGenerator queryProcessor;
+    private final QuerySqlGenerator querySqlGenerator;
 
     private ContextApplier contextApplier;
     private final QueryContext queryContext;
@@ -50,10 +50,10 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession,
                                UserInfoProvider userInfoProvider, Meta meta, DbService db,
                                QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter,
-                               QuerySqlGenerator queryProcessor)
+                               QuerySqlGenerator querySqlGenerator)
     {
         this.query = Objects.requireNonNull(query);
-        this.queryProcessor = queryProcessor;
+        this.querySqlGenerator = querySqlGenerator;
 
         queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
         contextApplier = new ContextApplier(queryContext);
@@ -79,7 +79,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         {
             try
             {
-                return db.list(queryProcessor.getSql(query, queryContext, executeType), parser);
+                return db.list(querySqlGenerator.getSql(query, queryContext, executeType), parser);
             }
             catch (RuntimeException e)
             {
