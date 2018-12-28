@@ -3,12 +3,12 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
@@ -18,6 +18,9 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
 {
     @Inject
     private QuerySqlGenerator querySqlGenerator;
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testMultipleColumn()
@@ -81,19 +84,22 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
                 querySqlGenerator.getSql(query, singletonMap("order", "desc")).format());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testResolveTypeOfRefColumnError()
     {
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Entity with alias 'public.testtable' not found, for public.testtable.name");
         Query query = meta.getQuery("testtable", "TestResolveRefColumnIllegalAE");
-        querySqlGenerator.getSql(query, new HashMap<>());
+        querySqlGenerator.getSql(query, emptyMap());
     }
 
-    @Test(expected = RuntimeException.class)//todo fix
+    @Test
     public void testResolveTypeOfRefColumnNPE()
     {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("Can not resolve refColumn=\"testtable.unknownColumn\"");
         Query query = meta.getQuery("testtable", "TestResolveRefColumnNPE");
-        assertEquals("SELECT ID AS \"___ID\", name FROM testtable WHERE name = 'value' LIMIT 2147483647",
-                querySqlGenerator.getSql(query, Collections.singletonMap("name", "value")).format());
+        querySqlGenerator.getSql(query, emptyMap());
     }
 
     @Test

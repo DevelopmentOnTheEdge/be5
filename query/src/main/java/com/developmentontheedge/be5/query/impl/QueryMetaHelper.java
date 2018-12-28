@@ -31,6 +31,7 @@ import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,11 +149,18 @@ public class QueryMetaHelper
                 .findFirst().get().getTable();
     }
 
+    @Nullable
     public ColumnDef getColumnDef(AstStart ast, AstBeParameterTag beParameterTag, String mainEntityName)
     {
         if (beParameterTag.getRefColumn() != null)
         {
-            return getColumnDef(ast, beParameterTag.getRefColumn(), mainEntityName);
+            ColumnDef columnDef = getColumnDef(ast, beParameterTag.getRefColumn(), mainEntityName);
+            if (columnDef == null)
+            {
+                throw new IllegalArgumentException("Can not resolve " +
+                        "refColumn=\"" + beParameterTag.getRefColumn() + "\"");
+            }
+            return columnDef;
         }
         else
         {
@@ -173,6 +181,7 @@ public class QueryMetaHelper
         }
     }
 
+    @Nullable
     private ColumnDef getColumnDef(AstStart ast, String rawColumnDef, String mainEntityName)
     {
         final List<String> splittedTo = StreamEx.split(rawColumnDef, "\\.").toList();
