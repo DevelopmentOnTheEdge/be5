@@ -1,10 +1,8 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
@@ -21,11 +19,11 @@ import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.QueryContext;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
 
 /**
@@ -33,69 +31,57 @@ import java.util.stream.StreamSupport;
  */
 public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryExecutor
 {
-    protected final Query query;
+    private DbService db;
+    private Meta meta;
+    private QuerySession querySession;
+    private UserInfoProvider userInfoProvider;
+    private QueryMetaHelper queryMetaHelper;
+    private CellFormatter cellFormatter;
+    private QuerySqlGenerator querySqlGenerator;
 
-    private static final Logger log = Logger.getLogger(Be5SqlQueryExecutor.class.getName());
-
-    private final DbService db;
-
-    private final QueryMetaHelper queryMetaHelper;
-    private final CellFormatter cellFormatter;
-    private final QuerySqlGenerator querySqlGenerator;
-
+    private Query query;
+    private Map<String, ?> parameters;
     private ContextApplier contextApplier;
-    private final QueryContext queryContext;
-    private final Map<String, ?> parameters;
-    private final Boolean selectable;
+    private QueryContext queryContext;
+    private Boolean selectable;
 
-    public Be5SqlQueryExecutor(Query query, Map<String, ?> parameters, QuerySession querySession,
-                               UserInfoProvider userInfoProvider, Meta meta, DbService db,
-                               QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter,
-                               QuerySqlGenerator querySqlGenerator)
+    @Inject
+    public void inject(QuerySession querySession, UserInfoProvider userInfoProvider, Meta meta, DbService db,
+                       QueryMetaHelper queryMetaHelper, CellFormatter cellFormatter,
+                       QuerySqlGenerator querySqlGenerator)
+    {
+        this.querySession = querySession;
+        this.userInfoProvider = userInfoProvider;
+        this.meta = meta;
+        this.db = db;
+        this.queryMetaHelper = queryMetaHelper;
+        this.cellFormatter = cellFormatter;
+        this.querySqlGenerator = querySqlGenerator;
+    }
+
+    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
     {
         this.query = Objects.requireNonNull(query);
         this.parameters = Objects.requireNonNull(parameters);
-        this.querySqlGenerator = querySqlGenerator;
 
         queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
         contextApplier = new ContextApplier(queryContext);
 
-        this.db = db;
-        this.queryMetaHelper = queryMetaHelper;
-
-        this.cellFormatter = cellFormatter;
-
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
                 .filter(r -> r == 1 || r == 2).count() > 0;
+        return this;
     }
 
-    private <T> List<T> list(ResultSetParser<T> parser)
+    private List<QRec> list(ExecuteType executeType)
     {
-        return list(ExecuteType.DEFAULT, parser);
-    }
-
-    private <T> List<T> list(ExecuteType executeType, ResultSetParser<T> parser)
-    {
-        if (query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN))
-        {
-            try
-            {
-                return db.list(querySqlGenerator.getSql(query, queryContext, executeType), parser);
-            }
-            catch (RuntimeException e)
-            {
-                throw Be5Exception.internalInQuery(query, e);
-            }
-        }
-
-        throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
+        return db.list(querySqlGenerator.getSql(query, queryContext, executeType), new QRecParser());
     }
 
     @Override
     public List<QRec> execute()
     {
-        List<QRec> rows = list(new QRecParser());
+        List<QRec> rows = list(ExecuteType.DEFAULT);
         addAggregateRowIfNeeded(rows);
         return processRows(rows);
     }
@@ -133,8 +119,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
-
-            List<QRec> aggregateRows = list(ExecuteType.AGGREGATE, new QRecParser());
+            List<QRec> aggregateRows = list(ExecuteType.AGGREGATE);
             TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
@@ -142,7 +127,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     @Override
     public long count()
     {
-        return (Long) list(ExecuteType.COUNT, new QRecParser()).get(0).asMap().get("count");
+        return (Long) list(ExecuteType.COUNT).get(0).asMap().get("count");
     }
 
     @Override

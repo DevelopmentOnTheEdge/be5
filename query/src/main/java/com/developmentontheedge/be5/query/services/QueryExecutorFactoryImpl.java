@@ -2,18 +2,11 @@ package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
-import com.developmentontheedge.be5.query.impl.CellFormatter;
-import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
-import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
-import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
+import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -25,61 +18,56 @@ import static com.developmentontheedge.be5.metadata.QueryType.D1_UNKNOWN;
 
 public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 {
-    private final Meta meta;
-    private final DbService db;
-    private final QuerySession querySession;
-    private final UserInfoProvider userInfoProvider;
-    private final QueryMetaHelper queryMetaHelper;
-    private final CellFormatter cellFormatter;
     private final GroovyRegister groovyRegister;
-    private final QuerySqlGenerator querySqlGenerator;
     private final Injector injector;
 
     @Inject
-    public QueryExecutorFactoryImpl(Meta meta, DbService db, QuerySession querySession,
-                                    UserInfoProvider userInfoProvider, QueryMetaHelper queryMetaHelper,
-                                    CellFormatter cellFormatter, GroovyRegister groovyRegister,
-                                    QuerySqlGenerator querySqlGenerator, Injector injector)
+    public QueryExecutorFactoryImpl(GroovyRegister groovyRegister, Injector injector)
     {
-        this.meta = meta;
-        this.db = db;
-        this.querySession = querySession;
-        this.userInfoProvider = userInfoProvider;
-        this.queryMetaHelper = queryMetaHelper;
-        this.cellFormatter = cellFormatter;
         this.groovyRegister = groovyRegister;
-        this.querySqlGenerator = querySqlGenerator;
         this.injector = injector;
     }
 
     @Override
     public QueryExecutor get(Query query, Map<String, ?> parameters)
     {
-        if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
+        try
         {
-            return getQueryBuilder(query, parameters);
+            if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
+            {
+                return getSqlQueryExecutor(query, parameters);
+            }
+            else if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
+            {
+                return getQueryExecutor(query, parameters);
+            }
+            else
+            {
+                throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+            }
         }
-        else if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
+        catch (RuntimeException e)
         {
-            return new Be5SqlQueryExecutor(query, parameters, querySession, userInfoProvider, meta, db, queryMetaHelper,
-                    cellFormatter, querySqlGenerator);
-        }
-        else
-        {
-            throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+            throw Be5Exception.internalInQuery(query, e);
         }
     }
 
-    private QueryExecutor getQueryBuilder(Query query, Map<String, ?> parameters)
+    private QueryExecutor getSqlQueryExecutor(Query query, Map<String, ?> parameters)
     {
-        BaseQueryExecutorSupport tableBuilder;
+        Be5SqlQueryExecutor be5SqlQueryExecutor = new Be5SqlQueryExecutor();
+        return getInitialized(be5SqlQueryExecutor, query, parameters);
+    }
+
+    private QueryExecutor getQueryExecutor(Query query, Map<String, ?> parameters)
+    {
+        AbstractQueryExecutor abstractQueryExecutor;
 
         switch (query.getType())
         {
             case JAVA:
                 try
                 {
-                    tableBuilder = (BaseQueryExecutorSupport) Class.forName(query.getQuery()).newInstance();
+                    abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(query.getQuery()).newInstance();
                     break;
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
@@ -94,7 +82,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 
                     if (aClass != null)
                     {
-                        tableBuilder = (BaseQueryExecutorSupport) aClass.newInstance();
+                        abstractQueryExecutor = (AbstractQueryExecutor) aClass.newInstance();
                         break;
                     }
                     else
@@ -110,12 +98,18 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
                 throw Be5Exception.internal("Not support operation type: " + query.getType());
         }
 
-        injector.injectMembers(tableBuilder);
+        return getInitialized(abstractQueryExecutor, query, parameters);
+    }
+
+    private QueryExecutor getInitialized(AbstractQueryExecutor abstractQueryExecutor,
+                                         Query query, Map<String, ?> parameters)
+    {
+        injector.injectMembers(abstractQueryExecutor);
 
         @SuppressWarnings("unchecked")
         Map<String, Object> params = (Map<String, Object>) parameters;
-        tableBuilder.initialize(query, params);
+        abstractQueryExecutor.initialize(query, params);
 
-        return tableBuilder;
+        return abstractQueryExecutor;
     }
 }

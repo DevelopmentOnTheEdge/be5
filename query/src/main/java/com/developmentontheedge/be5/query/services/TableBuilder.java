@@ -77,7 +77,7 @@ public class TableBuilder
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        propertiesList = queryExecutor.execute();
+        propertiesList = getRows();
         collectColumnsAndRows(query, propertiesList, columns, rows);
 
         return new TableModel(
@@ -91,6 +91,18 @@ public class TableBuilder
                 queryExecutor.getOrderDir());
     }
 
+    private List<QRec> getRows()
+    {
+        try
+        {
+            return queryExecutor.execute();
+        }
+        catch (RuntimeException e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
+        }
+    }
+
     private Long getCount(List<RowModel> rows)
     {
         Long totalNumberOfRows;
@@ -100,7 +112,14 @@ public class TableBuilder
         }
         else
         {
-            totalNumberOfRows = queryExecutor.count();
+            try
+            {
+                totalNumberOfRows = queryExecutor.count();
+            }
+            catch (RuntimeException e)
+            {
+                throw Be5Exception.internalInQuery(query, e);
+            }
         }
         return totalNumberOfRows;
     }

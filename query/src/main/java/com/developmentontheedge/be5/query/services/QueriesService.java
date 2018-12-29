@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query.services;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -22,7 +23,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.HIDDEN_COLUMN_PREFIX;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.NO;
 import static com.developmentontheedge.be5.metadata.model.SqlBoolColumnType.YES;
-import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 
 
 public class QueriesService
@@ -163,12 +162,7 @@ public class QueriesService
 
     private String[][] getTagsFromCustomSelectionViewExecute(Query query, Map<String, ?> parameters)
     {
-        String entityName = query.getEntity().getName();
-
-        Map<String, Object> newParams = new HashMap<>(parameters);
-        newParams.put(LIMIT, Integer.MAX_VALUE + "");
-        List<QRec> list = queryExecutorFactory.get(query, newParams).execute();
-
+        List<QRec> list = getQueryRows(query, parameters);
         String[][] stockArr = new String[list.size()][2];
 
         int i = 0;
@@ -185,7 +179,7 @@ public class QueriesService
             String key = property.getValue().toString();
             Object value = iterator.hasNext() ? iterator.next().getValue() : "";
             String second = value != null ? value.toString() : "";
-            stockArr[i++] = new String[]{key, userAwareMeta.getColumnTitle(entityName, second)};
+            stockArr[i++] = new String[]{key, userAwareMeta.getColumnTitle(query.getEntity().getName(), second)};
         }
 
         return stockArr;
@@ -326,11 +320,6 @@ public class QueriesService
     {
         return list(meta.getQuery(tableName, queryName), new ScalarLongParser(), parameters);
     }
-
-    public <T> List<T> list(Query query, ResultSetParser<T> parser, Map<String, ?> parameters)
-    {
-        return queryExecutorFactory.build(query, parameters).execute(parser);
-    }
 */
     public List<List<Object>> listOfLists(String sql, Object... params)
     {
@@ -398,7 +387,7 @@ public class QueriesService
 
     public List<QRec> query(Query query, Map<String, ?> parameters)
     {
-        return queryExecutorFactory.get(query, parameters).execute();
+        return getQueryRows(query, parameters);
     }
 
     public QRec queryRecord(String sql, Map<String, ?> parameters)
@@ -413,7 +402,7 @@ public class QueriesService
 
     public QRec queryRecord(Query query, Map<String, ?> parameters)
     {
-        List<QRec> list = queryExecutorFactory.get(query, parameters).execute();
+        List<QRec> list = getQueryRows(query, parameters);
         if (list.size() == 0)
         {
             return null;
@@ -421,6 +410,18 @@ public class QueriesService
         else
         {
             return list.get(0);
+        }
+    }
+
+    private List<QRec> getQueryRows(Query query, Map<String, ?> newParams)
+    {
+        try
+        {
+            return queryExecutorFactory.get(query, newParams).execute();
+        }
+        catch (RuntimeException e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
         }
     }
 }
