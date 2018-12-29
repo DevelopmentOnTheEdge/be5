@@ -54,18 +54,6 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    @Ignore
-    public void testTestResolveRefColumnByAlias()
-    {
-        Query query = meta.getQuery("testtable", "TestResolveRefColumnByAlias");
-
-        assertEquals("SELECT *\n" +
-                "FROM testtable t\n" +
-                "WHERE name = 'test' LIMIT 2147483647", querySqlGenerator.
-                getSql(query, singletonMap("name", "test")).format());
-    }
-
-    @Test
     public void orderParam()
     {
         Query query = meta.createQueryFromSql("SELECT * FROM testtable " +

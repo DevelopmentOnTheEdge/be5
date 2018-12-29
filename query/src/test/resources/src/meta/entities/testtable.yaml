@@ -214,10 +214,6 @@ testtable:
       code: |-
         SELECT ID AS "___ID", name FROM testtable WHERE 1=1
           AND name = <parameter:name refColumn="testtable.name" />
-  - TestResolveRefColumnByAlias:
-      code: |-
-        SELECT ID AS "___ID", name FROM testtable WHERE 1=1
-          AND name = <parameter:name refColumn="t.name" />
   - TestResolveRefColumnIllegalAE:
       code: |-
         SELECT ID AS "___ID", name FROM testtable WHERE 1=1
