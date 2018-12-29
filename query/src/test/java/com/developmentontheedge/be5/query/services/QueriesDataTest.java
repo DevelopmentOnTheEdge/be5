@@ -47,7 +47,7 @@ public class QueriesDataTest extends QueryBe5ProjectDBTest
 
         assertEquals("test1", new BufferedReader(
                 new InputStreamReader(qRec.getBinaryStream("dataCol"))).lines()
-                .parallel().collect(Collectors.joining("")));
+               .collect(Collectors.joining("")));
         assertEquals("test1", qRec.getString("dataCol"));
     }
 

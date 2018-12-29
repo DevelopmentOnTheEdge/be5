@@ -33,9 +33,9 @@ public class QRecTest
         qRec.add(new DynamicProperty("test", bytes.getClass(), bytes));
         assertEquals("This is an example", new BufferedReader(
                 new InputStreamReader(qRec.getBinaryStream(), UTF_8)).lines()
-                .parallel().collect(Collectors.joining("")));
+                .collect(Collectors.joining("")));
         assertEquals("This is an example", new BufferedReader(
                 new InputStreamReader(qRec.getBinaryStream("test"), UTF_8)).lines()
-                .parallel().collect(Collectors.joining("")));
+                .collect(Collectors.joining("")));
     }
 }

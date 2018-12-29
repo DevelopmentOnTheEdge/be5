@@ -6,9 +6,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -169,129 +167,6 @@ public class QRec extends DynamicPropertySetSupport
             Clob clob = (Clob) val;
             return clob.getAsciiStream();
         }
-        return new BlobInputStream((Blob) val);
-    }
-
-    public static final class BlobInputStream extends InputStream
-    {
-        Blob blob;
-        InputStream is;
-
-        boolean isClosed;
-
-        public BlobInputStream(Blob blob) throws SQLException
-        {
-            this.blob = blob;
-            is = blob.getBinaryStream();
-        }
-
-        @Override
-        public int read() throws IOException
-        {
-            int ret = is.read();
-            if (ret == -1)
-            {
-                close();
-            }
-            return ret;
-        }
-
-        @Override
-        public int read(byte[] b) throws IOException
-        {
-            int ret = is.read(b);
-            if (ret < 1)
-            {
-                close();
-            }
-            return ret;
-        }
-
-        @Override
-        public int read(byte[] b, int off, int len) throws IOException
-        {
-            int ret = is.read(b, off, len);
-            if (ret < 1)
-            {
-                close();
-            }
-            return ret;
-        }
-
-        @Override
-        public long skip(long n) throws IOException
-        {
-            return is.skip(n);
-        }
-
-        @Override
-        public int available() throws IOException
-        {
-            return is.available();
-        }
-
-        @Override
-        public void close() throws IOException
-        {
-            if (isClosed)
-            {
-                return;
-            }
-
-            try
-            {
-                is.close();
-                is = null;
-                Method pmeth = blob.getClass().getMethod("isTemporary", new Class[0]);
-                if (pmeth != null)
-                {
-                    boolean isTemporary = (Boolean) pmeth.invoke(blob, new Object[0]);
-                    if (isTemporary)
-                    {
-                        pmeth = blob.getClass().getMethod("freeTemporary", new Class[0]);
-                        if (pmeth != null)
-                        {
-                            pmeth.invoke(blob, new Object[0]);
-                        }
-                    }
-                }
-            }
-            catch (NoSuchMethodException ignore)
-            {
-            }
-            catch (Exception exc)
-            {
-                throw new IOException(exc.getMessage(), exc);
-            }
-            finally
-            {
-                isClosed = true;
-                blob = null;
-            }
-        }
-
-        @Override
-        public void mark(int readlimit)
-        {
-            is.mark(readlimit);
-        }
-
-        @Override
-        public void reset() throws IOException
-        {
-            is.reset();
-        }
-
-        @Override
-        public boolean markSupported()
-        {
-            return is.markSupported();
-        }
-
-        @Override
-        protected void finalize() throws Throwable
-        {
-            close();
-        }
+        return ((Blob) val).getBinaryStream();
     }
 }
