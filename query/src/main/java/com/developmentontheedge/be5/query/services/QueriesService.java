@@ -362,29 +362,6 @@ public class QueriesService
         return query(meta.getQuery(tableName, queryName), parameters);
     }
 
-    @Nullable
-    public <T> T query(String tableName, String queryName, Map<String, ?> parameters, ResultSetHandler<T> rsh)
-    {
-        Query query = meta.getQuery(tableName, queryName);
-        String sql = querySqlGenerator.getSql(query, parameters).format();
-        return db.query(sql, rsh);
-    }
-
-    public <T> List<T> list(String tableName, String queryName, Map<String, ?> parameters, ResultSetParser<T> parser)
-    {
-        Query query = meta.getQuery(tableName, queryName);
-        String sql = querySqlGenerator.getSql(query, parameters).format();
-        return db.list(sql, parser);
-    }
-
-    @Nullable
-    public <T> T one(String tableName, String queryName, Map<String, ?> parameters)
-    {
-        Query query = meta.getQuery(tableName, queryName);
-        String sql = querySqlGenerator.getSql(query, parameters).format();
-        return db.one(sql);
-    }
-
     public List<QRec> query(Query query, Map<String, ?> parameters)
     {
         return getQueryRows(query, parameters);
@@ -411,6 +388,29 @@ public class QueriesService
         {
             return list.get(0);
         }
+    }
+
+    @Nullable
+    public <T> T query(String tableName, String queryName, Map<String, ?> parameters, ResultSetHandler<T> rsh)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.query(sql, rsh);
+    }
+
+    public <T> List<T> list(String tableName, String queryName, Map<String, ?> parameters, ResultSetParser<T> parser)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.list(sql, parser);
+    }
+
+    @Nullable
+    public <T> T one(String tableName, String queryName, Map<String, ?> parameters)
+    {
+        Query query = meta.getQuery(tableName, queryName);
+        String sql = querySqlGenerator.getSql(query, parameters).format();
+        return db.one(sql);
     }
 
     private List<QRec> getQueryRows(Query query, Map<String, ?> newParams)
