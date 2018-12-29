@@ -18,13 +18,20 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.QueryContext;
+import com.developmentontheedge.sql.model.AstStart;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
+
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 /**
  * A modern query executor that uses our new parser.
@@ -73,27 +80,22 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         return this;
     }
 
-    private List<QRec> list(ExecuteType executeType)
-    {
-        return db.list(querySqlGenerator.getSql(query, queryContext, executeType), new QRecParser());
-    }
-
     @Override
     public List<QRec> execute()
     {
-        List<QRec> rows = list(ExecuteType.DEFAULT);
+        List<QRec> rows = db.list(querySqlGenerator.getSql(query, queryContext), new QRecParser());
         addAggregateRowIfNeeded(rows);
-        return processRows(rows);
+        return formatCell(rows);
     }
 
-    private List<QRec> processRows(List<QRec> rows)
+    private List<QRec> formatCell(List<QRec> rows)
     {
         List<QRec> res = new ArrayList<>();
-        rows.forEach(cells -> res.add(processCells(cells)));
+        rows.forEach(cells -> res.add(formatCell(cells)));
         return res;
     }
 
-    private QRec processCells(DynamicPropertySet cells)
+    private QRec formatCell(DynamicPropertySet cells)
     {
         QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
@@ -119,7 +121,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
-            List<QRec> aggregateRows = list(ExecuteType.AGGREGATE);
+            List<QRec> aggregateRows = db.list(querySqlGenerator.getSql(query, getParamsWithoutLimit()), new QRecParser());
             TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
@@ -127,7 +129,17 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     @Override
     public long count()
     {
-        return (Long) list(ExecuteType.COUNT).get(0).asMap().get("count");
+        AstStart sql = querySqlGenerator.getSql(query, getParamsWithoutLimit());
+        TableUtils.countFromQuery(sql.getQuery());
+        return db.countFrom(sql.format());
+    }
+
+    private Map<String, Object> getParamsWithoutLimit()
+    {
+        return new HashMap<String, Object>(parameters) {{
+            remove(LIMIT); remove(OFFSET);
+            remove(ORDER_COLUMN); remove(ORDER_DIR);
+        }};
     }
 
     @Override
@@ -141,10 +153,5 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     public Map<String, Object> getParameters()
     {
         return (Map<String, Object>) parameters;
-    }
-
-    enum ExecuteType
-    {
-        DEFAULT, COUNT, AGGREGATE
     }
 }

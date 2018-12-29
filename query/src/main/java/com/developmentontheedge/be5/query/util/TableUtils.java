@@ -3,10 +3,18 @@ package com.developmentontheedge.be5.query.util;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.sql.format.Ast;
+import com.developmentontheedge.sql.model.AstIdentifierConstant;
+import com.developmentontheedge.sql.model.AstParenthesis;
+import com.developmentontheedge.sql.model.AstQuery;
+import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.AstTableRef;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -220,6 +228,24 @@ public class TableUtils
                 dp.setValue("Blob");
                 dp.setType(String.class);
             }
+        }
+    }
+
+    public static void countFromQuery(AstQuery query)
+    {
+        AstSelect select = Ast.selectCount().from(AstTableRef.as(
+                new AstParenthesis(query.clone()),
+                new AstIdentifierConstant("data", true)
+        ));
+        query.replaceWith(new AstQuery(select));
+    }
+
+    public static void applyCategory(Query query, AstStart ast, String categoryString)
+    {
+        if (categoryString != null)
+        {
+            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(),
+                    Long.parseLong(categoryString)).apply(ast);
         }
     }
 }

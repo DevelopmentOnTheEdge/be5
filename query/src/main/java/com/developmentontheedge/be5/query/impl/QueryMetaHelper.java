@@ -7,20 +7,15 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.be5.query.util.CategoryFilter;
-import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFieldReference;
-import com.developmentontheedge.sql.model.AstIdentifierConstant;
 import com.developmentontheedge.sql.model.AstLimit;
 import com.developmentontheedge.sql.model.AstNumericConstant;
 import com.developmentontheedge.sql.model.AstOrderBy;
 import com.developmentontheedge.sql.model.AstOrderingElement;
-import com.developmentontheedge.sql.model.AstParenthesis;
-import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstSelectList;
 import com.developmentontheedge.sql.model.AstStart;
@@ -78,15 +73,6 @@ public class QueryMetaHelper
         }
     }
 
-    static void applyCategory(Query query, AstStart ast, String categoryString)
-    {
-        if (categoryString != null)
-        {
-            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(),
-                    Long.parseLong(categoryString)).apply(ast);
-        }
-    }
-
     private static Map<String, String> getAliasToTable(AstStart ast)
     {
         return ast.tree()
@@ -118,15 +104,6 @@ public class QueryMetaHelper
     private static boolean isNotQueryParameters(String key)
     {
         return key.startsWith("_") && key.endsWith("_");
-    }
-
-    static void countFromQuery(AstQuery query)
-    {
-        AstSelect select = Ast.selectCount().from(AstTableRef.as(
-                new AstParenthesis(query.clone()),
-                new AstIdentifierConstant("data", true)
-        ));
-        query.replaceWith(new AstQuery(select));
     }
 
     void resolveTypeOfRefColumn(AstStart ast)

@@ -100,17 +100,4 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "TestResolveRefColumnNPE");
         querySqlGenerator.getSql(query, emptyMap());
     }
-
-    @Test
-    public void testCountFromQuery()
-    {
-        String sql = querySqlGenerator.getSql(meta.getQuery("testtable", "All records"), emptyMap(),
-                Be5SqlQueryExecutor.ExecuteType.COUNT).format();
-
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
-                "  t.name AS \"Name\",\n" +
-                "  t.value AS \"Value\"\n" +
-                "FROM\n" +
-                "  testtable t) AS \"data\"", sql);
-    }
 }
