@@ -222,6 +222,7 @@
               <goal>addTestSources</goal>
               <goal>compileTests</goal>
               <goal>removeTestStubs</goal>
+              <goal>compile</goal>
             </goals>
           </execution>
         </executions>

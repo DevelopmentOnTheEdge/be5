@@ -2,6 +2,8 @@ package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
@@ -12,20 +14,24 @@ import com.google.inject.Injector;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.metadata.MetadataUtils.getCompiledGroovyClassName;
 import static com.developmentontheedge.be5.metadata.QueryType.D1;
 import static com.developmentontheedge.be5.metadata.QueryType.D1_UNKNOWN;
+import static com.developmentontheedge.be5.metadata.serialization.ModuleLoader2.getDevFileExists;
 
 
 public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 {
     private final GroovyRegister groovyRegister;
     private final Injector injector;
+    private final Meta meta;
 
     @Inject
-    public QueryExecutorFactoryImpl(GroovyRegister groovyRegister, Injector injector)
+    public QueryExecutorFactoryImpl(GroovyRegister groovyRegister, Injector injector, Meta meta)
     {
         this.groovyRegister = groovyRegister;
         this.injector = injector;
+        this.meta = meta;
     }
 
     @Override
@@ -62,40 +68,49 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     {
         AbstractQueryExecutor abstractQueryExecutor;
 
-        switch (query.getType())
+        try
         {
-            case JAVA:
-                try
-                {
+            switch (query.getType())
+            {
+                case JAVA:
                     abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(query.getQuery()).newInstance();
                     break;
-                }
-                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                {
-                    throw Be5Exception.internalInQuery(query, e);
-                }
-            case GROOVY:
-                try
-                {
-                    Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
-                            query.getQuery(), query.getFileName());
-
-                    if (aClass != null)
+                case GROOVY:
+                    if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                     {
-                        abstractQueryExecutor = (AbstractQueryExecutor) aClass.newInstance();
-                        break;
+                        String className = getCompiledGroovyClassName(query.getFileName());
+                        abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(className).newInstance();
                     }
                     else
                     {
-                        throw Be5Exception.internal("Class " + query.getQuery() + " is null.");
+                        try
+                        {
+                            Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
+                                    query.getQuery(), query.getFileName());
+
+                            if (aClass != null)
+                            {
+                                abstractQueryExecutor = (AbstractQueryExecutor) aClass.newInstance();
+                                break;
+                            }
+                            else
+                            {
+                                throw Be5Exception.internal("Class " + query.getQuery() + " is null.");
+                            }
+                        }
+                        catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                        {
+                            throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                        }
                     }
-                }
-                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
-                {
-                    throw new UnsupportedOperationException("Groovy feature has been excluded", e);
-                }
-            default:
-                throw Be5Exception.internal("Not support operation type: " + query.getType());
+                    break;
+                default:
+                    throw Be5Exception.internal("Not support operation type: " + query.getType());
+            }
+        }
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+        {
+            throw Be5Exception.internalInQuery(query, e);
         }
 
         return getInitialized(abstractQueryExecutor, query, parameters);

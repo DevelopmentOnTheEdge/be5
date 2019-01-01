@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
+import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.metadata.model.JavaOperation;
@@ -31,6 +32,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static com.developmentontheedge.be5.metadata.MetadataUtils.getCompiledGroovyClassName;
+import static com.developmentontheedge.be5.metadata.serialization.ModuleLoader2.getDevFileExists;
 
 
 public class OperationExecutorImpl implements OperationExecutor
@@ -198,52 +202,10 @@ public class OperationExecutorImpl implements OperationExecutor
         for (com.developmentontheedge.be5.metadata.model.OperationExtender
                 operationExtenderModel : operationExtenderModels)
         {
-            OperationExtender operationExtender;
-
-            if (operationExtenderModel.getClass() == GroovyOperationExtender.class)
-            {
-                GroovyOperationExtender groovyExtender = (GroovyOperationExtender) operationExtenderModel;
-                try
-                {
-                    Class aClass = groovyRegister.getClass("groovyExtender-" + groovyExtender.getFileName(),
-                            groovyExtender.getCode(), groovyExtender.getFileName());
-                    if (aClass != null)
-                    {
-                        operationExtender = (OperationExtender) aClass.newInstance();
-                    }
-                    else
-                    {
-                        throw Be5Exception.internalInOperationExtender(groovyExtender,
-                                new RuntimeException("Class " + groovyExtender.getCode() + " is null."));
-                    }
-                }
-                catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
-                {
-                    throw new UnsupportedOperationException("Groovy feature has been excluded", e);
-                }
-                catch (Throwable e)
-                {
-                    throw Be5Exception.internalInOperationExtender(groovyExtender, e);
-                }
-            }
-            else
-            {
-                try
-                {
-                    operationExtender =
-                            (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
-                }
-                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                {
-                    throw Be5Exception.internalInOperationExtender(operationExtenderModel, e);
-                }
-            }
-
+            OperationExtender operationExtender = getOperationExtenderInstance(operationExtenderModel);
             injector.injectMembers(operationExtender);
-
             operationExtenders.add(operationExtender);
         }
-
         return operationExtenders;
     }
 
@@ -300,59 +262,108 @@ public class OperationExecutorImpl implements OperationExecutor
                             Map<String, Object> operationParams)
     {
         OperationContext operationContext = getOperationContext(operationInfo, queryName, operationParams);
-
         return create(operationInfo, operationContext);
     }
 
     @Override
     public Operation create(OperationInfo operationInfo, OperationContext operationContext)
     {
-        Operation operation;
-
-        if (operationInfo.getModel().getClass() == GroovyOperation.class)
-        {
-            try
-            {
-                Class aClass = groovyOperationLoader.get((GroovyOperation) operationInfo.getModel());
-                if (aClass != null)
-                {
-                    operation = (Operation) aClass.newInstance();
-                }
-                else
-                {
-                    throw Be5Exception.internalInOperation(operationInfo.getModel(),
-                            new Error("Class " + operationInfo.getCode() + " is null."));
-                }
-            }
-            catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
-            {
-                throw new UnsupportedOperationException("Groovy feature has been excluded", e);
-            }
-            catch (Throwable e)
-            {
-                throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
-            }
-        }
-        else if (operationInfo.getModel().getClass() == JavaOperation.class)
-        {
-            try
-            {
-                operation = (Operation) Class.forName(operationInfo.getCode()).newInstance();
-            }
-            catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-            {
-                throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
-            }
-        }
-        else
-        {
-            throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
-        }
-
+        Operation operation = getOperationInstance(operationInfo);
         injector.injectMembers(operation);
         operation.initialize(operationInfo, operationContext, OperationResult.create());
-
         return operation;
     }
 
+    private Operation getOperationInstance(OperationInfo operationInfo)
+    {
+        try
+        {
+            if (operationInfo.getModel().getClass() == GroovyOperation.class)
+            {
+                GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
+                if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
+                {
+                    String className = getCompiledGroovyClassName(groovyOperation.getFileName());
+                    return (Operation) Class.forName(className).newInstance();
+                }
+                else
+                {
+                    try
+                    {
+                        Class aClass = groovyOperationLoader.get(groovyOperation);
+                        if (aClass != null)
+                        {
+                            return (Operation) aClass.newInstance();
+                        }
+                        else
+                        {
+                            throw new RuntimeException("Class " + operationInfo.getCode() + " is null.");
+                        }
+                    }
+                    catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                    {
+                        throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                    }
+                }
+            }
+            else if (operationInfo.getModel().getClass() == JavaOperation.class)
+            {
+                return (Operation) Class.forName(operationInfo.getCode()).newInstance();
+            }
+            else
+            {
+                throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
+            }
+        }
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+        {
+            throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
+        }
+    }
+
+    private OperationExtender getOperationExtenderInstance(
+            com.developmentontheedge.be5.metadata.model.OperationExtender operationExtenderModel)
+    {
+        try
+        {
+            if (operationExtenderModel.getClass() == GroovyOperationExtender.class)
+            {
+                GroovyOperationExtender groovyExtender = (GroovyOperationExtender) operationExtenderModel;
+                if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
+                {
+                    String className = getCompiledGroovyClassName(groovyExtender.getFileName());
+                    return (OperationExtender) Class.forName(className).newInstance();
+                }
+                else
+                {
+                    try
+                    {
+                        Class aClass = groovyRegister.getClass("groovyExtender-" + groovyExtender.getFileName(),
+                                groovyExtender.getCode(), groovyExtender.getFileName());
+                        if (aClass != null)
+                        {
+                            return (OperationExtender) aClass.newInstance();
+                        }
+                        else
+                        {
+                            throw Be5Exception.internalInOperationExtender(groovyExtender,
+                                    new Exception("Class " + groovyExtender.getCode() + " is null."));
+                        }
+                    }
+                    catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
+                    {
+                        throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                    }
+                }
+            }
+            else
+            {
+                return (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
+            }
+        }
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+        {
+            throw Be5Exception.internalInOperationExtender(operationExtenderModel, e);
+        }
+    }
 }
