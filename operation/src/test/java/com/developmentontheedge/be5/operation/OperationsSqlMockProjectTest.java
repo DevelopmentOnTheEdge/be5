@@ -1,13 +1,10 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -54,7 +51,6 @@ public abstract class OperationsSqlMockProjectTest extends OperationTestUtils
         protected void configure()
         {
             install(new BaseDbMockTestModule());
-            bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
         }
     }
 //

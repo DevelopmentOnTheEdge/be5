@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.servlet;
 
+import com.developmentontheedge.be5.base.security.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
@@ -28,7 +29,6 @@ public class TemplateFilter extends FilterSupport
 
     private final HtmlMetaTags htmlMetaTags;
     private final UserHelper userHelper;
-    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public TemplateFilter(UserHelper userHelper, ProjectProvider projectProvider,
@@ -36,7 +36,6 @@ public class TemplateFilter extends FilterSupport
     {
         this.userHelper = userHelper;
         this.htmlMetaTags = htmlMetaTags;
-        this.userInfoProvider = userInfoProvider;
 
         projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
     }
@@ -59,7 +58,7 @@ public class TemplateFilter extends FilterSupport
     @Override
     public void filter(Request req, Response res, FilterChain chain) throws IOException, ServletException
     {
-        if (userInfoProvider.get() == null)
+        if (UserInfoHolder.getLoggedUser() == null)
         {
             userHelper.initGuest();
         }

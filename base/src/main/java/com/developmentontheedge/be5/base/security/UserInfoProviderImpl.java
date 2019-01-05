@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.database.test;
+package com.developmentontheedge.be5.base.security;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
@@ -7,19 +7,13 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import java.util.List;
 import java.util.Locale;
 
-public class StaticUserInfoProvider implements UserInfoProvider
-{
-    public static UserInfo userInfo;
 
+public class UserInfoProviderImpl implements UserInfoProvider
+{
     @Override
     public UserInfo get()
     {
-        return userInfo;
-    }
-
-    public static void setUserInfo(UserInfo newUserInfo)
-    {
-        userInfo = newUserInfo;
+        return UserInfoHolder.getLoggedUser();
     }
 
     @Override

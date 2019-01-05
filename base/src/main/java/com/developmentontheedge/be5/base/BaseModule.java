@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.base.security.UserInfoHolder;
+import com.developmentontheedge.be5.base.security.UserInfoProviderImpl;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
@@ -19,6 +21,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
 
@@ -38,11 +41,16 @@ public class BaseModule extends AbstractModule
         bind(ProjectProvider.class).to(ProjectProviderImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
         bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);
-
         bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
+        bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
 
-        bind(UserInfo.class).toProvider(UserInfoProvider.class);
         bind(Project.class).toProvider(ProjectProvider.class);
+    }
+
+    @Provides
+    UserInfo provideUserInfo()
+    {
+        return UserInfoHolder.getLoggedUser();
     }
 }

@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.BaseTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
@@ -40,7 +39,6 @@ public abstract class QueryBe5ProjectDBTest extends BaseTest
             install(new DatabaseModule());
             bind(QuerySession.class).to(QuerySessionForTest.class);
             bind(CoreUtils.class).to(CoreUtilsForTest.class);
-            bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
         }
     }
 

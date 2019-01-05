@@ -3,13 +3,16 @@ package com.developmentontheedge.be5.base.services;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.metadata.RoleType;
 
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Locale;
 
-
-public interface UserInfoProvider extends Provider<UserInfo>
+/**
+ * TODO move to com.developmentontheedge.be5.base.security package
+ */
+public interface UserInfoProvider
 {
+    UserInfo get();
+
     String getLanguage();
 
     Locale getLocale();

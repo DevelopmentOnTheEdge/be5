@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.security.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
@@ -62,13 +63,13 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
     @Test
     public void skip() throws IOException, ServletException
     {
-        session.set(SessionConstants.USER_INFO, null);
+        UserInfoHolder.setLoggedUser(null);
 
         when(req.getContextPath()).thenReturn("/");
 
         templateFilter.filter(req, res, filterChain);
 
-        assertEquals(RoleType.ROLE_GUEST, ((UserInfo) session.get(SessionConstants.USER_INFO)).getUserName());
+        assertEquals(RoleType.ROLE_GUEST, UserInfoHolder.getLoggedUser().getUserName());
         verify(filterChain, only()).doFilter(any(), any());
     }
 

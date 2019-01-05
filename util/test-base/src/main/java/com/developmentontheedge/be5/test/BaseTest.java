@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.test;
 import ch.qos.logback.classic.Level;
 import com.developmentontheedge.be5.base.Bootstrap;
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.security.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -24,7 +25,6 @@ import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -70,8 +70,9 @@ public abstract class BaseTest extends BaseTestUtils implements InjectedTestUtil
 
     protected void setStaticUserInfo(String... roles)
     {
-        StaticUserInfoProvider.userInfo = new UserInfo(TEST_USER, Arrays.asList(roles), Arrays.asList(roles));
-        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1");
+        UserInfo userInfo = new UserInfo(TEST_USER, Arrays.asList(roles), Arrays.asList(roles));
+        userInfo.setRemoteAddr("192.168.0.1");
+        UserInfoHolder.setLoggedUser(userInfo);
     }
 
     protected static Injector initInjector(Module... modules)

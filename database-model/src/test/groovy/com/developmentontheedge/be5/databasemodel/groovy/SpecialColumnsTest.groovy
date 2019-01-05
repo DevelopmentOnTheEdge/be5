@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception
+import com.developmentontheedge.be5.base.security.UserInfoHolder
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider
 import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.Before
 import org.junit.Rule
@@ -33,7 +32,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     void beforeClass()
     {
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
-        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1")
+        UserInfoHolder.getLoggedUser().setRemoteAddr("192.168.0.1")
     }
 
     @Before
@@ -152,7 +151,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
 
         Thread.sleep(1)
 
-        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.2")
+        UserInfoHolder.getLoggedUser().setRemoteAddr("192.168.0.2")
 
         table[id] = [
                 "name": "editName",

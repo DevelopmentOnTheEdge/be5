@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.security.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -69,6 +70,7 @@ public class UserHelper
         session.set("remoteAddr", remoteAddr);
         session.set(SessionConstants.USER_INFO, ui);
         session.set(SessionConstants.CURRENT_USER, ui.getUserName());
+        UserInfoHolder.setLoggedUser(ui);
 
         return ui;
     }
@@ -76,9 +78,6 @@ public class UserHelper
     public void logout()
     {
         Session session = requestProvider.get().getSession();
-        UserInfo userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
-        String username = userInfo.getUserName();
-
         session.invalidate();
         initGuest();
     }
