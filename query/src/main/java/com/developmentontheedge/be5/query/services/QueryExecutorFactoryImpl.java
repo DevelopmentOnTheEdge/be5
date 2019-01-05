@@ -76,7 +76,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
                     abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(query.getQuery()).newInstance();
                     break;
                 case GROOVY:
-                    if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
+                    if (!getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                     {
                         String className = getCompiledGroovyClassName(query.getFileName());
                         abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(className).newInstance();

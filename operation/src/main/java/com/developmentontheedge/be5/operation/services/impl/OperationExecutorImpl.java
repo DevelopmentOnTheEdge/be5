@@ -281,7 +281,7 @@ public class OperationExecutorImpl implements OperationExecutor
             if (operationInfo.getModel().getClass() == GroovyOperation.class)
             {
                 GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
-                if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
+                if (!getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                 {
                     String className = getCompiledGroovyClassName(groovyOperation.getFileName());
                     return (Operation) Class.forName(className).newInstance();
@@ -329,7 +329,7 @@ public class OperationExecutorImpl implements OperationExecutor
             if (operationExtenderModel.getClass() == GroovyOperationExtender.class)
             {
                 GroovyOperationExtender groovyExtender = (GroovyOperationExtender) operationExtenderModel;
-                if (getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
+                if (!getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                 {
                     String className = getCompiledGroovyClassName(groovyExtender.getFileName());
                     return (OperationExtender) Class.forName(className).newInstance();
