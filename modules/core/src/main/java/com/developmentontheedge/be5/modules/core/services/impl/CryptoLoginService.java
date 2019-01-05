@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;

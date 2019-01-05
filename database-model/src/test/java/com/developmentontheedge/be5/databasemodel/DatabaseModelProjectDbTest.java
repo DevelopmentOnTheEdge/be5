@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.databasemodel;
 
 import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.BaseTest;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
 import javax.inject.Inject;

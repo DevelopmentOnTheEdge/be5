@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.base.security;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 
 import java.util.List;

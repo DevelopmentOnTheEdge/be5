@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.security;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -6,9 +6,6 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * TODO move to com.developmentontheedge.be5.base.security package
- */
 public interface UserInfoProvider
 {
     UserInfo get();

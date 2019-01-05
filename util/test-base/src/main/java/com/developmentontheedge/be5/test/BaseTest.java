@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
