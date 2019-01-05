@@ -27,6 +27,7 @@ public class EmbeddedJetty
     {
         LogConfigurator.configure();
         checkDescriptor();
+        Thread.currentThread().setName("main");
 
         try
         {
