@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query;
 
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Map;
 
 public interface QueryExecutor
 {
+    void initialize(Query query, Map<String, Object> parameters);
+
     Map<String, Object> getParameters();
 
     int getOrderColumn();

@@ -1,9 +1,6 @@
 package com.developmentontheedge.be5.query.support;
 
-import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
-
-import java.util.Map;
 
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
@@ -13,8 +10,6 @@ import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 
 public abstract class AbstractQueryExecutor implements QueryExecutor
 {
-    public abstract QueryExecutor initialize(Query query, Map<String, Object> parameters);
-
     @Override
     public int getOrderColumn()
     {

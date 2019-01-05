@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.impl.Be5SqlQueryExecutor;
-import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -37,15 +36,26 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     @Override
     public QueryExecutor get(Query query, Map<String, ?> parameters)
     {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> params = (Map<String, Object>) parameters;
+
+        QueryExecutor queryExecutor = getQueryExecutor(query);
+        injector.injectMembers(queryExecutor);
+        queryExecutor.initialize(query, params);
+        return queryExecutor;
+    }
+
+    private QueryExecutor getQueryExecutor(Query query)
+    {
         try
         {
             if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
             {
-                return getSqlQueryExecutor(query, parameters);
+                return new Be5SqlQueryExecutor();
             }
             else if (query.getType() == QueryType.JAVA || query.getType() == QueryType.GROOVY)
             {
-                return getQueryExecutor(query, parameters);
+                return getQueryExecutorInstance(query);
             }
             else
             {
@@ -58,28 +68,19 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         }
     }
 
-    private QueryExecutor getSqlQueryExecutor(Query query, Map<String, ?> parameters)
+    private QueryExecutor getQueryExecutorInstance(Query query)
     {
-        Be5SqlQueryExecutor be5SqlQueryExecutor = new Be5SqlQueryExecutor();
-        return getInitialized(be5SqlQueryExecutor, query, parameters);
-    }
-
-    private QueryExecutor getQueryExecutor(Query query, Map<String, ?> parameters)
-    {
-        AbstractQueryExecutor abstractQueryExecutor;
-
         try
         {
             switch (query.getType())
             {
                 case JAVA:
-                    abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(query.getQuery()).newInstance();
-                    break;
+                    return (QueryExecutor) Class.forName(query.getQuery()).newInstance();
                 case GROOVY:
                     if (!getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                     {
                         String className = getCompiledGroovyClassName(query.getFileName());
-                        abstractQueryExecutor = (AbstractQueryExecutor) Class.forName(className).newInstance();
+                        return (QueryExecutor) Class.forName(className).newInstance();
                     }
                     else
                     {
@@ -90,8 +91,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 
                             if (aClass != null)
                             {
-                                abstractQueryExecutor = (AbstractQueryExecutor) aClass.newInstance();
-                                break;
+                                return (QueryExecutor) aClass.newInstance();
                             }
                             else
                             {
@@ -103,7 +103,6 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
                             throw new UnsupportedOperationException("Groovy feature has been excluded", e);
                         }
                     }
-                    break;
                 default:
                     throw Be5Exception.internal("Not support operation type: " + query.getType());
             }
@@ -112,19 +111,5 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
         {
             throw Be5Exception.internalInQuery(query, e);
         }
-
-        return getInitialized(abstractQueryExecutor, query, parameters);
-    }
-
-    private QueryExecutor getInitialized(AbstractQueryExecutor abstractQueryExecutor,
-                                         Query query, Map<String, ?> parameters)
-    {
-        injector.injectMembers(abstractQueryExecutor);
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> params = (Map<String, Object>) parameters;
-        abstractQueryExecutor.initialize(query, params);
-
-        return abstractQueryExecutor;
     }
 }

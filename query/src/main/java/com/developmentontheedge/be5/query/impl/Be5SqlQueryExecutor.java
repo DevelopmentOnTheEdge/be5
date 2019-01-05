@@ -66,7 +66,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         this.querySqlGenerator = querySqlGenerator;
     }
 
-    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
+    public void initialize(Query query, Map<String, Object> parameters)
     {
         this.query = Objects.requireNonNull(query);
         this.parameters = Objects.requireNonNull(parameters);
@@ -77,7 +77,6 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
                 .filter(r -> r == 1 || r == 2).count() > 0;
-        return this;
     }
 
     @Override
