@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
@@ -46,10 +46,10 @@ public class UserInfoController extends JsonApiController
         List<String> roles = Splitter.on(',').splitToList(req.getOrEmpty("roles"));
 
         List<String> availableCurrentRoles = loginService.getAvailableCurrentRoles(roles,
-                userInfoProvider.get().getAvailableRoles());
+                userInfoProvider.getAvailableRoles());
 
         loginService.setCurrentRoles(availableCurrentRoles);
 
-        return userInfoProvider.get().getCurrentRoles();
+        return userInfoProvider.getCurrentRoles();
     }
 }

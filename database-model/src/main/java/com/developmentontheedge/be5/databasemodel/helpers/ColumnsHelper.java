@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.google.common.collect.ImmutableList;
@@ -76,13 +76,13 @@ public class ColumnsHelper
         if (CREATION_DATE_COLUMN_NAME.equals(propertyName)) return currentTime;
         if (MODIFICATION_DATE_COLUMN_NAME.equals(propertyName)) return currentTime;
 
-        if (WHO_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getUserName();
-        if (WHO_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getUserName();
+        if (WHO_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.getUserName();
+        if (WHO_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.getUserName();
 
         if (IS_DELETED_COLUMN_NAME.equals(propertyName)) return "no";
 
-        if (IP_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getRemoteAddr();
-        if (IP_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.get().getRemoteAddr();
+        if (IP_INSERTED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.getRemoteAddr();
+        if (IP_MODIFIED_COLUMN_NAME.equals(propertyName)) return userInfoProvider.getRemoteAddr();
 
         throw Be5Exception.internal("Not support: " + propertyName);
     }
@@ -96,11 +96,11 @@ public class ColumnsHelper
         {
             values.put(IS_DELETED_COLUMN_NAME, "yes");
             if (columns.containsKey(WHO_MODIFIED_COLUMN_NAME))
-                values.put(WHO_MODIFIED_COLUMN_NAME, userInfoProvider.get().getUserName());
+                values.put(WHO_MODIFIED_COLUMN_NAME, userInfoProvider.getUserName());
             if (columns.containsKey(MODIFICATION_DATE_COLUMN_NAME))
                 values.put(MODIFICATION_DATE_COLUMN_NAME, currentTime);
             if (columns.containsKey(IP_MODIFIED_COLUMN_NAME))
-                values.put(IP_MODIFIED_COLUMN_NAME, userInfoProvider.get().getRemoteAddr());
+                values.put(IP_MODIFIED_COLUMN_NAME, userInfoProvider.getRemoteAddr());
         }
         return values;
     }

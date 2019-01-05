@@ -35,7 +35,7 @@ public class UserInfoTest extends ServerBe5ProjectTest
     public void testGuestLocale()
     {
         initGuest();
-        assertEquals("ru", userInfoProvider.get().getLanguage());
+        assertEquals("ru", userInfoProvider.getLanguage());
     }
 
     @Test

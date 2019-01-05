@@ -138,7 +138,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
                 ImmutableMap.of("roles", ROLE_ADMINISTRATOR + "," + ROLE_SYSTEM_DEVELOPER));
         component.generate(request);
 
-        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
+        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.getCurrentRoles());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
                 ImmutableMap.of("roles", ""));
         component.generate(request);
 
-        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.get().getCurrentRoles());
+        assertEquals(Collections.singletonList(ROLE_ADMINISTRATOR), userInfoProvider.getCurrentRoles());
     }
 
 }

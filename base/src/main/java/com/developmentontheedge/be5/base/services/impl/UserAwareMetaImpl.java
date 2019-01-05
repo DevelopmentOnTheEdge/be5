@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.lifecycle.Start;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -134,7 +134,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     @Override
     public QuerySettings getQuerySettings(Query query)
     {
-        List<String> currentRoles = userInfoProvider.get().getCurrentRoles();
+        List<String> currentRoles = userInfoProvider.getCurrentRoles();
         for (QuerySettings settings : query.getQuerySettings())
         {
             Set<String> roles = settings.getRoles().getFinalRoles();
@@ -153,7 +153,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Operation getOperation(String entityName, String operationName)
     {
         Operation operation = meta.getOperation(entityName, operationName);
-        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.getCurrentRoles()))
             throw Be5Exception.accessDeniedToOperation(entityName, operationName);
 
         return operation;
@@ -163,14 +163,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public boolean hasAccessToOperation(String entityName, String queryName, String operationName)
     {
         Operation operation = meta.getOperation(entityName, queryName, operationName);
-        return meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles());
+        return meta.hasAccess(operation.getRoles(), userInfoProvider.getCurrentRoles());
     }
 
     @Override
     public Operation getOperation(String entityName, String queryName, String operationName)
     {
         Operation operation = meta.getOperation(entityName, queryName, operationName);
-        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.getCurrentRoles()))
             throw Be5Exception.accessDeniedToOperation(entityName, operationName);
 
         return operation;
@@ -180,7 +180,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Query getQuery(String entityName, String queryName)
     {
         Query query = meta.getQuery(entityName, queryName);
-        if (!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
+        if (!meta.hasAccess(query.getRoles(), userInfoProvider.getCurrentRoles()))
             throw Be5Exception.accessDeniedToQuery(entityName, queryName);
         return query;
     }
@@ -215,7 +215,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
 
     private String getLanguage()
     {
-        return meta.getLocale(userInfoProvider.get().getLocale()).getLanguage();
+        return meta.getLocale(userInfoProvider.getLocale()).getLanguage();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
@@ -42,7 +42,7 @@ public class QuerySqlGenerator
 
     public AstStart getSql(Query query, Map<String, ?> parameters)
     {
-        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.getLoggedUser(), meta);
         return getSql(query, queryContext);
     }
 

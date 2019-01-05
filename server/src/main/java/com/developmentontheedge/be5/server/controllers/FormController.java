@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -52,7 +52,7 @@ public class FormController extends JsonApiModelController
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
         //todo move to filter
-        if (stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
+        if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
         {
             userHelper.initGuest();
         }

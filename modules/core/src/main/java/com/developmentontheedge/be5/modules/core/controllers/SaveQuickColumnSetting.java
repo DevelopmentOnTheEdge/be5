@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 
@@ -26,7 +26,7 @@ public class SaveQuickColumnSetting extends JsonApiController
     @Override
     protected Object generate(Request req, String action)
     {
-        UserInfo userInfo = userInfoProvider.get();
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
         String table_name = req.get("table_name");
         String query_name = req.get("query_name");
         String column_name = req.get("column_name");

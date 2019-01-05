@@ -1,13 +1,10 @@
 package com.developmentontheedge.be5.databasemodel;
 
 import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.BaseTest;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
 import javax.inject.Inject;
@@ -34,7 +31,6 @@ public abstract class DatabaseModelSqlMockProjectTest extends BaseTest
         protected void configure()
         {
             install(new BaseDbMockTestModule());
-            bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
         }
     }
 }

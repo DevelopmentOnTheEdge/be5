@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.RoleHelper;
@@ -62,8 +62,8 @@ public class LoginServiceImpl implements LoginService
     public void setCurrentRoles(List<String> roles)
     {
         Objects.requireNonNull(roles.get(0), "There must be at least one role.");
-        roleHelper.updateCurrentRoles(userInfoProvider.get().getUserName(), roles);
-        userInfoProvider.get().setCurrentRoles(roles);
+        roleHelper.updateCurrentRoles(userInfoProvider.getUserName(), roles);
+        userInfoProvider.getLoggedUser().setCurrentRoles(roles);
     }
 
     @Override
