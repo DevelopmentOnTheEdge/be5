@@ -128,7 +128,7 @@ public class QueriesService
         if (query.isCacheable())
         {
             return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() +
-                            parameters.toString() + userInfoProvider.get().getLanguage(),
+                            parameters.toString() + userInfoProvider.getLanguage(),
                     k -> getTagsFromCustomSelectionViewExecute(query, parameters)
             );
         }
@@ -232,7 +232,7 @@ public class QueriesService
     public String[][] getTagsFromEnum(ColumnDef columnDef)
     {
         String tableName = columnDef.getEntity().getName();
-        String key = tableName + "getTagsFromEnum" + columnDef.getName() + userInfoProvider.get().getLanguage();
+        String key = tableName + "getTagsFromEnum" + columnDef.getName() + userInfoProvider.getLanguage();
         return tagsCache.get(key, k ->
         {
             String[] enumValues = columnDef.getType().getEnumValues();
@@ -250,7 +250,7 @@ public class QueriesService
 
     public String[][] getTagsYesNo()
     {
-        return tagsCache.get("getTagsYesNo" + userInfoProvider.get().getLanguage(), k ->
+        return tagsCache.get("getTagsYesNo" + userInfoProvider.getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{YES, userAwareMeta.getColumnTitle("query.jsp", "page", YES)};
@@ -261,7 +261,7 @@ public class QueriesService
 
     public String[][] getTagsNoYes()
     {
-        return tagsCache.get("getTagsNoYes" + userInfoProvider.get().getLanguage(), k ->
+        return tagsCache.get("getTagsNoYes" + userInfoProvider.getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{NO, userAwareMeta.getColumnTitle("query.jsp", "page", NO)};

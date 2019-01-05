@@ -28,7 +28,7 @@ public class UserInfoModelServiceImpl implements UserInfoModelService
     @Override
     public UserInfoModel getUserInfoModel()
     {
-        UserInfo userInfo = userInfoProvider.get();
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
         return new UserInfoModel(
                 !RoleType.ROLE_GUEST.equals(userInfo.getUserName()),
                 userInfo.getUserName(),

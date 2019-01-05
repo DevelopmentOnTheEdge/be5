@@ -71,7 +71,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         this.query = Objects.requireNonNull(query);
         this.parameters = Objects.requireNonNull(parameters);
 
-        queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.getLoggedUser(), meta);
         contextApplier = new ContextApplier(queryContext);
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()

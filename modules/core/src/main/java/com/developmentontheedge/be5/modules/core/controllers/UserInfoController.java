@@ -46,10 +46,10 @@ public class UserInfoController extends JsonApiController
         List<String> roles = Splitter.on(',').splitToList(req.getOrEmpty("roles"));
 
         List<String> availableCurrentRoles = loginService.getAvailableCurrentRoles(roles,
-                userInfoProvider.get().getAvailableRoles());
+                userInfoProvider.getAvailableRoles());
 
         loginService.setCurrentRoles(availableCurrentRoles);
 
-        return userInfoProvider.get().getCurrentRoles();
+        return userInfoProvider.getCurrentRoles();
     }
 }

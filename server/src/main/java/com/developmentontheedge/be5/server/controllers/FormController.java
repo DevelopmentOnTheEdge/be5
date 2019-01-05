@@ -52,7 +52,7 @@ public class FormController extends JsonApiModelController
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
         //todo move to filter
-        if (stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
+        if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
         {
             userHelper.initGuest();
         }

@@ -42,7 +42,7 @@ public class QuerySqlGenerator
 
     public AstStart getSql(Query query, Map<String, ?> parameters)
     {
-        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        QueryContext queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.getLoggedUser(), meta);
         return getSql(query, queryContext);
     }
 

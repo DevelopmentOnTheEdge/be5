@@ -70,9 +70,9 @@ class LoginTest extends CoreBe5ProjectDbMockTest
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
 
-        assertEquals TEST_USER, userInfoProvider.get().userName
-        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.get().availableRoles
-        assertEquals Arrays.asList("Test1"), userInfoProvider.get().currentRoles
+        assertEquals TEST_USER, userInfoProvider.userName
+        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.availableRoles
+        assertEquals Arrays.asList("Test1"), userInfoProvider.currentRoles
         //assertEquals session, UserInfoHolder.getSession()
 
         def actions = (FrontendAction[]) second.getDetails()
@@ -102,7 +102,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
         executeOperation(createOperation("users", "All records", "Login", ""),
                 [user_name: TEST_USER, user_pass: testPass]).getSecond()
 
-        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.get().currentRoles
+        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.currentRoles
     }
 
     @Test

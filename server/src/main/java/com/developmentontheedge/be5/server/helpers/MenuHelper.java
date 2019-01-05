@@ -84,7 +84,7 @@ public class MenuHelper
 
     private List<RootNode> collectEntities(boolean withIds, boolean withoutInvisible, EntityType entityType)
     {
-        UserInfo userInfo = userInfoProvider.get();
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
         List<String> roles = userInfo.getCurrentRoles();
         String language = userInfo.getLanguage();
         List<RootNode> out = new ArrayList<>();

@@ -53,10 +53,10 @@ public class LoginServiceImplTest extends CoreBe5ProjectDBTest
     public void testSetCurrentRoles()
     {
         initUserWithRoles("1", "2");
-        assertEquals(Arrays.asList("1", "2"), userInfoProvider.get().getCurrentRoles());
+        assertEquals(Arrays.asList("1", "2"), userInfoProvider.getCurrentRoles());
 
         loginService.setCurrentRoles(Collections.singletonList("1"));
-        assertEquals(Collections.singletonList("1"), userInfoProvider.get().getCurrentRoles());
+        assertEquals(Collections.singletonList("1"), userInfoProvider.getCurrentRoles());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class LoginServiceImplTest extends CoreBe5ProjectDBTest
     {
         initUserWithRoles("1", "2");
         loginService.setCurrentRoles(Collections.singletonList("3"));
-        assertEquals(Collections.singletonList("3"), userInfoProvider.get().getCurrentRoles());
+        assertEquals(Collections.singletonList("3"), userInfoProvider.getCurrentRoles());
     }
 
 }

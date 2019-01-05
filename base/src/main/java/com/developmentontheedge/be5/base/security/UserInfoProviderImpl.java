@@ -10,7 +10,7 @@ import java.util.Locale;
 public class UserInfoProviderImpl implements UserInfoProvider
 {
     @Override
-    public UserInfo get()
+    public UserInfo getLoggedUser()
     {
         return UserInfoHolder.getLoggedUser();
     }
@@ -24,36 +24,36 @@ public class UserInfoProviderImpl implements UserInfoProvider
     @Override
     public Locale getLocale()
     {
-        return get().getLocale();
+        return getLoggedUser().getLocale();
     }
 
     @Override
     public String getUserName()
     {
-        return get().getUserName();
+        return getLoggedUser().getUserName();
     }
 
     @Override
     public boolean isLoggedIn()
     {
-        return !RoleType.ROLE_GUEST.equals(get().getUserName());
+        return !RoleType.ROLE_GUEST.equals(getLoggedUser().getUserName());
     }
 
     @Override
     public List<String> getAvailableRoles()
     {
-        return get().getAvailableRoles();
+        return getLoggedUser().getAvailableRoles();
     }
 
     @Override
     public List<String> getCurrentRoles()
     {
-        return get().getCurrentRoles();
+        return getLoggedUser().getCurrentRoles();
     }
 
     @Override
     public String getRemoteAddr()
     {
-        return get().getRemoteAddr();
+        return getLoggedUser().getRemoteAddr();
     }
 }

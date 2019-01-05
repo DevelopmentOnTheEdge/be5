@@ -46,7 +46,7 @@ public class DocumentOperationsPlugin implements DocumentPlugin
     private List<TableOperationPresentation> collectOperations(Query query)
     {
         List<TableOperationPresentation> operations = new ArrayList<>();
-        List<String> userRoles = userInfoProvider.get().getCurrentRoles();
+        List<String> userRoles = userInfoProvider.getCurrentRoles();
 
         for (Operation operation : getQueryOperations(query))
         {

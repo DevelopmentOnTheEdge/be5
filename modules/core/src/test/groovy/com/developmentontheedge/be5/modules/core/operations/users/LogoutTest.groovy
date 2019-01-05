@@ -20,7 +20,7 @@ class LogoutTest extends CoreBe5ProjectDbMockTest
     void logout()
     {
         def request = mock(Request.class)
-        //userInfoProvider.get().setRequest(request)
+        //userInfoProvider.setRequest(request)
 
         def session = mock(Session.class)
         when(request.getSession()).thenReturn(session)
@@ -29,8 +29,8 @@ class LogoutTest extends CoreBe5ProjectDbMockTest
 
         //verify(session).invalidate()
 
-        assertEquals(RoleType.ROLE_GUEST, userInfoProvider.get().getUserName())
-        assertEquals([RoleType.ROLE_GUEST], userInfoProvider.get().getAvailableRoles())
+        assertEquals(RoleType.ROLE_GUEST, userInfoProvider.getUserName())
+        assertEquals([RoleType.ROLE_GUEST], userInfoProvider.getAvailableRoles())
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()

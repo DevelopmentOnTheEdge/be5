@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public interface UserInfoProvider
 {
-    UserInfo get();
+    UserInfo getLoggedUser();
 
     String getLanguage();
 
@@ -31,6 +31,6 @@ public interface UserInfoProvider
 
     default boolean isAdmin()
     {
-        return get().isAdmin();
+        return getLoggedUser().isAdmin();
     }
 }
