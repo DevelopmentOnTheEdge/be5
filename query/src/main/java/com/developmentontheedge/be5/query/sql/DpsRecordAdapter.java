@@ -75,7 +75,7 @@ class DpsRecordAdapter
                 {
                     String refName = columnLabel.substring(1);
                     int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
-                            .findAny().orElseThrow(() -> Be5Exception.internal("no previous column with name " + refName));
+                            .findAny().orElseThrow(() -> new RuntimeException("no previous column with name " + refName));
                     DynamicProperty dp = new DynamicProperty(columnLabel, String.class);
                     dp.setAttribute(COLUMN_REF_IDX_PROPERTY, refId);
                     schema[i - 1] = dp;
