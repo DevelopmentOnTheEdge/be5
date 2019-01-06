@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DbServiceImpl implements DbService
@@ -179,12 +178,10 @@ public class DbServiceImpl implements DbService
         }
         catch (RuntimeException e)
         {
-            log.log(Level.SEVERE, "", e);
             throw e;
         }
         catch (Throwable e)
         {
-            log.log(Level.SEVERE, "", e);
             throw new RuntimeException(e);
         }
         finally
