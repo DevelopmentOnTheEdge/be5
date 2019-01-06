@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.operation.model.Operation;
@@ -157,7 +157,8 @@ public class FormGeneratorImpl implements FormGenerator
     private ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
         log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
-        return errorModelHelper.getErrorModel(Be5Exception.internal(e),
+        Be5Exception be5Exception = e.getClass() == Be5Exception.class ? (Be5Exception) e : Be5Exception.internal(e);
+        return errorModelHelper.getErrorModel(be5Exception,
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
