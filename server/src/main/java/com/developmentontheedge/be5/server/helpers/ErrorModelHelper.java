@@ -38,14 +38,7 @@ public class ErrorModelHelper
         if (userInfoProvider.isSystemDeveloper())
         {
             StringWriter sw = new StringWriter();
-            if (e instanceof Be5Exception && e.getCause() != null)
-            {
-                e.getCause().printStackTrace(new PrintWriter(sw));
-            }
-            else
-            {
-                e.printStackTrace(new PrintWriter(sw));
-            }
+            e.printStackTrace(new PrintWriter(sw));
             return sw.toString();
         }
         else
