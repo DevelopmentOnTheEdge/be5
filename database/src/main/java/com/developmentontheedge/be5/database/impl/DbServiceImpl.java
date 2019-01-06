@@ -61,25 +61,29 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params)
     {
-        return execute(conn -> query(conn, sql, rsh, params));
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, rsh, params));
     }
 
     @Override
     public <T> T select(String sql, ResultSetParser<T> parser, Object... params)
     {
-        return execute(conn -> query(conn, sql, rs -> rs.next() ? parser.parse(rs) : null, params));
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, rs -> rs.next() ? parser.parse(rs) : null, params));
     }
 
     @Override
     public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
-        return execute(conn -> query(conn, sql, rs -> listWrapper(rs, parser), params));
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, rs -> listWrapper(rs, parser), params));
     }
 
     @Override
     public <T> List<T> list(AstStart astStart, ResultSetParser<T> parser, Object... params)
     {
-        return execute(conn -> query(conn, astStart, rs -> listWrapper(rs, parser), params));
+        String finalSql = format(astStart);
+        return execute(conn -> query(conn, finalSql, rs -> listWrapper(rs, parser), params));
     }
 
     private <T> List<T> listWrapper(ResultSet rs, ResultSetParser<T> parser) throws SQLException
@@ -95,13 +99,15 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> T one(String sql, Object... params)
     {
-        return execute(conn -> query(conn, sql, new ScalarHandler<>(), params));
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, new ScalarHandler<>(), params));
     }
 
     @Override
     public int update(String sql, Object... params)
     {
-        return execute(conn -> update(conn, sql, params));
+        String finalSql = format(sql);
+        return execute(conn -> update(conn, finalSql, params));
     }
 
     @Override
@@ -113,7 +119,8 @@ public class DbServiceImpl implements DbService
     @Override
     public <T> T insert(String sql, Object... params)
     {
-        return execute(conn -> insert(conn, sql, params));
+        String finalSql = format(sql);
+        return execute(conn -> insert(conn, finalSql, params));
     }
 
     @Override
@@ -135,21 +142,12 @@ public class DbServiceImpl implements DbService
 
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
     {
-        sql = format(sql);
-        log.fine(sql + Arrays.toString(params));
-        return queryRunner.query(conn, sql, rsh, params);
-    }
-
-    private <T> T query(Connection conn, AstStart astStart, ResultSetHandler<T> rsh, Object... params) throws SQLException
-    {
-        String sql = format(astStart);
         log.fine(sql + Arrays.toString(params));
         return queryRunner.query(conn, sql, rsh, params);
     }
 
     private int update(Connection conn, String sql, Object... params) throws SQLException
     {
-        sql = format(sql);
         log.fine(sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);
     }
@@ -162,7 +160,6 @@ public class DbServiceImpl implements DbService
 
     private <T> T insert(Connection conn, String sql, Object... params) throws SQLException
     {
-        sql = format(sql);
         log.fine(sql + Arrays.toString(params));
         return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
     }
@@ -175,10 +172,6 @@ public class DbServiceImpl implements DbService
         {
             conn = connectionService.getConnection();
             return executor.run(conn);
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
         }
         catch (Throwable e)
         {
