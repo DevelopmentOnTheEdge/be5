@@ -165,9 +165,9 @@ public class QueryBuilderController extends JsonApiModelController
         }
         else
         {
-            return new ArrayList<String>() {{
-                add("select * from users");
-            }};
+            List<String> newHistory = new ArrayList<>();
+            newHistory.add("select * from users");
+            return newHistory;
         }
     }
 
