@@ -122,7 +122,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (RuntimeException e)
         {
-            log.log(Level.INFO, "error on execute in validate parameters", e);
+            log.log(Level.FINE, "error on execute in validate parameters", e);
             operation.setResult(OperationResult.error(e.getMessage(), e));
             return parameters;
         }
@@ -148,7 +148,7 @@ public class OperationExecutorImpl implements OperationExecutor
             catch (RuntimeException e)
             {
                 //to do: change message - error state in parameter
-                log.log(Level.INFO, "error on execute in parameters", e);
+                log.log(Level.FINE, "error on execute in parameters", e);
                 operation.setResult(OperationResult.error(e.getMessage(), e));
                 return parameters;
             }
