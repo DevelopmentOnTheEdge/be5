@@ -25,6 +25,6 @@ public interface ConnectionService
 
     default RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
     {
-        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException("rethrow after rollback", e);
+        return e instanceof RuntimeException ? (RuntimeException) e : new RuntimeSqlException("rethrow after rollback", e);
     }
 }

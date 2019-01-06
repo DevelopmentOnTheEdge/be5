@@ -5,10 +5,11 @@ import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.RuntimeSqlException;
+import com.developmentontheedge.be5.database.SqlExecutor;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
-import com.developmentontheedge.be5.database.SqlExecutor;
 import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.format.dbms.Context;
 import com.developmentontheedge.sql.format.dbms.DbmsTransformer;
@@ -176,7 +177,7 @@ public class DbServiceImpl implements DbService
         }
         catch (SQLException e)
         {
-            throw new RuntimeException("Error on run query", e);
+            throw new RuntimeSqlException("Error on run query", e);
         }
         finally
         {

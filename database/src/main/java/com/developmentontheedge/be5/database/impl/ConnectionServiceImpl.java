@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
+import com.developmentontheedge.be5.database.RuntimeSqlException;
 import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 
@@ -61,7 +62,7 @@ public class ConnectionServiceImpl implements ConnectionService
             }
             catch (SQLException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeSqlException(e);
             }
             finally
             {
@@ -84,7 +85,7 @@ public class ConnectionServiceImpl implements ConnectionService
         catch (SQLException e)
         {
             log.log(Level.SEVERE, "Unable to rollback transaction", e);
-            throw new RuntimeException(e);
+            throw new RuntimeSqlException(e);
         }
         finally
         {
@@ -103,7 +104,7 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         catch (SQLException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeSqlException(e);
         }
     }
 
@@ -185,7 +186,7 @@ public class ConnectionServiceImpl implements ConnectionService
             }
             catch (SQLException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeSqlException(e);
             }
         }
     }
