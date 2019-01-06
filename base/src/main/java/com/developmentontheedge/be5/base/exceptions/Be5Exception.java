@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -176,6 +177,17 @@ public class Be5Exception extends RuntimeException
                 out.append(getFullStackTraceLine(stackTrace[i])).append("\n");
             }
         }
+        e = err;
+        do
+        {
+            if (e instanceof SQLException)
+            {
+                out.append(getThrowableMessage(e));
+                break;
+            }
+            e = e.getCause();
+        }
+        while (e != null);
 
         return HtmlUtils.escapeHTML(out.toString());
     }
