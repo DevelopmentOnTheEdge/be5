@@ -4,21 +4,28 @@ _system_:
   order: '91'
   primaryKey: _dummy_
   queries:
+  - System:
+      type: static
+      roles: SystemDeveloper
+      value: systemCard
   - Cache:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       operations:
       - Clear all caches
       code: com.developmentontheedge.be5.modules.core.queries.system.CacheTable
   - Daemons:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       operations:
       - ExecuteInOperation
       code: com.developmentontheedge.be5.modules.core.queries.system.DaemonsTable
   - Entities:
       type: Java
-      roles: [SystemDeveloper, Administrator]
+      roles: SystemDeveloper
+      invisible: true
       operations:
       - Reload project
       code: com.developmentontheedge.be5.modules.core.queries.system.meta.EntitiesTable
@@ -35,28 +42,34 @@ _system_:
   - Session variables:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       operations:
       - SessionVariablesEdit
       code: com.developmentontheedge.be5.modules.core.queries.system.SessionVariablesTable
   - Threads:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       code: com.developmentontheedge.be5.modules.core.queries.system.ThreadsTable
   - System properties:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       code: com.developmentontheedge.be5.modules.core.queries.system.SystemPropertiesTable
   - System settings:
       type: static
       roles: SystemDeveloper
+      invisible: true
       value: systemSettings.redir?_qn_=All+records
   - Http Headers:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       code: com.developmentontheedge.be5.modules.core.queries.system.HttpHeadersTable
   - DataSource:
       type: Java
       roles: SystemDeveloper
+      invisible: true
       code: com.developmentontheedge.be5.modules.core.queries.system.DataSourceTable
   - Query Builder:
       type: static
