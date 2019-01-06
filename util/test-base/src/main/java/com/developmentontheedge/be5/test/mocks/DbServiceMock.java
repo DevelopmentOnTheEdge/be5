@@ -3,8 +3,9 @@ package com.developmentontheedge.be5.test.mocks;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
+import com.developmentontheedge.be5.database.SqlExecutor;
 import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
@@ -97,13 +98,13 @@ public class DbServiceMock implements DbService
     }
 
     @Override
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(TransactionExecutor<T> executor)
     {
         return connectionService.transactionWithResult(executor);
     }
 
     @Override
-    public void transaction(SqlExecutorVoid executor)
+    public void transaction(TransactionExecutorVoid executor)
     {
         connectionService.transaction(executor);
     }

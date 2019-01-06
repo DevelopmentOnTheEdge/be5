@@ -6,8 +6,9 @@ import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
+import com.developmentontheedge.be5.database.SqlExecutor;
 import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.format.dbms.Context;
 import com.developmentontheedge.sql.format.dbms.DbmsTransformer;
@@ -173,7 +174,7 @@ public class DbServiceImpl implements DbService
             conn = connectionService.getConnection();
             return executor.run(conn);
         }
-        catch (Throwable e)
+        catch (SQLException e)
         {
             throw new RuntimeException("Error on run query", e);
         }
@@ -184,13 +185,13 @@ public class DbServiceImpl implements DbService
     }
 
     @Override
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(TransactionExecutor<T> executor)
     {
         return connectionService.transactionWithResult(executor);
     }
 
     @Override
-    public void transaction(SqlExecutorVoid executor)
+    public void transaction(TransactionExecutorVoid executor)
     {
         connectionService.transaction(executor);
     }

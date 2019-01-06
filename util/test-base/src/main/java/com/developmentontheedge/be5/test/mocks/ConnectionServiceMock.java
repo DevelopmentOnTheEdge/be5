@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.database.ConnectionService;
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(TransactionExecutor<T> executor)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public void transaction(SqlExecutorVoid executor)
+    public void transaction(TransactionExecutorVoid executor)
     {
         try
         {

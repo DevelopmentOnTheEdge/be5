@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.database;
 
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,9 +17,9 @@ public interface ConnectionService
 
     void rollbackTransaction();
 
-    <T> T transactionWithResult(SqlExecutor<T> executor);
+    <T> T transactionWithResult(TransactionExecutor<T> executor);
 
-    void transaction(SqlExecutorVoid executor);
+    void transaction(TransactionExecutorVoid executor);
 
     void releaseConnection(java.sql.Connection conn);
 
