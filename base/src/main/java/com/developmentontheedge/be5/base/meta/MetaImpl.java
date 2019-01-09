@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.base.meta;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;

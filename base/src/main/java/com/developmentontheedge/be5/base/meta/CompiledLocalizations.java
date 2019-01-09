@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.metadata.model.EntityLocalizations.Localizat
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.google.common.base.Function;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
@@ -14,12 +13,12 @@ import com.google.common.collect.Table;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CompiledLocalizations
 {
-
     public static CompiledLocalizations from(Project project)
     {
         // language -> entity name -> entity localizations
@@ -86,17 +85,17 @@ public class CompiledLocalizations
         // topic -> key -> value
         final Table<String, String, String> entityLocalizations;
 
-        public CompiledEntityLocalizations(Table<String, String, String> entityLocalizations)
+        CompiledEntityLocalizations(Table<String, String, String> entityLocalizations)
         {
             this.entityLocalizations = entityLocalizations;
         }
 
-        public static Function<CompiledEntityLocalizations, String> fnGetFirstByTopic(final String topic)
+        static Function<CompiledEntityLocalizations, String> fnGetFirstByTopic(final String topic)
         {
             return entityLocalizations -> entityLocalizations.getFirstByTopic(topic);
         }
 
-        public static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(
+        static Function<CompiledEntityLocalizations, String> fnGetByTopicAndKey(
                 final String topic, final String key)
         {
             return entityLocalizations -> entityLocalizations.getByTopicAndKey(topic, key);
