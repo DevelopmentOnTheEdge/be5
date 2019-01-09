@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.base.mail;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;

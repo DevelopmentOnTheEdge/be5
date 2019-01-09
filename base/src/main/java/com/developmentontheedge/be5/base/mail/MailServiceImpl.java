@@ -1,9 +1,8 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.base.mail;
 
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.server.services.MailService;
 
 import javax.inject.Inject;
 import javax.mail.Authenticator;

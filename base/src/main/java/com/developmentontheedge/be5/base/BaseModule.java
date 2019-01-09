@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.base;
 
 import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
+import com.developmentontheedge.be5.base.mail.MailService;
+import com.developmentontheedge.be5.base.mail.MailServiceImpl;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
@@ -50,6 +52,7 @@ public class BaseModule extends AbstractModule
         bind(GuiceJobFactory.class).in(Scopes.SINGLETON);
         bind(DaemonStarter.class).to(DaemonStarterImpl.class).asEagerSingleton();
         bind(Project.class).toProvider(ProjectProvider.class);
+        bind(MailService.class).to(MailServiceImpl.class).in(Scopes.SINGLETON);
     }
 
     @Provides

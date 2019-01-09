@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.base.mail;
 
 import javax.mail.internet.InternetAddress;
 import java.util.Map;
