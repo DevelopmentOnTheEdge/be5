@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.services.events;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
+import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME;
 
 public class EventManager implements MethodInterceptor
 {

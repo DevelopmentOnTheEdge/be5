@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.events;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.Operation;
 
 import java.util.Map;
 

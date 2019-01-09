@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.model;
 
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest;
 import org.junit.Test;
 

@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operation
 
-import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
@@ -8,7 +7,7 @@ import com.google.common.collect.ImmutableMap
 import org.junit.Ignore
 import org.junit.Test
 
-import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME
+import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME
 import static org.junit.Assert.*
 import static org.mockito.Mockito.verify
 

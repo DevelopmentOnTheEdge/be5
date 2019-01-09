@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;

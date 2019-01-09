@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 

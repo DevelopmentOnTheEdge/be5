@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.operation.model.TransactionalOperation;
+import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.google.inject.Stage;

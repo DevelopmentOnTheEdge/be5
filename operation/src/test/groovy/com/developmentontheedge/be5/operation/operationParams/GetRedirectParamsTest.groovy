@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.operation.operationParams
 
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
-import com.developmentontheedge.be5.operation.model.Operation
-import com.developmentontheedge.be5.operation.model.OperationContext
+import com.developmentontheedge.be5.operation.Operation
 import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM

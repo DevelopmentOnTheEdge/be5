@@ -4,8 +4,8 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.base.meta.Meta
 import com.developmentontheedge.be5.operation.OperationBe5ProjectDBTest
 import com.developmentontheedge.be5.operation.OperationConstants
-import com.developmentontheedge.be5.operation.model.OperationInfo
-import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.operation.OperationInfo
+import com.developmentontheedge.be5.operation.OperationStatus
 import org.junit.Test
 
 import javax.inject.Inject

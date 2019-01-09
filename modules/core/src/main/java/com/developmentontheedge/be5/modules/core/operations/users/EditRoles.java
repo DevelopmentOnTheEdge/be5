@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.operation.model.TransactionalOperation;
+import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;

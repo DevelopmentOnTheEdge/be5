@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.extenders;
 
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest;
-import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;

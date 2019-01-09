@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.operations.system
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test

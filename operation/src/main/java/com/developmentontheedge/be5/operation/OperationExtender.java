@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.model;
+package com.developmentontheedge.be5.operation;
 
 import java.util.Map;
 

@@ -3,7 +3,7 @@ package src.groovy.operations
 import com.developmentontheedge.be5.base.meta.UserAwareMeta
 import com.developmentontheedge.be5.base.meta.impl.UserAwareMetaImpl
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils
-import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 
 import javax.inject.Inject

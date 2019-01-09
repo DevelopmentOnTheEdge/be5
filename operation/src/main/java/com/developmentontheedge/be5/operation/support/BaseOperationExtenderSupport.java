@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationExtender;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationExtender;
 
 import java.util.Map;
 

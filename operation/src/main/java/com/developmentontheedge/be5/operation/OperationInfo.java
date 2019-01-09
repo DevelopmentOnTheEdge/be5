@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.model;
+package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;

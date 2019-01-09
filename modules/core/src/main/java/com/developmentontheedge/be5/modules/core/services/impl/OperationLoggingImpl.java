@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.util.DateUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.Features;
-import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.web.Session;
 

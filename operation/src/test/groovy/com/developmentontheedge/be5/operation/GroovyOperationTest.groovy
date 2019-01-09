@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.operation
 
-import com.developmentontheedge.be5.operation.model.Operation
-import com.developmentontheedge.be5.operation.model.OperationResult
-import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory

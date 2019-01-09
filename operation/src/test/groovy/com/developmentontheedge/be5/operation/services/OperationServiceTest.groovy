@@ -4,16 +4,14 @@ import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
-import com.developmentontheedge.be5.operation.model.Operation
-import com.developmentontheedge.be5.operation.model.OperationResult
-import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.operation.Operation
+import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertTrue
-import static org.junit.Assert.fail
 
 class OperationServiceTest extends OperationsSqlMockProjectTest
 {
