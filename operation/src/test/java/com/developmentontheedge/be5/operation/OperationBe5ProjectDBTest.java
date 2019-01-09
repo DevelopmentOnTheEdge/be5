@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
 
@@ -34,7 +35,7 @@ public abstract class OperationBe5ProjectDBTest extends OperationTestUtils
         {
             install(new BaseDbTestModule());
             install(new DatabaseModule());
-            bind(CoreUtils.class).to(CoreUtilsForTest.class);
+            bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
         }
     }
 
