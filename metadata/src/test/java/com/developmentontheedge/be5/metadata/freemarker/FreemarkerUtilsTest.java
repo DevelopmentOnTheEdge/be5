@@ -1,11 +1,19 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
+import com.developmentontheedge.be5.metadata.JulLogConfigurator;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class FreemarkerUtilsTest
 {
+    @Before
+    public void setUp()
+    {
+        JulLogConfigurator.config();
+    }
+
     @Test
     public void testEscape()
     {

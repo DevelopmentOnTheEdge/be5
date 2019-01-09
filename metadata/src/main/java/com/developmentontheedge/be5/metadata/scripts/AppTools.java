@@ -52,7 +52,7 @@ public class AppTools extends ScriptSupport<AppTools>
                     try
                     {
                         rs = connector.executeQuery(statement);
-                        format(rs, System.err, 20);
+                        format(rs, System.out, 20);
                     }
                     catch (SQLException e)
                     {

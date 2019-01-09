@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 public class MavenLoggerTest
 {
     @Test
-    public void setOperationName() throws Exception
+    public void setOperationName()
     {
         Log mock = mock(Log.class);
         MavenLogger logger = new MavenLogger(mock);
@@ -20,7 +20,7 @@ public class MavenLoggerTest
     }
 
     @Test
-    public void setProgress() throws Exception
+    public void setProgress()
     {
         Log mock = mock(Log.class);
         MavenLogger logger = new MavenLogger(mock);
