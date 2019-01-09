@@ -20,6 +20,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
 import com.developmentontheedge.be5.metadata.scripts.AppDropAllTables;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
@@ -100,7 +101,7 @@ public abstract class BaseTest extends BaseTestUtils implements InjectedTestUtil
         Project project;
         try
         {
-            project = ModuleLoader2.findAndLoadProjectWithModules(false);
+            project = ModuleLoader2.findAndLoadProjectWithModules(false, new JULLogger(log));
         }
         catch (ProjectLoadException e)
         {

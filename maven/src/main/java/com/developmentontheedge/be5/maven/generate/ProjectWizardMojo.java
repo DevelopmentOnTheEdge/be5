@@ -5,12 +5,14 @@ import com.developmentontheedge.be5.metadata.scripts.wizard.ProjectWizard;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.InputStream;
+import java.io.PrintStream;
 
 
 @Mojo(name = "wizard")
 public class ProjectWizardMojo extends Be5Mojo
 {
     InputStream inputStream = System.in;
+    PrintStream printStream = System.out;
 
     @Override
     public void execute()
@@ -23,6 +25,7 @@ public class ProjectWizardMojo extends Be5Mojo
                 .setLogger(logger)
                 .setDebug(debug)
                 .setInputStream(inputStream)
+                .setPrintStream(printStream)
                 .execute();
     }
 }

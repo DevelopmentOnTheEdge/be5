@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.RoleGroup;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,7 +58,7 @@ public class ModuleLoader2MergeModulesTest
         urls.add(modulePath.resolve("project.yaml").toUri().toURL());
         urls.add(modulePath2.resolve("project.yaml").toUri().toURL());
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
         LoadContext ctx = new LoadContext();
         ModuleLoader2.mergeAllModules(project, Arrays.asList(moduleProject1, moduleProject2), ctx);

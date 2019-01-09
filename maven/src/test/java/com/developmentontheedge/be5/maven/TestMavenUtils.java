@@ -58,7 +58,7 @@ public abstract class TestMavenUtils
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
         LoadContext ctx = new LoadContext();
         ModuleLoader2.mergeAllModules(project, Collections.emptyList(), ctx);

@@ -7,6 +7,9 @@ import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import org.junit.Test;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import static org.junit.Assert.assertEquals;
 
 public class ProjectWizardMojoTest extends TestMavenUtils
@@ -19,6 +22,7 @@ public class ProjectWizardMojoTest extends TestMavenUtils
         mojo.connectionProfileName = profileTestMavenPlugin;
 
         mojo.inputStream = inputStream("test-name\n5\n5\n");
+        mojo.printStream = new PrintStream(new OutputStream() {public void write(int b) {}});
         mojo.logger = new NullLogger();
         mojo.execute();
 

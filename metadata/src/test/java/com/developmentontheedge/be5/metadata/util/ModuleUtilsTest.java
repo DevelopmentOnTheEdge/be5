@@ -99,9 +99,9 @@ public class ModuleUtilsTest
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(tpmModulePath.resolve("project.yaml").toUri().toURL());
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
-        assertNotNull(ModuleLoader2.getModulePath("app").resolve("project.yaml"));
+        assertNotNull(ModuleLoader2.getModulePath("app", new NullLogger()).resolve("project.yaml"));
 
         app = ModuleLoader2.getModulesMap().get("app");
         ModuleLoader2.mergeModules(app, new NullLogger());
