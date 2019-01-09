@@ -24,7 +24,7 @@ public class Bootstrap
         }
     }
 
-    private void initServices() throws Exception
+    private void initServices()
     {
         injector.getInstance(LifecycleService.class).start();
     }
