@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.groovy.GroovyRegister;
+import com.developmentontheedge.be5.base.meta.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.Features;
@@ -10,16 +10,16 @@ import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.metadata.model.JavaOperation;
 import com.developmentontheedge.be5.operation.OperationConstants;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationContext;
-import com.developmentontheedge.be5.operation.model.OperationExtender;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.model.TransactionalOperation;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationExtender;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.google.inject.Injector;
 

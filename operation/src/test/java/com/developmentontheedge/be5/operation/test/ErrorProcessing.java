@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

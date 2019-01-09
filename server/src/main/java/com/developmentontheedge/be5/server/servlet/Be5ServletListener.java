@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.base.Bootstrap;
-import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
+import com.developmentontheedge.be5.base.logging.LogConfigurator;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
@@ -18,11 +18,6 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
 
     private Bootstrap be5Bootstrap;
 
-    public Be5ServletListener()
-    {
-        LogConfigurator.configure();
-    }
-
     protected Stage getStage()
     {
         Stage stage = ModuleLoader2.getDevFileExists() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
@@ -33,6 +28,7 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
     @Override
     public void contextInitialized(ServletContextEvent sce)
     {
+        LogConfigurator.configure();
         long startTime = System.currentTimeMillis();
         super.contextInitialized(sce);
         log.info("Injector created in " + (System.currentTimeMillis() - startTime) + " ms.");
@@ -44,7 +40,7 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
     @Override
     public void contextDestroyed(ServletContextEvent sce)
     {
-        be5Bootstrap.shutdown();
+        if (be5Bootstrap != null) be5Bootstrap.shutdown();
         super.contextDestroyed(sce);
     }
 

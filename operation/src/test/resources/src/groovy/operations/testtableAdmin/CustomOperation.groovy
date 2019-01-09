@@ -1,7 +1,7 @@
 package testtableAdmin
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport
 
 class CustomOperation extends BaseOperationSupport implements Operation

@@ -1,6 +1,6 @@
 daemons:
-  TestDeamon:
-    className: path.to.Daemon
-    configSection: MetaTestDaemon
+  TestDaemon:
+    className: com.developmentontheedge.be5.base.scheduling.TestDaemon
+    configSection: TestDaemon
     daemonType: periodic
-    description: Meta test daemon
+    description: Test daemon

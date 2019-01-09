@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.config.CoreUtils;
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
 import com.developmentontheedge.be5.modules.core.controllers.SaveQuickColumnSetting;
 import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
@@ -15,9 +15,6 @@ import com.developmentontheedge.be5.modules.core.services.impl.CategoriesService
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.OperationLoggingImpl;
-import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
-import com.developmentontheedge.be5.modules.core.services.scheduling.impl.DaemonStarterImpl;
-import com.developmentontheedge.be5.modules.core.services.scheduling.impl.GuiceJobFactory;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.google.inject.Scopes;
@@ -43,8 +40,6 @@ public class CoreModule extends ServletModule
         bind(DocumentCategoriesPlugin.class).asEagerSingleton();
         bind(Be5EventDbLogger.class).asEagerSingleton();
 
-        bind(GuiceJobFactory.class).in(Scopes.SINGLETON);
-        bind(DaemonStarter.class).to(DaemonStarterImpl.class).asEagerSingleton();
         bind(OperationLogging.class).to(OperationLoggingImpl.class).in(Scopes.SINGLETON);
     }
 }

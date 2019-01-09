@@ -1,6 +1,6 @@
 package src.groovy.operations.operationService
 
-import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import groovy.transform.TypeChecked
 

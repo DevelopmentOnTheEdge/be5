@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
-import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.OperationResult;
 
 public class OperationResultPresentation
 {

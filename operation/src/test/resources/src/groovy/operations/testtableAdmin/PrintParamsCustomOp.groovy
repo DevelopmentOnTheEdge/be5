@@ -1,7 +1,7 @@
 package src.groovy.operations.testtableAdmin
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.operation.model.OperationResult
+import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 

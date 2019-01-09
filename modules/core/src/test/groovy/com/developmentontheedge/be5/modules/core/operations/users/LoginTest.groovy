@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
 import com.developmentontheedge.be5.server.FrontendActions
 import com.developmentontheedge.be5.server.model.UserInfoModel
-import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory

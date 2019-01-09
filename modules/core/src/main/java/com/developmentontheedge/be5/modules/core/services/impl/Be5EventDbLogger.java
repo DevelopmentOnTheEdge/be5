@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.base.lifecycle.Start;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 

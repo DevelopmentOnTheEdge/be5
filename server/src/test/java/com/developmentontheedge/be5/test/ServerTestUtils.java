@@ -1,18 +1,18 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.config.CoreUtils;
+import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationContext;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;

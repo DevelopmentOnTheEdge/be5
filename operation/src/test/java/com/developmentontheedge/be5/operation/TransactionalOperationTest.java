@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.test.BaseTest;
 import com.google.common.collect.ImmutableMap;

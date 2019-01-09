@@ -1,6 +1,6 @@
 package src.groovy.operations.testtableAdmin
 
-import com.developmentontheedge.be5.operation.model.TransactionalOperation
+import com.developmentontheedge.be5.operation.TransactionalOperation
 import com.developmentontheedge.be5.server.helpers.FilterHelper
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySet

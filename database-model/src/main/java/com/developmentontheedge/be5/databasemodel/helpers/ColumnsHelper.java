@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.meta.Meta;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.base.lifecycle.Start;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;

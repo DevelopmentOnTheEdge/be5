@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;

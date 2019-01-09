@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
-import com.developmentontheedge.be5.operation.services.validation.Validator
+import com.developmentontheedge.be5.operation.validation.Validator
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test

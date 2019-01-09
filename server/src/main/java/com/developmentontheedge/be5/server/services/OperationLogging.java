@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.Operation;
 
 import java.util.Map;
 

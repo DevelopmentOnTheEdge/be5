@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.system.daemons;
 
-import com.developmentontheedge.be5.operation.services.validation.Validation;
+import com.developmentontheedge.be5.operation.validation.Validation;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

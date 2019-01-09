@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.server.operations.support;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;

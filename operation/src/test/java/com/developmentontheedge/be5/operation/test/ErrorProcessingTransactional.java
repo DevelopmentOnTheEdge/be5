@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.operation.model.TransactionalOperation;
+import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

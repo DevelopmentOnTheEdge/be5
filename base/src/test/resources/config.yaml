@@ -1,4 +1,4 @@
 config:
-  com.developmentontheedge.be5.base.services.impl.Be5CachesImpl:
+  com.developmentontheedge.be5.base.cache.Be5CachesImpl:
     cacheSizes:
       User settings: 0

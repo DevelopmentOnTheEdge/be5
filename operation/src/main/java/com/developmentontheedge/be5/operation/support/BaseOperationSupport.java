@@ -5,11 +5,11 @@ import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.OperationConstants;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationContext;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 
 import java.util.Collections;
 import java.util.HashMap;

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.base.BaseTest;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;
 import org.junit.Rule;

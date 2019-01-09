@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;

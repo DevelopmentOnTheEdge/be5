@@ -3,13 +3,13 @@ package com.developmentontheedge.be5.server.services.impl;
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
@@ -100,7 +100,7 @@ public class FormGeneratorImpl implements FormGenerator
         return getResult(operation, resultEither);
     }
 
-    private ResourceData getResult(com.developmentontheedge.be5.operation.model.Operation operation,
+    private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
         Either<FormPresentation, OperationResultPresentation> data;

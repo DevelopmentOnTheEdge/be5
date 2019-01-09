@@ -1,6 +1,6 @@
 package src.groovy.operations.operationService
 
-import com.developmentontheedge.be5.operation.model.TransactionalOperation
+import com.developmentontheedge.be5.operation.TransactionalOperation
 import com.developmentontheedge.be5.operation.support.TestOperationSupport
 
 

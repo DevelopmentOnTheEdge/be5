@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.util;
 
-import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.OperationStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
