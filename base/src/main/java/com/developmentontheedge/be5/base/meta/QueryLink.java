@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.meta.impl;
+package com.developmentontheedge.be5.base.meta;
 
 import static java.util.Objects.requireNonNull;
 
