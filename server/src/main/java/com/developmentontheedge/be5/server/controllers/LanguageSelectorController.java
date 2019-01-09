@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
@@ -109,7 +109,7 @@ public class LanguageSelectorController extends JsonApiController implements Con
     private LanguageSelectorResponse selectLanguage(Request req)
     {
         Locale language = meta.getLocale(new Locale(req.getNonEmpty("language")));
-        userInfoProvider.get().setLocale(language);
+        userInfoProvider.getLoggedUser().setLocale(language);
 
         return getState();
     }
@@ -120,7 +120,7 @@ public class LanguageSelectorController extends JsonApiController implements Con
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 
-        String selectedLanguage = userInfoProvider.get().getLanguage().toUpperCase();
+        String selectedLanguage = userInfoProvider.getLanguage().toUpperCase();
         Map<String, String> messages = readMessages(project, selectedLanguage);
 
         return new LanguageSelectorResponse(languages, selectedLanguage, messages);

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.database;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 import com.developmentontheedge.be5.database.sql.parsers.ScalarLongParser;
 import com.developmentontheedge.be5.database.sql.parsers.ScalarParser;
 import com.developmentontheedge.be5.database.util.SqlUtils;
@@ -40,9 +40,9 @@ public interface DbService
 
     <T> T execute(SqlExecutor<T> executor);
 
-    <T> T transactionWithResult(SqlExecutor<T> executor);
+    <T> T transactionWithResult(TransactionExecutor<T> executor);
 
-    void transaction(SqlExecutorVoid executor);
+    void transaction(TransactionExecutorVoid executor);
 
     @Nullable
     default Long oneLong(String sql, Object... params)

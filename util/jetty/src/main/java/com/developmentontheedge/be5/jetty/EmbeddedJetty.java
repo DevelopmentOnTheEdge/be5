@@ -2,9 +2,13 @@ package com.developmentontheedge.be5.jetty;
 
 import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +20,14 @@ public class EmbeddedJetty
     private String resourceBase = "src/main/webapp";
     private String descriptorPath = "/WEB-INF/web.xml";
     private int port = 8200;
+    private HashSessionManager hashSessionManager;
     private Server jetty;
 
     public void run()
     {
         LogConfigurator.configure();
         checkDescriptor();
+        Thread.currentThread().setName("main");
 
         try
         {
@@ -29,7 +35,8 @@ public class EmbeddedJetty
             jetty = new Server(port);
             WebAppContext webAppContext = getWebAppContext();
             jetty.setHandler(webAppContext);
-            doStart();
+            jetty.start();
+            restoreSessions();
             logStarted(webAppContext, startTime);
         }
         catch (Exception e)
@@ -48,26 +55,17 @@ public class EmbeddedJetty
         }
     }
 
-    private void doStart() throws Exception
-    {
-        String version = jetty.getClass().getPackage().getImplementationVersion();
-        log.info("Trying to start jetty v" + version);
-        jetty.start();
-    }
-
     private void logStarted(WebAppContext webAppContext, long startTime)
     {
-        log.info("-------------------------------------------------------");
         log.info(webAppContext.toString());
-        log.info((System.currentTimeMillis() - startTime) + " ms");
-        log.info("Started Jetty Server");
-        log.info(" => http://localhost:" + port);
-        log.info("-------------------------------------------------------");
+        long time = System.currentTimeMillis() - startTime;
+        log.info("Jetty started on http://localhost:" + port + " - " + time + " ms");
     }
 
     private WebAppContext getWebAppContext()
     {
         WebAppContext context = new WebAppContext();
+        context.setSessionHandler(getSessionHandler());
         context.setDescriptor(descriptorPath);
         context.setParentLoaderPriority(true);
         if (System.getProperty("os.name").toLowerCase().contains("windows"))
@@ -78,6 +76,38 @@ public class EmbeddedJetty
         context.setResourceBase(resourceBase);
         context.setMaxFormContentSize(1024 * 1024 * 1024);
         return context;
+    }
+
+    private SessionHandler getSessionHandler()
+    {
+        hashSessionManager = new HashSessionManager();
+        try
+        {
+            File file = new File("./target/sessions");
+            file.mkdirs();
+            hashSessionManager.setStoreDirectory(file);
+        }
+        catch (IOException e)
+        {
+            log.log(Level.SEVERE, "", e);
+        }
+        hashSessionManager.setSessionIdManager(new HashSessionIdManager());
+        hashSessionManager.setSavePeriod(1);
+        hashSessionManager.setMaxInactiveInterval(-1);
+
+        return new SessionHandler(hashSessionManager);
+    }
+
+    private void restoreSessions()
+    {
+        try
+        {
+            hashSessionManager.restoreSessions();
+        }
+        catch (Exception e)
+        {
+            log.log(Level.SEVERE, "Cannot restore sessions", e);
+        }
     }
 
     private void checkDescriptor()

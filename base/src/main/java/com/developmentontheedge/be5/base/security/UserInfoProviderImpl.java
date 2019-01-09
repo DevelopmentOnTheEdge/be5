@@ -1,25 +1,18 @@
-package com.developmentontheedge.be5.database.test;
+package com.developmentontheedge.be5.base.security;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 
 import java.util.List;
 import java.util.Locale;
 
-public class StaticUserInfoProvider implements UserInfoProvider
+
+public class UserInfoProviderImpl implements UserInfoProvider
 {
-    public static UserInfo userInfo;
-
     @Override
-    public UserInfo get()
+    public UserInfo getLoggedUser()
     {
-        return userInfo;
-    }
-
-    public static void setUserInfo(UserInfo newUserInfo)
-    {
-        userInfo = newUserInfo;
+        return UserInfoHolder.getLoggedUser();
     }
 
     @Override
@@ -31,36 +24,36 @@ public class StaticUserInfoProvider implements UserInfoProvider
     @Override
     public Locale getLocale()
     {
-        return get().getLocale();
+        return getLoggedUser().getLocale();
     }
 
     @Override
     public String getUserName()
     {
-        return get().getUserName();
+        return getLoggedUser().getUserName();
     }
 
     @Override
     public boolean isLoggedIn()
     {
-        return !RoleType.ROLE_GUEST.equals(get().getUserName());
+        return !RoleType.ROLE_GUEST.equals(getLoggedUser().getUserName());
     }
 
     @Override
     public List<String> getAvailableRoles()
     {
-        return get().getAvailableRoles();
+        return getLoggedUser().getAvailableRoles();
     }
 
     @Override
     public List<String> getCurrentRoles()
     {
-        return get().getCurrentRoles();
+        return getLoggedUser().getCurrentRoles();
     }
 
     @Override
     public String getRemoteAddr()
     {
-        return get().getRemoteAddr();
+        return getLoggedUser().getRemoteAddr();
     }
 }

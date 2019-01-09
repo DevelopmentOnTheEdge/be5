@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.model.Action;
@@ -28,7 +28,7 @@ public class UserInfoModelServiceImpl implements UserInfoModelService
     @Override
     public UserInfoModel getUserInfoModel()
     {
-        UserInfo userInfo = userInfoProvider.get();
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
         return new UserInfoModel(
                 !RoleType.ROLE_GUEST.equals(userInfo.getUserName()),
                 userInfo.getUserName(),

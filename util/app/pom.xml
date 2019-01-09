@@ -186,6 +186,14 @@
         <version>9.4.3.v20170317</version>
         <configuration>
           <scanIntervalSeconds>0</scanIntervalSeconds>
+          <webAppConfig implementation="org.eclipse.jetty.webapp.WebAppContext">
+            <sessionHandler implementation="org.eclipse.jetty.server.session.SessionHandler">
+              <sessionManager implementation="org.eclipse.jetty.server.session.HashSessionManager">
+                <storeDirectory>${basedir}/target/sessions</storeDirectory>
+                <idleSavePeriod>1</idleSavePeriod>
+              </sessionManager>
+            </sessionHandler>
+          </webAppConfig>
           <webApp>
             <webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
             <containerIncludeJarPattern>^$</containerIncludeJarPattern>
@@ -222,6 +230,7 @@
               <goal>addTestSources</goal>
               <goal>compileTests</goal>
               <goal>removeTestStubs</goal>
+              <goal>compile</goal>
             </goals>
           </execution>
         </executions>

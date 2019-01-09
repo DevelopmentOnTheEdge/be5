@@ -2,8 +2,9 @@ package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.database.sql.SqlExecutor;
-import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.RuntimeSqlException;
+import com.developmentontheedge.be5.database.sql.TransactionExecutor;
+import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -61,7 +62,7 @@ public class ConnectionServiceImpl implements ConnectionService
             }
             catch (SQLException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeSqlException(e);
             }
             finally
             {
@@ -84,7 +85,7 @@ public class ConnectionServiceImpl implements ConnectionService
         catch (SQLException e)
         {
             log.log(Level.SEVERE, "Unable to rollback transaction", e);
-            throw new RuntimeException(e);
+            throw new RuntimeSqlException(e);
         }
         finally
         {
@@ -103,7 +104,7 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         catch (SQLException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeSqlException(e);
         }
     }
 
@@ -114,7 +115,7 @@ public class ConnectionServiceImpl implements ConnectionService
     }
 
     @Override
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(TransactionExecutor<T> executor)
     {
         Connection conn;
         try
@@ -132,12 +133,12 @@ public class ConnectionServiceImpl implements ConnectionService
     }
 
     @Override
-    public void transaction(SqlExecutorVoid executor)
+    public void transaction(TransactionExecutorVoid executor)
     {
         transactionWithResult(getWrapperExecutor(executor));
     }
 
-    private static SqlExecutor<Void> getWrapperExecutor(final SqlExecutorVoid voidExecutor)
+    private static TransactionExecutor<Void> getWrapperExecutor(final TransactionExecutorVoid voidExecutor)
     {
         return conn -> {
             voidExecutor.run(conn);
@@ -185,7 +186,7 @@ public class ConnectionServiceImpl implements ConnectionService
             }
             catch (SQLException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeSqlException(e);
             }
         }
     }

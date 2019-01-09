@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -66,18 +66,17 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         this.querySqlGenerator = querySqlGenerator;
     }
 
-    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
+    public void initialize(Query query, Map<String, Object> parameters)
     {
         this.query = Objects.requireNonNull(query);
         this.parameters = Objects.requireNonNull(parameters);
 
-        queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.get(), meta);
+        queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.getLoggedUser(), meta);
         contextApplier = new ContextApplier(queryContext);
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
                 .filter(r -> r == 1 || r == 2).count() > 0;
-        return this;
     }
 
     @Override

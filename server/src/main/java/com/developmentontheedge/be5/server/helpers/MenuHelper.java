@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.helpers;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
@@ -84,7 +84,7 @@ public class MenuHelper
 
     private List<RootNode> collectEntities(boolean withIds, boolean withoutInvisible, EntityType entityType)
     {
-        UserInfo userInfo = userInfoProvider.get();
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
         List<String> roles = userInfo.getCurrentRoles();
         String language = userInfo.getLanguage();
         List<RootNode> out = new ArrayList<>();

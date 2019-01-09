@@ -114,4 +114,10 @@ public class MetadataUtils
                 .replace(".", "/") + fileExtension;
     }
 
+    public static String getCompiledGroovyClassName(String fileName)
+    {
+        return fileName
+                .replace("/", ".")
+                .substring(0, fileName.length() - ".groovy".length());
+    }
 }

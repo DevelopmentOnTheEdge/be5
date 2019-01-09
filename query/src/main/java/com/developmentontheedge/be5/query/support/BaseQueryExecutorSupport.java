@@ -24,12 +24,10 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
     protected List<String> columns = new ArrayList<>();
     protected List<QRec> properties = new ArrayList<>();
 
-    public QueryExecutor initialize(Query query, Map<String, Object> parameters)
+    public void initialize(Query query, Map<String, Object> parameters)
     {
         this.query = query;
         this.parameters = parameters;
-
-        return this;
     }
 
     public void addColumns(String firstName, String... columnNames)

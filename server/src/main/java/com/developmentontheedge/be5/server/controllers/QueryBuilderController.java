@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -165,9 +165,9 @@ public class QueryBuilderController extends JsonApiModelController
         }
         else
         {
-            return new ArrayList<String>() {{
-                add("select * from users");
-            }};
+            List<String> newHistory = new ArrayList<>();
+            newHistory.add("select * from users");
+            return newHistory;
         }
     }
 
