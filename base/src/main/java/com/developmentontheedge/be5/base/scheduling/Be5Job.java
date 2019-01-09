@@ -8,9 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public abstract class Process implements Job
+public abstract class Be5Job implements Job
 {
-    private static final Logger log = Logger.getLogger(Process.class.getName());
+    private static final Logger log = Logger.getLogger(Be5Job.class.getName());
 
     @Override
     public final void execute(JobExecutionContext context) throws JobExecutionException
@@ -22,7 +22,7 @@ public abstract class Process implements Job
         }
         catch (Throwable e)
         {
-            log.log(Level.SEVERE, "Error in process: ", e);
+            log.log(Level.SEVERE, "Error in job: ", e);
             throw new JobExecutionException(e);
         }
     }

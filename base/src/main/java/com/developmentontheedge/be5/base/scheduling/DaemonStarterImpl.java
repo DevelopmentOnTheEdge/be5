@@ -323,16 +323,16 @@ public class DaemonStarterImpl implements DaemonStarter
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Process> getProcessClass(Daemon daemon)
+    private Class<? extends Be5Job> getProcessClass(Daemon daemon)
     {
-        Class<? extends Process> cls;
+        Class<? extends Be5Job> cls;
         try
         {
-            cls = (Class<? extends Process>) Class.forName(daemon.getClassName());
+            cls = (Class<? extends Be5Job>) Class.forName(daemon.getClassName());
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5Exception.internal("Error on find process class", e);
+            throw Be5Exception.internal("Error on find job class", e);
         }
         return cls;
     }
