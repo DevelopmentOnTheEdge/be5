@@ -124,7 +124,6 @@ public class DaemonStarterImpl implements DaemonStarter
         return false;
     }
 
-    @Override
     @Dispose(order = 30)
     public void shutdown()
     {

@@ -6,8 +6,6 @@ import org.quartz.JobDetail;
 
 public interface DaemonStarter
 {
-    void shutdown();
-
     void reInitQuartzDaemon(Daemon daemon, boolean initManualDaemon);
 
     boolean isEnabled(String section);
