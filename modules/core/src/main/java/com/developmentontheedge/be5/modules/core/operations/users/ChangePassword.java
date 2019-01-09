@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.databasemodel.util.DpsUtils.setValues;
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.pattern;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.pattern;
 import static com.developmentontheedge.beans.BeanInfoConstants.PASSWORD_FIELD;
 import static com.developmentontheedge.beans.BeanInfoConstants.VALIDATION_RULES;
 

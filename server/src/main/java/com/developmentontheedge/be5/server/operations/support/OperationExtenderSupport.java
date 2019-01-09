@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.meta.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationExtenderSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;

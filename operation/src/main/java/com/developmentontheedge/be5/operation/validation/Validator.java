@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.services.validation;
+package com.developmentontheedge.be5.operation.validation;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.meta.UserAwareMeta;
@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.ERROR;
-import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
+import static com.developmentontheedge.be5.operation.validation.Validation.Status.ERROR;
+import static com.developmentontheedge.be5.operation.validation.Validation.Status.SUCCESS;
 
 
 public class Validator

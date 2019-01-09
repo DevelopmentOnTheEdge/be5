@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;

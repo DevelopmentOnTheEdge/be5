@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
-import com.developmentontheedge.be5.operation.services.validation.Validation
-import com.developmentontheedge.be5.operation.services.validation.Validator
+import com.developmentontheedge.be5.operation.validation.Validation
+import com.developmentontheedge.be5.operation.validation.Validator
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import org.junit.Before

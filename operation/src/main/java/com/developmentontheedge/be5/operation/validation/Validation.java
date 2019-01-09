@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.services.validation;
+package com.developmentontheedge.be5.operation.validation;
 
 
 public interface Validation

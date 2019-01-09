@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.base.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicProperty;

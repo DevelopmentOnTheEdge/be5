@@ -1,13 +1,13 @@
-package com.developmentontheedge.be5.operation.services.validation;
+package com.developmentontheedge.be5.operation.validation;
 
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import org.junit.Test;
 
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.Rule;
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.pattern;
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.range;
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.step;
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.unique;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.Rule;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.pattern;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.range;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.step;
+import static com.developmentontheedge.be5.operation.validation.ValidationRules.unique;
 import static org.junit.Assert.assertEquals;
 
 
