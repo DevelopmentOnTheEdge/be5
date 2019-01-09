@@ -85,7 +85,7 @@ public class MetaTest extends BaseTest
         assertEquals(1, daemons.size());
         daemons.iterator().hasNext();
         Daemon daemon = daemons.iterator().next();
-        assertEquals("path.to.Daemon", daemon.getClassName());
+        assertEquals("com.developmentontheedge.be5.base.scheduling.TestDaemon", daemon.getClassName());
         assertEquals("periodic", daemon.getDaemonType());
     }
 }

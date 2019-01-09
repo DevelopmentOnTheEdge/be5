@@ -4,6 +4,9 @@ import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.base.scheduling.DaemonStarter;
+import com.developmentontheedge.be5.base.scheduling.DaemonStarterImpl;
+import com.developmentontheedge.be5.base.scheduling.GuiceJobFactory;
 import com.developmentontheedge.be5.base.security.UserInfoHolder;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.base.security.UserInfoProviderImpl;
@@ -44,7 +47,8 @@ public class BaseModule extends AbstractModule
         bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
-
+        bind(GuiceJobFactory.class).in(Scopes.SINGLETON);
+        bind(DaemonStarter.class).to(DaemonStarterImpl.class).asEagerSingleton();
         bind(Project.class).toProvider(ProjectProvider.class);
     }
 

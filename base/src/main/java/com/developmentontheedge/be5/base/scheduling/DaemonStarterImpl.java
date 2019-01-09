@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services.scheduling.impl;
+package com.developmentontheedge.be5.base.scheduling;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.lifecycle.Dispose;
@@ -7,8 +7,6 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.modules.core.model.scheduling.Process;
-import com.developmentontheedge.be5.modules.core.services.scheduling.DaemonStarter;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -334,7 +332,7 @@ public class DaemonStarterImpl implements DaemonStarter
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5Exception.internal(e);
+            throw Be5Exception.internal("Error on find process class", e);
         }
         return cls;
     }

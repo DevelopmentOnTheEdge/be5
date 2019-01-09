@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.model.scheduling;
+package com.developmentontheedge.be5.base.scheduling;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

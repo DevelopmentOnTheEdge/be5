@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services.scheduling.impl;
+package com.developmentontheedge.be5.base.scheduling;
 
 import com.google.inject.Injector;
 import org.quartz.Job;
