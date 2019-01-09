@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.base.BaseTest;
+import com.developmentontheedge.be5.base.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;

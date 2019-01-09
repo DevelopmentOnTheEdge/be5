@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.meta;
 
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;

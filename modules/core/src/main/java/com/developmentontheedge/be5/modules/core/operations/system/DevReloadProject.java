@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.system;
 
-import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.google.inject.Stage;

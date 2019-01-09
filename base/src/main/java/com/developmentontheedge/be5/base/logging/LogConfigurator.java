@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services.impl;
+package com.developmentontheedge.be5.base.logging;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

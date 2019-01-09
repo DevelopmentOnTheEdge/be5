@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.BaseTest;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.cache.Be5CachesImpl;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.base.config.ConfigurationProvider;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.Test;
 

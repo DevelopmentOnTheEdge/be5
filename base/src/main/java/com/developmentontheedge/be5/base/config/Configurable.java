@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.config;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

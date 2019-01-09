@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.model.groovy
 
-import com.developmentontheedge.be5.base.services.GroovyRegister
+import com.developmentontheedge.be5.base.groovy.GroovyRegister
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySetDecorator
 import com.developmentontheedge.beans.DynamicPropertySetSupport

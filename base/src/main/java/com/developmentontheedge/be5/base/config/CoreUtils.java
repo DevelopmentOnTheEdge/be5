@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.config;
 
 import javax.annotation.Nullable;
 import java.util.Map;

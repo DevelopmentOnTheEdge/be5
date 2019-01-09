@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.test;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.config.CoreUtils;
 
 import java.util.Collections;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services.impl;
+package com.developmentontheedge.be5.base.meta.impl;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.EntityLocalizations;

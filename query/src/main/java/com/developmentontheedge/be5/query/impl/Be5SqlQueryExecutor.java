@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.meta.Meta;
 import com.developmentontheedge.be5.base.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.QueryType;

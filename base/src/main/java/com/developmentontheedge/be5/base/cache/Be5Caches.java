@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 

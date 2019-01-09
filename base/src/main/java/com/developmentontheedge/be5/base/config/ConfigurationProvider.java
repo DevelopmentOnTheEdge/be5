@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.base.services.impl;
+package com.developmentontheedge.be5.base.config;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.Configurable;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 

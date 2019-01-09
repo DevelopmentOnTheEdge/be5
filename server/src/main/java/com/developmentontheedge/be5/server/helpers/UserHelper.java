@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.security.UserInfoHolder;
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.server.SessionConstants;

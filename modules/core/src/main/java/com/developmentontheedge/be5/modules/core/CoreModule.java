@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.config.CoreUtils;
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
 import com.developmentontheedge.be5.modules.core.controllers.SaveQuickColumnSetting;
 import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;

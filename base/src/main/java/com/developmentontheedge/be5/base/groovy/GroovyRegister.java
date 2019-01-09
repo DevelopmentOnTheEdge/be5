@@ -1,5 +1,7 @@
-package com.developmentontheedge.be5.base.services;
+package com.developmentontheedge.be5.base.groovy;
 
+import com.developmentontheedge.be5.base.cache.Be5Caches;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.github.benmanes.caffeine.cache.Cache;
 import groovy.lang.GroovyClassLoader;

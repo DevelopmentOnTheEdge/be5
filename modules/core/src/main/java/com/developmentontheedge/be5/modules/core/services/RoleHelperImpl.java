@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.config.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;

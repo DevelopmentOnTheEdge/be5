@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 
-import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
+import com.developmentontheedge.be5.base.meta.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.database.DatabaseTest;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;

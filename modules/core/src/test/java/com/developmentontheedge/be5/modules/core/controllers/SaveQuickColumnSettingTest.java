@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.base.services.CoreUtils;
+import com.developmentontheedge.be5.base.config.CoreUtils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;

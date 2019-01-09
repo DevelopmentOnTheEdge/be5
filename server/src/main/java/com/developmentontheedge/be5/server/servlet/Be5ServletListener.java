@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.base.Bootstrap;
-import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
+import com.developmentontheedge.be5.base.logging.LogConfigurator;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.google.inject.Injector;
 import com.google.inject.Stage;

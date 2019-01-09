@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
-import com.developmentontheedge.be5.base.services.Meta
+import com.developmentontheedge.be5.base.meta.Meta
 import com.developmentontheedge.be5.operation.OperationBe5ProjectDBTest
 import com.developmentontheedge.be5.operation.OperationConstants
 import com.developmentontheedge.be5.operation.model.OperationInfo

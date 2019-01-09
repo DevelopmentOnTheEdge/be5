@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.system;
 
-import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.base.cache.Be5Caches;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 
 import javax.inject.Inject;

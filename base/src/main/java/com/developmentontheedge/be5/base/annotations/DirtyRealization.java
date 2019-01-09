@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.util.annotations;
+package com.developmentontheedge.be5.base.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
