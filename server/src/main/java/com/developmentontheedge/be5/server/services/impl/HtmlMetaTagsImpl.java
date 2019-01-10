@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.web.Request;
 

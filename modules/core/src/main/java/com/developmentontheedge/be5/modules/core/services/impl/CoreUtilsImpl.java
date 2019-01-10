@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.base.cache.Be5Caches;
-import com.developmentontheedge.be5.base.config.CoreUtils;
+import com.developmentontheedge.be5.cache.Be5Caches;
+import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;

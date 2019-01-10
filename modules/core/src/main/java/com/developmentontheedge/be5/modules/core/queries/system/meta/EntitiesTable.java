@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.queries.system.meta;
 
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.server.util.ActionUtils;
 
 import java.util.List;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 
 
 public class EntitiesTable extends QueryExecutorSupport

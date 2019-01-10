@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.sql;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.base.util.FilterUtil;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME;
-import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 
 
 public class OperationServiceImpl implements OperationService

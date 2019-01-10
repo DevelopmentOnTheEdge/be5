@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.database.test;
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Project;
 
 

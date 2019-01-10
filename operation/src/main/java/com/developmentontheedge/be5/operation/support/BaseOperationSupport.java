@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.base.util.FilterUtil;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;

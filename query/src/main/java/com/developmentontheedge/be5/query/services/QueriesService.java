@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.cache.Be5Caches;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.cache.Be5Caches;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;

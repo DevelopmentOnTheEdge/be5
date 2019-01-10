@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.base.mail.MailService;
+import com.developmentontheedge.be5.mail.MailService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;

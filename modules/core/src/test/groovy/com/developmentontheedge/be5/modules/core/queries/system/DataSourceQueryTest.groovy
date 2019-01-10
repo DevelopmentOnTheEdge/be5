@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.queries.system
 
-import com.developmentontheedge.be5.base.meta.Meta
+import com.developmentontheedge.be5.meta.Meta
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import org.junit.Test
 

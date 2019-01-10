@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
+import static com.developmentontheedge.be5.FrontendConstants.TOP_FORM;
 
 
 public class DocumentFormPlugin implements DocumentPlugin

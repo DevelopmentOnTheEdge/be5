@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.database;
 
-import com.developmentontheedge.be5.base.Bootstrap;
-import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
-import com.developmentontheedge.be5.base.cache.Be5Caches;
-import com.developmentontheedge.be5.base.config.CoreUtils;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.cache.Be5CachesImpl;
+import com.developmentontheedge.be5.Bootstrap;
+import com.developmentontheedge.be5.lifecycle.LifecycleSupport;
+import com.developmentontheedge.be5.cache.Be5Caches;
+import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.cache.Be5CachesImpl;
 import com.developmentontheedge.be5.database.impl.test.TestTransaction2Service;
 import com.developmentontheedge.be5.database.impl.test.TestTransaction2ServiceImpl;
 import com.developmentontheedge.be5.database.impl.test.TestTransactionService;

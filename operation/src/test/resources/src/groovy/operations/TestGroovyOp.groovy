@@ -1,6 +1,6 @@
 package src.groovy.operations
 
-import com.developmentontheedge.be5.base.meta.UserAwareMeta
+import com.developmentontheedge.be5.meta.UserAwareMeta
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.support.TestOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySetSupport

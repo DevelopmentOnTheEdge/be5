@@ -4,8 +4,8 @@ import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.Operation
 import org.junit.Test
 
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
 
 class GetRedirectParamsTest extends OperationsSqlMockProjectTest

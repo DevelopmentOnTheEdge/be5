@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.server.helpers
 
-import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import org.junit.Before
 import org.junit.Test
 
 import javax.inject.Inject
 
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
 
 class DpsHelperCustomOpTest extends ServerBe5ProjectTest

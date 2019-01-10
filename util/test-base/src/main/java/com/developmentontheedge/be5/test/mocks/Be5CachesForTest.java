@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.cache.Be5Caches;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.cache.Be5Caches;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.base.security.UserInfoHolder;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.security.UserInfoHolder;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.servlet.support.FilterSupport;

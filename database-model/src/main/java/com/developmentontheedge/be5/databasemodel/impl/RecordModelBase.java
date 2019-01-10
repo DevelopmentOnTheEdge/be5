@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.util;
 
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;

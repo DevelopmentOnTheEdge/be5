@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.operation.validation.Validator;
 

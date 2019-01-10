@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.base.security.UserInfoHolder
+import com.developmentontheedge.be5.security.UserInfoHolder
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest

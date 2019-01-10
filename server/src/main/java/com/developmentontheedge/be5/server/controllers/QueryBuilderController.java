@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;

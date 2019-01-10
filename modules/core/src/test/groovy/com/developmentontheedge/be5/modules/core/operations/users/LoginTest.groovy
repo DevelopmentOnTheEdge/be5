@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
-import com.developmentontheedge.be5.base.security.UserInfoProvider
+import com.developmentontheedge.be5.security.UserInfoProvider
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType

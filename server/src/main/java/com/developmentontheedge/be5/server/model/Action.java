@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrl;
 
 public class Action
 {

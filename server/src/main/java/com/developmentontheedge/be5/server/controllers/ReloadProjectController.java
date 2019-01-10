@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 @Singleton

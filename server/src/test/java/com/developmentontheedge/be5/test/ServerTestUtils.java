@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.config.CoreUtils;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.RoleType;

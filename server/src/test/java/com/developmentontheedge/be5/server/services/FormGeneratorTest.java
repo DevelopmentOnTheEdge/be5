@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.operation.validation;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;

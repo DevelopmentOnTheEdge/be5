@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.groovy.GroovyRegister;
-import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;

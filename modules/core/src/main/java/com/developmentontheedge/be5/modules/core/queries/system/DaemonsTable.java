@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.base.scheduling.DaemonStarter;
+import com.developmentontheedge.be5.scheduling.DaemonStarter;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;

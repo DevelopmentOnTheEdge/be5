@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.jetty;
 
-import com.developmentontheedge.be5.base.logging.LogConfigurator;
+import com.developmentontheedge.be5.logging.LogConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.server.session.HashSessionManager;

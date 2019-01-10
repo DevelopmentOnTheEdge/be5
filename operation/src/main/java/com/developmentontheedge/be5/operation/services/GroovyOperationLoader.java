@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.operation.services;
 
-import com.developmentontheedge.be5.base.lifecycle.Start;
-import com.developmentontheedge.be5.base.groovy.GroovyRegister;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.lifecycle.Start;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;

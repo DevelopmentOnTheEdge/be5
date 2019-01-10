@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.DateUtils;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.DateUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.Features;

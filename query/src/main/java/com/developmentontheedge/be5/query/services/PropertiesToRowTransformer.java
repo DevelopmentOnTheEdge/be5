@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.config.CoreUtils;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
 import com.developmentontheedge.be5.query.model.ColumnModel;

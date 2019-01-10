@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;

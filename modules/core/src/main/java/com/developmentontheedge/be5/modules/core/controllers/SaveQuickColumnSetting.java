@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.config.CoreUtils;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 

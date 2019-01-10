@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.base.lifecycle.Start;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.lifecycle.Start;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.modules.core.services.model.Category;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.CATEGORY_ID_PARAM;
 
 
 public class DocumentCategoriesPlugin implements DocumentPlugin

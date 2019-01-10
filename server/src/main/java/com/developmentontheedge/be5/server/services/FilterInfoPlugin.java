@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.util.FilterUtil;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;

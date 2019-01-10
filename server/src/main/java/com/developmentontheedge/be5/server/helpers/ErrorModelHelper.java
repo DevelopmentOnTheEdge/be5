@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.HtmlUtils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.ErrorTitles;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;

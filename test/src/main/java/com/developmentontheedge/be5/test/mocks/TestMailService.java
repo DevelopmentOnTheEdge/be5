@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.base.mail.MailService;
+import com.developmentontheedge.be5.mail.MailService;
 
 import javax.mail.internet.InternetAddress;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider
-import com.developmentontheedge.be5.base.meta.UserAwareMeta
+import com.developmentontheedge.be5.meta.ProjectProvider
+import com.developmentontheedge.be5.meta.UserAwareMeta
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.metadata.model.GroovyOperation
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest

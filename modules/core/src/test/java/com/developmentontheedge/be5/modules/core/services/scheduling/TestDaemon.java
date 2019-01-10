@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.scheduling;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.base.scheduling.Be5Job;
+import com.developmentontheedge.be5.scheduling.Be5Job;
 import org.quartz.JobExecutionContext;
 
 import javax.inject.Inject;

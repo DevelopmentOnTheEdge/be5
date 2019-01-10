@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.base.config.CoreUtils;
+import com.developmentontheedge.be5.config.CoreUtils;
 
 import java.util.Collections;
 import java.util.Map;

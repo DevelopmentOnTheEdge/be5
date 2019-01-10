@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.cache.Be5Caches;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.cache.Be5Caches;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;

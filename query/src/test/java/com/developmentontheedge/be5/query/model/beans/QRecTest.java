@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.model.beans;
 
-import com.developmentontheedge.be5.base.util.DateUtils;
+import com.developmentontheedge.be5.util.DateUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import org.junit.Test;
 

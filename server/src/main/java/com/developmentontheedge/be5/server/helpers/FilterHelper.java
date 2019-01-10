@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.base.util.FilterUtil;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -14,8 +14,8 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class FilterHelper

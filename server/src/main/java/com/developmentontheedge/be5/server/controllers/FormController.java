@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 @Singleton

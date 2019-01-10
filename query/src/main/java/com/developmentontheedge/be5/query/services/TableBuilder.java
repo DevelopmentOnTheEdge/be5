@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.config.CoreUtils;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.util.LayoutUtils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;

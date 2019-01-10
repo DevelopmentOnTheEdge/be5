@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services
 
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode
-import com.developmentontheedge.be5.base.exceptions.Be5Exception
+import com.developmentontheedge.be5.exceptions.Be5ErrorCode
+import com.developmentontheedge.be5.exceptions.Be5Exception
 import com.developmentontheedge.be5.operation.OperationBe5ProjectDBTest
 import org.junit.Test
 

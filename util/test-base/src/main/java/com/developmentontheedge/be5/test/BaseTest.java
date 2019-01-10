@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.test;
 
 import ch.qos.logback.classic.Level;
-import com.developmentontheedge.be5.base.Bootstrap;
-import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.security.UserInfoHolder;
-import com.developmentontheedge.be5.base.cache.Be5Caches;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.logging.LogConfigurator;
+import com.developmentontheedge.be5.Bootstrap;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfoHolder;
+import com.developmentontheedge.be5.cache.Be5Caches;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.logging.LogConfigurator;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;

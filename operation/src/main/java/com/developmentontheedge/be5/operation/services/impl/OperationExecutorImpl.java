@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.groovy.GroovyRegister;
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;

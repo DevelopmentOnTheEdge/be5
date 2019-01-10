@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.base.groovy.GroovyRegister;
-import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaClass;

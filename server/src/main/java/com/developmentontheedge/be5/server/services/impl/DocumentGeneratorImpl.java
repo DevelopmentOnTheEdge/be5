@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.util.FilterUtil;
-import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.base.util.LayoutUtils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_MORE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_MORE_ACTION;
 import static com.developmentontheedge.be5.query.QueryConstants.CLEAN_NAV;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;

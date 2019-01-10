@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Rule;
 import org.junit.Test;

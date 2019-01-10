@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.ControllerSupport;

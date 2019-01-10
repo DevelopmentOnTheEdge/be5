@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 
 import javax.inject.Inject;

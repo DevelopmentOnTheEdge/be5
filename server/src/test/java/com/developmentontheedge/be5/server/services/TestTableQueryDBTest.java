@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import org.junit.Before;

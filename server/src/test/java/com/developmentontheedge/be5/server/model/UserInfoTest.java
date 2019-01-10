@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
-import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;

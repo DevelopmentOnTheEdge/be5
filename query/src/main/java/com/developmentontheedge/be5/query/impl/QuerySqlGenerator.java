@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.meta.Meta;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
@@ -17,7 +17,7 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;

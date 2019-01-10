@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 import static com.google.common.collect.ImmutableMap.*;

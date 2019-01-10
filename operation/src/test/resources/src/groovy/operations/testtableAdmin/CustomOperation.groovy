@@ -1,6 +1,6 @@
 package testtableAdmin
 
-import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport
 

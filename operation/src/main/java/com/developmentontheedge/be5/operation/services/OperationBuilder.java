@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.services;
 
-import com.developmentontheedge.be5.base.meta.Meta;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;

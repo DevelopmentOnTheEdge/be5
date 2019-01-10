@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.util;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.model.Base64File;
 import com.google.common.base.Strings;

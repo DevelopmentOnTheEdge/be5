@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.model.beans;
 
-import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.base.groovy.GroovyRegister;
+import com.developmentontheedge.be5.model.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 

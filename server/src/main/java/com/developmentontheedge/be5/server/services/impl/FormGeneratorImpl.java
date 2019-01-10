@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.security.UserInfoProvider;
-import com.developmentontheedge.be5.base.meta.UserAwareMeta;
-import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.base.util.LayoutUtils;
+import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 

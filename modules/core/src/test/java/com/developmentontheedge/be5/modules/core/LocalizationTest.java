@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

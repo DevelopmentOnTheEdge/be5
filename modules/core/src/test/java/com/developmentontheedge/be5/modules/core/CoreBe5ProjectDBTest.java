@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.test.TestProjectProvider;
 import com.developmentontheedge.be5.test.TestUtils;
 import com.google.inject.AbstractModule;

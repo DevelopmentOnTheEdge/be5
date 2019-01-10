@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.base.config.CoreUtils;
+import com.developmentontheedge.be5.BaseModule;
+import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;

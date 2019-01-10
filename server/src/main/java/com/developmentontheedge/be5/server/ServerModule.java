@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server;
 
-import com.developmentontheedge.be5.base.BaseModule;
+import com.developmentontheedge.be5.BaseModule;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
