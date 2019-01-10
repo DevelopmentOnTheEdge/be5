@@ -7,6 +7,8 @@
          directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
          pattern="common"/>
 
+  <Manager pathname="${catalina.base}/temp/PROJECT_NAME_SESSIONS.ser"/>
+
   PARAMETERS
 
   <Resource name="jdbc/PROJECT_NAME"
