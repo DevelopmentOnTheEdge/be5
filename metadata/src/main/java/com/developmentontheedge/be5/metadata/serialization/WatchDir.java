@@ -159,7 +159,7 @@ public class WatchDir
                 registerAll(projectFileSystem);
             }
         }
-        log.info("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
+        log.fine("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
 
     public WatchDir onModify(Consumer<Path> onModify)

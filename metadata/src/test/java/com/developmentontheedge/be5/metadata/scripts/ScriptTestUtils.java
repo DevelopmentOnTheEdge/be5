@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
+import com.developmentontheedge.be5.metadata.JulLogConfigurator;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Module;
@@ -12,6 +13,7 @@ import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -32,6 +34,12 @@ public abstract class ScriptTestUtils
     protected Project project;
 
     public final String profileTestMavenPlugin = "profileTestMetadataScript";
+
+    @BeforeClass
+    public static void setUpClass()
+    {
+        JulLogConfigurator.config();
+    }
 
     @Before
     public void setUp() throws Exception
