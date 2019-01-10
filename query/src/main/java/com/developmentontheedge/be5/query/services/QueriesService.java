@@ -1,18 +1,18 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.cache.Be5Caches;
-import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -400,7 +400,16 @@ public class QueriesService
 
     public <T> List<T> list(String tableName, String queryName, Map<String, ?> parameters, ResultSetParser<T> parser)
     {
-        Query query = meta.getQuery(tableName, queryName);
+        return list(meta.getQuery(tableName, queryName), parameters, parser);
+    }
+
+    public <T> List<T> list(String sql, Map<String, ?> parameters, ResultSetParser<T> parser)
+    {
+        return list(meta.createQueryFromSql(sql), parameters, parser);
+    }
+
+    public <T> List<T> list(Query query, Map<String, ?> parameters, ResultSetParser<T> parser)
+    {
         String sql = querySqlGenerator.getSql(query, parameters).format();
         return db.list(sql, parser);
     }
