@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.lifecycle.Start;
 import com.developmentontheedge.be5.meta.ProjectProvider;
-import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
@@ -18,6 +18,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataSourceServiceImpl implements DataSourceService
@@ -58,29 +59,14 @@ public class DataSourceServiceImpl implements DataSourceService
     public void start() throws Exception
     {
         Project project = projectProvider.get();
-        String configInfo;
-
-        Connection conn = null;
-        String userName;
 
         try
         {
-            String name = "jdbc/" + project.getAppName();
             InitialContext ic = new InitialContext();
             Context xmlContext = (Context) ic.lookup("java:comp/env");
-            dataSource = (DataSource) xmlContext.lookup(name);
 
-            conn = dataSource.getConnection();
-            connectionUrl = conn.getMetaData().getURL();
-            userName = conn.getMetaData().getUserName();
-
-            type = Rdbms.getRdbms(connectionUrl);
-
-            configInfo = "Context Configuration (context.xml): " + "'" + name + "'";
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internal("When fetching datasource", e);
+            initDataSource(project, xmlContext);
+            initRdbmsType();
         }
         catch (NamingException e)
         {
@@ -99,12 +85,47 @@ public class DataSourceServiceImpl implements DataSourceService
             }
             connectionUrl = profile.getJdbcUrl().createConnectionUrl(false);
             bds.setUrl(connectionUrl);
-            userName = profile.getUsername();
+            String userName = profile.getUsername();
             bds.setUsername(userName);
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            configInfo = "Connection profile - " + profile.getName();
+            log.info("Connection profile - " + profile.getName());
+            log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
+        }
+
+        project.setDatabaseSystem(type);
+        projectProvider.addToReload(() -> project.setDatabaseSystem(type));
+    }
+
+    private void initDataSource(Project project, Context xmlContext)
+    {
+        try
+        {
+            String name = "jdbc/" + project.getAppName();
+            dataSource = (DataSource) xmlContext.lookup(name);
+            log.info("Context Configuration (context.xml): " + "'" + name + "'");
+        }
+        catch (Throwable e)
+        {
+            throw Be5Exception.internal("Error on init datasource", e);
+        }
+    }
+
+    private void initRdbmsType()
+    {
+        Connection conn = null;
+        try
+        {
+            conn = dataSource.getConnection();
+            connectionUrl = conn.getMetaData().getURL();
+            String userName = conn.getMetaData().getUserName();
+            type = Rdbms.getRdbms(connectionUrl);
+            log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
+        }
+        catch (Throwable e)
+        {
+            throw Be5Exception.internal("Error on init datasource", e);
         }
         finally
         {
@@ -116,15 +137,9 @@ public class DataSourceServiceImpl implements DataSourceService
                 }
                 catch (SQLException e)
                 {
-                    throw Be5Exception.internal("When close conn after fetching datasource", e);
+                    log.log(Level.SEVERE, "When close conn after fetching datasource", e);
                 }
             }
         }
-
-        project.setDatabaseSystem(type);
-        projectProvider.addToReload(() -> project.setDatabaseSystem(type));
-
-        log.info(configInfo);
-        log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
     }
 }
