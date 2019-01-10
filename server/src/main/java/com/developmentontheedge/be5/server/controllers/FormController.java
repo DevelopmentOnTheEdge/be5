@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
@@ -13,6 +12,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.google.inject.Stage;
@@ -20,8 +20,10 @@ import com.google.inject.Stage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
@@ -30,6 +32,8 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 @Singleton
 public class FormController extends JsonApiModelController
 {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     private final FormGenerator formGenerator;
     private final UserHelper userHelper;
     private final ErrorModelHelper errorModelHelper;

@@ -14,8 +14,10 @@ import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
@@ -23,6 +25,7 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 @Singleton
 public class DocumentController extends JsonApiModelController
 {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
     private final DocumentGenerator documentGenerator;
     private final ErrorModelHelper errorModelHelper;
 

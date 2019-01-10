@@ -9,13 +9,14 @@ import com.developmentontheedge.be5.web.impl.ResponseImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.invoke.MethodHandles;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public abstract class BaseControllerSupport extends ControllerSupport
 {
-    protected static final Logger log = Logger.getLogger(BaseControllerSupport.class.getName());
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

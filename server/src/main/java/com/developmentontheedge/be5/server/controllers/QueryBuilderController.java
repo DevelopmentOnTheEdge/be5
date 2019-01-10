@@ -29,12 +29,14 @@ import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
@@ -42,6 +44,8 @@ import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER
 @Singleton
 public class QueryBuilderController extends JsonApiModelController
 {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final Meta meta;
