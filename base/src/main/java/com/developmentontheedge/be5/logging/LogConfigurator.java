@@ -18,6 +18,6 @@ public class LogConfigurator
     public static void setLevel(Level level)
     {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.INFO);
+        root.setLevel(level);
     }
 }
