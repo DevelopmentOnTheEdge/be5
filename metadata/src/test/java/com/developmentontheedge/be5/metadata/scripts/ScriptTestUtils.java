@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,7 +57,7 @@ public abstract class ScriptTestUtils
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(modulePath.resolve("project.yaml").toUri().toURL());
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
 
         LoadContext ctx = new LoadContext();

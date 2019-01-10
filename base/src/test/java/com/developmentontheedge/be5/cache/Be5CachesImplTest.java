@@ -1,15 +1,14 @@
-package com.developmentontheedge.be5.services.impl;
+package com.developmentontheedge.be5.base.cache;
 
-import com.developmentontheedge.be5.BaseTest;
-import com.developmentontheedge.be5.cache.Be5CachesImpl;
-import com.developmentontheedge.be5.meta.ProjectProvider;
-import com.developmentontheedge.be5.config.ConfigurationProvider;
+import com.developmentontheedge.be5.base.BaseTest;
+import com.developmentontheedge.be5.base.config.ConfigurationProvider;
+import com.developmentontheedge.be5.base.meta.ProjectProvider;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.Test;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class Be5CachesImplTest extends BaseTest
 {

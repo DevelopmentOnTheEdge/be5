@@ -1,11 +1,14 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.base.logging.LogConfigurator;
+import com.developmentontheedge.be5.base.meta.ProjectProviderImpl;
 
 import com.developmentontheedge.be5.meta.ProjectProviderImpl;
 import com.developmentontheedge.be5.database.DatabaseTest;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.sql.format.dbms.Dbms;
 import com.google.inject.Stage;
@@ -17,8 +20,8 @@ import org.junit.rules.TemporaryFolder;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
-import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,12 +38,13 @@ public class DataSourceServiceImplTest extends DatabaseTest
     @Before
     public void setUp() throws Exception
     {
+        LogConfigurator.configure();
         path = tmp.newFolder().toPath();
         Project project = ProjectTestUtils.getProject("test");
         ProjectTestUtils.createH2Profile(project, "DataSourceServiceImplTest");
         project.setConnectionProfileName("DataSourceServiceImplTest");
         Serialization.save(project, path);
-        ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));
+        ModuleLoader2.loadAllProjects(singletonList(path.resolve("project.yaml").toUri().toURL()), new NullLogger());
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.metadata.scripts.AppDropAllTables;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,7 +58,7 @@ public abstract class TestMavenUtils
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
         LoadContext ctx = new LoadContext();
         ModuleLoader2.mergeAllModules(project, Collections.emptyList(), ctx);
@@ -65,14 +66,16 @@ public abstract class TestMavenUtils
         new AppDropAllTables()
                 .setBe5ProjectPath(tpmProjectPath.toFile().toPath())
                 .setProfileName(profileTestMavenPlugin)
+                .setLogger(new NullLogger())
                 .execute();
     }
 
-    void createTestDB() throws Exception
+    void createTestDB()
     {
         AppDb appDb = new AppDb();
         appDb.setBe5Project(project)
                 .setProfileName(profileTestMavenPlugin)
+                .setLogger(new NullLogger())
                 .execute();
 
         assertEquals(1, appDb.getCreatedTables());

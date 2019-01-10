@@ -34,7 +34,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Start(order = 20)
-    public void start() throws Exception
+    public void start()
     {
         projectProvider.addToReload(this::compileLocalizations);
         compileLocalizations();
@@ -203,11 +203,6 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public String getFieldTitle(String entityName, String operationName, String queryName, String name)
     {
         return localizations.getFieldTitle(getLanguage(), entityName, operationName, queryName, name).orElse(name);
-    }
-
-    public CompiledLocalizations getLocalizations()
-    {
-        return localizations;
     }
 
     private String getLanguage()

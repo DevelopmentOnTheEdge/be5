@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
-    protected ProcessController logger = new MavenLogger(getLog());
+    public ProcessController logger = new MavenLogger(getLog());
 
     @Parameter(property = "BE5_PROJECT_PATH", defaultValue = "./")
     public File projectPath;

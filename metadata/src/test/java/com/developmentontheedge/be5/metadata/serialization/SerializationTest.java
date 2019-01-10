@@ -31,6 +31,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import one.util.streamex.StreamEx;
 import org.junit.Assume;
 import org.junit.Ignore;
@@ -149,7 +150,7 @@ public class SerializationTest
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(modulePath.resolve("project.yaml").toUri().toURL());
         urls.add(path.resolve("project.yaml").toUri().toURL());
-        ModuleLoader2.loadAllProjects(urls);
+        ModuleLoader2.loadAllProjects(urls, new NullLogger());
 
         ModuleLoader2.mergeAllModules(project, Collections.singletonList(moduleProject2), lc);
 

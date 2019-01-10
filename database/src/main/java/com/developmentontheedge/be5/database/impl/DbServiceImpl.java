@@ -156,7 +156,7 @@ public class DbServiceImpl implements DbService
 
     private int updateUnsafe(Connection conn, String sql, Object... params) throws SQLException
     {
-        log.warning("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
+        log.info("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);
     }
 

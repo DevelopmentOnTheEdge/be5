@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.maven.generate;
 
 import com.developmentontheedge.be5.maven.TestMavenUtils;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -19,8 +20,7 @@ public class GenerateContextMavenTest extends TestMavenUtils
 
         mojo.generateContextPath = targetPath.toString();
         mojo.skipGenerateContextPath = false;
-
+        mojo.logger = new NullLogger();
         mojo.execute();
     }
-
 }

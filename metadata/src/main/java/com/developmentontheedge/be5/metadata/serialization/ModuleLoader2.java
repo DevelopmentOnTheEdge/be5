@@ -58,10 +58,14 @@ public class ModuleLoader2
 
     public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
     {
-        JULLogger julLogger = new JULLogger(log);
-        loadAllProjects(dirty, julLogger);
+        return findAndLoadProjectWithModules(dirty, new JULLogger(log));
+    }
 
-        return findProjectAndMergeModules(julLogger);
+    public static Project findAndLoadProjectWithModules(boolean dirty, ProcessController logger)
+            throws ProjectLoadException
+    {
+        loadAllProjects(dirty, logger);
+        return findProjectAndMergeModules(logger);
     }
 
     private static Project findProjectAndMergeModules(ProcessController logger) throws ProjectLoadException
@@ -174,11 +178,6 @@ public class ModuleLoader2
         return list;
     }
 
-    public static void loadAllProjects(List<URL> urls)
-    {
-        loadAllProjects(urls, new JULLogger(log));
-    }
-
     public static void loadAllProjects(List<URL> urls, ProcessController logger)
     {
         modulesMap = null;
@@ -242,7 +241,7 @@ public class ModuleLoader2
 
     public static Path getModulePath(String name, ProcessController logger)
     {
-        loadAllProjects(false, new JULLogger(log));
+        loadAllProjects(false, logger);
 
         return modulesMap.get(name).getLocation();
     }
@@ -258,7 +257,6 @@ public class ModuleLoader2
     }
 
     public static List<Project> loadModules(Project application, ProcessController logger, LoadContext loadContext)
-            throws ProjectLoadException
     {
         List<Project> result = new ArrayList<>();
         for (Module module : application.getModules())

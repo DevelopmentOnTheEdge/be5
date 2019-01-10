@@ -42,8 +42,6 @@ public class WatchDirTest
 
                 createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" + new Random().nextInt());
                 Serialization.save(project, path);
-
-                System.out.println(modify[0]);
             }
 
             assertTrue(modify[0]);

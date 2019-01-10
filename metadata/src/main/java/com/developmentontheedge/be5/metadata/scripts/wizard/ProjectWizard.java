@@ -27,7 +27,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 {
     private InputStream inputStream = System.in;
     private BufferedReader bufferedReader;
-    private static PrintStream out = System.out;
+    private PrintStream out = System.out;
 
     private static class MenuAction implements Runnable
     {
@@ -578,6 +578,12 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
     public ProjectWizard setInputStream(InputStream inputStream)
     {
         this.inputStream = inputStream;
+        return this;
+    }
+
+    public ProjectWizard setPrintStream(PrintStream printStream)
+    {
+        this.out = printStream;
         return this;
     }
 

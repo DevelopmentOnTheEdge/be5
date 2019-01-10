@@ -44,8 +44,8 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
         super.contextDestroyed(sce);
     }
 
-    private Injector getCurrentInjector(ServletContextEvent servletContextEvent)
+    private Injector getCurrentInjector(ServletContextEvent sce)
     {
-        return (Injector) servletContextEvent.getServletContext().getAttribute(Injector.class.getName());
+        return (Injector) sce.getServletContext().getAttribute(Injector.class.getName());
     }
 }

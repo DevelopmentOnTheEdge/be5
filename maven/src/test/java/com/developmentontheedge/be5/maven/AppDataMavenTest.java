@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.maven;
 
+import com.developmentontheedge.be5.metadata.util.NullLogger;
 import org.junit.Test;
 
 public class AppDataMavenTest extends TestMavenUtils
@@ -15,7 +16,7 @@ public class AppDataMavenTest extends TestMavenUtils
         mojo.connectionProfileName = profileTestMavenPlugin;
         mojo.script = "Post-db";
         mojo.ignoreMissing = false;
-
+        mojo.logger = new NullLogger();
         mojo.execute();
     }
 

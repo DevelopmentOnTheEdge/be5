@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.TreeSet;
@@ -30,7 +32,8 @@ public class ProjectWizardTest
     {
         tpmProjectPath = tmp.newFolder().toPath();
         projectWizard = new ProjectWizard()
-                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString());
+                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString())
+                .setPrintStream(new PrintStream(new OutputStream() {public void write(int b) {}}));
     }
 
     @Test

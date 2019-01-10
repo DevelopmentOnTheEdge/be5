@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.services;
+package com.developmentontheedge.be5.base.meta;
 
-import com.developmentontheedge.be5.BaseTest;
-import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.base.BaseTest;
 import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
@@ -86,7 +85,7 @@ public class MetaTest extends BaseTest
         assertEquals(1, daemons.size());
         daemons.iterator().hasNext();
         Daemon daemon = daemons.iterator().next();
-        assertEquals("com.developmentontheedge.be5.scheduling.TestDaemon", daemon.getClassName());
+        assertEquals("com.developmentontheedge.be5.base.scheduling.TestDaemon", daemon.getClassName());
         assertEquals("periodic", daemon.getDaemonType());
     }
 }
