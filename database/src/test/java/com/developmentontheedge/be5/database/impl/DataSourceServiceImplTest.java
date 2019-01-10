@@ -1,10 +1,8 @@
 package com.developmentontheedge.be5.database.impl;
 
-import com.developmentontheedge.be5.base.logging.LogConfigurator;
-import com.developmentontheedge.be5.base.meta.ProjectProviderImpl;
-
-import com.developmentontheedge.be5.meta.ProjectProviderImpl;
 import com.developmentontheedge.be5.database.DatabaseTest;
+import com.developmentontheedge.be5.logging.LogConfigurator;
+import com.developmentontheedge.be5.meta.ProjectProviderImpl;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;

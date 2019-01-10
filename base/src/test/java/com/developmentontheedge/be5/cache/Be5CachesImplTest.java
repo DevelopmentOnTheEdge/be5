@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.base.cache;
+package com.developmentontheedge.be5.cache;
 
-import com.developmentontheedge.be5.base.BaseTest;
-import com.developmentontheedge.be5.base.config.ConfigurationProvider;
-import com.developmentontheedge.be5.base.meta.ProjectProvider;
+import com.developmentontheedge.be5.BaseTest;
+import com.developmentontheedge.be5.config.ConfigurationProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.Test;
 
@@ -12,8 +12,8 @@ import static org.junit.Assert.assertEquals;
 
 public class Be5CachesImplTest extends BaseTest
 {
-    @Inject ConfigurationProvider configurationProvider;
-    @Inject ProjectProvider projectProvider;
+    @Inject private ConfigurationProvider configurationProvider;
+    @Inject private ProjectProvider projectProvider;
 
     @Test
     public void clearAll()

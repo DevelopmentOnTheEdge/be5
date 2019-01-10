@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.base.lifecycle.LifecycleService;
-import com.developmentontheedge.be5.base.lifecycle.LifecycleSupport;
+import com.developmentontheedge.be5.lifecycle.LifecycleService;
+import com.developmentontheedge.be5.lifecycle.LifecycleSupport;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import static com.developmentontheedge.be5.base.lifecycle.State.STOPPED;
+import static com.developmentontheedge.be5.lifecycle.State.STOPPED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;

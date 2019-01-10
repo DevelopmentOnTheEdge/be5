@@ -116,12 +116,12 @@ public class CompiledLocalizations
     // language -> entity -> CompiledEntityLocalizations
     private final Table<String, String, CompiledEntityLocalizations> all;
 
-    public CompiledLocalizations(Table<String, String, CompiledEntityLocalizations> all)
+    private CompiledLocalizations(Table<String, String, CompiledEntityLocalizations> all)
     {
         this.all = all;
     }
 
-    public Optional<String> getEntityTitle(String language, final String entityName)
+    Optional<String> getEntityTitle(String language, final String entityName)
     {
         checkNotNull(language);
         checkNotNull(entityName);
@@ -129,7 +129,7 @@ public class CompiledLocalizations
                 CompiledEntityLocalizations.fnGetFirstByTopic(DatabaseConstants.L10N_TOPIC_DISPLAY_NAME));
     }
 
-    public String getOperationTitle(String language, String entityName, final String name)
+    String getOperationTitle(String language, String entityName, final String name)
     {
         checkNotNull(language);
         checkNotNull(entityName);
@@ -142,7 +142,7 @@ public class CompiledLocalizations
                 .orElse(name));
     }
 
-    public String getQueryTitle(String language, String entityName, final String queryName)
+    String getQueryTitle(String language, String entityName, final String queryName)
     {
         checkNotNull(language);
         checkNotNull(entityName);
@@ -155,7 +155,7 @@ public class CompiledLocalizations
                 .orElse(queryName));
     }
 
-    public Optional<String> getFieldTitle(String language, String entityName, String operationName,
+    Optional<String> getFieldTitle(String language, String entityName, String operationName,
                                           String queryName, String name)
     {
         Optional<String> title = get(language, entityName, operationName, name);
@@ -168,7 +168,7 @@ public class CompiledLocalizations
         return title;
     }
 
-    public Optional<String> getFieldTitle(String language, String entityName, String operationName, String name)
+    Optional<String> getFieldTitle(String language, String entityName, String operationName, String name)
     {
         return get(language, entityName, operationName, name);
     }
