@@ -73,12 +73,10 @@ public class TableBuilder
 
     public TableModel get()
     {
-        List<QRec> propertiesList;
         List<ColumnModel> columns = new ArrayList<>();
         List<RowModel> rows = new ArrayList<>();
 
-        propertiesList = getRows();
-        collectColumnsAndRows(query, propertiesList, columns, rows);
+        collectColumnsAndRows(query, getRows(), columns, rows);
 
         return new TableModel(
                 columns,
