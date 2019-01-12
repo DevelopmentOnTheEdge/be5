@@ -25,6 +25,6 @@ public class QueryModule extends AbstractModule
         bind(QueryMetaHelper.class).in(Scopes.SINGLETON);
         bind(CellFormatter.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder().implement(TableBuilder.class, TableBuilder.class)
-                .build(TableBuilder.TableModelFactory.class));
+                .build(TableBuilder.TableBuilderFactory.class));
     }
 }

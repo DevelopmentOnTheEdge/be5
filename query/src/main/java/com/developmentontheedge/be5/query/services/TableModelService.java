@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class TableModelService
 {
-    private final TableBuilder.TableModelFactory tableBuilderFactory;
+    private final TableBuilder.TableBuilderFactory tableBuilderFactory;
 
     @Inject
-    public TableModelService(TableBuilder.TableModelFactory tableBuilderFactory)
+    public TableModelService(TableBuilder.TableBuilderFactory tableBuilderFactory)
     {
         this.tableBuilderFactory = tableBuilderFactory;
     }

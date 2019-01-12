@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
@@ -16,6 +15,7 @@ import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -50,7 +50,7 @@ public class TableBuilder
         this.queryExecutor = queryService.get(query, updateLimit(query, parameters));
     }
 
-    public interface TableModelFactory
+    public interface TableBuilderFactory
     {
         TableBuilder create(Query query, Map<String, Object> parameters);
     }
