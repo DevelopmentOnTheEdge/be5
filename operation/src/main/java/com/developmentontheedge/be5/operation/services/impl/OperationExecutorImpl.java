@@ -198,12 +198,9 @@ public class OperationExecutorImpl implements OperationExecutor
 
         List<OperationExtender> operationExtenders = new ArrayList<>();
 
-        for (com.developmentontheedge.be5.metadata.model.OperationExtender
-                operationExtenderModel : operationExtenderModels)
+        for (com.developmentontheedge.be5.metadata.model.OperationExtender model : operationExtenderModels)
         {
-            OperationExtender operationExtender = getOperationExtenderInstance(operationExtenderModel);
-            injector.injectMembers(operationExtender);
-            operationExtenders.add(operationExtender);
+            operationExtenders.add(getOperationExtender(model));
         }
         return operationExtenders;
     }
@@ -320,14 +317,21 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
+    private OperationExtender getOperationExtender(com.developmentontheedge.be5.metadata.model.OperationExtender model)
+    {
+        OperationExtender operationExtender = getOperationExtenderInstance(model);
+        injector.injectMembers(operationExtender);
+        return operationExtender;
+    }
+
     private OperationExtender getOperationExtenderInstance(
-            com.developmentontheedge.be5.metadata.model.OperationExtender operationExtenderModel)
+            com.developmentontheedge.be5.metadata.model.OperationExtender model)
     {
         try
         {
-            if (operationExtenderModel.getClass() == GroovyOperationExtender.class)
+            if (model.getClass() == GroovyOperationExtender.class)
             {
-                GroovyOperationExtender groovyExtender = (GroovyOperationExtender) operationExtenderModel;
+                GroovyOperationExtender groovyExtender = (GroovyOperationExtender) model;
                 if (!getDevFileExists() && meta.getProject().hasFeature(Features.COMPILED_GROOVY))
                 {
                     String className = getCompiledGroovyClassName(groovyExtender.getFileName());
@@ -357,12 +361,12 @@ public class OperationExecutorImpl implements OperationExecutor
             }
             else
             {
-                return (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
+                return (OperationExtender) Class.forName(model.getClassName()).newInstance();
             }
         }
         catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
         {
-            throw Be5Exception.internalInOperationExtender(operationExtenderModel, e);
+            throw Be5Exception.internalInOperationExtender(model, e);
         }
     }
 }
