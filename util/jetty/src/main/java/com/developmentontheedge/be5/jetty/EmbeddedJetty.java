@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
@@ -65,7 +66,6 @@ public class EmbeddedJetty
     private WebAppContext getWebAppContext()
     {
         WebAppContext context = new WebAppContext();
-        context.setDefaultsDescriptor(null);
         context.setSessionHandler(getSessionHandler());
         context.setDescriptor(descriptorPath);
         context.setParentLoaderPriority(true);
@@ -76,6 +76,8 @@ public class EmbeddedJetty
         context.setContextPath("/");
         context.setResourceBase(resourceBase);
         context.setMaxFormContentSize(1024 * 1024 * 1024);
+        context.setDefaultsDescriptor(null);
+        context.addServlet(DefaultServlet.class, "/");
         return context;
     }
 
