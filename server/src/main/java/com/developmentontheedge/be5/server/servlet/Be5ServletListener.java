@@ -20,9 +20,7 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
 
     protected Stage getStage()
     {
-        Stage stage = ModuleLoader2.getDevFileExists() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
-        log.info("Stage: " + stage);
-        return stage;
+        return ModuleLoader2.getDevFileExists() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
     }
 
     @Override
@@ -31,9 +29,11 @@ public abstract class Be5ServletListener extends GuiceServletContextListener
         LogConfigurator.configure();
         long startTime = System.currentTimeMillis();
         super.contextInitialized(sce);
-        log.info("Injector created in " + (System.currentTimeMillis() - startTime) + " ms.");
+        Injector injector = getCurrentInjector(sce);
+        log.info("Injector created in " + (System.currentTimeMillis() - startTime) + " ms. " +
+                "Stage: " + injector.getInstance(Stage.class).name());
 
-        be5Bootstrap = new Bootstrap(getCurrentInjector(sce));
+        be5Bootstrap = new Bootstrap(injector);
         be5Bootstrap.boot();
     }
 
