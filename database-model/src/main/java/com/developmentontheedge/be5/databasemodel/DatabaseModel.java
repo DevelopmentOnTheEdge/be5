@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.groovy.GroovyRegister;
-import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaClass;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
+import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
 
 import javax.inject.Inject;

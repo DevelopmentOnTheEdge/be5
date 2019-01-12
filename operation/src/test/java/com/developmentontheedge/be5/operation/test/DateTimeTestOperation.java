@@ -1,21 +1,16 @@
 package com.developmentontheedge.be5.operation.test;
 
-import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import javax.inject.Inject;
 import java.sql.Date;
 import java.util.Map;
 
 
 public class DateTimeTestOperation extends TestOperationSupport
 {
-    @Inject
-    SqlHelper sqlHelper;
-
     @Override
     public Object getParameters(Map<String, Object> presetValues)
     {
@@ -31,8 +26,6 @@ public class DateTimeTestOperation extends TestOperationSupport
     {
         DynamicPropertySet params = (DynamicPropertySet) parameters;
         db.insert("INSERT INTO testtable (activeFrom) VALUES (?)", params.getValue("activeFrom"));
-//        sqlHelper.insert(getInfo().getEntityName(),
-//                DpsUtils.toLinkedHashMap((DynamicPropertySet) parameters));
     }
 
 }

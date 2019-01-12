@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.database.impl;
+package com.developmentontheedge.be5.databasemodel.helpers;
 
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.sql.format.Ast;

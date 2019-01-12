@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.databasemodel;
 import com.developmentontheedge.be5.BaseModule;
 import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.DatabaseModule;
+import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.test.BaseTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.google.inject.AbstractModule;
@@ -34,6 +35,7 @@ public abstract class DatabaseModelSqlMockProjectTest extends BaseTest
         protected void configure()
         {
             install(new BaseDbMockTestModule());
+            bind(SqlHelper.class).in(Scopes.SINGLETON);
             bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
         }
     }

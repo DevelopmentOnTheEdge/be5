@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.util.Utils;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.OperationResult;

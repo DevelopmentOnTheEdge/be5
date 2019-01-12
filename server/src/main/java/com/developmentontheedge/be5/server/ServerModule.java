@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.BaseModule;
 import com.developmentontheedge.be5.database.DatabaseModule;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
 import com.developmentontheedge.be5.query.QuerySession;
