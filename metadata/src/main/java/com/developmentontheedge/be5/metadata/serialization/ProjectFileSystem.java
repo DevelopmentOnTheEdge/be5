@@ -155,14 +155,15 @@ public class ProjectFileSystem
         List<String> files = Arrays.asList(structure.getSecurityFile(), structure.getDaemonsFile(),
                 structure.getPagesFile(), structure.getLocalConnectionProfilesFile(),
                 structure.getRemoteConnectionProfilesFile(), structure.getMassChangesFile(),
-                structure.getCustomizationFile(), structure.getSelectedProfileFile(), structure.getDevFile());
+                structure.getCustomizationFile(), structure.getSelectedProfileFile(),
+                structure.getProjectFile(), structure.getDevFile());
         StreamEx.of(files).map(path -> resolve(root, path)).map(Path::getParent).forEach(p -> result.put(p, false));
 
         List<String> dirs = Arrays.asList(
                 structure.getDataDir(), structure.getEntitiesDir(),
                 structure.getJsExtendersDir(), structure.getJsFormsDir(), structure.getJsOperationsDir(),
                 structure.getJsQueriesDir(), structure.getL10nDir());
-        StreamEx.of(dirs).map(path -> resolve(root, path)).append(root).forEach(p -> result.put(p, false));
+        StreamEx.of(dirs).map(path -> resolve(root, path)).forEach(p -> result.put(p, false));
 
         List<String> recursiveDirs = Arrays.asList(structure.getScriptsDir(), structure.getModulesDir(),
                 structure.getMacroDir(), structure.getGroovyOperationsDir(), structure.getGroovyExtendersDir(),
@@ -177,7 +178,7 @@ public class ProjectFileSystem
 
     public Path getProjectFile()
     {
-        return root.resolve(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
+        return root.resolve(structure.getProjectFile());
     }
 
     public Path getSecurityFile()

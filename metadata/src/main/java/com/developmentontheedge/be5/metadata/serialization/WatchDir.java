@@ -29,6 +29,11 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
+/**
+ * to do watch single file - not critical
+ * https://stackoverflow.com/questions/16251273/
+ * can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
+ */
 public class WatchDir
 {
     private static final Logger log = Logger.getLogger(WatchDir.class.getName());
