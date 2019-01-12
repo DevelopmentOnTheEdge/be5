@@ -1,16 +1,15 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
+import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.groovy.GroovyRegister;
 import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.util.Utils;
-import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.metadata.model.JavaOperation;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationExtender;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -19,8 +18,9 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
+import com.developmentontheedge.be5.operation.validation.Validator;
+import com.developmentontheedge.be5.util.Utils;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -159,6 +159,7 @@ public class OperationExecutorImpl implements OperationExecutor
         {
             Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
             operation.setResult(OperationResult.error(be5Exception));
+            log.log(Level.SEVERE, be5Exception.getMessage(), e);
             return parameters;
         }
     }

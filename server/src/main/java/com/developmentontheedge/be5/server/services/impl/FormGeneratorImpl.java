@@ -2,10 +2,7 @@ package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -13,6 +10,7 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
@@ -21,13 +19,13 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
@@ -36,8 +34,6 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 public class FormGeneratorImpl implements FormGenerator
 {
-    private static final Logger log = Logger.getLogger(FormGeneratorImpl.class.getName());
-
     private final UserAwareMeta userAwareMeta;
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
@@ -103,11 +99,6 @@ public class FormGeneratorImpl implements FormGenerator
     private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
-        if (operation.getResult().getStatus() == OperationStatus.ERROR)
-        {
-            log.log(Level.SEVERE, "Error in operation: " + getUrl(operation).toString(),
-                    (Throwable) operation.getResult().getDetails());
-        }
         Either<FormPresentation, OperationResultPresentation> data;
         if (result.isFirst())
         {
