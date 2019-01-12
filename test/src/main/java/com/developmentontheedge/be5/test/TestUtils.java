@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.mail.MailService;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -15,7 +15,6 @@ import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.mail.MailService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
@@ -25,6 +24,7 @@ import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
 import com.developmentontheedge.be5.test.mocks.TestResponse;
 import com.developmentontheedge.be5.test.mocks.TestSession;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
@@ -33,6 +33,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.google.inject.servlet.ServletModule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
@@ -310,10 +311,10 @@ public abstract class TestUtils extends BaseTest
         }
     }
 
-    public static class WebTestModule extends AbstractModule
+    public static class WebTestModule extends ServletModule
     {
         @Override
-        protected void configure()
+        protected void configureServlets()
         {
             bind(Session.class).to(TestSession.class).in(Scopes.SINGLETON);
             bind(QuerySession.class).to(TestQuerySession.class).in(Scopes.SINGLETON);
