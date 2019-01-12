@@ -65,6 +65,7 @@ public class EmbeddedJetty
     private WebAppContext getWebAppContext()
     {
         WebAppContext context = new WebAppContext();
+        context.setDefaultsDescriptor(null);
         context.setSessionHandler(getSessionHandler());
         context.setDescriptor(descriptorPath);
         context.setParentLoaderPriority(true);
