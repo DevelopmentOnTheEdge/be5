@@ -103,6 +103,11 @@ public class FormGeneratorImpl implements FormGenerator
     private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
+        if (operation.getResult().getStatus() == OperationStatus.ERROR)
+        {
+            log.log(Level.SEVERE, "Error in operation: " + getUrl(operation).toString(),
+                    (Throwable) operation.getResult().getDetails());
+        }
         Either<FormPresentation, OperationResultPresentation> data;
         if (result.isFirst())
         {
@@ -156,7 +161,6 @@ public class FormGeneratorImpl implements FormGenerator
 
     private ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
-        log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
         Be5Exception be5Exception = e.getClass() == Be5Exception.class ? (Be5Exception) e : Be5Exception.internal(e);
         return errorModelHelper.getErrorModel(be5Exception,
                 Collections.singletonMap(SELF_LINK, url.toString()));
