@@ -28,14 +28,14 @@ public class TemplateFilter extends FilterSupport
 
     private final HtmlMetaTags htmlMetaTags;
     private final UserHelper userHelper;
+    private final ProjectProvider projectProvider;
 
     @Inject
     public TemplateFilter(UserHelper userHelper, ProjectProvider projectProvider, HtmlMetaTags htmlMetaTags)
     {
         this.userHelper = userHelper;
         this.htmlMetaTags = htmlMetaTags;
-
-        projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
+        this.projectProvider = projectProvider;
     }
 
     @Override
@@ -51,6 +51,8 @@ public class TemplateFilter extends FilterSupport
         templateResolver.setCacheTTLMs(3600000L);
         templateResolver.setCacheable(true);
         templateEngine.setTemplateResolver(templateResolver);
+
+        projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
     }
 
     @Override
