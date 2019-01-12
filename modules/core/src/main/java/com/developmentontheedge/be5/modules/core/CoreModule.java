@@ -1,9 +1,6 @@
 package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.config.CoreUtils;
-import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
-import com.developmentontheedge.be5.modules.core.controllers.SaveQuickColumnSetting;
-import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
@@ -17,20 +14,16 @@ import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.OperationLoggingImpl;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.OperationLogging;
+import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.servlet.ServletModule;
 
 
-public class CoreModule extends ServletModule
+public class CoreModule extends AbstractModule
 {
     @Override
-    protected void configureServlets()
+    protected void configure()
     {
         install(new ServerModule());
-
-        serve("/api/userInfo*").with(UserInfoController.class);
-        serve("/api/categories*").with(CategoriesController.class);
-        serve("/api/quick*").with(SaveQuickColumnSetting.class);
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
         bind(RoleHelper.class).to(RoleHelperImpl.class).in(Scopes.SINGLETON);

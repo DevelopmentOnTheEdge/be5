@@ -8,15 +8,6 @@ import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.server.controllers.DocumentController;
-import com.developmentontheedge.be5.server.controllers.DownloadController;
-import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
-import com.developmentontheedge.be5.server.controllers.FormController;
-import com.developmentontheedge.be5.server.controllers.LanguageSelectorController;
-import com.developmentontheedge.be5.server.controllers.MenuController;
-import com.developmentontheedge.be5.server.controllers.QueryBuilderController;
-import com.developmentontheedge.be5.server.controllers.ReloadProjectController;
-import com.developmentontheedge.be5.server.controllers.StaticPageController;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
@@ -38,17 +29,17 @@ import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoModelServiceImpl;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
+import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.servlet.ServletModule;
 
 import static com.google.inject.matcher.Matchers.annotatedWith;
 import static com.google.inject.matcher.Matchers.any;
 
 
-public class ServerModule extends ServletModule
+public class ServerModule extends AbstractModule
 {
     @Override
-    protected void configureServlets()
+    protected void configure()
     {
         install(new BaseModule());
         bind(Session.class).to(SessionImpl.class).in(Scopes.SINGLETON);
@@ -62,16 +53,6 @@ public class ServerModule extends ServletModule
         install(new DatabaseModule());
         install(new OperationModule());
         install(new QueryModule());
-
-        serve("/api/table*").with(DocumentController.class);
-        serve("/api/form*").with(FormController.class);
-        serve("/api/static*").with(StaticPageController.class);
-        serve("/api/menu*").with(MenuController.class);
-        serve("/api/languageSelector*").with(LanguageSelectorController.class);
-        serve("/api/queryBuilder").with(QueryBuilderController.class);
-        serve("/api/download").with(DownloadController.class);
-        serve("/api/downloadOperation").with(DownloadOperationController.class);
-        serve("/api/reloadProject").with(ReloadProjectController.class);
 
         bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
