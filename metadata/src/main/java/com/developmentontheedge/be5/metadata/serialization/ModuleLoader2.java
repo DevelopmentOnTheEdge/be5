@@ -375,24 +375,14 @@ public class ModuleLoader2
 
     private static void logLoadedProject(Project project, long startTime, ProcessController logger)
     {
-        logger.info("------------------------------------------------------------------------");
-        if (project.isModuleProject())
-        {
-            logger.info("Module      : " + project.getName());
-        }
-        else
-        {
-            logger.info("Project     : " + project.getName());
-        }
-
+        long time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        String title = project.isModuleProject() ? "Module" : "Project";
+        String modules = "";
         if (project.getModules().getSize() > 0)
         {
-            logger.info("Modules     : " + project.getModules().getNameList().stream()
-                    .collect(joining(", ")));
+            modules = "Modules: " + project.getModules().getNameList().stream().collect(joining(", "));
         }
-        long time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        logger.info("Loading time: " + time + " ms");
-        logger.info("------------------------------------------------------------------------");
+        logger.info(title + " " + project.getName() + " loaded in " + time + " ms. " + modules);
     }
 
     /**

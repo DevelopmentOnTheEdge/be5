@@ -90,8 +90,8 @@ public class DataSourceServiceImpl implements DataSourceService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            log.info("Connection profile - " + profile.getName());
-            log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
+            log.info("Connection profile - " + profile.getName() + ". " +
+                    "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
         }
 
         project.setDatabaseSystem(type);
@@ -121,7 +121,7 @@ public class DataSourceServiceImpl implements DataSourceService
             connectionUrl = conn.getMetaData().getURL();
             String userName = conn.getMetaData().getUserName();
             type = Rdbms.getRdbms(connectionUrl);
-            log.info("Using connection: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
+            log.info("Connection url: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
         }
         catch (Throwable e)
         {
