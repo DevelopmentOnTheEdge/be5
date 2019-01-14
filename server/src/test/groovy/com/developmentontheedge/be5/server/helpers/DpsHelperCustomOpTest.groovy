@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.helpers
 
-import com.developmentontheedge.be5.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.groovy.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import org.junit.Before
 import org.junit.Test

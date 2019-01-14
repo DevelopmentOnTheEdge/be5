@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaCl
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.meta.GroovyRegister;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
 

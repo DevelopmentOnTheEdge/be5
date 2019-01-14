@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model
 
+import com.developmentontheedge.be5.groovy.GDynamicPropertySetSupport
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

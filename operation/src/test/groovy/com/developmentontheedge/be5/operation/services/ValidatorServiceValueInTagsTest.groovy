@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.services
 
-import com.developmentontheedge.be5.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.groovy.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.validation.Validator
 import com.developmentontheedge.beans.json.JsonFactory

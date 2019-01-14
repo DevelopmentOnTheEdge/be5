@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model
 
+import com.developmentontheedge.be5.groovy.GDynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Test

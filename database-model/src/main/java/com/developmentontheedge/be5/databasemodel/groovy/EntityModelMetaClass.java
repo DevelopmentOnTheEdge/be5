@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.model.groovy.ExtensionMethodsMetaClass;
+import com.developmentontheedge.be5.groovy.meta.ExtensionMethodsMetaClass;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;

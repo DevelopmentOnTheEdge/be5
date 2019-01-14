@@ -1,10 +1,10 @@
-package com.developmentontheedge.be5.model;
+package com.developmentontheedge.be5.groovy;
 
-import com.developmentontheedge.be5.model.groovy.DPSAttributes;
-import com.developmentontheedge.be5.model.groovy.DynamicPropertyMetaClass;
-import com.developmentontheedge.be5.model.groovy.DynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.model.groovy.GDynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.meta.DPSAttributes;
+import com.developmentontheedge.be5.groovy.meta.DynamicPropertyMetaClass;
+import com.developmentontheedge.be5.groovy.meta.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.groovy.meta.GDynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.groovy.meta.GroovyRegister;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

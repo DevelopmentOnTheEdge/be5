@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services;
 
 import com.developmentontheedge.be5.lifecycle.Start;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.GroovyLoader;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -19,13 +19,13 @@ import java.util.Map;
 public class GroovyOperationLoader
 {
     private final Meta meta;
-    private final GroovyRegister groovyRegister;
+    private final GroovyLoader groovyRegister;
     private final ProjectProvider projectProvider;
 
     private Map<String, GroovyOperation> groovyOperationsMap;
 
     @Inject
-    public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyRegister groovyRegister)
+    public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyLoader groovyRegister)
     {
         this.groovyRegister = groovyRegister;
         this.meta = meta;

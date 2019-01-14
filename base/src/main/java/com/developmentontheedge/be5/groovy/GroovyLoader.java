@@ -5,21 +5,17 @@ import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.github.benmanes.caffeine.cache.Cache;
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.MetaClass;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import javax.inject.Inject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 
-public class GroovyRegister
+public class GroovyLoader
 {
     private Cache<String, Class> groovyClasses;
     private GroovyClassLoader classLoader;
 
     @Inject
-    public GroovyRegister(ProjectProvider projectProvider, Be5Caches be5Caches)
+    public GroovyLoader(ProjectProvider projectProvider, Be5Caches be5Caches)
     {
         projectProvider.addToReload(this::initClassLoader);
         initClassLoader();
@@ -81,32 +77,6 @@ public class GroovyRegister
 //        return pair.getSecond();
 //    }
 
-
-    public static void registerMetaClass(Class<? extends MetaClass> metaClazz, Class<?> clazz)
-    {
-        try
-        {
-            Constructor<? extends MetaClass> constructor = metaClazz.getDeclaredConstructor(Class.class);
-            MetaClass metaClass;
-            try
-            {
-                metaClass = constructor.newInstance(clazz);
-            }
-            catch (InstantiationException | IllegalAccessException |
-                    IllegalArgumentException | InvocationTargetException e)
-            {
-                throw new RuntimeException(e);
-            }
-            metaClass.initialize();
-            InvokerHelper.getMetaRegistry().setMetaClass(clazz, metaClass);
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-//
 //    @SuppressWarnings( "unchecked" )
 //    public static List<String> toCompilationMessages(List errors0)
 //    {

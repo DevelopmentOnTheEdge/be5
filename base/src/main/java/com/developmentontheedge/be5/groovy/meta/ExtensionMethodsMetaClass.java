@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.model.groovy;
+package com.developmentontheedge.be5.groovy.meta;
 
 import com.google.common.collect.ObjectArrays;
 import groovy.lang.DelegatingMetaClass;

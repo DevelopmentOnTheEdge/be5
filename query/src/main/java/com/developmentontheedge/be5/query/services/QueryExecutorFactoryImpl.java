@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.GroovyLoader;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -21,12 +21,12 @@ import static com.developmentontheedge.be5.metadata.serialization.ModuleLoader2.
 
 public class QueryExecutorFactoryImpl implements QueryExecutorFactory
 {
-    private final GroovyRegister groovyRegister;
+    private final GroovyLoader groovyRegister;
     private final Injector injector;
     private final Meta meta;
 
     @Inject
-    public QueryExecutorFactoryImpl(GroovyRegister groovyRegister, Injector injector, Meta meta)
+    public QueryExecutorFactoryImpl(GroovyLoader groovyRegister, Injector injector, Meta meta)
     {
         this.groovyRegister = groovyRegister;
         this.injector = injector;

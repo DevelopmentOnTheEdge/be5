@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model.groovy
 
+import com.developmentontheedge.be5.groovy.meta.DynamicPropertySetMetaClass
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet

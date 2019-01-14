@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.exceptions.Be5Exception
-import com.developmentontheedge.be5.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.groovy.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.validation.Validator

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operation.services.impl;
 
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.GroovyLoader;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -46,11 +46,11 @@ public class OperationExecutorImpl implements OperationExecutor
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
     private final Meta meta;
-    private final GroovyRegister groovyRegister;
+    private final GroovyLoader groovyRegister;
 
     @Inject
     public OperationExecutorImpl(Injector injector, ConnectionService connectionService, Validator validator,
-                                 GroovyOperationLoader groovyOperationLoader, Meta meta, GroovyRegister groovyRegister)
+                                 GroovyOperationLoader groovyOperationLoader, Meta meta, GroovyLoader groovyRegister)
     {
         this.injector = injector;
         this.connectionService = connectionService;

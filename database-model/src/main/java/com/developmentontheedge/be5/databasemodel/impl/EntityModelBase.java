@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
-import com.developmentontheedge.be5.groovy.GroovyRegister;
+import com.developmentontheedge.be5.groovy.meta.GroovyRegister;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;

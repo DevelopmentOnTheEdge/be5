@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.model.groovy;
+package com.developmentontheedge.be5.groovy.meta;
 
 import java.util.HashMap;
 import java.util.Map;
