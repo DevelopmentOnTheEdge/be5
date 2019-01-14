@@ -21,7 +21,6 @@ public class EmbeddedJetty
     private String resourceBase = "src/main/webapp";
     private String descriptorPath = "/WEB-INF/web.xml";
     private int port = 8200;
-    private HashSessionManager hashSessionManager;
     private Server jetty;
 
     public void run()
@@ -37,7 +36,6 @@ public class EmbeddedJetty
             WebAppContext webAppContext = getWebAppContext();
             jetty.setHandler(webAppContext);
             jetty.start();
-            restoreSessions();
             logStarted(webAppContext, startTime);
         }
         catch (Exception e)
@@ -83,7 +81,7 @@ public class EmbeddedJetty
 
     private SessionHandler getSessionHandler()
     {
-        hashSessionManager = new HashSessionManager();
+        HashSessionManager hashSessionManager = new HashSessionManager();
         try
         {
             File file = new File("./target/sessions");
@@ -99,18 +97,6 @@ public class EmbeddedJetty
         hashSessionManager.setMaxInactiveInterval(-1);
 
         return new SessionHandler(hashSessionManager);
-    }
-
-    private void restoreSessions()
-    {
-        try
-        {
-            hashSessionManager.restoreSessions();
-        }
-        catch (Exception e)
-        {
-            log.log(Level.SEVERE, "Cannot restore sessions", e);
-        }
     }
 
     private void checkDescriptor()
