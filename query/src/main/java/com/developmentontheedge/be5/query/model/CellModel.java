@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.query.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+
 /**
  * Result rendered cell.
  *
@@ -42,6 +44,17 @@ public class CellModel
     {
         options.computeIfAbsent(type, k -> new HashMap<>());
         options.get(type).put(attribute, value);
+        return this;
+    }
+
+    public CellModel cssClasses(String value)
+    {
+        return option("css", "class", value);
+    }
+
+    public CellModel grouping()
+    {
+        options.computeIfAbsent("grouping", k -> emptyMap());
         return this;
     }
 
