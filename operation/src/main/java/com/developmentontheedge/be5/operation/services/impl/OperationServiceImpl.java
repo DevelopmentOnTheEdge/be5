@@ -1,16 +1,15 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
-import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.util.Either;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -20,8 +19,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME;
 
 
 public class OperationServiceImpl implements OperationService
@@ -30,14 +29,12 @@ public class OperationServiceImpl implements OperationService
 
     private final OperationExecutor operationExecutor;
     private final Validator validator;
-    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public OperationServiceImpl(OperationExecutor operationExecutor, Validator validator, UserInfoProvider userInfoProvider)
+    public OperationServiceImpl(OperationExecutor operationExecutor, Validator validator)
     {
         this.operationExecutor = operationExecutor;
         this.validator = validator;
-        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
