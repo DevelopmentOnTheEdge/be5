@@ -25,6 +25,7 @@
             type="javax.sql.DataSource"
             validationQuery="VALIDATION_QUERY"
             removeAbandoned="true"
+            logAbandoned="true"
   />
 
 </Context>
