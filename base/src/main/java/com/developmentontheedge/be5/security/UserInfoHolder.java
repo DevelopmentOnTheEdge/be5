@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.security;
 
-import com.developmentontheedge.be5.model.UserInfo;
-
 public class UserInfoHolder
 {
     private static final ThreadLocal<UserInfo> threadLocalScope = new ThreadLocal<>();

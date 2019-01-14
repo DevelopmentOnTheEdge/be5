@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;

@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.meta.ProjectProviderImpl;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.meta.UserAwareMetaImpl;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.model.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.model.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.scheduling.DaemonStarter;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;

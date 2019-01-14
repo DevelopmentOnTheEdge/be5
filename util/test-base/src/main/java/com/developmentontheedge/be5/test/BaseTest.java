@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import ch.qos.logback.classic.Level;
 import com.developmentontheedge.be5.Bootstrap;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.cache.Be5Caches;
 import com.developmentontheedge.be5.meta.Meta;

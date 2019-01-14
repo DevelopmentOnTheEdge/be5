@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.server.model;
+package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,7 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 
 
-public class UserInfoTest extends ServerBe5ProjectTest
+public class UserHelperTest extends ServerBe5ProjectTest
 {
     private static UserInfo ui;
     @Inject
@@ -38,9 +37,4 @@ public class UserInfoTest extends ServerBe5ProjectTest
         assertEquals("ru", userInfoProvider.getLanguage());
     }
 
-    @Test
-    public void testSerializable() throws Exception
-    {
-        new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(ui);
-    }
 }

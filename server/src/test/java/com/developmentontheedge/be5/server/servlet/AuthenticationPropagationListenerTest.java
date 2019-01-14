@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.scheduling;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

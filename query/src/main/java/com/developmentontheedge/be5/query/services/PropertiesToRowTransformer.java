@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;

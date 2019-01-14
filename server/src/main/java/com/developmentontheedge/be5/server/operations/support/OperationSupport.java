@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations.support;
 
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.model;
+package com.developmentontheedge.be5.security;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 
