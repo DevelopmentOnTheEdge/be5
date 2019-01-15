@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.MetadataUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -25,7 +26,7 @@ public class RoleHelperImpl implements RoleHelper
     }
 
     @Override
-    public void updateCurrentRoles(String userName, List<String> roles)
+    public void updateCurrentRoles(String userName, Collection<String> roles)
     {
         coreUtils.setUserSetting(userName, DatabaseConstants.CURRENT_ROLE_LIST,
                 MetadataUtils.toInClause(roles));
