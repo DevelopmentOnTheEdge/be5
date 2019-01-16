@@ -1,18 +1,19 @@
 package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.FrontendConstants;
-import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -71,7 +72,7 @@ public abstract class BaseOperationSupport implements Operation
     @Override
     public Map<String, Object> getRedirectParams()
     {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
 
         for (Map.Entry<String, Object> entry : context.getParams().entrySet())
         {
