@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -105,20 +105,20 @@ public class FormGeneratorImpl implements FormGenerator
             String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
             String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
             String title = localizedEntityTitle + ": " + localizedOperationTitle;
-
+            Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
             data = Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
                     title,
                     JsonFactory.bean(result.getFirst()),
-                    LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
+                    layout,
                     resultForFrontend(operation.getResult()),
                     getErrorModel(operation)
             ));
         }
         else
         {
-            Map<String, Object> layout = LayoutUtils.getLayoutObject(operation.getInfo().getModel());
+            Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
             layout.remove("type");
             data = Either.second(new OperationResultPresentation(
                     resultForFrontend(result.getSecond()),

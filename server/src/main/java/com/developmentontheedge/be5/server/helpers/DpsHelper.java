@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -124,14 +124,16 @@ public class DpsHelper
 
     private List<String> getOperationProperties(Operation modelElements)
     {
-        String properties = (String) LayoutUtils.getLayoutObject(modelElements).get("properties");
+        Map<String, Object> layout = JsonUtils.getMapFromJson(modelElements.getLayout());
+        String properties = (String) layout.get("properties");
         return Arrays.asList(properties.split(","));
     }
 
     private boolean isHasOperationProperties(BeModelElement modelElements)
     {
-        return modelElements instanceof Operation &&
-                LayoutUtils.getLayoutObject((Operation) modelElements).get("properties") != null;
+        if (!(modelElements instanceof Operation)) return false;
+        Map<String, Object> layout = JsonUtils.getMapFromJson(((Operation) modelElements).getLayout());
+        return layout.get("properties") != null;
     }
 
     public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements,

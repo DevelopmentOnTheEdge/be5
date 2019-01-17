@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
@@ -122,13 +122,14 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
+        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
 
         return new TablePresentation(
                 title, entityName, queryName, tableModel.isSelectable(),
                 columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
                 parameters, totalNumberOfRows,
-                LayoutUtils.getLayoutObject(query));
+                layout);
     }
 
     @Override
