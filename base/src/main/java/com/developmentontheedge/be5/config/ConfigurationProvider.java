@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.config;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 public class ConfigurationProvider
 {
+    protected static final Jsonb jsonb = JsonbBuilder.create();
     private static final String CONFIG_FILE = "config.yaml";
 
     private final Map<Class<?>, Object> configurations;
@@ -49,10 +51,8 @@ public class ConfigurationProvider
             return null;
         }
 
-        //todo use json-b
-        String componentConfigJson = new Gson().toJson(config);
-
-        return new Gson().fromJson(componentConfigJson, configClass);
+        String componentConfigJson = jsonb.toJson(config);
+        return jsonb.fromJson(componentConfigJson, configClass);
     }
 
     @SuppressWarnings("unchecked")

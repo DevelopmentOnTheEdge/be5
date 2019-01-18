@@ -21,7 +21,7 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     {
         Map<String, Integer> cacheSizes = new HashMap<>();
 
-        public Config(Map<String, Integer> cacheSizes)
+        public void setCacheSizes(Map<String, Integer> cacheSizes)
         {
             this.cacheSizes = cacheSizes;
         }
@@ -32,6 +32,7 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     @Inject
     public Be5CachesImpl(ConfigurationProvider configurationProvider, ProjectProvider projectProvider)
     {
+        //todo move configure to Bootstrap
         config = (Config) configurationProvider.configure(this);
 
         projectProvider.addToReload(this::clearAll);
