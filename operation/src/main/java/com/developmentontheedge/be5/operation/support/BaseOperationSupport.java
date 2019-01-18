@@ -12,7 +12,6 @@ import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public abstract class BaseOperationSupport implements Operation
     protected OperationContext context;
     private OperationResult operationResult;
 
-    private final Map<String, Object> redirectParams = new HashMap<>();
+    private final Map<String, Object> redirectParams = new LinkedHashMap<>();
 
     @Override
     public void initialize(OperationInfo info, OperationContext context, OperationResult operationResult)
@@ -78,7 +77,7 @@ public abstract class BaseOperationSupport implements Operation
         {
             if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
             {
-                map.put(entry.getKey(), entry.getValue().toString());
+                map.put(entry.getKey(), getValue(entry));
             }
         }
 
@@ -86,11 +85,23 @@ public abstract class BaseOperationSupport implements Operation
         {
             if (entry.getValue() != null && !entry.getValue().toString().isEmpty())
             {
-                map.put(entry.getKey(), entry.getValue().toString());
+                map.put(entry.getKey(), getValue(entry));
             }
         }
 
         return map;
+    }
+
+    private Object getValue(Map.Entry<String, Object> entry)
+    {
+        if (entry.getValue() instanceof String[])
+        {
+            return String.join(",", (String[]) entry.getValue());
+        }
+        else
+        {
+            return entry.getValue().toString();
+        }
     }
 
     /**
