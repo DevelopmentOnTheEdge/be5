@@ -8,20 +8,18 @@ public class FormRequest
     public String query;
     public String operation;
     public Map<String, Object> contextParams;
-    public Long _ts_;
 
     public FormRequest()
     {
     }
 
     public FormRequest(String entity, String query, String operation,
-                       Map<String, Object> contextParams, Long _ts_)
+                       Map<String, Object> contextParams)
     {
         this.entity = entity;
         this.query = query;
         this.operation = operation;
         this.contextParams = contextParams;
-        this._ts_ = _ts_;
     }
 
     public String getEntity()
@@ -62,15 +60,5 @@ public class FormRequest
     public void setContextParams(Map<String, Object> contextParams)
     {
         this.contextParams = contextParams;
-    }
-
-    public Long get_ts_()
-    {
-        return _ts_;
-    }
-
-    public void set_ts_(Long _ts_)
-    {
-        this._ts_ = _ts_;
     }
 }

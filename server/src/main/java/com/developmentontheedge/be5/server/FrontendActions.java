@@ -1,19 +1,15 @@
 package com.developmentontheedge.be5.server;
 
+import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.beans.json.JsonFactory;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY;
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION;
 import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_PARAMS;
-import static com.developmentontheedge.be5.server.RestApiConstants.QUERY;
-import static com.developmentontheedge.be5.server.RestApiConstants.VALUES;
 
 
 public interface FrontendActions
@@ -79,18 +75,11 @@ public interface FrontendActions
     }
 
     static FrontendAction downloadOperation(String entityName, String queryName, String operationName,
-                                            Map<String, Object> operationParams, Object parameters)
+                                            Map<String, Object> contextParams, Object parameters)
     {
-        HashMap<String, Object> params = new HashMap<String, Object>()
-        {
-            {
-                put(ENTITY, entityName);
-                put(QUERY, queryName);
-                put(OPERATION, operationName);
-                put(OPERATION_PARAMS, operationParams);
-            }
-        };
-        if (parameters != null)params.put(VALUES, JsonFactory.beanValues(parameters));
-        return new FrontendAction(DOWNLOAD_OPERATION, params);
+        Map<String, Object> map = ((DynamicPropertySet) parameters).asModifiableMap();
+        FormRequest formRequest = new FormRequest(entityName, queryName, operationName, contextParams);
+        map.put(OPERATION_PARAMS, formRequest);
+        return new FrontendAction(DOWNLOAD_OPERATION, map);
     }
 }

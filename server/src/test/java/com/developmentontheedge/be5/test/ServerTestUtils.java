@@ -1,15 +1,13 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.config.CoreUtils;
-import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -17,16 +15,18 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
 import com.developmentontheedge.be5.test.mocks.ServerTestSession;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import org.junit.Rule;
@@ -145,7 +145,7 @@ public abstract class ServerTestUtils extends BaseTest
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                 String selectedRows, String values)
     {
-        return generateOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
+        return generateOperation(entityName, queryName, operationName, selectedRows, parseValues(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
@@ -156,7 +156,7 @@ public abstract class ServerTestUtils extends BaseTest
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, String values)
     {
-        return operationService.generate(operation, ParseRequestUtils.getValuesFromJson(values));
+        return operationService.generate(operation, parseValues(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(Operation operation)
@@ -178,7 +178,7 @@ public abstract class ServerTestUtils extends BaseTest
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                String selectedRows, String values)
     {
-        return executeOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
+        return executeOperation(entityName, queryName, operationName, selectedRows, parseValues(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
@@ -189,7 +189,7 @@ public abstract class ServerTestUtils extends BaseTest
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, String values)
     {
-        return executeOperation(operation, ParseRequestUtils.getValuesFromJson(values));
+        return executeOperation(operation, parseValues(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(Operation operation)
@@ -294,4 +294,18 @@ public abstract class ServerTestUtils extends BaseTest
         }
     }
 
+    public static Map<String, Object> parseValues(String json)
+    {
+        if (json != null && !json.isEmpty())
+        {
+            Map<String, String> o = JsonFactory.jsonb.fromJson(json, new HashMap<String, String>()
+            {
+            }.getClass().getGenericSuperclass());
+            return new HashMap<>(o);
+        }
+        else
+        {
+            return new HashMap<>();
+        }
+    }
 }

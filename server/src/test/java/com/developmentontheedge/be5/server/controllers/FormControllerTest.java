@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
+import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -89,7 +91,7 @@ public class FormControllerTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
 
-        JsonApiModel jsonApiModel = generateForQuery("All records", "/api/form/apply", Collections.emptyMap());
+        JsonApiModel jsonApiModel = generateForQuery("All records", "/api/form/apply", emptyMap());
 
         assertNull(jsonApiModel.getErrors());
         assertNotNull(jsonApiModel.getData());
@@ -108,16 +110,11 @@ public class FormControllerTest extends ServerBe5ProjectTest
 
     private JsonApiModel generateForQuery(String queryName, String url, Map<String, String> values)
     {
-        String valuesJson = jsonb.toJson(values);
-
+        FormRequest formRequest = new FormRequest("testtableAdmin", queryName, "Insert", emptyMap());
+        String operationParams = jsonb.toJson(formRequest);
         return component.generateJson(getSpyMockRequest(url, ImmutableMap.<String, Object>builder()
-                .put(RestApiConstants.ENTITY, "testtableAdmin")
-                .put(RestApiConstants.QUERY, queryName)
-                .put(RestApiConstants.OPERATION, "Insert")
-                .put(OperationConstants.SELECTED_ROWS, "")
-                .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(Collections.emptyMap()))
+                .put(RestApiConstants.OPERATION_PARAMS, operationParams)
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())
-                .put(RestApiConstants.VALUES, valuesJson)
                 .build()), res, url.replace("/api/form/", ""));
     }
 

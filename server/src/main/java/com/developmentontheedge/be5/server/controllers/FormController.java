@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
@@ -13,10 +12,10 @@ import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
@@ -24,7 +23,6 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -67,14 +65,8 @@ public class FormController extends JsonApiModelController
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));
-        requireNonNull(req.get(OPERATION_PARAMS));
-        FormRequest formParams = JsonFactory.jsonb.fromJson(req.getNonEmpty(OPERATION_PARAMS), FormRequest.class);
-        requireNonNull(formParams.entity);
-        requireNonNull(formParams.query);
-        requireNonNull(formParams.operation);
-        requireNonNull(formParams.contextParams);
-
-        Map<String, Object> values = getValues(req);
+        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_PARAMS));
+        Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
         try
         {
@@ -115,23 +107,5 @@ public class FormController extends JsonApiModelController
                     ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));
         }
-    }
-
-    private Map<String, Object> getValues(Request req)
-    {
-        Map<String, Object> values = new HashMap<>();
-        Map<String, String[]> parameters = req.getParameters();
-        for (Map.Entry<String, String[]> param : parameters.entrySet())
-        {
-            if (param.getValue().length == 1)
-            {
-                values.put(param.getKey(), param.getValue()[0]);
-            }
-            else
-            {
-                values.put(param.getKey(), param.getValue());
-            }
-        }
-        return OperationUtils.replaceEmptyStringToNull(values);
     }
 }

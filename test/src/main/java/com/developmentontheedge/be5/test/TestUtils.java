@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.OperationLogging;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
 import com.developmentontheedge.be5.test.mocks.TestMailService;
@@ -30,6 +29,7 @@ import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -156,7 +156,7 @@ public abstract class TestUtils extends BaseTest
                                                     String operationName, String selectedRows, String values)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows,
-                ParseRequestUtils.getValuesFromJson(values));
+                parseValues(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName,
@@ -167,7 +167,7 @@ public abstract class TestUtils extends BaseTest
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, String values)
     {
-        return operationService.generate(operation, ParseRequestUtils.getValuesFromJson(values));
+        return operationService.generate(operation, parseValues(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(Operation operation)
@@ -190,7 +190,7 @@ public abstract class TestUtils extends BaseTest
                                        String operationName, String selectedRows, String values)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows,
-                ParseRequestUtils.getValuesFromJson(values));
+                parseValues(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName,
@@ -201,7 +201,7 @@ public abstract class TestUtils extends BaseTest
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, String values)
     {
-        return executeOperation(operation, ParseRequestUtils.getValuesFromJson(values));
+        return executeOperation(operation, parseValues(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(Operation operation)
@@ -323,4 +323,18 @@ public abstract class TestUtils extends BaseTest
         }
     }
 
+    public static Map<String, Object> parseValues(String json)
+    {
+        if (json != null && !json.isEmpty())
+        {
+            Map<String, String> o = JsonFactory.jsonb.fromJson(json, new HashMap<String, String>()
+            {
+            }.getClass().getGenericSuperclass());
+            return new HashMap<>(o);
+        }
+        else
+        {
+            return new HashMap<>();
+        }
+    }
 }

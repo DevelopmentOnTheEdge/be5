@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.validation.Validator;
-import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.operations.support.DownloadOperationSupport;
 import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -17,6 +17,8 @@ import com.developmentontheedge.be5.web.Response;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
+
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_PARAMS;
 
 @Singleton
 public class DownloadOperationController extends ApiControllerSupport implements Controller
@@ -36,13 +38,11 @@ public class DownloadOperationController extends ApiControllerSupport implements
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
-        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
-        Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
+        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_PARAMS));
+        Operation operation = getOperation(formParams.entity, formParams.query, formParams.operation,
+                formParams.contextParams);
+        Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
-        Operation operation = getOperation(entityName, queryName, operationName, operationParams);
         Object parameters = operationExecutor.generate(operation, values);
         validator.checkAndThrowExceptionIsError(parameters);
         if (operation instanceof DownloadOperationSupport)

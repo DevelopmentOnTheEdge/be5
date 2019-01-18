@@ -80,9 +80,10 @@ public class Validator
     {
         throwExceptionIsError(property);
 
-        if (property.getValue() == null
-                || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
-                && ((Object[]) property.getValue()).length == 0))
+//        if (property.getValue() == null
+//                || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
+//                && ((Object[]) property.getValue()).length == 0))
+        if (property.getValue() == null)
         {
             if (property.isCanBeNull())
             {
@@ -98,6 +99,11 @@ public class Validator
 
         if (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
+            if (property.getValue() instanceof String)
+            {
+                property.setValue(new String[]{(String) property.getValue()});
+            }
+
             if (!(property.getValue() instanceof Object[]))
             {
                 setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");

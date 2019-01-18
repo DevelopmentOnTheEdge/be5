@@ -72,7 +72,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     public void insertOperation()
     {
         Object first = generateOperation("testtable", "All records", "Insert", "",
-                "{'name':'test','value':1}").getFirst();
+                doubleQuotes("{'name':'test','value':1}")).getFirst();
         assertEquals("{" +
                         "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
@@ -84,7 +84,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         //OperationResult execute = executeOperation(req);
 
         OperationResult result = executeOperation("testtable", "All records", "Insert", "",
-                "{'name':'test','value':'1'}").getSecond();
+                doubleQuotes("{'name':'test','value':'1'}")).getSecond();
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
@@ -130,7 +130,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvoke()
     {
-        OperationResult result = executeEditWithParams("{'name':'EditName','value':123}");
+        OperationResult result = executeEditWithValues("{'name':'EditName','value':123}");
 
         verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", 123, 12L);
@@ -142,7 +142,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvokeValueNull()
     {
-        executeEditWithParams("{'name':'EditName','value':null}");
+        executeEditWithValues("{'name':'EditName','value':null}");
 
         verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
@@ -151,13 +151,13 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvokeEmptyStringToNull()
     {
-        executeEditWithParams("{'name':'EditName','value':''}");
+        executeEditWithValues("{'name':'EditName','value':''}");
 
         verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
-    private OperationResult executeEditWithParams(String params)
+    private OperationResult executeEditWithValues(String values)
     {
         when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
@@ -167,8 +167,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         Operation operation = createOperation("testtableAdmin", "All records", "Edit", "12");
 
-        OperationResult result = executeOperation(operation,
-                params).getSecond();
+        OperationResult result = executeOperation(operation, doubleQuotes(values)).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
@@ -178,7 +177,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         return result;
     }
 
-    protected static void whenSelectListTagsContains(String containsSql, String... tagValues)
+    private static void whenSelectListTagsContains(String containsSql, String... tagValues)
     {
         List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
                 .map(tagValue -> getDps(new QRec(), ImmutableMap.of("CODE", tagValue, "Name", tagValue)))

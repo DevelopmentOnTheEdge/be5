@@ -31,7 +31,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     public void insertOperation()
     {
         InsertOperation operation = (InsertOperation)createOperation("testtable", "All records", "Insert", "");
-        OperationResult result = executeOperation(operation, "{'name':'test2','value':'2'}").getSecond();
+        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'test2','value':'2'}")).getSecond();
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
@@ -65,7 +65,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     public void editInvoke()
     {
         OperationResult result = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),
-                "{'name':'EditName','value':123}").getSecond();
+                doubleQuotes("{'name':'EditName','value':123}")).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());

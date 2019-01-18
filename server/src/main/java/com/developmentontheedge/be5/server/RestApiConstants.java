@@ -18,10 +18,7 @@ public interface RestApiConstants
      */
     String OPERATION = "operation";
 
-    /**
-     * A parameter that contains a JSON array of objects with the fields "name" and "value".
-     */
-    String VALUES = "values";
+    String CONTEXT_PARAMS = "contextParams";
 
     String OPERATION_PARAMS = "operationParams";
 
