@@ -254,6 +254,12 @@
                 <include>**/*.groovy</include>
               </includes>
             </source>
+            <source>
+              <directory>${project.basedir}/src/main/groovy</directory>
+              <includes>
+                <include>**/*.groovy</include>
+              </includes>
+            </source>
           </sources>
         </configuration>
       </plugin>
@@ -285,6 +291,7 @@
                 <source>src/groovy/queries</source>
                 <source>src/groovy/operations</source>
                 <source>src/groovy/extenders</source>
+                <source>src/main/groovy</source>
               </sources>
             </configuration>
           </execution>
