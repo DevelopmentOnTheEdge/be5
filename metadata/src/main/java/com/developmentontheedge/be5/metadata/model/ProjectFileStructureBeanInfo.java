@@ -18,7 +18,9 @@ public class ProjectFileStructureBeanInfo extends BeanInfoEx
         add("jsFormsDir");
         add("jsOperationsDir");
         add("jsExtendersDir");
+        add("groovyQueriesDir");
         add("groovyOperationsDir");
+        add("groovyExtendersDir");
         add("scriptsDir");
         add("iconsDir");
         add("l10nDir");
