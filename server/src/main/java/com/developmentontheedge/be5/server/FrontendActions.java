@@ -9,7 +9,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
 
 
 public interface FrontendActions
@@ -79,7 +79,7 @@ public interface FrontendActions
     {
         Map<String, Object> map = ((DynamicPropertySet) parameters).asModifiableMap();
         FormRequest formRequest = new FormRequest(entityName, queryName, operationName, contextParams);
-        map.put(OPERATION_PARAMS, formRequest);
+        map.put(OPERATION_INFO, formRequest);
         return new FrontendAction(DOWNLOAD_OPERATION, map);
     }
 }

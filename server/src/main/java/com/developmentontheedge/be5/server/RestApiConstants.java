@@ -20,7 +20,7 @@ public interface RestApiConstants
 
     String CONTEXT_PARAMS = "contextParams";
 
-    String OPERATION_PARAMS = "operationParams";
+    String OPERATION_INFO = "_operationInfo_";
 
     // json api
 

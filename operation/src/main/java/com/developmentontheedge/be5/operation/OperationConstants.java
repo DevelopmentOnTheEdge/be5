@@ -6,5 +6,5 @@ public interface OperationConstants
      * Selected rows of a table.
      */
     String SELECTED_ROWS = "_selectedRows_";
-    String RELOAD_CONTROL_NAME = "_reloadcontrol_";
+    String RELOAD_CONTROL_NAME = "_reloadControl_";
 }

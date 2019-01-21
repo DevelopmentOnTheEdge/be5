@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.FormRequest;
@@ -14,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -113,7 +111,7 @@ public class FormControllerTest extends ServerBe5ProjectTest
         FormRequest formRequest = new FormRequest("testtableAdmin", queryName, "Insert", emptyMap());
         String operationParams = jsonb.toJson(formRequest);
         return component.generateJson(getSpyMockRequest(url, ImmutableMap.<String, Object>builder()
-                .put(RestApiConstants.OPERATION_PARAMS, operationParams)
+                .put(RestApiConstants.OPERATION_INFO, operationParams)
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())
                 .build()), res, url.replace("/api/form/", ""));
     }

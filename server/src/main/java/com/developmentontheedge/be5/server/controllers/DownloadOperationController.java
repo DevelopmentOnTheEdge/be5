@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
 
 @Singleton
 public class DownloadOperationController extends ApiControllerSupport implements Controller
@@ -38,7 +38,7 @@ public class DownloadOperationController extends ApiControllerSupport implements
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_PARAMS));
+        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_INFO));
         Operation operation = getOperation(formParams.entity, formParams.query, formParams.operation,
                 formParams.contextParams);
         Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());

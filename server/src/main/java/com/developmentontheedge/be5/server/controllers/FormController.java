@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static java.util.Objects.requireNonNull;
@@ -65,7 +65,7 @@ public class FormController extends JsonApiModelController
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));
-        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_PARAMS));
+        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_INFO));
         Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
         try
