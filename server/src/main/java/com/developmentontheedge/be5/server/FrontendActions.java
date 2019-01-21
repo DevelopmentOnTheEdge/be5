@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server;
 
-import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -9,7 +8,10 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
+import static com.developmentontheedge.be5.server.RestApiConstants.CONTEXT_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 
 
 public interface FrontendActions
@@ -78,8 +80,10 @@ public interface FrontendActions
                                             Map<String, Object> contextParams, Object parameters)
     {
         Map<String, Object> map = ((DynamicPropertySet) parameters).asModifiableMap();
-        FormRequest formRequest = new FormRequest(entityName, queryName, operationName, contextParams);
-        map.put(OPERATION_INFO, formRequest);
+        map.put(ENTITY_NAME_PARAM, entityName);
+        map.put(QUERY_NAME_PARAM, queryName);
+        map.put(OPERATION_NAME_PARAM, operationName);
+        map.put(CONTEXT_PARAMS, contextParams);
         return new FrontendAction(DOWNLOAD_OPERATION, map);
     }
 }

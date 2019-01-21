@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.validation.Validator;
-import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.operations.support.DownloadOperationSupport;
 import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -18,7 +17,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
+import static com.developmentontheedge.be5.server.RestApiConstants.CONTEXT_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 
 @Singleton
 public class DownloadOperationController extends ApiControllerSupport implements Controller
@@ -38,9 +40,11 @@ public class DownloadOperationController extends ApiControllerSupport implements
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_INFO));
-        Operation operation = getOperation(formParams.entity, formParams.query, formParams.operation,
-                formParams.contextParams);
+        String entityName = req.getNonEmpty(ENTITY_NAME_PARAM);
+        String queryName = req.getNonEmpty(QUERY_NAME_PARAM);
+        String operationName = req.getNonEmpty(OPERATION_NAME_PARAM);
+        Map<String, Object> contextParams = ParseRequestUtils.getContextParams(req.getNonEmpty(CONTEXT_PARAMS));
+        Operation operation = getOperation(entityName, queryName, operationName, contextParams);
         Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
         Object parameters = operationExecutor.generate(operation, values);

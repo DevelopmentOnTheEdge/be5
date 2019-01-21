@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -27,7 +26,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_INFO;
+import static com.developmentontheedge.be5.server.RestApiConstants.CONTEXT_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static java.util.Objects.requireNonNull;
@@ -65,7 +67,10 @@ public class FormController extends JsonApiModelController
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));
-        FormRequest formParams = ParseRequestUtils.getFormRequest(req.getNonEmpty(OPERATION_INFO));
+        String entityName = req.getNonEmpty(ENTITY_NAME_PARAM);
+        String queryName = req.getNonEmpty(QUERY_NAME_PARAM);
+        String operationName = req.getNonEmpty(OPERATION_NAME_PARAM);
+        Map<String, Object> contextParams = ParseRequestUtils.getContextParams(req.getNonEmpty(CONTEXT_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
         try
@@ -73,8 +78,8 @@ public class FormController extends JsonApiModelController
             switch (requestSubUrl)
             {
                 case "":
-                    ResourceData generateData = formGenerator.generate(formParams.entity, formParams.query,
-                            formParams.operation, formParams.contextParams, values);
+                    ResourceData generateData = formGenerator.generate(entityName, queryName,
+                            operationName, contextParams, values);
                     if (FrontendConstants.OPERATION_RESULT.equals(generateData.getType()) &&
                             ((OperationResultPresentation) generateData.getAttributes()).getOperationResult()
                                     .getStatus() == OperationStatus.ERROR)
@@ -83,8 +88,8 @@ public class FormController extends JsonApiModelController
                     }
                     return data(generateData);
                 case "apply":
-                    ResourceData executeData = formGenerator.execute(formParams.entity, formParams.query,
-                            formParams.operation, formParams.contextParams, values);
+                    ResourceData executeData = formGenerator.execute(entityName, queryName,
+                            operationName, contextParams, values);
                     if (FORM_ACTION.equals(executeData.getType()))
                     {
                         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -101,8 +106,8 @@ public class FormController extends JsonApiModelController
         }
         catch (Be5Exception e)
         {
-            HashUrl url = new HashUrl(FORM_ACTION, formParams.entity, formParams.query, formParams.operation)
-                    .named(formParams.contextParams);
+            HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
+                    .named(contextParams);
             log.log(e.getLogLevel(), "Error in operation: " + url +
                     ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));

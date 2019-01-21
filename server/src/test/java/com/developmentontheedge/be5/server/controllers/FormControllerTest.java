@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.FormPresentation;
-import com.developmentontheedge.be5.server.model.FormRequest;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
@@ -108,10 +107,11 @@ public class FormControllerTest extends ServerBe5ProjectTest
 
     private JsonApiModel generateForQuery(String queryName, String url, Map<String, String> values)
     {
-        FormRequest formRequest = new FormRequest("testtableAdmin", queryName, "Insert", emptyMap());
-        String operationParams = jsonb.toJson(formRequest);
         return component.generateJson(getSpyMockRequest(url, ImmutableMap.<String, Object>builder()
-                .put(RestApiConstants.OPERATION_INFO, operationParams)
+                .put(RestApiConstants.ENTITY_NAME_PARAM, "testtableAdmin")
+                .put(RestApiConstants.QUERY_NAME_PARAM, queryName)
+                .put(RestApiConstants.OPERATION_NAME_PARAM, "Insert")
+                .put(RestApiConstants.CONTEXT_PARAMS, jsonb.toJson(emptyMap()))
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())
                 .build()), res, url.replace("/api/form/", ""));
     }

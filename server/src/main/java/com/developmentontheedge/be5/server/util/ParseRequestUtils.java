@@ -1,9 +1,7 @@
 package com.developmentontheedge.be5.server.util;
 
 import com.developmentontheedge.be5.operation.util.OperationUtils;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.Base64File;
-import com.developmentontheedge.be5.server.model.FormRequest;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -18,8 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 public class ParseRequestUtils
 {
@@ -66,38 +62,6 @@ public class ParseRequestUtils
             }
         }
         return OperationUtils.replaceEmptyStringToNull(values);
-    }
-
-    public static FormRequest getFormRequest(String json)
-    {
-        JsonParser parser = Json.createParser(new StringReader(json));
-        parser.next();
-        JsonObject object = parser.getObject();
-        FormRequest formRequest = new FormRequest();
-        for(Map.Entry<String, JsonValue> entry : object.entrySet())
-        {
-            if (RestApiConstants.ENTITY.equals(entry.getKey()))
-            {
-                formRequest.entity = getJsonStringValue(entry.getValue());
-            }
-            else if (RestApiConstants.QUERY.equals(entry.getKey()))
-            {
-                formRequest.query = getJsonStringValue(entry.getValue());
-            }
-            else if (RestApiConstants.OPERATION.equals(entry.getKey()))
-            {
-                formRequest.operation = getJsonStringValue(entry.getValue());
-            }
-            else if (RestApiConstants.CONTEXT_PARAMS.equals(entry.getKey()))
-            {
-                formRequest.contextParams = getContextParams(entry.getValue().asJsonObject());
-            }
-        }
-        requireNonNull(formRequest.entity);
-        requireNonNull(formRequest.query);
-        requireNonNull(formRequest.operation);
-        requireNonNull(formRequest.contextParams);
-        return formRequest;
     }
 
     public static Map<String, Object> getContextParams(String json)

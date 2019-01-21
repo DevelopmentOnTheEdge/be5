@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
@@ -20,7 +19,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.server.RestApiConstants.CONTEXT_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
+import static java.util.Objects.requireNonNull;
 
 @Singleton
 public class DocumentController extends JsonApiModelController
@@ -39,9 +43,10 @@ public class DocumentController extends JsonApiModelController
     @Override
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
-        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
-        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        Map<String, Object> parameters = ParseRequestUtils.getContextParams(req.get(RestApiConstants.CONTEXT_PARAMS));
+        requireNonNull(req.get(TIMESTAMP_PARAM));
+        String entityName = req.getNonEmpty(ENTITY_NAME_PARAM);
+        String queryName = req.getNonEmpty(QUERY_NAME_PARAM);
+        Map<String, Object> parameters = ParseRequestUtils.getContextParams(req.get(CONTEXT_PARAMS));
         try
         {
             switch (requestSubUrl)

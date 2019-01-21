@@ -14,8 +14,8 @@ import org.junit.Test;
 import javax.inject.Inject;
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY;
-import static com.developmentontheedge.be5.server.RestApiConstants.QUERY;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,8 +38,8 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     public void generate()
     {
         JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
-                ENTITY, "testtable",
-                QUERY, "All records",
+                ENTITY_NAME_PARAM, "testtable",
+                QUERY_NAME_PARAM, "All records",
                 TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertEquals("testtable: All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getTitle());
@@ -49,8 +49,8 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     public void accessDenied()
     {
         JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
-                ENTITY, "testtableAdmin",
-                QUERY, "All records",
+                ENTITY_NAME_PARAM, "testtableAdmin",
+                QUERY_NAME_PARAM, "All records",
                 TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertEquals(new ErrorModel("403",
@@ -65,7 +65,7 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
         JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
-                ENTITY, "testtableAdmin", QUERY, "All records",
+                ENTITY_NAME_PARAM, "testtableAdmin", QUERY_NAME_PARAM, "All records",
                 TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertNotNull(jsonApiModel.getData());
@@ -76,7 +76,7 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
     public void error()
     {
         JsonApiModel jsonApiModel = documentController.generateJson(getSpyMockRequest("/api/table/", ImmutableMap.of(
-                ENTITY, "testtable", QUERY, "Query with error",
+                ENTITY_NAME_PARAM, "testtable", QUERY_NAME_PARAM, "Query with error",
                 TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
         assertNull(jsonApiModel.getData());
