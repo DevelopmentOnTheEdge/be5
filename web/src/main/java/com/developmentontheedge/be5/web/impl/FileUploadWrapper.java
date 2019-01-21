@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.servlet;
+package com.developmentontheedge.be5.web.impl;
 
 import com.google.common.collect.ObjectArrays;
 import org.apache.commons.fileupload.FileItem;
@@ -144,6 +144,7 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
             if (isFileUploadField(item))
             {
                 fFileParams.put(item.getFieldName(), item);
+                fRegularParams.put(item.getFieldName(), new String[]{item.getName()});
             }
             else
             {
