@@ -80,10 +80,9 @@ public class Validator
     {
         throwExceptionIsError(property);
 
-//        if (property.getValue() == null
-//                || (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
-//                && ((Object[]) property.getValue()).length == 0))
-        if (property.getValue() == null)
+        if (property.getValue() == null ||
+                (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
+                && property.getValue() instanceof Object[] && ((Object[]) property.getValue()).length == 0))
         {
             if (property.isCanBeNull())
             {
