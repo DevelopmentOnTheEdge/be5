@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,13 +30,15 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
         respond(request, response);
     }
 
+    @Inject
+    private Provider<Request> req;
+
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
-        Request req = new RequestImpl(request);
         ResponseImpl res = new ResponseImpl(response);
         try
         {
-            generate(req, res);
+            generate(req.get(), res);
         }
         catch (IllegalArgumentException e)
         {

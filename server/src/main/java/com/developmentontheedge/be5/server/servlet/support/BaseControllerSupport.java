@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.server.servlet.FileUploadWrapper;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.ControllerSupport;
-import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.web.impl.ResponseImpl;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.invoke.MethodHandles;
@@ -32,22 +31,16 @@ public abstract class BaseControllerSupport extends ControllerSupport
         respond(request, response);
     }
 
+    @Inject
+    private Provider<Request> req;
+
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
         ServletUtils.addHeaders(request, response);
-        Request req;
-        if (ServletFileUpload.isMultipartContent(request))
-        {
-            req = new RequestImpl(new FileUploadWrapper(request));
-        }
-        else
-        {
-            req = new RequestImpl(request);
-        }
         Response res = new ResponseImpl(response);
         try
         {
-            generate(req, res);
+            generate(req.get(), res);
         }
         catch (Be5Exception e)
         {
