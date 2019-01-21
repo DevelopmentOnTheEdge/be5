@@ -23,6 +23,7 @@ testtable:
       - Filter
       - OldRedirectFilter
       - CustomOperation
+      - FileNotFoundError
       code: |-
         SELECT
           t.name AS "Name",
@@ -96,3 +97,7 @@ testtable:
       type: Groovy
       roles: Administrator
       file: testtableAdmin/CustomOperation.groovy
+  - FileNotFoundError:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/FileNotFoundError.groovy

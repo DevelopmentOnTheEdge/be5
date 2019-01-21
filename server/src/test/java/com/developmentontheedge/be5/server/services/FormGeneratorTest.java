@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services;
 
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationStatus;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -45,7 +47,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
             put("value", "2");
         }};
 
-        ResourceData result = formGenerator.generate("testtable", "All records", "Insert", Collections.emptyMap(), map);
+        ResourceData result = formGenerator.generate("testtable", "All records", "Insert", emptyMap(), map);
 
         assertEquals(FORM_ACTION, result.getType());
 
@@ -57,6 +59,12 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals("form/testtable/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
     }
 
+    @Test(expected = Be5Exception.class)
+    public void fileNotFoundError()
+    {
+        formGenerator.generate("testtable", "All records", "FileNotFoundError", emptyMap(), emptyMap());
+    }
+
     @Test
     public void executeForm()
     {
@@ -65,7 +73,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
             put("value", "2");
         }};
 
-        ResourceData result = formGenerator.execute("testtable", "All records", "Insert", Collections.emptyMap(), map);
+        ResourceData result = formGenerator.execute("testtable", "All records", "Insert", emptyMap(), map);
         assertEquals(OPERATION_RESULT, result.getType());
         assertEquals(OperationStatus.FINISHED, ((OperationResultPresentation)result.getAttributes())
                 .getOperationResult().getStatus());
@@ -79,7 +87,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
             put("name", "generateErrorInProperty");
         }};
 
-        ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", Collections.emptyMap(), map);
+        ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", emptyMap(), map);
         FormPresentation formPresentation = (FormPresentation) result.getAttributes();
         assertEquals("{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}", BaseTest.oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString()));
 
@@ -97,7 +105,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertNotNull(id);
         ResourceData result = formGenerator.generate("testtable", "All records", "Edit",
                 Collections.singletonMap(OperationConstants.SELECTED_ROWS, id.toString()),
-                Collections.emptyMap());
+                emptyMap());
 
         assertEquals("form/testtable/All records/Edit/_selectedRows_=" + id.toString(),
                 result.getLinks().get(RestApiConstants.SELF_LINK));
