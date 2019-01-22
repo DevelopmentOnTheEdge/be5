@@ -76,7 +76,7 @@ public class ParseRequestUtils
     private static Map<String, Object> getContextParams(JsonObject jsonObject)
     {
         Map<String, Object> contextParams = new LinkedHashMap<>();
-        for(Map.Entry<String, JsonValue> param : jsonObject.entrySet())
+        for (Map.Entry<String, JsonValue> param : jsonObject.entrySet())
         {
             if (param.getValue() instanceof JsonArray)
             {

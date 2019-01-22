@@ -67,23 +67,21 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
     @Override
     public String getParameter(String aName)
     {
-        String result = null;
         String[] values = fRegularParams.get(aName);
         if (values == null)
         {
-            //you might try the wrappee, to see if it has a value
+            return null;
         }
         else if (values.length == 0)
         {
             //param name known, but no values present
-            result = "";
+            return "";
         }
         else
         {
             //return first value in list
-            result = values[FIRST_VALUE];
+            return values[FIRST_VALUE];
         }
-        return result;
     }
 
     /**
