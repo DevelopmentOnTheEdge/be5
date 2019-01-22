@@ -39,10 +39,6 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
     private Request req;
     private FilterChain filterChain;
 
-    private String html = "<div th:text=\"${lang}\"></div>";
-
-    private String resHtml = "<div>ru</div>";
-
     @Before
     public void setUp()
     {
@@ -78,6 +74,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
 
         when(req.getContextPath()).thenReturn("/");
 
+        String html = "<div th:text=\"${lang}\"></div>";
         when(servletContext.getResourceAsStream("/WEB-INF/templates/index.html"))
                 .thenReturn(new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8)));
         when(res.getRawResponse()).thenReturn(mock(HttpServletResponse.class));
@@ -86,6 +83,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
 
         verify(filterChain, never()).doFilter(any(), any());
 
+        String resHtml = "<div>ru</div>";
         verify(res).sendHtml(eq(resHtml));
     }
 }

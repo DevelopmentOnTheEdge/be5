@@ -16,26 +16,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class ApiControllerSupportTest
+public class ApiControllerSupportTest extends WebTestSupport
 {
     private ApiControllerSupport controller;
-    private HttpServletRequest request;
-    private HttpServletResponse response;
 
     @Before
     public void setUp() throws Exception
     {
         controller = Mockito.spy(ApiControllerSupport.class);
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
+        injector.injectMembers(controller);
     }
 
     @Test
     public void generate()
     {
-        when(request.getContextPath()).thenReturn("");
-        when(request.getRequestURI()).thenReturn("/api/test");
-        controller.doPost(request, response);
+        when(rawRequest.getContextPath()).thenReturn("");
+        when(rawRequest.getRequestURI()).thenReturn("/api/test");
+        controller.doPost(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq(""));
     }
@@ -43,9 +40,9 @@ public class ApiControllerSupportTest
     @Test
     public void generate2()
     {
-        when(request.getContextPath()).thenReturn("");
-        when(request.getRequestURI()).thenReturn("/api/test/");
-        controller.doPost(request, response);
+        when(rawRequest.getContextPath()).thenReturn("");
+        when(rawRequest.getRequestURI()).thenReturn("/api/test/");
+        controller.doPost(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq(""));
     }
@@ -53,9 +50,9 @@ public class ApiControllerSupportTest
     @Test
     public void subUrl()
     {
-        when(request.getContextPath()).thenReturn("");
-        when(request.getRequestURI()).thenReturn("/api/test/path");
-        controller.doPost(request, response);
+        when(rawRequest.getContextPath()).thenReturn("");
+        when(rawRequest.getRequestURI()).thenReturn("/api/test/path");
+        controller.doPost(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq("path"));
     }
@@ -63,9 +60,9 @@ public class ApiControllerSupportTest
     @Test
     public void subUrl2()
     {
-        when(request.getContextPath()).thenReturn("");
-        when(request.getRequestURI()).thenReturn("/api/test/foo/bar");
-        controller.doPost(request, response);
+        when(rawRequest.getContextPath()).thenReturn("");
+        when(rawRequest.getRequestURI()).thenReturn("/api/test/foo/bar");
+        controller.doPost(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq("foo/bar"));
     }
@@ -73,9 +70,9 @@ public class ApiControllerSupportTest
     @Test
     public void subUrlWithContext()
     {
-        when(request.getContextPath()).thenReturn("/context");
-        when(request.getRequestURI()).thenReturn("/context/api/test/foo/bar");
-        controller.doPost(request, response);
+        when(rawRequest.getContextPath()).thenReturn("/context");
+        when(rawRequest.getRequestURI()).thenReturn("/context/api/test/foo/bar");
+        controller.doPost(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq("foo/bar"));
     }
@@ -83,9 +80,9 @@ public class ApiControllerSupportTest
     @Test
     public void doGet()
     {
-        when(request.getContextPath()).thenReturn("");
-        when(request.getRequestURI()).thenReturn("/api/test");
-        controller.doGet(request, response);
+        when(rawRequest.getContextPath()).thenReturn("");
+        when(rawRequest.getRequestURI()).thenReturn("/api/test");
+        controller.doGet(rawRequest, rawResponse);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq(""));
     }

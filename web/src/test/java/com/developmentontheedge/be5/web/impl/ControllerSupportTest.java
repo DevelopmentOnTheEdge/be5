@@ -2,6 +2,10 @@ package com.developmentontheedge.be5.web.impl;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Provides;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +23,7 @@ public class ControllerSupportTest
     private HttpServletRequest rawRequest;
     private HttpServletResponse rawResponse;
     private PrintWriter writer;
+    private TestController testController;
 
     @Before
     public void init() throws Exception
@@ -30,13 +35,17 @@ public class ControllerSupportTest
 
         rawRequest = mock(HttpServletRequest.class);
         when(rawRequest.getSession()).thenReturn(mock(HttpSession.class));
+
+        testController = new TestController();
+        Injector injector = Guice.createInjector(new TestWebModule());
+        injector.injectMembers(testController);
     }
 
     @Test
     public void doGet()
     {
         when(rawRequest.getParameter("name")).thenReturn("value");
-        new TestController().doGet(rawRequest, rawResponse);
+        testController.doGet(rawRequest, rawResponse);
         verify(rawResponse).setContentType("text/html;charset=UTF-8");
         verify(writer).append("value test");
     }
@@ -45,7 +54,7 @@ public class ControllerSupportTest
     public void doPost()
     {
         when(rawRequest.getParameter("name")).thenReturn("value");
-        new TestController().doPost(rawRequest, rawResponse);
+        testController.doPost(rawRequest, rawResponse);
         verify(rawResponse).setContentType("text/html;charset=UTF-8");
         verify(writer).append("value test");
     }
@@ -56,6 +65,15 @@ public class ControllerSupportTest
         public void generate(Request req, Response res)
         {
             res.sendHtml(req.getNonEmpty("name") + " test");
+        }
+    }
+
+    class TestWebModule extends AbstractModule
+    {
+        @Provides
+        Request provideUserInfo()
+        {
+            return new RequestImpl(rawRequest);
         }
     }
 }

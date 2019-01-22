@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.server.ScopedServerModule;
+import com.developmentontheedge.be5.web.WebModule;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
@@ -15,7 +15,7 @@ import com.google.inject.util.Modules;
 public abstract class ServerBe5ProjectTest extends ServerTestUtils
 {
     private static final Injector injector = initInjector(
-            Modules.override(new ServerModule(), new ScopedServerModule(), new TemplateModule()).with(new ServerTestModule()),
+            Modules.override(new ServerModule(), new WebModule(), new TemplateModule()).with(new ServerTestModule()),
             new CoreModuleForTest()
     );
 
