@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
@@ -15,7 +14,8 @@ import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.TableUtils;
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -64,7 +64,8 @@ public class TableBuilder
 
         if (limit == Integer.MAX_VALUE)
         {
-            limit = Integer.parseInt(LayoutUtils.getLayoutObject(query).getOrDefault("defaultPageLimit",
+            Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+            limit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
         newParams.put(LIMIT, Math.min(limit, maxLimit) + "");

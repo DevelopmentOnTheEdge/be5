@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public class DocumentFormPlugin implements DocumentPlugin
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        String topForm = (String) JsonUtils.getMapFromJson(query.getLayout()).get(TOP_FORM);
         if (topForm != null)
         {
             if (userAwareMeta.hasAccessToOperation(query.getEntity().getName(), query.getName(), topForm))

@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
@@ -18,6 +17,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.sql.model.AstDelete;
@@ -138,7 +138,7 @@ public class QueryBuilderController extends JsonApiModelController
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
-            Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
+            Map<String, Object> parameters = ParseRequestUtils.getContextParams(req.get(RestApiConstants.CONTEXT_PARAMS));
             ResourceData resourceData = new ResourceData(
                     "queryBuilder",
                     data,
@@ -222,7 +222,7 @@ public class QueryBuilderController extends JsonApiModelController
 
     private String select(List<ResourceData> includedData, List<ErrorModel> errorModelList, String sql, Request req)
     {
-        Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
+        Map<String, Object> parameters = ParseRequestUtils.getContextParams(req.get(RestApiConstants.CONTEXT_PARAMS));
         Query query = meta.createQueryFromSql(sql);
         String finalSql = getFinalSql(errorModelList, query, parameters);
 

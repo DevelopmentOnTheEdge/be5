@@ -1,19 +1,17 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LayoutUtils
+public class JsonUtils
 {
-    public static Map<String, Object> getLayoutObject(EntityItem entityItem)
+    public static Map<String, Object> getMapFromJson(String json)
     {
-        if (!entityItem.getLayout().isEmpty())
+        if (json != null && !json.isEmpty())
         {
-            return JsonFactory.jsonb.fromJson(entityItem.getLayout(),
-                    new HashMap<String, Object>()
+            return JsonFactory.jsonb.fromJson(json, new HashMap<String, Object>()
                     {
                     }.getClass().getGenericSuperclass());
         }

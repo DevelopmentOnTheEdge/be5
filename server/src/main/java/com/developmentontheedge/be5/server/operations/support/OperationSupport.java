@@ -1,21 +1,23 @@
 package com.developmentontheedge.be5.server.operations.support;
 
-import com.developmentontheedge.be5.security.UserInfo;
-import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
-import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
+import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.query.services.QueriesService;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.impl.FileUploadWrapper;
+import org.apache.commons.fileupload.FileItem;
 
 import javax.inject.Inject;
 
@@ -76,5 +78,11 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     protected void setResultFinished(FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(null, frontendActions));
+    }
+
+    protected FileItem getFileItem(String fileName)
+    {
+        FileUploadWrapper fileUploadWrapper = (FileUploadWrapper) request.getRawRequest();
+        return fileUploadWrapper.getFileItem(fileName);
     }
 }

@@ -52,7 +52,7 @@ class OperationServiceTest extends OperationsSqlMockProjectTest
     {
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
 
-        def operation = propertyError(['_reloadcontrol_': '/name', 'name': 'generateErrorInProperty'])
+        def operation = propertyError(['_reloadControl_': '/name', 'name': 'generateErrorInProperty'])
 
         assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
 //        assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
@@ -74,7 +74,7 @@ class OperationServiceTest extends OperationsSqlMockProjectTest
     {
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR)
 
-        def operation = propertyError(['_reloadcontrol_': '/name', 'name': 'generateErrorInProperty'])
+        def operation = propertyError(['_reloadControl_': '/name', 'name': 'generateErrorInProperty'])
 
         assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
     }

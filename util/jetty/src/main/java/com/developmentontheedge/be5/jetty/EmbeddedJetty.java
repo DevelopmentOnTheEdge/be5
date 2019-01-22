@@ -1,7 +1,10 @@
 package com.developmentontheedge.be5.jetty;
 
 import com.developmentontheedge.be5.logging.LogConfigurator;
+import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
@@ -34,7 +37,10 @@ public class EmbeddedJetty
             long startTime = System.currentTimeMillis();
             jetty = new Server(port);
             WebAppContext webAppContext = getWebAppContext();
-            jetty.setHandler(webAppContext);
+            HandlerCollection handlers = new HandlerCollection();
+            handlers.addHandler(webAppContext);
+            handlers.addHandler(getRequestLogHandler());
+            jetty.setHandler(handlers);
             jetty.start();
             logStarted(webAppContext, startTime);
         }
@@ -108,6 +114,23 @@ public class EmbeddedJetty
                     "Please set the correct working directory. Current: " + new File("").getAbsolutePath());
             System.exit(1);
         }
+    }
+
+    private RequestLogHandler getRequestLogHandler()
+    {
+        NCSARequestLog requestLog = new NCSARequestLog();
+        File file = new File("./target/access_logs");
+        file.mkdirs();
+        requestLog.setFilename(file.getAbsolutePath() + "/yyyy_mm_dd.request.log");
+        requestLog.setFilenameDateFormat("yyyy_MM_dd");
+        requestLog.setRetainDays(90);
+        requestLog.setAppend(true);
+        requestLog.setExtended(true);
+        requestLog.setLogCookies(false);
+        requestLog.setLogTimeZone("GMT");
+        RequestLogHandler requestLogHandler = new RequestLogHandler();
+        requestLogHandler.setRequestLog(requestLog);
+        return requestLogHandler;
     }
 
     public EmbeddedJetty setPort(int port)

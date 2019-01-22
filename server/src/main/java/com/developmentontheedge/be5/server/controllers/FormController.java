@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
@@ -26,8 +26,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.server.RestApiConstants.CONTEXT_PARAMS;
+import static com.developmentontheedge.be5.server.RestApiConstants.ENTITY_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.OPERATION_NAME_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.QUERY_NAME_PARAM;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
+import static java.util.Objects.requireNonNull;
 
 @Singleton
 public class FormController extends JsonApiModelController
@@ -61,21 +66,21 @@ public class FormController extends JsonApiModelController
             userHelper.initGuest();
         }
 
-        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
-        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        Map<String, Object> operationParams = ParseRequestUtils.
-                getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
-        Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
+        requireNonNull(req.get(TIMESTAMP_PARAM));
+        String entityName = req.getNonEmpty(ENTITY_NAME_PARAM);
+        String queryName = req.getNonEmpty(QUERY_NAME_PARAM);
+        String operationName = req.getNonEmpty(OPERATION_NAME_PARAM);
+        Map<String, Object> contextParams = ParseRequestUtils.getContextParams(req.getNonEmpty(CONTEXT_PARAMS));
+        Map<String, Object> values = ParseRequestUtils.getFormValues(req.getParameters());
 
         try
         {
             switch (requestSubUrl)
             {
                 case "":
-                    ResourceData generateData = formGenerator.generate(entityName, queryName, operationName,
-                            operationParams, values);
-                    if (OPERATION_RESULT.equals(generateData.getType()) &&
+                    ResourceData generateData = formGenerator.generate(entityName, queryName,
+                            operationName, contextParams, values);
+                    if (FrontendConstants.OPERATION_RESULT.equals(generateData.getType()) &&
                             ((OperationResultPresentation) generateData.getAttributes()).getOperationResult()
                                     .getStatus() == OperationStatus.ERROR)
                     {
@@ -83,8 +88,8 @@ public class FormController extends JsonApiModelController
                     }
                     return data(generateData);
                 case "apply":
-                    ResourceData executeData = formGenerator.execute(entityName, queryName, operationName,
-                            operationParams, values);
+                    ResourceData executeData = formGenerator.execute(entityName, queryName,
+                            operationName, contextParams, values);
                     if (FORM_ACTION.equals(executeData.getType()))
                     {
                         res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -102,11 +107,10 @@ public class FormController extends JsonApiModelController
         catch (Be5Exception e)
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName)
-                    .named(operationParams);
+                    .named(contextParams);
             log.log(e.getLogLevel(), "Error in operation: " + url +
                     ", on requestSubUrl = '" + requestSubUrl + "'", e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())));
         }
     }
-
 }

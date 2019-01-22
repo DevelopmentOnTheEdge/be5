@@ -39,7 +39,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
     {
         def op = getOperation([name: "b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
-        assertEquals("[_search_presets_:name, name:b, _search_:true]", op.getRedirectParams().toString())
+        assertEquals("[name:b, _search_:true, _search_presets_:name]", op.getRedirectParams().toString())
     }
 
     @Test
@@ -59,7 +59,7 @@ class GetRedirectParamsTest extends OperationsSqlMockProjectTest
         op.addRedirectParam("name", "a")
         op.addRedirectParams([test: "c"])
 
-        assertEquals("[test:c, name:a]", op.getRedirectParams().toString())
+        assertEquals("[name:a, test:c]", op.getRedirectParams().toString())
     }
 
     private Operation getOperation(Map<String, String> operationParams)

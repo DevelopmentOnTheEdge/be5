@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations.support;
 
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.model.FrontendAction;
@@ -19,7 +19,7 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
         );
         //String message = userAwareMeta.getLocalizedInfoMessage("Wait for the download to start.");
         //todo after add alertMessageAction
-        Map<String, Object> layout = LayoutUtils.getLayoutObject(getInfo().getModel());
+        Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
         if (parameters == null || "modalForm".equals(layout.get("type")))
         {
             setResultFinished(downloadOperationAction);

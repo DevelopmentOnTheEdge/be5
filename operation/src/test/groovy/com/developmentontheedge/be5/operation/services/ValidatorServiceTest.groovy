@@ -123,6 +123,17 @@ class ValidatorServiceTest extends OperationsSqlMockProjectTest
         assertArrayEquals([1L, 3L] as Long[], (Object[]) property.getValue())
     }
 
+    @Test
+    void testMultiLongOneValue()
+    {
+        DynamicProperty property = new DynamicProperty("name", "Name", Long.class, "1")
+        property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true)
+
+        validator.checkAndThrowExceptionIsError(property)
+
+        assertArrayEquals([1L] as Long[], (Object[]) property.getValue())
+    }
+
     @Test(expected = NumberFormatException.class)
     void testError()
     {

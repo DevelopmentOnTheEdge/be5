@@ -1,18 +1,18 @@
 package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.FrontendConstants;
-import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationConstants;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -22,7 +22,7 @@ public abstract class BaseOperationSupport implements Operation
     protected OperationContext context;
     private OperationResult operationResult;
 
-    private final Map<String, Object> redirectParams = new HashMap<>();
+    private final Map<String, Object> redirectParams = new LinkedHashMap<>();
 
     @Override
     public void initialize(OperationInfo info, OperationContext context, OperationResult operationResult)
@@ -71,13 +71,13 @@ public abstract class BaseOperationSupport implements Operation
     @Override
     public Map<String, Object> getRedirectParams()
     {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
 
         for (Map.Entry<String, Object> entry : context.getParams().entrySet())
         {
             if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
             {
-                map.put(entry.getKey(), entry.getValue().toString());
+                map.put(entry.getKey(), getValue(entry));
             }
         }
 
@@ -85,11 +85,23 @@ public abstract class BaseOperationSupport implements Operation
         {
             if (entry.getValue() != null && !entry.getValue().toString().isEmpty())
             {
-                map.put(entry.getKey(), entry.getValue().toString());
+                map.put(entry.getKey(), getValue(entry));
             }
         }
 
         return map;
+    }
+
+    private Object getValue(Map.Entry<String, Object> entry)
+    {
+        if (entry.getValue() instanceof String[])
+        {
+            return String.join(",", (String[]) entry.getValue());
+        }
+        else
+        {
+            return entry.getValue().toString();
+        }
     }
 
     /**

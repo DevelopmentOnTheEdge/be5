@@ -26,7 +26,7 @@ public class CategoriesController extends JsonApiController
         {
             case "forest":
                 return categoriesService.getCategoriesForest(
-                        req.getNonEmpty(RestApiConstants.ENTITY),
+                        req.getNonEmpty(RestApiConstants.ENTITY_NAME_PARAM),
                         req.getBoolean("hideEmpty", false)
                 );
             default:

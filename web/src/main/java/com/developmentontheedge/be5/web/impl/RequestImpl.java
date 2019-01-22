@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.web.impl;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,7 +43,14 @@ public class RequestImpl implements Request
     @Inject
     public RequestImpl(HttpServletRequest raw)
     {
-        this.raw = raw;
+        if (ServletFileUpload.isMultipartContent(raw))
+        {
+            this.raw = new FileUploadWrapper(raw);
+        }
+        else
+        {
+            this.raw = raw;
+        }
         this.remoteAddr = getClientIpAddr(raw);
         this.session = new SessionImpl(new RequestSessionProvider(raw));
     }

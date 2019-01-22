@@ -293,12 +293,18 @@ public class OperationExecutorImpl implements OperationExecutor
                         }
                         else
                         {
-                            throw new RuntimeException("Class " + operationInfo.getCode() + " is null.");
+                            throw Be5Exception.internalInOperation(operationInfo.getModel(),
+                                    new Exception("Class " + operationInfo.getCode() + " is null."));
                         }
                     }
                     catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                     {
-                        throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                        throw Be5Exception.internalInOperation(operationInfo.getModel(),
+                                new UnsupportedOperationException("Groovy feature has been excluded", e));
+                    }
+                    catch (RuntimeException e)
+                    {
+                        throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
                     }
                 }
             }
@@ -355,7 +361,12 @@ public class OperationExecutorImpl implements OperationExecutor
                     }
                     catch (NoClassDefFoundError | IllegalAccessException | InstantiationException e)
                     {
-                        throw new UnsupportedOperationException("Groovy feature has been excluded", e);
+                        throw Be5Exception.internalInOperationExtender(groovyExtender,
+                            new UnsupportedOperationException("Groovy feature has been excluded", e));
+                    }
+                    catch (RuntimeException e)
+                    {
+                        throw Be5Exception.internalInOperationExtender(groovyExtender, e);
                     }
                 }
             }
