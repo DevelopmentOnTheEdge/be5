@@ -80,9 +80,9 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         setResult(OperationResult.finished(null, frontendActions));
     }
 
-    protected FileItem getFileItem(String propertyName)
+    protected FileItem getFileItem(String fileName)
     {
         FileUploadWrapper fileUploadWrapper = (FileUploadWrapper) request.getRawRequest();
-        return fileUploadWrapper.getFileItem(propertyName);
+        return fileUploadWrapper.getFileItem(fileName);
     }
 }

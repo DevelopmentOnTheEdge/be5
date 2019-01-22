@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.web.impl;
 
-import com.google.common.collect.ObjectArrays;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -12,20 +11,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @see <a href="http://www.javapractices.com/topic/TopicAction.do?Id=221">Wrap file upload requests</a>
  */
 public class FileUploadWrapper extends HttpServletRequestWrapper
 {
-    /**
-     * Constructor.
-     */
-    public FileUploadWrapper(HttpServletRequest aRequest)
+    FileUploadWrapper(HttpServletRequest aRequest)
     {
         super(aRequest);
         ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
@@ -40,17 +34,10 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
         }
     }
 
-    /**
-     * Return all request parameter names, for both regular controls and file upload
-     * controls.
-     */
     @Override
     public Enumeration<String> getParameterNames()
     {
-        Set<String> allNames = new LinkedHashSet<>();
-        allNames.addAll(fRegularParams.keySet());
-        allNames.addAll(fFileParams.keySet());
-        return Collections.enumeration(allNames);
+        return Collections.enumeration(fRegularParams.keySet());
     }
 
     /**
@@ -124,9 +111,6 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
 
     // PRIVATE
 
-    /**
-     * Store regular params only. May be multivalued (hence the List).
-     */
     private final Map<String, String[]> fRegularParams = new LinkedHashMap<>();
 
     /**
@@ -137,45 +121,31 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
 
     private void convertToMaps(List<FileItem> aFileItems)
     {
+        Map<String, List<String>> fRegularListParams = new LinkedHashMap<>();
         for (FileItem item : aFileItems)
         {
+            String fieldName = item.getFieldName();
+            fRegularListParams.putIfAbsent(fieldName, new ArrayList<>());
+            List<String> values = fRegularListParams.get(fieldName);
             if (isFileUploadField(item))
             {
-                fFileParams.put(item.getFieldName(), item);
-                fRegularParams.put(item.getFieldName(), new String[]{item.getName()});
+                fFileParams.put(item.getName(), item);
+                values.add(item.getName());
             }
             else
             {
-                if (alreadyHasValue(item))
-                {
-                    addMultivaluedItem(item);
-                }
-                else
-                {
-                    addSingleValueItem(item);
-                }
+                values.add(item.getString());
             }
+        }
+
+        for (Map.Entry<String, List<String>> value : fRegularListParams.entrySet())
+        {
+            fRegularParams.put(value.getKey(), value.getValue().toArray(new String[0]));
         }
     }
 
     private boolean isFileUploadField(FileItem aFileItem)
     {
         return !aFileItem.isFormField();
-    }
-
-    private boolean alreadyHasValue(FileItem aItem)
-    {
-        return fRegularParams.get(aItem.getFieldName()) != null;
-    }
-
-    private void addSingleValueItem(FileItem aItem)
-    {
-        fRegularParams.put(aItem.getFieldName(), new String[]{aItem.getString()});
-    }
-
-    private void addMultivaluedItem(FileItem aItem)
-    {
-        String[] values = fRegularParams.get(aItem.getFieldName());
-        fRegularParams.put(aItem.getFieldName(), ObjectArrays.concat(values, aItem.getString()));
     }
 }
