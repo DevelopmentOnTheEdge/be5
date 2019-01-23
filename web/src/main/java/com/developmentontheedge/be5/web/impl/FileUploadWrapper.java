@@ -7,6 +7,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -134,7 +136,14 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
             }
             else
             {
-                values.add(item.getString());
+                try
+                {
+                    values.add(item.getString(StandardCharsets.UTF_8.name()));
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
