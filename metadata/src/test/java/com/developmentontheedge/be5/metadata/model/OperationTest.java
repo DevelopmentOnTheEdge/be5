@@ -17,13 +17,14 @@ public class OperationTest
         {
             String name = "op of type " + type;
             Operation operation = Operation.createOperation(name, type, e);
-            operation.setCode("code");
+            operation.setCode("java.lang.String");
             assertEquals(name, operation.getName());
             assertEquals(type, operation.getType());
             assertEquals("operation", operation.getEntityItemType());
-            assertEquals("code", operation.getCode());
+            assertEquals("java.lang.String", operation.getCode());
         }
         Operation operation = Operation.createOperation("test", Operation.OPERATION_TYPE_JAVA, e);
+        operation.setCode("java.lang.String");
         operation.setRecords(Operation.VISIBLE_WHEN_ANY_SELECTED_RECORDS);
         assertEquals("When any number of records is selected", operation.getVisibleWhen());
         operation.setVisibleWhen("Always");

@@ -23,6 +23,7 @@ public class AppSyncMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new AppSync()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)

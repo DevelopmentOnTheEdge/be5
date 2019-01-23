@@ -22,6 +22,7 @@ public class GenerateContextMojo extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
+        init();
         new GenerateContext()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)

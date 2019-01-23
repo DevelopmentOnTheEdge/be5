@@ -1,4 +1,4 @@
-package entities
+package queries.entities
 
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport

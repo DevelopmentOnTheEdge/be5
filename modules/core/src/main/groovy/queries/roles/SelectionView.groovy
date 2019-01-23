@@ -1,4 +1,4 @@
-package roles
+package queries.roles
 
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport
 import com.developmentontheedge.beans.DynamicPropertySet

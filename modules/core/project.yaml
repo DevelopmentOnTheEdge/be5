@@ -1,8 +1,12 @@
 core:
+  projectFileStructure:
+    groovyQueriesDir: src/main/groovy
+    groovyOperationsDir: src/main/groovy
+    groovyExtendersDir: src/main/groovy
   moduleProject: true
-  features: []
+  features:
+  - compiledGroovy
   l10n: ru
-  projectFileStructure: {}
   modules: []
   application:
   - _logout_

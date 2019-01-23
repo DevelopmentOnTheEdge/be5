@@ -18,7 +18,6 @@ testtable:
       type: 1D_unknown
       roles: '@AllRoles'
       operations:
-      - Filter
       - OldRedirectFilter
       - CustomOperation
       - InsertWithExtender
@@ -32,12 +31,6 @@ testtable:
         FROM
           testtable t
   operations:
-  - Filter:
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.FilterOperation
-  - FilterByParamsInQueryOperation:
-      roles: '@AllRoles'
-      code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - OldRedirectFilter:
       type: Groovy
       roles: Administrator

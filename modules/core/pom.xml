@@ -82,12 +82,19 @@
         <executions>
           <execution>
             <id>validate</id>
-            <phase>compile</phase>
+            <phase>package</phase>
             <goals>
               <goal>validate</goal>
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.developmentontheedge.be5</groupId>
+            <artifactId>be5-server</artifactId>
+            <version>0.1.2-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
@@ -96,18 +103,42 @@
         <executions>
           <execution>
             <goals>
+              <goal>addSources</goal>
+              <goal>compile</goal>
               <goal>addTestSources</goal>
               <goal>compileTests</goal>
               <goal>removeTestStubs</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <sources>
+            <source>
+              <directory>${project.basedir}/src/main/groovy</directory>
+              <includes>
+                <include>**/*.groovy</include>
+              </includes>
+            </source>
+          </sources>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>3.0.0</version>
         <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/groovy</source>
+              </sources>
+            </configuration>
+          </execution>
           <execution>
             <id>add-test-source</id>
             <phase>process-resources</phase>

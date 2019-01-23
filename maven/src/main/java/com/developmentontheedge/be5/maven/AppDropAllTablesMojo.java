@@ -10,6 +10,7 @@ public class AppDropAllTablesMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new AppDropAllTables()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)

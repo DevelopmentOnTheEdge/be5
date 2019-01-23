@@ -247,4 +247,4 @@ testtable:
   - Edit:
       records: 1
       roles: [Administrator]
-      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+      code: java.lang.String

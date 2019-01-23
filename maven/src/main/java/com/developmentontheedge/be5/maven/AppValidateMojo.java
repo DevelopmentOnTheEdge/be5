@@ -32,6 +32,7 @@ public class AppValidateMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new AppValidate()
                 .setLogPath(logPath)
                 .setLogger(logger)

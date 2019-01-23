@@ -17,6 +17,7 @@ public class ProjectWizardMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new ProjectWizard()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)

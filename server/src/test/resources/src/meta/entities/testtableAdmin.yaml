@@ -27,7 +27,6 @@ testtableAdmin:
       type: 1D
       roles: Administrator
       operations:
-      - TestOperation
       - TestGroovyOp
       - OperationWithExtend
       - OperationWithExtend2
@@ -37,7 +36,6 @@ testtableAdmin:
       - Delete
       - Edit
       - TestTransactionalOperation
-      - TestOperationProperty
       - Insert
       - EditWithCheckRecords
       code: |2-
@@ -81,12 +79,6 @@ testtableAdmin:
       roles: [SystemDeveloper, Administrator]
       file: TestGroovyTable.groovy
   operations:
-  - TestOperation:
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.TestOperation
-  - TestOperationProperty:
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.TestOperationProperty
   - TestTransactionalOperation:
       type: Groovy
       roles: Administrator

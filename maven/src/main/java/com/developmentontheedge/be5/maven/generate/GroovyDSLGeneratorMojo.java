@@ -19,6 +19,7 @@ public class GroovyDSLGeneratorMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new GroovyDSLGenerator()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)

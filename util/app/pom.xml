@@ -104,7 +104,7 @@
           <exclude>src/frontend/**/*</exclude>
           <exclude>node_modules/**/*</exclude>
           <exclude>dist/**/*</exclude>
-          <exclude>src/main/**/*.*</exclude>
+          <exclude>src/main/java/**/*.*</exclude>
           <exclude>target/**/*.*</exclude>
           <exclude>*.properties</exclude>
         </excludes>

@@ -10,6 +10,7 @@ public class AppDbMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new AppDb()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)

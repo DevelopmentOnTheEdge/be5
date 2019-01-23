@@ -18,6 +18,7 @@ public class AppDataMojo extends Be5Mojo
     @Override
     public void execute()
     {
+        init();
         new AppData()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)

@@ -15,6 +15,7 @@ public class AppToolsMojo extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
+        init();
         new AppTools()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)
