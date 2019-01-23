@@ -41,7 +41,7 @@ public class GroovyOperation extends SourceFileOperation
             }
             catch (ClassNotFoundException e)
             {
-                result.add(new ProjectElementException(getCompletePath(), "file: " + getFileName(), e));
+                result.add(new ProjectElementException(getCompletePath(), "file", e));
             }
         }
         return result;

@@ -23,7 +23,7 @@ public class JavaOperation extends Operation
         }
         catch (ClassNotFoundException e)
         {
-            result.add(new ProjectElementException(getCompletePath(), "code: " + getCode(), e));
+            result.add(new ProjectElementException(getCompletePath(), "code", e));
         }
         return result;
     }

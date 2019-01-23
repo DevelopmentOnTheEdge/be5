@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.metadata.model;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.developmentontheedge.be5.metadata.Features.BE_SQL_QUERIES;
+import static com.developmentontheedge.be5.metadata.MetadataUtils.getCompiledGroovyClassName;
 
 
 @PropertyName("Query")
@@ -536,6 +538,21 @@ public class Query extends EntityItem implements TemplateElement
         {
             result.add(new ProjectElementException(getCompletePath(), "operations",
                     "Operation '" + pOperationName + "' not found"));
+        }
+
+        if ((getType() == QueryType.GROOVY && getProject().hasFeature(Features.COMPILED_GROOVY))
+                || getType() == QueryType.JAVA)
+        {
+            String className = getType() == QueryType.JAVA ? getQuery() : getCompiledGroovyClassName(getFileName());
+            try
+            {
+                Class.forName(className);
+            }
+            catch (ClassNotFoundException e)
+            {
+                result.add(new ProjectElementException(getCompletePath(),
+                        getType() == QueryType.JAVA ? "code" : "file", e));
+            }
         }
         return result;
     }
