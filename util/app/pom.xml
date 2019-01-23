@@ -101,12 +101,17 @@
           <exclude>.*</exclude>
           <exclude>src/html/**/*.*</exclude>
           <exclude>.idea/**/*</exclude>
+          <exclude>*.iml</exclude>
           <exclude>src/frontend/**/*</exclude>
           <exclude>node_modules/**/*</exclude>
           <exclude>dist/**/*</exclude>
           <exclude>src/main/java/**/*.*</exclude>
+          <exclude>src/main/resources/**/*.*</exclude>
+          <exclude>src/main/webapp/**/*.*</exclude>
           <exclude>target/**/*.*</exclude>
           <exclude>*.properties</exclude>
+          <exclude>webpack.*</exclude>
+          <exclude>package.json</exclude>
         </excludes>
       </resource>
     </resources>
