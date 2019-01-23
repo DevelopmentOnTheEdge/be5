@@ -19,10 +19,15 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class TemplateFilter extends FilterSupport
 {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     private ServletContext servletContext;
     private TemplateEngine templateEngine;
 
@@ -69,8 +74,16 @@ public class TemplateFilter extends FilterSupport
         }
         else
         {
-            ServletUtils.addHeaders(req.getRawRequest(), res.getRawResponse());
-            res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req)));
+            try
+            {
+                ServletUtils.addHeaders(req.getRawRequest(), res.getRawResponse());
+                res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req)));
+            }
+            catch (Throwable e)
+            {
+                log.log(Level.SEVERE, "Error on precess template", e);
+                res.sendHtml(e.getMessage());
+            }
         }
     }
 
