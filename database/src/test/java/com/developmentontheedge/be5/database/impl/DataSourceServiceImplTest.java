@@ -58,4 +58,15 @@ public class DataSourceServiceImplTest extends DatabaseTest
         assertEquals(Dbms.H2, dataSourceService.getDbms());
     }
 
+    @Test
+    public void initRdbmsType() throws Exception
+    {
+        ProjectProviderImpl projectProvider = new ProjectProviderImpl(stage);
+        projectProvider.start();
+        DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(projectProvider);
+        dataSourceService.start();
+        dataSourceService.initRdbmsType();
+        assertEquals(Dbms.H2, dataSourceService.getDbms());
+        assertEquals("jdbc:h2:mem:DataSourceServiceImplTest", dataSourceService.getConnectionUrl());
+    }
 }
