@@ -167,8 +167,7 @@
           <version>4.3.0</version>
           <configuration>
             <sourceDirectories>
-              <sourceDirectory>${basedir}/sql/target/generated-sources/javacc</sourceDirectory>
-              <sourceDirectory>${basedir}/sql/target/generated-sources/jjtree</sourceDirectory>
+              <sourceDirectory>${basedir}/modules/core/src/main/groovy</sourceDirectory>
             </sourceDirectories>
           </configuration>
         </plugin>
