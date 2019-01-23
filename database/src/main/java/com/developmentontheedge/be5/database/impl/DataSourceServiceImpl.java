@@ -29,7 +29,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
     private DataSource dataSource;
     private String connectionUrl;
-    private Rdbms type;
+    private Rdbms rdbms;
 
     @Inject
     public DataSourceServiceImpl(ProjectProvider projectProvider)
@@ -46,7 +46,7 @@ public class DataSourceServiceImpl implements DataSourceService
     @Override
     public Dbms getDbms()
     {
-        return type.getDbms();
+        return rdbms.getDbms();
     }
 
     @Override
@@ -75,28 +75,31 @@ public class DataSourceServiceImpl implements DataSourceService
             {
                 throw Be5Exception.internal("Connection profile is not configured. and NamingException: ", e);
             }
-
-            type = profile.getRdbms();
-
-            BasicDataSource bds = new BasicDataSource();
-            if (Rdbms.MYSQL != profile.getRdbms())
-            {
-                bds.setDriverClassName(profile.getDriverDefinition());
-            }
             connectionUrl = profile.getJdbcUrl().createConnectionUrl(false);
-            bds.setUrl(connectionUrl);
-            String userName = profile.getUsername();
-            bds.setUsername(userName);
-            bds.setPassword(profile.getPassword());
-            bds.setValidationQuery(type.getValidationQuery());
-
-            dataSource = bds;
-            log.info("Connection profile - " + profile.getName() + ". " +
-                    "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
+            rdbms = profile.getRdbms();
+            dataSource = getBasicDataSource(profile);
         }
 
-        project.setDatabaseSystem(type);
-        projectProvider.addToReload(() -> project.setDatabaseSystem(type));
+        project.setDatabaseSystem(rdbms);
+        projectProvider.addToReload(() -> project.setDatabaseSystem(rdbms));
+    }
+
+    private BasicDataSource getBasicDataSource(BeConnectionProfile profile)
+    {
+        BasicDataSource dataSource = new BasicDataSource();
+        if (Rdbms.MYSQL != profile.getRdbms())
+        {
+            dataSource.setDriverClassName(profile.getDriverDefinition());
+        }
+        String username = profile.getUsername();
+        dataSource.setUsername(username);
+        dataSource.setPassword(profile.getPassword());
+        dataSource.setUrl(connectionUrl);
+        dataSource.setValidationQuery(rdbms.getValidationQuery());
+
+        log.info("Connection profile - " + profile.getName() + ". " +
+                "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, username, "xxxxx"));
+        return dataSource;
     }
 
     private void initDataSource(Project project, Context xmlContext)
@@ -121,7 +124,7 @@ public class DataSourceServiceImpl implements DataSourceService
             conn = dataSource.getConnection();
             connectionUrl = conn.getMetaData().getURL();
             String userName = conn.getMetaData().getUserName();
-            type = Rdbms.getRdbms(connectionUrl);
+            rdbms = Rdbms.getRdbms(connectionUrl);
             log.info("Connection url: " + DatabaseUtils.formatUrl(connectionUrl, userName, "xxxxx"));
         }
         catch (Throwable e)
