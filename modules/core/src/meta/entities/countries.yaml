@@ -21,10 +21,8 @@ countries:
       type: 1D
       roles: '@AllRolesExceptGuest'
       operations:
-      - Clone
       - Delete
       - Edit
-      - Explain Plan
       - Filter
       - Insert
       code: |-
@@ -32,28 +30,19 @@ countries:
           , telCode AS "Dial. Code"
          FROM countries
   operations:
-  - Clone:
-      records: 1
-      roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
   - Delete:
       records: 2
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 2
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentEditOperation
-  - Explain Plan:
-      roles: Administrator
-      code: com.beanexplorer.enterprise.operations.ExplainPlan
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:
       records: -1
       roles: '@AllRolesExceptGuest'
-      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Insert:
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
-  - PermaLink:
-      records: 1
-      code: com.beanexplorer.enterprise.operations.PermaLink
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+

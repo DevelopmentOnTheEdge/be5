@@ -16,29 +16,24 @@ dictionary:
   - All records:
       type: 1D
       operations:
-      - Clone
       - Delete
       - Edit
       - Filter
       - Insert
       code: SELECT ${entity.primaryKey} AS "Code", name AS "Name" FROM ${entity.name}
   operations:
-  - Clone:
-      records: 1
-      roles: DbAdmin
-      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
   - Delete:
       records: 2
       roles: DbAdmin
-      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 2
       roles: DbAdmin
-      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:
       records: -1
       roles: DbAdmin
-      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Insert:
       roles: DbAdmin
-      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
