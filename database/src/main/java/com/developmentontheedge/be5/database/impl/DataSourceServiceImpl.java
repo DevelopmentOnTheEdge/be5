@@ -62,10 +62,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
         try
         {
-            InitialContext ic = new InitialContext();
-            Context xmlContext = (Context) ic.lookup("java:comp/env");
-
-            initDataSource(project, xmlContext);
+            initDataSourceFromContext(project);
             initRdbmsType();
         }
         catch (NamingException e)
@@ -102,18 +99,13 @@ public class DataSourceServiceImpl implements DataSourceService
         return dataSource;
     }
 
-    private void initDataSource(Project project, Context xmlContext)
+    private void initDataSourceFromContext(Project project) throws NamingException
     {
-        try
-        {
-            String name = "jdbc/" + project.getAppName();
-            dataSource = (DataSource) xmlContext.lookup(name);
-            log.info("Context Configuration (context.xml): " + "'" + name + "'");
-        }
-        catch (Throwable e)
-        {
-            throw Be5Exception.internal("Error on init datasource", e);
-        }
+        InitialContext ic = new InitialContext();
+        Context xmlContext = (Context) ic.lookup("java:comp/env");
+        String name = "jdbc/" + project.getAppName();
+        dataSource = (DataSource) xmlContext.lookup(name);
+        log.info("Context Configuration (context.xml): " + "'" + name + "'");
     }
 
     private void initRdbmsType()
