@@ -28,13 +28,13 @@ public class EmbeddedJetty
 
     public void run()
     {
+        long startTime = System.currentTimeMillis();
         LogConfigurator.configure();
         checkDescriptor();
         Thread.currentThread().setName("main");
 
         try
         {
-            long startTime = System.currentTimeMillis();
             jetty = new Server(port);
             WebAppContext webAppContext = getWebAppContext();
             HandlerCollection handlers = new HandlerCollection();
@@ -87,22 +87,22 @@ public class EmbeddedJetty
 
     private SessionHandler getSessionHandler()
     {
-        HashSessionManager hashSessionManager = new HashSessionManager();
+        HashSessionManager sessionManager = new HashSessionManager();
         try
         {
             File file = new File("./target/sessions");
             file.mkdirs();
-            hashSessionManager.setStoreDirectory(file);
+            sessionManager.setStoreDirectory(file);
         }
         catch (IOException e)
         {
             log.log(Level.SEVERE, "", e);
         }
-        hashSessionManager.setSessionIdManager(new HashSessionIdManager());
-        hashSessionManager.setSavePeriod(1);
-        hashSessionManager.setMaxInactiveInterval(-1);
+        sessionManager.setSessionIdManager(new HashSessionIdManager());
+        sessionManager.setSavePeriod(1);
+        sessionManager.setMaxInactiveInterval(-1);
 
-        return new SessionHandler(hashSessionManager);
+        return new SessionHandler(sessionManager);
     }
 
     private void checkDescriptor()
