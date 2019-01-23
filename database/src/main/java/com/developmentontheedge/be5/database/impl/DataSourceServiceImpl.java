@@ -88,6 +88,7 @@ public class DataSourceServiceImpl implements DataSourceService
             String userName = profile.getUsername();
             bds.setUsername(userName);
             bds.setPassword(profile.getPassword());
+            bds.setValidationQuery(type.getValidationQuery());
 
             dataSource = bds;
             log.info("Connection profile - " + profile.getName() + ". " +
