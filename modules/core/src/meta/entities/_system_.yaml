@@ -14,6 +14,8 @@ _system_:
       invisible: true
       operations:
       - Clear all caches
+      - Reload project
+      - Get log files
       code: com.developmentontheedge.be5.modules.core.queries.system.CacheTable
   - Daemons:
       type: Java
@@ -26,9 +28,6 @@ _system_:
       type: Java
       roles: SystemDeveloper
       invisible: true
-      operations:
-      - Reload project
-      - Get log files
       code: com.developmentontheedge.be5.modules.core.queries.system.meta.EntitiesTable
   - Queries:
       type: Java
@@ -101,5 +100,6 @@ _system_:
       code: com.developmentontheedge.be5.modules.core.operations.system.DevReloadProject
   - Get log files:
       type: Java
+      layout: '{"type":"modalForm"}'
       roles: SystemDeveloper
       code: com.developmentontheedge.be5.server.operations.GetLogFiles
