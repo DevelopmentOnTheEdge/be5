@@ -27,7 +27,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
     private final ProjectProvider projectProvider;
 
-    private DataSource dataSource;
+    DataSource dataSource;
     private String connectionUrl;
     private Rdbms rdbms;
 
@@ -81,7 +81,7 @@ public class DataSourceServiceImpl implements DataSourceService
         projectProvider.addToReload(() -> project.setDatabaseSystem(rdbms));
     }
 
-    private BasicDataSource getBasicDataSource(BeConnectionProfile profile)
+    BasicDataSource getBasicDataSource(BeConnectionProfile profile)
     {
         BasicDataSource dataSource = new BasicDataSource();
         if (Rdbms.MYSQL != profile.getRdbms())
@@ -108,7 +108,7 @@ public class DataSourceServiceImpl implements DataSourceService
         log.info("Context Configuration (context.xml): " + "'" + name + "'");
     }
 
-    private void initRdbmsType()
+    void initRdbmsType()
     {
         Connection conn = null;
         try
