@@ -3,8 +3,8 @@ package com.developmentontheedge.be5.server;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -77,9 +77,9 @@ public interface FrontendActions
     }
 
     static FrontendAction downloadOperation(String entityName, String queryName, String operationName,
-                                            Map<String, Object> contextParams, Object parameters)
+                                            Map<String, Object> contextParams, Map<String, Object> parameters)
     {
-        Map<String, Object> map = ((DynamicPropertySet) parameters).asModifiableMap();
+        Map<Object, Object> map = new HashMap<>(parameters);
         map.put(ENTITY_NAME_PARAM, entityName);
         map.put(QUERY_NAME_PARAM, queryName);
         map.put(OPERATION_NAME_PARAM, operationName);

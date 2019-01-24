@@ -24,6 +24,7 @@ testtable:
       - OldRedirectFilter
       - CustomOperation
       - FileNotFoundError
+      - TestDownloadOperation
       code: |-
         SELECT
           t.name AS "Name",
@@ -93,6 +94,9 @@ testtable:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - TestDownloadOperation:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.controllers.DownloadOperationControllerTest$TestDownloadOperation
   - CustomOperation:
       type: Groovy
       roles: Administrator
