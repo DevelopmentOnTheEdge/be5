@@ -40,8 +40,33 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 executeOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
         verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
-        verify(DbServiceMock.mock).update("DELETE FROM testCollection WHERE categoryID IN (?)", 1L);
-        verify(DbServiceMock.mock).update("DELETE FROM testGenCollection WHERE recordID IN (?)", "testtableAdmin.1");
+        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testtableAdmin.1");
+    }
+
+    @Test
+    public void deleteOperationRestoredRecords()
+    {
+        whenSelectListTagsContains("FROM testRestoredRecords WHERE testRestoredRecords.ID = 1 LIMIT 2147483647", "1");
+
+        assertEquals(OperationStatus.FINISHED,
+                executeOperation("testRestoredRecords", "All records", "Delete", "1", "").getSecond().getStatus());
+
+        verify(DbServiceMock.mock).update("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "yes", 1L);
+        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testRestoredRecords.1");
+        verify(DbServiceMock.mock).update("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "yes", 1L);
+    }
+
+    @Test
+    public void restoreOperationRestoredRecords()
+    {
+        whenSelectListTagsContains("FROM testRestoredRecords WHERE testtableAdmin.ID = 1 LIMIT 2147483647", "1");
+
+        assertEquals(OperationStatus.FINISHED,
+                executeOperation("testRestoredRecords", "All records", "Restore", "1", "").getSecond().getStatus());
+
+        verify(DbServiceMock.mock).update("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "no", 1L);
+        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "no", "testRestoredRecords.1");
+        verify(DbServiceMock.mock).update("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "no", 1L);
     }
 
     @Test

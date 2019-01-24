@@ -16,3 +16,6 @@ testGenCollection:
     - categoryID:
         type: KEYTYPE
         reference: testtable
+    - isDeleted___:
+        type: ENUM('no','yes')
+        defaultValue: '''no'''

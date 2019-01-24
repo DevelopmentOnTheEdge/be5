@@ -12,6 +12,8 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 
 public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
@@ -77,20 +79,14 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     @Test
     public void deleteInvoke()
     {
-        database.getEntity("testCollection").add(ImmutableMap.of(
-                "categoryID", id.toString()
-        ));
-
         database.getEntity("testGenCollection").add(ImmutableMap.of(
                 "recordID", "testtableAdmin." + id.toString(),
                 "categoryID", 123123L
         ));
 
-        executeOperation("testtableAdmin", "All records", "Delete",
-                id.toString(), "").getSecond();
+        executeOperation("testtableAdmin", "All records", "Delete", id.toString(), "").getSecond();
 
-        assertEquals(0, database.getEntity("testCollection").count());
-        assertEquals(0, database.getEntity("testGenCollection").count());
+        assertEquals(0, database.getEntity("testGenCollection").count(Collections.singletonMap("isDeleted___", "no")));
     }
 
 }

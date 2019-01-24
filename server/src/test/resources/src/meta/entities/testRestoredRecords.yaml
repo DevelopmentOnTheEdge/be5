@@ -1,0 +1,49 @@
+testRestoredRecords:
+  type: table
+  displayName: testRestoredRecords
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(30)
+    - value:
+        type: INT
+        canBeNull: true
+    - isDeleted___:
+        type: ENUM('no','yes')
+        defaultValue: '''no'''
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT ID AS "ID", name AS "NAME"
+        FROM testRestoredRecords
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Delete
+      - Restore
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtableAdmin t
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
+  - Restore:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.RestoreOperation

@@ -10,4 +10,7 @@ testCollection:
         primaryKey: true
     - categoryID:
         type: KEYTYPE
-        reference: testtableAdmin
+        reference: testRestoredRecords
+    - isDeleted___:
+        type: ENUM('no','yes')
+        defaultValue: '''no'''

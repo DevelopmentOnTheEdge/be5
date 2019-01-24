@@ -416,9 +416,9 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     @Test
     void addEntityPrefixTest()
     {
-        db.update("DELETE FROM testtableAdmin");
-        db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 1)
-        db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 2)
+        db.update("DELETE FROM testRestoredRecords");
+        db.insert("INSERT INTO testRestoredRecords (name, value) VALUES (?, ?)", "TestName", 1)
+        db.insert("INSERT INTO testRestoredRecords (name, value) VALUES (?, ?)", "TestName", 2)
 
         def property = new DynamicProperty("test", String.class)
         dpsHelper.addTags(property, meta.getColumn("testCollection", "categoryID"),
