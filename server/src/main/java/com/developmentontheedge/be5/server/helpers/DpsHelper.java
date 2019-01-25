@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.server.helpers;
 
+import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.JsonUtils;
-import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -16,9 +14,12 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.validation.ValidationRules;
 import com.developmentontheedge.be5.query.services.QueriesService;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
@@ -703,4 +704,19 @@ public class DpsHelper
         }
         return columns;
     }
+
+    public DynamicPropertySet filterEntityParams(Entity entity, DynamicPropertySet parameters)
+    {
+        DynamicPropertySet result = new DynamicPropertySetSupport();
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        for(DynamicProperty property : parameters)
+        {
+            if (columns.containsKey(property.getName()))
+            {
+                result.add(property);
+            }
+        }
+        return result;
+    }
+
 }

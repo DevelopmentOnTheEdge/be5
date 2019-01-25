@@ -30,7 +30,9 @@ public class InsertOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        lastInsertID = database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet) parameters);
+        DynamicPropertySet entityParams = dpsHelper.filterEntityParams(getInfo().getEntity(),
+                (DynamicPropertySet) parameters);
+        lastInsertID = database.getEntity(getInfo().getEntityName()).add(entityParams);
 
         setResult(OperationResult.finished());
     }
