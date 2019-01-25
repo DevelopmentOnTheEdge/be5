@@ -12,6 +12,8 @@ import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.impl.FileUploadWrapper;
+import org.apache.commons.fileupload.FileItem;
 
 import javax.inject.Inject;
 
@@ -47,5 +49,11 @@ public abstract class OperationExtenderSupport extends BaseOperationExtenderSupp
         this.session = session;
         this.request = request;
         this.userInfo = userInfo;
+    }
+
+    protected FileItem getFileItem(String fileName)
+    {
+        FileUploadWrapper fileUploadWrapper = (FileUploadWrapper) request.getRawRequest();
+        return fileUploadWrapper.getFileItem(fileName);
     }
 }
