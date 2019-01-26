@@ -709,7 +709,7 @@ public class DpsHelper
     {
         DynamicPropertySet result = new DynamicPropertySetSupport();
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        for(DynamicProperty property : parameters)
+        for (DynamicProperty property : parameters)
         {
             if (columns.containsKey(property.getName()))
             {
