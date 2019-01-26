@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.FrontendConstants;
+import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
@@ -24,8 +25,9 @@ import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstUpdate;
+import com.developmentontheedge.sql.model.DbSpecificFunction;
+import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
-import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
@@ -52,12 +55,12 @@ public class QueryBuilderController extends JsonApiModelController
     private final ErrorModelHelper errorModelHelper;
     private final UserInfoProvider userInfoProvider;
     private final QuerySqlGenerator querySqlGenerator;
-    private final Stage stage;
+    private final DataSourceService dataSourceService;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, Meta meta,
                                   ErrorModelHelper errorModelHelper, UserInfoProvider userInfoProvider,
-                                  QuerySqlGenerator querySqlGenerator, Stage stage)
+                                  QuerySqlGenerator querySqlGenerator, DataSourceService dataSourceService)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
@@ -65,11 +68,30 @@ public class QueryBuilderController extends JsonApiModelController
         this.errorModelHelper = errorModelHelper;
         this.userInfoProvider = userInfoProvider;
         this.querySqlGenerator = querySqlGenerator;
-        this.stage = stage;
+        this.dataSourceService = dataSourceService;
     }
 
     @Override
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
+    {
+        if ("editor".equals(requestSubUrl))
+        {
+            return getFunctions();
+        }
+        return executeQuery(req);
+    }
+
+    private JsonApiModel getFunctions()
+    {
+        List<String> functions = DefaultParserContext.getInstance().getFunctionsMap()
+                .entrySet().stream().filter(x -> (!(x.getValue() instanceof DbSpecificFunction)
+                        || ((DbSpecificFunction) x.getValue()).isApplicable(dataSourceService.getDbms())))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+        return data(new ResourceData("functions",
+                Collections.singletonMap("functions", functions), null));
+    }
+
+    private JsonApiModel executeQuery(Request req)
     {
         List<ResourceData> includedData = new ArrayList<>();
         List<ErrorModel> errorModelList = new ArrayList<>();

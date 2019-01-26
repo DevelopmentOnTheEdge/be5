@@ -22,7 +22,7 @@ public class ServerServletModule extends ServletModule
         serve("/api/static*").with(StaticPageController.class);
         serve("/api/menu*").with(MenuController.class);
         serve("/api/languageSelector*").with(LanguageSelectorController.class);
-        serve("/api/queryBuilder").with(QueryBuilderController.class);
+        serve("/api/queryBuilder*").with(QueryBuilderController.class);
         serve("/api/download").with(DownloadController.class);
         serve("/api/downloadOperation").with(DownloadOperationController.class);
         serve("/api/reloadProject").with(ReloadProjectController.class);
