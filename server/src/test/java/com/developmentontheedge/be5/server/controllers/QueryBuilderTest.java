@@ -9,7 +9,10 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -29,6 +32,17 @@ public class QueryBuilderTest extends SqlMockOperationTest
                 RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())), response);
 
         verify(response).sendAsJson(any(JsonApiModel.class));
+    }
+
+    @Test
+    public void editor()
+    {
+        JsonApiModel data = component.getEditorData();
+        Map<String, Object> objectMap = (Map<String, Object>) data.getData().getAttributes();
+        List<String> functions = (List<String>) objectMap.get("functions");
+        List<String> tableNames = (List<String>) objectMap.get("tableNames");
+        assertTrue(functions.contains("concat"));
+        assertTrue(tableNames.contains("testtableAdmin"));
     }
 
     @Test

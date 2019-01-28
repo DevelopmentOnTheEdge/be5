@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -28,6 +29,7 @@ import com.developmentontheedge.sql.model.AstUpdate;
 import com.developmentontheedge.sql.model.DbSpecificFunction;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
+import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -76,19 +78,24 @@ public class QueryBuilderController extends JsonApiModelController
     {
         if ("editor".equals(requestSubUrl))
         {
-            return getFunctions();
+            return getEditorData();
         }
         return executeQuery(req);
     }
 
-    private JsonApiModel getFunctions()
+    JsonApiModel getEditorData()
     {
         List<String> functions = DefaultParserContext.getInstance().getFunctionsMap()
                 .entrySet().stream().filter(x -> (!(x.getValue() instanceof DbSpecificFunction)
                         || ((DbSpecificFunction) x.getValue()).isApplicable(dataSourceService.getDbms())))
                 .map(Map.Entry::getKey).collect(Collectors.toList());
-        return data(new ResourceData("functions",
-                Collections.singletonMap("functions", functions), null));
+        return data(new ResourceData("editor", ImmutableMap.of(
+                "functions", functions,
+                "tableNames", meta.getEntities().stream()
+                        .map(BeModelElementSupport::getName)
+                        .filter(x -> !(x.startsWith("_") && x.endsWith("_")))
+                        .collect(Collectors.toList())
+        ), null));
     }
 
     private JsonApiModel executeQuery(Request req)
