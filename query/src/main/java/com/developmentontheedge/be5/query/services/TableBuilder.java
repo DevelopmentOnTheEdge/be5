@@ -190,7 +190,7 @@ public class TableBuilder
         {
             if (!cell.hidden)
             {
-                processedCells.add(new CellModel(cell.content, cell.options));
+                processedCells.add(new CellModel(cell.name, cell.content, cell.options));
             }
         }
 

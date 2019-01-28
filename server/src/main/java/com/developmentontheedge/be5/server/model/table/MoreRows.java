@@ -8,7 +8,7 @@ public class MoreRows
 {
     private final int recordsTotal;
     private final int recordsFiltered;
-    private final List<List<CellModel>> data; // rows
+    private final List<List<CellModel>> data;
 
     public MoreRows(int recordsTotal, int recordsFiltered, List<List<CellModel>> data)
     {

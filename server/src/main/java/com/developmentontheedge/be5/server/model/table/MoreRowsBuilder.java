@@ -5,9 +5,10 @@ import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.google.common.collect.ImmutableList;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>, CellModel>
+public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>>
 {
     private final TableModel tableModel;
 
@@ -16,15 +17,19 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>, CellModel
         this.tableModel = tableModel;
     }
 
-    @Override
-    protected CellModel createCell(CellModel cellModel)
+    private CellModel createCell(CellModel cellModel)
     {
         return cellModel;
     }
 
     @Override
-    protected List<CellModel> createRow(RowModel rowModel, List<CellModel> cells)
+    protected List<CellModel> createRow(RowModel rowModel)
     {
+        List<CellModel> cells = new ArrayList<>();
+        for (CellModel cellModel : rowModel.getCells())
+        {
+            cells.add(createCell(cellModel));
+        }
         String id = rowModel.getId();
         return ImmutableList.<CellModel>builder()
                 .add(new CellModel(id != null ? id : ""))

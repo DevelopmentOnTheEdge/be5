@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
@@ -14,6 +13,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.model.table.MoreRows;
 import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
+import com.developmentontheedge.be5.server.model.table.NamedCellsRowBuilder;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.util.FilterUtil;
@@ -113,13 +113,23 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
+        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+
         List<ColumnModel> columns = tableModel.getColumns();
-        List<RowModel> rows = tableModel.getRows();
+        Object rows;
+        String mode = (String) layout.getOrDefault("mode", "");
+        if (mode.equals("named"))
+        {
+            rows = new NamedCellsRowBuilder(tableModel).build();
+        }
+        else
+        {
+            rows = tableModel.getRows();
+        }
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
         String title = getTitle(query, entityName, queryName);
-        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
 
         return new TablePresentation(
                 title, entityName, queryName, tableModel.isSelectable(),
@@ -159,16 +169,15 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
                 .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
         Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
-
-
         Map<String, Object> params = processQueryParams(query, parameters);
         TableModel tableModel = tableModelService.create(query, params);
 
-        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
+        MoreRows data = new MoreRows(
                 tableModel.getTotalNumberOfRows().intValue(),
                 tableModel.getTotalNumberOfRows().intValue(),
                 new MoreRowsBuilder(tableModel).build()
-        ), links), null);
+        );
+        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, data, links), null);
     }
 
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
