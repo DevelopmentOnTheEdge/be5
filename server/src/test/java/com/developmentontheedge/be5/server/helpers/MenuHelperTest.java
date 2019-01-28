@@ -25,7 +25,7 @@ public class MenuHelperTest extends ServerBe5ProjectTest
 
         List<MenuHelper.RootNode> nodes = menuHelper.collectEntities(false, EntityType.TABLE);
 
-        assertEquals("testtable", nodes.get(1).getTitle());
+        assertEquals("Testtable", nodes.get(1).getTitle());
         assertEquals(new Action("call", "table/testtable/All records"), nodes.get(1).getAction());
         assertNull(nodes.get(1).getChildren());
     }

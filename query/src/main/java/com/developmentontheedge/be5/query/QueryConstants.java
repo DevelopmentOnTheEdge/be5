@@ -23,4 +23,6 @@ public interface QueryConstants
     String COL_ATTR_LINK = "link";
     String COL_ATTR_REF = "ref";
     String COL_ATTR_URL = "url";
+
+    String ALL_RECORDS = "All records";
 }

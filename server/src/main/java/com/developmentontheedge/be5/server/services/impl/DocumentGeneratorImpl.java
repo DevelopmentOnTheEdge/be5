@@ -36,6 +36,7 @@ import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_MORE_ACTION;
+import static com.developmentontheedge.be5.query.QueryConstants.ALL_RECORDS;
 import static com.developmentontheedge.be5.query.QueryConstants.CLEAN_NAV;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
@@ -115,12 +116,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         List<ColumnModel> columns = tableModel.getColumns();
         List<RowModel> rows = tableModel.getRows();
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
-
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
-        String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
-        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
-        String title = localizedEntityTitle + ": " + localizedQueryTitle;
+        String title = getTitle(query, entityName, queryName);
         Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
 
         return new TablePresentation(
@@ -129,6 +127,22 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
                 parameters, totalNumberOfRows,
                 layout);
+    }
+
+    private String getTitle(Query query, String entityName, String queryName)
+    {
+        String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
+        String title;
+        if (ALL_RECORDS.equals(queryName))
+        {
+            title = localizedEntityTitle;
+        }
+        else
+        {
+            String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
+            title = localizedEntityTitle + ": " + localizedQueryTitle;
+        }
+        return title;
     }
 
     @Override

@@ -42,7 +42,8 @@ public class DocumentControllerTest extends ServerBe5ProjectTest
                 QUERY_NAME_PARAM, "All records",
                 TIMESTAMP_PARAM, "" + System.currentTimeMillis())), null, "");
 
-        assertEquals("testtable: All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getTitle());
+        assertEquals("testtable", ((TablePresentation) jsonApiModel.getData().getAttributes()).getCategory());
+        assertEquals("All records", ((TablePresentation) jsonApiModel.getData().getAttributes()).getPage());
     }
 
     @Test

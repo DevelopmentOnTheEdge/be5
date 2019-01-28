@@ -41,13 +41,29 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), Collections.emptyMap());
         TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
-        assertEquals("testtable: All records", table.getTitle());
 
         assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]", oneQuotes(jsonb.toJson(table.getColumns())));
 
         assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
         verify(Be5EventTestLogger.mock).queryCompleted(any(), any(), anyLong(), anyLong());
+    }
+
+    @Test
+    public void testTitleAllRecords()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), Collections.emptyMap());
+        TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
+        assertEquals("Testtable", table.getTitle());
+    }
+
+    @Test
+    public void testTitle()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(
+                meta.getQuery("testtable", "TableWithFilter"), Collections.emptyMap());
+        TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
+        assertEquals("Testtable: TableWithFilter", table.getTitle());
     }
 
     @Test
@@ -61,11 +77,11 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals("{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
                         "'length':10,'offset':0,'orderColumn':-1,'orderDir':'asc'," +
-                        "'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}",
+                        "'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'Testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}",
                 oneQuotes(jsonb.toJson(document.getData())));
 
         assertEquals("{'attributes':{'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
-                        "'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','title':'testtable: FilterByParamsInQueryOperation'}," +
+                        "'entity':'testtable','layout':{},'operation':'FilterByParamsInQueryOperation','operationParams':{},'operationResult':{'status':'generate'},'query':'TableWithFilter','title':'Testtable: FilterByParamsInQueryOperation'}," +
                         "'id':'topForm','links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'},'type':'form'}",
                 oneQuotes(jsonb.toJson(Arrays.stream(document.getIncluded()).filter(res -> "topForm".equals(res.getId())).findAny())));
     }

@@ -1,6 +1,6 @@
 testtable:
   type: table
-  displayName: testtable
+  displayName: Testtable
   order: '9'
   primaryKey: ID
   scheme:
