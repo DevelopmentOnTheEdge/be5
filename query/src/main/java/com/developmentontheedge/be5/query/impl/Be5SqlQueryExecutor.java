@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -75,7 +76,9 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         contextApplier = new ContextApplier(queryContext);
 
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
-                .map(name -> meta.getOperation(query.getEntity().getName(), name).getRecords())
+                .map(name -> meta.getOperation(query.getEntity().getName(), name))
+                .filter(o -> meta.hasAccess(o.getRoles(), userInfoProvider.getCurrentRoles()))
+                .map(Operation::getRecords)
                 .filter(r -> r == 1 || r == 2).count() > 0;
     }
 
