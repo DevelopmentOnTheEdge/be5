@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.eclipse</groupId>
       <artifactId>yasson</artifactId>
-      <version>1.0</version>
+      <version>1.0.3</version>
     </dependency>
 
     <dependency>
