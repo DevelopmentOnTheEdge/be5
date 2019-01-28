@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.model;
 
 import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.server.model.table.InitialRow;
+import com.developmentontheedge.be5.query.model.RowModel;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class TablePresentation
     private final String page;
     private final boolean selectable;
     private final List<ColumnModel> columns;
-    private final List<InitialRow> rows;
+    private final List<RowModel> rows;
 
     private final int offset;
     private final int orderColumn;
@@ -31,7 +31,7 @@ public class TablePresentation
             String page,
             boolean selectable,
             List<ColumnModel> columns,
-            List<InitialRow> rows,
+            List<RowModel> rows,
             int orderColumn,
             String orderDir,
             int offset,
@@ -80,7 +80,7 @@ public class TablePresentation
         return columns;
     }
 
-    public List<InitialRow> getRows()
+    public List<RowModel> getRows()
     {
         return rows;
     }

@@ -1,25 +1,24 @@
 package com.developmentontheedge.be5.server.services.impl;
 
+import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.JsonUtils;
-import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.model.table.InitialRow;
-import com.developmentontheedge.be5.server.model.table.InitialRowsBuilder;
 import com.developmentontheedge.be5.server.model.table.MoreRows;
 import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
+import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
@@ -114,7 +113,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         List<ColumnModel> columns = tableModel.getColumns();
-        List<InitialRow> rows = new InitialRowsBuilder(tableModel).build();
+        List<RowModel> rows = tableModel.getRows();
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
 
         String entityName = query.getEntity().getName();
