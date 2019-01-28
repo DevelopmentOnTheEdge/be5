@@ -98,15 +98,15 @@ public class DbServiceMock implements DbService
     }
 
     @Override
-    public <T> T transactionWithResult(TransactionExecutor<T> executor)
+    public <T> T inTransaction(TransactionExecutor<T> executor)
     {
-        return connectionService.transactionWithResult(executor);
+        return connectionService.inTransaction(executor);
     }
 
     @Override
-    public void transaction(TransactionExecutorVoid executor)
+    public void useTransaction(TransactionExecutorVoid executor)
     {
-        connectionService.transaction(executor);
+        connectionService.useTransaction(executor);
     }
 
     @Override

@@ -115,7 +115,7 @@ public class ConnectionServiceImpl implements ConnectionService
     }
 
     @Override
-    public <T> T transactionWithResult(TransactionExecutor<T> executor)
+    public <T> T inTransaction(TransactionExecutor<T> executor)
     {
         Connection conn;
         try
@@ -133,9 +133,9 @@ public class ConnectionServiceImpl implements ConnectionService
     }
 
     @Override
-    public void transaction(TransactionExecutorVoid executor)
+    public void useTransaction(TransactionExecutorVoid executor)
     {
-        transactionWithResult(getWrapperExecutor(executor));
+        inTransaction(getWrapperExecutor(executor));
     }
 
     private static TransactionExecutor<Void> getWrapperExecutor(final TransactionExecutorVoid voidExecutor)
@@ -191,7 +191,7 @@ public class ConnectionServiceImpl implements ConnectionService
         }
     }
 
-    private boolean isInTransaction()
+    public boolean isInTransaction()
     {
         return getCurrentTxConn() != null;
     }

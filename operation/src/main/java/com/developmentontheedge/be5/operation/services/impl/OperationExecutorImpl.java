@@ -91,7 +91,7 @@ public class OperationExecutorImpl implements OperationExecutor
         List<OperationExtender> extenders = loadOperationExtenders(operation);
         if (operation instanceof TransactionalOperation)
         {
-            return connectionService.transactionWithResult(connection -> {
+            return connectionService.inTransaction(connection -> {
                 Object parameters = callOperation(operation, extenders, presetValues);
                 if (operation.getStatus() == OperationStatus.ERROR)
                 {

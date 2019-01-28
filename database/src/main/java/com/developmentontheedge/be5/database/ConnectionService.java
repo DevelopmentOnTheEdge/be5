@@ -17,9 +17,26 @@ public interface ConnectionService
 
     void rollbackTransaction();
 
-    <T> T transactionWithResult(TransactionExecutor<T> executor);
+    /**
+     * Executes <code>executor</code> in a transaction, and returns the result of the callback.
+     *
+     * @param executor a callback which will receive an open connection, in a transaction.
+     * @param <T> type returned by callback
+     * @return value returned from the executor
+     */
+    <T> T inTransaction(TransactionExecutor<T> executor);
 
-    void transaction(TransactionExecutorVoid executor);
+    /**
+     * Executes <code>executor</code> in a transaction.
+     *
+     * @param executor a callback which will receive an open connection, in a transaction.
+     */
+    void useTransaction(TransactionExecutorVoid executor);
+
+    /**
+     * @return whether the connector is in a transaction.
+     */
+    boolean isInTransaction();
 
     void releaseConnection(java.sql.Connection conn);
 

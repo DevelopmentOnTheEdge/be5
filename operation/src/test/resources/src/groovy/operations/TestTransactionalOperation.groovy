@@ -19,7 +19,7 @@ class TestTransactionalOperation extends TestOperationSupport implements Transac
         if (presetValues.get("nullValues") != null) {
             return null
         } else {
-            if (connectionService.getCurrentTxConn() == null) throw Be5Exception.internal("not in transactionWithResult")
+            if (!connectionService.isInTransaction()) throw Be5Exception.internal("not in inTransaction")
 
             return new DynamicPropertySetSupport()
         }
@@ -28,7 +28,7 @@ class TestTransactionalOperation extends TestOperationSupport implements Transac
     @Override
     void invoke(Object parameters) throws Exception
     {
-        if (connectionService.getCurrentTxConn() == null) throw Be5Exception.internal("not in transactionWithResult")
+        if (!connectionService.isInTransaction()) throw Be5Exception.internal("not in inTransaction")
     }
 
 }

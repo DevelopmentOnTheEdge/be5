@@ -16,7 +16,7 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public <T> T transactionWithResult(TransactionExecutor<T> executor)
+    public <T> T inTransaction(TransactionExecutor<T> executor)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public void transaction(TransactionExecutorVoid executor)
+    public void useTransaction(TransactionExecutorVoid executor)
     {
         try
         {
@@ -63,5 +63,11 @@ public class ConnectionServiceMock implements ConnectionService
     public void rollbackTransaction()
     {
 
+    }
+
+    @Override
+    public boolean isInTransaction()
+    {
+        return false;
     }
 }

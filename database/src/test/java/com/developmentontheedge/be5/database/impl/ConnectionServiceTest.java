@@ -47,12 +47,12 @@ public class ConnectionServiceTest extends DatabaseTest
     public void nextTransactionAfterErrorInTransaction() throws Exception
     {
         try{
-            connectionService.transaction(connection ->
+            connectionService.useTransaction(connection ->
                 connectionService.rollbackTransaction()
             );
         }catch (RuntimeException ignore){}
 
-        connectionService.transaction(conn ->
+        connectionService.useTransaction(conn ->
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass")
         );
 
@@ -63,7 +63,7 @@ public class ConnectionServiceTest extends DatabaseTest
     @Test
     public void checkInOtherThreadsBeforeCommit() throws Exception
     {
-        connectionService.transaction(conn -> {
+        connectionService.useTransaction(conn -> {
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "test", "pass");
             assertEquals((Long) 1L, db.oneLong("SELECT count(*) FROM persons"));
             checkCountInOtherThreads(0L);
