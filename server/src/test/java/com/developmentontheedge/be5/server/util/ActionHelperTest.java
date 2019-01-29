@@ -86,6 +86,14 @@ public class ActionHelperTest extends ServerBe5ProjectTest
                 ActionUtils.toAction(query).arg);
     }
 
+    @Test
+    public void customPath()
+    {
+        Query query = getQuery(QueryType.STATIC, "page/contacts");
+        assertEquals("page/contacts",
+                ActionUtils.toAction(query).arg);
+    }
+
     private Query getQuery(QueryType type, String queryCode)
     {
         Entity entity = meta.getEntity("testtable");
