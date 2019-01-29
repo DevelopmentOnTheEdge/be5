@@ -3,6 +3,10 @@ package com.developmentontheedge.be5.query.model;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
+ */
+@Deprecated
 public class RowModel
 {
     private final List<CellModel> cells;

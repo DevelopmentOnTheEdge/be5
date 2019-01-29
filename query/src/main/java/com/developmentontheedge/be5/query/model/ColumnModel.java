@@ -1,5 +1,9 @@
 package com.developmentontheedge.be5.query.model;
 
+/**
+ * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
+ */
+@Deprecated
 public class ColumnModel
 {
     private final String title;

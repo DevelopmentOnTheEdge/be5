@@ -130,11 +130,15 @@ class PropertiesToRowTransformer
 
         for (DynamicProperty property : properties)
         {
-            String cellName = property.getName();
-            Object cellContent = formatValue(property);
             boolean hidden = TableUtils.shouldBeSkipped(property);
             Map<String, Map<String, String>> options = removeUnnecessaryCellOptions(DynamicPropertyMeta.get(property));
-            cells.add(new RawCellModel(cellName, cellContent, options, hidden));
+            cells.add(new RawCellModel(
+                    property.getName(),
+                    property.getDisplayName(),
+                    formatValue(property),
+                    options,
+                    hidden
+            ));
         }
 
         return cells;

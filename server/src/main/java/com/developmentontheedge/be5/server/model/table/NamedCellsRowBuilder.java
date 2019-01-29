@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NamedCellsRowBuilder extends TableRowsBuilder<Map<String, CellModel>>
+public class NamedCellsRowBuilder extends TableRowsBuilder<Map<String, NamedCellModel>>
 {
     private final TableModel tableModel;
 
@@ -17,12 +17,17 @@ public class NamedCellsRowBuilder extends TableRowsBuilder<Map<String, CellModel
     }
 
     @Override
-    protected Map<String, CellModel> createRow(RowModel rowModel)
+    protected Map<String, NamedCellModel> createRow(RowModel rowModel)
     {
-        Map<String, CellModel> cells = new HashMap<>();
+        Map<String, NamedCellModel> cells = new HashMap<>();
         for (CellModel cellModel : rowModel.getCells())
         {
-            cells.put(cellModel.name, cellModel);
+            cells.put(cellModel.name, new NamedCellModel(
+                    cellModel.name,
+                    cellModel.title,
+                    cellModel.content,
+                    cellModel.options
+            ));
         }
         return cells;
     }
