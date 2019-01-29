@@ -92,6 +92,9 @@ public class CellFormatter
 
     private Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
+        String title = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), cell.getName());
+        cell.setDisplayName(title);
+
         Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier);
 
         if (formattedContent instanceof String)
@@ -108,7 +111,6 @@ public class CellFormatter
                 formattedContent = blankNullsProperties.getOrDefault("value", "");
             }
         }
-
 
         Map<String, String> nullIfProperties = options.get(QueryConstants.COL_ATTR_NULLIF);
         if (nullIfProperties != null)

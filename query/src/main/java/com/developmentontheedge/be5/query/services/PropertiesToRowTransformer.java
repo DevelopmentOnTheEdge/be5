@@ -68,7 +68,7 @@ class PropertiesToRowTransformer
                 String quick = getQuickOptionState(property);
                 columns.add(new ColumnModel(
                         property.getName(),
-                        userAwareMeta.getColumnTitle(entityName, queryName, property.getName()),
+                        property.getDisplayName(),
                         quick
                 ));
             }

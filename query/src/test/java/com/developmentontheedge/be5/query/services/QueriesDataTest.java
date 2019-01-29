@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.query.services;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -21,6 +23,12 @@ public class QueriesDataTest extends QueryBe5ProjectDBTest
 {
     @Inject
     private QueriesService queries;
+
+    @Before
+    public void setUp()
+    {
+        setStaticUserInfo(RoleType.ROLE_GUEST);
+    }
 
     @After
     public void tearDown()
@@ -50,5 +58,4 @@ public class QueriesDataTest extends QueryBe5ProjectDBTest
                .collect(Collectors.joining("")));
         assertEquals("test1", qRec.getString("dataCol"));
     }
-
 }

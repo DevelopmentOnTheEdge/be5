@@ -105,13 +105,12 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         for (DynamicProperty cell : cells)
         {
             Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
-            DynamicProperty property = new DynamicProperty(cell.getName(), processedContent == null ? String.class
-                    : processedContent.getClass(), processedContent);
-            DynamicPropertyMeta.set(property, DynamicPropertyMeta.get(cell));
-            previousCells.add(property);
+            cell.setValue(processedContent);
+            cell.setType(processedContent == null ? String.class : processedContent.getClass());
+            previousCells.add(cell);
             if (!cell.isHidden())
             {
-                resultCells.add(property);
+                resultCells.add(cell);
             }
         }
 
