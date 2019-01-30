@@ -129,7 +129,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
-        String title = getTitle(query, entityName, queryName);
+        String title = getTitle(query, layout);
 
         return new TablePresentation(
                 title, entityName, queryName, tableModel.isSelectable(),
@@ -139,20 +139,23 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 layout);
     }
 
-    private String getTitle(Query query, String entityName, String queryName)
+    private String getTitle(Query query, Map<String, Object> layout)
     {
-        String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
-        String title;
-        if (ALL_RECORDS.equals(queryName))
+        if (layout.get("title") != null)
         {
-            title = localizedEntityTitle;
+            return userAwareMeta.getLocalizedQueryTitle(query.getEntity().getName(), (String) layout.get("title"));
+        }
+        else if (ALL_RECORDS.equals(query.getName()))
+        {
+            return userAwareMeta.getLocalizedEntityTitle(query.getEntity());
         }
         else
         {
-            String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
-            title = localizedEntityTitle + ": " + localizedQueryTitle;
+            String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
+            String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(
+                    query.getEntity().getName(), query.getName());
+            return localizedEntityTitle + ": " + localizedQueryTitle;
         }
-        return title;
     }
 
     @Override
