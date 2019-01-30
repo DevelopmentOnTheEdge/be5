@@ -280,6 +280,16 @@ public class QueriesService
         return toTagsArray(newTags);
     }
 
+    public String[][] addPrefix(String[][] tags, String prefix)
+    {
+        String[][] stockArr = new String[tags.length][2];
+        for (int i = 0; i < stockArr.length; i++)
+        {
+            stockArr[i] = new String[]{prefix + tags[i][0], tags[i][1]};
+        }
+        return stockArr;
+    }
+
     public String[][] addTags(Map<String, String> before, String[][] tags, Map<String, String> after)
     {
         Map<String, String> newTags = new LinkedHashMap<>();
