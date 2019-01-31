@@ -6,10 +6,5 @@ import java.sql.SQLException;
 @FunctionalInterface
 public interface ResultSetParser<T>
 {
-    default T parse(ResultSet rs) throws SQLException
-    {
-        return parse(new ResultSetWrapper(rs));
-    }
-
-    T parse(ResultSetWrapper rs) throws SQLException;
+    T parse(ResultSet rs) throws SQLException;
 }

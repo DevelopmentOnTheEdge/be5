@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.database.sql.parsers;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.ResultSetWrapper;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -35,7 +35,7 @@ public class ScalarLongParser implements ResultSetParser<Long>
 
     @SuppressWarnings("unchecked")
     @Override
-    public Long parse(final ResultSetWrapper rs) throws SQLException
+    public Long parse(final ResultSet rs) throws SQLException
     {
         if (this.columnName == null)
         {

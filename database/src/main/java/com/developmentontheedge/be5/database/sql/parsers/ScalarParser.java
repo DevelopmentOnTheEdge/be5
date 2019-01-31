@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.database.sql.parsers;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.ResultSetWrapper;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -34,7 +34,7 @@ public class ScalarParser<T> implements ResultSetParser<T>
 
     @SuppressWarnings("unchecked")
     @Override
-    public T parse(final ResultSetWrapper rs) throws SQLException
+    public T parse(final ResultSet rs) throws SQLException
     {
         if (this.columnName == null)
         {
