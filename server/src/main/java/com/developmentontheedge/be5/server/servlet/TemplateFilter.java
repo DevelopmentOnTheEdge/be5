@@ -14,6 +14,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -23,7 +24,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+@Singleton
 public class TemplateFilter extends FilterSupport
 {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
