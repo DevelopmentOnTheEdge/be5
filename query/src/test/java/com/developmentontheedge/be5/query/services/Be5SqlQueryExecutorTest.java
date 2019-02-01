@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.services;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
+import java.util.Collections;
 import java.util.List;
 
 import static com.developmentontheedge.be5.FrontendConstants.CATEGORY_ID_PARAM;
@@ -164,15 +166,6 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void beGrouping()
-    {
-        Query query = meta.getQuery("testtable", "beGrouping");
-        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
-        assertEquals("{}",
-                DynamicPropertyMeta.get(list.get(0).getProperty("Name")).get("grouping").toString());
-    }
-
-    @Test
     public void beAggregate()
     {
         Query query = meta.getQuery("testtable", "beAggregate");
@@ -183,6 +176,27 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
                 DynamicPropertyMeta.get(list.get(2).getProperty("Value")).get("format").get("mask"));
         assertEquals("currency",
                 DynamicPropertyMeta.get(list.get(2).getProperty("Value")).get("css").get("class"));
+    }
+
+    @Test
+    public void beRowCssClass()
+    {
+        Query query = meta.getQuery("testtable", "beRowCssClass");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+
+        assertEquals(" user1", DynamicPropertyMeta.get(list.get(0).getProperty("test")).get("css").get("class"));
+        assertEquals(" user1", DynamicPropertyMeta.get(list.get(0).getProperty("value")).get("css").get("class"));
+
+        assertEquals(" user2", DynamicPropertyMeta.get(list.get(1).getProperty("value")).get("css").get("class"));
+    }
+
+    @Test
+    public void beGrouping()
+    {
+        Query query = meta.getQuery("testtable", "beGrouping");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("{}",
+                DynamicPropertyMeta.get(list.get(0).getProperty("Name")).get("grouping").toString());
     }
 
     @Test

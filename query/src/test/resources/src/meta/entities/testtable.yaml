@@ -133,6 +133,7 @@ testtable:
       code: |-
          SELECT
             123 as "___ID",
+            'test' AS "test",
             t.value AS "value",
             t.name AS "___css_class"
           FROM

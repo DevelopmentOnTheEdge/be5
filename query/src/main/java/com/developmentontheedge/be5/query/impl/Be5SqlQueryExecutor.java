@@ -1,10 +1,9 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
@@ -14,6 +13,7 @@ import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -100,6 +100,8 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     private QRec formatCell(DynamicPropertySet properties)
     {
         TableUtils.filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
+        addRowClass(properties);
+
         QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
@@ -116,6 +118,24 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         }
 
         return resultCells;
+    }
+
+    private void addRowClass(DynamicPropertySet properties)
+    {
+        DynamicProperty cssRowClassProperty = properties.getProperty(QueryConstants.CSS_ROW_CLASS);
+        if (cssRowClassProperty != null)
+        {
+            for (DynamicProperty property : properties)
+            {
+                Map<String, Map<String, String>> options = DynamicPropertyMeta.get(property);
+                if (options.get("grouping") != null) continue;
+                Map<String, String> css = options.putIfAbsent("css", new HashMap<>());
+                if (css == null) css = options.get("css");
+
+                String className = css.getOrDefault("class", "");
+                css.put("class", className + " " + cssRowClassProperty.getValue());
+            }
+        }
     }
 
     private void addAggregateRowIfNeeded(List<QRec> propertiesList)

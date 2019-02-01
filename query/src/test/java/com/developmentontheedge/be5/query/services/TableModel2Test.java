@@ -65,16 +65,6 @@ public class TableModel2Test extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void beRowCssClass()
-    {
-        Query query = meta.getQuery("testtable", "beRowCssClass");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("[{'cells':[{'content':2,'options':{'css':{'class':' user1'}}}],'id':'123'}," +
-                        "{'cells':[{'content':1,'options':{'css':{'class':' user2'}}}],'id':'123'}]",
-                oneQuotes(jsonb.toJson(table.getRows())));
-    }
-
-    @Test
     public void withID()
     {
         Query query = meta.getQuery("testtable", "withID");
