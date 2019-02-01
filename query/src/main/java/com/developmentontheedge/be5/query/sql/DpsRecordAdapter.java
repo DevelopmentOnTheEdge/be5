@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.sql;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.util.SqlUtils;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -23,8 +23,10 @@ class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
-    static <T extends DynamicPropertySet> T addDp(T dps, DynamicProperty[] schema, ResultSet resultSet)
+    static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet) throws SQLException
     {
+        DynamicProperty[] schema = DpsRecordAdapter.createSchema(resultSet.getMetaData());
+
         try
         {
             for (int i = 0; i < schema.length; i++)
@@ -56,7 +58,7 @@ class DpsRecordAdapter
         }
     }
 
-    static DynamicProperty[] createSchema(ResultSetMetaData metaData)
+    private static DynamicProperty[] createSchema(ResultSetMetaData metaData)
     {
         return createSchema(metaData, SqlUtils::getTypeClass);
     }
