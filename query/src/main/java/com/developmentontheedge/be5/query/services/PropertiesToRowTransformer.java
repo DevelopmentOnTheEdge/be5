@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.config.CoreUtils;
-import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -16,6 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.GLUE_COLUMN_PREFIX;
+import static com.developmentontheedge.be5.query.util.TableUtils.shouldBeSkipped;
 
 /**
  * Parses properties in terms of tables.
@@ -26,7 +28,6 @@ class PropertiesToRowTransformer
     private final String queryName;
     private final DynamicPropertySet properties;
     private final UserInfo userInfo;
-    private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -35,13 +36,12 @@ class PropertiesToRowTransformer
      * @param properties represent a row
      */
     PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo,
-                               UserAwareMeta userAwareMeta, CoreUtils coreUtils)
+                               CoreUtils coreUtils)
     {
         this.entityName = entityName;
         this.queryName = queryName;
         this.properties = properties;
         this.userInfo = userInfo;
-        this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
     }
 
@@ -63,7 +63,7 @@ class PropertiesToRowTransformer
 
         for (DynamicProperty property : properties)
         {
-            if (!TableUtils.shouldBeSkipped(property))
+            if (!shouldBeSkipped(property))
             {
                 String quick = getQuickOptionState(property);
                 columns.add(new ColumnModel(
@@ -92,39 +92,23 @@ class PropertiesToRowTransformer
             return SqlBoolColumnType.NO;
     }
 
-    /**
-     * Glues and constructs cells.
-     *
-     * @see # preprocessProperties(DatabaseConnector, List<DynamicProperty>, Map<String, DynamicProperty>)
-     */
     List<RawCellModel> collectCells()
     {
-//        TODO support: collect all values, GLUE_COLUMN_PREFIX
-//        // mutable map of properties
-//        Map<String, StringBuilder> temp = new LinkedHashMap<>();
-//
-//        // see RecordEx#preprocessProperties/3
-//        for( DynamicProperty property : properties )
-//        {
-//            String name = property.getName();
-//            if( name.startsWith( RecordEx.GLUE_COLUMN_PREFIX ) )
-//            {
-//                appendProperty( property, temp );
-//                continue;
-//            }
-//            temp.put( name, new StringBuilder( toString( property ) ) );
-//        }
-//
-//        List<RawCellModel> cells = new ArrayList<>();
-//
-//        // collect all values
-//        for( Entry<String, StringBuilder> entry : temp.entrySet() )
-//        {
-//            String cellName = entry.getKey();
-//            String cellContent = entry.getValue().toString();
-//            boolean hidden = shouldBeSkipped( cellName );
-//            cells.add( new RawCellModel( cellName, localizer.localize( cellContent ), null, hidden ) );
-//        }
+        for (DynamicProperty property : properties)
+        {
+            if (property.getName().startsWith(GLUE_COLUMN_PREFIX))
+            {
+                String targetName = property.getName().substring(GLUE_COLUMN_PREFIX.length());
+                DynamicProperty tp = properties.getProperty(targetName);
+
+                Object val = tp.getValue();
+                if (val instanceof String && property.getValue() != null)
+                {
+                    tp.setValue(val.toString() + property.getValue());
+                }
+                property.setHidden(true);
+            }
+        }
 
         List<RawCellModel> cells = new ArrayList<>();
 
@@ -149,40 +133,6 @@ class PropertiesToRowTransformer
         options.remove("quick");
         return options;
     }
-
-//    private void appendProperty(DynamicProperty property, Map<String, StringBuilder> properties)
-//    {
-//        String targetName = property.getName().substring( DatabaseConstants.GLUE_COLUMN_PREFIX.length() );
-//        StringBuilder mutableStr = properties.get( targetName );
-//
-//        if( mutableStr == null )
-//        {
-//            throw new IllegalStateException( "Expected column '" + targetName + "'" );
-//        }
-//
-//        mutableStr.append( formatValue( property ) );
-//    }
-
-//    private String toString(DynamicProperty property)
-//    {
-//        Object value = property.getValue();
-//        if(value == null)return null;
-//
-//        if(property.getType() == java.sql.Date.class){
-//            return dateFormatter.format(value);
-//        }
-//
-//        if(property.getType() == java.sql.Time.class){
-//            String timestamp = timestampFormatter.format(value);
-//            if(timestamp.startsWith("01.01.1970"))
-//            {
-//                timestamp = timestamp.substring(11);
-//            }
-//            return timestamp;
-//        }
-//
-//        return value.toString();
-//    }
 
     private Object formatValue(DynamicProperty property)
     {
@@ -211,5 +161,4 @@ class PropertiesToRowTransformer
 
         return value;
     }
-
 }

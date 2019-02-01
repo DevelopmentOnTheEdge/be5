@@ -131,7 +131,7 @@ public class TableBuilder
             if (columns.isEmpty())
             {
                 columns.addAll(new PropertiesToRowTransformer(query.getEntity().getName(), query.getName(),
-                        properties, userInfo, userAwareMeta, coreUtils).collectColumns());
+                        properties, userInfo, coreUtils).collectColumns());
             }
             rows.add(generateRow(query, properties));
         }
@@ -141,7 +141,7 @@ public class TableBuilder
             throws AssertionError
     {
         PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(query.getEntity().getName(),
-                query.getName(), properties, userInfo, userAwareMeta, coreUtils);
+                query.getName(), properties, userInfo, coreUtils);
         List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
         List<CellModel> processedCells = processCells(cells); // only visible cells
 
