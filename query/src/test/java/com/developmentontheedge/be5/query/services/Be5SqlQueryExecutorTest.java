@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class TableModelTest extends QueryBe5ProjectDBTest
+public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
 {
     @Inject QueryExecutorFactory queryExecutorFactory;
 
