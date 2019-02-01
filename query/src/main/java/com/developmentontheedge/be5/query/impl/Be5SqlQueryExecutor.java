@@ -97,12 +97,13 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         return res;
     }
 
-    private QRec formatCell(DynamicPropertySet cells)
+    private QRec formatCell(DynamicPropertySet properties)
     {
+        TableUtils.filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
         QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
-        for (DynamicProperty cell : cells)
+        for (DynamicProperty cell : properties)
         {
             Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
             cell.setValue(processedContent);

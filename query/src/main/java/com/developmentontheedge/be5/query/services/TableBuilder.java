@@ -130,9 +130,6 @@ public class TableBuilder
         {
             TableUtils.replaceBlob(properties);
 
-            //TODO move to Be5SqlQueryExecutor
-            TableUtils.filterBeanWithRoles(properties, userInfo.getCurrentRoles());
-
             if (columns.isEmpty())
             {
                 columns.addAll(new PropertiesToRowTransformer(query.getEntity().getName(), query.getName(),

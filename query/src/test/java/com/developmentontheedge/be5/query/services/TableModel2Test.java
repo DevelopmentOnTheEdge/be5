@@ -65,36 +65,6 @@ public class TableModel2Test extends QueryBe5ProjectDBTest
     }
 
     @Test
-    public void beRoles()
-    {
-        Query query = meta.getQuery("testtable", "beRoles");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
-        assertEquals("{'cells':[{'content':'user2','options':{}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table.getRows().get(1))));
-
-        setStaticUserInfo("TestUser2");
-        TableModel table2 = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{'roles':{'name':'TestUser2'}}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table2.getRows().get(0))));
-    }
-
-    @Test
-    public void beRolesNot()
-    {
-        Query query = meta.getQuery("testtable", "beRolesNot");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{'roles':{'name':'!TestUser2'}}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
-
-        setStaticUserInfo("TestUser2");
-        TableModel table2 = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table2.getRows().get(0))));
-    }
-
-    @Test
     public void beRowCssClass()
     {
         Query query = meta.getQuery("testtable", "beRowCssClass");

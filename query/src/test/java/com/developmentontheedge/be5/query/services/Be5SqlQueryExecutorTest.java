@@ -22,12 +22,14 @@ import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
 public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
 {
-    @Inject QueryExecutorFactory queryExecutorFactory;
+    @Inject private QueryExecutorFactory queryExecutorFactory;
 
     private Long user1ID;
     private Long user2ID;
@@ -256,5 +258,29 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
         List<QRec> list = queryExecutorFactory.get(query, singletonMap("name", "value")).execute();
         assertEquals("user2", list.get(1).getValue("Name"));
         assertEquals(1L, list.get(1).getValue("Value"));
+    }
+
+    @Test
+    public void beRoles()
+    {
+        Query query = meta.getQuery("testtable", "beRoles");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertNull(list.get(0).getProperty("Value"));
+
+        setStaticUserInfo("TestUser2");
+        List<QRec> list2 = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertNotNull(list2.get(0).getProperty("Value"));
+    }
+
+    @Test
+    public void beRolesNot()
+    {
+        Query query = meta.getQuery("testtable", "beRolesNot");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertNotNull(list.get(0).getProperty("Value"));
+
+        setStaticUserInfo("TestUser2");
+        List<QRec> list2 = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertNull(list2.get(0).getProperty("Value"));
     }
 }
