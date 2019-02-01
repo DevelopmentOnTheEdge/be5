@@ -129,7 +129,10 @@ public class TableBuilder
         for (DynamicPropertySet properties : list)
         {
             TableUtils.replaceBlob(properties);
+
+            //TODO move to Be5SqlQueryExecutor
             TableUtils.filterBeanWithRoles(properties, userInfo.getCurrentRoles());
+
             if (columns.isEmpty())
             {
                 columns.addAll(new PropertiesToRowTransformer(query.getEntity().getName(), query.getName(),
@@ -156,6 +159,7 @@ public class TableBuilder
         return new RowModel(rowId, processedCells);
     }
 
+    //TODO move to Be5SqlQueryExecutor
     private void addRowClass(List<RawCellModel> cells)
     {
         Optional<Object> addClassName = cells.stream()
