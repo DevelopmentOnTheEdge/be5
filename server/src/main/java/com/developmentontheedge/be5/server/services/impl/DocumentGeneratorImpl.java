@@ -116,7 +116,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
 
         List<ColumnModel> columns = tableModel.getColumns();
-        Object rows;
+        List rows;
         String mode = (String) layout.getOrDefault("mode", "");
         if (mode.equals("named"))
         {

@@ -12,7 +12,7 @@ public class TablePresentation
     private final String page;
     private final boolean selectable;
     private final List<ColumnModel> columns;
-    private final Object rows;
+    private final List rows;
 
     private final int offset;
     private final int orderColumn;
@@ -29,7 +29,7 @@ public class TablePresentation
             String page,
             boolean selectable,
             List<ColumnModel> columns,
-            Object rows,
+            List rows,
             int orderColumn,
             String orderDir,
             int offset,
@@ -78,7 +78,7 @@ public class TablePresentation
         return columns;
     }
 
-    public Object getRows()
+    public List getRows()
     {
         return rows;
     }
