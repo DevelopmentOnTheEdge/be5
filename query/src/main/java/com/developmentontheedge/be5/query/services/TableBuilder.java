@@ -57,7 +57,7 @@ public class TableBuilder
                 columns,
                 rows,
                 queryExecutor.isSelectable(),
-                getCount(rows),
+                getCount((long) rows.size()),
                 queryExecutor.getOffset(),
                 queryExecutor.getLimit(),
                 queryExecutor.getOrderColumn(),
@@ -76,25 +76,16 @@ public class TableBuilder
         }
     }
 
-    private Long getCount(List<RowModel> rows)
+    private long getCount(long rowsCount)
     {
-        Long totalNumberOfRows;
-        if (queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
+        if (queryExecutor.getOffset() + rowsCount < queryExecutor.getLimit())
         {
-            totalNumberOfRows = (long) rows.size();
+            return rowsCount;
         }
         else
         {
-            try
-            {
-                totalNumberOfRows = queryExecutor.count();
-            }
-            catch (RuntimeException e)
-            {
-                throw Be5Exception.internalInQuery(query, e);
-            }
+            return queryExecutor.count();
         }
-        return totalNumberOfRows;
     }
 
     private void collectColumnsAndRows(Query query, List<QRec> list,
