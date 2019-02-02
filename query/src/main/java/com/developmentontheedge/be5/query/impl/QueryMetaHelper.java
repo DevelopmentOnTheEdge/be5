@@ -36,7 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.query.util.TableUtils.shouldBeSkipped;
+import static com.developmentontheedge.be5.query.util.QueryUtils.shouldBeSkipped;
 
 public class QueryMetaHelper
 {

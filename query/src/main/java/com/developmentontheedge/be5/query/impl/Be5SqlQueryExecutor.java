@@ -11,8 +11,9 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
+import com.developmentontheedge.be5.query.util.AggregateUtils;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
-import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.be5.query.util.QueryUtils;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -23,7 +24,9 @@ import com.developmentontheedge.sql.model.AstStart;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -99,7 +102,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
 
     private QRec formatCell(DynamicPropertySet properties)
     {
-        TableUtils.filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
+        filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
         addRowClass(properties);
 
         QRec resultCells = new QRec();
@@ -138,13 +141,64 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         }
     }
 
+    private static void filterBeanWithRoles(DynamicPropertySet dps, List<String> currentRoles)
+    {
+        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
+        {
+            DynamicProperty prop = props.next();
+            Map<String, String> info = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_ROLES);
+            if (info == null)
+            {
+                continue;
+            }
+
+            String roles = info.get("name");
+            List<String> roleList = Arrays.asList(roles.split(","));
+            List<String> forbiddenRoles = new ArrayList<>();
+            for (String userRole : roleList)
+            {
+                if (userRole.startsWith("!"))
+                {
+                    forbiddenRoles.add(userRole.substring(1));
+                }
+            }
+            roleList.removeAll(forbiddenRoles);
+
+            boolean hasAccess = false;
+            for (String role : roleList)
+            {
+                if (currentRoles.contains(role))
+                {
+                    hasAccess = true;
+                    break;
+                }
+            }
+            if (!hasAccess && !forbiddenRoles.isEmpty())
+            {
+                for (String currRole : currentRoles)
+                {
+                    if (!forbiddenRoles.contains(currRole))
+                    {
+                        hasAccess = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasAccess)
+            {
+                prop.setHidden(true);
+            }
+        }
+    }
+
     private void addAggregateRowIfNeeded(List<QRec> propertiesList)
     {
         if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
-            List<QRec> aggregateRows = db.list(querySqlGenerator.getSql(query, getParamsWithoutLimit()), new QRecParser());
-            TableUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
+            AstStart sql = querySqlGenerator.getSql(query, getParamsWithoutLimit());
+            List<QRec> aggregateRows = db.list(sql, new QRecParser());
+            AggregateUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
 
@@ -152,7 +206,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     public long count()
     {
         AstStart sql = querySqlGenerator.getSql(query, getParamsWithoutLimit());
-        TableUtils.countFromQuery(sql.getQuery());
+        QueryUtils.countFromQuery(sql.getQuery());
         return db.countFrom(sql.format());
     }
 

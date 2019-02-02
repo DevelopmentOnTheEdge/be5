@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.util.TableUtils;
+import com.developmentontheedge.be5.query.util.CategoryFilter;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.MacroExpander;
@@ -57,7 +57,7 @@ public class QuerySqlGenerator
 
         queryMetaHelper.resolveTypeOfRefColumn(ast);
         queryMetaHelper.applyFilters(ast, queryContext.getParameters());
-        TableUtils.applyCategory(query, ast, contextApplier.getContext().getParameter(CATEGORY_ID_PARAM));
+        applyCategory(query, ast, contextApplier.getContext().getParameter(CATEGORY_ID_PARAM));
 
         contextApplier.applyContext(ast);
 
@@ -78,5 +78,14 @@ public class QuerySqlGenerator
     {
         String value = queryContext.getParameter(name);
         return value != null ? value : defaultValue;
+    }
+
+    private static void applyCategory(Query query, AstStart ast, String categoryString)
+    {
+        if (categoryString != null)
+        {
+            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(),
+                    Long.parseLong(categoryString)).apply(ast);
+        }
     }
 }

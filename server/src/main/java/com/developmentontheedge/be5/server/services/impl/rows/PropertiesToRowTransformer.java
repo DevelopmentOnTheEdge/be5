@@ -1,13 +1,9 @@
 package com.developmentontheedge.be5.server.services.impl.rows;
 
-import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
-import com.developmentontheedge.be5.server.model.table.ColumnModel;
-import com.developmentontheedge.be5.server.model.table.RawCellModel;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
-import com.developmentontheedge.be5.query.util.TableUtils;
-import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.query.util.QueryUtils;
+import com.developmentontheedge.be5.server.model.table.RawCellModel;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -17,82 +13,25 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.GLUE_COLUMN_PREFIX;
-import static com.developmentontheedge.be5.query.util.TableUtils.shouldBeSkipped;
 
 /**
  * Parses properties in terms of tables.
  */
 class PropertiesToRowTransformer
 {
-    private final String entityName;
-    private final String queryName;
-    private final DynamicPropertySet properties;
-    private final UserInfo userInfo;
-    private final CoreUtils coreUtils;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     /**
-     * @param properties represent a row
-     */
-    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserInfo userInfo,
-                               CoreUtils coreUtils)
-    {
-        this.entityName = entityName;
-        this.queryName = queryName;
-        this.properties = properties;
-        this.userInfo = userInfo;
-        this.coreUtils = coreUtils;
-    }
-
-    /**
      * Returns a row identifier or empty string if the given properties contains no identifier.
      */
-    String getRowId()
+    String getRowId(DynamicPropertySet properties)
     {
         Object idObject = properties.getValue(DatabaseConstants.ID_COLUMN_LABEL);
         return idObject != null ? String.valueOf(idObject) : null;
     }
 
-    /**
-     * Constructs and collects columns. Note that this list contains no hidden columns (of any kind).
-     */
-    List<ColumnModel> collectColumns()
-    {
-        List<ColumnModel> columns = new ArrayList<>();
-
-        for (DynamicProperty property : properties)
-        {
-            if (!shouldBeSkipped(property))
-            {
-                String quick = getQuickOptionState(property);
-                columns.add(new ColumnModel(
-                        property.getName(),
-                        property.getDisplayName(),
-                        quick
-                ));
-            }
-        }
-
-        return columns;
-    }
-
-    private String getQuickOptionState(DynamicProperty property)
-    {
-        Map<String, String> quickOption = DynamicPropertyMeta.get(property).get("quick");
-        if (quickOption == null) return null;
-
-        String savedQuick = (String) coreUtils.getColumnSettingForUser(entityName, queryName, property.getName(),
-                                                        userInfo.getUserName()).get("quick");
-        if (savedQuick != null) return savedQuick;
-
-        if ("true".equals(quickOption.get("visible")))
-            return SqlBoolColumnType.YES;
-        else
-            return SqlBoolColumnType.NO;
-    }
-
-    List<RawCellModel> collectCells()
+    List<RawCellModel> collectCells(DynamicPropertySet properties)
     {
         for (DynamicProperty property : properties)
         {
@@ -114,7 +53,7 @@ class PropertiesToRowTransformer
 
         for (DynamicProperty property : properties)
         {
-            boolean hidden = TableUtils.shouldBeSkipped(property);
+            boolean hidden = QueryUtils.shouldBeSkipped(property);
             Map<String, Map<String, String>> options = removeUnnecessaryCellOptions(DynamicPropertyMeta.get(property));
             cells.add(new RawCellModel(
                     property.getName(),

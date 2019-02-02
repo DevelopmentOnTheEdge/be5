@@ -14,8 +14,6 @@ import javax.inject.Inject;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.metadata.MetadataUtils.getCompiledGroovyClassName;
-import static com.developmentontheedge.be5.metadata.QueryType.D1;
-import static com.developmentontheedge.be5.metadata.QueryType.D1_UNKNOWN;
 import static com.developmentontheedge.be5.metadata.serialization.ModuleLoader2.getDevFileExists;
 
 
@@ -49,7 +47,7 @@ public class QueryExecutorFactoryImpl implements QueryExecutorFactory
     {
         try
         {
-            if (query.getType() == D1 || query.getType() == D1_UNKNOWN)
+            if (query.getType() == QueryType.D1 || query.getType() == QueryType.D1_UNKNOWN)
             {
                 return new Be5SqlQueryExecutor();
             }

@@ -1,24 +1,11 @@
 package com.developmentontheedge.be5.query.util;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.util.MoreStrings;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.model.AstIdentifierConstant;
-import com.developmentontheedge.sql.model.AstParenthesis;
-import com.developmentontheedge.sql.model.AstQuery;
-import com.developmentontheedge.sql.model.AstSelect;
-import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.AstTableRef;
 
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,58 +14,8 @@ import java.util.Map;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 
-public class TableUtils
+public class AggregateUtils
 {
-    public static void filterBeanWithRoles(DynamicPropertySet dps, List<String> currentRoles)
-    {
-        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
-        {
-            DynamicProperty prop = props.next();
-            Map<String, String> info = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_ROLES);
-            if (info == null)
-            {
-                continue;
-            }
-
-            String roles = info.get("name");
-            List<String> roleList = Arrays.asList(roles.split(","));
-            List<String> forbiddenRoles = new ArrayList<>();
-            for (String userRole : roleList)
-            {
-                if (userRole.startsWith("!"))
-                {
-                    forbiddenRoles.add(userRole.substring(1));
-                }
-            }
-            roleList.removeAll(forbiddenRoles);
-
-            boolean hasAccess = false;
-            for (String role : roleList)
-            {
-                if (currentRoles.contains(role))
-                {
-                    hasAccess = true;
-                    break;
-                }
-            }
-            if (!hasAccess && !forbiddenRoles.isEmpty())
-            {
-                for (String currRole : currentRoles)
-                {
-                    if (!forbiddenRoles.contains(currRole))
-                    {
-                        hasAccess = true;
-                        break;
-                    }
-                }
-            }
-            if (!hasAccess)
-            {
-                prop.setHidden(true);
-            }
-        }
-    }
-
     public static void addAggregateRowIfNeeded(List<QRec> rows, List<QRec> aggregateRows,
                                                String totalTitle)
     {
@@ -141,7 +78,7 @@ public class TableUtils
     }
 
     private static QRec getTotalRow(DynamicPropertySet firstRow, Map<String, Double> aggregateValues,
-                                                  String totalTitle)
+                                    String totalTitle)
     {
         QRec res = new QRec();
         boolean totalTitleAdded = false;
@@ -165,7 +102,7 @@ public class TableUtils
             {
                 aggregateProp = new DynamicProperty(name, prop.getType(), null);
 
-                if (!totalTitleAdded && !shouldBeSkipped(prop))
+                if (!totalTitleAdded && !QueryUtils.shouldBeSkipped(prop))
                 {
                     totalTitleAdded = true;
                     aggregateProp.setValue(totalTitle);
@@ -203,49 +140,5 @@ public class TableUtils
             if (aggregateMeta != null) aggregateColumnNames.put(dp.getName(), aggregateMeta);
         }
         return aggregateColumnNames;
-    }
-
-    public static boolean shouldBeSkipped(DynamicProperty property)
-    {
-        String name = property.getName();
-        return property.isHidden() || MoreStrings.startsWithAny(name, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
-                DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
-    }
-
-    public static boolean shouldBeSkipped(String alias)
-    {
-        return MoreStrings.startsWithAny(alias, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX,
-                DatabaseConstants.HIDDEN_COLUMN_PREFIX, DatabaseConstants.GLUE_COLUMN_PREFIX);
-    }
-
-    public static void replaceBlob(DynamicPropertySet properties)
-    {
-        for (DynamicProperty dp : properties)
-        {
-            if (dp.getValue() == null) continue;
-            if (dp.getValue().getClass() == byte[].class || dp.getValue() instanceof Blob)
-            {
-                dp.setValue("Blob");
-                dp.setType(String.class);
-            }
-        }
-    }
-
-    public static void countFromQuery(AstQuery query)
-    {
-        AstSelect select = Ast.selectCount().from(AstTableRef.as(
-                new AstParenthesis(query.clone()),
-                new AstIdentifierConstant("data", true)
-        ));
-        query.replaceWith(new AstQuery(select));
-    }
-
-    public static void applyCategory(Query query, AstStart ast, String categoryString)
-    {
-        if (categoryString != null)
-        {
-            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(),
-                    Long.parseLong(categoryString)).apply(ast);
-        }
     }
 }

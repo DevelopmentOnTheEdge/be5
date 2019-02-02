@@ -16,7 +16,7 @@ public class TableUtilsTest
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
                 "  testtable t");
-        TableUtils.countFromQuery(sql.getQuery());
+        QueryUtils.countFromQuery(sql.getQuery());
 
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
                 "  t.name AS \"Name\",\n" +
