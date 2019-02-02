@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -39,20 +40,22 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getTablePresentation()
     {
-        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), Collections.emptyMap());
-        TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
+        Query query = meta.getQuery("testtable", "All records");
+        TablePresentation table = documentGenerator.getTablePresentation(query, emptyMap());
 
-        assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]", oneQuotes(jsonb.toJson(table.getColumns())));
+        assertEquals("[{'name':'Name','title':'Name'},{'name':'Value','title':'Value'}]",
+                oneQuotes(jsonb.toJson(table.getColumns())));
 
-        assertEquals("[{'cells':[" + "{'content':'tableModelTest','options':{}}," + "{'content':'1','options':{}}" + "]}]",
+        assertEquals("[{'cells':[" +
+                        "{'content':'tableModelTest','options':{}}," +
+                        "{'content':'1','options':{}}" + "]}]",
                 oneQuotes(jsonb.toJson(table.getRows())));
-        verify(Be5EventTestLogger.mock).queryCompleted(any(), any(), anyLong(), anyLong());
     }
 
     @Test
     public void testTitleAllRecords()
     {
-        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), Collections.emptyMap());
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), emptyMap());
         TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
         assertEquals("Testtable", table.getTitle());
     }
@@ -61,7 +64,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     public void testTitle()
     {
         JsonApiModel jsonApiModel = documentGenerator.getDocument(
-                meta.getQuery("testtable", "TableWithFilter"), Collections.emptyMap());
+                meta.getQuery("testtable", "TableWithFilter"), emptyMap());
         TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
         assertEquals("Testtable: TableWithFilter", table.getTitle());
     }
@@ -73,7 +76,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         Query query = meta.getQuery("testtable", "TableWithFilter");
 
-        JsonApiModel document = documentGenerator.getDocument(query, Collections.emptyMap());
+        JsonApiModel document = documentGenerator.getDocument(query, emptyMap());
 
         assertEquals("{'attributes':{'category':'testtable','columns':[{'name':'1','title':'1'}],'layout':{'topForm':'FilterByParamsInQueryOperation'}," +
                         "'length':10,'offset':0,'orderColumn':-1,'orderDir':'asc'," +
@@ -89,10 +92,11 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getQueryJsonApiForUser()
     {
-        JsonApiModel queryJsonApiForUser = documentGenerator.getDocument("testtable", "All records", Collections.emptyMap());
+        JsonApiModel queryJsonApiForUser = documentGenerator.getDocument("testtable", "All records", emptyMap());
 
         assertNotNull(queryJsonApiForUser.getData());
         TestCase.assertNull(queryJsonApiForUser.getErrors());
+        verify(Be5EventTestLogger.mock).queryCompleted(any(), any(), anyLong(), anyLong());
     }
 
     @Test
@@ -108,7 +112,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void updateQueryJsonApi()
     {
-        JsonApiModel jsonApiModel = documentGenerator.getNewTableRows("testtable", "All records", Collections.emptyMap());
+        JsonApiModel jsonApiModel = documentGenerator.getNewTableRows("testtable", "All records", emptyMap());
 
         assertEquals("{'attributes':{'data':[[" +
                         "{'content':'','options':{}}," +
@@ -126,7 +130,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         try
         {
-            documentGenerator.getDocument("testtable", "Query with error", Collections.emptyMap());
+            documentGenerator.getDocument("testtable", "Query with error", emptyMap());
         }
         catch (Be5Exception ignore)
         {

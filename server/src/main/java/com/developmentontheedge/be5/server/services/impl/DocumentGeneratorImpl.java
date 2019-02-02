@@ -108,14 +108,33 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
     {
-        return getTablePresentation(query, parameters, tableModelService.create(query, parameters));
-    }
-
-    private TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
-    {
+        TableModel tableModel = tableModelService.create(query, parameters);
         Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
 
         List<ColumnModel> columns = tableModel.getColumns();
+        List rows = getRows(tableModel, layout);
+
+        String title = getTitle(query, layout);
+        String entityName = query.getEntity().getName();
+        String queryName = query.getName();
+        Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
+
+        return new TablePresentation(
+                title,
+                entityName, queryName,
+                tableModel.isSelectable(),
+                columns,
+                rows,
+                tableModel.orderColumn, tableModel.orderDir,
+                tableModel.offset, tableModel.limit,
+                parameters,
+                totalNumberOfRows,
+                layout
+        );
+    }
+
+    private List getRows(TableModel tableModel, Map<String, Object> layout)
+    {
         List rows;
         String mode = (String) layout.getOrDefault("mode", "");
         if (mode.equals("named"))
@@ -126,17 +145,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         {
             rows = tableModel.getRows();
         }
-        Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
-        String entityName = query.getEntity().getName();
-        String queryName = query.getName();
-        String title = getTitle(query, layout);
-
-        return new TablePresentation(
-                title, entityName, queryName, tableModel.isSelectable(),
-                columns, rows,
-                tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.limit,
-                parameters, totalNumberOfRows,
-                layout);
+        return rows;
     }
 
     private String getTitle(Query query, Map<String, Object> layout)
