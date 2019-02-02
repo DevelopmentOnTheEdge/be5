@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
+import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
@@ -54,16 +55,18 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private static final List<String> positionsParamNames = Arrays.asList(ORDER_COLUMN, ORDER_DIR, OFFSET, LIMIT);
 
     private final UserAwareMeta userAwareMeta;
+    private final CoreUtils coreUtils;
     private final TableModelService tableModelService;
     private final Provider<Session> session;
 
     private final Map<String, DocumentPlugin> documentPlugins = new HashMap<>();
 
     @Inject
-    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, TableModelService tableModelService,
-                                 Provider<Session> session)
+    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils,
+                                 TableModelService tableModelService, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
+        this.coreUtils = coreUtils;
         this.tableModelService = tableModelService;
         this.session = session;
     }
@@ -108,8 +111,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
     {
-        TableModel tableModel = tableModelService.create(query, parameters);
         Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+        Map<String, Object> paramsWithLimit = updateLimit(query, layout, parameters);
+        TableModel tableModel = tableModelService.create(query, paramsWithLimit);
 
         List<ColumnModel> columns = tableModel.getColumns();
         List rows = getRows(tableModel, layout);
@@ -131,6 +135,22 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 totalNumberOfRows,
                 layout
         );
+    }
+
+    private Map<String, Object> updateLimit(Query query, Map<String, Object> layout, Map<String, Object> parameters)
+    {
+        HashMap<String, Object> newParams = new HashMap<>(parameters);
+        int limit = Integer.parseInt((String) newParams.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
+
+        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
+
+        if (limit == Integer.MAX_VALUE)
+        {
+            limit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
+                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
+        }
+        newParams.put(LIMIT, Math.min(limit, maxLimit) + "");
+        return newParams;
     }
 
     private List getRows(TableModel tableModel, Map<String, Object> layout)

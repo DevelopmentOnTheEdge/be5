@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
@@ -14,60 +13,37 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.be5.security.UserInfo;
-import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
-import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 
 public class TableBuilder
 {
     private final Query query;
     private final UserInfo userInfo;
     private final QueryExecutor queryExecutor;
-    private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
 
     @Inject
-    TableBuilder(UserInfo userInfo, QueryExecutorFactory queryService, UserAwareMeta userAwareMeta,
-                 CoreUtils coreUtils, @Assisted Query query, @Assisted Map<String, Object> parameters)
+    TableBuilder(UserInfo userInfo, QueryExecutorFactory queryService, CoreUtils coreUtils,
+                 @Assisted Query query, @Assisted Map<String, Object> parameters)
     {
         this.query = query;
         this.userInfo = userInfo;
-
         this.coreUtils = coreUtils;
-        this.userAwareMeta = userAwareMeta;
 
-        this.queryExecutor = queryService.get(query, updateLimit(query, parameters));
+        this.queryExecutor = queryService.get(query, parameters);
     }
 
     public interface TableBuilderFactory
     {
         TableBuilder create(Query query, Map<String, Object> parameters);
-    }
-
-    private Map<String, Object> updateLimit(Query query, Map<String, Object> parameters)
-    {
-        HashMap<String, Object> newParams = new HashMap<>(parameters);
-        int limit = Integer.parseInt((String) newParams.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
-
-        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-
-        if (limit == Integer.MAX_VALUE)
-        {
-            Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
-            limit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
-                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
-        }
-        newParams.put(LIMIT, Math.min(limit, maxLimit) + "");
-        return newParams;
     }
 
     public TableModel get()
