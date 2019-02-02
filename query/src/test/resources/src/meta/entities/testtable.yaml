@@ -33,16 +33,6 @@ testtable:
           t.value AS "Value"
         FROM
           testtable t
-  - withID:
-      type: 1D
-      operations: Edit
-      roles: '@AllRoles'
-      code: |-
-        SELECT
-          t.name AS "Name",
-          t.value AS "Value"
-        FROM
-          testtable t
   - emptyQuery:
       type: 1D_unknown
       roles: SystemDeveloper

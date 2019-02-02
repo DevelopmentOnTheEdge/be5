@@ -1,9 +1,11 @@
-package com.developmentontheedge.be5.query.services;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.model.TablePresentation;
+import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,12 +15,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-
-public class TableModel2Test extends QueryBe5ProjectDBTest
+public class TableModel2Test extends ServerBe5ProjectDBTest
 {
     @Inject
-    private TableModelService tableModelService;
+    private DocumentGenerator documentGenerator;
 
     private Long user1ID;
     private Long user2ID;
@@ -31,10 +31,6 @@ public class TableModel2Test extends QueryBe5ProjectDBTest
         db.update("delete from testtable");
         user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 2L);
         user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 1L);
-
-        db.update("delete from testSubQuery");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 1L);
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 2L);
     }
 
     @Test
@@ -44,12 +40,12 @@ public class TableModel2Test extends QueryBe5ProjectDBTest
         db.insert("INSERT INTO testData (name, textCol, dataCol) VALUES (?, ?, ?)", "test name", "test text", data);
 
         Query query = meta.getQuery("testData", "All records");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[" +
+        TablePresentation table = documentGenerator.getTablePresentation(query, Collections.emptyMap());
+        Assert.assertEquals("{'cells':[" +
                         "{'content':'test name','options':{}}," +
                         "{'content':'test text','options':{}}," +
                         "{'content':'Blob','options':{}}]}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getRows().get(0))));
         db.update("DELETE FROM testData");
     }
 
@@ -57,21 +53,21 @@ public class TableModel2Test extends QueryBe5ProjectDBTest
     public void beQuick()
     {
         Query query = meta.getQuery("testtable", "beQuick");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
-        assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
-                oneQuotes(jsonb.toJson(table.getColumns())));
+        TablePresentation table = documentGenerator.getTablePresentation(query, Collections.emptyMap());
+        Assert.assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getRows().get(0))));
+        Assert.assertEquals("[{'name':'Name','quick':'yes','title':'Name'}]",
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getColumns())));
     }
 
     @Test
     public void withID()
     {
         Query query = meta.getQuery("testtable", "withID");
-        TableModel table = tableModelService.create(query, Collections.emptyMap());
-        assertEquals("{'cells':[{'content':'user1','options':{}},{'content':2,'options':{}}]," +
+        TablePresentation table = documentGenerator.getTablePresentation(query, Collections.emptyMap());
+        Assert.assertEquals("{'cells':[{'content':'user1','options':{}},{'content':'2','options':{}}]," +
                         "'id':'"+user1ID+"'}",
-                oneQuotes(jsonb.toJson(table.getRows().get(0))));
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getRows().get(0))));
     }
 
 }

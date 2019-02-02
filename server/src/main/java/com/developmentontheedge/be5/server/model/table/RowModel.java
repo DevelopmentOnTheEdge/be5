@@ -1,12 +1,8 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.server.model.table;
 
 import java.util.List;
 import java.util.Objects;
 
-/**
- * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
- */
-@Deprecated
 public class RowModel
 {
     private final List<CellModel> cells;

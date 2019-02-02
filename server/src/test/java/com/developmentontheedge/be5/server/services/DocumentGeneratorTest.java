@@ -126,7 +126,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    public void error()
+    public void logQueryErrorEvent()
     {
         try
         {

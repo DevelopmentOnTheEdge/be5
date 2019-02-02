@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.modules.core.queries.system.meta;
 
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.query.support.Cell;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
 import com.developmentontheedge.be5.server.util.ActionUtils;
+import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class EntitiesTable extends QueryExecutorSupport
         List<Entity> entities = meta.getOrderedEntities(userInfo.getLanguage());
         for (Entity entity : entities)
         {
-            CellModel name = cell(entity.getName());
+            Cell name = cell(entity.getName());
             Query allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW);
             if (allRecords != null) name.option("link", "url", ActionUtils.toAction(allRecords).getArg());
 

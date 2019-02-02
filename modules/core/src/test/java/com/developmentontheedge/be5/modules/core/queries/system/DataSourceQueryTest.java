@@ -1,18 +1,18 @@
-package com.developmentontheedge.be5.modules.core.queries.system
+package com.developmentontheedge.be5.modules.core.queries.system;
 
-import com.developmentontheedge.be5.meta.Meta
-import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
-import org.junit.Test
+import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
+import org.junit.Test;
 
-import javax.inject.Inject
+import javax.inject.Inject;
 
-class DataSourceQueryTest extends CoreBe5ProjectDBTest
+public class DataSourceQueryTest extends CoreBe5ProjectDBTest
 {
     @Inject
-    Meta meta
+    private Meta meta;
 
     @Test
-    void get()
+    public void get()
     {
         meta.getQuery("_system_", "DataSource");
 //        TableModel tableModel = new DataSource().initialize(

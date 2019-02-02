@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.query.support;
 
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
-import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -53,9 +52,9 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
             {
                 cells.add((DynamicProperty) allCells.get(i));
             }
-            else if (allCells.get(i) instanceof CellModel)
+            else if (allCells.get(i) instanceof Cell)
             {
-                CellModel item = (CellModel) allCells.get(i);
+                Cell item = (Cell) allCells.get(i);
                 DynamicProperty property = new DynamicProperty(columns.get(i), String.class, item.content);
                 DynamicPropertyMeta.set(property, item.options);
                 cells.add(property);
@@ -69,9 +68,9 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
         return Collections.unmodifiableList(cells);
     }
 
-    public List<DynamicProperty> cells(CellModel firstCell, CellModel... otherCells)
+    public List<DynamicProperty> cells(Cell firstCell, Cell... otherCells)
     {
-        List<CellModel> cells = new ArrayList<>();
+        List<Cell> cells = new ArrayList<>();
         cells.add(firstCell);
         Collections.addAll(cells, otherCells);
         List<DynamicProperty> list = new ArrayList<>();
@@ -84,9 +83,9 @@ public abstract class BaseQueryExecutorSupport extends AbstractQueryExecutor imp
         return list;
     }
 
-    public CellModel cell(Object content)
+    public Cell cell(Object content)
     {
-        return new CellModel(content);
+        return new Cell(content);
     }
 
     public void addRow(List<DynamicProperty> cells)

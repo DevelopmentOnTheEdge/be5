@@ -13,6 +13,7 @@ be5ServerTestProject:
   - testtUser
   - testTypes
   - testCollection
+  - testData
   - testGenCollection
   - testRestoredRecords
   - atest

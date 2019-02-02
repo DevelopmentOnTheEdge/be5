@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.model;
 
-import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.server.model.table.ColumnModel;
 
 import java.util.List;
 import java.util.Map;

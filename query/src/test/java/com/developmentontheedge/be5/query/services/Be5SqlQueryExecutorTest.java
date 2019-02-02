@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.query.services;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
-import java.util.Collections;
 import java.util.List;
 
 import static com.developmentontheedge.be5.FrontendConstants.CATEGORY_ID_PARAM;

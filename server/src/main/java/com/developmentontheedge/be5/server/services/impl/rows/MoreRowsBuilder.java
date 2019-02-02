@@ -1,20 +1,19 @@
-package com.developmentontheedge.be5.server.model.table;
+package com.developmentontheedge.be5.server.services.impl.rows;
 
-import com.developmentontheedge.be5.query.model.CellModel;
-import com.developmentontheedge.be5.query.model.RowModel;
-import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.model.table.CellModel;
+import com.developmentontheedge.be5.server.model.table.RowModel;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>>
+public class MoreRowsBuilder implements TableRowsBuilder<List<CellModel>>
 {
-    private final TableModel tableModel;
+    private final List<RowModel> rows;
 
-    public MoreRowsBuilder(TableModel tableModel)
+    public MoreRowsBuilder(List<RowModel> rows)
     {
-        this.tableModel = tableModel;
+        this.rows = rows;
     }
 
     private CellModel createCell(CellModel cellModel)
@@ -22,7 +21,6 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>>
         return cellModel;
     }
 
-    @Override
     protected List<CellModel> createRow(RowModel rowModel)
     {
         List<CellModel> cells = new ArrayList<>();
@@ -37,8 +35,13 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<CellModel>>
     }
 
     @Override
-    public TableModel getTableModel()
+    public List<List<CellModel>> build()
     {
-        return tableModel;
+        List<List<CellModel>> res = new ArrayList<>();
+        for (RowModel rowModel : rows)
+        {
+            res.add(createRow(rowModel));
+        }
+        return res;
     }
 }

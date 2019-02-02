@@ -1,12 +1,8 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.server.model.table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
- */
-@Deprecated
 public class RawCellModel
 {
     public final String name;

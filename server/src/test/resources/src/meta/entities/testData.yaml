@@ -1,0 +1,31 @@
+testData:
+  type: table
+  displayName: attachments
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(255)
+        canBeNull: true
+    - textCol:
+        type: TEXT
+        canBeNull: true
+    - dataCol:
+        type: BLOB
+        canBeNull: true
+  queries:
+  - All records:
+      type: 1D_unknown
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT
+          name AS "name",
+          textCol AS "textCol",
+          dataCol AS "dataCol"
+        FROM testData

@@ -1,9 +1,5 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.server.model.table;
 
-/**
- * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
- */
-@Deprecated
 public class ColumnModel
 {
     private final String title;
@@ -15,11 +11,6 @@ public class ColumnModel
         this.title = title;
         this.name = name;
         this.quick = quick;
-    }
-
-    public ColumnModel(String name, String title)
-    {
-        this(name, title, null);
     }
 
     public String getName()

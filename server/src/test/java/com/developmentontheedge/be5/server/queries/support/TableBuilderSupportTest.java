@@ -1,12 +1,14 @@
 package com.developmentontheedge.be5.server.queries.support;
 
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,19 +16,17 @@ import static org.junit.Assert.assertEquals;
 public class TableBuilderSupportTest extends ServerBe5ProjectTest
 {
     @Inject
-    private TableModelService tableModelService;
+    private QueryExecutorFactory queryExecutorFactory;
 
     @Test
     public void test()
     {
         initGuest();
-        TableModel tableModel = tableModelService.
-                create(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>());
+        Query query = meta.getQuery("testtableAdmin", "TestGroovyTable");
+        List<QRec> rows = queryExecutorFactory.get(query, Collections.emptyMap()).execute();
 
-        assertEquals("[{'name':'Guest','title':'Guest'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
-
-        assertEquals("[{'cells':[{'content':'[Guest]','options':{}}]}]"
-                , oneQuotes(jsonb.toJson(tableModel.getRows())));
+        assertEquals("Guest", rows.get(0).getProperty("Guest").getDisplayName());
+        assertEquals("[Guest]", rows.get(0).getValue("Guest"));
     }
 
 }

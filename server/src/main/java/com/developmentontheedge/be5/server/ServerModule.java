@@ -27,6 +27,7 @@ import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.HtmlMetaTagsImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoModelServiceImpl;
+import com.developmentontheedge.be5.server.services.impl.rows.TableRowBuilder;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.AbstractModule;
@@ -62,6 +63,7 @@ public class ServerModule extends AbstractModule
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
         bind(ErrorModelHelper.class).in(Scopes.SINGLETON);
+        bind(TableRowBuilder.class).in(Scopes.SINGLETON);
 
         bind(DocumentOperationsPlugin.class).asEagerSingleton();
         bind(DocumentFormPlugin.class).asEagerSingleton();

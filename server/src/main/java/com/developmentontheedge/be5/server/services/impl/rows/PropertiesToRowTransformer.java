@@ -1,10 +1,10 @@
-package com.developmentontheedge.be5.query.services;
+package com.developmentontheedge.be5.server.services.impl.rows;
 
 import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
-import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.query.model.RawCellModel;
+import com.developmentontheedge.be5.server.model.table.ColumnModel;
+import com.developmentontheedge.be5.server.model.table.RawCellModel;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.TableUtils;
 import com.developmentontheedge.be5.security.UserInfo;

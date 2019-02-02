@@ -1,43 +1,19 @@
-package com.developmentontheedge.be5.query.model;
+package com.developmentontheedge.be5.query.support;
 
-import javax.json.bind.annotation.JsonbTransient;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
-/**
- * TODO use {@link com.developmentontheedge.beans.DynamicProperty}
- */
-@Deprecated
-public class CellModel
+public class Cell
 {
-    /**
-     * A string or a list of strings.
-     */
-    @JsonbTransient
-    public final String name;
-
-    @JsonbTransient
-    public final String title;
-
     public final Object content;
     public final Map<String, Map<String, String>> options;
 
-    public CellModel(Object content)
+    public Cell(Object content)
     {
-        this.name = null;
-        this.title = null;
         this.content = content;
         this.options = new HashMap<>();
-    }
-
-    public CellModel(String name, String title, Object content, Map<String, Map<String, String>> options)
-    {
-        this.name = name;
-        this.title = title;
-        this.content = content;
-        this.options = options;
     }
 
     public Object getContent()
@@ -50,19 +26,19 @@ public class CellModel
         return options;
     }
 
-    public CellModel option(String type, String attribute, String value)
+    public Cell option(String type, String attribute, String value)
     {
         options.computeIfAbsent(type, k -> new HashMap<>());
         options.get(type).put(attribute, value);
         return this;
     }
 
-    public CellModel cssClasses(String value)
+    public Cell cssClasses(String value)
     {
         return option("css", "class", value);
     }
 
-    public CellModel grouping()
+    public Cell grouping()
     {
         options.computeIfAbsent("grouping", k -> emptyMap());
         return this;

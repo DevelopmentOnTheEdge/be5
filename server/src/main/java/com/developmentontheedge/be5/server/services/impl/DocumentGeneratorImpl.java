@@ -5,18 +5,20 @@ import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.ColumnModel;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.query.QueryExecutor;
+import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
+import com.developmentontheedge.be5.server.model.MoreRowsPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.model.table.MoreRows;
-import com.developmentontheedge.be5.server.model.table.MoreRowsBuilder;
-import com.developmentontheedge.be5.server.model.table.NamedCellsRowBuilder;
+import com.developmentontheedge.be5.server.model.table.ColumnModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
+import com.developmentontheedge.be5.server.services.impl.rows.MoreRowsBuilder;
+import com.developmentontheedge.be5.server.services.impl.rows.NamedCellsRowBuilder;
+import com.developmentontheedge.be5.server.services.impl.rows.TableRowBuilder;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.JsonUtils;
@@ -26,12 +28,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM;
@@ -44,30 +44,31 @@ import static com.developmentontheedge.be5.query.QueryConstants.OFFSET;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_COLUMN;
 import static com.developmentontheedge.be5.query.QueryConstants.ORDER_DIR;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
+import static java.util.Collections.singletonMap;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator
 {
-    private static final Logger log = Logger.getLogger(DocumentGeneratorImpl.class.getName());
-
     private static final String QUERY_POSITIONS = "QUERY_POSITIONS";
     private static final String QUERY_FILTER = "QUERY_FILTER";
     private static final List<String> positionsParamNames = Arrays.asList(ORDER_COLUMN, ORDER_DIR, OFFSET, LIMIT);
 
     private final UserAwareMeta userAwareMeta;
     private final CoreUtils coreUtils;
-    private final TableModelService tableModelService;
+    private final TableRowBuilder tableRowBuilder;
+    private final QueryExecutorFactory queryServiceFactory;
     private final Provider<Session> session;
 
     private final Map<String, DocumentPlugin> documentPlugins = new HashMap<>();
 
     @Inject
-    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils,
-                                 TableModelService tableModelService, Provider<Session> session)
+    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, TableRowBuilder tableRowBuilder,
+                                 QueryExecutorFactory queryServiceFactory, Provider<Session> session)
     {
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
-        this.tableModelService = tableModelService;
+        this.tableRowBuilder = tableRowBuilder;
+        this.queryServiceFactory = queryServiceFactory;
         this.session = session;
     }
 
@@ -84,13 +85,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public JsonApiModel getDocument(Query query, Map<String, Object> parameters)
     {
         Map<String, Object> params = processQueryParams(query, parameters);
-        TablePresentation data = getTablePresentation(query, params);
-        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
-                .named(FilterUtil.getOperationParamsWithoutFilter(params));
-
+        TablePresentation data;
         List<ResourceData> included = new ArrayList<>();
         try
         {
+            data = getTablePresentation(query, params);
             documentPlugins.forEach((k, v) -> {
                 ResourceData resourceData = v.addData(query, params);
                 if (resourceData != null) included.add(resourceData);
@@ -102,7 +101,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
 
         return JsonApiModel.data(
-                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                new ResourceData(TABLE_ACTION, data, singletonMap(SELF_LINK, getUrl(query, parameters))),
                 included.toArray(new ResourceData[0]),
                 null
         );
@@ -113,28 +112,41 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
         Map<String, Object> paramsWithLimit = updateLimit(query, layout, parameters);
-        TableModel tableModel = tableModelService.create(query, paramsWithLimit);
+        QueryExecutor queryExecutor = queryServiceFactory.get(query, paramsWithLimit);
+        List<QRec> rows = queryExecutor.execute();
 
-        List<ColumnModel> columns = tableModel.getColumns();
-        List rows = getRows(tableModel, layout);
+        List<ColumnModel> columns = tableRowBuilder.collectColumns(query, rows);
+        List finalRows = getRows(query, rows, layout);
 
         String title = getTitle(query, layout);
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
-        Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
+        Long totalNumberOfRows = getCount(queryExecutor, rows.size());
 
         return new TablePresentation(
                 title,
                 entityName, queryName,
-                tableModel.isSelectable(),
+                queryExecutor.isSelectable(),
                 columns,
-                rows,
-                tableModel.orderColumn, tableModel.orderDir,
-                tableModel.offset, tableModel.limit,
+                finalRows,
+                queryExecutor.getOrderColumn(), queryExecutor.getOrderDir(),
+                queryExecutor.getOffset(), queryExecutor.getLimit(),
                 parameters,
                 totalNumberOfRows,
                 layout
         );
+    }
+
+    private long getCount(QueryExecutor queryExecutor, long rowsCount)
+    {
+        if (queryExecutor.getOffset() + rowsCount < queryExecutor.getLimit())
+        {
+            return rowsCount;
+        }
+        else
+        {
+            return queryExecutor.count();
+        }
     }
 
     private Map<String, Object> updateLimit(Query query, Map<String, Object> layout, Map<String, Object> parameters)
@@ -153,19 +165,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return newParams;
     }
 
-    private List getRows(TableModel tableModel, Map<String, Object> layout)
+    private List getRows(Query query, List<QRec> rows, Map<String, Object> layout)
     {
-        List rows;
         String mode = (String) layout.getOrDefault("mode", "");
         if (mode.equals("named"))
         {
-            rows = new NamedCellsRowBuilder(tableModel).build();
+            return new NamedCellsRowBuilder(rows).build();
         }
         else
         {
-            rows = tableModel.getRows();
+            return tableRowBuilder.collectRows(query, rows);
         }
-        return rows;
     }
 
     private String getTitle(Query query, Map<String, Object> layout)
@@ -198,18 +208,25 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Transactional
     JsonApiModel getNewTableRows(Query query, Map<String, Object> parameters)
     {
-        String url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
-                .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
-        Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
         Map<String, Object> params = processQueryParams(query, parameters);
-        TableModel tableModel = tableModelService.create(query, params);
+        MoreRowsPresentation data = getMoreRowsPresentation(query, params);
 
-        MoreRows data = new MoreRows(
-                tableModel.getTotalNumberOfRows().intValue(),
-                tableModel.getTotalNumberOfRows().intValue(),
-                new MoreRowsBuilder(tableModel).build()
+        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, data,
+                singletonMap(SELF_LINK, getUrl(query, parameters))), null);
+    }
+
+    private MoreRowsPresentation getMoreRowsPresentation(Query query, Map<String, Object> params)
+    {
+        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+        Map<String, Object> paramsWithLimit = updateLimit(query, layout, params);
+        QueryExecutor queryExecutor = queryServiceFactory.get(query, paramsWithLimit);
+        List<QRec> rows = queryExecutor.execute();
+        long count = getCount(queryExecutor, rows.size());
+        return new MoreRowsPresentation(
+                count,
+                count,
+                new MoreRowsBuilder(tableRowBuilder.collectRows(query, rows)).build()
         );
-        return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, data, links), null);
     }
 
     private Map<String, Object> processQueryParams(Query query, Map<String, Object> parameters)
@@ -235,6 +252,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public void addDocumentPlugin(String name, DocumentPlugin documentPlugin)
     {
         documentPlugins.put(name, documentPlugin);
+    }
+
+    private String getUrl(Query query, Map<String, Object> parameters)
+    {
+        return new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
+                .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
     }
 
     private Map<String, Map<String, Object>> getUserQueriesPositions()
