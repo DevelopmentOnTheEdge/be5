@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.jetty;
 import com.developmentontheedge.be5.logging.LogConfigurator;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.GzipHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
@@ -14,6 +15,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,13 +39,9 @@ public class EmbeddedJetty
         try
         {
             jetty = new Server(port);
-            WebAppContext webAppContext = getWebAppContext();
-            HandlerCollection handlers = new HandlerCollection();
-            handlers.addHandler(webAppContext);
-            handlers.addHandler(getRequestLogHandler());
-            jetty.setHandler(handlers);
+            jetty.setHandler(getHandlers());
             jetty.start();
-            logStarted(webAppContext, startTime);
+            logStarted(startTime);
         }
         catch (Exception e)
         {
@@ -60,9 +59,16 @@ public class EmbeddedJetty
         }
     }
 
-    private void logStarted(WebAppContext webAppContext, long startTime)
+    private HandlerCollection getHandlers()
     {
-        log.info(webAppContext.toString());
+        HandlerCollection handlers = new HandlerCollection();
+        handlers.addHandler(getRequestLogHandler());
+        handlers.addHandler(getGzipHandler(getWebAppContext()));
+        return handlers;
+    }
+
+    private void logStarted(long startTime)
+    {
         long time = System.currentTimeMillis() - startTime;
         log.info("Jetty started on http://localhost:" + port + " - " + time + " ms");
     }
@@ -82,7 +88,17 @@ public class EmbeddedJetty
         context.setMaxFormContentSize(1024 * 1024 * 1024);
         context.setDefaultsDescriptor(null);
         context.addServlet(DefaultServlet.class, "/");
+        log.info(context.toString());
         return context;
+    }
+
+    private GzipHandler getGzipHandler(WebAppContext webAppContext)
+    {
+        GzipHandler gzipHandler = new GzipHandler();
+        gzipHandler.setMimeTypes(new HashSet<>(Arrays.asList("text/html", "text/plain", "text/xml",
+                "text/css", "application/javascript", "application/x-javascript", "text/javascript")));
+        gzipHandler.setHandler(webAppContext);
+        return gzipHandler;
     }
 
     private SessionHandler getSessionHandler()
