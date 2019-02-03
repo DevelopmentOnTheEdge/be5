@@ -93,6 +93,8 @@ public class DataSourceServiceImpl implements DataSourceService
         dataSource.setPassword(profile.getPassword());
         dataSource.setUrl(connectionUrl);
         dataSource.setValidationQuery(rdbms.getValidationQuery());
+        dataSource.setRemoveAbandoned(true);
+        dataSource.setTestOnBorrow(true);
 
         log.info("Connection profile - " + profile.getName() + ". " +
                 "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, username, "xxxxx"));
