@@ -16,8 +16,8 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_
 
 public class AggregateUtils
 {
-    public static void addAggregateRowIfNeeded(List<QRec> rows, List<QRec> aggregateRows,
-                                               String totalTitle)
+    public static void addAggregateRow(List<QRec> rows, List<QRec> aggregateRows,
+                                       String totalTitle)
     {
         DynamicPropertySet firstRow = aggregateRows.get(0);
         Map<String, Map<String, String>> aggregateColumnNames = getAggregateColumnNames(rows.get(0));

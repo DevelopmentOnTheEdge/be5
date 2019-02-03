@@ -191,14 +191,14 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         }
     }
 
-    private void addAggregateRowIfNeeded(List<QRec> propertiesList)
+    private void addAggregateRowIfNeeded(List<QRec> rows)
     {
-        if (propertiesList.size() > 0 && StreamSupport.stream(propertiesList.get(0).spliterator(), false)
+        if (rows.size() > 0 && StreamSupport.stream(rows.get(0).spliterator(), false)
                 .anyMatch(x -> DynamicPropertyMeta.get(x).containsKey(QueryConstants.COL_ATTR_AGGREGATE)))
         {
             AstStart sql = querySqlGenerator.getSql(query, getParamsWithoutLimit());
             List<QRec> aggregateRows = db.list(sql, new QRecParser());
-            AggregateUtils.addAggregateRowIfNeeded(propertiesList, aggregateRows, queryMetaHelper.getTotalTitle(query));
+            AggregateUtils.addAggregateRow(rows, aggregateRows, queryMetaHelper.getTotalTitle(query));
         }
     }
 
