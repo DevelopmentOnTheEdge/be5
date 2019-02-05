@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.server.FrontendActions.GO_BACK;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyVararg;
@@ -31,6 +32,16 @@ import static org.mockito.Mockito.when;
 
 public class StandardOperationsTest extends SqlMockOperationTest
 {
+    @Test
+    public void simpleTestOperation()
+    {
+        OperationResult result = executeOperation("testtableAdmin", "All records",
+                "SimpleTestOperation", "", "").getSecond();
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals(GO_BACK, ((FrontendAction[])result.getDetails())[0].getType());
+        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
+    }
+
     @Test
     public void deleteOperation()
     {
