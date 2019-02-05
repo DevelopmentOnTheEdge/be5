@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static com.developmentontheedge.be5.server.FrontendActions.GO_BACK;
 import static org.junit.Assert.assertEquals;
 
 public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
@@ -70,6 +71,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
                 doubleQuotes("{'name':'EditName','value':123}")).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals(GO_BACK, ((FrontendAction[])result.getDetails())[0].getType());
         assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
         assertEquals("EditName,123",

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.server.FrontendActions.CLOSE_MAIN_MODAL;
 import static com.developmentontheedge.be5.server.FrontendActions.UPDATE_PARENT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
 
@@ -149,6 +150,7 @@ public class FilterOperationTest extends SqlMockOperationTest
                 oneQuotes(((TablePresentation) ((JsonApiModel) details[0].getValue()).getData().getAttributes()).getParameters().toString()));
 
         assertEquals(UPDATE_PARENT_DOCUMENT, details[0].getType());
+        assertEquals(CLOSE_MAIN_MODAL, details[1].getType());
     }
 
     @Test

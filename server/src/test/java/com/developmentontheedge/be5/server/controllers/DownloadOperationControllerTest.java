@@ -59,7 +59,8 @@ public class DownloadOperationControllerTest extends ServerBe5ProjectTest
                 "testtable", "All records", "TestDownloadOperation",
                 emptyMap(), emptyMap()
         );
-        assertEquals(frontendAction, ((FrontendAction[]) resultEither.getSecond().getDetails())[0]);
+        assertEquals(FrontendActions.closeMainModal(), ((FrontendAction[]) resultEither.getSecond().getDetails())[0]);
+        assertEquals(frontendAction, ((FrontendAction[]) resultEither.getSecond().getDetails())[1]);
     }
 
     public static class TestDownloadOperation extends DownloadOperationSupport

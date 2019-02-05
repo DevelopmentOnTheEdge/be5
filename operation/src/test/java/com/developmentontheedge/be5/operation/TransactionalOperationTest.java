@@ -25,7 +25,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                 ImmutableMap.of("name", "test", "value", 5));
 
-        assertEquals(OperationStatus.FINISHED, result.getSecond().getStatus());
+        assertEquals(OperationStatus.REDIRECTED, result.getSecond().getStatus());
     }
 
     @Test
@@ -35,8 +35,6 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                 ImmutableMap.of("nullValues", "yes"));
 
-        assertEquals(OperationStatus.FINISHED, result.getSecond().getStatus());
+        assertEquals(OperationStatus.REDIRECTED, result.getSecond().getStatus());
     }
-
-
 }

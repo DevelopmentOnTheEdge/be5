@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
+
 
 public abstract class BaseOperationSupport implements Operation
 {
@@ -174,6 +176,14 @@ public abstract class BaseOperationSupport implements Operation
     public void redirectToTable(Query query, Map<String, Object> params)
     {
         redirectToTable(query.getEntity().getName(), query.getName(), params);
+    }
+
+    @Override
+    public void setResultGoBack()
+    {
+        setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
+                getInfo().getEntityName(), getContext().getQueryName())
+                .named(FilterUtil.getOperationParamsWithoutFilter(getRedirectParams())).toString()));
     }
 
     public String getBackUrl()

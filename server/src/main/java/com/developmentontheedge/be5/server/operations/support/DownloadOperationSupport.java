@@ -26,7 +26,7 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
         Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
         if (parameters == null || "modalForm".equals(layout.get("type")))
         {
-            setResultFinished(downloadOperationAction);
+            setResultFinished(FrontendActions.closeMainModal(), downloadOperationAction);
         }
         else
         {

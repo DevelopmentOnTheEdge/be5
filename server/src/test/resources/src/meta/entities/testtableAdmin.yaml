@@ -38,6 +38,7 @@ testtableAdmin:
       - TestTransactionalOperation
       - Insert
       - EditWithCheckRecords
+      - SimpleTestOperation
       code: |2-
             SELECT
               t.ID AS "___ID",
@@ -123,3 +124,6 @@ testtableAdmin:
       extenders:
       - className: com.developmentontheedge.be5.server.operations.extenders.CheckRecordsExtender
       code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - SimpleTestOperation:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SimpleTestOperation

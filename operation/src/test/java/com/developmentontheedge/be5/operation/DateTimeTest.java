@@ -40,7 +40,7 @@ public class DateTimeTest extends OperationsSqlMockProjectTest
                 "}", oneQuotes(JsonFactory.bean(parameters)));
 
         OperationResult result = executeOperation(operation, values).getSecond();
-        assertEquals(OperationResult.finished(), result);
+        assertEquals(OperationResult.redirect("table/testtable/All records"), result);
     }
 
     @Test
