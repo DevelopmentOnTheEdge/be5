@@ -81,7 +81,8 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         setResult(OperationResult.finished(null, frontendActions));
     }
 
-    protected void setResultGoBack()
+    @Override
+    public void setResultGoBack()
     {
         setResultFinished(FrontendActions.goBackOrRedirect(getBackUrl()));
     }

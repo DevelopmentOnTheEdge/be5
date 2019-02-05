@@ -49,6 +49,8 @@ public interface Operation
 
     void setResult(OperationResult operationResult);
 
+    void setResultGoBack();
+
     void addRedirectParams(Map<String, ?> extra);
 
     void addRedirectParam(String name, Object value);

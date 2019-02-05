@@ -78,7 +78,7 @@ public class OperationServiceImpl implements OperationService
 
         if (OperationStatus.EXECUTE == operation.getStatus())
         {
-            operation.setResult(OperationResult.finished());
+            operation.setResultGoBack();
         }
 
         if (OperationStatus.ERROR == operation.getStatus())

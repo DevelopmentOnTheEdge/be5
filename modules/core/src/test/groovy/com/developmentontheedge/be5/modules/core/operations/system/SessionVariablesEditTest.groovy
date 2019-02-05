@@ -42,7 +42,7 @@ class SessionVariablesEditTest extends CoreBe5ProjectDbMockTest
         session.set("remoteAddr", "199.168.0.1")
 
         def operation = executeOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", ["newValue": "199.168.0.2"])
-        assertEquals(OperationStatus.REDIRECTED, operation.getSecond().getStatus())
+        assertEquals(OperationStatus.FINISHED, operation.getSecond().getStatus())
 
         assertEquals("199.168.0.2", session.get("remoteAddr"))
     }
