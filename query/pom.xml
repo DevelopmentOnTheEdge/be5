@@ -27,12 +27,6 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.json.bind</groupId>
-      <artifactId>javax.json.bind-api</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.developmentontheedge</groupId>
       <artifactId>beans-json</artifactId>
       <version>1.0.1-SNAPSHOT</version>
