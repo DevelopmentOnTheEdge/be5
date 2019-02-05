@@ -22,12 +22,14 @@ public interface FrontendActions
 
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
     String GO_BACK = "GO_BACK";
+    String CLOSE_MAIN_MODAL = "CLOSE_MAIN_MODAL";
     String SET_URL = "SET_URL";
     String REDIRECT = "REDIRECT";
     String DOWNLOAD_OPERATION = "DOWNLOAD_OPERATION";
     String REFRESH_DOCUMENT = "REFRESH_DOCUMENT";
 
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
+    FrontendAction CLOSE_MAIN_MODAL_ACTION = new FrontendAction(CLOSE_MAIN_MODAL, null);
     FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
 
     static FrontendAction updateUserInfo(UserInfoModel userInfoModel)
@@ -58,6 +60,11 @@ public interface FrontendActions
     static FrontendAction goBack()
     {
         return GO_BACK_ACTION;
+    }
+
+    static FrontendAction closeMainModal()
+    {
+        return CLOSE_MAIN_MODAL_ACTION;
     }
 
     static FrontendAction goBackOrRedirect(String url)
