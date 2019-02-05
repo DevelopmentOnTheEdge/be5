@@ -32,7 +32,7 @@ public interface FrontendActions
     FrontendAction CLOSE_MAIN_MODAL_ACTION = new FrontendAction(CLOSE_MAIN_MODAL, null);
     FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
 
-    static FrontendAction updateUserInfo(UserInfoModel userInfoModel)
+    static FrontendAction updateUser(UserInfoModel userInfoModel)
     {
         return new FrontendAction(UPDATE_USER_INFO, userInfoModel);
     }
