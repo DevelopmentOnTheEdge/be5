@@ -126,7 +126,7 @@ public class TableRowBuilder
         {
             if (!cell.hidden)
             {
-                processedCells.add(new CellModel(cell.name, cell.title, cell.content, cell.options));
+                processedCells.add(new CellModel(cell.content, cell.options));
             }
         }
 

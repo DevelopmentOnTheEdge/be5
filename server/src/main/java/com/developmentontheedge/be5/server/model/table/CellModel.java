@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.model.table;
 
-import javax.json.bind.annotation.JsonbTransient;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,27 +10,17 @@ public class CellModel
     /**
      * A string or a list of strings.
      */
-    @JsonbTransient
-    public final String name;
-
-    @JsonbTransient
-    public final String title;
-
     public final Object content;
     public final Map<String, Map<String, String>> options;
 
     public CellModel(Object content)
     {
-        this.name = null;
-        this.title = null;
         this.content = content;
         this.options = new HashMap<>();
     }
 
-    public CellModel(String name, String title, Object content, Map<String, Map<String, String>> options)
+    public CellModel(Object content, Map<String, Map<String, String>> options)
     {
-        this.name = name;
-        this.title = title;
         this.content = content;
         this.options = options;
     }
