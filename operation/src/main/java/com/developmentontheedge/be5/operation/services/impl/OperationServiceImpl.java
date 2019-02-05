@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.util.FilterUtil;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -19,7 +18,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.operation.OperationConstants.RELOAD_CONTROL_NAME;
 
 
@@ -80,10 +78,7 @@ public class OperationServiceImpl implements OperationService
 
         if (OperationStatus.EXECUTE == operation.getStatus())
         {
-            operation.setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
-                    operation.getInfo().getEntityName(), operation.getContext().getQueryName())
-                    .named(FilterUtil.getOperationParamsWithoutFilter(operation.getRedirectParams())).toString())
-            );
+            operation.setResult(OperationResult.finished());
         }
 
         if (OperationStatus.ERROR == operation.getStatus())

@@ -25,8 +25,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                 ImmutableMap.of("name", "test", "value", 5));
 
-        assertEquals("{'details':'table/testtableAdmin/All records','status':'REDIRECTED'}",
-                oneQuotes(BaseTest.jsonb.toJson(result.getSecond())));
+        assertEquals(OperationStatus.FINISHED, result.getSecond().getStatus());
     }
 
     @Test
@@ -36,8 +35,7 @@ public class TransactionalOperationTest extends OperationBe5ProjectDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                 ImmutableMap.of("nullValues", "yes"));
 
-        assertEquals("{'details':'table/testtableAdmin/All records','status':'REDIRECTED'}",
-                BaseTest.oneQuotes(BaseTest.jsonb.toJson(result.getSecond())));
+        assertEquals(OperationStatus.FINISHED, result.getSecond().getStatus());
     }
 
 

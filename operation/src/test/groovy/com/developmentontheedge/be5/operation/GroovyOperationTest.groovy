@@ -39,7 +39,7 @@ class GroovyOperationTest extends OperationsSqlMockProjectTest
         Either<Object, OperationResult> generate = executeOperation(operation,
                 ['beginDate': '2017-12-20', 'name': 'testValue', 'reason': 'fired', 'reasonMulti': ['fired', 'other'] as String[]])
 
-        assertEquals(OperationStatus.REDIRECTED, operation.getStatus())
+        assertEquals(OperationStatus.FINISHED, operation.getStatus())
 
         verify(DbServiceMock.mock).update(eq("update fakeTable set name = ?,beginDate = ?,reason = ?"),
                 eq("testValue"),

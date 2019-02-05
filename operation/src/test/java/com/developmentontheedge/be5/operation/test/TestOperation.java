@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.test;
 
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -29,6 +30,7 @@ public class TestOperation extends TestOperationSupport
         DynamicPropertySet params = (DynamicPropertySet) parameters;
         db.insert("INSERT INTO "+getInfo().getEntityName()+" (name, value) VALUES (?, ?)",
                 params.getValue("name"), params.getValue("value"));
+        setResult(OperationResult.redirect(getBackUrl()));
     }
 
 }

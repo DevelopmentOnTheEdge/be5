@@ -15,7 +15,7 @@ public class SilentDeleteOperation extends DeleteOperation
         }
         else
         {
-            setResultFinished(FrontendActions.goBackOrRedirect(getBackUrl()));
+            setResultGoBack();
         }
     }
 }
