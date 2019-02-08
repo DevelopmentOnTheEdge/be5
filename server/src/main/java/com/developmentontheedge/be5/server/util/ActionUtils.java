@@ -124,7 +124,7 @@ public final class ActionUtils
         for (String s : values)
         {
             String[] split = s.split("=");
-            params.put(split[0], split[1].replace("+", " "));
+            params.put(split[0], split.length == 1 ? "" : split[1].replace("+", " "));
         }
         return params;
     }
