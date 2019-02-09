@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -62,7 +61,7 @@ public class DocumentController extends JsonApiModelController
         catch (Be5Exception e)
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName)
-                    .named(FilterUtil.getOperationParamsWithoutFilter(parameters)).toString();
+                    .named(parameters).toString();
             log.log(e.getLogLevel(), "Error in document: " + url, e);
             return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }

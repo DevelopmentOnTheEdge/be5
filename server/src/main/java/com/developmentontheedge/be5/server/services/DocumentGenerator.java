@@ -19,6 +19,4 @@ public interface DocumentGenerator
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
     void addDocumentPlugin(String name, DocumentPlugin documentPlugin);
-
-    void clearSavedPosition(Query query, Map<String, Object> parameters);
 }

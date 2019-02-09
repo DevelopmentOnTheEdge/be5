@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
@@ -69,7 +69,6 @@ public class FilterHelper
 
     public JsonApiModel filterDocument(Query query, Map<String, Object> parameters)
     {
-        documentGenerator.clearSavedPosition(query, parameters);
         return documentGenerator.getDocument(query, parameters);
     }
 

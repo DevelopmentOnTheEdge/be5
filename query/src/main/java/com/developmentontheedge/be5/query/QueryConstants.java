@@ -12,8 +12,6 @@ public interface QueryConstants
     String DISPLAY_TYPE = "_displayType_";
     String TITLE_LEVEL = "_titleLevel_";
 
-    String CLEAN_NAV = "_cleanNav_";
-
     String COL_ATTR_AGGREGATE = "aggregate";
     String COL_ATTR_ROLES = "roles";
     String COL_ATTR_BLANKNULLS = "blankNulls";
