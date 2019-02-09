@@ -2,14 +2,15 @@ package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueriesService;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
@@ -30,16 +31,18 @@ public class FilterInfoPlugin implements DocumentPlugin
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final QueryMetaHelper queryMetaHelper;
+    private final DpsHelper dpsHelper;
     protected static final String DOCUMENT_FILTER_INFO_PLUGIN = "filterInfo";
 
     @Inject
     public FilterInfoPlugin(QueriesService queries, Meta meta, UserAwareMeta userAwareMeta,
-                            DocumentGenerator documentGenerator, QueryMetaHelper queryMetaHelper)
+                            DocumentGenerator documentGenerator, QueryMetaHelper queryMetaHelper, DpsHelper dpsHelper)
     {
         this.queries = queries;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.queryMetaHelper = queryMetaHelper;
+        this.dpsHelper = dpsHelper;
         documentGenerator.addDocumentPlugin(DOCUMENT_FILTER_INFO_PLUGIN, this);
     }
 
@@ -134,6 +137,12 @@ public class FilterInfoPlugin implements DocumentPlugin
     protected FilterItem getValueTitle(ColumnDef column, String mainEntityName, String k, Object v)
     {
         String columnTitle = userAwareMeta.getColumnTitle(column.getTableFrom(), k);
+        if (column.getTableTo() != null)
+        {
+            String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
+                    Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));
+            if (tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
+        }
         if (meta.getEntity(column.getTableFrom()).getPrimaryKey().equals(column.getName()))
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
@@ -141,12 +150,12 @@ public class FilterInfoPlugin implements DocumentPlugin
             String idColumnTitle = mainEntityName.equalsIgnoreCase(column.getTableFrom()) ? null : columnTitle;
             if (tags.length > 0) return new FilterItem(idColumnTitle, tags[0][1]);
         }
-        if (column.getTableTo() != null)
+        else
         {
-            String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
-                    Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));
-            if (tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
+            String[][] tags = dpsHelper.getTags(column, Collections.singletonMap(column.getName(), v));
+            if (tags != null && tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
         }
+
         return new FilterItem(columnTitle, v + "");
     }
 

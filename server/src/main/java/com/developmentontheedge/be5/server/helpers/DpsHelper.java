@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.metadata.model.JavaOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.validation.ValidationRules;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.util.FilterUtil;
@@ -45,6 +44,7 @@ import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BOO
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CHAR;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CURRENCY;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_DECIMAL;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_ENUM;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_INT;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_TEXT;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UBIGINT;
@@ -500,37 +500,7 @@ public class DpsHelper
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
-        String[][] tags = null;
-        if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
-        {
-            tags = queries.getTagsYesNo();
-        }
-        else if (columnDef.getType().getEnumValues() != Strings2.EMPTY)
-        {
-            tags = queries.getTagsFromEnum(columnDef);
-        }
-        else
-        {
-            String tableName = columnDef.getTableTo();
-            if (tableName != null && meta.getEntity(tableName) != null)
-            {
-                String viewName = columnDef.getViewName();
-                Map<String, Object> operationParamsWithoutFilter =
-                        FilterUtil.getOperationParamsWithoutFilter(operationParams);
-                Entity entity = columnDef.getEntity();
-                Map<String, Object> tagsParams = addEntityPrefix(entity, operationParamsWithoutFilter);
-
-                String propertyName = dp.getName();
-                if (tagsParams.containsKey(propertyName))
-                {
-                    tags = getTagForPrimaryKeyValue(tableName, viewName, tagsParams.get(propertyName));
-                }
-                else
-                {
-                    tags = queries.getTagsFromCustomSelectionView(tableName, viewName, tagsParams);
-                }
-            }
-        }
+        String[][] tags = getTags(columnDef, operationParams);
 
         if (tags != null)
         {
@@ -540,6 +510,59 @@ public class DpsHelper
                 dp.setValue(tags[0][0]);
             }
         }
+    }
+
+    public String[][] getTags(ColumnDef columnDef, Map<String, Object> operationParams)
+    {
+        String viewName = columnDef.getViewName();
+        Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+
+        if (columnDef.getType().getTypeName().equals(TYPE_BOOL) || columnDef.getType().getTypeName().equals(TYPE_ENUM))
+        {
+            String[][] tags;
+            if (columnDef.getType().getTypeName().equals(TYPE_BOOL))
+            {
+                tags = queries.getTagsYesNo();
+            }
+            else
+            {
+                tags = queries.getTagsFromEnum(columnDef);
+            }
+            if (operationParamsWithoutFilter.containsKey(columnDef.getName()))
+            {
+                return getOneTag(tags, operationParamsWithoutFilter.get(columnDef.getName()));
+            }
+            else
+            {
+                return tags;
+            }
+        }
+        else
+        {
+            String tableName = columnDef.getTableTo();
+            if (tableName != null && meta.getEntity(tableName) != null)
+            {
+                Map<String, Object> tagsParams = addEntityPrefix(columnDef.getEntity(), operationParamsWithoutFilter);
+                if (tagsParams.containsKey(columnDef.getName()))
+                {
+                    return getTagForPrimaryKeyValue(tableName, viewName, tagsParams.get(columnDef.getName()));
+                }
+                else
+                {
+                    return queries.getTagsFromCustomSelectionView(tableName, viewName, tagsParams);
+                }
+            }
+        }
+        return null;
+    }
+
+    private String[][] getOneTag(String[][] tags, Object value)
+    {
+        for (String[] tag : tags)
+        {
+            if (tag[0].equals(value)) return new String[][]{tag};
+        }
+        return new String[][]{};
     }
 
     private Map<String, Object> addEntityPrefix(Entity entity, Map<String, Object> operationParams)

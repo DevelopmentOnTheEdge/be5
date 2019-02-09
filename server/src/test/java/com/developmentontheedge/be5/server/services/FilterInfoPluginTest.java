@@ -68,6 +68,24 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    public void addDataForEnum()
+    {
+        Query query = meta.getQuery("testTags", "All records");
+        ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("admlevel", "Municipal"));
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Административный уровень','value':'Муниципальный'}]}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
+    @Test
+    public void addDataForBool()
+    {
+        Query query = meta.getQuery("testTags", "All records");
+        ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("payable", "no"));
+        Assert.assertEquals("{'operationParamsInfo':[{'key':'Оплачиваемая','value':'нет'}]}",
+                oneQuotes(jsonb.toJson(resourceData.getAttributes())));
+    }
+
+    @Test
     public void addDataUsedParam()
     {
         Query query = meta.getQuery("testtable", "usedParam filter info");
