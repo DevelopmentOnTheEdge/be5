@@ -172,7 +172,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 "EditName", 123, 12L);
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
-        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
+        assertEquals("table/testtableAdmin/All records/_selectedRows_=12", ((FrontendAction[])result.getDetails())[0].getValue());
     }
 
     @Test
@@ -206,7 +206,8 @@ public class StandardOperationsTest extends SqlMockOperationTest
         OperationResult result = executeOperation(operation, doubleQuotes(values)).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
-        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
+        assertEquals("table/testtableAdmin/All records/_selectedRows_=12",
+                ((FrontendAction[])result.getDetails())[0].getValue());
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
 

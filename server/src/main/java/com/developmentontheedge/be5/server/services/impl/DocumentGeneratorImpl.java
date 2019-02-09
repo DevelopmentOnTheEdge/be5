@@ -19,7 +19,6 @@ import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.server.services.impl.rows.MoreRowsBuilder;
 import com.developmentontheedge.be5.server.services.impl.rows.NamedCellsRowBuilder;
 import com.developmentontheedge.be5.server.services.impl.rows.TableRowBuilder;
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.JsonUtils;
 
