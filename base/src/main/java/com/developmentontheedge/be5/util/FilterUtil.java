@@ -12,7 +12,7 @@ import static com.developmentontheedge.be5.FrontendConstants.SEARCH_PRESETS_PARA
 
 public class FilterUtil
 {
-    public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
+    public static Map<String, Object> getContextParams(Map<String, Object> operationParams)
     {
         if (!operationParams.containsKey(SEARCH_PARAM))
         {

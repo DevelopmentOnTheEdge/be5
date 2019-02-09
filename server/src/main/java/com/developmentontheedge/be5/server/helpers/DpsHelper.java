@@ -515,7 +515,7 @@ public class DpsHelper
     public String[][] getTags(ColumnDef columnDef, Map<String, Object> operationParams)
     {
         String viewName = columnDef.getViewName();
-        Map<String, Object> operationParamsWithoutFilter = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+        Map<String, Object> contextParams = FilterUtil.getContextParams(operationParams);
 
         if (columnDef.getType().getTypeName().equals(TYPE_BOOL) || columnDef.getType().getTypeName().equals(TYPE_ENUM))
         {
@@ -528,9 +528,9 @@ public class DpsHelper
             {
                 tags = queries.getTagsFromEnum(columnDef);
             }
-            if (operationParamsWithoutFilter.containsKey(columnDef.getName()))
+            if (contextParams.containsKey(columnDef.getName()))
             {
-                return getOneTag(tags, operationParamsWithoutFilter.get(columnDef.getName()));
+                return getOneTag(tags, contextParams.get(columnDef.getName()));
             }
             else
             {
@@ -542,7 +542,7 @@ public class DpsHelper
             String tableName = columnDef.getTableTo();
             if (tableName != null && meta.getEntity(tableName) != null)
             {
-                Map<String, Object> tagsParams = addEntityPrefix(columnDef.getEntity(), operationParamsWithoutFilter);
+                Map<String, Object> tagsParams = addEntityPrefix(columnDef.getEntity(), contextParams);
                 if (tagsParams.containsKey(columnDef.getName()))
                 {
                     return getTagForPrimaryKeyValue(tableName, viewName, tagsParams.get(columnDef.getName()));
@@ -684,9 +684,9 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
-        Map<String, ?> params = FilterUtil.getOperationParamsWithoutFilter(operationParams);
+        Map<String, ?> contextParams = FilterUtil.getContextParams(operationParams);
 
-        for (Map.Entry<String, ?> entry : params.entrySet())
+        for (Map.Entry<String, ?> entry : contextParams.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
             if (property != null)

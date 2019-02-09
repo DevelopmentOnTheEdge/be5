@@ -55,7 +55,7 @@ public class FilterInfoPlugin implements DocumentPlugin
 
     protected List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
     {
-        Map<String, Object> params = FilterUtil.getOperationParamsWithoutFilter(parameters);
+        Map<String, Object> params = FilterUtil.getContextParams(parameters);
         List<FilterItem> result = new ArrayList<>();
 
         AstStart ast = null;

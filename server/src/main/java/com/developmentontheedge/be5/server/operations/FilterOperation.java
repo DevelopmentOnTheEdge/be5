@@ -41,7 +41,7 @@ public class FilterOperation extends OperationSupport
     public void invoke(Object parameters) throws Exception
     {
         Map<String, Object> params = dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters);
-        params.putAll(FilterUtil.getOperationParamsWithoutFilter(context.getParams()));
+        params.putAll(FilterUtil.getContextParams(context.getParams()));
         Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
         if ("modalForm".equals(layout.get("type")))
         {

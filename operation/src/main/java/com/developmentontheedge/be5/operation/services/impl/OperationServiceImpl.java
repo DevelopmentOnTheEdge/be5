@@ -111,7 +111,7 @@ public class OperationServiceImpl implements OperationService
     private static Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
     {
         Map<String, Object> presetValues =
-                new HashMap<>(FilterUtil.getOperationParamsWithoutFilter(context.getParams()));
+                new HashMap<>(FilterUtil.getContextParams(context.getParams()));
 
         presetValues.putAll(values);
         return presetValues;
