@@ -72,7 +72,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals(GO_BACK, ((FrontendAction[])result.getDetails())[0].getType());
-        assertEquals("table/testtableAdmin/All records", ((FrontendAction[])result.getDetails())[0].getValue());
+        assertEquals("table/testtableAdmin/All records/_selectedRows_=" + id, ((FrontendAction[])result.getDetails())[0].getValue());
 
         assertEquals("EditName,123",
                 db.select("SELECT name, value FROM testtableAdmin WHERE id = ?", new ConcatColumnsParser(), id));

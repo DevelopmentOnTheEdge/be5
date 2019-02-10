@@ -100,12 +100,12 @@ public class FormGeneratorImpl implements FormGenerator
                                    Either<Object, OperationResult> result)
     {
         Either<FormPresentation, OperationResultPresentation> data;
+        Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
         if (result.isFirst())
         {
             String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
             String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
             String title = localizedEntityTitle + ": " + localizedOperationTitle;
-            Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
             data = Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
@@ -118,7 +118,6 @@ public class FormGeneratorImpl implements FormGenerator
         }
         else
         {
-            Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
             layout.remove("type");
             data = Either.second(new OperationResultPresentation(
                     resultForFrontend(result.getSecond()),

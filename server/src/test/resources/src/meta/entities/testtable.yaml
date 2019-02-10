@@ -99,9 +99,11 @@ testtable:
   operations:
   - Filter:
       roles: Administrator
+      layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterOperation
   - FilterByParamsInQueryOperation:
       roles: '@AllRoles'
+      layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - OldRedirectFilter:
       type: Groovy

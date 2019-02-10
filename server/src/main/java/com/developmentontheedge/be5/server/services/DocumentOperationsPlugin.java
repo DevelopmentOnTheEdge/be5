@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.Collections3;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
-import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -87,9 +87,9 @@ public class DocumentOperationsPlugin implements DocumentPlugin
         {
             action = operation.getCode();
         }
-
+        Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getLayout());
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation,
-                isClientSide, action);
+                isClientSide, action, layout);
     }
 
     private static String determineWhenVisible(Operation operation)
@@ -115,4 +115,61 @@ public class DocumentOperationsPlugin implements DocumentPlugin
         return Collections3.containsAny(userRoles, operation.getRoles().getFinalRoles());
     }
 
+    public static class TableOperationPresentation
+    {
+        public final String name;
+        public final String title;
+        public final String visibleWhen;
+        public final boolean requiresConfirmation;
+        public final boolean clientSide;
+        public final String action;
+        private final Object layout;
+
+        public TableOperationPresentation(String name, String title, String visibleWhen, boolean requiresConfirmation,
+                                          boolean clientSide, String action, Object layout)
+        {
+            this.name = name;
+            this.title = title;
+            this.visibleWhen = visibleWhen;
+            this.requiresConfirmation = requiresConfirmation;
+            this.clientSide = clientSide;
+            this.action = action;
+            this.layout = layout;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public String getVisibleWhen()
+        {
+            return visibleWhen;
+        }
+
+        public boolean isRequiresConfirmation()
+        {
+            return requiresConfirmation;
+        }
+
+        public boolean isClientSide()
+        {
+            return clientSide;
+        }
+
+        public String getAction()
+        {
+            return action;
+        }
+
+        public Object getLayout()
+        {
+            return layout;
+        }
+    }
 }

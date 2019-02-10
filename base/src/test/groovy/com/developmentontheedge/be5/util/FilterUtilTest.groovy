@@ -11,7 +11,7 @@ class FilterUtilTest
     @Test
     void getOperationParamsTest()
     {
-        assertEquals([payable: "no"], FilterUtil.getOperationParamsWithoutFilter([payable: "no"]))
+        assertEquals([payable: "no"], FilterUtil.getContextParams([payable: "no"]))
     }
 
     @Test
@@ -19,7 +19,7 @@ class FilterUtilTest
     {
         def map = [payable: "no", (SEARCH_PARAM): "true"]
 
-        assertEquals([:], FilterUtil.getOperationParamsWithoutFilter(map))
+        assertEquals([:], FilterUtil.getContextParams(map))
     }
 
     @Test
@@ -27,7 +27,7 @@ class FilterUtilTest
     {
         def map = [payable: "no", CODE: "123", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "payable,CODE"]
 
-        assertEquals([CODE: "123", payable: "no"], FilterUtil.getOperationParamsWithoutFilter(map))
+        assertEquals([CODE: "123", payable: "no"], FilterUtil.getContextParams(map))
     }
 
     @Test

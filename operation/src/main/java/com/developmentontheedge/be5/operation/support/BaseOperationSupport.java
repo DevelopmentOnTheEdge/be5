@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
@@ -183,7 +182,7 @@ public abstract class BaseOperationSupport implements Operation
     {
         setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
                 getInfo().getEntityName(), getContext().getQueryName())
-                .named(FilterUtil.getOperationParamsWithoutFilter(getRedirectParams())).toString()));
+                .named(getRedirectParams()).toString()));
     }
 
     public String getBackUrl()
@@ -194,7 +193,7 @@ public abstract class BaseOperationSupport implements Operation
     private String getTableUrl(String entityName, String queryName, Map<String, Object> params)
     {
         return new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName)
-                .named(FilterUtil.getOperationParamsWithoutFilter(params)).toString();
+                .named(params).toString();
     }
 
     public HashUrl getUrlForNewRecordId(Object newID)
