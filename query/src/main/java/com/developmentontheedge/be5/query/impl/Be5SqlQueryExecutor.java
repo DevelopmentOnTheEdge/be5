@@ -126,7 +126,8 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     private void addRowClass(DynamicPropertySet properties)
     {
         DynamicProperty cssRowClassProperty = properties.getProperty(QueryConstants.CSS_ROW_CLASS);
-        if (cssRowClassProperty != null)
+        String cssRowClass = cssRowClassProperty != null ? (String) cssRowClassProperty.getValue() : null;
+        if (cssRowClass != null && cssRowClass.length() > 0)
         {
             for (DynamicProperty property : properties)
             {
@@ -136,7 +137,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
                 if (css == null) css = options.get("css");
 
                 String className = css.getOrDefault("class", "");
-                css.put("class", className + " " + cssRowClassProperty.getValue());
+                css.put("class", className + " " + cssRowClass);
             }
         }
     }
