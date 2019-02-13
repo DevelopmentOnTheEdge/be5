@@ -103,13 +103,10 @@ public class FormGeneratorImpl implements FormGenerator
         Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
         if (result.isFirst())
         {
-            String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
-            String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
-            String title = localizedEntityTitle + ": " + localizedOperationTitle;
             data = Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
-                    title,
+                    getTitle(operation, layout),
                     JsonFactory.bean(result.getFirst()),
                     layout,
                     resultForFrontend(operation.getResult()),
@@ -126,6 +123,17 @@ public class FormGeneratorImpl implements FormGenerator
         }
         return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                 Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
+    }
+
+    private String getTitle(Operation operation, Map<String, Object> layout)
+    {
+        if (layout.get("title") != null)
+        {
+            return userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getEntityName(), (String) layout.get("title"));
+        }
+        String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
+        String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
+        return localizedEntityTitle + ": " + localizedOperationTitle;
     }
 
     private ErrorModel getErrorModel(Operation operation)
