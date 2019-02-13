@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.FilterUtil;
+import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
@@ -27,12 +28,13 @@ import static java.util.function.Function.identity;
 
 public class FilterInfoPlugin implements DocumentPlugin
 {
+    protected static final String DOCUMENT_FILTER_INFO_PLUGIN = "filterInfo";
+
     private final QueriesService queries;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final QueryMetaHelper queryMetaHelper;
     private final DpsHelper dpsHelper;
-    protected static final String DOCUMENT_FILTER_INFO_PLUGIN = "filterInfo";
 
     @Inject
     public FilterInfoPlugin(QueriesService queries, Meta meta, UserAwareMeta userAwareMeta,
@@ -63,6 +65,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         if (query.getType() == QueryType.D1 || query.getType() == QueryType.D1_UNKNOWN)
         {
             ast = SqlQuery.parse(query.getFinalQuery());
+            new MacroExpander().expandMacros(ast);
             usedParams = ast.tree()
                     .select(AstBeParameterTag.class)
                     .collect(Collectors.toMap(AstBeParameterTag::getName, identity(),
