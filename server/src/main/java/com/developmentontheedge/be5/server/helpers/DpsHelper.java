@@ -19,6 +19,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
@@ -346,6 +347,7 @@ public class DpsHelper
         try
         {
             ast = SqlQuery.parse(query.getFinalQuery());
+            new MacroExpander().expandMacros(ast);
         }
         catch (RuntimeException e)
         {
