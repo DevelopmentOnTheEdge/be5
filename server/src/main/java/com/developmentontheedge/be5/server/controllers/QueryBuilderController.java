@@ -275,7 +275,7 @@ public class QueryBuilderController extends JsonApiModelController
     {
         try
         {
-            return querySqlGenerator.getSql(query, parameters).format();
+            return db.format(querySqlGenerator.getSql(query, parameters));
         }
         catch (Be5Exception e)
         {
