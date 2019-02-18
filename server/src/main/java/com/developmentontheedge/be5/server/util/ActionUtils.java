@@ -143,7 +143,7 @@ public final class ActionUtils
                 (query.getQuery().endsWith(".be") || query.getQuery().startsWith("static/"));
     }
 
-    private static final Pattern ACTION_PATTERN = Pattern.compile("^[\\w/]+$");
+    private static final Pattern ACTION_PATTERN = Pattern.compile("^[\\w-/]+$");
 
     private static boolean isExternalRef(Query query)
     {

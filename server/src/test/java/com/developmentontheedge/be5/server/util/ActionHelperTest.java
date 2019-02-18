@@ -90,8 +90,10 @@ public class ActionHelperTest extends ServerBe5ProjectTest
     public void customPath()
     {
         Query query = getQuery(QueryType.STATIC, "page/contacts");
-        assertEquals("page/contacts",
-                ActionUtils.toAction(query).arg);
+        assertEquals("page/contacts", ActionUtils.toAction(query).arg);
+
+        Query query2 = getQuery(QueryType.STATIC, "page/for-users");
+        assertEquals("page/for-users", ActionUtils.toAction(query2).arg);
     }
 
     private Query getQuery(QueryType type, String queryCode)
