@@ -3,18 +3,22 @@ package com.developmentontheedge.be5.jetty;
 import com.developmentontheedge.be5.logging.LogConfigurator;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.GzipHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -27,6 +31,7 @@ public class EmbeddedJetty
     private String resourceBase = "src/main/webapp";
     private String descriptorPath = "/WEB-INF/web.xml";
     private int port = 8200;
+    private String resourceFolder = "files";
     private Server jetty;
 
     public void run()
@@ -63,6 +68,7 @@ public class EmbeddedJetty
     {
         HandlerCollection handlers = new HandlerCollection();
         handlers.addHandler(getRequestLogHandler());
+        handlers.addHandler(getResourceHandler());
         handlers.addHandler(getGzipHandler(getWebAppContext()));
         return handlers;
     }
@@ -149,9 +155,33 @@ public class EmbeddedJetty
         return requestLogHandler;
     }
 
+    private ContextHandler getResourceHandler()
+    {
+        ContextHandler context0 = new ContextHandler();
+        context0.setContextPath("/files");
+        File dir0 = Paths.get("./" + resourceFolder).toFile();
+        try
+        {
+            context0.setBaseResource(Resource.newResource(dir0));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        ResourceHandler rh0 = new ResourceHandler();
+        context0.setHandler(rh0);
+        return context0;
+    }
+
     public EmbeddedJetty setPort(int port)
     {
         this.port = port;
+        return this;
+    }
+
+    public EmbeddedJetty setResourceFolder(String resourceFolder)
+    {
+        this.resourceFolder = resourceFolder;
         return this;
     }
 }
