@@ -25,8 +25,12 @@ class FilterUtilTest
     @Test
     void getOperationParamsTestWithSearchParamsContain()
     {
-        def map = [payable: "no", CODE: "123", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "payable,CODE"]
-
+        def map = [
+           payable: "no",
+           CODE: "123",
+           (SEARCH_PARAM): "true",
+           (SEARCH_PRESETS_PARAM): ["payable", "CODE"] as String[]
+        ]
         assertEquals([CODE: "123", payable: "no"], FilterUtil.getContextParams(map))
     }
 

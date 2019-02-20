@@ -27,7 +27,7 @@ public class FilterUtil
             return Collections.emptyMap();
         }
 
-        List<String> contextParamNames = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> contextParamNames = getSearchPresetParamList(operationParams.get(SEARCH_PRESETS_PARAM));
 
         return operationParams.entrySet()
                 .stream()
@@ -43,7 +43,7 @@ public class FilterUtil
         }
 
         List<String> contextParamNames = params.get(SEARCH_PRESETS_PARAM) == null ? Collections.emptyList() :
-                Arrays.asList(((String) params.get(SEARCH_PRESETS_PARAM)).split(","));
+                getSearchPresetParamList(params.get(SEARCH_PRESETS_PARAM));
 
         return params.entrySet()
                 .stream()
@@ -71,12 +71,18 @@ public class FilterUtil
         {
             if (params.get(SEARCH_PRESETS_PARAM) != null)
             {
-                return Arrays.asList(((String) params.get(SEARCH_PRESETS_PARAM)).split(","));
+                return getSearchPresetParamList(params.get(SEARCH_PRESETS_PARAM));
             }
             else
             {
                 return Collections.emptyList();
             }
         }
+    }
+
+    private static List<String> getSearchPresetParamList(Object param)
+    {
+        if (param instanceof String) return Collections.singletonList((String) param);
+        else return Arrays.asList((String[]) param);
     }
 }
