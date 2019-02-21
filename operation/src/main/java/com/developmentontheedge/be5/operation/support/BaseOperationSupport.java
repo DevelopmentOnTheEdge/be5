@@ -169,6 +169,11 @@ public abstract class BaseOperationSupport implements Operation
         redirectToTable(query.getEntity().getName(), query.getName(), params);
     }
 
+    public void redirectToTable()
+    {
+        redirectToTable(info.getEntityName(), context.getQueryName(), getRedirectParams());
+    }
+
     @Override
     public void setResultGoBack()
     {
