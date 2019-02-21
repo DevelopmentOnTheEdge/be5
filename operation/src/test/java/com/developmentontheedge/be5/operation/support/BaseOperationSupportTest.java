@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.operation.OperationConstants;
-import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,13 +26,6 @@ public class BaseOperationSupportTest extends OperationsSqlMockProjectTest
                 new OperationInfo(meta.getOperation("testtable", "CustomOperation")),
                 new OperationContext(new Object[]{"1"}, "Test", Collections.singletonMap(OperationConstants.SELECTED_ROWS, "1")),
                 OperationResult.create());
-    }
-
-    @Test
-    public void redirectThisOperation()
-    {
-        operationSupport.redirectThisOperation();
-        assertEquals("form/testtable/Test/CustomOperation/_selectedRows_=1", operationSupport.getResult().getDetails());
     }
 
     @Test

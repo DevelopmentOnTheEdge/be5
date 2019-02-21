@@ -18,6 +18,7 @@ public interface FrontendActions
 {
     String UPDATE_USER_INFO = "UPDATE_USER_INFO";
     String OPEN_DEFAULT_ROUTE = "OPEN_DEFAULT_ROUTE";
+    String SUCCESS_ALERT = "SUCCESS_ALERT";
     FrontendAction OPEN_DEFAULT_ROUTE_ACTION = new FrontendAction(OPEN_DEFAULT_ROUTE, null);
 
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
@@ -55,6 +56,12 @@ public interface FrontendActions
     {
         Objects.requireNonNull(model);
         return new FrontendAction(UPDATE_PARENT_DOCUMENT, model);
+    }
+
+    static FrontendAction successAlert(String message)
+    {
+        Objects.requireNonNull(message);
+        return new FrontendAction(SUCCESS_ALERT, message);
     }
 
     static FrontendAction goBack()

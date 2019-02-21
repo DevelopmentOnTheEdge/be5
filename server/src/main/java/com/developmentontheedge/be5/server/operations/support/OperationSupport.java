@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.operations.support;
 
+import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.meta.Meta;
@@ -15,12 +16,16 @@ import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.FrontendAction;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.FileUploadWrapper;
 import org.apache.commons.fileupload.FileItem;
 
 import javax.inject.Inject;
+
+import static com.developmentontheedge.be5.server.FrontendActions.redirect;
+import static com.developmentontheedge.be5.server.FrontendActions.successAlert;
 
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
@@ -79,6 +84,17 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     protected void setResultFinished(FrontendAction... frontendActions)
     {
         setResult(OperationResult.finished(null, frontendActions));
+    }
+
+    public void redirectThisOperation()
+    {
+        String url = new HashUrl(FrontendConstants.FORM_ACTION,
+                info.getEntityName(), context.getQueryName(), info.getName())
+                .named(getRedirectParams()).toString();
+        setResultFinished(
+                successAlert(userAwareMeta.getLocalizedInfoMessage("Successfully completed.")),
+                redirect(url)
+        );
     }
 
     @Override

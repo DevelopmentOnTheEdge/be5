@@ -149,14 +149,6 @@ public abstract class BaseOperationSupport implements Operation
 //        presetValues.forEach((key, value) -> addNotNullRedirectParam(presetValues, key));
 //    }
 
-    public void redirectThisOperation()
-    {
-        String url = new HashUrl(FrontendConstants.FORM_ACTION,
-                info.getEntityName(), context.getQueryName(), info.getName())
-                .named(getRedirectParams()).toString();
-        setResult(OperationResult.redirect(url));
-    }
-
     public void redirectThisOperationNewId(Object newID)
     {
         setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
