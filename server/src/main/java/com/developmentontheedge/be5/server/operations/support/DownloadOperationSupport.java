@@ -21,10 +21,8 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
                 getInfo().getEntityName(), context.getQueryName(), getInfo().getName(),
                 context.getParams(), parametersMap
         );
-        //String message = userAwareMeta.getLocalizedInfoMessage("Wait for the download to start.");
-        //todo after add alertMessageAction
         Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
-        if (parameters == null || "modalForm".equals(layout.get("type")))
+        if ("modalForm".equals(layout.get("type")))
         {
             setResultFinished(FrontendActions.closeMainModal(), downloadOperationAction);
         }

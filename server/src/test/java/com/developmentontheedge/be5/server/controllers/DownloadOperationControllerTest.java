@@ -59,8 +59,16 @@ public class DownloadOperationControllerTest extends ServerBe5ProjectTest
                 "testtable", "All records", "TestDownloadOperation",
                 emptyMap(), emptyMap()
         );
-        assertEquals(FrontendActions.closeMainModal(), ((FrontendAction[]) resultEither.getSecond().getDetails())[0]);
+        assertEquals(FrontendActions.goBack(), ((FrontendAction[]) resultEither.getSecond().getDetails())[0]);
         assertEquals(frontendAction, ((FrontendAction[]) resultEither.getSecond().getDetails())[1]);
+    }
+
+    @Test
+    public void executeModal()
+    {
+        Either<Object, OperationResult> resultEither =
+                executeOperation("testtable", "All records", "TestModalDownloadOperation", "");
+        assertEquals(FrontendActions.closeMainModal(), ((FrontendAction[]) resultEither.getSecond().getDetails())[0]);
     }
 
     public static class TestDownloadOperation extends DownloadOperationSupport
