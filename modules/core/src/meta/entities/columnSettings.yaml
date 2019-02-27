@@ -42,11 +42,9 @@ columnSettings:
         type: BOOL
         defaultValue: '''no'''
     - sort:
-        type: VARCHAR(7)
         type: ENUM('DEFAULT', 'ASC', 'DESC')
         defaultValue: '''DEFAULT'''
     - aggregate:
-        type: VARCHAR(10)
         type: ENUM('DEFAULT', 'SUM', 'COUNT', 'AVG')
         defaultValue: '''DEFAULT'''
   queries:
