@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.naming.NoInitialContextException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ public class DataSourceServiceImpl implements DataSourceService
 
     private final ProjectProvider projectProvider;
 
-    DataSource dataSource;
+    private DataSource dataSource;
     private String connectionUrl;
     private Rdbms rdbms;
 
@@ -65,12 +66,12 @@ public class DataSourceServiceImpl implements DataSourceService
             initDataSourceFromContext(project);
             initRdbmsType();
         }
-        catch (NamingException e)
+        catch (NoInitialContextException e)
         {
             BeConnectionProfile profile = project.getConnectionProfile();
             if (profile == null)
             {
-                throw Be5Exception.internal("Connection profile is not configured. and NamingException: ", e);
+                throw Be5Exception.internal("Connection profile is not configured. and NoInitialContextException: ", e);
             }
             connectionUrl = profile.getJdbcUrl().createConnectionUrl(false);
             rdbms = profile.getRdbms();
