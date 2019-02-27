@@ -18,7 +18,6 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.util.Utils;
 import com.google.inject.Injector;
