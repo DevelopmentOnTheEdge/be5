@@ -7,12 +7,6 @@ import java.util.Map;
 
 public class OperationUtils
 {
-    public static String[] selectedRows(String selectedRowsString)
-    {
-        if (selectedRowsString == null || selectedRowsString.trim().isEmpty()) return new String[0];
-        return selectedRowsString.split(",");
-    }
-
     public static boolean operationSuccessfullyFinished(OperationStatus operationStatus)
     {
         return operationStatus == OperationStatus.FINISHED ||
@@ -35,6 +29,5 @@ public class OperationUtils
         }
         return map;
     }
-
 
 }

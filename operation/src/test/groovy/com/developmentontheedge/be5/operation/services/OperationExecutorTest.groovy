@@ -10,6 +10,7 @@ import org.junit.Test
 
 import javax.inject.Inject
 
+import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
 class OperationExecutorTest extends OperationBe5ProjectDBTest
@@ -43,7 +44,7 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     }
 
     @Test
-    void create()
+    void oneRecord()
     {
         def op = operationExecutor.create(
                 new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp")),
@@ -51,5 +52,16 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
 
         assertEquals(OperationStatus.CREATE, op.getStatus())
         assertEquals(1L, op.getContext().getRecord())
+    }
+
+    @Test
+    void manyRecords()
+    {
+        def op = operationExecutor.create(
+                new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp")),
+                "All records", Collections.singletonMap(OperationConstants.SELECTED_ROWS, [1, 2] as String[]))
+
+        assertEquals(OperationStatus.CREATE, op.getStatus())
+        assertArrayEquals([1L, 2L] as Object[], op.getContext().getRecords())
     }
 }

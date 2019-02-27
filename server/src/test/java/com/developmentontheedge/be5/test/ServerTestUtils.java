@@ -211,9 +211,15 @@ public abstract class ServerTestUtils extends BaseTest
         }
         else
         {
-            params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, selectedRows);
+            params = Collections.singletonMap(OperationConstants.SELECTED_ROWS, parseSelectedRows(selectedRows));
         }
         return createOperation(entityName, queryName, operationName, params);
+    }
+
+    private static String[] parseSelectedRows(String selectedRowsString)
+    {
+        if (selectedRowsString == null || selectedRowsString.trim().isEmpty()) return new String[0];
+        return selectedRowsString.split(",");
     }
 
     protected Operation createOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)

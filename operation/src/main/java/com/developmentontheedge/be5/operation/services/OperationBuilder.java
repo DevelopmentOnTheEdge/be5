@@ -133,8 +133,7 @@ public class OperationBuilder
         if (records.length > 0)
         {
             operationParams.put(SELECTED_ROWS, Arrays.stream(records)
-                    .map(Object::toString)
-                    .collect(Collectors.joining(",")));
+                    .map(Object::toString).toArray());
         }
 
         return operationExecutor.getOperationContext(getOperationInfo(), queryName, operationParams);

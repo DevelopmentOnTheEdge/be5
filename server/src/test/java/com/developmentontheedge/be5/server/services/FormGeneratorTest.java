@@ -104,7 +104,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         Long id = db.oneLong("select id from testtable limit 1");
         assertNotNull(id);
         ResourceData result = formGenerator.generate("testtable", "All records", "Edit",
-                Collections.singletonMap(OperationConstants.SELECTED_ROWS, id.toString()),
+                Collections.singletonMap(OperationConstants.SELECTED_ROWS, new String[]{id.toString()}),
                 emptyMap());
 
         assertEquals("form/testtable/All records/Edit/_selectedRows_=" + id.toString(),

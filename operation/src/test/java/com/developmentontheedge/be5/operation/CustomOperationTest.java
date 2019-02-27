@@ -30,7 +30,7 @@ public class CustomOperationTest extends OperationsSqlMockProjectTest
         oneAssert(generate);
     }
 
-    void oneAssert(Either<Object, OperationResult> generate)
+    private void oneAssert(Either<Object, OperationResult> generate)
     {
         Assert.assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name'},'/value':{'displayName':'value','readOnly':true}},'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(generate.getFirst())));

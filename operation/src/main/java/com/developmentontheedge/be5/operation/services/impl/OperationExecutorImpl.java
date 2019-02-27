@@ -233,11 +233,29 @@ public class OperationExecutorImpl implements OperationExecutor
     public OperationContext getOperationContext(OperationInfo operationInfo, String queryName,
                                                 Map<String, ?> operationParams)
     {
-        Object[] selectedRows = OperationUtils.
-                selectedRows((String) operationParams.get(OperationConstants.SELECTED_ROWS));
-        if (selectedRows.length > 0)
+        return new OperationContext(getRecords(operationInfo, operationParams), queryName,
+                                    (Map<String, Object>) operationParams);
+    }
+
+    private Object[] getRecords(OperationInfo operationInfo, Map<String, ?> operationParams)
+    {
+        Object[] selectedRows;
+        if (operationParams.get(OperationConstants.SELECTED_ROWS) instanceof Object[])
         {
-            if (!operationInfo.getEntityName().startsWith("_"))
+            selectedRows = (Object[]) operationParams.get(OperationConstants.SELECTED_ROWS);
+        }
+        else
+        {
+            selectedRows = new Object[]{operationParams.get(OperationConstants.SELECTED_ROWS)};
+        }
+
+        if (selectedRows != null && selectedRows.length > 0)
+        {
+            if (operationInfo.getEntityName().startsWith("_"))
+            {
+                return selectedRows;
+            }
+            else
             {
                 if (!operationInfo.getEntity().hasPrimaryKey())
                 {
@@ -247,10 +265,13 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 Class<?> primaryKeyColumnType = meta.
                         getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
-                selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
+                return Utils.changeTypes(selectedRows, primaryKeyColumnType);
             }
         }
-        return new OperationContext(selectedRows, queryName, (Map<String, Object>) operationParams);
+        else
+        {
+            return new String[0];
+        }
     }
 
     @Override
