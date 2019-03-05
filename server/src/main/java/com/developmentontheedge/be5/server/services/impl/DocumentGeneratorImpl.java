@@ -135,17 +135,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private Map<String, Object> updateLimit(Query query, Map<String, Object> layout, Map<String, Object> parameters)
     {
-        HashMap<String, Object> newParams = new HashMap<>(parameters);
-        int limit = getLimit(query, layout, newParams);
+        int limit = getLimit(query, layout, parameters);
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
+        Map<String, Object> newParams = new HashMap<>(parameters);
         newParams.put(LIMIT, Math.min(limit, maxLimit) + "");
         return newParams;
     }
 
-    private int getLimit(Query query, Map<String, Object> layout, HashMap<String, Object> newParams)
+    int getLimit(Query query, Map<String, Object> layout, Map<String, Object> parameters)
     {
-        int limit = Integer.parseInt((String) newParams.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
+        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
         int defaultLimit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
                 coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         Map<String, Object> userQuerySettings = coreUtils.getQuerySettingForUser(

@@ -131,18 +131,18 @@ public class CoreUtilsForTest implements CoreUtils
     @Override
     public Map<String, Object> getQuerySettingForUser(String table_name, String query_name, String user_name)
     {
-        return Collections.emptyMap();
+        return mock.getQuerySettingForUser(table_name, query_name, user_name);
     }
 
     @Override
     public void setQuerySettingForUser(String table_name, String query_name, String user_name, Map<String, Object> values)
     {
-
+        mock.setQuerySettingForUser(table_name, query_name, user_name, values);
     }
 
     @Override
     public void removeQuerySettingForUser(String table_name, String query_name, String user_name)
     {
-
+        mock.removeQuerySettingForUser(table_name, query_name, user_name);
     }
 }

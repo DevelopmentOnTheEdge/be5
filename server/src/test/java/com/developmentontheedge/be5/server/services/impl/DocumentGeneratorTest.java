@@ -1,13 +1,18 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.impl;
 
+import com.developmentontheedge.be5.cache.Be5Caches;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.TestTableQueryDBTest;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerTestResponse;
+import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +21,15 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class DocumentGeneratorTest extends TestTableQueryDBTest
@@ -58,6 +66,26 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
         JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), emptyMap());
         TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();
         assertEquals("Testtable", table.getTitle());
+    }
+
+    @Test
+    public void getLimit()
+    {
+        DocumentGeneratorImpl documentGeneratorImpl = (DocumentGeneratorImpl) documentGenerator;
+        Query query = meta.getQuery("testtable", "All records");
+
+        assertEquals(10, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
+
+        assertEquals(20, documentGeneratorImpl.getLimit(query, emptyMap(), singletonMap(LIMIT, "20")));
+        verify(CoreUtilsForTest.mock).setQuerySettingForUser("testtable", "All records",
+                RoleType.ROLE_GUEST, Collections.singletonMap("recordsPerPage", 20));
+
+        when(CoreUtilsForTest.mock.getQuerySettingForUser("testtable", "All records",
+                RoleType.ROLE_GUEST)).thenReturn(Collections.singletonMap("recordsPerPage", 20));
+        assertEquals(20, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
+
+        CoreUtilsForTest.clearMock();
+        assertEquals(10, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
     }
 
     @Test
