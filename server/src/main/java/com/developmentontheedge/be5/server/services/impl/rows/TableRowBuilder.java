@@ -70,11 +70,12 @@ public class TableRowBuilder
             if (!shouldBeSkipped(property))
             {
                 String quick = getQuickOptionState(query, property);
+                Boolean nosort = DynamicPropertyMeta.get(property).get("nosort") != null ? true : null;
                 columns.add(new ColumnModel(
                         property.getName(),
                         property.getDisplayName(),
-                        quick
-                ));
+                        quick,
+                        nosort));
             }
         }
 

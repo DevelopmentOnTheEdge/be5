@@ -97,15 +97,6 @@ testtable:
             t.name AS "Name;<grouping/>"
           FROM
             testtable t
-  - beNoSort:
-      type: 1D_unknown
-      roles: SystemDeveloper
-      code: |-
-        SELECT
-           123 as "___ID",
-           t.name AS "Name;<nosort/>"
-         FROM
-           testtable t
   - beRoles:
       type: 1D_unknown
       roles: SystemDeveloper

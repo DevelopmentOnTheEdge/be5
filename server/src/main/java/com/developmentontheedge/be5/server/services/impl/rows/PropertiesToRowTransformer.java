@@ -70,6 +70,7 @@ class PropertiesToRowTransformer
     private Map<String, Map<String, String>> removeUnnecessaryCellOptions(Map<String, Map<String, String>> options)
     {
         options.remove("quick");
+        options.remove("nosort");
         return options;
     }
 

@@ -61,6 +61,17 @@ public class TableModel2Test extends ServerBe5ProjectDBTest
     }
 
     @Test
+    public void beNoSort()
+    {
+        Query query = meta.getQuery("testtable", "beNoSort");
+        TablePresentation table = documentGenerator.getTablePresentation(query, Collections.emptyMap());
+        Assert.assertEquals("{'cells':[{'content':'user1','options':{}}],'id':'123'}",
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getRows().get(0))));
+        Assert.assertEquals("[{'name':'Name','nosort':true,'title':'Name'}]",
+                BaseTestUtils.oneQuotes(BaseTestUtils.jsonb.toJson(table.getColumns())));
+    }
+
+    @Test
     public void withID()
     {
         Query query = meta.getQuery("testtable", "withID");
