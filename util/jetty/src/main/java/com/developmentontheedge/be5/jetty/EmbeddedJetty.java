@@ -123,6 +123,7 @@ public class EmbeddedJetty
         sessionManager.setSessionIdManager(new HashSessionIdManager());
         sessionManager.setSavePeriod(1);
         sessionManager.setMaxInactiveInterval(-1);
+        sessionManager.setDeleteUnrestorableSessions(true);
 
         return new SessionHandler(sessionManager);
     }
