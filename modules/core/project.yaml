@@ -16,6 +16,7 @@ core:
   - be5events
   - be5operationLogParams
   - be5operationLogs
+  - be5querySettings
   - categories
   - classifications
   - columnSettings

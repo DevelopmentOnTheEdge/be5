@@ -1,0 +1,53 @@
+be5querySettings:
+  type: collection
+  displayName: Query settings
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - table_name:
+        type: VARCHAR(30)
+    - query_name:
+        type: VARCHAR(255)
+    - user_name:
+        type: VARCHAR(50)
+        reference: users
+    - recordsPerPage:
+        type: INT
+        canBeNull: true
+  queries:
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Delete
+      - Edit
+      - Filter
+      - Insert
+      code: |-
+          SELECT
+            ID AS "___ID",
+            table_name AS "table_name",
+            query_name AS "query_name",
+            user_name AS "user_name",
+            recordsPerPage AS "recordsPerPage"
+          FROM be5querySettings
+  operations:
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
