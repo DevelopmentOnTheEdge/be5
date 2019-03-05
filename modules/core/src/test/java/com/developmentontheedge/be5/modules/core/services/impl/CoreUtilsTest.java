@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services;
+package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.cache.Be5Caches;
 import com.developmentontheedge.be5.config.CoreUtils;
@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl.COLUMN_SETTINGS_ENTITY;
 import static org.junit.Assert.assertEquals;
 
 public class CoreUtilsTest extends CoreBe5ProjectDBTest
@@ -34,7 +35,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     {
         db.update("DELETE FROM systemSettings");
         db.update("DELETE FROM user_prefs");
-        db.update("DELETE FROM columnSettings");
+        db.update("DELETE FROM be5columnSettings");
         be5Caches.clearAll();
     }
 
@@ -154,7 +155,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     {
         assertEquals(Collections.emptyMap(), utils.getColumnSettingForUser("users", "All records", "User", TEST_USER));
 
-        database.getEntity("columnSettings").add(new HashMap<String, Object>() {{
+        database.getEntity(COLUMN_SETTINGS_ENTITY).add(new HashMap<String, Object>() {{
             put("queryID", 0);
             put("table_name", "users");
             put("query_name", "All records");
@@ -174,7 +175,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     @Test
     public void setColumnSettingForUserTest()
     {
-        EntityModel<Long> columnSettings = database.getEntity("columnSettings");
+        EntityModel<Long> columnSettings = database.getEntity(COLUMN_SETTINGS_ENTITY);
         utils.setColumnSettingForUser("users", "All records", "User", TEST_USER,
                 Collections.singletonMap("quick", "yes"));
         assertEquals("yes",

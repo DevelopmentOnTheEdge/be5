@@ -19,7 +19,7 @@ core:
   - be5querySettings
   - categories
   - classifications
-  - columnSettings
+  - be5columnSettings
   - countries
   - entities
   - languages

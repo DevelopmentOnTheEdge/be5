@@ -1,6 +1,6 @@
-columnSettings:
+be5columnSettings:
   type: collection
-  displayName: columnSettings
+  displayName: Column settings
   primaryKey: ID
   scheme:
     columns:
@@ -64,7 +64,7 @@ columnSettings:
             column_name AS "column_name",
             user_name AS "user_name",
             quick AS "quick"
-          FROM columnSettings
+          FROM be5columnSettings
   operations:
   - Insert:
       roles: Administrator
