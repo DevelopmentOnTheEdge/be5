@@ -221,6 +221,7 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
 
         assertEquals("tableModelTest", list.get(0).getValue("NameFromSubQuery"));
         assertEquals("", list.get(1).getValue("NameFromSubQuery"));
+        assertNotNull(DynamicPropertyMeta.get(list.get(1).getProperty("NameFromSubQuery")).get("nosort"));
     }
 
     @Test

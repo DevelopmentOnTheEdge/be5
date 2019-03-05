@@ -206,9 +206,10 @@ public class CellFormatter
         Object content;
         if (cell.getValue() instanceof String)
         {
-            unzipper.unzip((String) cell.getValue(), builder::add, subquery ->
-                    builder.add(toTable(subquery, varResolver, query, contextApplier))
-            );
+            unzipper.unzip((String) cell.getValue(), builder::add, subquery -> {
+                builder.add(toTable(subquery, varResolver, query, contextApplier));
+                options.put("nosort", Collections.emptyMap());
+            });
             ImmutableList<Object> formattedParts = builder.build();
             content = StreamEx.of(formattedParts).map(this::print).joining();
         }
