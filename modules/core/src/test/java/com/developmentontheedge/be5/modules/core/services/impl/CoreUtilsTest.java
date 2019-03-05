@@ -158,7 +158,6 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals(Collections.emptyMap(), utils.getColumnSettingForUser("users", "All records", "User", TEST_USER));
 
         database.getEntity(COLUMN_SETTINGS_ENTITY).add(new HashMap<String, Object>() {{
-            put("queryID", 0);
             put("table_name", "users");
             put("query_name", "All records");
             put("column_name", "User");
@@ -203,7 +202,6 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals(Collections.emptyMap(), utils.getQuerySettingForUser("users", "All records", TEST_USER));
 
         database.getEntity(QUERY_SETTINGS_ENTITY).add(new HashMap<String, Object>() {{
-            put("queryID", 0);
             put("table_name", "users");
             put("query_name", "All records");
             put("user_name", TEST_USER);

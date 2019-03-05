@@ -356,7 +356,6 @@ public class CoreUtilsImpl implements CoreUtils
         else
         {
             Map<String, Object> params = new HashMap<String, Object>() {{
-                put("queryID", 0);
                 put("table_name", table_name);
                 put("query_name", query_name);
                 put("column_name", column_name);
@@ -427,7 +426,6 @@ public class CoreUtilsImpl implements CoreUtils
         else
         {
             Map<String, Object> params = new HashMap<String, Object>() {{
-                put("queryID", 0);
                 put("table_name", table_name);
                 put("query_name", query_name);
                 put("user_name", user_name);

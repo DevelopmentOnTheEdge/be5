@@ -8,8 +8,6 @@ be5columnSettings:
         type: KEYTYPE
         autoIncrement: true
         primaryKey: true
-    - queryID:
-        type: KEYTYPE
     - table_name:
         type: VARCHAR(30)
     - query_name:
