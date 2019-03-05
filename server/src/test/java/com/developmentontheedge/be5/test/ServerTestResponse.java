@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.web.Response;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -71,5 +72,11 @@ public class ServerTestResponse implements Response
     public OutputStream getOutputStream() throws IOException
     {
         return mock.getOutputStream();
+    }
+
+    @Override
+    public void addCookie(Cookie cookie)
+    {
+        mock.addCookie(cookie);
     }
 }
