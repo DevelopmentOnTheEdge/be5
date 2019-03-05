@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl.COLUMN_SETTINGS_ENTITY;
+import static com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl.QUERY_SETTINGS_ENTITY;
+import static com.google.inject.internal.util.ImmutableMap.of;
 import static org.junit.Assert.assertEquals;
 
 public class CoreUtilsTest extends CoreBe5ProjectDBTest
@@ -42,7 +44,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     @Test
     public void getSystemSettingInSection()
     {
-        database.getEntity("systemSettings").add(ImmutableMap.of(
+        database.getEntity("systemSettings").add(of(
                 "section_name", "system",
                 "setting_name", "app_name",
                 "setting_value", "Test App"));
@@ -92,7 +94,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals(CoreUtilsImpl.MISSING_SETTING_VALUE, be5Caches.getCache("System settings").getIfPresent("system.is_active"));
         assertEquals(true, utils.getBooleanSystemSetting("is_active", true));
 
-        database.getEntity("systemSettings").add(ImmutableMap.of(
+        database.getEntity("systemSettings").add(of(
                 "section_name", "system",
                 "setting_name", "is_active",
                 "setting_value", "true"));
@@ -110,7 +112,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
         assertEquals(null, utils.getModuleSetting("core", "is_active"));
         assertEquals("false", utils.getModuleSetting("core", "is_active", "false"));
 
-        database.getEntity("systemSettings").add(ImmutableMap.of(
+        database.getEntity("systemSettings").add(of(
                 "section_name", "CORE_module",
                 "setting_name", "is_active",
                 "setting_value", "true"));
@@ -127,7 +129,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
 
         assertEquals(null, utils.getUserSetting("testName", "companyID"));
 
-        database.getEntity("user_prefs").add(ImmutableMap.of(
+        database.getEntity("user_prefs").add(of(
                 "user_name", "testName",
                 "pref_name", "companyID",
                 "pref_value", "123"));
@@ -193,6 +195,32 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
                 "table_name", "users",
                 "query_name", "All records",
                 "column_name", "User")).getValueAsString("quick"));
+    }
+
+    @Test
+    public void getQuerySettingForUserTest()
+    {
+        assertEquals(Collections.emptyMap(), utils.getQuerySettingForUser("users", "All records", TEST_USER));
+
+        database.getEntity(QUERY_SETTINGS_ENTITY).add(new HashMap<String, Object>() {{
+            put("queryID", 0);
+            put("table_name", "users");
+            put("query_name", "All records");
+            put("user_name", TEST_USER);
+            put("recordsPerPage", 100);
+        }});
+
+        be5Caches.clearAll();
+        assertEquals(100, utils.getQuerySettingForUser("users", "All records", TEST_USER).get("recordsPerPage"));
+
+        utils.removeQuerySettingForUser("users", "All records", TEST_USER);
+        assertEquals(Collections.emptyMap(), utils.getQuerySettingForUser("users", "All records", TEST_USER));
+
+        utils.setQuerySettingForUser("users", "All records", TEST_USER, of("recordsPerPage", 1000));
+        assertEquals(1000, utils.getQuerySettingForUser("users", "All records", TEST_USER).get("recordsPerPage"));
+
+        utils.setQuerySettingForUser("users", "All records", TEST_USER, of("recordsPerPage", 1001));
+        assertEquals(1001, utils.getQuerySettingForUser("users", "All records", TEST_USER).get("recordsPerPage"));
     }
 
     @Test(expected = java.lang.NullPointerException.class)

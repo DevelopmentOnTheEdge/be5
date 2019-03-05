@@ -44,8 +44,16 @@ public interface CoreUtils
 
     Map<String, Object> getColumnSettingForUser(String table_name, String query_name, String column_name,
                                         String user_name);
+
     void setColumnSettingForUser(String table_name, String query_name, String column_name,
                                         String user_name, Map<String, Object> values);
+
     void removeColumnSettingForUser(String table_name, String query_name, String column_name,
                                            String user_name);
+
+    Map<String, Object> getQuerySettingForUser(String table_name, String query_name, String user_name);
+
+    void setQuerySettingForUser(String table_name, String query_name, String user_name, Map<String, Object> values);
+
+    void removeQuerySettingForUser(String table_name, String query_name, String user_name);
 }

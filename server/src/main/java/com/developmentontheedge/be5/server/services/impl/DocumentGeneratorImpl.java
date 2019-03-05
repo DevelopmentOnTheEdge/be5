@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
+import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.MoreRowsPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
@@ -24,6 +25,7 @@ import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,23 +136,34 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private Map<String, Object> updateLimit(Query query, Map<String, Object> layout, Map<String, Object> parameters)
     {
         HashMap<String, Object> newParams = new HashMap<>(parameters);
-        int limit = getLimit(layout, newParams);
+        int limit = getLimit(query, layout, newParams);
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
         newParams.put(LIMIT, Math.min(limit, maxLimit) + "");
         return newParams;
     }
 
-    private int getLimit(Map<String, Object> layout, HashMap<String, Object> newParams)
+    private int getLimit(Query query, Map<String, Object> layout, HashMap<String, Object> newParams)
     {
         int limit = Integer.parseInt((String) newParams.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
-
+        int defaultLimit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
+                coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
+        Map<String, Object> userQuerySettings = coreUtils.getQuerySettingForUser(
+                query.getEntity().getName(), query.getName(), UserInfoHolder.getLoggedUser().getUserName());
         if (limit == Integer.MAX_VALUE)
         {
-            return Integer.parseInt(layout.getOrDefault("defaultPageLimit",
-                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
+            return (int) userQuerySettings.getOrDefault("recordsPerPage", defaultLimit);
         }
-        return limit;
+        else
+        {
+            if (limit != defaultLimit && !((Integer) limit).equals(userQuerySettings.get("recordsPerPage")))
+            {
+                coreUtils.setQuerySettingForUser(query.getEntity().getName(), query.getName(),
+                        UserInfoHolder.getLoggedUser().getUserName(),
+                        Collections.singletonMap("recordsPerPage", limit));
+            }
+            return limit;
+        }
     }
 
     private List getRows(Query query, List<QRec> rows, Map<String, Object> layout)

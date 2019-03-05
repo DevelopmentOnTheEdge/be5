@@ -127,4 +127,22 @@ public class CoreUtilsForTest implements CoreUtils
     {
 
     }
+
+    @Override
+    public Map<String, Object> getQuerySettingForUser(String table_name, String query_name, String user_name)
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public void setQuerySettingForUser(String table_name, String query_name, String user_name, Map<String, Object> values)
+    {
+
+    }
+
+    @Override
+    public void removeQuerySettingForUser(String table_name, String query_name, String user_name)
+    {
+
+    }
 }

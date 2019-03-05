@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.google.common.collect.ImmutableMap;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -16,15 +15,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 
 public class CoreUtilsImpl implements CoreUtils
 {
     static String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
     static final String COLUMN_SETTINGS_ENTITY = "be5columnSettings";
+    static final String QUERY_SETTINGS_ENTITY = "be5querySettings";
 
     private final Cache<String, String> systemSettingsCache;
     private final Cache<String, String> userSettingsCache;
     private final Cache<String, Map<String, Object>> columnSettingsCache;
+    private final Cache<String, Map<String, Object>> querySettingsCache;
 
     private final DbService db;
     private final DatabaseModel database;
@@ -38,6 +41,7 @@ public class CoreUtilsImpl implements CoreUtils
         systemSettingsCache = be5Caches.createCache("System settings");
         userSettingsCache = be5Caches.createCache("User settings");
         columnSettingsCache = be5Caches.createCache("Column settings");
+        querySettingsCache = be5Caches.createCache("Query settings");
     }
 
     /**
@@ -366,7 +370,7 @@ public class CoreUtilsImpl implements CoreUtils
 
     private RecordModel<Object> readColumnSettings(String table_name, String query_name, String column_name, String user_name)
     {
-        return database.getEntity(COLUMN_SETTINGS_ENTITY).getBy(ImmutableMap.of(
+        return database.getEntity(COLUMN_SETTINGS_ENTITY).getBy(of(
                 "table_name", table_name,
                 "query_name", query_name,
                 "column_name", column_name,
@@ -380,7 +384,7 @@ public class CoreUtilsImpl implements CoreUtils
     {
         String key = getColumnSettingsKey(table_name, query_name, column_name, user_name);
         columnSettingsCache.invalidate(key);
-        database.getEntity(COLUMN_SETTINGS_ENTITY).removeBy(ImmutableMap.of(
+        database.getEntity(COLUMN_SETTINGS_ENTITY).removeBy(of(
                 "table_name", table_name,
                 "query_name", query_name,
                 "column_name", column_name,
@@ -395,5 +399,72 @@ public class CoreUtilsImpl implements CoreUtils
         Objects.requireNonNull(column_name);
         Objects.requireNonNull(user_name);
         return table_name + "." + query_name + "." + column_name + "?user_name=" + user_name;
+    }
+
+    @Override
+    public Map<String, Object> getQuerySettingForUser(String table_name, String query_name, String user_name)
+    {
+        String key = getQuerySettingsKey(table_name, query_name, user_name);
+        return querySettingsCache.get(key, k -> {
+            RecordModel<Object> record = readQuerySettings(table_name, query_name, user_name);
+            return record != null ? record.asMap() : Collections.emptyMap();
+        });
+    }
+
+    @Override
+    public void setQuerySettingForUser(String table_name, String query_name,
+                                        String user_name, Map<String, Object> values)
+    {
+        String key = getQuerySettingsKey(table_name, query_name, user_name);
+        Objects.requireNonNull(values);
+
+        RecordModel<Object> record = readQuerySettings(table_name, query_name, user_name);
+        if (record != null)
+        {
+            record.update(values);
+            querySettingsCache.put(key, record.asMap());
+        }
+        else
+        {
+            Map<String, Object> params = new HashMap<String, Object>() {{
+                put("queryID", 0);
+                put("table_name", table_name);
+                put("query_name", query_name);
+                put("user_name", user_name);
+            }};
+            params.putAll(values);
+            database.getEntity(QUERY_SETTINGS_ENTITY).add(params);
+            querySettingsCache.put(key, Collections.unmodifiableMap(params));
+        }
+    }
+
+    private RecordModel<Object> readQuerySettings(String table_name, String query_name, String user_name)
+    {
+        return database.getEntity(QUERY_SETTINGS_ENTITY).getBy(of(
+                "table_name", table_name,
+                "query_name", query_name,
+                "user_name", user_name
+        ));
+    }
+
+    @Override
+    public void removeQuerySettingForUser(String table_name, String query_name,
+                                           String user_name)
+    {
+        String key = getQuerySettingsKey(table_name, query_name, user_name);
+        querySettingsCache.invalidate(key);
+        database.getEntity(QUERY_SETTINGS_ENTITY).removeBy(of(
+                "table_name", table_name,
+                "query_name", query_name,
+                "user_name", user_name
+        ));
+    }
+
+    private String getQuerySettingsKey(String table_name, String query_name, String user_name)
+    {
+        Objects.requireNonNull(table_name);
+        Objects.requireNonNull(query_name);
+        Objects.requireNonNull(user_name);
+        return table_name + "." + query_name + "?user_name=" + user_name;
     }
 }
