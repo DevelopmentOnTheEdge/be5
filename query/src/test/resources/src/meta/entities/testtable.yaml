@@ -22,8 +22,7 @@ testtable:
         SELECT
           t.name AS "Name",
           t.value AS "Value"
-        FROM
-          testtable t
+        FROM testtable t
   - testOrderWithHiddenColumns:
       code: |-
         SELECT
@@ -31,168 +30,152 @@ testtable:
           t.ID AS "___testID",
           t.name AS "Name",
           t.value AS "Value"
-        FROM
-          testtable t
+        FROM testtable t
   - emptyQuery:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT * FROM testtable t WHERE 1 = 2
+        SELECT * FROM testtable t WHERE 1 = 2
   - beLink:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            '<link columns="entity,ID" using="users,___ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          '<link columns="entity,ID" using="users,___ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
+        FROM testtable t
   - beLinkMultiple:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            '<link columns="ID,ID" using="1,2" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          '<link columns="ID,ID" using="1,2" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
+        FROM testtable t
   - beRef:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            '<ref table="testtable" />' AS ";Name"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          '<ref table="testtable" />' AS ";Name"
+        FROM testtable t
   - beQuick:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            '<quick visible="true"/>' AS ";Name"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          '<quick visible="true"/>' AS ";Name"
+        FROM testtable t
   - beCssFormat:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.value AS "Value",
-            '<css class="currency"/>;<format mask="###,###,##0.00" />' AS ";Value"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.value AS "Value",
+          '<css class="currency"/>;<format mask="###,###,##0.00" />' AS ";Value"
+        FROM testtable t
   - beGrouping:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name;<grouping/>"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name;<grouping/>"
+        FROM testtable t
   - beRoles:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            t.value AS "Value;<roles name='TestUser2'/>"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          t.value AS "Value;<roles name='TestUser2'/>"
+        FROM testtable t
   - beRolesNot:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            t.name AS "Name",
-            t.value AS "Value;<roles name='!TestUser2'/>"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          t.name AS "Name",
+          t.value AS "Value;<roles name='!TestUser2'/>"
+        FROM testtable t
   - beRowCssClass:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            'test' AS "test",
-            t.value AS "value",
-            t.name AS "___css_class"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          'test' AS "test",
+          t.value AS "value",
+          t.name AS "___css_class"
+        FROM testtable t
   - beAggregate:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-         SELECT
-            t.value AS "Value",
-            '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
-          FROM
-            testtable t
+        SELECT
+          t.value AS "Value",
+          '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
+        FROM testtable t
   - beAggregate1D:
       type: 1D
       roles: SystemDeveloper
       code: |-
-         SELECT
-            123 as "___ID",
-            'test' AS "Test",
-            'test2' AS "Test2",
-            t.value AS "Value",
-            '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
-          FROM
-            testtable t
+        SELECT
+          123 as "___ID",
+          'test' AS "Test",
+          'test2' AS "Test2",
+          t.value AS "Value",
+          '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
+        FROM testtable t
   - Sub Query:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-            SELECT
-              t.name AS "___Name",
-              t.name AS "Name",
-              t.value AS "Value",
-              '<sql>SELECT u.value FROM testSubQuery u
-                    WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues"
-            FROM
-              testtable t
+        SELECT
+          t.name AS "___Name",
+          t.name AS "Name",
+          t.value AS "Value",
+          '<sql>SELECT u.value FROM testSubQuery u
+                WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues"
+        FROM testtable t
   - Sub Query default:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-            SELECT
-              t.name AS "___Name",
-              '<sql default="defaultValue">SELECT u.value
-                    FROM testSubQuery u WHERE 1 = 2</sql>' AS "testSubQueryValues"
-            FROM
-              testtable t
+        SELECT
+          t.name AS "___Name",
+          '<sql default="defaultValue">SELECT u.value
+                FROM testSubQuery u WHERE 1 = 2</sql>' AS "testSubQueryValues"
+        FROM testtable t
   - Sub Query with prepare params:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-            SELECT
-              t.name AS "___Name",
-              t.name AS "Name",
-              t.value AS "Value",
-              '<sql using="___Name">SELECT u.value FROM testSubQuery u WHERE u.name = ?</sql>' AS "testtUserValues"
-            FROM
-              testtable t
+        SELECT
+          t.name AS "___Name",
+          t.name AS "Name",
+          t.value AS "Value",
+          '<sql using="___Name">SELECT u.value FROM testSubQuery u WHERE u.name = ?</sql>' AS "testtUserValues"
+        FROM testtable t
   - Sub Query with long prepare params:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
-            SELECT
-              t.value AS "___value",
-              t.name AS "Name",
-              t.value AS "Value",
-              '<sql using="___value">SELECT u.value FROM testSubQuery u WHERE u.value = ?</sql>' AS "testtUserValues"
-            FROM
-              testtable t
+        SELECT
+          t.value AS "___value",
+          t.name AS "Name",
+          t.value AS "Value",
+          '<sql using="___value">SELECT u.value FROM testSubQuery u WHERE u.value = ?</sql>' AS "testtUserValues"
+        FROM testtable t
   - TestMultipleColumn:
       code: |-
         SELECT ID AS "___ID", name FROM testtable WHERE 1=1
