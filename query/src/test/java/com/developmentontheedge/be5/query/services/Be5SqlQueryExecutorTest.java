@@ -198,6 +198,15 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void beNoSort()
+    {
+        Query query = meta.getQuery("testtable", "beNoSort");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("{}",
+                DynamicPropertyMeta.get(list.get(0).getProperty("Name")).get("nosort").toString());
+    }
+
+    @Test
     public void beAggregate1D()
     {
         Query query = meta.getQuery("testtable", "beAggregate1D");
