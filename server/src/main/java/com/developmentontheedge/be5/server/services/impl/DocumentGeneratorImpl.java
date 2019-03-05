@@ -156,7 +156,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
         else
         {
-            if (limit != defaultLimit && !((Integer) limit).equals(userQuerySettings.get("recordsPerPage")))
+            if (limit != defaultLimit || (userQuerySettings.get("recordsPerPage") != null
+                    && limit != ((int) userQuerySettings.get("recordsPerPage"))))
             {
                 coreUtils.setQuerySettingForUser(query.getEntity().getName(), query.getName(),
                         UserInfoHolder.getLoggedUser().getUserName(),
