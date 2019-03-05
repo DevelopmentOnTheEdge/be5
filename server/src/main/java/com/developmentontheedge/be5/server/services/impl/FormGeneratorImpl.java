@@ -99,11 +99,12 @@ public class FormGeneratorImpl implements FormGenerator
     private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
-        Either<FormPresentation, OperationResultPresentation> data;
         Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
+        Map<String, String> links = Collections.singletonMap(SELF_LINK, getUrl(operation).toString());
+
         if (result.isFirst())
         {
-            data = Either.first(new FormPresentation(
+            FormPresentation attributes = new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
                     getTitle(operation, layout),
@@ -111,18 +112,15 @@ public class FormGeneratorImpl implements FormGenerator
                     layout,
                     resultForFrontend(operation.getResult()),
                     getErrorModel(operation)
-            ));
+            );
+            return new ResourceData(FORM_ACTION, attributes, links);
         }
         else
         {
-            layout.remove("type");
-            data = Either.second(new OperationResultPresentation(
-                    resultForFrontend(result.getSecond()),
-                    layout
-            ));
+            OperationResultPresentation attributes = new OperationResultPresentation(
+                    resultForFrontend(result.getSecond()), layout);
+            return new ResourceData(OPERATION_RESULT, attributes, links);
         }
-        return new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                Collections.singletonMap(SELF_LINK, getUrl(operation).toString()));
     }
 
     private String getTitle(Operation operation, Map<String, Object> layout)
