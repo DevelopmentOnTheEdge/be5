@@ -35,7 +35,7 @@ countries:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
-      records: 2
+      records: 1
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:

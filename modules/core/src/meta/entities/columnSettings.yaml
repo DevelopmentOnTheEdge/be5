@@ -49,7 +49,7 @@ columnSettings:
         defaultValue: '''DEFAULT'''
   queries:
   - All records:
-      type: 1D_unknown
+      type: 1D
       roles: Administrator
       operations:
       - Delete
@@ -57,13 +57,14 @@ columnSettings:
       - Filter
       - Insert
       code: |-
-        SELECT
+          SELECT
+            ID AS "___ID",
             table_name AS "table_name",
             query_name AS "query_name",
             column_name AS "column_name",
             user_name AS "user_name",
             quick AS "quick"
-        FROM columnSettings
+          FROM columnSettings
   operations:
   - Insert:
       roles: Administrator
