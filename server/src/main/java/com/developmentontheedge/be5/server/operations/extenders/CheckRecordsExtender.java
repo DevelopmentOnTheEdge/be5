@@ -101,7 +101,8 @@ public class CheckRecordsExtender extends OperationExtenderSupport
         }
         catch (Throwable e)
         {
-            message = "Cannot execute operation " + op.getInfo().getEntityName() + "." + op.getInfo().getName() + ": " + e.getMessage();
+            message = "Cannot execute operation " + op.getInfo().getEntityName() + "." + op.getInfo().getName() +
+                            ": " + e.getMessage();
             log.log(Level.SEVERE, message, e);
             return true;
         }
