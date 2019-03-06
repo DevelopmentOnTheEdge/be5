@@ -89,7 +89,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
             {
                 if (userInfo.isAdmin())
                 {
-                    message = "Cannot execute operation " + op.getInfo().getName() +
+                    message = "Cannot execute operation " + op.getInfo().getEntityName() + "." + op.getInfo().getName() +
                             ": the following records are not found or not accessible: " + disabledRecords;
                 }
                 else
@@ -101,7 +101,7 @@ public class CheckRecordsExtender extends OperationExtenderSupport
         }
         catch (Throwable e)
         {
-            message = "Cannot execute operation " + op.getInfo().getName() + ": " + e.getMessage();
+            message = "Cannot execute operation " + op.getInfo().getEntityName() + "." + op.getInfo().getName() + ": " + e.getMessage();
             log.log(Level.SEVERE, message, e);
             return true;
         }
