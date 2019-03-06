@@ -91,8 +91,8 @@ public class TemplateFilter extends FilterSupport
     private static String getRequestWithoutContext(String contextPath, String requestUri)
     {
         String reqWithoutContext = requestUri.replaceFirst(contextPath, "");
-        if (!reqWithoutContext.endsWith("/")) reqWithoutContext += "/";
-        return reqWithoutContext;
+        if (!reqWithoutContext.endsWith("/")) return reqWithoutContext + "/";
+        else return reqWithoutContext;
     }
 
     private Context getContext(Request req)
