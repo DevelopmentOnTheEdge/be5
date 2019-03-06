@@ -7,6 +7,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
@@ -240,5 +241,11 @@ public class RequestImpl implements Request
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    @Override
+    public Cookie[] getCookies()
+    {
+        return raw.getCookies();
     }
 }

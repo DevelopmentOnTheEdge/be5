@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -144,5 +145,11 @@ public class TestRequest implements Request
     public void setAttribute(String name, Object value)
     {
         session.set(name, value);
+    }
+
+    @Override
+    public Cookie[] getCookies()
+    {
+        return new Cookie[0];
     }
 }
