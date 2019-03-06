@@ -6,9 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,7 +24,7 @@ public class UserHelperTest extends ServerBe5ProjectTest
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = userHelper.saveUser("test", roles, roles, Locale.US, "");
+        ui = userHelper.saveUser("test", roles, roles, Locale.US, "", false);
 
         assertEquals(roles, ui.getCurrentRoles());
     }
@@ -35,6 +34,24 @@ public class UserHelperTest extends ServerBe5ProjectTest
     {
         initGuest();
         assertEquals("ru", userInfoProvider.getLanguage());
+    }
+
+    @Test
+    public void testSetCurrentRoles()
+    {
+        initUserWithRoles("1", "2");
+        assertEquals(Arrays.asList("1", "2"), userInfoProvider.getCurrentRoles());
+
+        userHelper.setCurrentRoles(Collections.singletonList("1"));
+        assertEquals(Collections.singletonList("1"), userInfoProvider.getCurrentRoles());
+    }
+
+    @Test
+    public void testSetCurrentRolesNotAvailable()
+    {
+        initUserWithRoles("1", "2");
+        userHelper.setCurrentRoles(Collections.singletonList("3"));
+        assertEquals(Collections.singletonList("3"), userInfoProvider.getCurrentRoles());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services;
+package com.developmentontheedge.be5.server.helpers;
 
 import java.util.Collection;
 import java.util.List;

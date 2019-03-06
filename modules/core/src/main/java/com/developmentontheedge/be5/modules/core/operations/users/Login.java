@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.FrontendActions;
+import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -21,6 +22,8 @@ public class Login extends GOperationSupport
 {
     @Inject
     protected LoginService loginService;
+    @Inject
+    protected UserHelper userHelper;
     @Inject
     protected UserInfoModelService userInfoModelService;
     @Inject
@@ -40,13 +43,12 @@ public class Login extends GOperationSupport
     }
 
     @Override
-    public void invoke(Object parameters) throws Exception
+    public void invoke(Object parameters)
     {
         String username = params.getValueAsString("user_name");
         if (loginService.loginCheck(username, params.getValueAsString("user_pass").toCharArray()))
         {
-            loginService.saveUser(username, request);
-            postLogin(parameters);
+            userHelper.saveUser(username, false);
             if (context.getParams().get("withoutUpdateUserInfo") == null)
             {
                 setResultFinished(FrontendActions.updateUserAndOpenDefaultRoute(userInfoModelService.getUserInfoModel()));
@@ -63,8 +65,4 @@ public class Login extends GOperationSupport
         }
     }
 
-    public void postLogin(Object parameters)
-    {
-
-    }
 }

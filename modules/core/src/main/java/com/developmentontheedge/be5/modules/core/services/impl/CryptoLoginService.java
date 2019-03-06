@@ -1,23 +1,22 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.modules.core.services.RoleHelper;
-import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.modules.core.services.LoginService;
 
 import javax.inject.Inject;
 import java.util.Objects;
 
-public class CryptoLoginService extends LoginServiceImpl
+public class CryptoLoginService implements LoginService
 {
     private static final Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
+    protected final DbService db;
+
     @Inject
-    public CryptoLoginService(DbService db, UserHelper userHelper, RoleHelper roleHelper,
-                              UserInfoProvider userInfoProvider)
+    public CryptoLoginService(DbService db)
     {
-        super(db, userHelper, roleHelper, userInfoProvider);
+        this.db = db;
     }
 
     @Override

@@ -82,7 +82,7 @@ public abstract class ServerTestUtils extends BaseTest
     {
         //ServerTestSession testSession = new ServerTestSession();
         getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-                Locale.US, "");
+                Locale.US, "", false);
 
         //UserInfoHolder.setRequest(new ServerTestRequest(testSession));
         //UserInfoProviderForTest.userInfo = userInfo;
@@ -91,7 +91,7 @@ public abstract class ServerTestUtils extends BaseTest
     protected void initUserWithNameAndRoles(String name, String... roles)
     {
         getInjector().getInstance(UserHelper.class).
-                saveUser(name, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "");
+                saveUser(name, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "", false);
     }
 
     protected void initGuest()
