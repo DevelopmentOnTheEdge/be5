@@ -8,13 +8,12 @@ import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.be5.server.services.UserInfoModelService;
-import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DPBuilder;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.developmentontheedge.beans.BeanInfoConstants.CAN_BE_NULL;
 import static com.developmentontheedge.beans.BeanInfoConstants.PASSWORD_FIELD;
 
 
@@ -36,9 +35,19 @@ public class Login extends GOperationSupport
     {
         dpsHelper.addDpForColumns(params, getInfo().getEntity(), Arrays.asList("user_name", "user_pass"),
                 context.getParams(), presetValues);
-        DynamicProperty user_pass = params.getProperty("user_pass");
-        user_pass.setAttribute(CAN_BE_NULL, false);
-        user_pass.setAttribute(PASSWORD_FIELD, true);
+
+        new DPBuilder(params.getProperty("user_pass")) {{
+            nullable = false;
+            attr(PASSWORD_FIELD, true);
+        }}.build();
+
+        String rememberMeTitle = userAwareMeta.getColumnTitle("users", "Remember me");
+        params.add(new DPBuilder("rememberMe", rememberMeTitle) {{
+            type = Boolean.class;
+            nullable = true;
+            value = presetValues.get("rememberMe");
+        }}.build());
+
         return params;
     }
 
@@ -46,9 +55,11 @@ public class Login extends GOperationSupport
     public void invoke(Object parameters)
     {
         String username = params.getValueAsString("user_name");
+        boolean rememberMe = params.getValue("rememberMe") != null;
+
         if (loginService.loginCheck(username, params.getValueAsString("user_pass").toCharArray()))
         {
-            userHelper.saveUser(username, false);
+            userHelper.saveUser(username, rememberMe);
             if (context.getParams().get("withoutUpdateUserInfo") == null)
             {
                 setResultFinished(FrontendActions.updateUserAndOpenDefaultRoute(userInfoModelService.getUserInfoModel()));
