@@ -139,7 +139,7 @@ public class UserHelper
 
     public void setCurrentRoles(List<String> roles)
     {
-        Objects.requireNonNull(roles.get(0), "There must be at least one role.");
+        if (roles.isEmpty()) throw new IllegalArgumentException("There must be at least one role.");
         roleHelper.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), roles);
         UserInfoHolder.getLoggedUser().setCurrentRoles(roles);
     }
