@@ -31,7 +31,8 @@ public class UserHelper
 {
     private static final Logger log = Logger.getLogger(UserHelper.class.getName());
 
-    private static final String REMEMBER_ME = "remember-me";
+    private static final String REMEMBER_ME_KEY = "remember-me";
+    private static final int TWO_WEEKS_S = 1209600;
 
     private final Meta meta;
     private final Stage stage;
@@ -181,16 +182,16 @@ public class UserHelper
     private void rememberUser(String username)
     {
         String id = rememberUserHelper.rememberUser(username);
-        Cookie cookie = new Cookie(REMEMBER_ME, id);
+        Cookie cookie = new Cookie(REMEMBER_ME_KEY, id);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 30); // valid for 30 days
+        cookie.setMaxAge(TWO_WEEKS_S);
         responseProvider.get().addCookie(cookie);
     }
 
     private void deleteRememberMeCookie(String id)
     {
         rememberUserHelper.removeRememberedUser(id);
-        Cookie cookie = new Cookie(REMEMBER_ME, "");
+        Cookie cookie = new Cookie(REMEMBER_ME_KEY, "");
         cookie.setPath("/");
         cookie.setMaxAge(0);
         responseProvider.get().addCookie(cookie);
@@ -200,7 +201,7 @@ public class UserHelper
     {
         Cookie[] cookies = requestProvider.get().getCookies();
         return Arrays.stream(cookies)
-                .filter(c -> c.getName().equals(REMEMBER_ME))
+                .filter(c -> c.getName().equals(REMEMBER_ME_KEY))
                 .findFirst();
     }
 }
