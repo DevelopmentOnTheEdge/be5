@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FilterHelper;
 import com.developmentontheedge.be5.server.services.MenuHelper;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.server.services.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.DocumentOperationsPlugin;
@@ -62,7 +62,7 @@ public class ServerModule extends AbstractModule
         bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
         bind(DpsHelper.class).in(Scopes.SINGLETON);
-        bind(UserHelper.class).in(Scopes.SINGLETON);
+        bind(UserService.class).in(Scopes.SINGLETON);
         bind(SqlHelper.class).in(Scopes.SINGLETON);
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);

@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.FrontendActions;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.beans.DPBuilder;
@@ -22,7 +22,7 @@ public class Login extends GOperationSupport
     @Inject
     protected LoginService loginService;
     @Inject
-    protected UserHelper userHelper;
+    protected UserService userHelper;
     @Inject
     protected UserInfoModelService userInfoModelService;
     @Inject

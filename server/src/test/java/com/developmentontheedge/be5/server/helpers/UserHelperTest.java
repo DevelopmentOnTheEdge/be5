@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.security.UserInfo;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class UserHelperTest extends ServerBe5ProjectTest
 {
     private static UserInfo ui;
     @Inject
-    private UserHelper userHelper;
+    private UserService userHelper;
 
     @Before
     public void setUpTestUser()

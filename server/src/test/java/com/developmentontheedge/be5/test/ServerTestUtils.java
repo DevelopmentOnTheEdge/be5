@@ -16,7 +16,7 @@ import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
@@ -81,7 +81,7 @@ public abstract class ServerTestUtils extends BaseTest
     protected void initUserWithRoles(String... roles)
     {
         //ServerTestSession testSession = new ServerTestSession();
-        getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+        getInjector().getInstance(UserService.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
                 Locale.US, "", false);
 
         //UserInfoHolder.setRequest(new ServerTestRequest(testSession));
@@ -90,7 +90,7 @@ public abstract class ServerTestUtils extends BaseTest
 
     protected void initUserWithNameAndRoles(String name, String... roles)
     {
-        getInjector().getInstance(UserHelper.class).
+        getInjector().getInstance(UserService.class).
                 saveUser(name, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "", false);
     }
 

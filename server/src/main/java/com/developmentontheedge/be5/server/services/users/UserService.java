@@ -25,26 +25,26 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
-public class UserHelper
+public class UserService
 {
-    private static final Logger log = Logger.getLogger(UserHelper.class.getName());
+    private static final Logger log = Logger.getLogger(UserService.class.getName());
 
     private final Meta meta;
     private final Stage stage;
-    private final RoleHelper roleHelper;
+    private final RoleService roleService;
     private final RememberMeServices rememberMeService;
     private final InitUserService initUserService;
     private final Provider<Request> requestProvider;
     private final Provider<Response> responseProvider;
 
     @Inject
-    public UserHelper(Meta meta, Stage stage, RoleHelper roleHelper, RememberMeServices rememberMeService,
-                      InitUserService initUserService, Provider<Request> requestProvider,
-                      Provider<Response> responseProvider)
+    public UserService(Meta meta, Stage stage, RoleService roleService, RememberMeServices rememberMeService,
+                       InitUserService initUserService, Provider<Request> requestProvider,
+                       Provider<Response> responseProvider)
     {
         this.meta = meta;
         this.stage = stage;
-        this.roleHelper = roleHelper;
+        this.roleService = roleService;
         this.rememberMeService = rememberMeService;
         this.initUserService = initUserService;
         this.requestProvider = requestProvider;
@@ -53,8 +53,8 @@ public class UserHelper
 
     public void saveUser(String username, boolean rememberMe)
     {
-        List<String> availableRoles = roleHelper.getAvailableRoles(username);
-        List<String> currentRoles = getAvailableCurrentRoles(roleHelper.getCurrentRoles(username), availableRoles);
+        List<String> availableRoles = roleService.getAvailableRoles(username);
+        List<String> currentRoles = getAvailableCurrentRoles(roleService.getCurrentRoles(username), availableRoles);
         Request req = requestProvider.get();
         saveUser(username, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
         log.fine("Login user: " + username); //TODO save to events
@@ -131,7 +131,7 @@ public class UserHelper
     public void setCurrentRoles(List<String> roles)
     {
         if (roles.isEmpty()) throw new IllegalArgumentException("There must be at least one role.");
-        roleHelper.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), roles);
+        roleService.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), roles);
         UserInfoHolder.getLoggedUser().setCurrentRoles(roles);
     }
 

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.security.UserInfoHolder;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
 import com.developmentontheedge.be5.server.servlet.support.ServletUtils;
@@ -33,11 +33,11 @@ public class TemplateFilter extends FilterSupport
     private TemplateEngine templateEngine;
 
     private final HtmlMetaTags htmlMetaTags;
-    private final UserHelper userHelper;
+    private final UserService userHelper;
     private final ProjectProvider projectProvider;
 
     @Inject
-    public TemplateFilter(UserHelper userHelper, ProjectProvider projectProvider, HtmlMetaTags htmlMetaTags)
+    public TemplateFilter(UserService userHelper, ProjectProvider projectProvider, HtmlMetaTags htmlMetaTags)
     {
         this.userHelper = userHelper;
         this.htmlMetaTags = htmlMetaTags;

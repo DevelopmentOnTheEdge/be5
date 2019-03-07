@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.services.users.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleService;
 
 import java.util.Collection;
 import java.util.List;
 
-public class RoleHelperMock implements RoleHelper
+public class RoleServiceMock implements RoleService
 {
     @Override
     public void updateCurrentRoles(String userName, Collection<String> roles)

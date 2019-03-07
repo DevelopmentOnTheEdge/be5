@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
-import com.developmentontheedge.be5.server.services.users.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-public class RoleHelperImpl implements RoleHelper
+public class RoleServiceImpl implements RoleService
 {
     private final DbService db;
     private final CoreUtils coreUtils;
 
     @Inject
-    public RoleHelperImpl(DbService db, CoreUtils coreUtils)
+    public RoleServiceImpl(DbService db, CoreUtils coreUtils)
     {
         this.db = db;
         this.coreUtils = coreUtils;

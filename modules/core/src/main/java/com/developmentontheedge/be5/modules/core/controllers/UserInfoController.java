@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.server.services.users.UserHelper;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.server.services.UserInfoModelService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
@@ -14,12 +14,12 @@ import java.util.List;
 @Singleton
 public class UserInfoController extends JsonApiController
 {
-    private final UserHelper userHelper;
+    private final UserService userHelper;
     private final UserInfoModelService userInfoModelService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public UserInfoController(UserHelper userHelper, UserInfoModelService userInfoModelService,
+    public UserInfoController(UserService userHelper, UserInfoModelService userInfoModelService,
                               UserInfoProvider userInfoProvider)
     {
         this.userHelper = userHelper;
