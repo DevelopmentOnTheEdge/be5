@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.helpers.RememberUserHelper;
+import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 
-public class RememberUserHelperMock implements RememberUserHelper
+public class RememberUserHelperMock implements PersistentTokenRepository
 {
     @Override
     public String rememberUser(String username)

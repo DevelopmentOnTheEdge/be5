@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.cache.Be5Caches;
 import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.helpers.RememberUserHelper;
+import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 import com.developmentontheedge.be5.server.helpers.RoleHelper;
 import com.developmentontheedge.be5.server.services.InitUserService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
@@ -49,7 +49,7 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
             bind(OperationLogging.class).to(OperationLoggingMock.class).in(Scopes.SINGLETON);
             bind(RoleHelper.class).to(RoleHelperMock.class).in(Scopes.SINGLETON);
             bind(InitUserService.class).to(InitUserServiceMock.class).in(Scopes.SINGLETON);
-            bind(RememberUserHelper.class).to(RememberUserHelperMock.class).in(Scopes.SINGLETON);
+            bind(PersistentTokenRepository.class).to(RememberUserHelperMock.class).in(Scopes.SINGLETON);
         }
     }
 

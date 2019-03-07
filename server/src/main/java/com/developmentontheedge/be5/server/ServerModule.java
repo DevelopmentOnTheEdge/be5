@@ -30,6 +30,8 @@ import com.developmentontheedge.be5.server.services.impl.InitUserServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoModelServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.rows.TableRowBuilder;
+import com.developmentontheedge.be5.server.services.rememberme.RememberMeServices;
+import com.developmentontheedge.be5.server.services.rememberme.RememberMeServicesImpl;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.AbstractModule;
@@ -76,5 +78,6 @@ public class ServerModule extends AbstractModule
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoModelService.class).to(UserInfoModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(InitUserService.class).to(InitUserServiceImpl.class).in(Scopes.SINGLETON);
+        bind(RememberMeServices.class).to(RememberMeServicesImpl.class).in(Scopes.SINGLETON);
     }
 }

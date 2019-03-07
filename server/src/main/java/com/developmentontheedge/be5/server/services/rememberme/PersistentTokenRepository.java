@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services.rememberme;
 
-public interface RememberUserHelper
+public interface PersistentTokenRepository
 {
     String rememberUser(String username);
 

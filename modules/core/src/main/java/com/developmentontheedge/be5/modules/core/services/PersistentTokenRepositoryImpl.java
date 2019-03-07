@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.server.helpers.RememberUserHelper;
+import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RememberUserHelperImpl implements RememberUserHelper
+public class PersistentTokenRepositoryImpl implements PersistentTokenRepository
 {
     private SecureRandom random = new SecureRandom();
     private Map<String, String> rememberedUsers = new HashMap<>();
