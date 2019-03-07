@@ -1,10 +1,14 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
+import java.util.Date;
+
 public interface PersistentTokenRepository
 {
-    String rememberUser(String username);
+    void createNewToken(PersistentRememberMeToken token);
 
-    String getRememberedUser(String id);
+    void updateToken(String series, String tokenValue, Date lastUsed);
 
-    void removeRememberedUser(String id);
+    PersistentRememberMeToken getTokenForSeries(String seriesId);
+
+    void removeUserTokens(String username);
 }

@@ -66,7 +66,7 @@ public class TemplateFilter extends FilterSupport
     {
         if (UserInfoHolder.getLoggedUser() == null)
         {
-            userHelper.initUser();
+            userHelper.initUser(req, res);
         }
         String reqWithoutContext = getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
         if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)

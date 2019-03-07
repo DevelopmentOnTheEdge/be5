@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface RememberMeServices
 {
-    void rememberUser(Request request, Response response, String username);
+    void onLoginSuccess(HttpServletRequest rawRequest, HttpServletResponse rawResponse, String username);
 
-    String autoLogin(Request request, Response response);
+    String autoLogin(HttpServletRequest request, HttpServletResponse response);
 
-    void logout(Request request, Response response);
+    void logout(HttpServletRequest request, HttpServletResponse response, String username);
 }

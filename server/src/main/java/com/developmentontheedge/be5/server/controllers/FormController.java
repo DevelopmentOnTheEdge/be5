@@ -63,7 +63,7 @@ public class FormController extends JsonApiModelController
         //todo move to filter
         if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
         {
-            userHelper.initUser();
+            userHelper.initUser(req, res);
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));

@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.modules.core.services.PersistentTokenRepositoryImpl;
 import com.developmentontheedge.be5.modules.core.services.RoleServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.Be5EventDbLogger;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
@@ -13,9 +12,8 @@ import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.OperationLoggingImpl;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.services.users.RoleService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
-import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
+import com.developmentontheedge.be5.server.services.users.RoleService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
@@ -29,7 +27,6 @@ public class CoreModule extends AbstractModule
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
         bind(RoleService.class).to(RoleServiceImpl.class).in(Scopes.SINGLETON);
-        bind(PersistentTokenRepository.class).to(PersistentTokenRepositoryImpl.class).in(Scopes.SINGLETON);
         bind(CoreUtils.class).to(CoreUtilsImpl.class).in(Scopes.SINGLETON);
         bind(LoginService.class).to(LoginServiceImpl.class).in(Scopes.SINGLETON);
         bind(CategoriesService.class).to(CategoriesServiceImpl.class).in(Scopes.SINGLETON);

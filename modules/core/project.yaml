@@ -24,6 +24,7 @@ core:
   - entities
   - languages
   - mimeTypes
+  - persistent_logins
   - provinces
   - roles
   - sequences
