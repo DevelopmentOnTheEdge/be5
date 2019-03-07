@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.helpers.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleHelper;
 
 import java.util.Collection;
 import java.util.List;

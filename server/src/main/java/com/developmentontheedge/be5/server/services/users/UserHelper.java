@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services.users;
 
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;

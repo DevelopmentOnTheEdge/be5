@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;

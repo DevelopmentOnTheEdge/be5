@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services;
 
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
-import com.developmentontheedge.be5.server.helpers.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleHelper;
 import org.junit.Test;
 
 import javax.inject.Inject;

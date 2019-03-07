@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.server.FrontendActions;
-import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;

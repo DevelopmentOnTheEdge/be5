@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.server.helpers.MenuHelper;
+import com.developmentontheedge.be5.server.services.MenuHelper;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.server.helpers.FilterHelper;
+import com.developmentontheedge.be5.server.services.FilterHelper;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 

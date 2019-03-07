@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.OperationLoggingImpl;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.helpers.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleHelper;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 import com.google.inject.AbstractModule;

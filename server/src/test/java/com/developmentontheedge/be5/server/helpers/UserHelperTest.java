@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.server.services.users.UserHelper;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;
 import org.junit.Test;

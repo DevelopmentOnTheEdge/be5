@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
-import com.developmentontheedge.be5.server.helpers.RoleHelper;
+import com.developmentontheedge.be5.server.services.users.RoleHelper;
 import com.developmentontheedge.be5.server.services.InitUserService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
