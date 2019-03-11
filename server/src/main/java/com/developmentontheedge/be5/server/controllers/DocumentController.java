@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.ErrorModelHelper;
+import com.developmentontheedge.be5.server.services.document.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.HashUrl;

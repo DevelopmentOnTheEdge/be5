@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
@@ -7,8 +7,8 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.model.AstBeParameterTag;

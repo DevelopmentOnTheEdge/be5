@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.Collections3;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.JsonUtils;
 

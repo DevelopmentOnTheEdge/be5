@@ -5,9 +5,9 @@ import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.modules.core.services.model.Category;
-import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.document.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.document.DocumentPlugin;
 
 import javax.inject.Inject;
 import java.util.List;

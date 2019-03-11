@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.impl.rows;
+package com.developmentontheedge.be5.server.services.document.rows;
 
 import java.util.List;
 

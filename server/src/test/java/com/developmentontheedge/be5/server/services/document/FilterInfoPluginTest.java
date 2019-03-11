@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;

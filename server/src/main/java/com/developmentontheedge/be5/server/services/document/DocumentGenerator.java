@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 

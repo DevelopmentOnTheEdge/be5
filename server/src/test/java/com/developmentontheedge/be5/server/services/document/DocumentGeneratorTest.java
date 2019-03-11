@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.server.services.document;
 
-import com.developmentontheedge.be5.cache.Be5Caches;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -8,7 +7,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.TestTableQueryDBTest;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerTestResponse;

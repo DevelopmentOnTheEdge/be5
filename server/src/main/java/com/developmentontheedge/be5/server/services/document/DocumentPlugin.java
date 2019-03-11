@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.model;
+package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
