@@ -3,16 +3,17 @@ package com.developmentontheedge.be5.meta;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.lifecycle.Start;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -207,7 +208,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
 
     private String getLanguage()
     {
-        return meta.getLocale(userInfoProvider.getLocale()).getLanguage();
+        if (userInfoProvider.isLoggedIn())
+        {
+            return meta.getLocale(userInfoProvider.getLocale()).getLanguage();
+        }
+        else
+        {
+            return meta.getLocale(Locale.US).getLanguage();
+        }
     }
 
     @Override
