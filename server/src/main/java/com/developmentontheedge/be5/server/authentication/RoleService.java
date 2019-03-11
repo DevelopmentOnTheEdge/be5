@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.users;
+package com.developmentontheedge.be5.server.authentication;
 
 import java.util.Collection;
 import java.util.List;

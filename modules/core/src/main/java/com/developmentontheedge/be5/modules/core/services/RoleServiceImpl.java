@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
-import com.developmentontheedge.be5.server.services.users.RoleService;
+import com.developmentontheedge.be5.server.authentication.RoleService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

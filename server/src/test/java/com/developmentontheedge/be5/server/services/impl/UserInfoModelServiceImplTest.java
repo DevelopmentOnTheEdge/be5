@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
-import com.developmentontheedge.be5.server.services.users.UserInfoModelService;
+import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 

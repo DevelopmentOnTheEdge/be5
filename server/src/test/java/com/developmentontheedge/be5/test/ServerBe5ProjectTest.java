@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
-import com.developmentontheedge.be5.server.services.users.RoleService;
-import com.developmentontheedge.be5.server.services.users.InitUserService;
+import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepository;
+import com.developmentontheedge.be5.server.authentication.RoleService;
+import com.developmentontheedge.be5.server.authentication.InitUserService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.server.servlet.TemplateModule;

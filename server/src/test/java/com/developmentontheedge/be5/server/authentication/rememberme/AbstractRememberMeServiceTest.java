@@ -1,11 +1,10 @@
-package com.developmentontheedge.be5.server.services.rememberme;
+package com.developmentontheedge.be5.server.authentication.rememberme;
 
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.servlet.http.Cookie;
 

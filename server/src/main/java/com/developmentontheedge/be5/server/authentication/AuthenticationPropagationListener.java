@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.servlet;
+package com.developmentontheedge.be5.server.authentication;
 
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;

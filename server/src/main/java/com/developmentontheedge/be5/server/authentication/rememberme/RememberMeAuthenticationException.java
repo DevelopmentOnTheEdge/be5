@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.server.services.rememberme;
+package com.developmentontheedge.be5.server.authentication.rememberme;
 
-import com.developmentontheedge.be5.server.services.users.AuthenticationException;
+import com.developmentontheedge.be5.server.authentication.AuthenticationException;
 
 public class RememberMeAuthenticationException extends AuthenticationException
 {

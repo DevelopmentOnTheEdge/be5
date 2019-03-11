@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
-import com.developmentontheedge.be5.server.services.users.UserService;
+import com.developmentontheedge.be5.server.authentication.UserService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.HashUrl;
@@ -40,18 +40,18 @@ public class FormController extends JsonApiModelController
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private final FormGenerator formGenerator;
-    private final UserService userHelper;
+    private final UserService userService;
     private final ErrorModelHelper errorModelHelper;
     private final Stage stage;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public FormController(FormGenerator formGenerator,
-                          UserService userHelper, ErrorModelHelper errorModelHelper,
+                          UserService userService, ErrorModelHelper errorModelHelper,
                           UserInfoProvider userInfoProvider, Stage stage)
     {
         this.formGenerator = formGenerator;
-        this.userHelper = userHelper;
+        this.userService = userService;
         this.errorModelHelper = errorModelHelper;
         this.stage = stage;
         this.userInfoProvider = userInfoProvider;
@@ -63,7 +63,7 @@ public class FormController extends JsonApiModelController
         //todo move to filter
         if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
         {
-            userHelper.initUser(req, res);
+            userService.initUser(req, res);
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));

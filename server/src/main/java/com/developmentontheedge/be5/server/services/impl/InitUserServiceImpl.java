@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.server.services.users.InitUserService;
+import com.developmentontheedge.be5.server.authentication.InitUserService;
 
 public class InitUserServiceImpl implements InitUserService
 {

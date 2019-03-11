@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.security.UserInfoHolder;
-import com.developmentontheedge.be5.server.services.users.UserService;
+import com.developmentontheedge.be5.server.authentication.UserService;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
 import com.developmentontheedge.be5.server.servlet.support.ServletUtils;
@@ -33,13 +33,13 @@ public class TemplateFilter extends FilterSupport
     private TemplateEngine templateEngine;
 
     private final HtmlMetaTags htmlMetaTags;
-    private final UserService userHelper;
+    private final UserService userService;
     private final ProjectProvider projectProvider;
 
     @Inject
-    public TemplateFilter(UserService userHelper, ProjectProvider projectProvider, HtmlMetaTags htmlMetaTags)
+    public TemplateFilter(UserService userService, ProjectProvider projectProvider, HtmlMetaTags htmlMetaTags)
     {
-        this.userHelper = userHelper;
+        this.userService = userService;
         this.htmlMetaTags = htmlMetaTags;
         this.projectProvider = projectProvider;
     }
@@ -66,7 +66,7 @@ public class TemplateFilter extends FilterSupport
     {
         if (UserInfoHolder.getLoggedUser() == null)
         {
-            userHelper.initUser(req, res);
+            userService.initUser(req, res);
         }
         String reqWithoutContext = getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
         if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)

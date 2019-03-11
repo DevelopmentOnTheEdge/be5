@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.servlet;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
+import com.developmentontheedge.be5.server.authentication.AuthenticationPropagationListener;
 import org.junit.Test;
 
 import javax.servlet.ServletRequest;

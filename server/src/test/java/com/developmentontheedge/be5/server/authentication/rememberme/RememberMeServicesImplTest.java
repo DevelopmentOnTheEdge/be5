@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.rememberme;
+package com.developmentontheedge.be5.server.authentication.rememberme;
 
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.test.ServerTestResponse;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.users;
+package com.developmentontheedge.be5.server.authentication;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.security.UserInfo;
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.developmentontheedge.be5.server.services.rememberme.AbstractRememberMeService.REMEMBER_ME_KEY;
+import static com.developmentontheedge.be5.server.authentication.rememberme.AbstractRememberMeService.REMEMBER_ME_KEY;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

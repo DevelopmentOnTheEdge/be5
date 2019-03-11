@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.services.users.RoleService;
+import com.developmentontheedge.be5.server.authentication.RoleService;
 import org.mockito.Mockito;
 
 import java.util.Collection;

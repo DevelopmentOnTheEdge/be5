@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.users;
+package com.developmentontheedge.be5.server.authentication;
 
 public interface InitUserService
 {

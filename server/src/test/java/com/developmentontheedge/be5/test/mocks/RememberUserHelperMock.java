@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.services.rememberme.PersistentRememberMeToken;
-import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
+import com.developmentontheedge.be5.server.authentication.rememberme.PersistentRememberMeToken;
+import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepository;
 
 import java.sql.Timestamp;
 

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.rememberme;
+package com.developmentontheedge.be5.server.authentication.rememberme;
 
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.query.model.beans.QRec;

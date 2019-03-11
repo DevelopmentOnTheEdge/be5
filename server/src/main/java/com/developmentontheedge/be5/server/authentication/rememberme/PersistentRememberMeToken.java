@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services.rememberme;
+package com.developmentontheedge.be5.server.authentication.rememberme;
 
 import java.sql.Timestamp;
 

@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.server.services.users.UserService;
+import com.developmentontheedge.be5.server.authentication.UserService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
