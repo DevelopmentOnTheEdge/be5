@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.test.mocks;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentRememberMeToken;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class RememberUserHelperMock implements PersistentTokenRepository
 {
@@ -14,7 +14,7 @@ public class RememberUserHelperMock implements PersistentTokenRepository
     }
 
     @Override
-    public void updateToken(String series, String tokenValue, Date lastUsed)
+    public void updateToken(String series, String tokenValue, Timestamp lastUsed)
     {
 
     }

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
 import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.util.DateUtils;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
@@ -11,10 +12,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -145,7 +144,7 @@ public class RememberMeServicesImpl implements RememberMeServices
                             "Implies previous cookie theft attack."));
         }
 
-        if (token.getDate().getTime() + getTokenValiditySeconds() * 1000L < System
+        if (token.getTimestamp().getTime() + getTokenValiditySeconds() * 1000L < System
                 .currentTimeMillis())
         {
             throw new RememberMeAuthenticationException("Remember-me login has expired");
@@ -157,12 +156,12 @@ public class RememberMeServicesImpl implements RememberMeServices
                 + token.getUsername() + "', series '" + token.getSeries() + "'");
 
         PersistentRememberMeToken newToken = new PersistentRememberMeToken(
-                token.getUsername(), token.getSeries(), generateTokenData(), new Date());
+                token.getUsername(), token.getSeries(), generateTokenData(), DateUtils.currentTimestamp());
 
         try
         {
             tokenRepository.updateToken(newToken.getSeries(), newToken.getTokenValue(),
-                    newToken.getDate());
+                    newToken.getTimestamp());
             addCookie(newToken, request, response);
         }
         catch (Exception e)
@@ -191,7 +190,7 @@ public class RememberMeServicesImpl implements RememberMeServices
         log.fine("Creating new persistent login for user " + username);
 
         PersistentRememberMeToken persistentToken = new PersistentRememberMeToken(
-                username, generateSeriesData(), generateTokenData(), new Timestamp(System.currentTimeMillis()));
+                username, generateSeriesData(), generateTokenData(), DateUtils.currentTimestamp());
         try
         {
             tokenRepository.createNewToken(persistentToken);

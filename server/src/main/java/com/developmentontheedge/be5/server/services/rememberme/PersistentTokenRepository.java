@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public interface PersistentTokenRepository
 {
     void createNewToken(PersistentRememberMeToken token);
 
-    void updateToken(String series, String tokenValue, Date lastUsed);
+    void updateToken(String series, String tokenValue, Timestamp lastUsed);
 
     PersistentRememberMeToken getTokenForSeries(String seriesId);
 

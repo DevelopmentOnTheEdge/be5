@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.services.rememberme;
 import com.developmentontheedge.be5.database.DbService;
 
 import javax.inject.Inject;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class PersistentTokenRepositoryImpl implements PersistentTokenRepository
 {
@@ -18,10 +18,10 @@ public class PersistentTokenRepositoryImpl implements PersistentTokenRepository
     public void createNewToken(PersistentRememberMeToken token)
     {
         db.update("insert into persistent_logins (user_name, series, token, last_used) values(?,?,?,?)",
-                token.getUsername(), token.getSeries(), token.getTokenValue(), token.getDate());
+                token.getUsername(), token.getSeries(), token.getTokenValue(), token.getTimestamp());
     }
 
-    public void updateToken(String series, String tokenValue, Date lastUsed)
+    public void updateToken(String series, String tokenValue, Timestamp lastUsed)
     {
         db.update("update persistent_logins set token = ?, last_used = ? where series = ?", tokenValue, lastUsed, series);
     }

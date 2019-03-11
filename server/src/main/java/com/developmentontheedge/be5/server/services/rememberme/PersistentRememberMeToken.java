@@ -1,21 +1,21 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class PersistentRememberMeToken
 {
     private final String username;
     private final String series;
     private final String tokenValue;
-    private final Date date;
+    private final Timestamp timestamp;
 
     public PersistentRememberMeToken(String username, String series, String tokenValue,
-                                     Date date)
+                                     Timestamp timestamp)
     {
         this.username = username;
         this.series = series;
         this.tokenValue = tokenValue;
-        this.date = date;
+        this.timestamp = timestamp;
     }
 
     public String getUsername()
@@ -33,8 +33,8 @@ public class PersistentRememberMeToken
         return tokenValue;
     }
 
-    public Date getDate()
+    public Timestamp getTimestamp()
     {
-        return date;
+        return timestamp;
     }
 }
