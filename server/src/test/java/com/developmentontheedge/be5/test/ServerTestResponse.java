@@ -89,4 +89,9 @@ public class ServerTestResponse implements Response
     {
         return cookies.get(name);
     }
+
+    public void clearCookies()
+    {
+        cookies.clear();
+    }
 }

@@ -50,13 +50,14 @@ public class UserService
         this.responseProvider = responseProvider;
     }
 
-    public void saveUser(String username, boolean rememberMe)
+    public UserInfo saveUser(String username, boolean rememberMe)
     {
         List<String> availableRoles = roleService.getAvailableRoles(username);
         List<String> currentRoles = getAvailableCurrentRoles(roleService.getCurrentRoles(username), availableRoles);
         Request req = requestProvider.get();
-        saveUser(username, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
-        log.fine("Login user: " + username); //TODO save to events
+        UserInfo userInfo = saveUser(username, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
+        log.fine("Login user: " + username);
+        return userInfo;
     }
 
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
@@ -116,14 +117,15 @@ public class UserService
         initGuest();
     }
 
-    public List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
+    public List<String> getAvailableCurrentRoles(List<String> newRoles, List<String> availableRoles)
     {
-        List<String> newRoles = roles.stream()
+        if (availableRoles.size() == 0) throw new IllegalArgumentException("User must have at least one role.");
+        List<String> finalNewRoles = newRoles.stream()
                 .filter(availableRoles::contains)
                 .collect(Collectors.toList());
-        if (newRoles.size() > 0)
+        if (finalNewRoles.size() > 0)
         {
-            return newRoles;
+            return finalNewRoles;
         }
         else
         {

@@ -17,7 +17,7 @@ public abstract class AbstractRememberMeService implements RememberMeServices
 {
     private static final Logger log = Logger.getLogger(AbstractRememberMeService.class.getName());
 
-    static final String REMEMBER_ME_KEY = "remember-me";
+    public static final String REMEMBER_ME_KEY = "remember-me";
     private static final int TWO_WEEKS_S = 1209600;
     private static final int DEFAULT_SERIES_LENGTH = 16;
     private static final int DEFAULT_TOKEN_LENGTH = 16;
