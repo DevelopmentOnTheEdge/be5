@@ -349,13 +349,13 @@ public class QueriesService
         return vals;
     }
 
-    public Map<String, String> map(String query, Object... params)
+    public Map<String, Object> readAsMap(String query, Object... params)
     {
-        Map<String, String> values = new LinkedHashMap<>();
+        Map<String, Object> values = new LinkedHashMap<>();
         db.query(query, rs -> {
             while (rs.next())
             {
-                values.put(rs.getString(1), rs.getString(2));
+                values.put(rs.getString(1), rs.getObject(2));
             }
             return null;
         }, params);

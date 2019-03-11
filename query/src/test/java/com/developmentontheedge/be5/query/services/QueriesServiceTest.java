@@ -168,7 +168,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void readAsMapTest()
     {
-        Map<String, String> values = queries.map("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
+        Map<String, Object> values = queries.readAsMap("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
         assertEquals(ImmutableMap.of(
                 "01", "Regional",
