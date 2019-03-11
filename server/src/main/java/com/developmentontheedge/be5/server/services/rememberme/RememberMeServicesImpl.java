@@ -111,7 +111,7 @@ public class RememberMeServicesImpl implements RememberMeServices
         return null;
     }
 
-    private String processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request, HttpServletResponse response)
+    String processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request, HttpServletResponse response)
     {
         if (cookieTokens.length != 2)
         {
@@ -243,6 +243,11 @@ public class RememberMeServicesImpl implements RememberMeServices
         this.tokenLength = tokenLength;
     }
 
+    public void setCookieName(String cookieName)
+    {
+        this.cookieName = cookieName;
+    }
+
     private void setCookie(String[] tokens, int maxAge, HttpServletRequest request,
                            HttpServletResponse response)
     {
@@ -277,7 +282,7 @@ public class RememberMeServicesImpl implements RememberMeServices
      * @return the array of tokens.
      * @throws InvalidCookieException if the cookie was not base64 encoded.
      */
-    private String[] decodeCookie(String cookieValue) throws InvalidCookieException
+    String[] decodeCookie(String cookieValue) throws InvalidCookieException
     {
         for (int j = 0; j < cookieValue.length() % 4; j++)
         {
@@ -320,7 +325,7 @@ public class RememberMeServicesImpl implements RememberMeServices
      * @param cookieTokens the tokens to be encoded.
      * @return base64 encoding of the tokens concatenated with the ":" delimiter.
      */
-    private String encodeCookie(String[] cookieTokens)
+    String encodeCookie(String[] cookieTokens)
     {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cookieTokens.length; i++)
