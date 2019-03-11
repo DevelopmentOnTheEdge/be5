@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.server.services.rememberme;
 
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.util.DateUtils;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,8 +29,8 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
         this.userAwareMeta = userAwareMeta;
     }
 
-    protected String processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
-                                            HttpServletResponse response)
+    protected String processAutoLoginCookie(String[] cookieTokens, Request request,
+                                            Response response)
     {
         if (cookieTokens.length != 2)
         {
@@ -94,7 +94,7 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
     }
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, String username)
+    public void logout(Request request, Response response, String username)
     {
         super.logout(request, response, username);
         if (username != null)
@@ -103,8 +103,8 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
         }
     }
 
-    public void onLoginSuccess(HttpServletRequest request,
-                               HttpServletResponse response, String username)
+    public void onLoginSuccess(Request request,
+                               Response response, String username)
     {
         log.fine("Creating new persistent login for user " + username);
 

@@ -98,8 +98,7 @@ public class UserService
         initUserService.initUser(userName);
         if (rememberMe)
         {
-            rememberMeService.onLoginSuccess(requestProvider.get().getRawRequest(),
-                    responseProvider.get().getRawResponse(), userName);
+            rememberMeService.onLoginSuccess(requestProvider.get(), responseProvider.get(), userName);
         }
 
         return ui;
@@ -111,7 +110,7 @@ public class UserService
         String username = session != null ? (String) session.get(SessionConstants.CURRENT_USER) : null;
         if (username != null)
         {
-            rememberMeService.logout(req.getRawRequest(), res.getRawResponse(), username);
+            rememberMeService.logout(req, res, username);
         }
         if (session != null) session.invalidate();
         initGuest();
@@ -141,7 +140,7 @@ public class UserService
 
     public void initUser(Request req, Response res)
     {
-        String userName = rememberMeService.autoLogin(req.getRawRequest(), res.getRawResponse());
+        String userName = rememberMeService.autoLogin(req, res);
         if (userName != null)
         {
             saveUser(userName, true);

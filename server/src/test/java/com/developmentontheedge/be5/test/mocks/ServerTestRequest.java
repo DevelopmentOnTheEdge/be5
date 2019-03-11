@@ -8,6 +8,8 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,12 +17,17 @@ import java.util.Map;
 
 public class ServerTestRequest implements Request
 {
+    private Map<String, Cookie> cookies = new HashMap<>();
     private Session session = null;
 
     @Inject
     public ServerTestRequest(Session session)
     {
         this.session = session;
+    }
+
+    public ServerTestRequest()
+    {
     }
 
     @Override
@@ -140,6 +147,11 @@ public class ServerTestRequest implements Request
     @Override
     public Cookie[] getCookies()
     {
-        return new Cookie[0];
+        return cookies.values().toArray(new Cookie[0]);
+    }
+
+    public void setCookies(Cookie... cookies)
+    {
+        Arrays.stream(cookies).forEach(c -> this.cookies.put(c.getName(), c));
     }
 }

@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
+
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -35,7 +36,7 @@ public abstract class AbstractRememberMeService implements RememberMeServices
     }
 
     @Override
-    public String autoLogin(HttpServletRequest request, HttpServletResponse response)
+    public String autoLogin(Request request, Response response)
     {
         String rememberMeCookie = extractRememberMeCookie(request);
 
@@ -77,16 +78,16 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         return null;
     }
 
-    protected abstract String processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
-                                                     HttpServletResponse response);
+    protected abstract String processAutoLoginCookie(String[] cookieTokens, Request request,
+                                                     Response response);
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, String userName)
+    public void logout(Request request, Response response, String userName)
     {
         cancelCookie(request, response);
     }
 
-    private String extractRememberMeCookie(HttpServletRequest request)
+    private String extractRememberMeCookie(Request request)
     {
         Cookie[] cookies = request.getCookies();
 
@@ -120,8 +121,8 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         return new String(Base64.getEncoder().encode(newToken));
     }
 
-    void addCookie(PersistentRememberMeToken token, HttpServletRequest request,
-                   HttpServletResponse response)
+    void addCookie(PersistentRememberMeToken token, Request request,
+                   Response response)
     {
         setCookie(new String[]{token.getSeries(), token.getTokenValue()},
                 getTokenValiditySeconds(), request, response);
@@ -157,8 +158,8 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         this.cookieName = cookieName;
     }
 
-    private void setCookie(String[] tokens, int maxAge, HttpServletRequest request,
-                           HttpServletResponse response)
+    void setCookie(String[] tokens, int maxAge, Request request,
+                           Response response)
     {
         String cookieValue = encodeCookie(tokens);
         Cookie cookie = new Cookie(cookieName, cookieValue);
@@ -174,7 +175,7 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         response.addCookie(cookie);
     }
 
-    void cancelCookie(HttpServletRequest request, HttpServletResponse response)
+    private void cancelCookie(Request request, Response response)
     {
         log.fine("Cancelling cookie");
         Cookie cookie = new Cookie(cookieName, null);

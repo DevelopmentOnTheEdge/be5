@@ -8,13 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
 
 public class ServerTestResponse implements Response
 {
+    private Map<String, Cookie> cookies = new HashMap<>();
     public static Response mock = mock(Response.class);
 
     public static void newMock()
@@ -76,16 +79,14 @@ public class ServerTestResponse implements Response
         return mock.getOutputStream();
     }
 
-    List<Cookie> cookies = new ArrayList<>();
-
     @Override
     public void addCookie(Cookie cookie)
     {
-        cookies.add(cookie);
+        cookies.put(cookie.getName(), cookie);
     }
 
-    public List<Cookie> getCookies()
+    public Cookie getCookie(String name)
     {
-        return cookies;
+        return cookies.get(name);
     }
 }
