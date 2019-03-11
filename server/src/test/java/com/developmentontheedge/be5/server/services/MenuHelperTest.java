@@ -1,8 +1,9 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.server.model.Action;
+import com.developmentontheedge.be5.server.services.MenuHelper;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 

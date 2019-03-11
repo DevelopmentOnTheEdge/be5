@@ -13,6 +13,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -60,6 +61,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
         UserInfoHolder.setLoggedUser(null);
 
         when(req.getContextPath()).thenReturn("/");
+        when(req.getRawRequest()).thenReturn(mock(HttpServletRequest.class));
 
         templateFilter.filter(req, res, filterChain);
 

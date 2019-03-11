@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.helpers
 
 import com.developmentontheedge.be5.meta.Meta
+import com.developmentontheedge.be5.server.services.DpsHelper
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty

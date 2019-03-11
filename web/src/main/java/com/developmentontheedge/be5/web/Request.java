@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.web;
 
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -49,4 +50,6 @@ public interface Request extends SessionAccess, ParametersAccess
     Locale getLocale();
 
     ServletInputStream getInputStream() throws IOException;
+
+    Cookie[] getCookies();
 }

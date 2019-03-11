@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.meta.Meta;

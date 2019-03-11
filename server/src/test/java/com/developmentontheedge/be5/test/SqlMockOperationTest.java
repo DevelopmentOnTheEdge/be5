@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import org.junit.After;
 import org.junit.Before;

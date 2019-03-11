@@ -29,6 +29,7 @@ ru:
       - 'The minimum password length is $1 characters': 'Минимальная длина пароля $1 знаков'
       - Access to these records is denied.: Доступ к этим записям запрещен.
       - Entity does not support record recovery: Сущность не поддерживает восстановление записей
+      - Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.: Недопустимое несоответствие "Запомнить меня" токена (серии / токена). Предполагает предыдущую атаку кражи файлов cookie.
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.
@@ -100,6 +101,7 @@ ru:
       entries:
       - user_name: Логин
       - user_pass: Пароль
+      - Remember me: Запомнить меня
     - topics:
       - Insert
       entries:

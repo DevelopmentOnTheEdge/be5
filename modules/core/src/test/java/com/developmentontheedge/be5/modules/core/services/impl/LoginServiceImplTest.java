@@ -48,23 +48,4 @@ public class LoginServiceImplTest extends CoreBe5ProjectDBTest
     {
         assertFalse(loginService.loginCheck("nonexistent_user", "pass".toCharArray()));
     }
-
-    @Test
-    public void testSetCurrentRoles()
-    {
-        initUserWithRoles("1", "2");
-        assertEquals(Arrays.asList("1", "2"), userInfoProvider.getCurrentRoles());
-
-        loginService.setCurrentRoles(Collections.singletonList("1"));
-        assertEquals(Collections.singletonList("1"), userInfoProvider.getCurrentRoles());
-    }
-
-    @Test
-    public void testSetCurrentRolesNotAvailable()
-    {
-        initUserWithRoles("1", "2");
-        loginService.setCurrentRoles(Collections.singletonList("3"));
-        assertEquals(Collections.singletonList("3"), userInfoProvider.getCurrentRoles());
-    }
-
 }

@@ -15,7 +15,7 @@ be5columnSettings:
     - column_name:
         type: VARCHAR(255)
     - user_name:
-        type: VARCHAR(50)
+        type: VARCHAR(100)
         reference: users
         canBeNull: true
     - role_name:

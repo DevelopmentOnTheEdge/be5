@@ -2,16 +2,22 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.web.Response;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
 
 public class ServerTestResponse implements Response
 {
+    private Map<String, Cookie> cookies = new HashMap<>();
     public static Response mock = mock(Response.class);
 
     public static void newMock()
@@ -71,5 +77,21 @@ public class ServerTestResponse implements Response
     public OutputStream getOutputStream() throws IOException
     {
         return mock.getOutputStream();
+    }
+
+    @Override
+    public void addCookie(Cookie cookie)
+    {
+        cookies.put(cookie.getName(), cookie);
+    }
+
+    public Cookie getCookie(String name)
+    {
+        return cookies.get(name);
+    }
+
+    public void clearCookies()
+    {
+        cookies.clear();
     }
 }

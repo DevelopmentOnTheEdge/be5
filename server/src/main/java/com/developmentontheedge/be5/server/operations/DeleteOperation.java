@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
+import com.developmentontheedge.beans.DPBuilder;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Collections;
@@ -35,7 +36,9 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                     Collections.singletonMap(getInfo().getPrimaryKey(), context.getRecord()));
             if (tags.length == 0)
             {
-                validator.setError(params.getProperty("info"), "Record not found");
+                new DPBuilder(params.getProperty("info")) {{
+                    message = "Record not found";
+                }}.build();
             }
             else
             {

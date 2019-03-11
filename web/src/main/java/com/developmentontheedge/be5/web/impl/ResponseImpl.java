@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -101,4 +102,9 @@ public class ResponseImpl implements Response
         return rawWrapper.getRawResponse().getOutputStream();
     }
 
+    @Override
+    public void addCookie(Cookie cookie)
+    {
+        rawWrapper.getRawResponse().addCookie(cookie);
+    }
 }

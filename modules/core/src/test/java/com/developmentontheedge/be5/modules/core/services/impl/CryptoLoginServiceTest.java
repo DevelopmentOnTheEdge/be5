@@ -1,11 +1,8 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.modules.core.services.RoleHelper;
-import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,17 +15,13 @@ import static org.junit.Assert.assertTrue;
 public class CryptoLoginServiceTest extends CoreBe5ProjectDBTest
 {
     @Inject private DbService db;
-    @Inject private UserHelper userHelper;
-    @Inject private RoleHelper roleHelper;
-    @Inject private UserInfoProvider userInfoProvider;
-
     private LoginService loginService;
     private final String user_name = "CryptoLogin_test_user";
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
-        loginService = new CryptoLoginService(db, userHelper, roleHelper, userInfoProvider);
+        loginService = new CryptoLoginService(db);
         if (database.getEntity("users").count(ImmutableMap.of("user_name", user_name)) == 0)
         {
             database.getEntity("users").add(ImmutableMap.of(

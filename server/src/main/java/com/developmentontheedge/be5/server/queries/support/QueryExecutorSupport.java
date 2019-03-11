@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.support.BaseQueryExecutorSupport;
-import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 

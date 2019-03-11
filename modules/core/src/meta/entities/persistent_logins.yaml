@@ -1,0 +1,49 @@
+persistent_logins:
+  type: collection
+  displayName: Persistent logins
+  primaryKey: ID
+  scheme:
+    columns:
+    - series:
+        type: VARCHAR(64)
+        primaryKey: true
+    - user_name:
+        type: VARCHAR(100)
+        reference: users
+    - token:
+        type: VARCHAR(64)
+    - last_used:
+        type: DATETIME
+  queries:
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Delete
+      - Edit
+      - Filter
+      - Insert
+      code: |-
+        SELECT
+          ID AS "___ID",
+          user_name AS "user_name",
+          series AS "series",
+          token AS "token",
+          last_used AS "last_used"
+        FROM persistent_logins
+  operations:
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation

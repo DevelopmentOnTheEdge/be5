@@ -4,12 +4,12 @@ import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
-import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
+import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.HashUrl;
@@ -40,14 +40,14 @@ public class FormController extends JsonApiModelController
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private final FormGenerator formGenerator;
-    private final UserHelper userHelper;
+    private final UserService userHelper;
     private final ErrorModelHelper errorModelHelper;
     private final Stage stage;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public FormController(FormGenerator formGenerator,
-                          UserHelper userHelper, ErrorModelHelper errorModelHelper,
+                          UserService userHelper, ErrorModelHelper errorModelHelper,
                           UserInfoProvider userInfoProvider, Stage stage)
     {
         this.formGenerator = formGenerator;
@@ -63,7 +63,7 @@ public class FormController extends JsonApiModelController
         //todo move to filter
         if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
         {
-            userHelper.initGuest();
+            userHelper.initUser(req, res);
         }
 
         requireNonNull(req.get(TIMESTAMP_PARAM));

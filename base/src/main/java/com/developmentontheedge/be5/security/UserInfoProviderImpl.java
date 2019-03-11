@@ -35,7 +35,7 @@ public class UserInfoProviderImpl implements UserInfoProvider
     @Override
     public boolean isLoggedIn()
     {
-        return !RoleType.ROLE_GUEST.equals(getLoggedUser().getUserName());
+        return getLoggedUser() != null && !RoleType.ROLE_GUEST.equals(getLoggedUser().getUserName());
     }
 
     @Override

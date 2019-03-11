@@ -1,9 +1,8 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.databasemodel.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

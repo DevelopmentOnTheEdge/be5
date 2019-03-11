@@ -2,13 +2,15 @@ package com.developmentontheedge.be5.modules.core.operations.users
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.server.FrontendActions
-import com.developmentontheedge.be5.server.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.server.FrontendActions
 import com.developmentontheedge.be5.server.model.FrontendAction
-import com.developmentontheedge.be5.web.Request
-import com.developmentontheedge.be5.web.Session
+import com.developmentontheedge.be5.server.model.UserInfoModel
+import com.developmentontheedge.be5.test.mocks.TestRequest
+import com.developmentontheedge.be5.test.mocks.TestResponse
 import org.junit.Test
+
+import javax.servlet.http.HttpServletResponse
 
 import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
@@ -19,15 +21,14 @@ class LogoutTest extends CoreBe5ProjectDbMockTest
     @Test
     void logout()
     {
-        def request = mock(Request.class)
-        //userInfoProvider.setRequest(request)
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
 
-        def session = mock(Session.class)
-        when(request.getSession()).thenReturn(session)
+        TestRequest.newMock()
+        when(TestRequest.mock.getSession(false)).thenReturn(null)
+
+        when(TestResponse.mock.getRawResponse()).thenReturn(mock(HttpServletResponse.class))
 
         def second = generateOperation(createOperation("users", "All records", "Logout", "")).getSecond()
-
-        //verify(session).invalidate()
 
         assertEquals(RoleType.ROLE_GUEST, userInfoProvider.getUserName())
         assertEquals([RoleType.ROLE_GUEST], userInfoProvider.getAvailableRoles())

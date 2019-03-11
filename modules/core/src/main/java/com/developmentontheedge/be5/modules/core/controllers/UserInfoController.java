@@ -1,28 +1,28 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.server.services.UserInfoModelService;
+import com.developmentontheedge.be5.server.services.users.UserService;
+import com.developmentontheedge.be5.server.services.users.UserInfoModelService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
-import com.google.common.base.Splitter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.List;
 
 @Singleton
 public class UserInfoController extends JsonApiController
 {
-    private final LoginService loginService;
+    private final UserService userHelper;
     private final UserInfoModelService userInfoModelService;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public UserInfoController(LoginService loginService, UserInfoModelService userInfoModelService,
+    public UserInfoController(UserService userHelper, UserInfoModelService userInfoModelService,
                               UserInfoProvider userInfoProvider)
     {
-        this.loginService = loginService;
+        this.userHelper = userHelper;
         this.userInfoModelService = userInfoModelService;
         this.userInfoProvider = userInfoProvider;
     }
@@ -43,12 +43,12 @@ public class UserInfoController extends JsonApiController
 
     private Object selectRolesAndSendNewState(Request req)
     {
-        List<String> roles = Splitter.on(',').splitToList(req.getOrEmpty("roles"));
+        List<String> roles = Arrays.asList(req.getOrEmpty("roles").split(","));
 
-        List<String> availableCurrentRoles = loginService.getAvailableCurrentRoles(roles,
+        List<String> availableCurrentRoles = userHelper.getAvailableCurrentRoles(roles,
                 userInfoProvider.getAvailableRoles());
 
-        loginService.setCurrentRoles(availableCurrentRoles);
+        userHelper.setCurrentRoles(availableCurrentRoles);
 
         return userInfoProvider.getCurrentRoles();
     }

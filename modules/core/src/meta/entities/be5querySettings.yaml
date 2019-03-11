@@ -13,7 +13,7 @@ be5querySettings:
     - query_name:
         type: VARCHAR(255)
     - user_name:
-        type: VARCHAR(50)
+        type: VARCHAR(100)
         reference: users
     - recordsPerPage:
         type: INT

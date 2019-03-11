@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QueryMetaHelper;
 import com.developmentontheedge.be5.query.services.QueriesService;
-import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.model.DocumentPlugin;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.FilterUtil;
