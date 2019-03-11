@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.server.services.rememberme;
 
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import com.developmentontheedge.be5.test.ServerTestResponse;
 import com.developmentontheedge.be5.util.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
@@ -15,17 +13,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class RememberMeServicesImplTest extends ServerBe5ProjectTest
 {
-    private RememberMeServicesImpl services;
+    private PersistentRememberMeServices services;
 
     private MockTokenRepository repo;
     private HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -34,7 +26,7 @@ public class RememberMeServicesImplTest extends ServerBe5ProjectTest
     @Before
     public void setUpData() throws Exception {
         initGuest();
-        services = new RememberMeServicesImpl(new InMemoryTokenRepositoryImpl(), userAwareMeta);
+        services = new PersistentRememberMeServices(new InMemoryTokenRepositoryImpl(), userAwareMeta);
         services.setCookieName("mycookiename");
         // Default to 100 days (see SEC-1081).
         services.setTokenValiditySeconds(100 * 24 * 60 * 60);
@@ -69,20 +61,6 @@ public class RememberMeServicesImplTest extends ServerBe5ProjectTest
                 DateUtils.currentTimestamp()));
         services.processAutoLoginCookie(new String[] { "series", "token" },
                 mockRequest, mockResponce);
-    }
-
-    @Test
-    public void cookieShouldBeCorrectlyEncodedAndDecoded() throws Exception {
-        String[] cookie = new String[] { "name:with:colon", "cookie", "tokens", "blah" };
-        //MockRememberMeServices services = new MockRememberMeServices(uds);
-
-        String encoded = services.encodeCookie(cookie);
-        // '=' aren't allowed in version 0 cookies.
-        assertFalse(encoded.endsWith("="));
-        String[] decoded = services.decodeCookie(encoded);
-
-        assertArrayEquals(decoded, new String[]{"name:with:colon", "cookie", "tokens", "blah"});
-        //assertThat(decoded).containsExactly("name:with:colon", "cookie", "tokens", "blah");
     }
 
 //    @Test
@@ -135,9 +113,9 @@ public class RememberMeServicesImplTest extends ServerBe5ProjectTest
 //        services.logout(request, response, null);
 //    }
 
-    private RememberMeServicesImpl create(PersistentRememberMeToken token) {
+    private PersistentRememberMeServices create(PersistentRememberMeToken token) {
         repo = new MockTokenRepository(token);
-        RememberMeServicesImpl services = new RememberMeServicesImpl(repo, userAwareMeta);
+        PersistentRememberMeServices services = new PersistentRememberMeServices(repo, userAwareMeta);
 
         services.setCookieName("mycookiename");
         return services;

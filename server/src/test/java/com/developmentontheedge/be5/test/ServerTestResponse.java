@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
@@ -74,9 +76,16 @@ public class ServerTestResponse implements Response
         return mock.getOutputStream();
     }
 
+    List<Cookie> cookies = new ArrayList<>();
+
     @Override
     public void addCookie(Cookie cookie)
     {
-        mock.addCookie(cookie);
+        cookies.add(cookie);
+    }
+
+    public List<Cookie> getCookies()
+    {
+        return cookies;
     }
 }

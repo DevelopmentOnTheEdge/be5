@@ -32,7 +32,7 @@ import com.developmentontheedge.be5.server.services.impl.rows.TableRowBuilder;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepositoryImpl;
 import com.developmentontheedge.be5.server.services.rememberme.RememberMeServices;
-import com.developmentontheedge.be5.server.services.rememberme.RememberMeServicesImpl;
+import com.developmentontheedge.be5.server.services.rememberme.PersistentRememberMeServices;
 import com.developmentontheedge.be5.server.services.users.UserService;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
@@ -80,7 +80,7 @@ public class ServerModule extends AbstractModule
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoModelService.class).to(UserInfoModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(InitUserService.class).to(InitUserServiceImpl.class).in(Scopes.SINGLETON);
-        bind(RememberMeServices.class).to(RememberMeServicesImpl.class).in(Scopes.SINGLETON);
+        bind(RememberMeServices.class).to(PersistentRememberMeServices.class).in(Scopes.SINGLETON);
         bind(PersistentTokenRepository.class).to(PersistentTokenRepositoryImpl.class).in(Scopes.SINGLETON);
     }
 }
