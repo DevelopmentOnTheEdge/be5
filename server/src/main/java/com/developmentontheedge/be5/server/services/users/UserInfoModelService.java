@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.server.services.users;
 
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 

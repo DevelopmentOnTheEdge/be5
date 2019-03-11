@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.services.MenuHelper;
 import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
-import com.developmentontheedge.be5.server.services.UserInfoModelService;
+import com.developmentontheedge.be5.server.services.users.UserInfoModelService;
 
 import javax.inject.Inject;
 import java.util.logging.Logger;

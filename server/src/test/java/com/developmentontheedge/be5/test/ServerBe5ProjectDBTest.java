@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.meta.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.services.rememberme.PersistentTokenRepository;
 import com.developmentontheedge.be5.server.services.users.RoleService;
-import com.developmentontheedge.be5.server.services.InitUserService;
+import com.developmentontheedge.be5.server.services.users.InitUserService;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;

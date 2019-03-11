@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
-import com.developmentontheedge.be5.server.services.InitUserService;
 import com.developmentontheedge.be5.server.services.rememberme.RememberMeServices;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
