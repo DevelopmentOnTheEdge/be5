@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.operation.OperationContext;
 import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 
 public class OperationContextTest
@@ -36,5 +36,4 @@ public class OperationContextTest
         OperationContext test = new OperationContext(new Long[]{1L, 2L}, "test", Collections.emptyMap());
         assertEquals(1L, (long) test.getRecord());
     }
-
 }

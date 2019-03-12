@@ -236,9 +236,14 @@ public class OperationExecutorImpl implements OperationExecutor
                                     (Map<String, Object>) operationParams);
     }
 
-    private Object[] getRecords(OperationInfo operationInfo, Map<String, ?> operationParams)
+    Object[] getRecords(OperationInfo operationInfo, Map<String, ?> operationParams)
     {
         Object[] selectedRows;
+        if (!operationParams.containsKey(OperationConstants.SELECTED_ROWS))
+        {
+            return new String[0];
+        }
+
         if (operationParams.get(OperationConstants.SELECTED_ROWS) instanceof Object[])
         {
             selectedRows = (Object[]) operationParams.get(OperationConstants.SELECTED_ROWS);
