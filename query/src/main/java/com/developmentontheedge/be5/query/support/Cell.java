@@ -38,6 +38,11 @@ public class Cell
         return option("css", "class", value);
     }
 
+    public Cell link(String url)
+    {
+        return option("link", "url", url);
+    }
+
     public Cell grouping()
     {
         options.computeIfAbsent("grouping", k -> emptyMap());

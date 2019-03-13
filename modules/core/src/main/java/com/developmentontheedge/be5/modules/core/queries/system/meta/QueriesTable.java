@@ -38,7 +38,7 @@ public class QueriesTable extends QueryExecutorSupport
             addRow(cells(
                     entityName,
                     cell(query.getName())
-                            .option("link", "url", ActionUtils.toAction(query).getArg()),
+                            .link(ActionUtils.toAction(query).getArg()),
                     query.getType(),
                     query.getRoles().getFinalRoles().toString(),
                     query.getOperationNames().getFinalValues().size()

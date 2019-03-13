@@ -26,20 +26,18 @@ public class EntitiesTable extends QueryExecutorSupport
         {
             Cell name = cell(entity.getName());
             Query allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW);
-            if (allRecords != null) name.option("link", "url", ActionUtils.toAction(allRecords).getArg());
+            if (allRecords != null) name.link(ActionUtils.toAction(allRecords).getArg());
 
             addRow(cells(name,
                     entity.getTypeString(),
                     meta.getColumns(entity).size(),
 
                     cell(meta.getQueryNames(entity).size())
-                            .option("link", "url",
-                                    new HashUrl(TABLE_ACTION, "_system_", "Queries")
+                            .link(new HashUrl(TABLE_ACTION, "_system_", "Queries")
                                             .named("entity", entity.getName()).toString()),
 
                     cell(meta.getOperationNames(entity).size())
-                            .option("link", "url",
-                                    new HashUrl(TABLE_ACTION, "_system_", "Operations")
+                            .link(new HashUrl(TABLE_ACTION, "_system_", "Operations")
                                             .named("entity", entity.getName()).toString())
             ));
         }
