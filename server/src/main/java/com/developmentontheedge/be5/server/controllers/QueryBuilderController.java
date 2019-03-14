@@ -9,9 +9,14 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
+import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.query.sql.ListWrapperHandler;
+import com.developmentontheedge.be5.query.sql.QRecParser;
+import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
+import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -36,7 +41,6 @@ import javax.inject.Singleton;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -45,6 +49,8 @@ import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 
 @Singleton
 public class QueryBuilderController extends JsonApiModelController
@@ -128,7 +134,7 @@ public class QueryBuilderController extends JsonApiModelController
                 if (req.getBoolean("updateWithoutBeSql", false))
                 {
                     data = new Data("", "", history);
-                    updateUnsafe(includedData, sql);
+                    executeRaw(includedData, sql);
                 }
                 else
                 {
@@ -171,7 +177,7 @@ public class QueryBuilderController extends JsonApiModelController
             ResourceData resourceData = new ResourceData(
                     "queryBuilder",
                     data,
-                    Collections.singletonMap(SELF_LINK, new HashUrl("queryBuilder").named(parameters).toString())
+                    singletonMap(SELF_LINK, new HashUrl("queryBuilder").named(parameters).toString())
             );
 
             return data(
@@ -184,7 +190,7 @@ public class QueryBuilderController extends JsonApiModelController
         {
             return error(errorModelHelper.getErrorModel(
                     Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
-                    Collections.singletonMap(SELF_LINK, "queryBuilder"))
+                    singletonMap(SELF_LINK, "queryBuilder"))
             );
         }
     }
@@ -207,44 +213,69 @@ public class QueryBuilderController extends JsonApiModelController
     private void insert(List<ResourceData> includedData, String sql)
     {
         Object id = db.insert(sql);
-
-        includedData.add(new ResourceData(
-                "result",
-                FrontendConstants.STATIC_ACTION,
-                new StaticPagePresentation(
-                        "Insert was successful",
-                        "New primaryKey: " + id
-                ),
-                null
-        ));
+        addText(includedData, "Insert was successful", "New primaryKey: " + id);
     }
 
     private void update(List<ResourceData> includedData, String sql)
     {
         Object id = db.update(sql);
-
-        includedData.add(new ResourceData(
-                "result",
-                FrontendConstants.STATIC_ACTION,
-                new StaticPagePresentation(
-                        "Update was successful",
-                        id + " row(s) affected"
-                ),
-                null
-        ));
+        addText(includedData, "Update was successful", id + " row(s) affected");
     }
 
-    private void updateUnsafe(List<ResourceData> includedData, String sql)
+    private void executeRaw(List<ResourceData> includedData, String sql)
     {
-        Object id = db.updateUnsafe(sql);
+        if (sql.startsWith("update") || sql.startsWith("UPDATE")
+                || sql.startsWith("insert") || sql.startsWith("INSERT")
+                || sql.startsWith("delete") || sql.startsWith("DELETE"))
+        {
+            Object id = db.updateUnsafe(sql);
+            addText(includedData, "Update was successful", id + " row(s) affected");
+        }
+        else
+        {
+            String finalSql = processRawSql(sql);
+            List<List<QRec>> lists = db.executeRaw(finalSql, new ListWrapperHandler<>(new QRecParser()));
+            if (lists.size() > 0)
+            {
+                List<QRec> qRecList = lists.get(0);
+                if (qRecList.size() > 0)
+                {
+                    qRecList.get(0).forEach(dp -> DynamicPropertyMeta.add(dp, singletonMap("nosort", emptyMap())));
+                }
+                TablePresentation tablePresentation = documentGenerator.
+                        getTablePresentation(meta.createQueryFromSql(finalSql), emptyMap(), qRecList);
+                includedData.add(new ResourceData(
+                        "result",
+                        FrontendConstants.TABLE_ACTION,
+                        tablePresentation,
+                        null
+                ));
+            }
+            else
+            {
+                addText(includedData, "Execute no return data", "");
+            }
+        }
+    }
 
+    private String processRawSql(String sql)
+    {
+        if (sql.contains("limit") || sql.contains("LIMIT"))
+        {
+            return sql;
+        }
+        else
+        {
+            return sql + "\nLIMIT 100";
+        }
+    }
+
+    private void addText(List<ResourceData> includedData, String title, String text)
+    {
         includedData.add(new ResourceData(
                 "result",
                 FrontendConstants.STATIC_ACTION,
-                new StaticPagePresentation(
-                        "Update was successful",
-                        id + " row(s) affected"
-                ),
+                new StaticPagePresentation(title, text),
                 null
         ));
     }

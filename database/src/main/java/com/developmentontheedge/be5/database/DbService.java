@@ -48,6 +48,8 @@ public interface DbService
 
     int updateUnsafe(String sql, Object... params);
 
+    <T> List<T> executeRaw(String sql, ResultSetHandler<T> rsh, Object... params);
+
     /**
      * Executes the given insert sql statement.
      *

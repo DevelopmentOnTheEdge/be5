@@ -120,4 +120,10 @@ public class DbServiceMock implements DbService
     {
         return astStart.format();
     }
+
+    @Override
+    public <T> List<T> executeRaw(String sql, ResultSetHandler<T> rsh, Object... params)
+    {
+        return mock.executeRaw(sql, rsh, params);
+    }
 }

@@ -51,7 +51,7 @@ public class DbServiceImpl implements DbService
     }
 
     @Start(order = 20)
-    public void start() throws Exception
+    public void start()
     {
         queryRunner = new QueryRunner();
         formatSqlCache = be5Caches.createCache("Format sql");
@@ -119,6 +119,12 @@ public class DbServiceImpl implements DbService
     }
 
     @Override
+    public <T> List<T> executeRaw(String sql, ResultSetHandler<T> rsh, Object... params)
+    {
+        return execute(conn -> executeRaw(conn, sql, rsh, params));
+    }
+
+    @Override
     public <T> T insert(String sql, Object... params)
     {
         String finalSql = format(sql);
@@ -156,8 +162,15 @@ public class DbServiceImpl implements DbService
 
     private int updateUnsafe(Connection conn, String sql, Object... params) throws SQLException
     {
-        log.info("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
+        log.fine("Update raw sql: " + sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);
+    }
+
+    private <T> List<T> executeRaw(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params)
+            throws SQLException
+    {
+        log.fine("Execute raw sql: " + sql + Arrays.toString(params));
+        return queryRunner.execute(conn, sql, rsh, params);
     }
 
     private <T> T insert(Connection conn, String sql, Object... params) throws SQLException

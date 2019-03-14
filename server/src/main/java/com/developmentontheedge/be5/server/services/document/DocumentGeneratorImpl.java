@@ -119,6 +119,33 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         );
     }
 
+    @Override
+    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, List<QRec> rows)
+    {
+        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+
+        List<ColumnModel> columns = tableRowBuilder.collectColumns(query, rows);
+        List finalRows = getRows(query, rows, layout);
+
+        String title = "Query";
+        String entityName = query.getEntity().getName();
+        String queryName = query.getName();
+        Long totalNumberOfRows = (long) rows.size();
+
+        return new TablePresentation(
+                title,
+                entityName, queryName,
+                false,
+                columns,
+                finalRows,
+                0, "asc",
+                0, rows.size(),
+                parameters,
+                totalNumberOfRows,
+                layout
+        );
+    }
+
     private long getCount(QueryExecutor queryExecutor, long rowsCount)
     {
         if (queryExecutor.getOffset() + rowsCount < queryExecutor.getLimit())
