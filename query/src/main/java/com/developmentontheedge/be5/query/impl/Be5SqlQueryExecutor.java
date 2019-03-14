@@ -81,8 +81,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name))
                 .filter(o -> meta.hasAccess(o.getRoles(), userInfoProvider.getCurrentRoles()))
-                .map(Operation::getRecords)
-                .filter(r -> r == 1 || r == 2).count() > 0;
+                .map(Operation::getRecords).anyMatch(r -> r == 1 || r == 2);
     }
 
     @Override
@@ -165,31 +164,34 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
             }
             roleList.removeAll(forbiddenRoles);
 
-            boolean hasAccess = false;
-            for (String role : roleList)
-            {
-                if (currentRoles.contains(role))
-                {
-                    hasAccess = true;
-                    break;
-                }
-            }
-            if (!hasAccess && !forbiddenRoles.isEmpty())
-            {
-                for (String currRole : currentRoles)
-                {
-                    if (!forbiddenRoles.contains(currRole))
-                    {
-                        hasAccess = true;
-                        break;
-                    }
-                }
-            }
+            boolean hasAccess = isHasAccess(currentRoles, roleList, forbiddenRoles);
             if (!hasAccess)
             {
                 prop.setHidden(true);
             }
         }
+    }
+
+    private static boolean isHasAccess(List<String> currentRoles, List<String> roleList, List<String> forbiddenRoles)
+    {
+        for (String role : roleList)
+        {
+            if (currentRoles.contains(role))
+            {
+                return true;
+            }
+        }
+        if (!forbiddenRoles.isEmpty())
+        {
+            for (String currRole : currentRoles)
+            {
+                if (!forbiddenRoles.contains(currRole))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void addAggregateRowIfNeeded(List<QRec> rows)
