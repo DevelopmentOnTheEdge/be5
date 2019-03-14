@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.server.util.ActionUtils;
 
@@ -37,9 +37,9 @@ public class MenuHelper
 
     public Action getDefaultAction()
     {
-        List<RootNode> entities = collectEntities(false, false, EntityType.TABLE);
+        List<RootNode> entitiesWithInvisible = collectEntities(false, true, EntityType.TABLE);
 
-        for (RootNode rootNode : entities)
+        for (RootNode rootNode : entitiesWithInvisible)
         {
             if (rootNode.action != null)
             {
@@ -54,7 +54,7 @@ public class MenuHelper
             }
         }
 
-        entities = collectEntities(false, true, EntityType.TABLE);
+        List<RootNode> entities = collectEntities(false, false, EntityType.TABLE);
 
         for (RootNode rootNode : entities)
         {
@@ -64,10 +64,7 @@ public class MenuHelper
             }
             else if (rootNode.children != null)
             {
-                for (QueryNode node : rootNode.children)
-                {
-                    return node.action;
-                }
+                return rootNode.children.get(0).action;
             }
         }
 
@@ -79,10 +76,10 @@ public class MenuHelper
      */
     public List<RootNode> collectEntities(boolean withIds, EntityType entityType)
     {
-        return collectEntities(withIds, true, entityType);
+        return collectEntities(withIds, false, entityType);
     }
 
-    private List<RootNode> collectEntities(boolean withIds, boolean withoutInvisible, EntityType entityType)
+    private List<RootNode> collectEntities(boolean withIds, boolean withInvisible, EntityType entityType)
     {
         UserInfo userInfo = userInfoProvider.getLoggedUser();
         List<String> roles = userInfo.getCurrentRoles();
@@ -91,17 +88,17 @@ public class MenuHelper
 
         for (Entity entity : meta.getOrderedEntities(entityType, language))
         {
-            collectEntityContent(entity, language, roles, withIds, withoutInvisible, out);
+            collectEntityContent(entity, language, roles, withIds, withInvisible, out);
         }
 
         return out;
     }
 
     private void collectEntityContent(Entity entity, String language, List<String> roles, boolean withIds,
-                                      boolean withoutInvisible, List<RootNode> out)
+                                      boolean withInvisible, List<RootNode> out)
     {
         List<Query> queries = meta.getQueries(entity, roles);
-        if (withoutInvisible)
+        if (!withInvisible)
         {
             queries.removeIf(Query::isInvisible);
         }

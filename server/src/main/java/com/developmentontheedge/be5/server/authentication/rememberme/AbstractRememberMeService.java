@@ -13,6 +13,10 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * copy code parts from
+ * org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
+ */
 public abstract class AbstractRememberMeService implements RememberMeServices
 {
     private static final Logger log = Logger.getLogger(AbstractRememberMeService.class.getName());
