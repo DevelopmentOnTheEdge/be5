@@ -29,8 +29,8 @@ public class PersistentTokenRepositoryImplTest extends ServerBe5ProjectDBTest
     @Before
     public void setUp()
     {
-        db.updateUnsafe("drop table if exists persistent_logins");
-        db.updateUnsafe("create table persistent_logins (user_name varchar(64) not null, series varchar(64) primary key, "
+        db.updateRaw("drop table if exists persistent_logins");
+        db.updateRaw("create table persistent_logins (user_name varchar(64) not null, series varchar(64) primary key, "
                 + "token varchar(64) not null, last_used timestamp not null)");
         queries = getInjector().getInstance(QueriesService.class);
         repo = new PersistentTokenRepositoryImpl(db);

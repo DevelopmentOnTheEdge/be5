@@ -113,9 +113,9 @@ public class DbServiceImpl implements DbService
     }
 
     @Override
-    public int updateUnsafe(String sql, Object... params)
+    public int updateRaw(String sql, Object... params)
     {
-        return execute(conn -> updateUnsafe(conn, sql, params));
+        return execute(conn -> updateRaw(conn, sql, params));
     }
 
     @Override
@@ -160,7 +160,7 @@ public class DbServiceImpl implements DbService
         return queryRunner.update(conn, sql, params);
     }
 
-    private int updateUnsafe(Connection conn, String sql, Object... params) throws SQLException
+    private int updateRaw(Connection conn, String sql, Object... params) throws SQLException
     {
         log.fine("Update raw sql: " + sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);

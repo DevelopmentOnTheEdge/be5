@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.database.DatabaseTest;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,12 +41,22 @@ public class DbServiceTest extends DatabaseTest
     }
 
     @Test
-    public void updateUnsafe()
+    public void updateRaw()
     {
-        int count = db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
+        int count = db.updateRaw("ALTER TABLE persons ADD column_test varchar(40)");
 
         assertEquals(0, count);
         assertNull(db.one("select column_test from persons"));
+    }
+
+    @Test
+    public void executeRaw()
+    {
+        List<String> emails = db.executeRaw("SELECT email FROM persons WHERE name = ?",
+                new ScalarHandler<>(), "user2");
+
+        assertEquals(1, emails.size());
+        assertEquals("email2@mail.ru", emails.get(0));
     }
 
     @Test

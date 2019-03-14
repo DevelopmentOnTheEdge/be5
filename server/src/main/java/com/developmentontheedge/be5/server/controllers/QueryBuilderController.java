@@ -228,7 +228,7 @@ public class QueryBuilderController extends JsonApiModelController
                 || sql.startsWith("insert") || sql.startsWith("INSERT")
                 || sql.startsWith("delete") || sql.startsWith("DELETE"))
         {
-            Object id = db.updateUnsafe(sql);
+            Object id = db.updateRaw(sql);
             addText(includedData, "Update was successful", id + " row(s) affected");
         }
         else

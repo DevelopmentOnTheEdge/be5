@@ -78,7 +78,7 @@ public class DbServiceMock implements DbService
     }
 
     @Override
-    public int updateUnsafe(String sql, Object... params)
+    public int updateRaw(String sql, Object... params)
     {
         log.info("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
         return mock.update(sql, params);

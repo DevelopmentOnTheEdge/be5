@@ -46,7 +46,7 @@ public interface DbService
      */
     int update(String sql, Object... params);
 
-    int updateUnsafe(String sql, Object... params);
+    int updateRaw(String sql, Object... params);
 
     <T> List<T> executeRaw(String sql, ResultSetHandler<T> rsh, Object... params);
 
