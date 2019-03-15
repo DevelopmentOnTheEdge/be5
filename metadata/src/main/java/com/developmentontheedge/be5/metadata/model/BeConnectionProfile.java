@@ -345,12 +345,6 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
             }
 
             @Override
-            public Map<String, Object> asModifiableMap()
-            {
-                return new LinkedHashMap<>(properties);
-            }
-
-            @Override
             public Map<String, Object> asMap()
             {
                 return new LinkedHashMap<>(properties);
