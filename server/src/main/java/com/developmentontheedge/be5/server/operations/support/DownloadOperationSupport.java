@@ -15,7 +15,7 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        Map<String, Object> parametersMap = parameters != null ? ((DynamicPropertySet) parameters).asModifiableMap()
+        Map<String, Object> parametersMap = parameters != null ? ((DynamicPropertySet) parameters).asMap()
                 : Collections.emptyMap();
         FrontendAction downloadOperationAction = FrontendActions.downloadOperation(
                 getInfo().getEntityName(), context.getQueryName(), getInfo().getName(),
