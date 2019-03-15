@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -72,7 +73,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
     }
 
     @Test
-    public void updateWithoutBeSql()
+    public void executeRawUpdate()
     {
         Response response = mock(Response.class);
         component.generate(getSpyMockRequest("/api/queryBuilder/", ImmutableMap.of(
@@ -80,7 +81,21 @@ public class QueryBuilderTest extends SqlMockOperationTest
                 "updateWithoutBeSql", "true",
                 RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())), response);
 
-        verify(DbServiceMock.mock).update("update testtable SET name = 'test' WHERE id = 1");
+        verify(DbServiceMock.mock).updateRaw("update testtable SET name = 'test' WHERE id = 1");
+
+        verify(response).sendAsJson(any(JsonApiModel.class));
+    }
+
+    @Test
+    public void executeRawQuery()
+    {
+        Response response = mock(Response.class);
+        component.generate(getSpyMockRequest("/api/queryBuilder/", ImmutableMap.of(
+                "sql", "EXPLAIN select * from testtable",
+                "updateWithoutBeSql", "true",
+                RestApiConstants.TIMESTAMP_PARAM, "" + System.currentTimeMillis())), response);
+
+        verify(DbServiceMock.mock).executeRaw(eq("EXPLAIN select * from testtable"), any());
 
         verify(response).sendAsJson(any(JsonApiModel.class));
     }

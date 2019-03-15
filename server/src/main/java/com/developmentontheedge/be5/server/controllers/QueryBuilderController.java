@@ -117,10 +117,11 @@ public class QueryBuilderController extends JsonApiModelController
 
             if (sql == null)
             {
-                sql = history.get(history.size() - 1);
+                sql = history.get(history.size() - 1).trim();
             }
             else
             {
+                sql = sql.trim();
                 if (!history.get(history.size() - 1).equals(sql))
                 {
                     history.add(sql);
@@ -222,7 +223,7 @@ public class QueryBuilderController extends JsonApiModelController
         addText(includedData, "Update was successful", id + " row(s) affected");
     }
 
-    private void executeRaw(List<ResourceData> includedData, String sql)
+    void executeRaw(List<ResourceData> includedData, String sql)
     {
         if (sql.startsWith("update") || sql.startsWith("UPDATE")
                 || sql.startsWith("insert") || sql.startsWith("INSERT")
@@ -260,14 +261,12 @@ public class QueryBuilderController extends JsonApiModelController
 
     private String processRawSql(String sql)
     {
-        if (sql.contains("limit") || sql.contains("LIMIT"))
-        {
-            return sql;
-        }
-        else
+        if (!(sql.contains("limit") || sql.contains("LIMIT")) &&
+                (sql.startsWith("SELECT") || sql.startsWith("select")))
         {
             return sql + "\nLIMIT 100";
         }
+        return sql;
     }
 
     private void addText(List<ResourceData> includedData, String title, String text)
