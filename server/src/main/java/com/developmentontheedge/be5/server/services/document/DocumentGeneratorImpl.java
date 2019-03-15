@@ -14,10 +14,11 @@ import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.model.table.ColumnModel;
-import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.server.services.document.rows.MoreRowsBuilder;
 import com.developmentontheedge.be5.server.services.document.rows.NamedCellsRowBuilder;
 import com.developmentontheedge.be5.server.services.document.rows.TableRowBuilder;
+import com.developmentontheedge.be5.server.services.events.LogBe5Event;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.JsonUtils;
 
@@ -264,6 +265,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private String getUrl(Query query, Map<String, Object> parameters)
     {
         return new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName())
-                .named(parameters).toString();
+                .named(FilterUtil.getContextParams(parameters)).toString();
     }
 }

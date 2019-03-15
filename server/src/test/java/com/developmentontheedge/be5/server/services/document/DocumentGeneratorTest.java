@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services.document;
 
+import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
@@ -96,7 +98,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    public void testTableWithFilter()
+    public void testTableWithFilterOperation()
     {
         initUserWithRoles("SystemDeveloper");
 
@@ -132,6 +134,16 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
                 Collections.singletonMap("name", "1"));
 
         assertEquals("table/testtable/All records/name=1",
+                jsonApiModel.getData().getLinks().get(RestApiConstants.SELF_LINK));
+    }
+
+    @Test
+    public void testSelfLinkWithFilter()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"),
+                of("name", "1", FrontendConstants.SEARCH_PARAM, "true"));
+
+        assertEquals("table/testtable/All records",
                 jsonApiModel.getData().getLinks().get(RestApiConstants.SELF_LINK));
     }
 
