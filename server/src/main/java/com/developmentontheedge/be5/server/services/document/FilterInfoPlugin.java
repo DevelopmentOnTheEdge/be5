@@ -50,13 +50,15 @@ public class FilterInfoPlugin implements DocumentPlugin
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
-        FilterInfo filterInfo = new FilterInfo(getOperationParamsInfo(query, parameters));
+        FilterInfo filterInfo = new FilterInfo(
+                getOperationParamsInfo(query, FilterUtil.getContextParams(parameters)),
+                getOperationParamsInfo(query, FilterUtil.getFilterParams(parameters))
+        );
         return new ResourceData(DOCUMENT_FILTER_INFO_PLUGIN, filterInfo, null);
     }
 
-    protected List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> parameters)
+    protected List<FilterItem> getOperationParamsInfo(Query query, Map<String, Object> params)
     {
-        Map<String, Object> params = FilterUtil.getContextParams(parameters);
         List<FilterItem> result = new ArrayList<>();
 
         AstStart ast = null;
@@ -186,15 +188,22 @@ public class FilterInfoPlugin implements DocumentPlugin
     public static class FilterInfo
     {
         private List<FilterItem> operationParamsInfo;
+        private List<FilterItem> filterInfo;
 
-        public FilterInfo(List<FilterItem> operationParamsInfo)
+        public FilterInfo(List<FilterItem> operationParamsInfo, List<FilterItem> filterInfo)
         {
             this.operationParamsInfo = operationParamsInfo;
+            this.filterInfo = filterInfo;
         }
 
         public List<FilterItem> getOperationParamsInfo()
         {
             return operationParamsInfo;
+        }
+
+        public List<FilterItem> getFilterInfo()
+        {
+            return filterInfo;
         }
     }
 
