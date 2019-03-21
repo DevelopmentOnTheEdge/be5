@@ -1,12 +1,11 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.server.authentication;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.server.services.MenuHelper;
 import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
-import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
+import com.developmentontheedge.be5.server.services.MenuHelper;
 
 import javax.inject.Inject;
 import java.util.logging.Logger;
