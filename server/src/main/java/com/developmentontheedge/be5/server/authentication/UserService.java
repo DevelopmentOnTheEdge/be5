@@ -66,6 +66,28 @@ public class UserService
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
                              Locale locale, String remoteAddr, boolean rememberMe)
     {
+        UserInfo ui = createUserInfo(userName, availableRoles, currentRoles, locale, remoteAddr);
+
+        Session session = requestProvider.get().getSession();
+        session.invalidate();
+
+        session.set("remoteAddr", remoteAddr);
+        session.set(SessionConstants.USER_INFO, ui);
+        session.set(SessionConstants.CURRENT_USER, ui.getUserName());
+        UserInfoHolder.setLoggedUser(ui);
+        initUserService.initUser(userName);
+        if (rememberMe)
+        {
+            rememberMeService.onLoginSuccess(requestProvider.get(), responseProvider.get(), userName);
+        }
+
+        log.fine("Login user: " + userName);
+        return ui;
+    }
+
+    private UserInfo createUserInfo(String userName, List<String> availableRoles, List<String> currentRoles,
+                                    Locale locale, String remoteAddr)
+    {
         UserInfo ui;
         if (stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
@@ -91,21 +113,6 @@ public class UserService
 
         ui.setRemoteAddr(remoteAddr);
         ui.setLocale(meta.getLocale(locale));
-
-        Session session = requestProvider.get().getSession();
-        session.invalidate();
-
-        session.set("remoteAddr", remoteAddr);
-        session.set(SessionConstants.USER_INFO, ui);
-        session.set(SessionConstants.CURRENT_USER, ui.getUserName());
-        UserInfoHolder.setLoggedUser(ui);
-        initUserService.initUser(userName);
-        if (rememberMe)
-        {
-            rememberMeService.onLoginSuccess(requestProvider.get(), responseProvider.get(), userName);
-        }
-
-        log.fine("Login user: " + userName);
         return ui;
     }
 
