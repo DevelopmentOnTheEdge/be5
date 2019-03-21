@@ -41,7 +41,6 @@ public class UserInfoModelServiceImpl implements UserInfoModelService
     protected String getDefaultAction()
     {
         Action defaultAction = menuHelper.getDefaultAction();
-        String defaultRouteCall = "";
         if (defaultAction == null)
         {
             log.severe("Default Action must not be null");
@@ -50,13 +49,13 @@ public class UserInfoModelServiceImpl implements UserInfoModelService
         {
             if (defaultAction.getName().equals("call"))
             {
-                defaultRouteCall = defaultAction.getArg();
+                return defaultAction.getArg();
             }
             else
             {
                 log.severe("Default Action type must be 'call'");
             }
         }
-        return defaultRouteCall;
+        return "";
     }
 }
