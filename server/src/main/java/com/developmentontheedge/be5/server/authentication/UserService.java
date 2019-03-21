@@ -50,14 +50,17 @@ public class UserService
         this.responseProvider = responseProvider;
     }
 
-    public UserInfo saveUser(String username, boolean rememberMe)
+    public UserInfo saveUser(String userName, boolean rememberMe)
     {
-        List<String> availableRoles = roleService.getAvailableRoles(username);
-        List<String> currentRoles = getAvailableCurrentRoles(roleService.getCurrentRoles(username), availableRoles);
+        List<String> availableRoles = roleService.getAvailableRoles(userName);
+        List<String> currentRoles = getAvailableCurrentRoles(roleService.getCurrentRoles(userName), availableRoles);
+        return saveUser(userName, availableRoles, currentRoles, rememberMe);
+    }
+
+    public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles, boolean rememberMe)
+    {
         Request req = requestProvider.get();
-        UserInfo userInfo = saveUser(username, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
-        log.fine("Login user: " + username);
-        return userInfo;
+        return saveUser(userName, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
     }
 
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
@@ -102,6 +105,7 @@ public class UserService
             rememberMeService.onLoginSuccess(requestProvider.get(), responseProvider.get(), userName);
         }
 
+        log.fine("Login user: " + userName);
         return ui;
     }
 
