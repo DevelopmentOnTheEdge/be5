@@ -91,20 +91,14 @@ public class UserService
         UserInfo ui;
         if (stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
-            Set<String> devAvailableRoles = new LinkedHashSet<String>()
-            {{
-                addAll(availableRoles);
-                addAll(ModuleLoader2.getDevRoles());
-            }};
-            Set<String> devCurrentRoles = new LinkedHashSet<String>()
-            {{
-                addAll(currentRoles);
-                addAll(ModuleLoader2.getDevRoles());
-            }};
+            Set<String> devAvailableRoles = new LinkedHashSet<>(availableRoles);
+            Set<String> devCurrentRoles = new LinkedHashSet<>(currentRoles);
 
-            ui = new UserInfo(userName, devAvailableRoles, devCurrentRoles);
+            devAvailableRoles.addAll(ModuleLoader2.getDevRoles());
+            devCurrentRoles.addAll(ModuleLoader2.getDevRoles());
 
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
+            ui = new UserInfo(userName, devAvailableRoles, devCurrentRoles);
         }
         else
         {
