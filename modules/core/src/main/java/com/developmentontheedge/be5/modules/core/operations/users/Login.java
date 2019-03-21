@@ -52,7 +52,7 @@ public class Login extends GOperationSupport
     }
 
     @Override
-    public void invoke(Object parameters)
+    public void invoke(Object parameters) throws Exception
     {
         String username = params.getValueAsString("user_name");
         boolean rememberMe = params.getValue("rememberMe") != null;
