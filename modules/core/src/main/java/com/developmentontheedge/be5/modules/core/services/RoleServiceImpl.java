@@ -36,11 +36,12 @@ public class RoleServiceImpl implements RoleService
     @Override
     public List<String> getCurrentRoles(String userName)
     {
+        List<String> availableRoles = getAvailableRoles(userName);
         String readCurrentRoles = coreUtils.getUserSetting(userName, DatabaseConstants.CURRENT_ROLE_LIST);
         List<String> roles = parseRoles(readCurrentRoles);
         if (roles.size() > 0)
         {
-            return roles;
+            return getAvailableCurrentRoles(roles, availableRoles);
         }
         else
         {

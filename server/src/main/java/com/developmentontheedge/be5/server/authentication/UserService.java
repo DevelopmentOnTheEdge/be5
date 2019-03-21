@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 
 public class UserService
@@ -53,7 +52,7 @@ public class UserService
     public UserInfo saveUser(String userName, boolean rememberMe)
     {
         List<String> availableRoles = roleService.getAvailableRoles(userName);
-        List<String> currentRoles = getAvailableCurrentRoles(roleService.getCurrentRoles(userName), availableRoles);
+        List<String> currentRoles = roleService.getCurrentRoles(userName);
         return saveUser(userName, availableRoles, currentRoles, rememberMe);
     }
 
@@ -122,27 +121,13 @@ public class UserService
         initGuest();
     }
 
-    public List<String> getAvailableCurrentRoles(List<String> newRoles, List<String> availableRoles)
-    {
-        if (availableRoles.size() == 0) throw new IllegalArgumentException("User must have at least one role.");
-        List<String> finalNewRoles = newRoles.stream()
-                .filter(availableRoles::contains)
-                .collect(Collectors.toList());
-        if (finalNewRoles.size() > 0)
-        {
-            return finalNewRoles;
-        }
-        else
-        {
-            return Collections.singletonList(availableRoles.get(0));
-        }
-    }
-
     public void setCurrentRoles(List<String> roles)
     {
-        if (roles.isEmpty()) throw new IllegalArgumentException("There must be at least one role.");
-        roleService.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), roles);
-        UserInfoHolder.getLoggedUser().setCurrentRoles(roles);
+        List<String> availableCurrentRoles = roleService.getAvailableCurrentRoles(roles,
+                UserInfoHolder.getLoggedUser().getAvailableRoles());
+        if (availableCurrentRoles.isEmpty()) throw new IllegalArgumentException("There must be at least one role.");
+        roleService.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), availableCurrentRoles);
+        UserInfoHolder.getLoggedUser().setCurrentRoles(availableCurrentRoles);
     }
 
     public void initUser(Request req, Response res)

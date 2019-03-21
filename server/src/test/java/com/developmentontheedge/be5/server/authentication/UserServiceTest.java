@@ -102,21 +102,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     {
         initUserWithRoles("1", "2");
         userHelper.setCurrentRoles(singletonList("3"));
-        assertEquals(singletonList("3"), userInfoProvider.getCurrentRoles());
-    }
-
-    @Test
-    public void getAvailableCurrentRoles()
-    {
-        assertEquals(singletonList("1"),
-                userHelper.getAvailableCurrentRoles(Arrays.asList("1", "2"), singletonList("1")));
-    }
-
-    @Test
-    public void getAvailableCurrentRolesEmptyNewRoles()
-    {
-        assertEquals(singletonList("1"),
-                userHelper.getAvailableCurrentRoles(Collections.emptyList(), singletonList("1")));
+        assertEquals(singletonList("1"), userInfoProvider.getCurrentRoles());
     }
 
     @Test
