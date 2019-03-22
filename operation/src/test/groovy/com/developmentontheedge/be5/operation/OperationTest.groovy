@@ -51,7 +51,7 @@ class OperationTest extends OperationsSqlMockProjectTest
     {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "All records", "TestOperation1",
                  ImmutableMap.of("name", "foo", OperationConstants.SELECTED_ROWS, [1] as String[])), [:]).getSecond()
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo/_selectedRows_=1"), result)
     }
 
     @Test

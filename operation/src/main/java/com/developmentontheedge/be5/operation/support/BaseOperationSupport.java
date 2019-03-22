@@ -76,8 +76,7 @@ public abstract class BaseOperationSupport implements Operation
 
         for (Map.Entry<String, Object> entry : context.getParams().entrySet())
         {
-            if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null
-                    && !entry.getKey().equals(OperationConstants.SELECTED_ROWS))
+            if (!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
             {
                 map.put(entry.getKey(), getValue(entry));
             }
