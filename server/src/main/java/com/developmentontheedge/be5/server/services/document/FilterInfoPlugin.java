@@ -17,6 +17,7 @@ import com.developmentontheedge.sql.model.SqlQuery;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -145,22 +146,27 @@ public class FilterInfoPlugin implements DocumentPlugin
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableTo(),
                     Collections.singletonMap(meta.getEntity(column.getTableTo()).getPrimaryKey(), v));
-            if (tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
+            if (tags.length > 0) return new FilterItem(columnTitle, getValue(tags));
         }
         if (meta.getEntity(column.getTableFrom()).getPrimaryKey().equals(column.getName()))
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
                     Collections.singletonMap(meta.getEntity(column.getTableFrom()).getPrimaryKey(), v));
             String idColumnTitle = mainEntityName.equalsIgnoreCase(column.getTableFrom()) ? null : columnTitle;
-            if (tags.length > 0) return new FilterItem(idColumnTitle, tags[0][1]);
+            if (tags.length > 0) return new FilterItem(idColumnTitle, getValue(tags));
         }
         else
         {
             String[][] tags = dpsHelper.getTags(column, Collections.singletonMap(column.getName(), v));
-            if (tags != null && tags.length > 0) return new FilterItem(columnTitle, tags[0][1]);
+            if (tags != null && tags.length > 0) return new FilterItem(columnTitle, getValue(tags));
         }
 
         return new FilterItem(columnTitle, v + "");
+    }
+
+    private String getValue(String[][] tags)
+    {
+        return Arrays.stream(tags).map(tag -> tag[1]).collect(Collectors.joining(", "));
     }
 
     public static class FilterItem
