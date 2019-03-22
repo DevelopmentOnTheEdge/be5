@@ -184,7 +184,7 @@ public abstract class BaseOperationSupport implements Operation
 
     public String getBackUrl()
     {
-        return getTableUrl(info.getEntityName(), context.getQueryName(), context.getParams());
+        return getTableUrl(info.getEntityName(), context.getQueryName(), getRedirectParams());
     }
 
     private String getTableUrl(String entityName, String queryName, Map<String, Object> params)
