@@ -13,7 +13,7 @@
 
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
-    <artifactId>be5</artifactId>
+    <artifactId>be5-parent</artifactId>
     <version>0.0.3-SNAPSHOT</version>
   </parent>
 

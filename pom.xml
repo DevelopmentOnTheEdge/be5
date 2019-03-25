@@ -4,10 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.developmentontheedge.be5</groupId>
-  <artifactId>be5</artifactId>
+  <artifactId>be5-parent</artifactId>
   <version>0.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <url>http://developmentontheedge.com/</url>
+
+  <name>Be5 project</name>
+  <url>https://github.com/DevelopmentOnTheEdge/be5/wiki</url>
 
   <modules>
     <module>database</module>
