@@ -32,10 +32,6 @@ categories:
         columns:
         - entity
         - publicID
-    - IDX_CAT_NAME_PAR:
-        columns:
-        - name
-        - parentID
     - IDX_CAT_PARENT_ID:
         columns: parentID
     - IDX_CAT_PUBLICID:
