@@ -55,10 +55,20 @@ public class GetLogFiles extends DownloadOperationSupport
         }
         else
         {
+            params.add(new DynamicPropertyBuilder("access_log", Boolean.class)
+                    .title("Show access logs?")
+                    .reloadOnChange()
+                    .nullable()
+                    .value("true".equals(presetValues.get("access_log")))
+                    .get());
+
+            boolean showAccessLog = (boolean) params.getValue("access_log");
+
             List<String> list = new ArrayList<>();
             File folder = logFile.getParentFile();
             for (final File fileEntry : folder.listFiles())
             {
+                if (!showAccessLog && fileEntry.getName().contains("access_log")) continue;
                 list.add(fileEntry.getName());
             }
             params.add(new DynamicPropertyBuilder("logFile", String.class)
