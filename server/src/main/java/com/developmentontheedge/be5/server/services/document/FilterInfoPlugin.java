@@ -117,12 +117,23 @@ public class FilterInfoPlugin implements DocumentPlugin
                 }
             }
 
-            String valueTitle = mainTableDefName != null ?
-                    userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), v + "") : v + "";
+            String valueTitle = getValueTitle(query, mainTableDefName, v);
             result.add(new FilterItem(mainTableDefName != null ?
                     userAwareMeta.getColumnTitle(mainTableDefName, k) : k, valueTitle));
         });
         return result;
+    }
+
+    private String getValueTitle(Query query, String mainTableDefName, Object value)
+    {
+        if (value instanceof String[])
+        {
+            return Arrays.stream((String[]) value).map(v -> mainTableDefName != null ?
+                    userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), v + "") : v + "")
+                    .collect(Collectors.joining(", "));
+        }
+        return mainTableDefName != null ?
+                userAwareMeta.getColumnTitle(mainTableDefName, query.getName(), value + "") : value + "";
     }
 
     private String getMainTableDefName(Query query, AstStart ast)
