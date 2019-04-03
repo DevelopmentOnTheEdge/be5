@@ -121,7 +121,7 @@ public class EmbeddedJetty
             log.log(Level.SEVERE, "", e);
         }
         sessionManager.setSessionIdManager(new HashSessionIdManager());
-        sessionManager.setSavePeriod(1);
+        sessionManager.setSavePeriod(60);
         sessionManager.setMaxInactiveInterval(-1);
         sessionManager.setDeleteUnrestorableSessions(true);
 
