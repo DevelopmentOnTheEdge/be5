@@ -50,21 +50,21 @@ public class UserService
         this.responseProvider = responseProvider;
     }
 
-    public UserInfo saveUser(String userName, boolean rememberMe)
+    public UserInfo saveUser(String userName)
     {
         List<String> availableRoles = roleService.getAvailableRoles(userName);
         List<String> currentRoles = roleService.getCurrentRoles(userName);
-        return saveUser(userName, availableRoles, currentRoles, rememberMe);
+        return saveUser(userName, availableRoles, currentRoles);
     }
 
-    public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles, boolean rememberMe)
+    public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles)
     {
         Request req = requestProvider.get();
-        return saveUser(userName, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr(), rememberMe);
+        return saveUser(userName, availableRoles, currentRoles, req.getLocale(), req.getRemoteAddr());
     }
 
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
-                             Locale locale, String remoteAddr, boolean rememberMe)
+                             Locale locale, String remoteAddr)
     {
         UserInfo ui = createUserInfo(userName, availableRoles, currentRoles, locale, remoteAddr);
 
@@ -147,7 +147,7 @@ public class UserService
     @LogBe5Event
     void saveAutoLoginUser(String userName)
     {
-        saveUser(userName, true);
+        saveUser(userName);
     }
 
     private void initGuest()
@@ -157,6 +157,6 @@ public class UserService
 
         List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
 
-        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr(), false);
+        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr());
     }
 }

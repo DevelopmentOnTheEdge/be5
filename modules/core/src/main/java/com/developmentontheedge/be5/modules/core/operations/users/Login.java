@@ -56,11 +56,10 @@ public class Login extends GOperationSupport
     public void invoke(Object parameters) throws Exception
     {
         String username = params.getValueAsString("user_name");
-        boolean rememberMe = params.getValue(AbstractRememberMeService.DEFAULT_PARAMETER) != null;
 
         if (loginService.loginCheck(username, params.getValueAsString("user_pass").toCharArray()))
         {
-            userService.saveUser(username, rememberMe);
+            userService.saveUser(username);
             if (context.getParams().get("withoutUpdateUserInfo") == null)
             {
                 setResultFinished(FrontendActions.updateUserAndOpenDefaultRoute(userInfoModelService.getUserInfoModel()));

@@ -51,7 +51,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     {
         when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(Arrays.asList("1", "2"));
         when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(singletonList("1"));
-        UserInfo ui = userService.saveUser("test", false);
+        UserInfo ui = userService.saveUser("test");
 
         assertEquals(singletonList("1"), ui.getCurrentRoles());
     }
@@ -60,7 +60,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     public void saveUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        UserInfo ui = userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
+        UserInfo ui = userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1");
 
         assertEquals(roles, ui.getCurrentRoles());
 
@@ -80,7 +80,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
         ((ServerTestRequest) requestProvider.get())
                 .setParameter(AbstractRememberMeService.DEFAULT_PARAMETER, "true");
         List<String> roles = Arrays.asList("1", "2");
-        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1");
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);
@@ -136,7 +136,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
         ((ServerTestRequest) requestProvider.get())
                 .setParameter(AbstractRememberMeService.DEFAULT_PARAMETER, "true");
         List<String> roles = Arrays.asList("1", "2");
-        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1");
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);
