@@ -161,24 +161,6 @@ public class EventManager implements MethodInterceptor
         }
     }
 
-//    public void servletCompleted( ServletInfo si )
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//
-//                listener.servletCompleted( si );
-//
-//        }
-//    }
-//
-//    public void servletDenied( ServletInfo si, String reason )
-//    {
-//        for( Be5EventLogger listener : listeners )
-//        {
-//            listener.servletDenied( si, reason );
-//        }
-//    }
-
     ///////////////////////////////////////////////////////////////////
     // methods for long processes and daemons
     //
@@ -197,10 +179,4 @@ public class EventManager implements MethodInterceptor
     {
         listeners.add(listener);
     }
-
-    public void removeListener(Be5EventLogger listener)
-    {
-        listeners.remove(listener);
-    }
-
 }
