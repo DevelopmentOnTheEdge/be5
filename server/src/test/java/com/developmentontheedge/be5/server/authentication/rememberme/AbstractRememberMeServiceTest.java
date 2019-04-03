@@ -8,11 +8,13 @@ import org.junit.Test;
 
 import javax.servlet.http.Cookie;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class AbstractRememberMeServiceTest
@@ -178,6 +180,38 @@ public class AbstractRememberMeServiceTest
         ServerTestResponse response = new ServerTestResponse();
 
         services.autoLogin(request, response);
+    }
+
+    @Test
+    public void loginSuccessCallsOnLoginSuccessCorrectly() {
+        MockRememberMeServices services = new MockRememberMeServices();
+
+        ServerTestRequest request = new ServerTestRequest();
+        ServerTestResponse response = new ServerTestResponse();
+        String userName = "joe";
+
+        // No parameter set
+        services.loginSuccess(request, response, userName);
+        assertThat(services.loginSuccessCalled, is(false));
+
+        // Parameter set to true
+        services = new MockRememberMeServices();
+        request.setParameter(MockRememberMeServices.DEFAULT_PARAMETER, "true");
+        services.loginSuccess(request, response, userName);
+        assertThat(services.loginSuccessCalled, is(true));
+
+        // Different parameter name, set to true
+        services = new MockRememberMeServices();
+        services.setParameter("my_parameter");
+        request.setParameter("my_parameter", "true");
+        services.loginSuccess(request, response, userName);
+        assertThat(services.loginSuccessCalled, is(true));
+
+        // Parameter set to false
+        services = new MockRememberMeServices();
+        request.setParameter(MockRememberMeServices.DEFAULT_PARAMETER, "false");
+        services.loginSuccess(request, response, userName);
+        assertThat(services.loginSuccessCalled, is(false));
     }
 
     @Test

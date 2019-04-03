@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.authentication.rememberme;
 
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 
@@ -22,12 +23,14 @@ public abstract class AbstractRememberMeService implements RememberMeServices
     private static final Logger log = Logger.getLogger(AbstractRememberMeService.class.getName());
 
     public static final String REMEMBER_ME_KEY = "remember-me";
+    public static final String DEFAULT_PARAMETER = "remember-me";
     private static final int TWO_WEEKS_S = 1209600;
     private static final int DEFAULT_SERIES_LENGTH = 16;
     private static final int DEFAULT_TOKEN_LENGTH = 16;
     private static final String DELIMITER = ":";
 
     private String cookieName = REMEMBER_ME_KEY;
+    private String parameter = DEFAULT_PARAMETER;
     private int tokenValiditySeconds = TWO_WEEKS_S;
     private int seriesLength = DEFAULT_SERIES_LENGTH;
     private int tokenLength = DEFAULT_TOKEN_LENGTH;
@@ -81,6 +84,47 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         cancelCookie(request, response);
         return null;
     }
+
+    @Override
+    public final void loginSuccess(Request request, Response response, String username)
+    {
+        if (!rememberMeRequested(request, parameter))
+        {
+            log.fine("Remember-me login not requested.");
+            return;
+        }
+
+        onLoginSuccess(request, response, username);
+    }
+
+    private boolean rememberMeRequested(Request request, String parameter)
+    {
+        String paramValue = request.get(parameter);
+
+        if (paramValue != null)
+        {
+            if (paramValue.equalsIgnoreCase("true") || paramValue.equalsIgnoreCase("on")
+                    || paramValue.equalsIgnoreCase("yes") || paramValue.equals("1"))
+            {
+                return true;
+            }
+        }
+
+        if (log.isLoggable(Level.FINE))
+        {
+            log.fine("Did not send remember-me cookie (principal did not set parameter '"
+                    + parameter + "')");
+        }
+
+        return false;
+    }
+
+    /**
+     * Called from loginSuccess when a remember-me login has been requested. Typically
+     * implemented by subclasses to set a remember-me cookie and potentially store a
+     * record of it if the implementation requires this.
+     */
+    protected abstract void onLoginSuccess(Request request, Response response, String username);
 
     protected abstract String processAutoLoginCookie(String[] cookieTokens, Request request,
                                                      Response response);
@@ -162,8 +206,19 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         this.cookieName = cookieName;
     }
 
+    public void setParameter(String parameter)
+    {
+        if (Utils.isEmpty(parameter)) throw new IllegalArgumentException("Parameter name cannot be empty or null");
+        this.parameter = parameter;
+    }
+
+    public String getParameter()
+    {
+        return parameter;
+    }
+
     void setCookie(String[] tokens, int maxAge, Request request,
-                           Response response)
+                   Response response)
     {
         String cookieValue = encodeCookie(tokens);
         Cookie cookie = new Cookie(cookieName, cookieValue);

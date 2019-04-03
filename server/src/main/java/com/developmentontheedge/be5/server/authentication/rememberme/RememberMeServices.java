@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.web.Response;
 
 public interface RememberMeServices
 {
-    void onLoginSuccess(Request rawRequest, Response rawResponse, String username);
+    void loginSuccess(Request rawRequest, Response rawResponse, String username);
 
     String autoLogin(Request request, Response response);
 

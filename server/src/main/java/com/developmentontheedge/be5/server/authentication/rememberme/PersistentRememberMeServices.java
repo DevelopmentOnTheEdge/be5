@@ -103,6 +103,7 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
         }
     }
 
+    @Override
     public void onLoginSuccess(Request request,
                                Response response, String username)
     {

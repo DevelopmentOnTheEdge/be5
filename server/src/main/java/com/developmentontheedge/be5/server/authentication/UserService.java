@@ -76,9 +76,9 @@ public class UserService
         session.set(SessionConstants.CURRENT_USER, ui.getUserName());
         UserInfoHolder.setLoggedUser(ui);
         initUserService.initUser(userName);
-        if (rememberMe)
+        if (!RoleType.ROLE_GUEST.equals(userName))
         {
-            rememberMeService.onLoginSuccess(requestProvider.get(), responseProvider.get(), userName);
+            rememberMeService.loginSuccess(requestProvider.get(), responseProvider.get(), userName);
         }
 
         log.fine("Login user: " + userName);

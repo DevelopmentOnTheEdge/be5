@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
 import com.developmentontheedge.be5.server.authentication.UserService;
+import com.developmentontheedge.be5.server.authentication.rememberme.AbstractRememberMeService;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.beans.DPBuilder;
 
@@ -42,10 +43,10 @@ public class Login extends GOperationSupport
         }}.build();
 
         String rememberMeTitle = userAwareMeta.getColumnTitle("users", "Remember me");
-        params.add(new DPBuilder("rememberMe", rememberMeTitle) {{
+        params.add(new DPBuilder(AbstractRememberMeService.DEFAULT_PARAMETER, rememberMeTitle) {{
             type = Boolean.class;
             nullable = true;
-            value = presetValues.get("rememberMe");
+            value = presetValues.get(AbstractRememberMeService.DEFAULT_PARAMETER);
         }}.build());
 
         return params;
@@ -55,7 +56,7 @@ public class Login extends GOperationSupport
     public void invoke(Object parameters) throws Exception
     {
         String username = params.getValueAsString("user_name");
-        boolean rememberMe = params.getValue("rememberMe") != null;
+        boolean rememberMe = params.getValue(AbstractRememberMeService.DEFAULT_PARAMETER) != null;
 
         if (loginService.loginCheck(username, params.getValueAsString("user_pass").toCharArray()))
         {

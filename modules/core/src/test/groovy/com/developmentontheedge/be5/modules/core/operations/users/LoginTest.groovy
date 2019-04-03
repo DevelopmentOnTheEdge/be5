@@ -38,7 +38,7 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     {
         def first = generateOperation(createOperation("users", "All records", "Login", "")).getFirst()
 
-        assertEquals("{'values':{'user_name':'','user_pass':'','rememberMe':''},'meta':{'/user_name':{'displayName':'Логин','columnSize':'100'},'/user_pass':{'displayName':'Пароль','passwordField':true,'columnSize':'50'},'/rememberMe':{'displayName':'Запомнить меня','type':'Boolean','canBeNull':true}},'order':['/user_name','/user_pass','/rememberMe']}",
+        assertEquals("{'values':{'user_name':'','user_pass':'','remember-me':''},'meta':{'/user_name':{'displayName':'Логин','columnSize':'100'},'/user_pass':{'displayName':'Пароль','passwordField':true,'columnSize':'50'},'/remember-me':{'displayName':'Запомнить меня','type':'Boolean','canBeNull':true}},'order':['/user_name','/user_pass','/remember-me']}",
                 oneQuotes(JsonFactory.bean(first)))
     }
 

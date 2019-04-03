@@ -4,11 +4,13 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
+import com.developmentontheedge.be5.server.authentication.rememberme.AbstractRememberMeService;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import com.developmentontheedge.be5.test.mocks.InitUserServiceMock;
 import com.developmentontheedge.be5.test.mocks.RoleServiceMock;
+import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
@@ -75,8 +77,10 @@ public class UserServiceTest extends ServerBe5ProjectTest
     @Test
     public void saveUserAndRemember()
     {
+        ((ServerTestRequest) requestProvider.get())
+                .setParameter(AbstractRememberMeService.DEFAULT_PARAMETER, "true");
         List<String> roles = Arrays.asList("1", "2");
-        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);
@@ -129,8 +133,10 @@ public class UserServiceTest extends ServerBe5ProjectTest
     @Test
     public void logoutAfterRemember()
     {
+        ((ServerTestRequest) requestProvider.get())
+                .setParameter(AbstractRememberMeService.DEFAULT_PARAMETER, "true");
         List<String> roles = Arrays.asList("1", "2");
-        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);

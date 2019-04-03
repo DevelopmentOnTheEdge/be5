@@ -20,6 +20,8 @@ public class ServerTestRequest implements Request
     private Map<String, Cookie> cookies = new HashMap<>();
     private Session session = null;
 
+    private Map<String, String[]> parameters = new HashMap<>();
+
     @Inject
     public ServerTestRequest(Session session)
     {
@@ -105,13 +107,19 @@ public class ServerTestRequest implements Request
     @Override
     public Map<String, String[]> getParameters()
     {
-        return null;
+        return parameters;
     }
 
     @Override
     public String get(String parameter)
     {
-        return null;
+        String[] values = parameters.get(parameter);
+        return values != null ? values[0] : null;
+    }
+
+    public void setParameter(String name, String value)
+    {
+        parameters.put(name, new String[]{value});
     }
 
     @Override
