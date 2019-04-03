@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
 import com.developmentontheedge.be5.server.authentication.rememberme.RememberMeServices;
+import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
@@ -135,12 +136,18 @@ public class UserService
         String userName = rememberMeService.autoLogin(req, res);
         if (userName != null)
         {
-            saveUser(userName, true);
+            saveAutoLoginUser(userName);
         }
         else
         {
             initGuest();
         }
+    }
+
+    @LogBe5Event
+    void saveAutoLoginUser(String userName)
+    {
+        saveUser(userName, true);
     }
 
     private void initGuest()

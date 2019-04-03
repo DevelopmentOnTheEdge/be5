@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.SessionConstants;
+import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import com.developmentontheedge.be5.test.mocks.InitUserServiceMock;
@@ -17,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.Cookie;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +27,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest extends ServerBe5ProjectTest
 {
     @Inject
-    private UserService userHelper;
+    private UserService userService;
     @Inject
     private Provider<Request> requestProvider;
     @Inject
@@ -46,7 +49,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     {
         when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(Arrays.asList("1", "2"));
         when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(singletonList("1"));
-        UserInfo ui = userHelper.saveUser("test", false);
+        UserInfo ui = userService.saveUser("test", false);
 
         assertEquals(singletonList("1"), ui.getCurrentRoles());
     }
@@ -55,7 +58,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     public void saveUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        UserInfo ui = userHelper.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
+        UserInfo ui = userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", false);
 
         assertEquals(roles, ui.getCurrentRoles());
 
@@ -73,7 +76,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     public void saveUserAndRemember()
     {
         List<String> roles = Arrays.asList("1", "2");
-        userHelper.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);
@@ -93,7 +96,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
         initUserWithRoles("1", "2");
         assertEquals(Arrays.asList("1", "2"), userInfoProvider.getCurrentRoles());
 
-        userHelper.setCurrentRoles(singletonList("1"));
+        userService.setCurrentRoles(singletonList("1"));
         assertEquals(singletonList("1"), userInfoProvider.getCurrentRoles());
     }
 
@@ -101,7 +104,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     public void testSetCurrentRolesNotAvailable()
     {
         initUserWithRoles("1", "2");
-        userHelper.setCurrentRoles(singletonList("3"));
+        userService.setCurrentRoles(singletonList("3"));
         assertEquals(singletonList("1"), userInfoProvider.getCurrentRoles());
     }
 
@@ -116,7 +119,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
         Session session = mock(Session.class);
         when(request.getSession(false)).thenReturn(session);
 
-        userHelper.logout(request, response);
+        userService.logout(request, response);
 
         verify(session).invalidate();
         assertEquals(RoleType.ROLE_GUEST, userInfoProvider.getUserName());
@@ -127,7 +130,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
     public void logoutAfterRemember()
     {
         List<String> roles = Arrays.asList("1", "2");
-        userHelper.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
+        userService.saveUser("test", roles, roles, Locale.US, "192.168.0.1", true);
 
         Cookie cookie = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie);
@@ -135,11 +138,21 @@ public class UserServiceTest extends ServerBe5ProjectTest
         assertTrue(cookie.getMaxAge() > 0);
 
         ((ServerTestResponse) responseProvider.get()).clearCookies();
-        userHelper.logout(requestProvider.get(), responseProvider.get());
+        userService.logout(requestProvider.get(), responseProvider.get());
 
         Cookie cookie2 = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);
         assertNotNull(cookie2);
         assertEquals(REMEMBER_ME_KEY, cookie2.getName());
         assertEquals(0, cookie2.getMaxAge());
+    }
+
+    @Test
+    public void log_saveAutoLoginUser()
+    {
+        when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(singletonList("1"));
+        when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(singletonList("1"));
+        userService.saveAutoLoginUser("test");
+        verify(Be5EventTestLogger.mock).logCompleted(eq("UserService"), eq("saveAutoLoginUser"),
+                any(), anyLong(), anyLong());
     }
 }

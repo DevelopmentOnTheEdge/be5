@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
+import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.lifecycle.Start;
 import com.developmentontheedge.be5.meta.ProjectProvider;
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_LOGGING;
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_OPERATION;
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_QUERY;
 import static com.developmentontheedge.be5.server.services.events.EventManager.ACTION_SERVLET;
@@ -102,6 +103,14 @@ public class Be5EventDbLogger implements Be5EventLogger
         HttpSession session = request.get().getSession(false);
         storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
                 ACTION_SERVLET, servletName, requestUri, params, "", exception);
+    }
+
+    @Override
+    public void logCompleted(String className, String methodName, Map<String, ?> params, long startTime, long endTime)
+    {
+        HttpSession session = request.get().getSession(false);
+        storeRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+                ACTION_LOGGING, className, methodName, params, "");
     }
 
     private String getUserName(HttpSession session)

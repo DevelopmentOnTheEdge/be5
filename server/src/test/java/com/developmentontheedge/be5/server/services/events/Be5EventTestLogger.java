@@ -58,4 +58,10 @@ public class Be5EventTestLogger implements Be5EventLogger
     {
         mock.servletError(servletName, requestUri, params, startTime, endTime, exception);
     }
+
+    @Override
+    public void logCompleted(String className, String methodName, Map<String, ?> params, long startTime, long endTime)
+    {
+        mock.logCompleted(className, methodName, params, startTime, endTime);
+    }
 }

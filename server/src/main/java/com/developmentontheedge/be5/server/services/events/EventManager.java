@@ -7,6 +7,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ public class EventManager implements MethodInterceptor
     public static final String ACTION_OPERATION = "operation";
     public static final String ACTION_SERVLET = "servlet";
 //    public static final String ACTION_QUERY_BUILDER = "queryBuilder";
-//    public static final String ACTION_LOGGING = "logging";
+    public static final String ACTION_LOGGING = "logging";
 //    public static final String ACTION_PRINT = "print";
 
 //    public static final String ACTION_PROCESS = "process";
@@ -32,6 +33,7 @@ public class EventManager implements MethodInterceptor
         long startTime = System.currentTimeMillis();
         Object[] arguments = invocation.getArguments();
         String className = invocation.getMethod().getDeclaringClass().getSimpleName();
+
         if (className.equals("DocumentGeneratorImpl"))
         {
             return logQuery(invocation, startTime, arguments);
@@ -41,7 +43,25 @@ public class EventManager implements MethodInterceptor
             return logOperation(invocation, startTime, arguments);
         }
 
-        return invocation.proceed();
+        return logLogging(invocation, startTime, arguments, className);
+    }
+
+    private Object logLogging(MethodInvocation invocation, long startTime, Object[] arguments, String className) throws Throwable
+    {
+        Object proceedResult = invocation.proceed();
+        String methodName = invocation.getMethod().getName();
+        logCompleted(className, methodName, getParamsByID(arguments), startTime, System.currentTimeMillis());
+        return proceedResult;
+    }
+
+    private Map<String, ?> getParamsByID(Object[] arguments)
+    {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < arguments.length; i++)
+        {
+            map.put("param" + (i + 1), arguments[i].toString());
+        }
+        return map;
     }
 
     private Object logQuery(MethodInvocation invocation, long startTime, Object[] arguments) throws Throwable
@@ -129,6 +149,15 @@ public class EventManager implements MethodInterceptor
         for (Be5EventLogger listener : listeners)
         {
             listener.servletError(servletName, requestUri, params, startTime, endTime, exception);
+        }
+    }
+
+    public void logCompleted(String className, String methodName, Map<String, ?> params,
+                                 long startTime, long endTime)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.logCompleted(className, methodName, params, startTime, endTime);
         }
     }
 
