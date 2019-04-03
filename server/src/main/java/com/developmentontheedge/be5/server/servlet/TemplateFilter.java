@@ -64,10 +64,20 @@ public class TemplateFilter extends FilterSupport
     @Override
     public void filter(Request req, Response res, FilterChain chain) throws IOException, ServletException
     {
-        if (UserInfoHolder.getLoggedUser() == null)
+        String message = null;
+        try
         {
-            userService.initUser(req, res);
+            if (UserInfoHolder.getLoggedUser() == null)
+            {
+                userService.initUser(req, res);
+            }
         }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "Error on initUser", e);
+            message = e.getMessage();
+        }
+
         String reqWithoutContext = getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
         if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)
         {
@@ -78,7 +88,7 @@ public class TemplateFilter extends FilterSupport
             try
             {
                 ServletUtils.addHeaders(req.getRawRequest(), res.getRawResponse());
-                res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req)));
+                res.sendHtml(templateEngine.process(reqWithoutContext + "index", getContext(req, message)));
             }
             catch (Throwable e)
             {
@@ -95,12 +105,13 @@ public class TemplateFilter extends FilterSupport
         else return reqWithoutContext;
     }
 
-    private Context getContext(Request req)
+    private Context getContext(Request req, String message)
     {
         Context context = new Context();
         context.setVariables(htmlMetaTags.getTags(req));
         context.setVariable("requestUrl", req.getRequestUri());
         context.setVariable("contextPath", req.getContextPath());
+        context.setVariable("message", message);
         return context;
     }
 
