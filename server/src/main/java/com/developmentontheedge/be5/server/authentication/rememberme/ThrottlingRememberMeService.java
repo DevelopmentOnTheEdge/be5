@@ -27,7 +27,7 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
 {
     private static final Logger log = Logger.getLogger(ThrottlingRememberMeService.class.getName());
 
-    private final static String REMOVE_TOKEN_QUERY = "DELETE FROM persistent_logins WHERE series = ? AND token = ?";
+    private static final String REMOVE_TOKEN_QUERY = "DELETE FROM persistent_logins WHERE series = ? AND token = ?";
     // We should store a lot of tokens to prevent cache overflow
     private static final int TOKEN_CACHE_MAX_SIZE = 100;
     //private final RememberMeCookieDecoder rememberMeCookieDecoder;
@@ -194,14 +194,7 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
      */
     private boolean isTokenInfoValid(CachedRememberMeTokenInfo tokenInfo)
     {
-        if ((System.currentTimeMillis() - tokenInfo.getCachingTime()) >= cachedTokenValidityTime)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return (System.currentTimeMillis() - tokenInfo.getCachingTime()) < cachedTokenValidityTime;
     }
 
     /**
@@ -213,12 +206,8 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
      */
     private boolean isTokenCached(String series, String value)
     {
-        if (tokenCache.containsKey(series) && isTokenInfoValid(tokenCache.get(series))
-                && value.equals(tokenCache.get(series).getValue()))
-        {
-            return true;
-        }
-        return false;
+        return tokenCache.containsKey(series) && isTokenInfoValid(tokenCache.get(series))
+                && value.equals(tokenCache.get(series).getValue());
     }
 
     /**
