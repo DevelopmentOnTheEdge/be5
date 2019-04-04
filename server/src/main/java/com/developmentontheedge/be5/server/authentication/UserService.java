@@ -131,23 +131,18 @@ public class UserService
         UserInfoHolder.getLoggedUser().setCurrentRoles(availableCurrentRoles);
     }
 
+    @LogBe5Event
     public void initUser(Request req, Response res)
     {
         String userName = rememberMeService.autoLogin(req, res);
         if (userName != null)
         {
-            saveAutoLoginUser(userName);
+            saveUser(userName);
         }
         else
         {
             initGuest();
         }
-    }
-
-    @LogBe5Event
-    void saveAutoLoginUser(String userName)
-    {
-        saveUser(userName);
     }
 
     private void initGuest()
