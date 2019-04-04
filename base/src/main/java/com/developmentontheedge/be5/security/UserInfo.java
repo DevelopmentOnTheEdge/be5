@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.security;
 
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.util.Utils;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -10,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 
 public class UserInfo implements Serializable
@@ -27,6 +30,9 @@ public class UserInfo implements Serializable
 
     public UserInfo(String userName, Collection<String> availableRoles, Collection<String> currentRoles)
     {
+        checkArgument(!Utils.isEmpty(userName));
+        checkArgument(!availableRoles.isEmpty());
+        checkArgument(!currentRoles.isEmpty());
         this.userName = userName;
         this.availableRoles = new ArrayList<>(availableRoles);
         this.currentRoles = new ArrayList<>(currentRoles);

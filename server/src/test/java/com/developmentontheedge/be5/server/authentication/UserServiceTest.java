@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.developmentontheedge.be5.server.authentication.rememberme.AbstractRememberMeService.REMEMBER_ME_KEY;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -155,10 +157,24 @@ public class UserServiceTest extends ServerBe5ProjectTest
     @Test
     public void log_saveAutoLoginUser()
     {
+        Be5EventTestLogger.clearMock();
         when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(singletonList("1"));
         when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(singletonList("1"));
         userService.saveAutoLoginUser("test");
         verify(Be5EventTestLogger.mock).logCompleted(eq("UserService"), eq("saveAutoLoginUser"),
                 any(), anyLong(), anyLong());
+    }
+
+    @Test
+    public void logException_saveAutoLoginUser()
+    {
+        Be5EventTestLogger.clearMock();
+        when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(emptyList());
+        when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(emptyList());
+        try {
+            userService.saveAutoLoginUser("test");
+        } catch (Throwable ignore) {}
+        verify(Be5EventTestLogger.mock).logException(eq("UserService"), eq("saveAutoLoginUser"),
+                any(), anyLong(), anyLong(), anyString());
     }
 }

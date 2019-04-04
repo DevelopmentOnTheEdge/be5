@@ -23,4 +23,7 @@ public interface Be5EventLogger
                       String exception);
 
     void logCompleted(String className, String methodName, Map<String, ?> params, long startTime, long endTime);
+
+    void logException(String className, String methodName, Map<String, ?> params, long startTime, long endTime,
+                      String exception);
 }

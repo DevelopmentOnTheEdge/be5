@@ -113,6 +113,15 @@ public class Be5EventDbLogger implements Be5EventLogger
                 ACTION_LOGGING, className, methodName, params, "");
     }
 
+    @Override
+    public void logException(String className, String methodName, Map<String, ?> params, long startTime, long endTime,
+                             String exception)
+    {
+        HttpSession session = request.get().getSession(false);
+        storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+                ACTION_LOGGING, className, methodName, params, "", exception);
+    }
+
     private String getUserName(HttpSession session)
     {
         if (session == null)

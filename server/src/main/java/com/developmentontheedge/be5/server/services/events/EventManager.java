@@ -48,10 +48,19 @@ public class EventManager implements MethodInterceptor
 
     private Object logLogging(MethodInvocation invocation, long startTime, Object[] arguments, String className) throws Throwable
     {
-        Object proceedResult = invocation.proceed();
         String methodName = invocation.getMethod().getName();
-        logCompleted(className, methodName, getParamsByID(arguments), startTime, System.currentTimeMillis());
-        return proceedResult;
+        try
+        {
+            Object proceedResult = invocation.proceed();
+            logCompleted(className, methodName, getParamsByID(arguments), startTime, System.currentTimeMillis());
+            return proceedResult;
+        }
+        catch (Throwable e)
+        {
+            logException(className, methodName, getParamsByID(arguments), startTime, System.currentTimeMillis(),
+                    e.getMessage());
+            throw e;
+        }
     }
 
     private Map<String, ?> getParamsByID(Object[] arguments)
@@ -158,6 +167,15 @@ public class EventManager implements MethodInterceptor
         for (Be5EventLogger listener : listeners)
         {
             listener.logCompleted(className, methodName, params, startTime, endTime);
+        }
+    }
+
+    public void logException(String className, String methodName, Map<String, ?> params,
+                             long startTime, long endTime, String exception)
+    {
+        for (Be5EventLogger listener : listeners)
+        {
+            listener.logException(className, methodName, params, startTime, endTime, exception);
         }
     }
 

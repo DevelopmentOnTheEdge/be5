@@ -30,7 +30,8 @@ public class Be5EventTestLogger implements Be5EventLogger
     }
 
     @Override
-    public void operationError(Operation operation, Map<String, Object> values, long startTime, long endTime, String exception)
+    public void operationError(Operation operation, Map<String, Object> values, long startTime, long endTime,
+                               String exception)
     {
         mock.operationError(operation, values, startTime, endTime, exception);
     }
@@ -54,7 +55,8 @@ public class Be5EventTestLogger implements Be5EventLogger
     }
 
     @Override
-    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime, String exception)
+    public void servletError(String servletName, String requestUri, Map<String, ?> params, long startTime, long endTime,
+                             String exception)
     {
         mock.servletError(servletName, requestUri, params, startTime, endTime, exception);
     }
@@ -63,5 +65,12 @@ public class Be5EventTestLogger implements Be5EventLogger
     public void logCompleted(String className, String methodName, Map<String, ?> params, long startTime, long endTime)
     {
         mock.logCompleted(className, methodName, params, startTime, endTime);
+    }
+
+    @Override
+    public void logException(String className, String methodName, Map<String, ?> params, long startTime, long endTime,
+                             String exception)
+    {
+        mock.logException(className, methodName, params, startTime, endTime, exception);
     }
 }
