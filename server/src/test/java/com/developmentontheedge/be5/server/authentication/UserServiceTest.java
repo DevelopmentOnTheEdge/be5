@@ -153,28 +153,4 @@ public class UserServiceTest extends ServerBe5ProjectTest
         assertEquals(REMEMBER_ME_KEY, cookie2.getName());
         assertEquals(0, cookie2.getMaxAge());
     }
-
-    @Test
-    public void log_saveAutoLoginUser()
-    {
-        Be5EventTestLogger.clearMock();
-        when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(singletonList("1"));
-        when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(singletonList("1"));
-        userService.saveAutoLoginUser("test");
-        verify(Be5EventTestLogger.mock).logCompleted(eq("UserService"), eq("saveAutoLoginUser"),
-                any(), anyLong(), anyLong());
-    }
-
-    @Test
-    public void logException_saveAutoLoginUser()
-    {
-        Be5EventTestLogger.clearMock();
-        when(RoleServiceMock.mock.getAvailableRoles("test")).thenReturn(emptyList());
-        when(RoleServiceMock.mock.getCurrentRoles("test")).thenReturn(emptyList());
-        try {
-            userService.saveAutoLoginUser("test");
-        } catch (Throwable ignore) {}
-        verify(Be5EventTestLogger.mock).logException(eq("UserService"), eq("saveAutoLoginUser"),
-                any(), anyLong(), anyLong(), anyString());
-    }
 }

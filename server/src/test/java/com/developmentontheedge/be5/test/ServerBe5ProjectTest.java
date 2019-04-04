@@ -1,11 +1,12 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepository;
-import com.developmentontheedge.be5.server.authentication.RoleService;
 import com.developmentontheedge.be5.server.authentication.InitUserService;
+import com.developmentontheedge.be5.server.authentication.RoleService;
+import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepository;
 import com.developmentontheedge.be5.server.services.OperationLogging;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
+import com.developmentontheedge.be5.server.services.events.EventManagerTest;
 import com.developmentontheedge.be5.server.servlet.TemplateModule;
 import com.developmentontheedge.be5.test.mocks.InitUserServiceMock;
 import com.developmentontheedge.be5.test.mocks.OperationLoggingMock;
@@ -43,6 +44,7 @@ public abstract class ServerBe5ProjectTest extends ServerTestUtils
             bind(RoleService.class).to(RoleServiceMock.class).in(Scopes.SINGLETON);
             bind(InitUserService.class).to(InitUserServiceMock.class).in(Scopes.SINGLETON);
             bind(PersistentTokenRepository.class).to(RememberUserHelperMock.class).in(Scopes.SINGLETON);
+            bind(EventManagerTest.TestEvents.class).in(Scopes.SINGLETON);
         }
     }
 }
