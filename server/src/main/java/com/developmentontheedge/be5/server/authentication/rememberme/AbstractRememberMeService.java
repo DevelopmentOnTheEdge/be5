@@ -135,7 +135,7 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         cancelCookie(request, response);
     }
 
-    private String extractRememberMeCookie(Request request)
+    String extractRememberMeCookie(Request request)
     {
         Cookie[] cookies = request.getCookies();
 
@@ -234,7 +234,7 @@ public abstract class AbstractRememberMeService implements RememberMeServices
         response.addCookie(cookie);
     }
 
-    private void cancelCookie(Request request, Response response)
+    void cancelCookie(Request request, Response response)
     {
         log.fine("Cancelling cookie");
         Cookie cookie = new Cookie(cookieName, null);

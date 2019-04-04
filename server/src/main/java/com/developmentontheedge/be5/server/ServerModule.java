@@ -13,10 +13,10 @@ import com.developmentontheedge.be5.server.authentication.InitUserServiceImpl;
 import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
 import com.developmentontheedge.be5.server.authentication.UserInfoModelServiceImpl;
 import com.developmentontheedge.be5.server.authentication.UserService;
-import com.developmentontheedge.be5.server.authentication.rememberme.PersistentRememberMeServices;
 import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepository;
 import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepositoryImpl;
 import com.developmentontheedge.be5.server.authentication.rememberme.RememberMeServices;
+import com.developmentontheedge.be5.server.authentication.rememberme.ThrottlingRememberMeService;
 import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FilterHelper;
@@ -80,7 +80,7 @@ public class ServerModule extends AbstractModule
         bind(HtmlMetaTags.class).to(HtmlMetaTagsImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoModelService.class).to(UserInfoModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(InitUserService.class).to(InitUserServiceImpl.class).in(Scopes.SINGLETON);
-        bind(RememberMeServices.class).to(PersistentRememberMeServices.class).in(Scopes.SINGLETON);
+        bind(RememberMeServices.class).to(ThrottlingRememberMeService.class).in(Scopes.SINGLETON);
         bind(PersistentTokenRepository.class).to(PersistentTokenRepositoryImpl.class).in(Scopes.SINGLETON);
     }
 }

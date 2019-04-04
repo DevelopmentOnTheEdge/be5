@@ -145,7 +145,7 @@ public class UserServiceTest extends ServerBe5ProjectTest
         assertEquals(REMEMBER_ME_KEY, cookie.getName());
         assertTrue(cookie.getMaxAge() > 0);
 
-        ((ServerTestResponse) responseProvider.get()).clearCookies();
+        ((ServerTestRequest) requestProvider.get()).setCookies(cookie);
         userService.logout(requestProvider.get(), responseProvider.get());
 
         Cookie cookie2 = ((ServerTestResponse) responseProvider.get()).getCookie(REMEMBER_ME_KEY);

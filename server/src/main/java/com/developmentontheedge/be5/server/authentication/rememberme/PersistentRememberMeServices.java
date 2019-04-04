@@ -18,7 +18,7 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
 {
     private static final Logger log = Logger.getLogger(PersistentRememberMeServices.class.getName());
 
-    private final PersistentTokenRepository tokenRepository;
+    PersistentTokenRepository tokenRepository;
     private final UserAwareMeta userAwareMeta;
 
     @Inject
@@ -122,4 +122,8 @@ public class PersistentRememberMeServices extends AbstractRememberMeService impl
         }
     }
 
+    public void setTokenRepository(PersistentTokenRepository tokenRepository)
+    {
+        this.tokenRepository = tokenRepository;
+    }
 }
