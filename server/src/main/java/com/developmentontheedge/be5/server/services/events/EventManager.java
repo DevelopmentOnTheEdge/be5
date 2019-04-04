@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.services.events;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.util.Utils;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -123,7 +124,7 @@ public class EventManager implements MethodInterceptor
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.operationError(operation, values, startTime, endTime, exception);
+            listener.operationError(operation, values, startTime, endTime, notEmptyException(exception));
         }
     }
 
@@ -139,7 +140,7 @@ public class EventManager implements MethodInterceptor
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.queryError(query, parameters, startTime, endTime, exception);
+            listener.queryError(query, parameters, startTime, endTime, notEmptyException(exception));
         }
     }
 
@@ -157,7 +158,7 @@ public class EventManager implements MethodInterceptor
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.servletError(servletName, requestUri, params, startTime, endTime, exception);
+            listener.servletError(servletName, requestUri, params, startTime, endTime, notEmptyException(exception));
         }
     }
 
@@ -175,8 +176,13 @@ public class EventManager implements MethodInterceptor
     {
         for (Be5EventLogger listener : listeners)
         {
-            listener.logException(className, methodName, params, startTime, endTime, exception);
+            listener.logException(className, methodName, params, startTime, endTime, notEmptyException(exception));
         }
+    }
+
+    private String notEmptyException(String exception)
+    {
+        return !Utils.isEmpty(exception) ? exception : "Exception (empty message)";
     }
 
     ///////////////////////////////////////////////////////////////////
