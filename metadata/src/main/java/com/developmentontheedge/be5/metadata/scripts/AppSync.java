@@ -24,6 +24,7 @@ import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
+import com.developmentontheedge.be5.metadata.util.StringUtils;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 public class AppSync extends ScriptSupport<AppSync>
@@ -80,12 +80,7 @@ public class AppSync extends ScriptSupport<AppSync>
             }
 
             readSchema();
-            createEntities();
-            if (sqlExecutor.getConnector().getType() != DbmsType.MYSQL)
-            {
-                createViews();
-            }
-
+            collectEntities();
             String ddlString = getDdlStatements(false);
             ddlString = MultiSqlParser.normalize(be5Project.getDatabaseSystem().getType(), ddlString);
 
@@ -109,7 +104,7 @@ public class AppSync extends ScriptSupport<AppSync>
                 logger.error("Use -DBE5_FORCE_UPDATE=true, for apply");
             }
 
-            checkSynchronizationStatus();
+            //checkSynchronizationStatus();
             logger.setOperationName("Finished");
         }
         catch (FreemarkerSqlException | ExtendedSqlException | SQLException e)
@@ -138,22 +133,6 @@ public class AppSync extends ScriptSupport<AppSync>
         logSqlFilePath();
     }
 
-    protected void checkSynchronizationStatus()
-    {
-        // TODO
-/*        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
-        if(!warnings.isEmpty())
-        {
-            logger.error( "Synchronization of " + databaseSynchronizer.getProject().getName()+
-            " produced "+warnings.size()+" warning(s):" );
-            for(ProjectElementException warning : warnings)
-            {
-                displayError( warning );
-            }
-        }
-*/
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // Read database structure
     //
@@ -164,7 +143,7 @@ public class AppSync extends ScriptSupport<AppSync>
     private Map<String, String> tableTypes;
     private Map<String, List<SqlColumnInfo>> columns;
     private Map<String, List<IndexInfo>> indices;
-    private List<Entity> entities;
+    private List<Entity> entities = new ArrayList<>();;
 
     private void readSchema() throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
@@ -198,17 +177,24 @@ public class AppSync extends ScriptSupport<AppSync>
         logger.info("completed, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
-    private void createEntities()
+    private void collectEntities() throws ExtendedSqlException, SQLException
+    {
+        Project project = new Project("internal-db");
+        project.setDatabaseSystem(be5Project.getDatabaseSystem());
+        Module internalDbModule = new Module("temp", project);
+        createEntities(internalDbModule);
+        if (sqlExecutor.getConnector().getType() == DbmsType.MYSQL)
+        {
+            createViews(internalDbModule);
+        }
+    }
+
+    private void createEntities(Module module)
     {
         Rdbms databaseSystem = DatabaseUtils.getRdbms(connector);
         DbmsTypeManager typeManager = databaseSystem == null ?
                 new DefaultTypeManager() : databaseSystem.getTypeManager();
         boolean casePreserved = typeManager.normalizeIdentifierCase("aA").equals("aA");
-
-        entities = new ArrayList<>();
-        Project project = new Project("internal-db");
-        project.setDatabaseSystem(be5Project.getDatabaseSystem());
-        Module module = new Module("temp", project);
 
         for (String table : tableTypes.keySet())
         {
@@ -295,11 +281,10 @@ public class AppSync extends ScriptSupport<AppSync>
     /**
      * For MySQL only now
      */
-    private void createViews() throws ExtendedSqlException, SQLException
+    private void createViews(Module module) throws ExtendedSqlException, SQLException
     {
-        for (Entity entity : entities)
+        for (String table : tableTypes.keySet())
         {
-            final String table = entity.getName();
             if (!"VIEW".equalsIgnoreCase(tableTypes.get(table)))
                 continue;
 
@@ -322,7 +307,9 @@ public class AppSync extends ScriptSupport<AppSync>
                 continue;
 
             createTable = createTable.substring(as + " AS ".length());
+            Entity entity = new Entity(table, module, EntityType.TABLE);
             ViewDef def = new ViewDef(entity);
+            entities.add(entity);
             def.setDefinition(createTable);
             DataElementUtils.saveQuiet(def);
         }
@@ -385,23 +372,13 @@ public class AppSync extends ScriptSupport<AppSync>
         {
             for (Entity entity : module.getEntities())
             {
-                DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-                if (scheme != null)
-                {
-                    String normalizedName = entity.getName().toLowerCase();
-                    newSchemes.put(normalizedName, scheme);
-                }
+                collectDdlElements(newSchemes, entity);
             }
         }
 
         for (Entity entity : entities)
         {
-            DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-            if (scheme != null)
-            {
-                String normalizedName = entity.getName().toLowerCase();
-                oldSchemes.put(normalizedName, scheme);
-            }
+            collectDdlElements(oldSchemes, entity);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -434,8 +411,12 @@ public class AppSync extends ScriptSupport<AppSync>
                 if (oldScheme instanceof TableDef && newScheme instanceof TableDef)
                     fixPrimaryKey((TableDef) oldScheme, (TableDef) newScheme);
 
-                sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
-                        : newScheme.getDiffDdl(oldScheme, sqlExecutor));
+                String diffSql = dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
+                        : newScheme.getDiffDdl(oldScheme, sqlExecutor);
+                if (!StringUtils.isEmpty(diffSql))
+                {
+                    sb.append(diffSql);
+                }
             }
             else
             {
@@ -448,8 +429,18 @@ public class AppSync extends ScriptSupport<AppSync>
         return sb.toString();
     }
 
-    private void clonedEntity()
+    private void collectDdlElements(Map<String, DdlElement> oldSchemes, Entity entity)
     {
+        DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
+        if (scheme != null)
+        {
+            String normalizedName = entity.getName().toLowerCase();
+            oldSchemes.put(normalizedName, scheme);
+        }
+    }
+
+//    private void clonedEntity()
+//    {
 //        if( updateClones || removeClones || removeUnusedTables)
 //        {
 //            for( Entity entity : entities )
@@ -492,7 +483,7 @@ public class AppSync extends ScriptSupport<AppSync>
 //                }
 //            }
 //        }
-    }
+//    }
 
     private void fixPrimaryKey(TableDef orphanDdl, TableDef ddl)
     {
@@ -515,7 +506,22 @@ public class AppSync extends ScriptSupport<AppSync>
         }
     }
 
-    private static final Pattern CLONE_ID = Pattern.compile("(\\d+)$");
+//    protected void checkSynchronizationStatus()
+//    {
+//        // TODO
+//        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
+//        if(!warnings.isEmpty())
+//        {
+//            logger.error( "Synchronization of " + databaseSynchronizer.getProject().getName()+
+//            " produced "+warnings.size()+" warning(s):" );
+//            for(ProjectElementException warning : warnings)
+//            {
+//                displayError( warning );
+//            }
+//        }
+//    }
+
+//    private static final Pattern CLONE_ID = Pattern.compile("(\\d+)$");
 //    private static DdlElement getDdlForClone( Map<String, DdlElement> schemes, String cloneName )
 //    {
 //        String name = cloneName.toLowerCase();
