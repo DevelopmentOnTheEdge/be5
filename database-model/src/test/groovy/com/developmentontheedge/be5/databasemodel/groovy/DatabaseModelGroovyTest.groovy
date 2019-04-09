@@ -320,8 +320,9 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         def id = testtableAdmin << ["name" : "TestSetBy", "value": 123]
         def id2 = testtableAdmin << ["name" : "TestSetBy", "value": 1234]
 
-        testtableAdmin.setBy(["name" : "TestSetByEdited", "value": 0],
+        def count = testtableAdmin.setBy(["name" : "TestSetByEdited", "value": 0],
                 ["name" : "TestSetBy", "value": 123])
+        assertEquals(1, count)
 
         def record = testtableAdmin[id]
         assertEquals "TestSetByEdited", record.$name
