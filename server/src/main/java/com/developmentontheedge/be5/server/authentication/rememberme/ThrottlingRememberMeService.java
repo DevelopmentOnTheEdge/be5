@@ -34,8 +34,8 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
     private final DbService db;
     private final Map<String, CachedRememberMeTokenInfo> tokenCache = new ConcurrentHashMap<>();
 
-    // 5 seconds should be enough for processing request and sending response to client
-    private int cachedTokenValidityTime = 5 * 1000;
+    // 20 seconds should be enough for processing request and sending response to client
+    private int cachedTokenValidityTime = 20 * 1000;
 
     /**
      * @param db needed to execute the sql queries
@@ -108,7 +108,6 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
 
         if (isTokenCached(presentedSeries, presentedToken))
         {
-            tokenCache.remove(presentedSeries);
             details = token.getUsername();
             rewriteCookie(token, request, response);
         }
