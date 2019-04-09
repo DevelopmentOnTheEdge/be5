@@ -176,7 +176,7 @@ public interface EntityModel<T>
      */
     int set(T id, Map<String, ?> values);
 
-//    void setMany( Map<String, ?> values, Map<String, ?> conditions);
+    int setBy(Map<String, ?> values, Map<String, ?> conditions);
 
     /**
      * Sets value to property with a specified name.<br>

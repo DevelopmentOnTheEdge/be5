@@ -19,15 +19,25 @@ systemSettings:
         - setting_name
   queries:
   - All records:
-      type: 1D_unknown
+      type: 1D
       roles: [SystemDeveloper, Administrator]
       invisible: true
       operations:
       - Insert
+      - Edit
       code: |-
-        SELECT section_name,setting_name,setting_value
+        SELECT
+          CONCAT(section_name, "|", setting_name)
+          section_name,
+          setting_name,
+          setting_value
         FROM systemSettings
   operations:
   - Insert:
       roles: [SystemDeveloper, Administrator]
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - Edit:
+      records: 1
+      roles: [SystemDeveloper, Administrator]
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.modules.core.operations.system.SystemSettingsEdit

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -16,15 +16,17 @@ public class EditOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        Entity entity = getInfo().getEntity();
+        String entityName = getInfo().getEntityName();
+        RecordModel<Object> record = database.getEntity(entityName).get(context.getRecord());
+        return getEditParameters(record, presetValues);
+    }
 
+    protected Object getEditParameters(DynamicPropertySet record, Map<String, Object> presetValues)
+    {
         DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
                 getInfo().getModel(), context.getParams());
-
-        setValues(dps, database.getEntity(entity.getName()).get(context.getRecord()));
-
+        setValues(dps, record);
         setValues(dps, presetValues);
-
         return dpsHelper.setOperationParams(dps, context.getParams());
     }
 
