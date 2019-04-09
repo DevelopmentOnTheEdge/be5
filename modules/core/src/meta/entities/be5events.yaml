@@ -55,7 +55,7 @@ be5events:
       messageWhenEmpty: The list is empty
       layout: '{"topForm":"TopFilter"}'
       invisible: true
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       operations:
       - Filter
       - TopFilter
@@ -87,14 +87,14 @@ be5events:
         ORDER BY e.startTime DESC
   operations:
   - Filter:
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Filter by Date:
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - TopFilter:
-      roles: [Administrator]
+      roles: [SystemDeveloper, Administrator]
       layout: '{"properties":"action,entity,title"}'
       code: com.developmentontheedge.be5.server.operations.FilterOperation
