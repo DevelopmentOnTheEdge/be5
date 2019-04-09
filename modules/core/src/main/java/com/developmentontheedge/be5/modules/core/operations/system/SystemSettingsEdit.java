@@ -10,30 +10,27 @@ import java.util.Map;
 
 public class SystemSettingsEdit extends EditOperation
 {
-    private Map<String, String> item;
+    private Map<String, String> conditions;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         String entityName = getInfo().getEntityName();
         String[] split = ((String) context.getRecord()).split("|");
-        item = ImmutableMap.of(
+        conditions = ImmutableMap.of(
                 "section_name", split[0],
                 "setting_name", split[1]
         );
-        RecordModel<Object> record = database.getEntity(entityName).getBy(item);
+        RecordModel<Object> record = database.getEntity(entityName).getBy(conditions);
         return getEditParameters(record, presetValues);
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        DynamicPropertySet entityParams = dpsHelper.filterEntityParams(getInfo().getEntity(),
+        DynamicPropertySet values = dpsHelper.filterEntityParams(getInfo().getEntity(),
                 (DynamicPropertySet) parameters);
-
-        //TODO in process
-        //database.getEntity(getInfo().getEntityName()).set(context.getRecord(), entityParams);
-
+        database.getEntity(getInfo().getEntityName()).setBy(values, conditions);
         setResult(OperationResult.finished());
     }
 }
