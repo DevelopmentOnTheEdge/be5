@@ -17,6 +17,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,6 +78,18 @@ public class  EntityModelBase<T> implements EntityModel<T>
     @Override
     public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ?> conditions)
     {
+        return getRecordModel(getPropertySet(columns, conditions));
+    }
+
+    @Nullable
+    @Override
+    public DynamicPropertySet getPropertySet(Map<String, ?> conditions)
+    {
+        return getPropertySet(Collections.emptyList(), conditions);
+    }
+
+    private DynamicPropertySet getPropertySet(List<String> columns, Map<String, ?> conditions)
+    {
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
 
@@ -84,10 +97,8 @@ public class  EntityModelBase<T> implements EntityModel<T>
                 .from(entity.getName())
                 .where(conditions).format();
 
-        DynamicPropertySetSupport dps = db.select(sql,
+        return db.select(sql,
                 rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions));
-
-        return getRecordModel(dps);
     }
 
     @Override

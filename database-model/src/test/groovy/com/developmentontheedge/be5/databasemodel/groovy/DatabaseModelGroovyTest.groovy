@@ -76,6 +76,18 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
+    void getPropertySet()
+    {
+        testtableAdmin << ["name": "TestName", "value": "1"]
+
+        DynamicPropertySet rec = testtableAdmin.getPropertySet(["name": "TestName"])
+
+        assertFalse(rec instanceof RecordModel)
+        assertEquals "TestName", rec.getValue("name")
+        assertEquals 1, rec.getValue("value")
+    }
+
+    @Test
     void getColumnsTest()
     {
         def id = testtableAdmin << ["name": "TestName", "value": "1"]

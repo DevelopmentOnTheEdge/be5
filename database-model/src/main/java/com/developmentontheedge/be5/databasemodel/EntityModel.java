@@ -114,6 +114,9 @@ public interface EntityModel<T>
     RecordModel<T> getBy(Map<String, ?> conditions);
 
     @Nullable
+    DynamicPropertySet getPropertySet(Map<String, ?> conditions);
+
+    @Nullable
     RecordModel<T> getColumns(List<String> columns, T id);
 
     @Nullable
