@@ -245,14 +245,8 @@ public class  EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
-
-        Map<String, Object> map = new LinkedHashMap<>(values);
-
-        columnsHelper.addUpdateSpecialColumns(entity, map);
-
-        return sqlHelper.update(entity.getName(),
-                Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
-                map);
+        Map<String, T> conditions = Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id));
+        return setBy(values, conditions);
     }
 
     @Override
@@ -262,6 +256,21 @@ public class  EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(dps);
 
         return set(id, DpsUtils.toLinkedHashMap(dps));
+    }
+
+    @Override
+    public int setBy(Map<String, ?> values, Map<String, ?> conditions)
+    {
+        Objects.requireNonNull(values);
+        Objects.requireNonNull(conditions);
+        Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values);
+        return sqlHelper.update(entity.getName(), conditions, finalValues);
+    }
+
+    @Override
+    public int setBy(DynamicPropertySet values, Map<String, ?> conditions)
+    {
+        return setBy(DpsUtils.toLinkedHashMap(values), conditions);
     }
 
     @Override
@@ -361,14 +370,6 @@ public class  EntityModelBase<T> implements EntityModel<T>
         return getClass().getSimpleName() + "[ entityName = " + getEntityName() + " ]";
     }
 
-//    @Override
-//    public void setMany( Map<String, String> values, Map<String, String> conditions )
-//    {
-//        Objects.requireNonNull(values);
-//        Objects.requireNonNull(conditions);
-//        setForceMany(values, conditions);
-//    }
-
     private void checkPrimaryKey(Map<String, ?> conditions)
     {
         for (Map.Entry<String, ?> entry : conditions.entrySet())
@@ -397,35 +398,6 @@ public class  EntityModelBase<T> implements EntityModel<T>
 
         return id;
     }
-
-//
-//    @Override
-//    public void setForceMany(String propertyName, String value, Map<String, String> conditions)
-//    {
-//        Objects.requireNonNull(propertyName);
-//        Objects.requireNonNull(value);
-//        Objects.requireNonNull(conditions);
-//        setForceMany( Collections.singletonMap( propertyName, value ), conditions);
-//    }
-
-//    /**
-//     * in process
-//     */
-//    @Override
-//    public void setForceMany(Map<String, ?> values, Map<String, ?> conditions)
-//    {
-//        Objects.requireNonNull(values);
-//        Objects.requireNonNull(conditions);
-//
-//        DynamicPropertySet dps = db.select(
-//                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
-//                rs -> dpsHelper.addDpForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
-//
-//        dpsHelper.updateValuesWithSpecial(dps, values);
-//
-//        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
-//                ObjectArrays.concat(dpsHelper.getValuesFromJson(dps), castValues(entity, conditions), Object.class));
-//    }
 
     @Override
     public Entity getEntity()

@@ -303,6 +303,24 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
+    void testSetBy()
+    {
+        def id = testtableAdmin << ["name" : "TestSetBy", "value": 123]
+        def id2 = testtableAdmin << ["name" : "TestSetBy", "value": 1234]
+
+        testtableAdmin.setBy(["name" : "TestSetByEdited", "value": 0],
+                ["name" : "TestSetBy", "value": 123])
+
+        def record = testtableAdmin[id]
+        assertEquals "TestSetByEdited", record.$name
+        assertEquals 0, record.$value
+
+        def record2 = testtableAdmin[id2]
+        assertEquals "TestSetBy", record2.$name
+        assertEquals 1234, record2.$value
+    }
+
+    @Test
     void testFindRecord()
     {
         testtableAdmin << [

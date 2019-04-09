@@ -176,8 +176,6 @@ public interface EntityModel<T>
      */
     int set(T id, Map<String, ?> values);
 
-    int setBy(Map<String, ?> values, Map<String, ?> conditions);
-
     /**
      * Sets value to property with a specified name.<br>
      * This method may not contain any checks, it's just the method implementation.
@@ -188,18 +186,9 @@ public interface EntityModel<T>
      */
     int set(T id, DynamicPropertySet values);
 
-    //void setForceMany(String propertyName, String value, Map<String, String> conditions);
+    int setBy(Map<String, ?> values, Map<String, ?> conditions);
 
-//    void setForceMany(Map<String, String> values, Map<String, String> conditions);
-
-//    /**
-//     * Operation removes all the records consistent with any of conditions in collection.
-//     * The method can check the values on consistency and threw exceptions<br>
-//     * in order to avoid compromising the integrity of the database.
-//     * @param c collection of conditions
-//     * @return number of affected rows
-//     */
-//    int removeAll(Collection<Map<String, ?>> c);
+    int setBy(DynamicPropertySet values, Map<String, ?> conditions);
 
     int removeWhereColumnIn(String columnName, T[] ids);
 

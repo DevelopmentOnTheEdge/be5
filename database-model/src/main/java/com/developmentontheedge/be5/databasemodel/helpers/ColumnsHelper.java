@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +43,11 @@ public class ColumnsHelper
         this.userInfoProvider = userInfoProvider;
     }
 
-    public void addUpdateSpecialColumns(Entity entity, Map<String, Object> values)
+    public Map<String, Object> withUpdateSpecialColumns(Entity entity, Map<String, ?> values)
     {
-        addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
+        Map<String, Object> map = new LinkedHashMap<>(values);
+        addSpecialColumns(entity, map, ColumnsHelper.updateSpecialColumns);
+        return map;
     }
 
     public void addInsertSpecialColumns(Entity entity, Map<String, Object> values)
