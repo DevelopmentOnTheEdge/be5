@@ -27,7 +27,7 @@ systemSettings:
       - Edit
       code: |-
         SELECT
-          CONCAT(section_name, "|", setting_name)
+          CONCAT(section_name, '|', setting_name) AS "___ID",
           section_name,
           setting_name,
           setting_value

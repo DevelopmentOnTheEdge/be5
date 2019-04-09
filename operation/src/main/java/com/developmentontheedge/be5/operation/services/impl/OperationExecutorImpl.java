@@ -255,7 +255,7 @@ public class OperationExecutorImpl implements OperationExecutor
 
         if (selectedRows != null && selectedRows.length > 0)
         {
-            if (operationInfo.getEntityName().startsWith("_"))
+            if (operationInfo.getEntityName().startsWith("_") || operationInfo.getPrimaryKey().startsWith("_"))
             {
                 return selectedRows;
             }

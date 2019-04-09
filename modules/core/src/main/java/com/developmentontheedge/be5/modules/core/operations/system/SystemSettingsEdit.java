@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core.operations.system;
 
-import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.operations.EditOperation;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -16,12 +15,12 @@ public class SystemSettingsEdit extends EditOperation
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         String entityName = getInfo().getEntityName();
-        String[] split = ((String) context.getRecord()).split("|");
+        String[] split = ((String) context.getRecord()).split("\\|");
         conditions = ImmutableMap.of(
                 "section_name", split[0],
                 "setting_name", split[1]
         );
-        RecordModel<Object> record = database.getEntity(entityName).getBy(conditions);
+        DynamicPropertySet record = database.getEntity(entityName).getPropertySet(conditions);
         return getEditParameters(record, presetValues);
     }
 
