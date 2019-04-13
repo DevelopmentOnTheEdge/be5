@@ -11,9 +11,6 @@ import com.developmentontheedge.be5.server.services.events.Be5EventLogger;
 import com.developmentontheedge.be5.server.services.events.EventManager;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,21 +31,19 @@ public class Be5EventDbLogger implements Be5EventLogger
     private final DatabaseModel database;
     private final EventManager eventManager;
     private final ProjectProvider projectProvider;
-    private final Provider<HttpServletRequest> request;
 
     @Inject
     public Be5EventDbLogger(EventManager eventManager, DatabaseModel database, ProjectProvider projectProvider,
-                            UserInfoProvider userInfoProvider, Provider<HttpServletRequest> request)
+                            UserInfoProvider userInfoProvider)
     {
         this.database = database;
         this.userInfoProvider = userInfoProvider;
         this.eventManager = eventManager;
         this.projectProvider = projectProvider;
-        this.request = request;
     }
 
     @Start(order = 30)
-    public void start() throws Exception
+    public void start()
     {
         if (projectProvider.get().hasFeature(Features.EVENT_DB_LOGGING_FEATURE))
         {
@@ -91,8 +86,7 @@ public class Be5EventDbLogger implements Be5EventLogger
     public void servletCompleted(String servletName, String requestUri, Map<String, ?> params,
                                  long startTime, long endTime)
     {
-        HttpSession session = request.get().getSession(false);
-        storeRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_SERVLET, servletName, requestUri, params, "");
     }
 
@@ -100,16 +94,14 @@ public class Be5EventDbLogger implements Be5EventLogger
     public void servletError(String servletName, String requestUri, Map<String, ?> params,
                              long startTime, long endTime, String exception)
     {
-        HttpSession session = request.get().getSession(false);
-        storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_SERVLET, servletName, requestUri, params, "", exception);
     }
 
     @Override
     public void logCompleted(String className, String methodName, Map<String, ?> params, long startTime, long endTime)
     {
-        HttpSession session = request.get().getSession(false);
-        storeRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+        storeRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_LOGGING, className, methodName, params, "");
     }
 
@@ -117,21 +109,8 @@ public class Be5EventDbLogger implements Be5EventLogger
     public void logException(String className, String methodName, Map<String, ?> params, long startTime, long endTime,
                              String exception)
     {
-        HttpSession session = request.get().getSession(false);
-        storeErrorRecord(getUserName(session), request.get().getRemoteAddr(), startTime, endTime,
+        storeErrorRecord(userInfoProvider.getUserName(), userInfoProvider.getRemoteAddr(), startTime, endTime,
                 ACTION_LOGGING, className, methodName, params, "", exception);
-    }
-
-    private String getUserName(HttpSession session)
-    {
-        if (session == null)
-        {
-            return "Guest";
-        }
-        else
-        {
-            return userInfoProvider.getUserName();
-        }
     }
 
     private void storeErrorRecord(String user_name, String remoteAddr, long startTime, long endTime, String action,
