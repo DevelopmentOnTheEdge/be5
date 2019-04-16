@@ -123,11 +123,11 @@ public class UserService
 
     public void setCurrentRoles(List<String> roles)
     {
-        List<String> availableCurrentRoles = roleService.getAvailableCurrentRoles(roles,
-                UserInfoHolder.getLoggedUser().getAvailableRoles());
+        UserInfo user = UserInfoHolder.getLoggedUser();
+        List<String> availableCurrentRoles = roleService.getAvailableCurrentRoles(roles, user.getAvailableRoles());
         if (availableCurrentRoles.isEmpty()) throw new IllegalArgumentException("There must be at least one role.");
-        roleService.updateCurrentRoles(UserInfoHolder.getLoggedUser().getUserName(), availableCurrentRoles);
-        UserInfoHolder.getLoggedUser().setCurrentRoles(availableCurrentRoles);
+        roleService.updateCurrentRoles(user.getUserName(), availableCurrentRoles);
+        user.setCurrentRoles(availableCurrentRoles);
     }
 
     @LogBe5Event
