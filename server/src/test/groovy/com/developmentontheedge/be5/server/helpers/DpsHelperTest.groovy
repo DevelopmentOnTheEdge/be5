@@ -415,6 +415,19 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    void addTagsForPrimaryKeyValue2()
+    {
+        def property = new DynamicProperty("test", String.class)
+        property.setCanBeNull(true)
+        dpsHelper.addTags(property, meta.getColumn("testTags", "referenceTest"),
+                ImmutableMap.of("referenceTest", "02"))
+        def tags = ((String[][]) property.getAttribute(TAG_LIST_ATTR))
+        assertEquals(1, tags.length)
+        assertEquals("02", tags[0][0])
+        assertEquals("Муниципальный", tags[0][1])
+    }
+
+    @Test
     void addEntityPrefixTest()
     {
         db.update("DELETE FROM testRestoredRecords");

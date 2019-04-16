@@ -53,6 +53,7 @@ import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UIN
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_VARCHAR;
 import static com.developmentontheedge.be5.operation.validation.ValidationRules.range;
 import static com.developmentontheedge.be5.operation.validation.ValidationRules.step;
+import static com.google.common.collect.ImmutableMap.of;
 
 
 public class DpsHelper
@@ -544,15 +545,17 @@ public class DpsHelper
             String tableName = columnDef.getTableTo();
             if (tableName != null && meta.getEntity(tableName) != null)
             {
-                Map<String, Object> tagsParams = addEntityPrefix(columnDef.getEntity(), contextParams);
-                if (tagsParams.containsKey(columnDef.getName()))
+                Map<String, Object> tagsParams;
+                if (contextParams.containsKey(columnDef.getName()))
                 {
-                    return getTagForPrimaryKeyValue(tableName, viewName, tagsParams.get(columnDef.getName()));
+                    Object value = contextParams.get(columnDef.getName());
+                    tagsParams = of(meta.getEntity(tableName).getPrimaryKey(), value);
                 }
                 else
                 {
-                    return queries.getTagsFromCustomSelectionView(tableName, viewName, tagsParams);
+                    tagsParams = withEntityPrefix(columnDef.getEntity(), contextParams);
                 }
+                return queries.getTagsFromCustomSelectionView(tableName, viewName, tagsParams);
             }
         }
         return null;
@@ -567,7 +570,7 @@ public class DpsHelper
         return new String[][]{};
     }
 
-    private Map<String, Object> addEntityPrefix(Entity entity, Map<String, Object> operationParams)
+    private Map<String, Object> withEntityPrefix(Entity entity, Map<String, Object> operationParams)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         return operationParams.entrySet().stream()
@@ -581,12 +584,6 @@ public class DpsHelper
                         return e.getKey();
                     }
                 }, Map.Entry::getValue));
-    }
-
-    private String[][] getTagForPrimaryKeyValue(String tableName, String viewName, Object value)
-    {
-        return queries.getTagsFromCustomSelectionView(tableName, viewName,
-                Collections.singletonMap(meta.getEntity(tableName).getPrimaryKey(), value));
     }
 
     public Object[] getValues(DynamicPropertySet dps)
