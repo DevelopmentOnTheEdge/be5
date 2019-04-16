@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -147,11 +146,7 @@ public class UserService
 
     private void initGuest()
     {
-        Request req = requestProvider.get();
-        Objects.requireNonNull(req);
-
         List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
-
-        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr());
+        saveUser(RoleType.ROLE_GUEST, roles, roles);
     }
 }
