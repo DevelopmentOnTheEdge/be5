@@ -232,13 +232,9 @@
         <executions>
           <execution>
             <goals>
-              <goal>addSources</goal>
-              <goal>addTestSources</goal>
-              <goal>generateStubs</goal>
               <goal>compile</goal>
-              <goal>generateTestStubs</goal>
+              <goal>addTestSources</goal>
               <goal>compileTests</goal>
-              <goal>removeStubs</goal>
               <goal>removeTestStubs</goal>
             </goals>
           </execution>
