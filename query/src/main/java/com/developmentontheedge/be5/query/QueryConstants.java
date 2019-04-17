@@ -15,6 +15,7 @@ public interface QueryConstants
     String COL_ATTR_AGGREGATE = "aggregate";
     String COL_ATTR_ROLES = "roles";
     String COL_ATTR_BLANKNULLS = "blankNulls";
+    String COL_ATTR_SAFEXML = "safexml";
     String CSS_ROW_CLASS = DatabaseConstants.HIDDEN_COLUMN_PREFIX + "css_class";
 
     String COL_ATTR_NULLIF = "nullif";

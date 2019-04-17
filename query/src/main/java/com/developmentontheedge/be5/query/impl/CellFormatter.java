@@ -20,6 +20,7 @@ import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -95,14 +96,14 @@ public class CellFormatter
         String title = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), cell.getName());
         cell.setDisplayName(title);
 
-        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier);
+        Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
+        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier, options);
 
         if (formattedContent instanceof String)
         {
             formattedContent = getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
         }
 
-        Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
         Map<String, String> blankNullsProperties = options.get(QueryConstants.COL_ATTR_BLANKNULLS);
         if (blankNullsProperties != null)
         {
@@ -183,10 +184,9 @@ public class CellFormatter
     }
 
     private Object getFormattedPartsWithoutLink(DynamicProperty cell, VarResolver varResolver, Query query,
-                                                ContextApplier contextApplier)
+                                                ContextApplier contextApplier, Map<String, Map<String, String>> options)
     {
         Objects.requireNonNull(cell);
-        Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
 
         boolean hasLink = options.containsKey("link");
         Map<String, String> link = null;
@@ -211,7 +211,7 @@ public class CellFormatter
                 options.put("nosort", Collections.emptyMap());
             });
             ImmutableList<Object> formattedParts = builder.build();
-            content = StreamEx.of(formattedParts).map(this::print).joining();
+            content = StreamEx.of(formattedParts).map(x -> print(x, options)).joining();
         }
         else
         {
@@ -228,21 +228,30 @@ public class CellFormatter
     /**
      * Dynamically casts tables to string using default formatting;
      */
-    private String print(Object formattedPart)
+    private String print(Object formattedPart, Map<String, Map<String, String>> options)
     {
         if (formattedPart instanceof List)
         {
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options)).joining(" "))
                     .joining("<br/> ");
 //            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
 //                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
         }
         else
         {
-            return formattedPart.toString();
+            String content = formattedPart.toString();
+            Map<String, String> safeXmlProperties = options.get(QueryConstants.COL_ATTR_SAFEXML);
+            if (safeXmlProperties != null)
+            {
+                if (content != null)
+                {
+                    content = Utils.safeXML(content);
+                }
+            }
+            return content;
         }
     }
 

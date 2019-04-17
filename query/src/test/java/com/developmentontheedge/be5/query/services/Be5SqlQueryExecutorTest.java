@@ -164,6 +164,18 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void safeXml()
+    {
+        db.update("DELETE FROM testtable");
+        db.insert("insert into testtable (name, value) VALUES (?, ?)", "value<tag>", 2L);
+
+        Query query = meta.getQuery("testtable", "safeXml");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+
+        assertEquals("value&lt;tag&gt;", list.get(0).getValue());
+    }
+
+    @Test
     public void beAggregate()
     {
         Query query = meta.getQuery("testtable", "beAggregate");
