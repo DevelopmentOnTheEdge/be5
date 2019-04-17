@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -133,7 +134,17 @@ public class UserService
     @LogBe5Event
     public void initUser(Request req, Response res)
     {
-        String userName = rememberMeService.autoLogin(req, res);
+        String userName = null;
+        try
+        {
+            userName = rememberMeService.autoLogin(req, res);
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "Error on try autoLogin: ", e);
+            initGuest();
+        }
+
         if (userName != null)
         {
             saveUser(userName);
