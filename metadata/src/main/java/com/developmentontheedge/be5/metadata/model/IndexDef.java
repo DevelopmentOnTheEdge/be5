@@ -81,7 +81,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     {
         if (!(other instanceof IndexDef))
             return getCreateDdl();
-        if (((IndexDef) other).getCreateDdl().equals(getCreateDdl()))
+        if (((IndexDef) other).getCreateDdl().equalsIgnoreCase(getCreateDdl()))
             return "";
         return getDdl();
     }
