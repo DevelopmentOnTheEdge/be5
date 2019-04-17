@@ -76,6 +76,7 @@ _system_:
       value: queryBuilder
   - Events:
       type: static
+      extras: feature:eventDbLogging
       roles: [SystemDeveloper, Administrator]
       value: be5events.redir?_qn_=All+records
   operations:
