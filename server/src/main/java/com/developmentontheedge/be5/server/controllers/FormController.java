@@ -3,19 +3,16 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.model.OperationResultPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
-import com.developmentontheedge.be5.server.authentication.UserService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,32 +37,18 @@ public class FormController extends JsonApiModelController
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private final FormGenerator formGenerator;
-    private final UserService userService;
     private final ErrorModelHelper errorModelHelper;
-    private final Stage stage;
-    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public FormController(FormGenerator formGenerator,
-                          UserService userService, ErrorModelHelper errorModelHelper,
-                          UserInfoProvider userInfoProvider, Stage stage)
+    public FormController(FormGenerator formGenerator, ErrorModelHelper errorModelHelper)
     {
         this.formGenerator = formGenerator;
-        this.userService = userService;
         this.errorModelHelper = errorModelHelper;
-        this.stage = stage;
-        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
     public JsonApiModel generateJson(Request req, Response res, String requestSubUrl)
     {
-        //todo move to filter
-        if (stage == Stage.DEVELOPMENT && userInfoProvider.getLoggedUser() == null)
-        {
-            userService.initUser(req, res);
-        }
-
         requireNonNull(req.get(TIMESTAMP_PARAM));
         String entityName = req.getNonEmpty(ENTITY_NAME_PARAM);
         String queryName = req.getNonEmpty(QUERY_NAME_PARAM);
