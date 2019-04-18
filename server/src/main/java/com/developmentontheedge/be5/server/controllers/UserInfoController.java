@@ -1,7 +1,8 @@
-package com.developmentontheedge.be5.modules.core.controllers;
+package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
 import com.developmentontheedge.be5.server.authentication.UserService;
+import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
 
@@ -24,7 +25,7 @@ public class UserInfoController extends JsonApiController
     }
 
     @Override
-    protected Object generate(Request req, String action)
+    protected UserInfoModel generate(Request req, String action)
     {
         switch (action)
         {
@@ -37,7 +38,7 @@ public class UserInfoController extends JsonApiController
         }
     }
 
-    private Object selectRolesAndSendNewState(Request req)
+    private UserInfoModel selectRolesAndSendNewState(Request req)
     {
         List<String> roles = Arrays.asList(req.getOrEmpty("roles").split(","));
 

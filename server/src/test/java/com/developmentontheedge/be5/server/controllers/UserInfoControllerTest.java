@@ -1,13 +1,12 @@
-package com.developmentontheedge.be5.modules.core.controllers;
+package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
-import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.mocks.RoleServiceMock;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,14 +19,14 @@ import java.util.Collections;
 
 import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 import static com.developmentontheedge.be5.metadata.RoleType.ROLE_SYSTEM_DEVELOPER;
+import static com.google.common.collect.ImmutableList.of;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
+public class UserInfoControllerTest extends ServerBe5ProjectTest
 {
     @Inject
     private UserInfoController component;
@@ -111,26 +110,18 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     @Test
     public void generateSelectRolesAndSendNewState()
     {
-        DbServiceMock.clearMock();
+        RoleServiceMock.clearMock();
         initUserWithRoles(ROLE_ADMINISTRATOR, ROLE_SYSTEM_DEVELOPER);
 
-        assertEquals(ImmutableList.of(ROLE_ADMINISTRATOR, ROLE_SYSTEM_DEVELOPER),
+        assertEquals(of(ROLE_ADMINISTRATOR, ROLE_SYSTEM_DEVELOPER),
                 UserInfoHolder.getLoggedUser().getCurrentRoles());
 
-        UserInfoModel userInfoModel = (UserInfoModel) component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
+        UserInfoModel userInfoModel = component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
                 ImmutableMap.of("roles", ROLE_ADMINISTRATOR)), "selectRoles");
 
-        assertEquals(ImmutableList.of(ROLE_ADMINISTRATOR), userInfoModel.getCurrentRoles());
+        assertEquals(of(ROLE_ADMINISTRATOR), userInfoModel.getCurrentRoles());
 
-        verify(DbServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
-                "('Administrator')",
-                "current-role-list",
-                "testUser");
-
-        verify(DbServiceMock.mock).insert("INSERT INTO user_prefs VALUES( ?, ?, ? )",
-                "testUser",
-                "current-role-list",
-                "('Administrator')");
+        verify(RoleServiceMock.mock).updateCurrentRoles("testUser", of(ROLE_ADMINISTRATOR));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

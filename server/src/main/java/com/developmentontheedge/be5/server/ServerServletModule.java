@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.server.controllers.MenuController;
 import com.developmentontheedge.be5.server.controllers.QueryBuilderController;
 import com.developmentontheedge.be5.server.controllers.ReloadProjectController;
 import com.developmentontheedge.be5.server.controllers.StaticPageController;
+import com.developmentontheedge.be5.server.controllers.UserInfoController;
 import com.google.inject.servlet.ServletModule;
 
 
@@ -21,6 +22,7 @@ public class ServerServletModule extends ServletModule
         serve("/api/form*").with(FormController.class);
         serve("/api/static*").with(StaticPageController.class);
         serve("/api/menu*").with(MenuController.class);
+        serve("/api/userInfo*").with(UserInfoController.class);
         serve("/api/languageSelector*").with(LanguageSelectorController.class);
         serve("/api/queryBuilder*").with(QueryBuilderController.class);
         serve("/api/download").with(DownloadController.class);

@@ -1,14 +1,20 @@
 package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.server.authentication.RoleService;
-import org.mockito.Mockito;
 
 import java.util.Collection;
 import java.util.List;
 
+import static org.mockito.Mockito.mock;
+
 public class RoleServiceMock implements RoleService
 {
-    public static RoleService mock = Mockito.mock(RoleService.class);
+    public static RoleService mock = mock(RoleService.class);
+
+    public static void clearMock()
+    {
+        mock = mock(RoleService.class);
+    }
 
     @Override
     public void updateCurrentRoles(String userName, Collection<String> roles)
