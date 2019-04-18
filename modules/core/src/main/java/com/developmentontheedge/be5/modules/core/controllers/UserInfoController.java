@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
 import com.developmentontheedge.be5.server.authentication.UserService;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
@@ -16,15 +15,12 @@ public class UserInfoController extends JsonApiController
 {
     private final UserService userHelper;
     private final UserInfoModelService userInfoModelService;
-    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public UserInfoController(UserService userHelper, UserInfoModelService userInfoModelService,
-                              UserInfoProvider userInfoProvider)
+    public UserInfoController(UserService userHelper, UserInfoModelService userInfoModelService)
     {
         this.userHelper = userHelper;
         this.userInfoModelService = userInfoModelService;
-        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -47,6 +43,6 @@ public class UserInfoController extends JsonApiController
 
         userHelper.setCurrentRoles(roles);
 
-        return userInfoProvider.getCurrentRoles();
+        return userInfoModelService.getUserInfoModel();
     }
 }

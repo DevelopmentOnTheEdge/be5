@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
+import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.web.Request;
@@ -108,15 +109,18 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     }
 
     @Test
-    public void generateSelectRolesAndSendNewState() throws Exception
+    public void generateSelectRolesAndSendNewState()
     {
         DbServiceMock.clearMock();
-        Response response = mock(Response.class);
+        initUserWithRoles(ROLE_ADMINISTRATOR, ROLE_SYSTEM_DEVELOPER);
 
-        component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
-                ImmutableMap.of("roles", ROLE_ADMINISTRATOR)), response);
+        assertEquals(ImmutableList.of(ROLE_ADMINISTRATOR, ROLE_SYSTEM_DEVELOPER),
+                UserInfoHolder.getLoggedUser().getCurrentRoles());
 
-        verify(response).sendAsJson(eq(ImmutableList.of(ROLE_ADMINISTRATOR)));
+        UserInfoModel userInfoModel = (UserInfoModel) component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
+                ImmutableMap.of("roles", ROLE_ADMINISTRATOR)), "selectRoles");
+
+        assertEquals(ImmutableList.of(ROLE_ADMINISTRATOR), userInfoModel.getCurrentRoles());
 
         verify(DbServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
                 "('Administrator')",
