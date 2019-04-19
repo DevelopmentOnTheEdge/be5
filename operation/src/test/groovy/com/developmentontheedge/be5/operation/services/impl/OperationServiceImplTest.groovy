@@ -22,7 +22,7 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
                 test5: new java.sql.Date(123123123123)
         ])
 
-        OperationServiceImpl.replaceValuesToString(dps)
+        new OperationServiceImpl(null, null).replaceValuesToString(dps)
         assertEquals([
                 test1: "1",
                 test2: "1",
@@ -39,7 +39,7 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
                 test6: (["1", "2"] as String[]),
         ])
 
-        OperationServiceImpl.replaceValuesToString(dps)
+        new OperationServiceImpl(null, null).replaceValuesToString(dps)
         assertArrayEquals(["1", "2"] as String[], dps.asMap().get("test6"))
 
 
@@ -47,7 +47,7 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
                 test6: ([1, "2"] as Object[]),
         ])
 
-        OperationServiceImpl.replaceValuesToString(dps)
+        new OperationServiceImpl(null, null).replaceValuesToString(dps)
         assertArrayEquals([1, "2"] as Object[], dps.asMap().get("test6"))
     }
 

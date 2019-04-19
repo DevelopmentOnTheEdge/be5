@@ -1,19 +1,16 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
 import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.operation.validation.Validator;
-import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,11 +35,7 @@ public class OperationServiceImpl implements OperationService
     @Override
     public Either<Object, OperationResult> generate(Operation operation, Map<String, Object> values)
     {
-        Map<String, Object> presetValues = getPresetValues(operation.getContext(), values);
-
-        operation.setResult(OperationResult.generate());
-
-        Object parameters = operationExecutor.generate(operation, presetValues);
+        Object parameters = operationExecutor.generate(operation, values);
 
         if (OperationStatus.ERROR == operation.getStatus())
         {
@@ -51,14 +44,14 @@ public class OperationServiceImpl implements OperationService
 
         if (parameters == null)
         {
-            return execute(operation, presetValues);
+            return execute(operation, values);
         }
 
-        if (presetValues.containsKey(RELOAD_CONTROL_NAME))
+        if (values.containsKey(RELOAD_CONTROL_NAME))
         {
             if (parameters instanceof DynamicPropertySet)
             {
-                String reloadControlName = ((String) presetValues.get(RELOAD_CONTROL_NAME)).substring(1);
+                String reloadControlName = ((String) values.get(RELOAD_CONTROL_NAME)).substring(1);
                 DynamicProperty property = ((DynamicPropertySet) parameters).getProperty(reloadControlName);
                 validator.validate(property);
             }
@@ -70,11 +63,7 @@ public class OperationServiceImpl implements OperationService
     @Override
     public Either<Object, OperationResult> execute(Operation operation, Map<String, Object> values)
     {
-        Map<String, Object> presetValues = getPresetValues(operation.getContext(), values);
-
-        operation.setResult(OperationResult.execute());
-
-        Object parameters = operationExecutor.execute(operation, presetValues);
+        Object parameters = operationExecutor.execute(operation, values);
 
         if (OperationStatus.EXECUTE == operation.getStatus())
         {
@@ -90,12 +79,11 @@ public class OperationServiceImpl implements OperationService
             catch (RuntimeException e)
             {
                 log.log(Level.INFO, "error on execute in parameters", e);
-                //remove duplicate operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(parameters);
             }
 
             Operation newOperation = operationExecutor.create(operation.getInfo(), operation.getContext());
-            Object newParameters = operationExecutor.generate(newOperation, presetValues);
+            Object newParameters = operationExecutor.generate(newOperation, values);
 
             if (newParameters != null && OperationStatus.ERROR != newOperation.getStatus())
             {
@@ -108,23 +96,13 @@ public class OperationServiceImpl implements OperationService
         return Either.second(operation.getResult());
     }
 
-    private static Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
-    {
-        Map<String, Object> presetValues =
-                new HashMap<>(FilterUtil.getContextParams(context.getParams()));
-
-        presetValues.putAll(values);
-        return presetValues;
-    }
-
-    private static Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
+    private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
     {
         replaceValuesToString(parameters);
-
         return Either.first(parameters);
     }
 
-    static void replaceValuesToString(Object parameters)
+    void replaceValuesToString(Object parameters)
     {
         if (parameters instanceof DynamicPropertySet)
         {
@@ -143,6 +121,4 @@ public class OperationServiceImpl implements OperationService
             }
         }
     }
-
-
 }

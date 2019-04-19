@@ -19,6 +19,7 @@ import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.validation.Validator;
+import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.Utils;
 import com.google.inject.Injector;
 
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -62,15 +64,17 @@ public class OperationExecutorImpl implements OperationExecutor
     @Override
     public Object generate(Operation operation, Map<String, Object> presetValues)
     {
+        operation.setResult(OperationResult.generate());
         List<OperationExtender> extenders = loadOperationExtenders(operation);
         return generateWithExtenders(operation, extenders, presetValues);
     }
 
     private Object generateWithExtenders(Operation operation, List<OperationExtender> extenders,
-                                         Map<String, Object> presetValues)
+                                         Map<String, Object> values)
     {
         try
         {
+            Map<String, Object> presetValues = getPresetValues(operation.getContext(), values);
             Object parameters = operation.getParameters(presetValues);
             for (OperationExtender ext : extenders)
             {
@@ -84,9 +88,17 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
+    private Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
+    {
+        Map<String, Object> presetValues = new HashMap<>(FilterUtil.getContextParams(context.getParams()));
+        presetValues.putAll(values);
+        return presetValues;
+    }
+
     @Override
     public Object execute(Operation operation, Map<String, Object> presetValues)
     {
+        operation.setResult(OperationResult.execute());
         List<OperationExtender> extenders = loadOperationExtenders(operation);
         if (operation instanceof TransactionalOperation)
         {
