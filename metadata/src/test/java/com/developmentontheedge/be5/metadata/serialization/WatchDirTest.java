@@ -1,11 +1,18 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -57,6 +64,46 @@ public class WatchDirTest
             while (modify[0]);
 
             assertFalse(modify[0]);
+        }
+        finally
+        {
+            if (watcher != null) watcher.stop();
+        }
+    }
+
+    @Test
+    public void testChangeFile() throws Exception
+    {
+        Path path = tmp.newFolder().toPath();
+        Project project = getProject("test");
+        Entity entity = ProjectTestUtils.createEntity(project, "entity", "ID");
+        ProjectTestUtils.createQuery(entity, "All records",
+                Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
+        Serialization.save(project, path);
+
+        boolean modify[] = new boolean[]{false};
+
+        WatchDir watcher = null;
+        try
+        {
+            watcher = new WatchDir(Collections.singletonMap("main", project))
+                    .onModify(onModify -> modify[0] = true)
+                    .start();
+
+            while (!modify[0])
+            {
+                Thread.sleep(100);
+
+                File entityFile = path.resolve("src/meta/entities/entity.yaml").toFile();
+                try(PrintWriter output = new PrintWriter(new FileWriter(entityFile,true)))
+                {
+                    output.printf("%s\r\n", "NEWLINE");
+                }
+                catch (Exception e) {}
+            }
+
+            assertTrue(modify[0]);
+            watcher.stop();
         }
         finally
         {
