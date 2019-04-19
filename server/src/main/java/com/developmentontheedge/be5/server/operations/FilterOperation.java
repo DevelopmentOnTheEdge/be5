@@ -1,12 +1,13 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.server.services.FilterHelper;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
+import com.developmentontheedge.be5.server.services.FilterHelper;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.server.FrontendActions.closeMainModal;
@@ -21,8 +22,15 @@ public class FilterOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        DynamicPropertySet dps = getFilterParameters(presetValues);
+        DynamicPropertySet dps = getFilterParameters(getPresetValues(presetValues));
         return filterHelper.processFilterParams(dps, presetValues, context.getParams());
+    }
+
+    private Map<String, Object> getPresetValues(Map<String, Object> values)
+    {
+        Map<String, Object> presetValues = new HashMap<>(FilterUtil.getFilterParams(getContext().getParams()));
+        presetValues.putAll(values);
+        return presetValues;
     }
 
     protected DynamicPropertySet getFilterParameters(Map<String, Object> presetValues) throws Exception
