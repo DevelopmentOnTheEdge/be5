@@ -19,7 +19,6 @@ import com.developmentontheedge.be5.server.authentication.rememberme.RememberMeS
 import com.developmentontheedge.be5.server.authentication.rememberme.ThrottlingRememberMeService;
 import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
-import com.developmentontheedge.be5.server.services.FilterHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.services.MenuHelper;
@@ -61,7 +60,6 @@ public class ServerModule extends AbstractModule
         install(new OperationModule());
         install(new QueryModule());
 
-        bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
         bind(DpsHelper.class).in(Scopes.SINGLETON);
         bind(UserService.class).in(Scopes.SINGLETON);
