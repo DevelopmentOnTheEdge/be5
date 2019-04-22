@@ -1,13 +1,9 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
-import com.developmentontheedge.be5.query.impl.beautifiers.BeautifierCollection;
-import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.MoreStrings;
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -16,18 +12,21 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
+import com.developmentontheedge.be5.query.impl.beautifiers.BeautifierCollection;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
+import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.MoreStrings;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
-import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
@@ -216,13 +215,12 @@ public class CellFormatter
         Object content;
         if (cell.getValue() instanceof String)
         {
-            ImmutableList.Builder<Object> builder = ImmutableList.builder();
-            unzipper.unzip((String) cell.getValue(), builder::add, subquery -> {
-                builder.add(subQueryToString(subquery, varResolver, query, contextApplier, options));
+            StringBuilder builder = new StringBuilder();
+            unzipper.unzip((String) cell.getValue(), builder::append, subquery -> {
+                builder.append(subQueryToString(subquery, varResolver, query, contextApplier, options));
                 options.put("nosort", Collections.emptyMap());
             });
-            ImmutableList<Object> formattedParts = builder.build();
-            content = StreamEx.of(formattedParts).map(x -> print(x, options)).joining();
+            content = builder.toString();
         }
         else
         {
