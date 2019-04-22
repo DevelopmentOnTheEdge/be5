@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
+import static com.developmentontheedge.be5.query.QueryConstants.BEAUTIFIER_NAME;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
 import static java.util.Collections.singletonMap;
@@ -234,33 +235,19 @@ public class CellFormatter
         return content;
     }
 
-    /**
-     * Dynamically casts tables to string using default formatting;
-     */
-    private String print(Object formattedPart, Map<String, Map<String, String>> options)
-    {
-        if (formattedPart instanceof List)
-        {
-            @SuppressWarnings("unchecked")
-            List<List<Object>> table = (List<List<Object>>) formattedPart;
-            //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options))
-                    .joining(", "))
-                    .joining("<br/>");
-        }
-        else
-        {
-            return formattedPart.toString();
-        }
-    }
-
     private String subQueryToString(String subQueryName, VarResolver varResolver, Query query,
-                                                ContextApplier contextApplier, Map<String, Map<String, String>> options)
+                                    ContextApplier contextApplier, Map<String, Map<String, String>> options)
     {
-        List<QRec> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
+        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
+            Object value = varResolver.resolve(x);
+            return value != null ? value.toString() : null;
+        });
+
+        List<QRec> list = executeSubQuery(query, subQuery, varResolver);
+
+        String beautifierName = subQuery.getBeautifierName();
 
         List<List<Object>> lists = new ArrayList<>();
-
         for (DynamicPropertySet dps : list)
         {
             List<Object> objects = toRow(dps, varResolver, query, contextApplier);
@@ -291,6 +278,26 @@ public class CellFormatter
         }).toList();
     }
 
+    /**
+     * Dynamically casts tables to string using default formatting;
+     */
+    private String print(Object formattedPart, Map<String, Map<String, String>> options)
+    {
+        if (formattedPart instanceof List)
+        {
+            @SuppressWarnings("unchecked")
+            List<List<Object>> table = (List<List<Object>>) formattedPart;
+            Map<String, String> map = options.get(BEAUTIFIER_NAME);
+            //todo support beautifiers - <br/> or ; or ...
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options))
+                    .joining(", "))
+                    .joining("<br/>");
+        }
+        else
+        {
+            return formattedPart.toString();
+        }
+    }
 
     private static class RootVarResolver implements VarResolver
     {
@@ -331,15 +338,8 @@ public class CellFormatter
         }
     }
 
-    private List<QRec> executeSubQuery(String subQueryName, VarResolver varResolver,
-                                                     Query query, ContextApplier contextApplier)
+    private List<QRec> executeSubQuery(Query query, AstBeSqlSubQuery subQuery, VarResolver varResolver)
     {
-        AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
-            Object value = varResolver.resolve(x);
-            return value != null ? value.toString() : null;
-        });
-
-        String beautifierName = subQuery.getBeautifierName();
         if (subQuery.getQuery() == null)
         {
             return Collections.emptyList();
@@ -349,21 +349,7 @@ public class CellFormatter
 
         List<QRec> dynamicPropertySets;
 
-        Object[] params;
-        String usingParamNames = subQuery.getUsingParamNames();
-        if (usingParamNames != null)
-        {
-            String[] paramNames = usingParamNames.split(",");
-            params = new Object[paramNames.length];
-            for (int i = 0; i < paramNames.length; i++)
-            {
-                params[i] = varResolver.resolve(paramNames[i]);
-            }
-        }
-        else
-        {
-            params = new Object[]{};
-        }
+        Object[] params = getParams(subQuery.getUsingParamNames(), varResolver);
 
         try
         {
@@ -394,6 +380,21 @@ public class CellFormatter
         {
             return dynamicPropertySets;
         }
+    }
+
+    private Object[] getParams(String usingParamNames, VarResolver varResolver)
+    {
+        if (usingParamNames != null)
+        {
+            String[] paramNames = usingParamNames.split(",");
+            Object[] params = new Object[paramNames.length];
+            for (int i = 0; i < paramNames.length; i++)
+            {
+                params[i] = varResolver.resolve(paramNames[i]);
+            }
+            return params;
+        }
+        return new Object[]{};
     }
 
     /**
