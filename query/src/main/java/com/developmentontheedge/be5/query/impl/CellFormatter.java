@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.query.impl.beautifiers.BeautifierCollection;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.MoreStrings;
@@ -71,16 +72,18 @@ public class CellFormatter
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
     private final Provider<QueriesService> queries;
+    private final BeautifierCollection beautifiers;
 
     @Inject
     public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider,
-                         Provider<QueriesService> queries)
+                         Provider<QueriesService> queries, BeautifierCollection beautifiers)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.userInfoProvider = userInfoProvider;
         this.queries = queries;
+        this.beautifiers = beautifiers;
     }
 
     /**
@@ -206,7 +209,7 @@ public class CellFormatter
         {
             ImmutableList.Builder<Object> builder = ImmutableList.builder();
             unzipper.unzip((String) cell.getValue(), builder::add, subquery -> {
-                builder.add(toTable(subquery, varResolver, query, contextApplier));
+                builder.add(subQueryToString(subquery, varResolver, query, contextApplier, options));
                 options.put("nosort", Collections.emptyMap());
             });
             ImmutableList<Object> formattedParts = builder.build();
@@ -234,7 +237,8 @@ public class CellFormatter
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options)).joining(", "))
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options))
+                    .joining(", "))
                     .joining("<br/>");
 //            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
 //                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
@@ -254,11 +258,8 @@ public class CellFormatter
         }
     }
 
-    /**
-     * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
-     */
-    private List<List<Object>> toTable(String subQueryName, VarResolver varResolver, Query query,
-                                       ContextApplier contextApplier)
+    private String subQueryToString(String subQueryName, VarResolver varResolver, Query query,
+                                                ContextApplier contextApplier, Map<String, Map<String, String>> options)
     {
         List<QRec> list = executeSubQuery(subQueryName, varResolver, query, contextApplier);
 
@@ -270,7 +271,7 @@ public class CellFormatter
             lists.add(objects);
         }
 
-        return lists;
+        return print(lists, options);
     }
 
     /**
@@ -342,6 +343,7 @@ public class CellFormatter
             return value != null ? value.toString() : null;
         });
 
+        String beautifierName = subQuery.getBeautifierName();
         if (subQuery.getQuery() == null)
         {
             return Collections.emptyList();

@@ -161,6 +161,13 @@ testtable:
         SELECT
           '<sql>SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
+  - subQueryBeautifierList:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+        SELECT
+          '<sql beautifierName="list">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+        FROM testtable t
   - Sub Query default:
       type: 1D_unknown
       roles: SystemDeveloper
