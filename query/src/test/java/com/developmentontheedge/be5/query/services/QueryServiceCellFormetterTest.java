@@ -41,7 +41,7 @@ public class QueryServiceCellFormetterTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "Sub Query");
         List<QRec> recs = queryService.get(query, new HashMap<>()).execute();
 
-        assertEquals("1<br/> 2", recs.get(0).getString("testSubQueryValues"));
+        assertEquals("1<br/>2", recs.get(0).getString("testSubQueryValues"));
     }
 
     @Test
