@@ -8,6 +8,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +59,30 @@ public class DpsUtils
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
-            if (property != null && !property.isReadOnly())
+            if (property != null && !property.isReadOnly() && isValueInTagsIfExistsTags(property, entry.getValue()))
             {
                 dps.setValue(entry.getKey(), entry.getValue());
             }
         }
         return dps;
+    }
+
+    private static boolean isValueInTagsIfExistsTags(DynamicProperty property, Object value)
+    {
+        Object tagsObject = property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
+        if (tagsObject == null || value == null) return true;
+
+        if (tagsObject instanceof Object[][])
+        {
+            return Arrays.stream((Object[][]) tagsObject)
+                    .anyMatch(item -> (item)[0].toString().equals(value.toString()));
+        }
+        else if (tagsObject instanceof Object[])
+        {
+            return Arrays.stream((Object[]) tagsObject)
+                    .anyMatch(item -> item.toString().equals(value.toString()));
+        }
+        return false;
     }
 
     public static <T extends DynamicPropertySet> T setValues(T dps, ResultSet resultSet)

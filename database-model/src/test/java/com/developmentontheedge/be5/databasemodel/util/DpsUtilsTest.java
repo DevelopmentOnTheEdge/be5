@@ -77,6 +77,39 @@ public class DpsUtilsTest
     }
 
     @Test
+    public void checkContainedInTags()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[][]{{"foo", "foo"}})
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "foo"));
+        assertEquals("foo", dps.getValue("value"));
+    }
+
+    @Test
+    public void skipNotContainedInTags()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[][]{{"foo", "foo"}})
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "bar"));
+        assertNull(dps.getValue("value"));
+    }
+
+    @Test
+    public void skipNotContainedInTagsOneDimensional()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[]{"foo"})
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "bar"));
+        assertNull(dps.getValue("value"));
+    }
+
+    @Test
     public void setValuesFromDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
