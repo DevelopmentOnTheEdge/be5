@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
-import static com.developmentontheedge.be5.query.QueryConstants.BEAUTIFIER_NAME;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
 import static java.util.Collections.singletonMap;
@@ -236,7 +235,7 @@ public class CellFormatter
     }
 
     private String subQueryToString(String subQueryName, VarResolver varResolver, Query query,
-                                    ContextApplier contextApplier, Map<String, Map<String, String>> options)
+                                    ContextApplier contextApplier, Map<String, Map<String, String>> subQueryOptions)
     {
         AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
             Object value = varResolver.resolve(x);
@@ -247,25 +246,27 @@ public class CellFormatter
 
         String beautifierName = subQuery.getBeautifierName();
 
-        List<List<Object>> lists = new ArrayList<>();
+        List<Map<String, Object>> lists = new ArrayList<>();
         for (DynamicPropertySet dps : list)
         {
-            List<Object> objects = toRow(dps, varResolver, query, contextApplier);
-            lists.add(objects);
+            Map<String, Object> values = toRow(dps, varResolver, query, contextApplier);
+            lists.add(values);
         }
 
-        return print(lists, options);
+        return print(lists, subQueryOptions);
     }
 
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query,
-                               ContextApplier contextApplier)
+    private Map<String, Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query,
+                                      ContextApplier contextApplier)
     {
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
-        return StreamEx.of(dps.spliterator()).map(property -> {
+        return StreamEx.of(dps.spliterator())
+                .collect(Utils.toLinkedMap(DynamicProperty::getName, property ->
+        {
             String name = property.getName();
             Object value = property.getValue();
             //RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
@@ -275,22 +276,24 @@ public class CellFormatter
             Object processedCell = format(property, compositeVarResolver, query, contextApplier);
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
-        }).toList();
+        }));
     }
 
     /**
      * Dynamically casts tables to string using default formatting;
      */
-    private String print(Object formattedPart, Map<String, Map<String, String>> options)
+    private String print(Object formattedPart, Map<String, Map<String, String>> subQueryOptions)
     {
         if (formattedPart instanceof List)
         {
             @SuppressWarnings("unchecked")
-            List<List<Object>> table = (List<List<Object>>) formattedPart;
-            Map<String, String> map = options.get(BEAUTIFIER_NAME);
+            List<Map<String, Object>> table = (List<Map<String, Object>>) formattedPart;
+
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options))
-                    .joining(", "))
+            return StreamEx.of(table)
+                    .map(values -> StreamEx.of(values.entrySet())
+                            .map(entry -> print(entry.getValue(), subQueryOptions))
+                            .joining(", "))
                     .joining("<br/>");
         }
         else
