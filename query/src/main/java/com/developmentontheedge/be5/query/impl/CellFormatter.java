@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
-import com.developmentontheedge.be5.query.impl.beautifiers.BeautifierCollection;
+import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.QRecParser;
@@ -71,18 +71,18 @@ public class CellFormatter
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
     private final Provider<QueriesService> queries;
-    private final BeautifierCollection beautifiers;
+    private final Map<String, SubQueryBeautifier> subQueryBeautifiers;
 
     @Inject
     public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider,
-                         Provider<QueriesService> queries, BeautifierCollection beautifiers)
+                         Provider<QueriesService> queries, Map<String, SubQueryBeautifier> subQueryBeautifiers)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.userInfoProvider = userInfoProvider;
         this.queries = queries;
-        this.beautifiers = beautifiers;
+        this.subQueryBeautifiers = subQueryBeautifiers;
     }
 
     /**
@@ -217,7 +217,7 @@ public class CellFormatter
         {
             StringBuilder builder = new StringBuilder();
             unzipper.unzip((String) cell.getValue(), builder::append, subquery -> {
-                builder.append(subQueryToString(subquery, varResolver, query, contextApplier, options));
+                builder.append(subQueryToString(subquery, varResolver, query, contextApplier));
                 options.put("nosort", Collections.emptyMap());
             });
             content = builder.toString();
@@ -235,7 +235,7 @@ public class CellFormatter
     }
 
     private String subQueryToString(String subQueryName, VarResolver varResolver, Query query,
-                                    ContextApplier contextApplier, Map<String, Map<String, String>> subQueryOptions)
+                                    ContextApplier contextApplier)
     {
         AstBeSqlSubQuery subQuery = contextApplier.getSubQuery(subQueryName, x -> {
             Object value = varResolver.resolve(x);
@@ -244,8 +244,6 @@ public class CellFormatter
 
         List<QRec> list = executeSubQuery(query, subQuery, varResolver);
 
-        String beautifierName = subQuery.getBeautifierName();
-
         List<Map<String, Object>> lists = new ArrayList<>();
         for (DynamicPropertySet dps : list)
         {
@@ -253,7 +251,9 @@ public class CellFormatter
             lists.add(values);
         }
 
-        return print(lists, subQueryOptions);
+        String beautifierName = subQuery.getBeautifierName() != null ? subQuery.getBeautifierName() : "internal_glue";
+        SubQueryBeautifier beautifier = subQueryBeautifiers.get(beautifierName);
+        return beautifier.print(lists);
     }
 
     /**
@@ -277,29 +277,6 @@ public class CellFormatter
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
         }));
-    }
-
-    /**
-     * Dynamically casts tables to string using default formatting;
-     */
-    private String print(Object formattedPart, Map<String, Map<String, String>> subQueryOptions)
-    {
-        if (formattedPart instanceof List)
-        {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> table = (List<Map<String, Object>>) formattedPart;
-
-            //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table)
-                    .map(values -> StreamEx.of(values.entrySet())
-                            .map(entry -> print(entry.getValue(), subQueryOptions))
-                            .joining(", "))
-                    .joining("<br/>");
-        }
-        else
-        {
-            return formattedPart.toString();
-        }
     }
 
     private static class RootVarResolver implements VarResolver

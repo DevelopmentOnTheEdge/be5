@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.query.impl.beautifiers;
 
-public class HtmlGlueBeautifier extends HtmlBeautifier
+public class HtmlLineGlueBeautifier extends HtmlBeautifier
 {
-    protected String rowDelimiter = "<br/>";
+    protected String rowDelimiter = ", ";
     protected String columnDelimiter = ", ";
 
     public String getRowDelimiter()

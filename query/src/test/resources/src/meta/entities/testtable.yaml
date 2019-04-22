@@ -159,14 +159,21 @@ testtable:
       roles: SystemDeveloper
       code: |-
         SELECT
-          '<sql>SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+          '<sql beautifierName="internal_glue">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
-  - subQueryBeautifierList:
+  - subQueryBeautifierLine:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
         SELECT
-          '<sql beautifierName="list">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+          '<sql beautifierName="line">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+        FROM testtable t
+  - subQueryBeautifierText:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+        SELECT
+          '<sql beautifierName="text">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
   - Sub Query default:
       type: 1D_unknown

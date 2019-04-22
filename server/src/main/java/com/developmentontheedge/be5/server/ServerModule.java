@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.databasemodel.helpers.SqlHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
 import com.developmentontheedge.be5.query.QueryModule;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
 import com.developmentontheedge.be5.server.authentication.InitUserService;
 import com.developmentontheedge.be5.server.authentication.InitUserServiceImpl;
 import com.developmentontheedge.be5.server.authentication.UserInfoModelService;
@@ -17,6 +18,7 @@ import com.developmentontheedge.be5.server.authentication.rememberme.PersistentT
 import com.developmentontheedge.be5.server.authentication.rememberme.PersistentTokenRepositoryImpl;
 import com.developmentontheedge.be5.server.authentication.rememberme.RememberMeServices;
 import com.developmentontheedge.be5.server.authentication.rememberme.ThrottlingRememberMeService;
+import com.developmentontheedge.be5.server.queries.JsonBeautifier;
 import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
@@ -37,6 +39,7 @@ import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.google.inject.multibindings.MapBinder;
 
 import static com.google.inject.matcher.Matchers.annotatedWith;
 import static com.google.inject.matcher.Matchers.any;
@@ -80,5 +83,9 @@ public class ServerModule extends AbstractModule
         bind(InitUserService.class).to(InitUserServiceImpl.class).in(Scopes.SINGLETON);
         bind(RememberMeServices.class).to(ThrottlingRememberMeService.class).in(Scopes.SINGLETON);
         bind(PersistentTokenRepository.class).to(PersistentTokenRepositoryImpl.class).in(Scopes.SINGLETON);
+
+        MapBinder<String, SubQueryBeautifier> binder = MapBinder.newMapBinder(binder(),
+                String.class, SubQueryBeautifier.class);
+        binder.addBinding("json").to(JsonBeautifier.class);
     }
 }
