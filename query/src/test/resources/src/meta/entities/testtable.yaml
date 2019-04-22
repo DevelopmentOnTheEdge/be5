@@ -154,6 +154,13 @@ testtable:
           '<sql>SELECT u.value FROM testSubQuery u
                 WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues"
         FROM testtable t
+  - subQueryBeautifier:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+        SELECT
+          '<sql>SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+        FROM testtable t
   - Sub Query default:
       type: 1D_unknown
       roles: SystemDeveloper

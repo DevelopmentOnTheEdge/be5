@@ -196,8 +196,6 @@ public class CellFormatter
             options.remove("link");
         }
 
-        ImmutableList.Builder<Object> builder = ImmutableList.builder();
-
         if (cell.getValue() == null)
         {
             return null;
@@ -206,6 +204,7 @@ public class CellFormatter
         Object content;
         if (cell.getValue() instanceof String)
         {
+            ImmutableList.Builder<Object> builder = ImmutableList.builder();
             unzipper.unzip((String) cell.getValue(), builder::add, subquery -> {
                 builder.add(toTable(subquery, varResolver, query, contextApplier));
                 options.put("nosort", Collections.emptyMap());
@@ -235,8 +234,8 @@ public class CellFormatter
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
             //todo support beautifiers - <br/> or ; or ...
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options)).joining(" "))
-                    .joining("<br/> ");
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options)).joining(", "))
+                    .joining("<br/>");
 //            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
 //                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
         }

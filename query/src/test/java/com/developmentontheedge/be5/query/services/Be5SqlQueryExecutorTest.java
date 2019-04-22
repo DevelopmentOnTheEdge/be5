@@ -68,7 +68,7 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "Sub Query");
         List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
-        assertEquals("1<br/> 2", list.get(0).getValue("testSubQueryValues"));
+        assertEquals("1<br/>2", list.get(0).getValue("testSubQueryValues"));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.getQuery("testtable", "Sub Query with prepare params");
         List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
-        assertEquals("1<br/> 2", list.get(0).getValue("testtUserValues"));
+        assertEquals("1<br/>2", list.get(0).getValue("testtUserValues"));
     }
 
     @Test
@@ -93,6 +93,14 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "Sub Query with long prepare params");
         List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
         assertEquals("2", list.get(0).getValue("testtUserValues"));
+    }
+
+    @Test
+    public void subQueryBeautifier()
+    {
+        Query query = meta.getQuery("testtable", "subQueryBeautifier");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("user1, 1<br/>user1, 2", list.get(0).getValue("test"));
     }
 
     @Test
