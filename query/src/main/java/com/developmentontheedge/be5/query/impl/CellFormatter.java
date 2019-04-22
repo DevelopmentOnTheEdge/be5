@@ -125,6 +125,15 @@ public class CellFormatter
             }
         }
 
+        Map<String, String> safeXmlProperties = options.get(QueryConstants.COL_ATTR_SAFEXML);
+        if (safeXmlProperties != null)
+        {
+            if (formattedContent != null)
+            {
+                formattedContent = Utils.safeXML(formattedContent.toString());
+            }
+        }
+
         Map<String, String> linkProperties = options.get(COL_ATTR_LINK);
         if (linkProperties != null && !linkProperties.containsKey(COL_ATTR_URL))
         {
@@ -240,21 +249,10 @@ public class CellFormatter
             return StreamEx.of(table).map(list -> StreamEx.of(list).map(x -> print(x, options))
                     .joining(", "))
                     .joining("<br/>");
-//            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(" "))
-//                    .map(x -> "<div class=\"inner-sql-row\">" + x + "</div>").joining("");
         }
         else
         {
-            String content = formattedPart.toString();
-            Map<String, String> safeXmlProperties = options.get(QueryConstants.COL_ATTR_SAFEXML);
-            if (safeXmlProperties != null)
-            {
-                if (content != null)
-                {
-                    content = Utils.safeXML(content);
-                }
-            }
-            return content;
+            return formattedPart.toString();
         }
     }
 
