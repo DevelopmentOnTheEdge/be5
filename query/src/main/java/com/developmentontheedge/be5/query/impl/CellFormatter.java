@@ -99,37 +99,37 @@ public class CellFormatter
         cell.setDisplayName(title);
 
         Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
-        Object formattedContent = getFormattedParts(cell, varResolver, query, contextApplier, options);
+        Object content = getFormattedParts(cell, varResolver, query, contextApplier, options);
 
-        if (formattedContent instanceof String)
+        if (content instanceof String)
         {
-            formattedContent = getLocalizedCell(query.getEntity().getName(), query.getName(), (String) formattedContent);
+            content = getLocalizedCell(query.getEntity().getName(), query.getName(), (String) content);
         }
 
         Map<String, String> blankNullsProperties = options.get(QueryConstants.COL_ATTR_BLANKNULLS);
         if (blankNullsProperties != null)
         {
-            if (formattedContent == null || formattedContent.equals("null"))
+            if (content == null || content.equals("null"))
             {
-                formattedContent = blankNullsProperties.getOrDefault("value", "");
+                content = blankNullsProperties.getOrDefault("value", "");
             }
         }
 
         Map<String, String> nullIfProperties = options.get(QueryConstants.COL_ATTR_NULLIF);
         if (nullIfProperties != null)
         {
-            if (formattedContent == null || formattedContent.equals(nullIfProperties.get("value")))
+            if (content == null || content.equals(nullIfProperties.get("value")))
             {
-                formattedContent = nullIfProperties.getOrDefault("result", "");
+                content = nullIfProperties.getOrDefault("result", "");
             }
         }
 
         Map<String, String> safeXmlProperties = options.get(QueryConstants.COL_ATTR_SAFEXML);
         if (safeXmlProperties != null)
         {
-            if (formattedContent != null)
+            if (content != null)
             {
-                formattedContent = Utils.safeXML(formattedContent.toString());
+                content = Utils.safeXML(content.toString());
             }
         }
 
@@ -138,27 +138,9 @@ public class CellFormatter
         {
             try
             {
-                HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
-                        .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-                String cols = linkProperties.get("columns");
-                String vals = linkProperties.get("using");
-                if (cols != null && vals != null)
-                {
-                    String[] colsArr = cols.split(",");
-                    String[] valuesArr = vals.split(",");
-
-                    Map<String, List<String>> mapOfList = new HashMap<>();
-                    for (int i = 0; i < colsArr.length; i++)
-                    {
-                        Object resolveValue = varResolver.resolve(valuesArr[i]);
-                        mapOfList.putIfAbsent(colsArr[i], new ArrayList<>());
-                        mapOfList.get(colsArr[i]).add(resolveValue != null ? resolveValue.toString() : valuesArr[i]);
-                    }
-                    url = url.named(mapOfList);
-                }
-                String utlStr = url.toString();
+                String url = generateUrl(linkProperties, varResolver);
                 options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
-                        put(COL_ATTR_URL, utlStr);
+                        put(COL_ATTR_URL, url);
                         put("class", linkProperties.get("class"));
                 }});
             }
@@ -172,26 +154,53 @@ public class CellFormatter
         Map<String, String> refProperties = options.get(QueryConstants.COL_ATTR_REF);
         if (refProperties != null)
         {
-            String table = refProperties.get("table");
-            HashUrl url = new HashUrl("table")
-                    .positional(table)
-                    .positional(refProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-            for (TableReference reference : meta.getEntity(table).getAllReferences())
-            {
-                if (query.getEntity().getName().equals(reference.getTableTo()))
-                {
-                    url = url.named(reference.getName(), varResolver.resolve(ID_COLUMN_LABEL).toString());
-                    break;
-                }
-            }
-            String utlStr = url.toString();
+            String url = generateRefUrl(refProperties, query, varResolver);
             options.put(COL_ATTR_LINK, new HashMap<String, String>() {{
-                put(COL_ATTR_URL, utlStr);
+                put(COL_ATTR_URL, url);
                 put("class", refProperties.get("class"));
             }});
         }
 
-        return formattedContent;
+        return content;
+    }
+
+    private String generateRefUrl(Map<String, String> refProperties, Query query, VarResolver varResolver)
+    {
+        String table = refProperties.get("table");
+        HashUrl url = new HashUrl("table")
+                .positional(table)
+                .positional(refProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+        for (TableReference reference : meta.getEntity(table).getAllReferences())
+        {
+            if (query.getEntity().getName().equals(reference.getTableTo()))
+            {
+                return url.named(reference.getName(), varResolver.resolve(ID_COLUMN_LABEL).toString()).toString();
+            }
+        }
+        return url.toString();
+    }
+
+    private String generateUrl(Map<String, String> linkProperties, VarResolver varResolver)
+    {
+        HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
+                .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+        String cols = linkProperties.get("columns");
+        String vals = linkProperties.get("using");
+        if (cols != null && vals != null)
+        {
+            String[] colsArr = cols.split(",");
+            String[] valuesArr = vals.split(",");
+
+            Map<String, List<String>> mapOfList = new HashMap<>();
+            for (int i = 0; i < colsArr.length; i++)
+            {
+                Object resolveValue = varResolver.resolve(valuesArr[i]);
+                mapOfList.putIfAbsent(colsArr[i], new ArrayList<>());
+                mapOfList.get(colsArr[i]).add(resolveValue != null ? resolveValue.toString() : valuesArr[i]);
+            }
+            return url.named(mapOfList).toString();
+        }
+        return url.toString();
     }
 
     private Object getFormattedParts(DynamicProperty cell, VarResolver varResolver, Query query,
@@ -365,7 +374,7 @@ public class CellFormatter
     /**
      * Returns a localized title of an operation in user's preferred language.
      */
-    public String getLocalizedCell(String entityName, String queryName, String content)
+    private String getLocalizedCell(String entityName, String queryName, String content)
     {
         return MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
                 userAwareMeta.getLocalization(entityName, queryName, message)
