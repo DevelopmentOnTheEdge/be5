@@ -64,7 +64,7 @@ public class CellFormatter
     private static final String LOC_MSG_POSTFIX = "}}}";
 
     private static final Pattern MESSAGE_PATTERN = MoreStrings.variablePattern(LOC_MSG_PREFIX, LOC_MSG_POSTFIX);
-    private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
+    private static final Unzipper subQueryUnzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
 
     private final DbService db;
     private final UserAwareMeta userAwareMeta;
@@ -99,7 +99,7 @@ public class CellFormatter
         cell.setDisplayName(title);
 
         Map<String, Map<String, String>> options = DynamicPropertyMeta.get(cell);
-        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver, query, contextApplier, options);
+        Object formattedContent = getFormattedParts(cell, varResolver, query, contextApplier, options);
 
         if (formattedContent instanceof String)
         {
@@ -194,44 +194,29 @@ public class CellFormatter
         return formattedContent;
     }
 
-    private Object getFormattedPartsWithoutLink(DynamicProperty cell, VarResolver varResolver, Query query,
-                                                ContextApplier contextApplier, Map<String, Map<String, String>> options)
+    private Object getFormattedParts(DynamicProperty cell, VarResolver varResolver, Query query,
+                                     ContextApplier contextApplier, Map<String, Map<String, String>> options)
     {
         Objects.requireNonNull(cell);
-
-        boolean hasLink = options.containsKey("link");
-        Map<String, String> link = null;
-        if (hasLink)
-        {
-            link = options.get("link");
-            options.remove("link");
-        }
 
         if (cell.getValue() == null)
         {
             return null;
         }
 
-        Object content;
         if (cell.getValue() instanceof String)
         {
             StringBuilder builder = new StringBuilder();
-            unzipper.unzip((String) cell.getValue(), builder::append, subquery -> {
+            subQueryUnzipper.unzip((String) cell.getValue(), builder::append, subquery -> {
                 builder.append(subQueryToString(subquery, varResolver, query, contextApplier));
                 options.put("nosort", Collections.emptyMap());
             });
-            content = builder.toString();
+            return builder.toString();
         }
         else
         {
-            content = cell.getValue();
+            return cell.getValue();
         }
-
-        if (hasLink)
-        {
-            options.put("link", link);
-        }
-        return content;
     }
 
     private String subQueryToString(String subQueryName, VarResolver varResolver, Query query,
