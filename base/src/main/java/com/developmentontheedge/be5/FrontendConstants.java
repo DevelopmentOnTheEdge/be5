@@ -18,7 +18,7 @@ public interface FrontendConstants
 
     String OPERATION_RESULT = "operationResult";
 
-    String CATEGORY_ID_PARAM = "_cat_";
+    String CATEGORY_ID_PARAM = "cat";
     String SEARCH_PARAM = "_search_";
     String SEARCH_PRESETS_PARAM = "_search_presets_";
 

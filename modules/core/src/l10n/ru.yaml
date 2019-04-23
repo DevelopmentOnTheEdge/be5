@@ -139,6 +139,7 @@ ru:
       - number: №
       - title: Название
       - total: Итого
+      - cat: Категории
       - 'false': нет
       - 'true': да
       - 'no': нет
