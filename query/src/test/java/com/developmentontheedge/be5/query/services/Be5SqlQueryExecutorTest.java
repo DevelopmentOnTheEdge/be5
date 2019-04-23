@@ -104,6 +104,22 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void subQueryBeautifierLine()
+    {
+        Query query = meta.getQuery("testtable", "subQueryBeautifierLine");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("user1, 1, user1, 2", list.get(0).getValue("test"));
+    }
+
+    @Test
+    public void subQueryBeautifierText()
+    {
+        Query query = meta.getQuery("testtable", "subQueryBeautifierText");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("user11user12", list.get(0).getValue("test"));
+    }
+
+    @Test
     public void groovyTableTest()
     {
         Query query = meta.getQuery("testtableAdmin", "TestGroovyTable");
