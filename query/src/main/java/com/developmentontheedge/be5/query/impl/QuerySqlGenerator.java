@@ -63,15 +63,21 @@ public class QuerySqlGenerator
 
         if (query.getType() == QueryType.D1) QueryMetaHelper.addIDColumnLabel(ast, query);
 
+        applyLimitAndOrder(ast, queryContext);
+
+        Simplifier.simplify(ast);
+        return ast;
+    }
+
+    private void applyLimitAndOrder(AstStart ast, QueryContext queryContext)
+    {
         int orderColumn = Integer.parseInt(getOrDefault(queryContext, ORDER_COLUMN, "-1"));
         String orderDir = getOrDefault(queryContext, ORDER_DIR, "asc");
         int offset = Integer.parseInt(getOrDefault(queryContext, OFFSET, "0"));
         int limit = Integer.parseInt(getOrDefault(queryContext, LIMIT, Integer.toString(Integer.MAX_VALUE)));
+
         QueryMetaHelper.applySort(ast, orderColumn, orderDir);
         new LimitsApplier(offset, limit).transform(ast);
-
-        Simplifier.simplify(ast);
-        return ast;
     }
 
     private String getOrDefault(QueryContext queryContext, String name, String defaultValue)
