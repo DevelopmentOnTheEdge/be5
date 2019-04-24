@@ -68,7 +68,6 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1123,7 +1122,7 @@ public class YamlSerializer
                 final Map<String, Object> settingsBlockBody = map();
                 serializeFields(setting, Fields.querySettings(), settingsBlockBody);
 
-                if (!setting.getRoles().equals(roles))
+                if (!setting.getRoles().getFinalRoles().equals(roles))
                     settingsBlockBody.put(ATTR_ROLES, list(setting.getRoles().getAllIncludedValues()));
 
                 settingsBlock.put(TAG_SETTINGS, settingsBlockBody);
