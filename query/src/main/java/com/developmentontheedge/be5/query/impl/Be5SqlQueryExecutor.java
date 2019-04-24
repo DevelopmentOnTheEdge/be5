@@ -8,6 +8,9 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.query.VarResolver;
+import com.developmentontheedge.be5.query.impl.CellFormatter.CompositeVarResolver;
+import com.developmentontheedge.be5.query.impl.CellFormatter.RootVarResolver;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
@@ -97,6 +100,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
 
     private QRec formatCell(DynamicPropertySet properties)
     {
+        EmptyVarResolver varResolver = new EmptyVarResolver();
         filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
         addRowClass(properties);
 
@@ -105,7 +109,9 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
 
         for (DynamicProperty cell : properties)
         {
-            Object processedContent = cellFormatter.formatCell(cell, previousCells, query, contextApplier);
+            CompositeVarResolver cellVarResolver =
+                    new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
+            Object processedContent = cellFormatter.format(cell, cellVarResolver, query, contextApplier);
             cell.setValue(processedContent);
             cell.setType(processedContent == null ? String.class : processedContent.getClass());
             previousCells.add(cell);
@@ -116,6 +122,19 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         }
 
         return resultCells;
+    }
+
+    private static class EmptyVarResolver implements VarResolver
+    {
+        EmptyVarResolver()
+        {
+        }
+
+        @Override
+        public Object resolve(String varName)
+        {
+            return null;
+        }
     }
 
     private void addRowClass(DynamicPropertySet properties)

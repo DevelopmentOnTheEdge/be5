@@ -93,7 +93,7 @@ public class CellFormatter
         return format(cell, new RootVarResolver(previousCells), query, contextApplier);
     }
 
-    private Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         String title = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), cell.getName());
         cell.setDisplayName(title);
@@ -238,42 +238,44 @@ public class CellFormatter
 
         List<QRec> list = executeSubQuery(query, subQuery, varResolver);
 
-        List<Map<String, Object>> lists = new ArrayList<>();
+        List<QRec> resultRows = new ArrayList<>();
         for (DynamicPropertySet dps : list)
         {
-            Map<String, Object> values = toRow(dps, varResolver, query, contextApplier);
-            lists.add(values);
+            resultRows.add(toRow(dps, varResolver, query, contextApplier));
         }
 
         String beautifierName = subQuery.getBeautifierName() != null ? subQuery.getBeautifierName() : "internal_glue";
         SubQueryBeautifier beautifier = subQueryBeautifiers.get(beautifierName);
-        return beautifier.print(lists);
+        return beautifier.print(resultRows);
     }
 
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private Map<String, Object> toRow(DynamicPropertySet dps, VarResolver varResolver, Query query,
+    private QRec toRow(DynamicPropertySet properties, VarResolver varResolver, Query query,
                                       ContextApplier contextApplier)
     {
+        QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
-        return StreamEx.of(dps.spliterator())
-                .collect(Utils.toLinkedMap(DynamicProperty::getName, property ->
+        for (DynamicProperty cell : properties)
         {
-            String name = property.getName();
-            Object value = property.getValue();
-            //RawCellModel rawCellModel = new RawCellModel(value != null ? value.toString() : "");
-            if (value == null) property.setValue("");
-            CompositeVarResolver compositeVarResolver =
+            CompositeVarResolver cellVarResolver =
                     new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
-            Object processedCell = format(property, compositeVarResolver, query, contextApplier);
-            previousCells.add(new DynamicProperty(name, String.class, processedCell));
-            return !name.startsWith("___") ? processedCell : "";
-        }));
+            Object processedContent = format(cell, cellVarResolver, query, contextApplier);
+            cell.setValue(processedContent);
+            cell.setType(processedContent == null ? String.class : processedContent.getClass());
+            previousCells.add(cell);
+            if (!cell.isHidden())
+            {
+                resultCells.add(cell);
+            }
+        }
+
+        return resultCells;
     }
 
-    private static class RootVarResolver implements VarResolver
+    static class RootVarResolver implements VarResolver
     {
         private final DynamicPropertySet dps;
 
@@ -289,7 +291,7 @@ public class CellFormatter
         }
     }
 
-    private static class CompositeVarResolver implements VarResolver
+    static class CompositeVarResolver implements VarResolver
     {
         private final VarResolver local;
         private final VarResolver parent;

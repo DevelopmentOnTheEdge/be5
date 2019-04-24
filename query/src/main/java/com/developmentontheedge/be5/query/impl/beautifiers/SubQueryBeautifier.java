@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.query.impl.beautifiers;
 
+import com.developmentontheedge.be5.query.model.beans.QRec;
+
 import java.util.List;
-import java.util.Map;
 
 public interface SubQueryBeautifier
 {
-    String print(List<Map<String, Object>> lists);
+    String print(List<QRec> lists);
 }
