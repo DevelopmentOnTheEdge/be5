@@ -8,9 +8,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.VarResolver;
-import com.developmentontheedge.be5.query.impl.CellFormatter.CompositeVarResolver;
-import com.developmentontheedge.be5.query.impl.CellFormatter.RootVarResolver;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
@@ -18,18 +15,13 @@ import com.developmentontheedge.be5.query.util.AggregateUtils;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.QueryUtils;
 import com.developmentontheedge.be5.security.UserInfoProvider;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.model.AstStart;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -94,119 +86,13 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         List<QRec> rows = db.list(querySqlGenerator.getSql(query, queryContext), new QRecParser());
         addAggregateRowIfNeeded(rows);
         return rows.stream()
-                .map(this::formatCell)
+                .map(this::formatCells)
                 .collect(Collectors.toList());
     }
 
-    private QRec formatCell(DynamicPropertySet properties)
+    private QRec formatCells(DynamicPropertySet properties)
     {
-        EmptyVarResolver varResolver = new EmptyVarResolver();
-        filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
-        addRowClass(properties);
-
-        QRec resultCells = new QRec();
-        DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
-
-        for (DynamicProperty cell : properties)
-        {
-            CompositeVarResolver cellVarResolver =
-                    new CompositeVarResolver(new RootVarResolver(previousCells), varResolver);
-            Object processedContent = cellFormatter.format(cell, cellVarResolver, query, contextApplier);
-            cell.setValue(processedContent);
-            cell.setType(processedContent == null ? String.class : processedContent.getClass());
-            previousCells.add(cell);
-            if (!cell.isHidden())
-            {
-                resultCells.add(cell);
-            }
-        }
-
-        return resultCells;
-    }
-
-    private static class EmptyVarResolver implements VarResolver
-    {
-        EmptyVarResolver()
-        {
-        }
-
-        @Override
-        public Object resolve(String varName)
-        {
-            return null;
-        }
-    }
-
-    private void addRowClass(DynamicPropertySet properties)
-    {
-        DynamicProperty cssRowClassProperty = properties.getProperty(QueryConstants.CSS_ROW_CLASS);
-        String cssRowClass = cssRowClassProperty != null ? (String) cssRowClassProperty.getValue() : null;
-        if (cssRowClass != null && cssRowClass.length() > 0)
-        {
-            for (DynamicProperty property : properties)
-            {
-                Map<String, Map<String, String>> options = DynamicPropertyMeta.get(property);
-                if (options.get("grouping") != null) continue;
-                Map<String, String> css = options.putIfAbsent("css", new HashMap<>());
-                if (css == null) css = options.get("css");
-
-                String className = css.getOrDefault("class", "");
-                css.put("class", className + " " + cssRowClass);
-            }
-        }
-    }
-
-    private static void filterBeanWithRoles(DynamicPropertySet dps, List<String> currentRoles)
-    {
-        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
-        {
-            DynamicProperty prop = props.next();
-            Map<String, String> info = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_ROLES);
-            if (info == null)
-            {
-                continue;
-            }
-
-            String roles = info.get("name");
-            List<String> roleList = Arrays.asList(roles.split(","));
-            List<String> forbiddenRoles = new ArrayList<>();
-            for (String userRole : roleList)
-            {
-                if (userRole.startsWith("!"))
-                {
-                    forbiddenRoles.add(userRole.substring(1));
-                }
-            }
-            roleList.removeAll(forbiddenRoles);
-
-            boolean hasAccess = isHasAccess(currentRoles, roleList, forbiddenRoles);
-            if (!hasAccess)
-            {
-                prop.setHidden(true);
-            }
-        }
-    }
-
-    private static boolean isHasAccess(List<String> currentRoles, List<String> roleList, List<String> forbiddenRoles)
-    {
-        for (String role : roleList)
-        {
-            if (currentRoles.contains(role))
-            {
-                return true;
-            }
-        }
-        if (!forbiddenRoles.isEmpty())
-        {
-            for (String currRole : currentRoles)
-            {
-                if (!forbiddenRoles.contains(currRole))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return cellFormatter.toRow(properties, (name) -> null, query, contextApplier);
     }
 
     private void addAggregateRowIfNeeded(List<QRec> rows)

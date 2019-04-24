@@ -27,13 +27,14 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
-import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -85,15 +86,7 @@ public class CellFormatter
         this.subQueryBeautifiers = subQueryBeautifiers;
     }
 
-    /**
-     * Executes subqueries of the cell or returns the cell content itself.
-     */
-    Object formatCell(DynamicProperty cell, DynamicPropertySet previousCells, Query query, ContextApplier contextApplier)
-    {
-        return format(cell, new RootVarResolver(previousCells), query, contextApplier);
-    }
-
-    Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
+    private Object format(DynamicProperty cell, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
         String title = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(), cell.getName());
         cell.setDisplayName(title);
@@ -252,9 +245,10 @@ public class CellFormatter
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private QRec toRow(DynamicPropertySet properties, VarResolver varResolver, Query query,
-                                      ContextApplier contextApplier)
+    QRec toRow(DynamicPropertySet properties, VarResolver varResolver, Query query, ContextApplier contextApplier)
     {
+        filterBeanWithRoles(properties, userInfoProvider.getCurrentRoles());
+        addRowClass(properties);
         QRec resultCells = new QRec();
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
@@ -275,7 +269,79 @@ public class CellFormatter
         return resultCells;
     }
 
-    static class RootVarResolver implements VarResolver
+    private void addRowClass(DynamicPropertySet properties)
+    {
+        DynamicProperty cssRowClassProperty = properties.getProperty(QueryConstants.CSS_ROW_CLASS);
+        String cssRowClass = cssRowClassProperty != null ? (String) cssRowClassProperty.getValue() : null;
+        if (cssRowClass != null && cssRowClass.length() > 0)
+        {
+            for (DynamicProperty property : properties)
+            {
+                Map<String, Map<String, String>> options = DynamicPropertyMeta.get(property);
+                if (options.get("grouping") != null) continue;
+                Map<String, String> css = options.putIfAbsent("css", new HashMap<>());
+                if (css == null) css = options.get("css");
+
+                String className = css.getOrDefault("class", "");
+                css.put("class", className + " " + cssRowClass);
+            }
+        }
+    }
+
+    private static void filterBeanWithRoles(DynamicPropertySet dps, List<String> currentRoles)
+    {
+        for (Iterator<DynamicProperty> props = dps.propertyIterator(); props.hasNext();)
+        {
+            DynamicProperty prop = props.next();
+            Map<String, String> info = DynamicPropertyMeta.get(prop).get(QueryConstants.COL_ATTR_ROLES);
+            if (info == null)
+            {
+                continue;
+            }
+
+            String roles = info.get("name");
+            List<String> roleList = Arrays.asList(roles.split(","));
+            List<String> forbiddenRoles = new ArrayList<>();
+            for (String userRole : roleList)
+            {
+                if (userRole.startsWith("!"))
+                {
+                    forbiddenRoles.add(userRole.substring(1));
+                }
+            }
+            roleList.removeAll(forbiddenRoles);
+
+            boolean hasAccess = isHasAccess(currentRoles, roleList, forbiddenRoles);
+            if (!hasAccess)
+            {
+                prop.setHidden(true);
+            }
+        }
+    }
+
+    private static boolean isHasAccess(List<String> currentRoles, List<String> roleList, List<String> forbiddenRoles)
+    {
+        for (String role : roleList)
+        {
+            if (currentRoles.contains(role))
+            {
+                return true;
+            }
+        }
+        if (!forbiddenRoles.isEmpty())
+        {
+            for (String currRole : currentRoles)
+            {
+                if (!forbiddenRoles.contains(currRole))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static class RootVarResolver implements VarResolver
     {
         private final DynamicPropertySet dps;
 
@@ -291,7 +357,7 @@ public class CellFormatter
         }
     }
 
-    static class CompositeVarResolver implements VarResolver
+    private static class CompositeVarResolver implements VarResolver
     {
         private final VarResolver local;
         private final VarResolver parent;
