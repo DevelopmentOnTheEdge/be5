@@ -258,8 +258,7 @@ public class YamlSerializer
             }
 
             root.put(TAG_DAEMONS, content);
-            final String string = print(root);
-            return string;
+            return print(root);
         }
 
     }
@@ -295,9 +294,7 @@ public class YamlSerializer
                 content.add(serializedMassChange);
             }
 
-            final String string = print(root);
-
-            return string;
+            return print(root);
         }
     }
 
@@ -412,9 +409,8 @@ public class YamlSerializer
             final Map<String, Object> root = map();
             final Map<String, Object> serializedCustomizations = serializeCustomizations(application);
             root.put(TAG_CUSTOMIZATIONS, serializedCustomizations);
-            final String string = print(root);
 
-            return string;
+            return print(root);
         }
 
     }
@@ -462,12 +458,11 @@ public class YamlSerializer
 
         private void serializeTableDefinition(final TableDef tableDef, final Map<String, Object> schemeContent)
         {
-            final Map<String, Object> serializedTableDefinitionBody = schemeContent;
             if (tableDef.getModule().getName().equals(projectOrigin))
             {
-                serializeDocumentation(tableDef, serializedTableDefinitionBody);
-                serializeFields(tableDef, Fields.tableDef(), serializedTableDefinitionBody);
-                serializeUsedExtras(tableDef, serializedTableDefinitionBody);
+                serializeDocumentation(tableDef, schemeContent);
+                serializeFields(tableDef, Fields.tableDef(), schemeContent);
+                serializeUsedExtras(tableDef, schemeContent);
             }
 
             final List<Object> serializedColumnDefinitionList = list();
@@ -479,7 +474,7 @@ public class YamlSerializer
                 }
             }
             if (!serializedColumnDefinitionList.isEmpty())
-                serializedTableDefinitionBody.put(TAG_COLUMNS, serializedColumnDefinitionList);
+                schemeContent.put(TAG_COLUMNS, serializedColumnDefinitionList);
 
             final List<Object> serializedIndexDefinitionList = list();
             for (final IndexDef index : tableDef.getIndices())
@@ -490,7 +485,7 @@ public class YamlSerializer
                 }
             }
             if (!serializedIndexDefinitionList.isEmpty())
-                serializedTableDefinitionBody.put(TAG_INDICES, serializedIndexDefinitionList);
+                schemeContent.put(TAG_INDICES, serializedIndexDefinitionList);
         }
 
         private Map<String, Object> serializeColumnDefinition(final ColumnDef column)
@@ -545,10 +540,9 @@ public class YamlSerializer
 
         private void serializeViewDefinition(final ViewDef viewDef, final Map<String, Object> schemeContent)
         {
-            final Map<String, Object> serializedViewDefinitionBody = schemeContent;
-            serializeDocumentation(viewDef, serializedViewDefinitionBody);
-            serializeFields(viewDef, Fields.viewDef(), serializedViewDefinitionBody);
-            serializedViewDefinitionBody.put(TAG_VIEW_DEFINITION, viewDef.getDefinition());
+            serializeDocumentation(viewDef, schemeContent);
+            serializeFields(viewDef, Fields.viewDef(), schemeContent);
+            schemeContent.put(TAG_VIEW_DEFINITION, viewDef.getDefinition());
         }
 
         private Map<String, Object> serializeTableReferences(final BeModelCollection<TableRef> tableReferences)
@@ -700,9 +694,8 @@ public class YamlSerializer
             serializeDocumentation(localizations, content);
             content.put(TAG_ENTITIES, serializedEntitiesLocalizations);
             root.put(language, content);
-            final String string = print(root);
 
-            return string;
+            return print(root);
         }
 
         private Object serializeEntityLocalizations(final EntityLocalizations entityLocalizations)
@@ -714,13 +707,7 @@ public class YamlSerializer
             for (final LocalizationElement entry : entityLocalizations.elements())
             {
                 final String blockName = String.join(";", entry.getTopics());
-                List<LocalizationElement> block = blocks.get(blockName);
-
-                if (block == null)
-                {
-                    block = new ArrayList<>();
-                    blocks.put(blockName, block);
-                }
+                List<LocalizationElement> block = blocks.computeIfAbsent(blockName, k -> new ArrayList<>());
 
                 block.add(entry);
             }
@@ -796,9 +783,8 @@ public class YamlSerializer
             content.put(TAG_ROLE_GROUPS, roleGroups);
 
             root.put(TAG_SECURITY, content);
-            final String string = print(root);
 
-            return string;
+            return print(root);
         }
 
     }
@@ -833,9 +819,8 @@ public class YamlSerializer
 
             content.put(TAG_CONNECTION_PROFILES_INNER, serializedProfiles);
             root.put(TAG_CONNECTION_PROFILES, content);
-            final String string = print(root);
 
-            return string;
+            return print(root);
         }
 
     }
@@ -951,9 +936,8 @@ public class YamlSerializer
                 content.put("operations", serializedOperations);
 
             serializeCustomizationsStatement(entity, content);
-            final String stringContent = print(root);
 
-            return stringContent;
+            return print(root);
         }
 
         private Object serializeQuery(final Query query, final boolean serializeReferencedFiles)
@@ -968,7 +952,7 @@ public class YamlSerializer
             final Collection<String> customizedProperties =
                     projectOrigin.equals(query.getOriginModuleName())
                             ? query.getCustomizedProperties()
-                            : Collections.<String>emptySet();
+                            : Collections.emptySet();
 
             writeRoles(customizedProperties, query, content);
 
@@ -1161,7 +1145,7 @@ public class YamlSerializer
             final Collection<String> customizedProperties =
                     projectOrigin.equals(operation.getOriginModuleName())
                             ? operation.getCustomizedProperties()
-                            : Collections.<String>emptySet();
+                            : Collections.emptySet();
 
             root.put(operation.getName(), content);
 
@@ -1427,9 +1411,7 @@ public class YamlSerializer
         if (serialized == null)
             throw new AssertionError();
 
-        final String string = print(serialized);
-
-        return string;
+        return print(serialized);
     }
 
     private Object serializeToObject(final Project project, final boolean serializeReferencedFiles)
@@ -1441,7 +1423,7 @@ public class YamlSerializer
         this.fileSystem = new ProjectFileSystem(project);
 
         if (project.isModuleProject())
-            content.put(ATTR_MODULE_PROJECT, Boolean.valueOf(true));
+            content.put(ATTR_MODULE_PROJECT, Boolean.TRUE);
 
         serializeDocumentation(project, content);
         content.put(ATTR_FEATURES, list(project.getFeatures()));
@@ -1541,10 +1523,7 @@ public class YamlSerializer
                 }
             serializedModuleContent.put(TAG_ENTITIES, serializedEntities);
             final List<Object> serializedExtras = list();
-            for (String extra : module.getExtras())
-            {
-                serializedExtras.add(extra);
-            }
+            serializedExtras.addAll(Arrays.asList(module.getExtras()));
             if (!serializedExtras.isEmpty())
             {
                 serializedModuleContent.put(TAG_EXTRAS, serializedExtras);
@@ -1617,7 +1596,7 @@ public class YamlSerializer
     }
 
     private void write(final Path scriptFile, final FreemarkerScript script)
-            throws IOException, UnsupportedEncodingException
+            throws IOException
     {
         try
         {
@@ -1773,7 +1752,7 @@ public class YamlSerializer
         return serializedProfile;
     }
 
-    static void serializeProperties(final BeElementWithProperties element, final Map<String, Object> serializedElement)
+    private static void serializeProperties(final BeElementWithProperties element, final Map<String, Object> serializedElement)
     {
         final List<Object> serializedProperties = list();
         for (final String property : element.getPropertyNames())
@@ -1783,7 +1762,7 @@ public class YamlSerializer
             serializedElement.put(TAG_PROPERTIES, serializedProperties);
     }
 
-    static void serializeFields(final BeModelElement model, final List<Field> fields, final Map<String, Object> target)
+    private static void serializeFields(final BeModelElement model, final List<Field> fields, final Map<String, Object> target)
     {
         final Collection<String> inheritedProperties;
         final Collection<String> customizedProperties;
@@ -1828,7 +1807,7 @@ public class YamlSerializer
      * @param root
      * @return
      */
-    static String print(Object root)
+    private static String print(Object root)
     {
         final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(FlowStyle.BLOCK);
@@ -1840,12 +1819,12 @@ public class YamlSerializer
         return new Yaml(new Constructor(), new YamlRepresenter(transformed), options).dump(transformed);
     }
 
-    static Map<String, Object> map()
+    private static Map<String, Object> map()
     {
         return new LinkedHashMap<>();
     }
 
-    static Map<String, Object> map(final String key, final Object value)
+    private static Map<String, Object> map(final String key, final Object value)
     {
         final LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put(key, value);
@@ -1853,17 +1832,17 @@ public class YamlSerializer
         return map;
     }
 
-    static List<Object> list()
+    private static List<Object> list()
     {
         return new ArrayList<>();
     }
 
-    static List<String> list(final Collection<String> elements)
+    private static List<String> list(final Collection<String> elements)
     {
         return new ArrayList<>(elements);
     }
 
-    static List<String> list(final String[] elements)
+    private static List<String> list(final String[] elements)
     {
         return new ArrayList<>(Arrays.asList(elements));
     }
