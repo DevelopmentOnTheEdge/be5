@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
@@ -89,14 +90,9 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
     {
         List<QRec> rows = db.list(querySqlGenerator.getSql(query, queryContext), new QRecParser());
         addAggregateRowIfNeeded(rows);
-        return formatCell(rows);
-    }
-
-    private List<QRec> formatCell(List<QRec> rows)
-    {
-        List<QRec> res = new ArrayList<>();
-        rows.forEach(cells -> res.add(formatCell(cells)));
-        return res;
+        return rows.stream()
+                .map(this::formatCell)
+                .collect(Collectors.toList());
     }
 
     private QRec formatCell(DynamicPropertySet properties)
