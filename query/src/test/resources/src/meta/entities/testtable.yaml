@@ -45,6 +45,14 @@ testtable:
           t.name AS "Name",
           '<link columns="entity,ID" using="users,___ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
         FROM testtable t
+  - beLinkCustomUrl:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |-
+        SELECT
+          CONCAT('testCard/', CAST(123 AS CHAR)) AS "___TestUrl",
+          t.name AS "Name;<link url='___TestUrl' class='open-hash-url'/>"
+        FROM testtable t
   - beLinkMultiple:
       type: 1D_unknown
       roles: SystemDeveloper

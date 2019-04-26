@@ -150,6 +150,15 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void beLinkCustomUrl()
+    {
+        Query query = meta.getQuery("testtable", "beLinkCustomUrl");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("{class=open-hash-url, url=testCard/123}",
+                DynamicPropertyMeta.get(list.get(0).getProperty("Name")).get("link").toString());
+    }
+
+    @Test
     public void beLinkMultiple()
     {
         Query query = meta.getQuery("testtable", "beLinkMultiple");

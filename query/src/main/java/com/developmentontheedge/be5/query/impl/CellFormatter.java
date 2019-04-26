@@ -127,7 +127,7 @@ public class CellFormatter
         }
 
         Map<String, String> linkProperties = options.get(COL_ATTR_LINK);
-        if (linkProperties != null && !linkProperties.containsKey(COL_ATTR_URL))
+        if (linkProperties != null)
         {
             try
             {
@@ -175,25 +175,32 @@ public class CellFormatter
 
     private String generateUrl(Map<String, String> linkProperties, VarResolver varResolver)
     {
-        HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
-                .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-        String cols = linkProperties.get("columns");
-        String vals = linkProperties.get("using");
-        if (cols != null && vals != null)
+        if (linkProperties.containsKey(COL_ATTR_URL))
         {
-            String[] colsArr = cols.split(",");
-            String[] valuesArr = vals.split(",");
-
-            Map<String, List<String>> mapOfList = new HashMap<>();
-            for (int i = 0; i < colsArr.length; i++)
-            {
-                Object resolveValue = varResolver.resolve(valuesArr[i]);
-                mapOfList.putIfAbsent(colsArr[i], new ArrayList<>());
-                mapOfList.get(colsArr[i]).add(resolveValue != null ? resolveValue.toString() : valuesArr[i]);
-            }
-            return url.named(mapOfList).toString();
+            return varResolver.resolve(linkProperties.get(COL_ATTR_URL)).toString();
         }
-        return url.toString();
+        else
+        {
+            HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
+                    .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+            String cols = linkProperties.get("columns");
+            String vals = linkProperties.get("using");
+            if (cols != null && vals != null)
+            {
+                String[] colsArr = cols.split(",");
+                String[] valuesArr = vals.split(",");
+
+                Map<String, List<String>> mapOfList = new HashMap<>();
+                for (int i = 0; i < colsArr.length; i++)
+                {
+                    Object resolveValue = varResolver.resolve(valuesArr[i]);
+                    mapOfList.putIfAbsent(colsArr[i], new ArrayList<>());
+                    mapOfList.get(colsArr[i]).add(resolveValue != null ? resolveValue.toString() : valuesArr[i]);
+                }
+                return url.named(mapOfList).toString();
+            }
+            return url.toString();
+        }
     }
 
     private Object getFormattedParts(DynamicProperty cell, VarResolver varResolver, Query query,
