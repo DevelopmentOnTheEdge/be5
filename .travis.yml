@@ -15,7 +15,7 @@ before_install:
     && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     && cd ../
 install:
-  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
   - mvn org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
 after_success:
