@@ -11,8 +11,7 @@ public class SystemSettingsEdit extends EditOperation
 {
     private Map<String, String> conditions;
 
-    @Override
-    public Object getParameters(Map<String, Object> presetValues) throws Exception
+    protected DynamicPropertySet getRecordData(Map<String, Object> presetValues)
     {
         String entityName = getInfo().getEntityName();
         String[] split = ((String) context.getRecord()).split("\\|");
@@ -20,12 +19,11 @@ public class SystemSettingsEdit extends EditOperation
                 "section_name", split[0],
                 "setting_name", split[1]
         );
-        DynamicPropertySet record = database.getEntity(entityName).getPropertySet(conditions);
-        return getEditParameters(record, presetValues);
+        return database.getEntity(entityName).getPropertySet(conditions);
     }
 
     @Override
-    public void invoke(Object parameters) throws Exception
+    public void invoke(Object parameters)
     {
         DynamicPropertySet values = dpsHelper.filterEntityParams(getInfo().getEntity(),
                 (DynamicPropertySet) parameters);

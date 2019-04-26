@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -16,18 +15,23 @@ public class EditOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        String entityName = getInfo().getEntityName();
-        RecordModel<Object> record = database.getEntity(entityName).get(context.getRecord());
-        return getEditParameters(record, presetValues);
-    }
-
-    protected Object getEditParameters(DynamicPropertySet record, Map<String, Object> presetValues)
-    {
-        DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
-                getInfo().getModel(), context.getParams());
+        DynamicPropertySet record = getRecordData(presetValues);
+        DynamicPropertySet dps = (DynamicPropertySet) getParametersBean(presetValues, record);
         setValues(dps, record);
         setValues(dps, presetValues);
         return dpsHelper.setOperationParams(dps, context.getParams());
+    }
+
+    protected DynamicPropertySet getRecordData(Map<String, Object> presetValues)
+    {
+        String entityName = getInfo().getEntityName();
+        return database.getEntity(entityName).get(context.getRecord());
+    }
+
+    protected Object getParametersBean(Map<String, Object> presetValues, DynamicPropertySet record)
+    {
+        return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
+                getInfo().getModel(), context.getParams());
     }
 
     @Override
