@@ -8,6 +8,7 @@
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
     <version>0.0.3-SNAPSHOT</version>
+    <relativePath>../../</relativePath>
   </parent>
 
   <artifactId>be5-monitoring</artifactId>
