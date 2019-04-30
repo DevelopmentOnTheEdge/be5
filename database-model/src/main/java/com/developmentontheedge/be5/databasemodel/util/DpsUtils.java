@@ -71,7 +71,23 @@ public class DpsUtils
     {
         Object tagsObject = property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
         if (tagsObject == null || value == null) return true;
+        if (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+        {
+            Object[] values = (Object[]) value;
+            for (int i = 0; i < values.length; i++)
+            {
+                if (!isValueInTags(values[i], tagsObject)) return false;
+            }
+            return true;
+        }
+        else
+        {
+            return isValueInTags(value, tagsObject);
+        }
+    }
 
+    private static boolean isValueInTags(Object value, Object tagsObject)
+    {
         if (tagsObject instanceof Object[][])
         {
             return Arrays.stream((Object[][]) tagsObject)

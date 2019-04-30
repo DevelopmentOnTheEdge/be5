@@ -88,6 +88,30 @@ public class DpsUtilsTest
     }
 
     @Test
+    public void checkContainedInTagsMultipleValue()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[][]{{"foo", "foo"}, {"bar", "bar"}})
+                .multiple()
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", new String[]{"foo", "bar"}));
+        assertArrayEquals(new String[]{"foo", "bar"}, (String[]) dps.getValue("value"));
+    }
+
+    @Test
+    public void checkContainedInTagsMultipleValueNoContain()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[][]{{"foo", "foo"}, {"bar", "bar"}})
+                .multiple()
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", new String[]{"foo2", "bar"}));
+        assertArrayEquals(null, (String[]) dps.getValue("value"));
+    }
+
+    @Test
     public void skipNotContainedInTags()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
