@@ -89,7 +89,7 @@ ru:
   - users:
     - topics: displayName
       entries:
-      - Logout: Пользователи
+      - displayName: Пользователи
     - topics: viewName
       entries:
       - Login: Вход

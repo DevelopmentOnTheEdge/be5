@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationBuilder;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import org.junit.Assert;
 import org.junit.Test;
 
 import javax.inject.Inject;
