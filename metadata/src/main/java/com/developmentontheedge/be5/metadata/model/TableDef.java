@@ -456,7 +456,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             }
             DataElementUtils.remove(index);
         }
-        sb.append(typeManager.getDropColumnStatements(oldColumn));
+        sb.insert(0, typeManager.getDropColumnStatements(oldColumn));
     }
 
     private boolean isSafeTypeUpdate(ColumnDef oldColumn, ColumnDef column, DbmsTypeManager typeManager,

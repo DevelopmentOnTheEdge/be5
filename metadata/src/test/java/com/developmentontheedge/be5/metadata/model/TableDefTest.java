@@ -167,6 +167,54 @@ public class TableDefTest
         assertEquals("ALTER TABLE `test` CHANGE COLUMN `ID` `CODE` BIGINT UNSIGNED NOT NULL;", def2.getDiffDdl(def, null));
     }
 
+    /**
+     * First drop old PK, then create new one
+     */
+    @Test
+    public void testDdlChangePrimaryKey() throws ExtendedSqlException
+    {
+        TableDef def = create();
+        ColumnDef c = createColumn(def, "name", "VARCHAR(20)", true);
+        c.setPrimaryKey( true );
+        createColumn(def, "type", "ENUM(a,b,c)", false);
+        TableDef def2 = create();
+        c = createColumn(def2, "ID", "KEYTYPE", true);
+        c.setPrimaryKey( true );
+        createColumn(def2, "name", "VARCHAR(20)", true);
+        createColumn(def2, "type", "ENUM(a,b,c)", false);
+        def.getProject().setDatabaseSystem(Rdbms.ORACLE);
+        def2.getProject().setDatabaseSystem(Rdbms.ORACLE);
+        assertEquals("ALTER TABLE TEST DROP COLUMN NAME;\n" + 
+                "ALTER TABLE TEST ADD ID VARCHAR2(15 CHAR) PRIMARY KEY;\n" + 
+                "ALTER TABLE TEST ADD NAME VARCHAR2(20 CHAR);\n"
+                , def2.getDiffDdl(def, null));
+        def.getProject().setDatabaseSystem(Rdbms.POSTGRESQL);
+        def2.getProject().setDatabaseSystem(Rdbms.POSTGRESQL);
+        assertEquals("ALTER TABLE test DROP COLUMN name;\n" + 
+                "DROP INDEX IF EXISTS test_pkey;\n" + 
+                "ALTER TABLE test ADD COLUMN id BIGINT PRIMARY KEY;\n" +
+                "ALTER TABLE test ADD COLUMN name VARCHAR(20);\n"
+                , def2.getDiffDdl(def, null));
+        def.getProject().setDatabaseSystem(Rdbms.SQLSERVER);
+        def2.getProject().setDatabaseSystem(Rdbms.SQLSERVER);
+        assertEquals("ALTER TABLE \"test\" DROP COLUMN \"name\";\n" + 
+                "ALTER TABLE \"test\" ADD \"ID\" BIGINT PRIMARY KEY;ALTER TABLE \"test\" ADD \"name\" VARCHAR(20);"
+                , def2.getDiffDdl(def, null));
+        def.getProject().setDatabaseSystem(Rdbms.DB2);
+        def2.getProject().setDatabaseSystem(Rdbms.DB2);
+        assertEquals("ALTER TABLE TEST DROP COLUMN NAME;\n" + 
+                "CALL admin_cmd('REORG TABLE TEST');ALTER TABLE TEST ADD COLUMN ID BIGINT PRIMARY KEY;\n" + 
+                "CALL admin_cmd('REORG TABLE TEST');ALTER TABLE TEST ADD COLUMN NAME VARCHAR(20);\n" + 
+                "CALL admin_cmd('REORG TABLE TEST');"
+                , def2.getDiffDdl(def, null));
+        def.getProject().setDatabaseSystem(Rdbms.MYSQL);
+        def2.getProject().setDatabaseSystem(Rdbms.MYSQL);
+        assertEquals("ALTER TABLE `test` DROP COLUMN `name`;\n" + 
+                "ALTER TABLE `test` ADD COLUMN `ID` BIGINT UNSIGNED PRIMARY KEY;\n" + 
+                "ALTER TABLE `test` ADD COLUMN `name` VARCHAR(20);\n" 
+                , def2.getDiffDdl(def, null));
+    }
+
     @Test
     public void testDiffDdlUpdateTypeSafely() throws ExtendedSqlException
     {
