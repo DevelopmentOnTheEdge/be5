@@ -19,16 +19,13 @@ public class QueryServiceCellFormetterTest extends QueryBe5ProjectDBTest
     @Inject
     private QueryExecutorFactory queryService;
 
-    private Long user1ID;
-    private Long user2ID;
-
     @Before
     public void insertOneRow()
     {
         setStaticUserInfo(RoleType.ROLE_GUEST);
         db.update("delete from testtable");
-        user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 1L);
-        user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 2L);
+        db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 1L);
+        db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 2L);
 
         db.update("delete from testSubQuery");
         db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 1L);
@@ -44,16 +41,26 @@ public class QueryServiceCellFormetterTest extends QueryBe5ProjectDBTest
         assertEquals("1<br/>2", recs.get(0).getString("testSubQueryValues"));
     }
 
+    /** No l10n.
+     *  */
     @Test
     public void dictionaryLocalization()
     {
-        Query query = meta.getQuery("testTags", "dictionaryLocalization");
+        Query query = meta.getQuery("testDictionary", "*** Selection view ***");
         List<QRec> recs = queryService.get(query, new HashMap<>()).execute();
 
-        assertEquals("Региональный", recs.get(0).getString("referenceTest"));
-        assertEquals("Региональный", recs.get(1).getString("referenceTest"));
-        assertEquals("Муниципальный", recs.get(2).getString("referenceTest"));
-        assertEquals("Муниципальный", recs.get(3).getString("referenceTest"));
+        assertEquals("1", recs.get(0).getString("ID"));
+        assertEquals("value1", recs.get(0).getString("CODE"));
+        assertEquals("2", recs.get(1).getString("ID"));
+        assertEquals("value2", recs.get(1).getString("CODE"));
+
+        query = meta.getQuery("testTags", "dictionaryLocalization");
+        recs = queryService.get(query, new HashMap<>()).execute();
+
+        assertEquals("01101a", recs.get(0).getString("referenceTest"));
+        assertEquals("01201a", recs.get(1).getString("referenceTest"));
+        assertEquals("02201a", recs.get(2).getString("referenceTest"));
+        assertEquals("02101a", recs.get(3).getString("referenceTest"));
     }
 
 }

@@ -1,0 +1,22 @@
+testDictionary:
+  type: dictionary
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - code:
+        type: VARCHAR(255)
+  queries:
+  - All records:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |2-
+            SELECT ID, code FROM testDictionary ORDER BY code
+  - '*** Selection view ***':
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |2-
+            SELECT ID, code FROM testDictionary ORDER BY code

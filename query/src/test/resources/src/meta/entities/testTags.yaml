@@ -13,10 +13,13 @@ testTags:
     - admlevel:
         type: ENUM('Federal','Municipal','Regional')
         defaultValue: '''Regional'''
-    - referenceTest:
+    - referenceTestChar:
         type: VARCHAR(2)
         canBeNull: true
         reference: testTags
+    - referenceTestInt:
+        type: KEYTYPE
+        reference: testDictionary
   queries:
   - '*** Selection view ***':
       type: 1D
@@ -35,7 +38,8 @@ testTags:
       type: 1D_unknown
       roles: '@AllRoles'
       code: |-
-        SELECT CONCAT('{{{', referenceTest, '}}}') AS "referenceTest"
+        SELECT 
+          CONCAT('{{{', referenceTestChar, '}}}', '{{{', referenceTestInt, '}}}', '{{{01}}}', '{{{a}}}') AS "referenceTest"
         FROM testTags
   - With parameter:
       type: 1D_unknown

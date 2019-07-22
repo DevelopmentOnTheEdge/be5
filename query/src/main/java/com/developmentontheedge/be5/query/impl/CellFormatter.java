@@ -6,15 +6,12 @@ import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
 import com.developmentontheedge.be5.query.model.beans.QRec;
-import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
@@ -29,7 +26,6 @@ import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -46,7 +41,6 @@ import java.util.regex.Pattern;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.ID_COLUMN_LABEL;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_LINK;
 import static com.developmentontheedge.be5.query.QueryConstants.COL_ATTR_URL;
-import static java.util.Collections.singletonMap;
 
 public class CellFormatter
 {
@@ -71,18 +65,16 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final UserInfoProvider userInfoProvider;
-    private final Provider<QueriesService> queries;
     private final Map<String, SubQueryBeautifier> subQueryBeautifiers;
 
     @Inject
     public CellFormatter(DbService db, UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider,
-                         Provider<QueriesService> queries, Map<String, SubQueryBeautifier> subQueryBeautifiers)
+                         Map<String, SubQueryBeautifier> subQueryBeautifiers)
     {
         this.db = db;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.userInfoProvider = userInfoProvider;
-        this.queries = queries;
         this.subQueryBeautifiers = subQueryBeautifiers;
     }
 
@@ -446,36 +438,10 @@ public class CellFormatter
         return new Object[]{};
     }
 
-    /**
-     * Returns a localized title of an operation in user's preferred language.
-     */
     private String getLocalizedCell(String entityName, String queryName, String content)
     {
         return MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
-                userAwareMeta.getLocalization(entityName, queryName, message)
-                        .orElseGet(() -> localizeDictionaryValues(entityName, message)
-                                .orElse(message))
-        );
+                userAwareMeta.getLocalization(entityName, queryName, message).orElse(message));
     }
 
-    private Optional<String> localizeDictionaryValues(String entityName, String key)
-    {
-        if (!meta.getProject().getEntityNames().contains(entityName)) return Optional.empty();
-
-        for (TableReference reference : meta.getEntity(entityName).getAllReferences())
-        {
-            String tableTo = reference.getTableTo();
-            Entity entity = tableTo != null ? meta.getEntity(tableTo) : null;
-            if (entity != null && entity.getType() == EntityType.DICTIONARY)
-            {
-                String primaryKey = entity.getPrimaryKey();
-                String[][] tags = queries.get().getTagsFromSelectionView(entity.getName(), singletonMap(primaryKey, key));
-                if (tags.length > 0)
-                {
-                    return Optional.of(tags[0][1]);
-                }
-            }
-        }
-        return Optional.empty();
-    }
 }

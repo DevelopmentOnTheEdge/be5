@@ -6,6 +6,7 @@ queryTestProject:
   application:
   - classifications
   - testData
+  - testDictionary
   - testtable
   - testtableAdmin
   - testSubQuery
