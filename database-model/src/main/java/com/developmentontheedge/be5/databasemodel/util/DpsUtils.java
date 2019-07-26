@@ -71,7 +71,7 @@ public class DpsUtils
     {
         Object tagsObject = property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
         if (tagsObject == null || value == null) return true;
-        if (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+        if (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST) && value instanceof Object[])
         {
             Object[] values = (Object[]) value;
             for (int i = 0; i < values.length; i++)

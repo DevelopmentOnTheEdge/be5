@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -88,7 +89,7 @@ public class DpsUtilsTest
     }
 
     @Test
-    public void checkContainedInTagsMultipleValue()
+    public void checkMultipleContainedInTagsSomeValues()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.add(new DynamicPropertyBuilder("value", String.class)
@@ -100,7 +101,21 @@ public class DpsUtilsTest
     }
 
     @Test
-    public void checkContainedInTagsMultipleValueNoContain()
+    public void checkMultipleContainedInTagsOneValue()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicPropertyBuilder("value", String.class)
+                .tags(new String[][]{{"foo", "foo"}, {"bar", "bar"}})
+                .multiple()
+                .get());
+        DpsUtils.setValues(dps, ImmutableMap.of("value", new String[]{"foo"}));
+        assertArrayEquals(new String[]{"foo"}, (String[]) dps.getValue("value"));
+        DpsUtils.setValues(dps, ImmutableMap.of("value", "foo"));
+        assertEquals("foo", dps.getValue("value"));
+    }
+
+    @Test
+    public void checkMultipleContainedInTagsNoValues()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.add(new DynamicPropertyBuilder("value", String.class)
@@ -108,6 +123,8 @@ public class DpsUtilsTest
                 .multiple()
                 .get());
         DpsUtils.setValues(dps, ImmutableMap.of("value", new String[]{"foo2", "bar"}));
+        assertArrayEquals(null, (String[]) dps.getValue("value"));
+        DpsUtils.setValues(dps, Collections.emptyMap());
         assertArrayEquals(null, (String[]) dps.getValue("value"));
     }
 
