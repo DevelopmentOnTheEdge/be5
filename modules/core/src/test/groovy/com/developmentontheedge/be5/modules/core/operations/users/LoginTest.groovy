@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
 import com.developmentontheedge.be5.security.UserInfoProvider
+import com.developmentontheedge.be5.config.CoreUtils
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
@@ -26,6 +27,8 @@ class LoginTest extends CoreBe5ProjectDbMockTest
 {
     @Inject
     UserInfoProvider userInfoProvider
+    @Inject
+    private CoreUtils utils;
 
     @Before
     void init()
@@ -89,6 +92,8 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     @Test
     void withoutCURRENT_ROLE_LIST()
     {
+        utils.removeUserSetting(TEST_USER, DatabaseConstants.CURRENT_ROLE_LIST);
+
         String testPass = "testPass"
         when(DbServiceMock.mock.one(eq("SELECT COUNT(1) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
