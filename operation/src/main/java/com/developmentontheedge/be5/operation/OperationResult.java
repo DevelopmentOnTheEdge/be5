@@ -10,16 +10,23 @@ public class OperationResult
     private final OperationStatus status;
     private final String message;
     private final Object details;
+    private final int timeout; // seconds
 
     ///////////////////////////////////////////////////////////////////
     // private constructors
     //
 
-    private OperationResult(OperationStatus status, String message, Object details)
+    private OperationResult(OperationStatus status, String message, Object details, int timeout)
     {
         this.status = status;
         this.message = message;
         this.details = details;
+        this.timeout = timeout;
+    }
+
+    private OperationResult(OperationStatus status, String message, Object details)
+    {
+        this(status, message, details, 5);
     }
 
     private OperationResult(OperationStatus status, Object details)
@@ -45,6 +52,11 @@ public class OperationResult
     public Object getDetails()
     {
         return details;
+    }
+
+    public int getTimeout()
+    {
+        return timeout;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -112,6 +124,11 @@ public class OperationResult
         return new OperationResult(OperationStatus.FINISHED, message, details);
     }
 
+    public static OperationResult finished(String message, Object details, int timeout)
+    {
+        return new OperationResult(OperationStatus.FINISHED, message, details, timeout);
+    }
+
     public static OperationResult redirect(String url)
     {
         return new OperationResult(OperationStatus.REDIRECTED, url);
@@ -135,6 +152,11 @@ public class OperationResult
     public static OperationResult error(String message)
     {
         return new OperationResult(OperationStatus.ERROR, message, new RuntimeException(message));
+    }
+
+    public static OperationResult error(String message, Throwable details, int timeout)
+    {
+        return new OperationResult(OperationStatus.ERROR, message, details, timeout);
     }
 
     @Override
@@ -166,6 +188,7 @@ public class OperationResult
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", details=" + details +
+                ", timeout=" + timeout +
                 '}';
     }
 }

@@ -53,7 +53,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         //result.getAttributes()
 
-        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE'},'query':'All records','title':'Testtable: Добавить'}",
+        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'Testtable: Добавить'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
 
         assertEquals("form/testtable/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
@@ -93,8 +93,28 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         assertEquals(OperationStatus.ERROR, formPresentation.getOperationResult().getStatus());
         assertEquals("Error in property (getParameters)", formPresentation.getOperationResult().getMessage());
+        assertEquals(5, formPresentation.getOperationResult().getTimeout() );
 
         assertNull(formPresentation.getOperationResult().getDetails());
+        verify(Be5EventTestLogger.mock).operationError(any(), any(), anyLong(), anyLong(), any());
+    }
+
+    @Test
+    public void executeWithGenerateErrorWithTimeoutInProperty()
+    {
+        Map<String, Object> map = new HashMap<String, Object>(){{
+            put("name", "generateErrorWithTimeout");
+        }};
+
+        ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", emptyMap(), map);
+        OperationResultPresentation operationResultPresentation = (OperationResultPresentation) result.getAttributes();
+        assertEquals("OperationResult{status=error, message='Error in property (getParameters) with timeout 20', details=null, timeout=20}", BaseTest.oneQuotes(operationResultPresentation.getOperationResult().toString()));
+
+        assertEquals(OperationStatus.ERROR, operationResultPresentation.getOperationResult().getStatus());
+        assertEquals("Error in property (getParameters) with timeout 20", operationResultPresentation.getOperationResult().getMessage());
+        assertEquals(20, operationResultPresentation.getOperationResult().getTimeout() );
+
+        assertNull(operationResultPresentation.getOperationResult().getDetails());
         verify(Be5EventTestLogger.mock).operationError(any(), any(), anyLong(), anyLong(), any());
     }
 
