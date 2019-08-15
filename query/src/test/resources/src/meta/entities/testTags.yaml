@@ -28,6 +28,12 @@ testTags:
       code: |-
         SELECT code AS "CODE", admlevel AS "NAME"
         FROM testTags
+  - 'One More Selection view':
+      type: 1D
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT admlevel FROM testTags
   - All records:
       type: 1D_unknown
       roles: '@AllRoles'

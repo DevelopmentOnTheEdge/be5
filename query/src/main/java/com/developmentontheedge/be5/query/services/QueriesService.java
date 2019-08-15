@@ -169,16 +169,14 @@ public class QueriesService
         for (DynamicPropertySet dps : list)
         {
             Iterator<DynamicProperty> iterator = dps.iterator();
-            iterator.hasNext();
             DynamicProperty property = iterator.next();
             if (property.getName().startsWith(HIDDEN_COLUMN_PREFIX))
             {
-                iterator.hasNext();
                 property = iterator.next();
             }
             String key = property.getValue().toString();
-            Object value = iterator.hasNext() ? iterator.next().getValue() : "";
-            String second = value != null ? value.toString() : "";
+            Object value = iterator.hasNext() ? iterator.next().getValue() : null;
+            String second = value != null ? value.toString() : key;
             stockArr[i++] = new String[]{key, userAwareMeta.getColumnTitle(query.getEntity().getName(), second)};
         }
 
