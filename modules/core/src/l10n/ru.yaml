@@ -86,6 +86,13 @@ ru:
       - name: Наименование
       - description: Описание
       - entity: Класс
+  - systemSettings:
+    - topics:
+      - '@AllQueries'
+      entries:
+      - section_name: Раздел настроек
+      - setting_name: Параметр
+      - setting_value: Значение
   - users:
     - topics: displayName
       entries:

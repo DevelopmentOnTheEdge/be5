@@ -22,12 +22,10 @@ systemSettings:
       type: 1D
       roles: [SystemDeveloper, Administrator]
       invisible: true
-      layout: '{"topForm":"TopFilter"}'
       operations:
       - Insert
       - Edit
       - Filter
-      - TopFilter
       code: |-
         SELECT
           CONCAT(section_name, '|', setting_name) AS "___ID",
@@ -44,11 +42,6 @@ systemSettings:
       roles: [SystemDeveloper, Administrator]
       layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.modules.core.operations.system.SystemSettingsEdit
-  - TopFilter:
-      records: -1
-      roles: [SystemDeveloper, Administrator]
-      layout: '{"title":"Filter","properties":"section_name,setting_name"}'
-      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Filter:
       records: -1
       roles: [SystemDeveloper, Administrator]
