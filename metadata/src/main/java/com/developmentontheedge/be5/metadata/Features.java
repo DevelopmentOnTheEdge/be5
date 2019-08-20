@@ -7,4 +7,5 @@ public interface Features
     String EVENT_DB_LOGGING_FEATURE = "eventDbLogging";
     String LOGGING = "logging";
     String COMPILED_GROOVY = "compiledGroovy";
+    String SKIP_VALIDATION = "skipValidation";
 }

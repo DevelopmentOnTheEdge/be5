@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.Features;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -101,7 +102,12 @@ public class ModuleLoader2
 
         long startTime = System.nanoTime();
         ModuleLoader2.mergeModules(project, logger);
-        project.validate();
+
+        if (!project.hasFeature(Features.SKIP_VALIDATION))
+        {
+            project.validate();
+        }
+
         project.initBeSqlMacros();
         if (project.hasFeature(BE_SQL_QUERIES))
         {
