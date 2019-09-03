@@ -28,10 +28,12 @@ public interface FrontendActions
     String REDIRECT = "REDIRECT";
     String DOWNLOAD_OPERATION = "DOWNLOAD_OPERATION";
     String REFRESH_DOCUMENT = "REFRESH_DOCUMENT";
+    String REFRESH_PARENT_DOCUMENT = "REFRESH_PARENT_DOCUMENT";
 
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
     FrontendAction CLOSE_MAIN_MODAL_ACTION = new FrontendAction(CLOSE_MAIN_MODAL, null);
     FrontendAction REFRESH_DOCUMENT_ACTION = new FrontendAction(REFRESH_DOCUMENT, null);
+    FrontendAction REFRESH_PARENT_DOCUMENT_ACTION = new FrontendAction(REFRESH_PARENT_DOCUMENT, null);
 
     static FrontendAction updateUser(UserInfoModel userInfoModel)
     {
@@ -82,6 +84,11 @@ public interface FrontendActions
     static FrontendAction refreshDocument()
     {
         return REFRESH_DOCUMENT_ACTION;
+    }
+
+    static FrontendAction refreshParentDocument()
+    {
+        return REFRESH_PARENT_DOCUMENT_ACTION;
     }
 
     static FrontendAction redirect(String url)
