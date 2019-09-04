@@ -18,7 +18,7 @@ public abstract class HtmlBeautifier implements SubQueryBeautifier
     private String toRow(QRec qRec)
     {
         return StreamEx.of(qRec.spliterator())
-                .map(entry -> entry.getValue().toString())
+                .map(entry -> entry.getValue())
                 .joining(getColumnDelimiter());
     }
 

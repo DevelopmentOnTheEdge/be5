@@ -72,6 +72,14 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void subQueryNulls()
+    {
+        Query query = meta.getQuery("testtable", "Sub Query");
+        List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
+        assertEquals("null<br/>null", list.get(0).getValue("testSubQueryValues1"));
+    }
+
+    @Test
     public void subQueryDefault()
     {
         Query query = meta.getQuery("testtable", "Sub Query default");

@@ -160,7 +160,9 @@ testtable:
           t.name AS "Name",
           t.value AS "Value",
           '<sql>SELECT u.value FROM testSubQuery u
-                WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues"
+                WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues",
+          '<sql>SELECT concat(u.value,null) FROM testSubQuery u
+                WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues1"
         FROM testtable t
   - subQueryBeautifier:
       type: 1D_unknown
