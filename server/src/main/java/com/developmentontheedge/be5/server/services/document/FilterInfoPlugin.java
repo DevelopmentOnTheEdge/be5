@@ -108,7 +108,7 @@ public class FilterInfoPlugin implements DocumentPlugin
             {
                 if (usedParams.containsKey(k))
                 {
-                    if (!meta.hasEntity(mainTableDefName)) return;
+                    if (mainTableDefName == null || !meta.hasEntity(mainTableDefName)) return;
                     ColumnDef column2 = queryMetaHelper.getColumnDef(ast2, usedParams.get(k), mainTableDefName);
                     if (column2 != null)
                     {
