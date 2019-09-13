@@ -82,5 +82,5 @@ users:
       roles: '@AllRolesExceptGuest'
       code: com.developmentontheedge.be5.modules.core.operations.users.ChangePassword
   - Logout:
-      roles: '@AllRolesExceptGuest'
+      roles: '@AllRoles'
       code: com.developmentontheedge.be5.modules.core.operations.users.Logout
