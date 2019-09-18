@@ -87,6 +87,9 @@ ru:
       - description: Описание
       - entity: Класс
   - systemSettings:
+    - topics: displayName
+      entries:
+      - displayName: Установки системы
     - topics:
       - '@AllQueries'
       entries:
