@@ -33,6 +33,7 @@ systemSettings:
           setting_name,
           setting_value
         FROM systemSettings
+        ORDER BY section_name, setting_name 
   operations:
   - Insert:
       roles: [SystemDeveloper, Administrator]
