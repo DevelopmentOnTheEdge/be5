@@ -49,7 +49,7 @@ public class MailServiceImpl implements MailService
         }
         catch (Throwable e)
         {
-            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject " + subject, e);
             throw new RuntimeException(e);
         }
     }
@@ -69,7 +69,7 @@ public class MailServiceImpl implements MailService
         }
         catch (Throwable e)
         {
-            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject " + subject, e);
             throw new RuntimeException(e);
         }
     }
@@ -85,7 +85,7 @@ public class MailServiceImpl implements MailService
         }
         catch (Throwable e)
         {
-            log.log(Level.SEVERE, "error on send email to " + to + ", subject" + subject, e);
+            log.log(Level.SEVERE, "error on send email to " + to + ", subject " + subject, e);
             throw new RuntimeException(e);
         }
     }
