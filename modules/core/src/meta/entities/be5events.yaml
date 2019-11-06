@@ -53,21 +53,18 @@ be5events:
   - All records:
       type: 1D
       messageWhenEmpty: The list is empty
-      layout: '{"topForm":"TopFilter"}'
       invisible: true
-      roles: [SystemDeveloper, Administrator]
+      roles: [SystemDeveloper]
       operations:
       - Filter
-      - TopFilter
-      - Filter by Date
       code: |-
         SELECT
            e.ID AS "___myid",
-           e.user_name AS "User Name",
+           e.user_name AS "user_name",
            TIMESTAMPDIFF(SECOND, e.startTime, e.endTime) AS "Time",
-           e.startTime AS "Begin",
-           e.endTime AS "End;<quick visible='false'/>",
-           e.action AS "Action",
+           e.startTime AS "startTime",
+           e.endTime AS "endTime;<quick visible='false'/>",
+           e.action AS "action",
            CASE WHEN e.entity IS NULL OR e.entity = '' THEN e.title ELSE concat( e.entity, '::', e.title ) END
                AS "Event Type",
            '<sql using="___myid">SELECT CASE WHEN COUNT( p.logID ) > 0 THEN 'Click' ELSE '&nbsp;' END
@@ -75,8 +72,8 @@ be5events:
            </sql>' AS "Parameters",
            '<ref table="be5eventParams" class="open-in-modal"/>' AS ";Parameters",
            e.IP AS "IP;<quick visible='false'/>",
-           e.result AS "Result;",
-           e.exception AS "Exception;"
+           e.result AS "result",
+           e.exception AS "exception"
         FROM be5events e
         WHERE (1=1)
         <if parameter="startPeriod">

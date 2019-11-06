@@ -86,6 +86,28 @@ ru:
       - name: Наименование
       - description: Описание
       - entity: Класс
+  - be5events:
+    - topics: displayName
+      entries:
+      - displayName: Действия пользователей
+    - topics: operationName
+      entries:
+      - Filter by Date: Фильтр по дате
+    - topics:
+      - '@AllQueries'
+      entries:
+      - user_name: Пользователь
+      - Time: Время (сек)
+      - entity: Сущность
+      - startTime: Начало
+      - endTime: Окончание
+      - action: Действие
+      - Event Type: Объект
+      - Parameters: Параметры
+      - IP: IP адрес
+      - result: Результат
+      - exception: Ошибки
+      - title: Название
   - systemSettings:
     - topics: displayName
       entries:
