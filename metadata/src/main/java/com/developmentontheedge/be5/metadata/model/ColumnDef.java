@@ -22,10 +22,11 @@ public class ColumnDef extends TableRef
     private boolean canBeNull;
     private boolean autoIncrement;
     private String defaultValue;
+    private String placeholder;
     private String[] oldNames = new String[0];
 
     private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(
-            new HashSet<>(Arrays.asList("type", "canBeNull", "defaultValue")));
+            new HashSet<>(Arrays.asList("type", "canBeNull", "defaultValue", "placeholder")));
 
     public ColumnDef(String name, BeModelCollection<? extends ColumnDef> origin)
     {
@@ -160,6 +161,18 @@ public class ColumnDef extends TableRef
     public void setDefaultValue(String defaultValue)
     {
         this.defaultValue = customizeProperty("defaultValue", this.defaultValue, Strings2.emptyToNull(defaultValue));
+        fireChanged();
+    }
+
+    @PropertyName("Placeholder")
+    public String getPlaceholder()
+    {
+        return getValue("placeholder", placeholder, () -> ((ColumnDef) prototype).getPlaceholder());
+    }
+
+    public void setPlaceholder(String placeholder)
+    {
+        this.placeholder = customizeProperty("placeholder", this.placeholder, Strings2.emptyToNull(placeholder));
         fireChanged();
     }
 

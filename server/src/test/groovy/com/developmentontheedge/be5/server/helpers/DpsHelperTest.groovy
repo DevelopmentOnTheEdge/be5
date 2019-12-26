@@ -47,7 +47,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void getDpsWithoutAutoIncrementTest()
     {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"), [:])
-        assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
+        assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','placeholder':''Level of smth'','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
@@ -83,7 +83,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
-        assertEquals "{'values':{'admlevel':'Regional'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
+        assertEquals "{'values':{'admlevel':'Regional'},'meta':{'/admlevel':{'displayName':'Административный уровень','placeholder':''Level of smth''}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 
@@ -92,7 +92,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
-        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
+        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Административный уровень','placeholder':''Level of smth''}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 

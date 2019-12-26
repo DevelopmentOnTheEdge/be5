@@ -26,6 +26,7 @@ import static com.developmentontheedge.be5.metadata.serialization.SerializationC
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_EXTRAS;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_INDICES;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_OLD_NAMES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_PLACEHOLDER;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_REFERENCE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_REFERENCES;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_SCHEME;
@@ -194,7 +195,8 @@ class SchemeDeserializer extends BaseDeserializer
             tableRefStructure.applyTo(column);
         }
 
-        checkChildren(column, columnElement, Fields.columnDef(), TAG_COMMENT, TAG_EXTRAS, TAG_REFERENCE, TAG_OLD_NAMES);
+        checkChildren(column, columnElement, Fields.columnDef(),
+                TAG_COMMENT, TAG_EXTRAS, TAG_REFERENCE, TAG_OLD_NAMES, TAG_PLACEHOLDER);
 
         return column;
     }

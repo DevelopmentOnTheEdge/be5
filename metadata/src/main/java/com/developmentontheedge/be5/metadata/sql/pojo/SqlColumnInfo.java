@@ -9,6 +9,7 @@ public class SqlColumnInfo
     private String name;
     private boolean canBeNull;
     private String defaultValue;
+    private String placeholder;
     private boolean autoIncrement;
     private String type;
     private String[] enumValues;
@@ -53,6 +54,16 @@ public class SqlColumnInfo
     public void setAutoIncrement(boolean autoIncrement)
     {
         this.autoIncrement = autoIncrement;
+    }
+
+    public String getPlaceholder()
+    {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder)
+    {
+        this.placeholder = placeholder;
     }
 
     public String getType()

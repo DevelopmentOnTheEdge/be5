@@ -216,6 +216,7 @@ public class AppSync extends ScriptSupport<AppSync>
                 typeManager.correctType(column.getType());
                 column.setPrimaryKey(info.getName().equalsIgnoreCase(entity.getPrimaryKey()));    // PENDING
                 column.setCanBeNull(info.isCanBeNull());
+                column.setPlaceholder(info.getPlaceholder());
                 String defaultValue = info.getDefaultValue();
                 column.setAutoIncrement(info.isAutoIncrement());
                 if (!info.isAutoIncrement())

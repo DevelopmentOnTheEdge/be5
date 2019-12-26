@@ -13,6 +13,7 @@ testTags:
     - admlevel:
         type: ENUM('Federal','Municipal','Regional')
         defaultValue: '''Regional'''
+        placeholder: '''Level of smth'''
     - referenceTest:
         type: VARCHAR(2)
         canBeNull: true

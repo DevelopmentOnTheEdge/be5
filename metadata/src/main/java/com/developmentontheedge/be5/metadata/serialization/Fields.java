@@ -85,7 +85,8 @@ public class Fields
             new Field("canBeNull", false),
             new Field("autoIncrement", false),
             new Field("primaryKey", false),
-            new Field("defaultValue")
+            new Field("defaultValue"),
+            new Field("placeholder")
     ));
     private static final List<Field> INDEX_DEF = Collections.unmodifiableList(Arrays.asList(
             new Field("name"),

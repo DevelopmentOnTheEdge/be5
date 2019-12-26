@@ -24,6 +24,7 @@ public interface SerializationConstants
     String TAG_COLUMNS = "columns";
     String TAG_INDICES = "indices";
     String TAG_OLD_NAMES = "oldNames";
+    String TAG_PLACEHOLDER = "placeholder";
 
     String TAG_PROJECT_FILE_STRUCTURE = "projectFileStructure";
 

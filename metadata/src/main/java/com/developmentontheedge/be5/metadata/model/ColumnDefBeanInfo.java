@@ -22,6 +22,7 @@ public class ColumnDefBeanInfo extends BeanInfoEx
         property("primaryKey").readOnly().add();
         addHidden("autoIncrement", "isAutoIncrementHidden");
         add("defaultValue");
+        add("placeholder");
         add("oldNames");
         add("usedInExtras");
         add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));

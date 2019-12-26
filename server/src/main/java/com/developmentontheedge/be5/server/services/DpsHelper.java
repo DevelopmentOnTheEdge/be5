@@ -410,6 +410,11 @@ public class DpsHelper
             dp.setValue(meta.getColumnDefaultValue(columnDef));
         }
 
+        if (columnDef.getPlaceholder() != null)
+        {
+            dp.setAttribute(BeanInfoConstants.PLACEHOLDER, columnDef.getPlaceholder());
+        }
+
         if (columnDef.isCanBeNull() ||
                 (columnDef.getTypeString().equals(TYPE_BOOL) && columnDef.getDefaultValue() != null))
         {
