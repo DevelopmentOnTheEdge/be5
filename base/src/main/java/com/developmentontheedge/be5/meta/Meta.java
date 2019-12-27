@@ -111,6 +111,18 @@ public interface Meta
         return defaultValue;
     }
 
+    default String getPlaceholder(ColumnDef column)
+    {
+        if (column == null) return null;
+
+        String placeholder = column.getPlaceholder();
+        if (placeholder != null && placeholder.startsWith("'") && placeholder.endsWith("'"))
+        {
+            placeholder = placeholder.substring(1, placeholder.length() - 1);
+        }
+        return placeholder;
+    }
+
     Class<?> getColumnType(ColumnDef columnDef);
 
     Class<?> getColumnType(Entity entity, String columnName);

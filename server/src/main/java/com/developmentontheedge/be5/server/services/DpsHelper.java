@@ -412,7 +412,7 @@ public class DpsHelper
 
         if (columnDef.getPlaceholder() != null)
         {
-            dp.setAttribute(BeanInfoConstants.PLACEHOLDER, columnDef.getPlaceholder());
+            dp.setAttribute(BeanInfoConstants.PLACEHOLDER, meta.getPlaceholder(columnDef));
         }
 
         if (columnDef.isCanBeNull() ||
