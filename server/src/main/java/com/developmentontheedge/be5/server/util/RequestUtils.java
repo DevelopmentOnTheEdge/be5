@@ -23,18 +23,8 @@ public class RequestUtils
         HttpServletResponse response = res.getRawResponse();
 
         response.setContentType(contentType + "; charset=" + charset);
-        //response.setCharacterEncoding(encoding);
-
-        if (download)
-        {
-            response.setHeader("Content-disposition", "attachment; filename=" +
-                    UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-        else
-        {
-            response.setHeader("Content-disposition", "filename=" +
-                    UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
+        response.setHeader("Content-disposition", (download ? "attachment; " : "") + "filename*=UTF-8''"
+                + parseFileName(filename));
 
         try
         {
@@ -46,4 +36,13 @@ public class RequestUtils
             throw new RuntimeException(e);
         }
     }
+
+    public static String parseFileName(String filename)
+    {
+        String newFileName = UrlEscapers.urlFormParameterEscaper().escape(filename);
+        newFileName = newFileName.replaceAll("\\+", "%20");
+        System.out.println("newFileName=" + newFileName);
+        return newFileName;
+    }
+
 }
