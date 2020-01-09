@@ -186,7 +186,7 @@ public class OperationResult
     {
         return "OperationResult{" +
                 "status=" + status +
-                ", message='" + message + '\'' +
+                ", message=" + (message == null ? null : '\'' + message + '\'') +
                 ", details=" + details +
                 ", timeout=" + timeout +
                 '}';
