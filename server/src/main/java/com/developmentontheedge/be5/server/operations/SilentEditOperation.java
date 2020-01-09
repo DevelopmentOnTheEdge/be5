@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.operation.OperationResult;
+
 public class SilentEditOperation extends EditOperation
 {
     @Override
@@ -7,6 +9,13 @@ public class SilentEditOperation extends EditOperation
     {
         super.invoke(parameters);
 
-        setResultGoBack();
+        if (isModalFormLayout())
+        {
+            setResult(OperationResult.finished(null, null, 0));
+        }
+        else
+        {
+            setResultGoBack();
+        }
     }
 }

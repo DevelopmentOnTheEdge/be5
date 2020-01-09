@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.server.FrontendActions;
+import com.developmentontheedge.be5.operation.OperationResult;
 
 public class SilentDeleteOperation extends DeleteOperation
 {
@@ -9,9 +9,9 @@ public class SilentDeleteOperation extends DeleteOperation
     {
         super.invoke(parameters);
 
-        if (parameters == null)
+        if (isModalFormLayout())
         {
-            setResultFinished(FrontendActions.refreshDocument());
+            setResult(OperationResult.finished(null, null, 0));
         }
         else
         {

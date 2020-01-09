@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.server.FrontendActions.GO_BACK;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.contains;
@@ -164,7 +165,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     }
 
     @Test
-    public void editInvoke()
+    public void editSilentInvoke()
     {
         OperationResult result = executeEditWithValues("{'name':'EditName','value':123}");
 
@@ -173,6 +174,27 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtableAdmin/All records/_selectedRows_=12", ((FrontendAction[])result.getDetails())[0].getValue());
+    }
+
+    @Test
+    public void editSilentInvokeModalForm()
+    {
+        when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
+                "name", "TestName",
+                "value", 12345,
+                "ID", 12L
+        )));
+
+        Operation operation = createOperation("testtableAdmin", "All records", "EditModalForm", "12");
+        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'EditName','value':123}")).getSecond();
+
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertNull(result.getDetails());
+        assertEquals(0, result.getTimeout());
+
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+                "EditName", 123, 12L);
     }
 
     @Test

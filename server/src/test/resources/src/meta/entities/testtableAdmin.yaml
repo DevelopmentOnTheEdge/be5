@@ -35,6 +35,7 @@ testtableAdmin:
       - TransactionTestOp
       - Delete
       - Edit
+      - EditModalForm
       - TestTransactionalOperation
       - Insert
       - EditWithCheckRecords
@@ -112,11 +113,21 @@ testtableAdmin:
       records: 1
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - EditModalForm:
+      records: 1
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Insert:
       roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - InsertModal:
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - EditWithCheckRecords:
       records: 1
