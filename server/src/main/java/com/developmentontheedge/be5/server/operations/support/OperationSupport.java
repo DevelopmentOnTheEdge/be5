@@ -17,15 +17,19 @@ import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.services.DpsHelper;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.FileUploadWrapper;
+
 import org.apache.commons.fileupload.FileItem;
 
 import javax.inject.Inject;
 
 import static com.developmentontheedge.be5.server.FrontendActions.redirect;
 import static com.developmentontheedge.be5.server.FrontendActions.successAlert;
+
+import java.util.Map;
 
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
@@ -107,5 +111,11 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     {
         FileUploadWrapper fileUploadWrapper = (FileUploadWrapper) request.getRawRequest();
         return fileUploadWrapper.getFileItem(fileName);
+    }
+
+    public boolean isModalFormLayout()
+    {
+        Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
+        return "modalForm".equals(layout.get("type"));
     }
 }

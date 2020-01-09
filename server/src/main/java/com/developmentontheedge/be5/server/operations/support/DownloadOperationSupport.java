@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.server.operations.support;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.server.FrontendActions;
 import com.developmentontheedge.be5.server.model.FrontendAction;
-import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -21,8 +20,7 @@ public abstract class DownloadOperationSupport extends OperationSupport implemen
                 getInfo().getEntityName(), context.getQueryName(), getInfo().getName(),
                 context.getParams(), parametersMap
         );
-        Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
-        if ("modalForm".equals(layout.get("type")))
+        if (isModalFormLayout())
         {
             setResultFinished(FrontendActions.closeMainModal(), downloadOperationAction);
         }
