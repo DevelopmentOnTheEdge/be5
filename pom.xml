@@ -24,6 +24,7 @@
     <module>database-model</module>
     <module>web</module>
     <module>server</module>
+    <module>modules/bpmn</module>
     <module>modules/core</module>
     <module>modules/monitoring</module>
     <module>test</module>
