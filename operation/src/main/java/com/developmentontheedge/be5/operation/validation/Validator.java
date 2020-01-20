@@ -125,7 +125,7 @@ public class Validator
         }
         else
         {
-            if (property.getValue() instanceof String && property.getType() != String.class)
+            if (property.getValue() instanceof String && !String.class.equals(property.getType()))
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
             }
@@ -199,9 +199,9 @@ public class Validator
         //todo move to IntegerRule, NumberRule
         try
         {
-            if (type == Short.class) return Short.parseShort(value);
-            if (type == Integer.class) return Integer.parseInt(value);
-            if (type == Long.class) return Long.parseLong(value);
+            if (Short.class.equals(type)) return Short.parseShort(value);
+            if (Integer.class.equals(type)) return Integer.parseInt(value);
+            if (Long.class.equals(type)) return Long.parseLong(value);
         }
         catch (NumberFormatException e)
         {
@@ -210,7 +210,7 @@ public class Validator
             try
             {
                 BigInteger bigInteger = new BigInteger(value);
-                if (type == Long.class)
+                if (Long.class.equals(type))
                 {
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
@@ -221,7 +221,7 @@ public class Validator
                         msg += " >= " + Long.MIN_VALUE;
                     }
                 }
-                if (type == Integer.class)
+                if (Integer.class.equals(type))
                 {
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
@@ -232,7 +232,7 @@ public class Validator
                         msg += " >= " + Integer.MIN_VALUE;
                     }
                 }
-                if (type == Short.class)
+                if (Short.class.equals(type))
                 {
                     if (bigInteger.compareTo(BigInteger.ZERO) > 0)
                     {
@@ -254,8 +254,8 @@ public class Validator
 
         try
         {
-            if (type == Float.class) return Float.parseFloat(value);
-            if (type == Double.class) return Double.parseDouble(value);
+            if (Float.class.equals(type)) return Float.parseFloat(value);
+            if (Double.class.equals(type)) return Double.parseDouble(value);
         }
         catch (NumberFormatException e)
         {
@@ -265,15 +265,12 @@ public class Validator
             throw new NumberFormatException(msg + toStringProperty(property));
         }
 
-        if( Boolean.class.equals( type ) )
-        { 
-            return Boolean.parseBoolean(value);
-        } 
+        if (Boolean.class.equals(type)) return Boolean.parseBoolean(value);
 
         //todo move to DateRule
         try
         {
-            if( Date.class.equals( type ) ) return Date.valueOf(value);
+            if (Date.class.equals(type)) return Date.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
@@ -283,10 +280,7 @@ public class Validator
         }
         try
         {
-            if( Timestamp.class.equals( type ) )
-            { 
-                return Timestamp.valueOf(value);
-            } 
+            if (Timestamp.class.equals(type)) return Timestamp.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
@@ -327,7 +321,7 @@ public class Validator
         Object statusAttr = property.getAttribute(BeanInfoConstants.STATUS);
         if (statusAttr == null) return false;
         Validation.Status status;
-        if (statusAttr.getClass() == Validation.Status.class)
+        if (Validation.Status.class.equals(statusAttr.getClass()))
         {
             status = (Validation.Status) statusAttr;
         }

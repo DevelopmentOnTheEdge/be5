@@ -87,16 +87,17 @@ class PropertiesToRowTransformer
         {
             log.log(Level.WARNING, "toGMTString=" + ((java.sql.Date) value).toGMTString());
             log.log(Level.WARNING, "type=" + property.getType());
-            log.log(Level.WARNING, "format=" + dateFormatter.getCalendar());
-            log.log(Level.WARNING, "formatedValue=" + dateFormatter.format(value));
+            log.log(Level.WARNING, "time=" + ((java.sql.Date) value).getTime());
+            log.log(Level.WARNING, "toString=" + value);
         }
 
-        if (property.getType() == java.sql.Date.class)
+        if (java.sql.Date.class.equals(property.getType()))
         {
+            log.log(Level.WARNING, "formatedValue=" + dateFormatter.format(value));
             return dateFormatter.format(value);
         }
 
-        if (property.getType() == java.sql.Time.class)
+        if (java.sql.Time.class.equals(property.getType()))
         {
             String timestamp = timestampFormatter.format(value);
             if (timestamp.startsWith("01.01.1970"))
@@ -106,7 +107,7 @@ class PropertiesToRowTransformer
             return timestamp;
         }
 
-        if (property.getType() == java.sql.Timestamp.class)
+        if (java.sql.Timestamp.class.equals(property.getType()))
         {
             return timestampFormatter.format(value);
         }
