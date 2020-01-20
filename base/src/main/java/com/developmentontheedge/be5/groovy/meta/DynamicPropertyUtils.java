@@ -40,12 +40,12 @@ public class DynamicPropertyUtils
 
     static Object processValue(Object value, Class type)
     {
-        if (value != null && value.getClass() == GStringImpl.class)
+        if (value != null && GStringImpl.class.equals( value.getClass() ) )
         {
             value = value.toString();
         }
 
-        if (type == java.sql.Date.class && value != null)
+        if (java.sql.Date.class.equals( type ) && value != null)
         {
             value = Utils.changeType(value, java.sql.Date.class);
         }
