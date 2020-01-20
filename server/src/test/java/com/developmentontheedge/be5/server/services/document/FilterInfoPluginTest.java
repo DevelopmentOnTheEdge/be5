@@ -65,7 +65,7 @@ public class FilterInfoPluginTest extends ServerBe5ProjectDBTest
     {
         Query query = meta.getQuery("testTags", "All records");
         ResourceData resourceData = filterInfoPlugin.addData(query, Collections.singletonMap("CODE", "50"));
-        Assert.assertEquals("{'filterInfo':[],'operationParamsInfo':[{'value':'Региональный'}]}",
+        Assert.assertEquals("{'filterInfo':[],'operationParamsInfo':[{'key':'Код','value':'Региональный'}]}",
                 oneQuotes(jsonb.toJson(resourceData.getAttributes())));
     }
 

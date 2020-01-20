@@ -164,8 +164,7 @@ public class FilterInfoPlugin implements DocumentPlugin
         {
             String[][] tags = queries.getTagsFromSelectionView(column.getTableFrom(),
                     Collections.singletonMap(meta.getEntity(column.getTableFrom()).getPrimaryKey(), v));
-            String idColumnTitle = mainEntityName.equalsIgnoreCase(column.getTableFrom()) ? null : columnTitle;
-            if (tags.length > 0) return new FilterItem(idColumnTitle, getValue(tags));
+            if (tags.length > 0) return new FilterItem(columnTitle, getValue(tags));
         }
         else
         {
