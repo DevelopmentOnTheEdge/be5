@@ -265,12 +265,15 @@ public class Validator
             throw new NumberFormatException(msg + toStringProperty(property));
         }
 
-        if (type == Boolean.class) return Boolean.parseBoolean(value);
+        if( Boolean.class.equals( type ) )
+        { 
+            return Boolean.parseBoolean(value);
+        } 
 
         //todo move to DateRule
         try
         {
-            if (type == Date.class) return Date.valueOf(value);
+            if( Date.class.equals( type ) ) return Date.valueOf(value);
         }
         catch (IllegalArgumentException e)
         {
@@ -280,7 +283,10 @@ public class Validator
         }
         try
         {
-            if (type == Timestamp.class) return Timestamp.valueOf(value);
+            if( Timestamp.class.equals( type ) )
+            { 
+                return Timestamp.valueOf(value);
+            } 
         }
         catch (IllegalArgumentException e)
         {
