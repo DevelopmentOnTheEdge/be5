@@ -24,27 +24,27 @@ public class SqlUtils
                 return null;
             }
 
-            if (clazz == Double.class && object.getClass() == BigDecimal.class)
+            if (Double.class.equals(clazz) && BigDecimal.class.equals(object.getClass()))
             {
                 return (T) (Double) ((BigDecimal) object).doubleValue();
             }
 
-            if (clazz == Short.class && object.getClass() == Integer.class)
+            if (Short.class.equals(clazz) && Integer.class.equals(object.getClass()))
             {
                 return (T) (Short) ((Integer) object).shortValue();
             }
 
-            if (clazz == Integer.class && object.getClass() == Long.class)
+            if (Integer.class.equals(clazz) && Long.class.equals(object.getClass()))
             {
                 return (T) (Integer) ((Long) object).intValue();
             }
 
-            if (clazz == Long.class)
+            if (Long.class.equals(clazz))
             {
                 return (T) longFromDbObject(object);
             }
 
-            if (clazz == String.class)
+            if (String.class.equals(clazz))
             {
                 return (T) stringFromDbObject(object);
             }
@@ -73,15 +73,15 @@ public class SqlUtils
         {
             return null;
         }
-        else if (number.getClass() == Long.class)
+        else if (Long.class.equals(number.getClass()))
         {
             return (Long) number;
         }
-        else if (number.getClass() == Integer.class)
+        else if (Integer.class.equals(number.getClass()))
         {
             return ((Integer) number).longValue();
         }
-        else if (number.getClass() == BigInteger.class)
+        else if (BigInteger.class.equals(number.getClass()))
         {
             return ((BigInteger) number).longValue();
         }
@@ -99,11 +99,11 @@ public class SqlUtils
             {
                 return null;
             }
-            else if (value.getClass() == String.class)
+            else if (String.class.equals(value.getClass()))
             {
                 return (String) value;
             }
-            else if (value.getClass() == byte[].class)
+            else if (byte[].class.equals(value.getClass()))
             {
                 return new String((byte[]) value, StandardCharsets.UTF_8);
             }
