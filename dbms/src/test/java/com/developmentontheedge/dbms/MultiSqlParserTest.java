@@ -71,6 +71,15 @@ public class MultiSqlParserTest extends TestCase
                 , handler.sqlPos.toString());
     }
 
+    public void testRegexpReplace()
+    {
+        String sql = "-- cool statement\nSELECT regexp_replace(st.channel,'[^0-9]','','g') FROM \"myTable\";";
+
+        TestSqlHandler handler = new TestSqlHandler(sql);
+        assertEquals("{SELECT regexp_replace(st.channel,'[^0-9]','','g') FROM \"myTable\"=82}"
+                , handler.sqlPos.toString());
+    }
+
     public void testTrigger()
     {
         String sql = "DROP TRIGGER IF EXISTS makeSearchCompanyNameFields ON utilitySupplierChecks;\n" +
