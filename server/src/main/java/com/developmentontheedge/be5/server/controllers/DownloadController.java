@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
@@ -14,6 +15,8 @@ import javax.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Example url
@@ -34,7 +37,7 @@ public class DownloadController extends ApiControllerSupport implements Controll
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        String entity = req.getNonEmpty("_t_");
+        String entity = req.getOrDefault("_t_", "attachments");
         Long ID = req.getLong("ID");
 
         String typeColumn = req.getOrDefault("_typeColumn_", "mimeType");
@@ -44,7 +47,18 @@ public class DownloadController extends ApiControllerSupport implements Controll
         String charsetColumn = req.get("_charsetColumn_");
         boolean download = "yes".equals(req.get("_download_"));
 
-        RecordModel record = database.getEntity(entity).get(ID);
+        RecordModel record = null;
+        if (ID != null)
+        {
+            record = database.getEntity(entity).get(ID);
+        }
+        else if (req.get("filename") != null)
+        {
+            Map<String, String> conditions = new HashMap<>();
+            conditions.put(filenameColumn, req.get("filename"));
+            conditions.put(DatabaseConstants.IS_DELETED_COLUMN_NAME, "no");
+            record = database.getEntity(entity).getBy(conditions);
+        }
         if (record == null)
         {
             throw new RuntimeException("File not found.");
