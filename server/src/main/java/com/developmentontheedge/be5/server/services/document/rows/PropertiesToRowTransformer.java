@@ -93,7 +93,10 @@ class PropertiesToRowTransformer
 
         if (java.sql.Date.class.equals(property.getType()))
         {
-            log.log(Level.WARNING, "formatedValue=" + dateFormatter.format(value));
+            if ("birthDate".equalsIgnoreCase(property.getName()))
+            {
+                log.log(Level.WARNING, "formatedValue=" + dateFormatter.format(value));
+            }
             return dateFormatter.format(value);
         }
 
