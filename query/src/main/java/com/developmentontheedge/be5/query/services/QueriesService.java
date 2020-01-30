@@ -127,7 +127,7 @@ public class QueriesService
         String entityName = query.getEntity().getName();
         if (query.isCacheable())
         {
-            return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() +
+            return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() + query.getName() +
                             parameters.toString() + userInfoProvider.getLanguage(),
                     k -> getTagsFromCustomSelectionViewExecute(query, parameters)
             );
@@ -148,17 +148,6 @@ public class QueriesService
         String[][] stockArr = new String[tags.size()][2];
         return tags.toArray(stockArr);
     }
-
-//
-//    public Map<String, String> getTagsMapFromQuery( Map<String, Object> parameters, String query, Object... params )
-//    {
-//        //return getTagsListFromQuery( Collections.emptyMap(), query, params );
-//        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
-//                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
-//        );
-//        String[][] stockArr = new String[tags.size()][2];
-//        return tags.toArray(stockArr);
-//    }
 
     private String[][] getTagsFromCustomSelectionViewExecute(Query query, Map<String, ?> parameters)
     {

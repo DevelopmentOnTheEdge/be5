@@ -24,10 +24,20 @@ testTags:
   - '*** Selection view ***':
       type: 1D
       invisible: true
+      cacheable: true
       roles: '@AllRoles'
       code: |-
         SELECT code AS "CODE", admlevel AS "NAME"
         FROM testTags
+  - '*** Custom Selection view ***':
+      type: 1D
+      invisible: true
+      cacheable: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT code AS "CODE", admlevel AS "NAME"
+        FROM testTags
+        WHERE code != '01'
   - 'One More Selection view':
       type: 1D
       invisible: true

@@ -74,6 +74,19 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void getTagsFromCustomSelectionViewCacheTest()
+    {
+        String[][] strings = new String[][]{{"01", "Региональный"}, {"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
+
+        String[][] tagsFromEnum = queries.getTagsFromSelectionView("testTags");
+        assertArrayEquals(strings, tagsFromEnum);
+
+        strings = new String[][]{{"02", "Муниципальный"}, {"03", "Федеральный"}, {"04", "Региональный"}};
+        tagsFromEnum = queries.getTagsFromCustomSelectionView("testTags", "*** Custom Selection view ***");
+        assertArrayEquals(strings, tagsFromEnum);
+    }
+
+    @Test
     public void getTagsFromOneColumnSelectionViewTest()
     {
         String[][] strings = new String[][]{
