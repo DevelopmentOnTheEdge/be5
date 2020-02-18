@@ -105,6 +105,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
         Long totalNumberOfRows = getCount(queryExecutor, rows.size());
+        String messageWhenEmpty = query.getMessageWhenEmpty();
 
         return new TablePresentation(
                 title,
@@ -116,7 +117,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 queryExecutor.getOffset(), queryExecutor.getLimit(),
                 parameters,
                 totalNumberOfRows,
-                layout
+                layout,
+                messageWhenEmpty
         );
     }
 
@@ -132,6 +134,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
         Long totalNumberOfRows = (long) rows.size();
+        String messageWhenEmpty = query.getMessageWhenEmpty();
 
         return new TablePresentation(
                 title,
@@ -143,7 +146,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 0, rows.size(),
                 parameters,
                 totalNumberOfRows,
-                layout
+                layout,
+                messageWhenEmpty
         );
     }
 

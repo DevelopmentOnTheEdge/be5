@@ -22,6 +22,7 @@ public class TablePresentation
     private final Map<String, Object> parameters;
     private final Long totalNumberOfRows;
     private final Object layout;
+    private final String messageWhenEmpty;
 
     public TablePresentation(
             String title,
@@ -36,7 +37,8 @@ public class TablePresentation
             int length,
             Map<String, Object> parameters,
             Long totalNumberOfRows,
-            Object layout)
+            Object layout,
+            String messageWhenEmpty)
     {
         this.title = title;
         this.category = category;
@@ -51,6 +53,7 @@ public class TablePresentation
         this.parameters = parameters;
         this.totalNumberOfRows = totalNumberOfRows;
         this.layout = layout;
+        this.messageWhenEmpty = messageWhenEmpty;
     }
 
     public String getTitle()
@@ -116,6 +119,11 @@ public class TablePresentation
     public Object getLayout()
     {
         return layout;
+    }
+
+    public String getMessageWhenEmpty()
+    {
+        return messageWhenEmpty;
     }
 
     @Override
