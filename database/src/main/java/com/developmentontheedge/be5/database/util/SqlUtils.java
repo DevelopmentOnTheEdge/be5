@@ -12,6 +12,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import org.postgresql.util.PGobject;
+
 public class SqlUtils
 {
     public static <T> T getSqlValue(Class<T> clazz, ResultSet rs, int idx)
@@ -111,6 +113,11 @@ public class SqlUtils
             {
                 Clob clob = (Clob) value;
                 return clob.getSubString(1, (int) clob.length());
+            }
+            else if (value instanceof PGobject)
+            {
+                PGobject pgobject = (PGobject) value;
+                return pgobject.getValue();
             }
             return (String) value;
         }

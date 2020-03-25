@@ -63,5 +63,12 @@
       <version>1.4.193</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.2.11</version>
+    </dependency>
+
   </dependencies>
 </project>
