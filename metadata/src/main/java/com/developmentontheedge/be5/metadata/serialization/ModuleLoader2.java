@@ -418,7 +418,7 @@ public class ModuleLoader2
                     {
                         used = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
-                        logger.info(" - " + String.format("%-20s", name) + urls.get(i) + ": replaced");
+                        logger.info(" - " + name + ": " + urls.get(i) + ": replaced");
                     }
                 }
                 if (!used)
