@@ -31,7 +31,7 @@ public class DPSAttributes
     public void setValue(Object value)
     {
         map.put("value", value);
-        if( map.get( "TYPE" ) != null || value == null )
+        if (map.get("TYPE") != null || value == null)
         {
             return;
         }
