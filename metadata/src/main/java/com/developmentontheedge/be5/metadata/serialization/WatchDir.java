@@ -164,7 +164,7 @@ public class WatchDir
                 registerAll(projectFileSystem);
             }
         }
-        log.fine("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
+        log.info("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
 
     public WatchDir onModify(Consumer<Path> onModify)
