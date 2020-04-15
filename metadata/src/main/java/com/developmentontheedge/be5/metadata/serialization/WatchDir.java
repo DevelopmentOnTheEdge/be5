@@ -203,7 +203,9 @@ public class WatchDir
             }
 
             if (stopped)
+            {
                 return;
+            }
 
             Path dir = keys.get(key);
             if (dir == null)
@@ -236,6 +238,7 @@ public class WatchDir
                 // handle
                 if (kind == ENTRY_MODIFY)
                 {
+                    log.info( "Modified "  + child );
                     // skip timestamp modification
                     if (Files.isRegularFile(child))
                     {
