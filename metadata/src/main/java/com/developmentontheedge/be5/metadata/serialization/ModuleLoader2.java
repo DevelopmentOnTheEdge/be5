@@ -401,9 +401,12 @@ public class ModuleLoader2
         try
         {
             readDevPathsToSourceProjects(logger);
-            if (pathsToProjectsToHotReload.isEmpty()) return;
+            if (pathsToProjectsToHotReload.isEmpty())
+            {
+                return;
+            }
 
-            logger.info("Replace project path for hot reload (dev.yaml):");
+            logger.info("Replace project paths for hot reload (dev.yaml):");
 
             for (Map.Entry<String, Path> moduleSource : pathsToProjectsToHotReload.entrySet())
             {
@@ -415,14 +418,14 @@ public class ModuleLoader2
                     {
                         used = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
-                        logger.info(" - " + String.format("%-20s", name) + urls.get(i) + " - replace");
+                        logger.info(" - " + String.format("%-20s", name) + urls.get(i) + ": replaced");
                     }
                 }
                 if (!used)
                 {
                     URL url = moduleSource.getValue().resolve("project.yaml").toUri().toURL();
                     urls.add(url);
-                    logger.info(" - " + moduleSource.getKey() + ": " + url + " - add");
+                    logger.info(" - " + moduleSource.getKey() + ": " + url + ": added");
                 }
             }
         }
@@ -497,6 +500,7 @@ public class ModuleLoader2
                 if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
                 {
                     pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
+                    logger.error("Added path for hot reload -> " + entry.getKey() + ":" + entry.getValue());
                 }
                 else
                 {
