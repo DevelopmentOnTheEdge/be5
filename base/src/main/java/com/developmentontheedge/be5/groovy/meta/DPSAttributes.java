@@ -31,6 +31,11 @@ public class DPSAttributes
     public void setValue(Object value)
     {
         map.put("value", value);
+        if( map.get( "TYPE" ) != null || value == null )
+        {
+            return;
+        }
+        map.put("TYPE", value.getClass());
     }
 
     public void setREAD_ONLY(boolean value)
