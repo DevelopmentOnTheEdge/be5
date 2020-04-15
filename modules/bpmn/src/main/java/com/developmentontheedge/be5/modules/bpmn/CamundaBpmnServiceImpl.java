@@ -27,25 +27,11 @@ public class CamundaBpmnServiceImpl implements BpmnService
         processEngine = pec.buildProcessEngine();
     }
 
-    /**
-     * Deploys BPMN model.
-     *
-     * Model name should end with ".bpmn". The method checks it and adds ".bpmn" if needed.
-     *
-     * @return key (process definition key) for deployed model.
-     */
     public String deployModel(String name, String model)
     {
         return deployModel(name, new ByteArrayInputStream(model.getBytes()));
     }
 
-    /**
-     * Deploys BPMN model from the stream.
-     *
-     * Model name should end with ".bpmn". The method checks it and adds ".bpmn" if needed.
-     *
-     * @return id for deployed model.
-     */
     public String deployModel(String name, InputStream is)
     {
         if (!name.endsWith(BPMN_SUFFIX))
@@ -60,13 +46,6 @@ public class CamundaBpmnServiceImpl implements BpmnService
         return pd.getKey();
     }
 
-    /**
-     * Delete BPMN model with the specified key (process definition key) and all
-     * related resources (cascade deletion to process instances, history process
-     * instances and jobs).
-     *
-     * If several versions exist, all versions will be deleted.
-     */
     public void deleteModel(String key)
     {
         List<ProcessDefinition> pds = processEngine.getRepositoryService()
@@ -79,53 +58,76 @@ public class CamundaBpmnServiceImpl implements BpmnService
         }
     }
 
-    /**
-     * Starts BPMN model with the specified key (process definition key) and
-     * variables.
-     *
-     * If several versions exist, the latest version will be started.
-     *
-     * @return id for started process instance.
-     */
-    public String startProcess(String key, Map<String, Object> variables)
+    public String startProcess(String processDefinitionKey, Map<String, Object> variables)
     {
-        ProcessDefinition pd = processEngine.getRepositoryService()
-                .createProcessDefinitionQuery().processDefinitionKey(key)
-                .latestVersion().singleResult();
-
-        ProcessInstance pi = processEngine.getRuntimeService().startProcessInstanceById(pd.getId(), variables);
+        ProcessInstance pi = processEngine.getRuntimeService()
+                .startProcessInstanceByKey(processDefinitionKey, variables);
 
         return pi.getProcessInstanceId();
     }
 
-    /**
-     * @return list of current active tasks.
-     */
+    public String startProcess(String processDefinitionKey, String businessKey, Map<String, Object> variables)
+    {
+        ProcessInstance pi = processEngine.getRuntimeService()
+                .startProcessInstanceByKey(processDefinitionKey, businessKey, variables);
+
+        return pi.getProcessInstanceId();
+    }
+
+    @Override
+    public ProcessDefinition getProcess(String key)
+    {
+        return processEngine.getRepositoryService()
+                .createProcessDefinitionQuery().processDefinitionKey(key)
+                .latestVersion().singleResult();
+    }
+
     public List<Task> getActiveTasks()
     {
         return processEngine.getTaskService().createTaskQuery().active().list();
     }
 
-    /**
-     * Completes the specified task.
-     */
+    public List<Task> getTasks(String processDefinitionKey)
+    {
+        return processEngine.getTaskService().createTaskQuery().processDefinitionKey(processDefinitionKey).list();
+    }
+
+    public List<Task> getTasksByBusinessKey(String businessKey)
+    {
+        return processEngine.getTaskService().createTaskQuery().processInstanceBusinessKey(businessKey).list();
+    }
+
+    public Task getTask(String taskId)
+    {
+        return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+    }
+
     public void completeTask(String taskId, Map<String, Object> variables)
     {
         processEngine.getTaskService().complete(taskId, variables);
     }
 
-    /**
-     * @return variables for specified execution (task or process).
-     */
     public Map<String, Object> getVariables(String executionId)
     {
         return processEngine.getRuntimeService().getVariables(executionId);
     }
 
-    /** Set up variable value for specified execution. */
     public void setVariable(String executionId, String variableName, Object value)
     {
         processEngine.getRuntimeService().setVariable(executionId, variableName, value);
     }
 
+    public void setVariableByBusinessKey(String businessKey, String variableName, Object value)
+    {
+        ProcessInstance pi = processEngine.getRuntimeService().createProcessInstanceQuery()
+                .processInstanceBusinessKey(businessKey).active().singleResult();
+
+        processEngine.getRuntimeService().setVariable(pi.getId(), variableName, value);
+    }
+
+    @Override
+    public void createSignalEvent(String signalName)
+    {
+        processEngine.getRuntimeService().createSignalEvent(signalName);
+    }
 }
