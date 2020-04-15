@@ -238,7 +238,7 @@ public class WatchDir
                 // handle
                 if (kind == ENTRY_MODIFY)
                 {
-                    log.info( "Modified "  + child );
+                    log.info("Modified "  + child);
                     // skip timestamp modification
                     if (Files.isRegularFile(child))
                     {
