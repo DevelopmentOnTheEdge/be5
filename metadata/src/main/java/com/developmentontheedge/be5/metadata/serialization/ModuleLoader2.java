@@ -388,7 +388,7 @@ public class ModuleLoader2
         {
             modules = "Modules: " + project.getModules().getNameList().stream().collect(joining(", "));
         }
-        logger.info(title + " " + project.getName() + " loaded in " + time + " ms. " + modules);
+        logger.info(title + " '" + project.getName() + "' loaded in " + time + " ms. " + modules);
     }
 
     /**
