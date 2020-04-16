@@ -237,13 +237,13 @@ public class WatchDir
                 if (kind == ENTRY_MODIFY) // handle the change
                 {
                     log.info("Modified "  + child);
-                    if (Files.isRegularFile(child)) // skip timestamp modification
+                    if (Files.isRegularFile(child)) // skip frequent modifications
                     {
                         Long previouslyModified = lastModifiedByPath.get(child);
                         long lastModified = child.toFile().lastModified();
-                        if (previouslyModified != null && (lastModified - previouslyModified) > 100)
+                        if (previouslyModified != null && (lastModified - previouslyModified) < 1000)
                         {
-                            lastModifiedByPath.put(child, lastModified);
+                            //lastModifiedByPath.put(child, lastModified);
                             continue;
                         }
                         lastModifiedByPath.put(child, lastModified);

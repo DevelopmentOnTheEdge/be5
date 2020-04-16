@@ -88,7 +88,7 @@ public class ProjectProviderImpl implements ProjectProvider
                     {
                         watcher = new WatchDir(ModuleLoader2.getModulesMap())
                                 .onModify(flag -> {
-                                     log.info("onModify is invoked, flag = " + flag);
+                                     //log.info("onModify is invoked, flag = " + flag);
                                      dirty = flag;
                                      get();
                                  })
