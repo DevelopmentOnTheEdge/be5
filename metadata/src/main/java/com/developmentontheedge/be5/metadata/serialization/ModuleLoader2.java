@@ -175,7 +175,7 @@ public class ModuleLoader2
             if (dirty)
             {
                 logger.info("Project is dirty, project urls = " + urls);
-            } 
+            }
             loadAllProjects(urls, logger);
         }
         catch (IOException e)
