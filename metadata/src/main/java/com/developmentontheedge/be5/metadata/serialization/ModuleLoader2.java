@@ -200,7 +200,7 @@ public class ModuleLoader2
                 {
                     Path path = Paths.get(url.toURI()).getParent();
                     module = Serialization.load(path, loadContext);
-                    logger.debug("Load module from dir: " + path);
+                    logger.info("Load module from dir: " + path);
                 }
                 else // war or jar file
                 {
@@ -220,7 +220,7 @@ public class ModuleLoader2
                     Path path = fs.getPath("./");
                     module = Serialization.load(path, loadContext);
 
-                    logger.debug("Load module from " + url.toExternalForm() + ", path=" + path);
+                    logger.info("Load module from " + url.toExternalForm() + ", path=" + path);
                 }
                 loadContext.check();
                 newModulesMap.put(module.getAppName(), module);
