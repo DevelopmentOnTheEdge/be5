@@ -87,7 +87,7 @@ public class ProjectProviderImpl implements ProjectProvider
                     if (ModuleLoader2.getModulesMap() != null)
                     {
                         watcher = new WatchDir(ModuleLoader2.getModulesMap())
-                                .onModify(onModify -> dirty = true)
+                                .onModify(onModify -> { dirty = onModify; get(); })
                                 .start();
                     }
                 }

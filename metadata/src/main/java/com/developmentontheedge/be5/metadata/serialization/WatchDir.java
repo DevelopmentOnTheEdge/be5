@@ -42,7 +42,7 @@ public class WatchDir
     private final Map<WatchKey, Path> keys;
     private final boolean recursive;
     private volatile boolean stopped = false;
-    private Consumer<Path> onModify = path -> {
+    private Consumer<Boolean> onModify = flag -> {
     };
     // need no weak links as we work with limited amount of files
     private final Map<Path, Long> lastModifiedByPath = new HashMap<>();
@@ -167,7 +167,7 @@ public class WatchDir
         log.info("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
 
-    public WatchDir onModify(Consumer<Path> onModify)
+    public WatchDir onModify(Consumer<Boolean> onModify)
     {
         this.onModify = onModify;
         return this;
@@ -208,13 +208,13 @@ public class WatchDir
             }
 
             Path dir = keys.get(key);
-            if (dir == null)
+            if (dir == null) // WatchKey not recognized
             {
-                // WatchKey not recognized
                 continue;
             }
 
             final List<WatchEvent<?>> events = key.pollEvents();
+            boolean bModified = false;
             for (WatchEvent<?> event : events)
             {
                 if (stopped)
@@ -224,8 +224,7 @@ public class WatchDir
 
                 WatchEvent.Kind<?> kind = event.kind();
 
-                // TBD - provide example of how OVERFLOW event is handled
-                if (kind == OVERFLOW)
+                if (kind == OVERFLOW) // TBD - provide example of how OVERFLOW event is handled
                 {
                     continue;
                 }
@@ -235,12 +234,10 @@ public class WatchDir
                 Path name = ev.context();
                 Path child = dir.resolve(name);
 
-                // handle
-                if (kind == ENTRY_MODIFY)
+                if (kind == ENTRY_MODIFY) // handle the change
                 {
                     log.info("Modified "  + child);
-                    // skip timestamp modification
-                    if (Files.isRegularFile(child))
+                    if (Files.isRegularFile(child)) // skip timestamp modification
                     {
                         Long previouslyModified = lastModifiedByPath.get(child);
                         long lastModified = child.toFile().lastModified();
@@ -251,7 +248,8 @@ public class WatchDir
                         }
                         lastModifiedByPath.put(child, lastModified);
                     }
-                    onModify.accept(child);
+                    //onModify.accept(child);
+                    bModified = true;
                 }
 
                 // if directory is created, and watching recursively, then
@@ -266,11 +264,14 @@ public class WatchDir
                             registerAll(child);
                         }
                     }
-                    catch (IOException x)
+                    catch (IOException x) // ignore to keep sample readable
                     {
-                        // ignore to keep sample readable
                     }
                 }
+            }
+            if (bModified)
+            {
+                onModify.accept(bModified);
             }
 
             // reset key and remove from set if directory no longer accessible
