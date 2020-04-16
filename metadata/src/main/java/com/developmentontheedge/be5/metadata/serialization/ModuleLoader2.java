@@ -174,7 +174,7 @@ public class ModuleLoader2
             }
             if (dirty)
             {
-                logger.info ("Project is dirty, project urls = " + urls); 
+                logger.info ("Project is dirty, project urls = " + urls);
             } 
             loadAllProjects(urls, logger);
         }
