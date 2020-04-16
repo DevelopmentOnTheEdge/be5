@@ -162,11 +162,20 @@ public class ModuleLoader2
     private static synchronized void loadAllProjects(boolean dirty, List<URL> additionalUrls, ProcessController logger)
     {
         if (modulesMap != null && !dirty)
+        {
             return;
+        }
 
         try
         {
-            if (urls == null) urls = getProjectUrls(additionalUrls, logger);
+            if (urls == null)
+            {
+                urls = getProjectUrls(additionalUrls, logger);
+            }
+            if (dirty)
+            {
+                logger.info("Project is dirty, project urls = " + urls); 
+            } 
             loadAllProjects(urls, logger);
         }
         catch (IOException e)
