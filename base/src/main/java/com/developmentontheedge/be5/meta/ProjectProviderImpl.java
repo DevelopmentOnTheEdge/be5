@@ -13,9 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.logging.Logger;
 
 public class ProjectProviderImpl implements ProjectProvider
 {
+    private static final Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
+
     private Project project;
     private List<Runnable> callOnReload = new ArrayList<>();
 
@@ -48,6 +51,7 @@ public class ProjectProviderImpl implements ProjectProvider
     {
         if (dirty)
         {
+            log.info("On getting project dirty flag is detected.");
             Project oldProject = project;
             project = loadProject();
 
