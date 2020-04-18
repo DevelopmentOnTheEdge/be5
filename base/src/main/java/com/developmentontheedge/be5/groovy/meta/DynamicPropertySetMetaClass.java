@@ -59,6 +59,10 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             DynamicProperty prop = ((T) object).getProperty(property);
             if (prop != null)
             {
+                if (prop.getValue() instanceof DynamicPropertySet)
+                {
+                   return prop.getValue();
+                }
                 return prop;
             }
             throw e;
