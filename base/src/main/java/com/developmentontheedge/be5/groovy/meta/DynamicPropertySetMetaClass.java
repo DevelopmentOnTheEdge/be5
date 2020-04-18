@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass
+//public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass
+public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
 {
     public DynamicPropertySetMetaClass(Class<T> theClass)
     {
@@ -32,6 +33,35 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
     public Object getAt(DynamicPropertySet dps, String name)
     {
         return dps.getValue(name);
+    }
+
+    public Object getProperty(Object object, String property)
+    {
+        if (PropertyAccessHelper.isValueAccess(property))
+        {
+            return ((T) object).getValue(property.substring(1));
+        }
+        try
+        {
+            return super.getProperty(object, property);
+        }
+        catch (MissingPropertyException e)
+        {
+            if (PropertyAccessHelper.isPropertyAccess(property))
+            {
+                DynamicProperty prop = ((T) object).getProperty(property.substring(1));
+                if (prop != null)
+                {
+                    return prop;
+                }
+            }
+            DynamicProperty prop = ((T) object).getProperty(property);
+            if (prop != null)
+            {
+                return prop;
+            }
+            throw e;
+        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.groovy.meta;
 
 public class PropertyAccessHelper
 {
-
     private static final String PROPERTY_PREFIX = "_";
     private static final String VALUE_PREFIX = "$";
 
