@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.groovy.meta;
 
-import com.developmentontheedge.beans.DynamicProperty;
+//import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import groovy.lang.MissingPropertyException;
-
+//import groovy.lang.MissingPropertyException;
 
 //public class GDynamicPropertySetMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
 public class GDynamicPropertySetMetaClass<T extends DynamicPropertySet> extends DynamicPropertySetMetaClass
