@@ -12,6 +12,21 @@ public class StringUtils
         return (value == null) || (value).trim().length() == 0;
     }
 
+    public static boolean isNumeric(String value)
+    {
+        if (isEmpty(value))
+        {
+            return false;
+        }
+        //return value.matches( "[-+]?\\d*\\.?\\d+" );
+        return value.matches("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
+    }
+
+    public static String capitalize(String str)
+    {
+        return isEmpty(str) ? str : str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
     public static String join(Object[] array, String delimiter)
     {
         return join(Arrays.asList(array), delimiter);
