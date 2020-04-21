@@ -102,7 +102,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         assertEquals(OperationStatus.GENERATE, operation.getStatus());
 
-        assertEquals("{'name':'','value':''}",
+        assertEquals("{'name':'','value':'111'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 

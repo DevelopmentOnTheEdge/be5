@@ -18,13 +18,16 @@ public class EditOperation extends OperationSupport
     {
         DynamicPropertySet record = getRecordData(presetValues);
         DynamicPropertySet dps = (DynamicPropertySet) getParametersBean(presetValues, record);
-        if (context.getRecords().length == 1)
+        if (context.getRecords().length > 1)
         {
-            setValues(dps, record);
+            dps.forEach(p -> {
+                p.setCanBeNull(true);
+                p.setValue(null);
+            });
         }
         else
         {
-            dps.forEach(p -> p.setCanBeNull(true));
+            setValues(dps, record);
         }
         setValues(dps, presetValues);
         return dpsHelper.setOperationParams(dps, context.getParams());

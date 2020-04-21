@@ -42,10 +42,9 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     @Test
     public void generateForm()
     {
-        Map<String, Object> map = new HashMap<String, Object>(){{
-            put("name", "test1");
-            put("value", "2");
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "test1");
+        map.put("value", "2");
 
         ResourceData result = formGenerator.generate("testtable", "All records", "Insert", emptyMap(), map);
 
@@ -59,6 +58,71 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals("form/testtable/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
     }
 
+    @Test
+    public void getParametersEdit()
+    {
+        db.update("delete from testtableAdmin");
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 12);
+
+        Long id = db.one("select id from testtableAdmin limit 1");
+        assertNotNull(id);
+
+        ResourceData result = formGenerator.generate("testtableAdmin", "All records", "Edit",
+                Collections.singletonMap(OperationConstants.SELECTED_ROWS, id),
+                emptyMap());
+
+        assertEquals(FORM_ACTION, result.getType());
+
+        assertEquals("{'bean':{'values':{'name':'tableModelTest','value':'12'},'meta':{'/name':{'displayName':'name','columnSize':'30'},'/value':{'displayName':'value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':" + id + "},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
+                oneQuotes(jsonb.toJson(result.getAttributes())));
+        Map<String, Object> oparams = ((FormPresentation)result.getAttributes()).getOperationParams();
+        assertEquals(1, oparams.size());
+        assertEquals("_selectedRows_", oparams.keySet().iterator().next());
+        assertEquals("form/testtableAdmin/All records/Edit/_selectedRows_=" + oparams.values().iterator().next(), result.getLinks().get(RestApiConstants.SELF_LINK));
+    }
+
+    @Test
+    public void getParametersInsert()
+    {
+        ResourceData result = formGenerator.generate("testtableAdmin", "All records", "Insert",
+                emptyMap(),
+                emptyMap());
+
+        assertEquals(FORM_ACTION, result.getType());
+
+        assertEquals("{'bean':{'values':{'name':'','value':'111'},'meta':{'/name':{'displayName':'name','columnSize':'30'},'/value':{'displayName':'value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{'type':'modalForm'},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Добавить'}",
+                oneQuotes(jsonb.toJson(result.getAttributes())));
+        assertEquals("form/testtableAdmin/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
+    }
+
+    @Test
+    public void getParametersEdit2Records()
+    {
+        db.update("delete from testtableAdmin");
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 12);
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 13);
+
+        Long[] ids = db.longArray("select id from testtableAdmin limit 2");
+        assertEquals(2, ids.length);
+        Long id1 = ids[0];
+        Long id2 = ids[1];
+        assertNotNull(id1);
+        assertNotNull(id2);
+
+        ResourceData result = formGenerator.generate("testtableAdmin", "All records", "Edit",
+                Collections.singletonMap(OperationConstants.SELECTED_ROWS, ids),
+                emptyMap());
+
+        assertEquals(FORM_ACTION, result.getType());
+
+        assertEquals("{'bean':{'values':{'name':'','value':''},'meta':{'/name':{'displayName':'name','canBeNull':true,'columnSize':'30'},'/value':{'displayName':'value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':[" + id1 + "," + id2 + "]},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
+                oneQuotes(jsonb.toJson(result.getAttributes())));
+        Map<String, Object> oparams = ((FormPresentation)result.getAttributes()).getOperationParams();
+        assertEquals(1, oparams.size());
+        assertEquals("_selectedRows_", oparams.keySet().iterator().next());
+        assertEquals("form/testtableAdmin/All records/Edit/_selectedRows_=" + oparams.values().iterator().next(), result.getLinks().get(RestApiConstants.SELF_LINK));
+    }
+
     @Test(expected = Be5Exception.class)
     public void fileNotFoundError()
     {
@@ -68,10 +132,9 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     @Test
     public void executeForm()
     {
-        Map<String, Object> map = new HashMap<String, Object>(){{
-            put("name", "test1");
-            put("value", "2");
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "test1");
+        map.put("value", "2");
 
         ResourceData result = formGenerator.execute("testtable", "All records", "Insert", emptyMap(), map);
         assertEquals(OPERATION_RESULT, result.getType());
@@ -83,9 +146,8 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     @Test
     public void executeWithGenerateErrorInProperty()
     {
-        Map<String, Object> map = new HashMap<String, Object>(){{
-            put("name", "generateErrorInProperty");
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "generateErrorInProperty");
 
         ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", emptyMap(), map);
         FormPresentation formPresentation = (FormPresentation) result.getAttributes();
@@ -102,9 +164,8 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     @Test
     public void executeWithGenerateErrorWithTimeoutInProperty()
     {
-        Map<String, Object> map = new HashMap<String, Object>(){{
-            put("name", "generateErrorWithTimeout");
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "generateErrorWithTimeout");
 
         ResourceData result = formGenerator.execute("testtableAdmin", "All records", "ServerErrorProcessing", emptyMap(), map);
         OperationResultPresentation operationResultPresentation = (OperationResultPresentation) result.getAttributes();

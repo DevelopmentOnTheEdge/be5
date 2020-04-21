@@ -47,7 +47,7 @@ class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
         def rec = database.testtableAdmin[id]
 
         assertEquals "test", rec.$name
-        assertEquals null, rec.$value
+        assertEquals 111, rec.$value
     }
 
 }
