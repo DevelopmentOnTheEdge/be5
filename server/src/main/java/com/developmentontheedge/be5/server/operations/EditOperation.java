@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.databasemodel.util.DpsUtils.setValues;
@@ -17,7 +18,14 @@ public class EditOperation extends OperationSupport
     {
         DynamicPropertySet record = getRecordData(presetValues);
         DynamicPropertySet dps = (DynamicPropertySet) getParametersBean(presetValues, record);
-        setValues(dps, record);
+        if (context.getRecords().length == 1)
+        {
+            setValues(dps, record);
+        }
+        else
+        {
+            dps.forEach(p -> p.setCanBeNull(true));
+        }
         setValues(dps, presetValues);
         return dpsHelper.setOperationParams(dps, context.getParams());
     }
@@ -25,7 +33,7 @@ public class EditOperation extends OperationSupport
     protected DynamicPropertySet getRecordData(Map<String, Object> presetValues)
     {
         String entityName = getInfo().getEntityName();
-        return database.getEntity(entityName).get(context.getRecord());
+        return database.getEntity(entityName).get(context.getRecords()[0]);
     }
 
     protected Object getParametersBean(Map<String, Object> presetValues, DynamicPropertySet record)
@@ -39,8 +47,17 @@ public class EditOperation extends OperationSupport
     {
         DynamicPropertySet entityParams = dpsHelper.filterEntityParams(getInfo().getEntity(),
                 (DynamicPropertySet) parameters);
-        database.getEntity(getInfo().getEntityName()).set(context.getRecord(), entityParams);
-
+        if (context.getRecords().length == 1)
+        {
+            database.getEntity(getInfo().getEntityName()).set(context.getRecord(), entityParams);
+        }
+        else
+        {
+            Map<String, Object> values = new HashMap<>(entityParams.asMap());
+            entityParams.forEach(p -> { if (p.getValue() == null) values.remove(p.getName()); });
+            if (values.size() > 0)
+                database.getEntity(getInfo().getEntityName()).setIds(context.getRecords(), values);
+        }
         setResult(OperationResult.finished());
     }
 }

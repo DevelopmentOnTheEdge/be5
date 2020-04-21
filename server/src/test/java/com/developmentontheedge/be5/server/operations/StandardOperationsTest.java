@@ -28,6 +28,7 @@ import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -215,6 +216,35 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 "EditName", null, 12L);
     }
 
+    @Test
+    public void editInvokeEmptyStringToNull2Records()
+    {
+        executeEditWithValues2Records("{'name':'EditName','value':''}");
+
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ? WHERE ID IN (?, ?)",
+                "EditName", 12L, 13L);
+    }
+
+    @Test
+    public void editInvokeEmptyStringToNullNullable2Records()
+    {
+        executeEditWithValues2Records("{'name':'','value':'1'}");
+
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET value = ? WHERE ID IN (?, ?)",
+                1, 12L, 13L);
+    }
+
+    @Test
+    public void editInvokeEmptyAllNulls2Records()
+    {
+        executeEditWithValues2Records("{'name':'','value':''}");
+
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
+        verifyNoMoreInteractions(DbServiceMock.mock);
+    }
+
     private OperationResult executeEditWithValues(String values)
     {
         when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
@@ -229,6 +259,22 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtableAdmin/All records/_selectedRows_=12",
+                ((FrontendAction[])result.getDetails())[0].getValue());
+
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
+
+        return result;
+    }
+
+    private OperationResult executeEditWithValues2Records(String values)
+    {
+        Operation operation = createOperation("testtableAdmin", "All records", "Edit", "12,13");
+
+        OperationResult result = executeOperation(operation, doubleQuotes(values)).getSecond();
+
+        assertEquals(OperationStatus.FINISHED, result.getStatus());
+        assertEquals(1, ((FrontendAction[])result.getDetails()).length);
+        assertEquals("table/testtableAdmin/All records/_selectedRows_=12,13",
                 ((FrontendAction[])result.getDetails())[0].getValue());
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));

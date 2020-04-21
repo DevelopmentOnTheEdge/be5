@@ -189,6 +189,10 @@ public interface EntityModel<T>
      */
     int set(T id, DynamicPropertySet values);
 
+    int setIds(T[] ids, DynamicPropertySet values);
+
+    int setIds(T[] ids, Map<String, ?> values);
+
     int setBy(Map<String, ?> values, Map<String, ?> conditions);
 
     int setBy(DynamicPropertySet values, Map<String, ?> conditions);

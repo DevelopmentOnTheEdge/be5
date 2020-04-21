@@ -261,6 +261,24 @@ public class  EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
+    public int setIds(T[] ids, Map<String, ?> values)
+    {
+        Objects.requireNonNull(ids);
+        Objects.requireNonNull(values);
+        Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values);
+        return sqlHelper.updateIn(entity.getName(), getPrimaryKeyName(), ids, finalValues);
+    }
+
+    @Override
+    public int setIds(T[] ids, DynamicPropertySet dps)
+    {
+        Objects.requireNonNull(ids);
+        Objects.requireNonNull(dps);
+
+        return setIds(ids, DpsUtils.toLinkedHashMap(dps));
+    }
+
+    @Override
     public int set(T id, DynamicPropertySet dps)
     {
         Objects.requireNonNull(id);
@@ -305,7 +323,7 @@ public class  EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(ids);
         if (ids.length == 0) return 0;
 
-        if (columnName.equals(getPrimaryKeyName())) checkPrimaryKey(ids);
+        if (columnName.equals(getPrimaryKeyName())) checkPrimaryKeys(ids);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
@@ -389,12 +407,13 @@ public class  EntityModelBase<T> implements EntityModel<T>
         }
     }
 
-    private void checkPrimaryKey(T[] ids)
+    private T[] checkPrimaryKeys(T[] ids)
     {
         for (T id : ids)
         {
             checkPrimaryKey(id);
         }
+        return ids;
     }
 
     private T checkPrimaryKey(T id)
