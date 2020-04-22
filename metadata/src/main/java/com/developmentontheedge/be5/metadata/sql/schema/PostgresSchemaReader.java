@@ -27,7 +27,7 @@ public class PostgresSchemaReader extends DefaultSchemaReader
 
     private static final Pattern DEFAULT_DATE_PATTERN =
             Pattern.compile("^to_date\\('(\\d+\\-\\d+\\-\\d+)'::text, 'YYYY-MM-DD'::text\\)$");
-    private static final String[] SUFFICES = {"::character varying", "::date", "::text", "::integer"};
+    private static final String[] SUFFICES = {"::character varying", "::bpchar", "::date", "::text", "::integer"};
 
     private static final Pattern ENUM_VALUES_PATTERN = Pattern.compile("\'(.+?)\'::(character varying|text)");
 
