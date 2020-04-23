@@ -119,7 +119,7 @@ class PropertiesToRowTransformer
 //          value = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, userInfo.getLocale())
 //                    .format(adjustForUsersTimeZone((java.sql.Timestamp) value, userInfo));
 //          simple variant
-//          TODO it's only java.sql.Timestamp property type, but most timestamp file uses formated strings in view
+//          TODO it's only for java.sql.Timestamp property type, but most timestamp field uses formated as strings in views
 //          value = adjustForUsersTimeZone((java.sql.Timestamp) value, userInfo);
             return timestampFormatter.format(value);
         }
