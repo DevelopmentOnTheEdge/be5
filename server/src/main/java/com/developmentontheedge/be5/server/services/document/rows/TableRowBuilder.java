@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.model.table.CellModel;
 import com.developmentontheedge.be5.server.model.table.ColumnModel;
@@ -102,7 +103,8 @@ public class TableRowBuilder
                                  PropertiesToRowTransformer transformer)
             throws AssertionError
     {
-        List<RawCellModel> cells = transformer.collectCells(properties); // can contain hidden cells
+        UserInfo userInfo = userInfoProvider.getLoggedUser();
+        List<RawCellModel> cells = transformer.collectCells(properties, userInfo); // can contain hidden cells
         List<CellModel> processedCells = processCells(cells); // only visible cells
 
         String rowId = transformer.getRowId(properties);
