@@ -51,6 +51,40 @@ class OperationServiceImplTest extends OperationsSqlMockProjectTest
         assertArrayEquals([1, "2"] as Object[], dps.asMap().get("test6"))
     }
 
+    @Test
+    void replaceValuesToStringDPSDigitAndDate() {
+        def dps = getDps(new DynamicPropertySetSupport(), [
+                test1: getDps(new DynamicPropertySetSupport(),
+                        [
+                                test2: "1",
+                                test3: 1,
+                                test4: 1L,
+                                test5: 1.1,
+                                test6: new java.sql.Date(123123123123)
+                        ]),
+        ])
+
+//        new OperationServiceImpl(null, null).replaceValuesToString(dps)
+//        assertEquals([test1:getDps(new DynamicPropertySetSupport(),[dps]),], dps.asMap());
+
+        new OperationServiceImpl(null, null).replaceValuesToString(dps)
+        assertEquals([
+                test2: "1",
+                test3: "1",
+                test4: "1",
+                test5: "1.1",
+                test6: new java.sql.Date(123123123123).toString()
+        ], ((DynamicPropertySet)dps.getValue("test1")).asMap())
+
+
+//        dps = getDps(new DynamicPropertySetSupport(), [
+//                test6: ([1, "2"] as Object[]),
+//        ])
+//
+//        new OperationServiceImpl(null, null).replaceValuesToString(dps)
+//        assertArrayEquals([1, "2"] as Object[], dps.asMap().get("test7"))
+    }
+
     static <T extends DynamicPropertySet> T getDps(T dps, Map<String, ?> nameValues)
     {
         for (Map.Entry<String, ?> entry : nameValues.entrySet())

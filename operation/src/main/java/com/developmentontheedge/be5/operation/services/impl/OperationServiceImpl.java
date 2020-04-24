@@ -108,13 +108,18 @@ public class OperationServiceImpl implements OperationService
         {
             for (DynamicProperty property : (DynamicPropertySet) parameters)
             {
+                if (property.getValue() instanceof DynamicPropertySet)
+                {
+                    replaceValuesToString(property.getValue());
+                }
                 if (property.getValue() == null)
                 {
                     property.setValue("");
                 }
                 else if (property.getValue().getClass() != String.class &&
                         property.getValue().getClass() != Boolean.class &&
-                        !(property.getValue() instanceof Object[]))
+                        !(property.getValue() instanceof Object[]) &&
+                        !(property.getValue() instanceof DynamicPropertySet))
                 {
                     property.setValue(property.getValue().toString());
                 }
