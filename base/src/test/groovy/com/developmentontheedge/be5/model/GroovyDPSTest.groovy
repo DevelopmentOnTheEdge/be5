@@ -39,6 +39,9 @@ class GroovyDPSTest
             GROUP_ID = 1
             GROUP_NAME = "Test"
             GROUP_CLASSES = "col-md-8"
+            TAB_ID = 1
+            TAB_NAME = "tab 1"
+            TAB_CLASSES = "col-md-9"
             VALIDATION_RULES = new TestRange("1", "10")
             EXTRA_ATTRS = [["search": "all"]]
             COLUMN_SIZE_ATTR = 10
@@ -73,7 +76,7 @@ class GroovyDPSTest
 
         assertEquals("newValue", dps["input3"])
 
-        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue','input4':'input4value','parent1':{'innerInput1':'Inner input 1'}},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'rawValue':true,'groupId':'1','groupName':'Test','groupClasses':'col-md-8','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','inputSize':'10','placeholder':'Select...','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'max':'10','min':'1'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'},'/input4':{'displayName':'Input 4'},'/parent1':{'displayName':'Parent 1','type':'GDynamicPropertySetSupport'},'/parent1/innerInput1':{'displayName':'innerInput1','parent':'parent1'}},'order':['/reasonMulti','/input2','/input3','/input4','/parent1','/parent1/innerInput1']}",
+        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue','input4':'input4value','parent1':{'innerInput1':'Inner input 1'}},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'rawValue':true,'groupId':'1','groupName':'Test','groupClasses':'col-md-8','tabId':'1','tabName':'tab 1','tabClasses':'col-md-9','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','inputSize':'10','placeholder':'Select...','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'max':'10','min':'1'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'},'/input4':{'displayName':'Input 4'},'/parent1':{'displayName':'Parent 1','type':'GDynamicPropertySetSupport'},'/parent1/innerInput1':{'displayName':'innerInput1','parent':'parent1'}},'order':['/reasonMulti','/input2','/input3','/input4','/parent1','/parent1/innerInput1']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 

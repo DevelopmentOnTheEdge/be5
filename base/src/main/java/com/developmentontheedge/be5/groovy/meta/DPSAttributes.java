@@ -128,6 +128,21 @@ public class DPSAttributes
         map.put("GROUP_CLASSES", value);
     }
 
+    public void setTAB_ID(Object value)
+    {
+        map.put("TAB_ID", value);
+    }
+
+    public void setTAB_NAME(String value)
+    {
+        map.put("TAB_NAME", value);
+    }
+
+    public void setTAB_CLASSES(String value)
+    {
+        map.put("TAB_CLASSES", value);
+    }
+
     public void setDEFAULT_VALUE(Object value)
     {
         map.put("DEFAULT_VALUE", value);
