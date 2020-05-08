@@ -158,11 +158,11 @@
             <artifactId>h2</artifactId>
             <version>1.4.193</version>
           </dependency>
-          <dependency>
+          <!--dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.0.0</version>
-          </dependency>
+          </dependency-->
         </dependencies>
       </plugin>
 
