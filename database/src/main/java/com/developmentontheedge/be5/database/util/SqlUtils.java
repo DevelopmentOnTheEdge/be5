@@ -12,8 +12,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 
-import org.postgresql.util.PGobject;
-
 public class SqlUtils
 {
     public static <T> T getSqlValue(Class<T> clazz, ResultSet rs, int idx)
@@ -101,27 +99,36 @@ public class SqlUtils
             {
                 return null;
             }
-            else if (String.class.equals(value.getClass()))
+
+            Class cls = value.getClass();
+ 
+            if( String.class.equals( cls ) )
             {
                 return (String) value;
             }
-            else if (byte[].class.equals(value.getClass()))
+            else if( byte[].class.equals( cls ) )
             {
-                return new String((byte[]) value, StandardCharsets.UTF_8);
+                return new String( (byte[])value, StandardCharsets.UTF_8 );
             }
-            else if (value instanceof Clob)
+            else if( value instanceof Clob )
             {
                 Clob clob = (Clob) value;
                 return clob.getSubString(1, (int) clob.length());
             }
-            else if (value instanceof PGobject)
+            //else if( value instanceof org.postgresql.util.PGobject )
+            //{
+            //    return ( ( org.postgresql.util.PGobject )pgobject ).getValue();
+            //}
+            else if( cls.getName().startsWith( "org.postgresql.util.PG" ) ||
+                     cls.getName().startsWith( "org.postgresql.geometric.PG" )
+                   )
             {
-                PGobject pgobject = (PGobject) value;
-                return pgobject.getValue();
+                 java.lang.reflect.Method getValue = cls.getMethod( "getValue", new Class[ 0 ] );
+                 return ( String )getValue.invoke( value, new Object[ 0 ] ); 
             }
             return (String) value;
         }
-        catch (SQLException e)
+        catch (SQLException|NoSuchMethodException|IllegalAccessException|java.lang.reflect.InvocationTargetException e)
         {
             throw new RuntimeException(e);
         }
