@@ -26,8 +26,9 @@ public class QueryBuilderDbTest extends ServerBe5ProjectDBTest
         component.executeRaw(list, "EXPLAIN ANALYZE select * from testtable");
         assertEquals(1, list.size());
         assertEquals("table", list.get(0).getType());
-        assertTrue(((RowModel) ((TablePresentation) list.get(0).getAttributes())
-                .getRows().get(0)).getCells().get(0).getContent().toString().startsWith(
+        String res = ((RowModel) ((TablePresentation) list.get(0).getAttributes())
+                .getRows().get(0)).getCells().get(0).getContent().toString();
+        assertTrue( "Wrong result = " + res, res.startsWith(
                 "SELECT\n" +
                 "    TESTTABLE.ID,\n" +
                 "    TESTTABLE.NAME,\n" +
