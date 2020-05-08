@@ -30,10 +30,10 @@ public class QueryBuilderDbTest extends ServerBe5ProjectDBTest
                 .getRows().get(0)).getCells().get(0).getContent().toString();
         assertTrue( "Wrong result = " + res, res.startsWith(
                 "SELECT\n" +
-                "    TESTTABLE.ID,\n" +
-                "    TESTTABLE.NAME,\n" +
-                "    TESTTABLE.VALUE\n" +
-                "FROM PUBLIC.TESTTABLE\n" +
+                "    \"PUBLIC\".\"TESTTABLE\".\"ID\",\n" +
+                "    \"PUBLIC\".\"TESTTABLE\".\"NAME\",\n" +
+                "    \"PUBLIC\".\"TESTTABLE\".\"VALUE\"\n" +
+                "FROM \"PUBLIC\".\"TESTTABLE\"\n" +
                 "    /* PUBLIC.TESTTABLE.tableScan */\n" +
                 "    /* scanCount: "));
     }
