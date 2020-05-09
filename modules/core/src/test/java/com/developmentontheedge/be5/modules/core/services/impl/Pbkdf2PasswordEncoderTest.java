@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class Pbkdf2PasswordEncoderTest
 {
     @Test
-    @Ignore 
+    //@Ignore 
     public void check() throws Exception
     {
         Pbkdf2PasswordEncoder authentication = new Pbkdf2PasswordEncoder( 1, 8 );
