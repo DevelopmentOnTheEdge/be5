@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import javax.inject.Inject;
 

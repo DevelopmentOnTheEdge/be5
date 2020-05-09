@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.util.Base64;
 
