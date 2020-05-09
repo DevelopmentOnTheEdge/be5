@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class CryptoLoginService implements LoginService
 {
-    private static final Pbkdf2PasswordEncoder passwordEncoder;
+    private Pbkdf2PasswordEncoder passwordEncoder;
 
     protected final DbService db;
 

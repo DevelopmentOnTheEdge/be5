@@ -9,8 +9,8 @@ import java.util.Base64;
 public class Pbkdf2PasswordEncoder
 {
     private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
-    private static final int iterations = 65536;
-    private static final int desiredKeyLen = 128;
+    private static int iterations = 65536;
+    private static int desiredKeyLen = 128;
 
     public Pbkdf2PasswordEncoder()
     {
