@@ -648,7 +648,7 @@ public class DateUtils
      */
     public static java.sql.Timestamp currentTimestamp()
     {
-        return new java.sql.Timestamp(System.currentTimeMillis());
+        return new java.sql.Timestamp( System.currentTimeMillis() );
     }
 
     /**
@@ -658,7 +658,8 @@ public class DateUtils
      */
     public static java.sql.Date currentDate()
     {
-        return new java.sql.Date(System.currentTimeMillis());
+        java.sql.Date d = new java.sql.Date( System.currentTimeMillis() );
+        return ( java.sql.Date )makeDate( getYear( d ), getMonth( d ), getDay( d ) );
     }
 
     public static <T extends Date> T max(T a, T b)
