@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class CryptoLoginService implements LoginService
 {
-    private Pbkdf2PasswordEncoder passwordEncoder;
+    private static final Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
     protected final DbService db;
 
@@ -17,13 +17,6 @@ public class CryptoLoginService implements LoginService
     public CryptoLoginService(DbService db)
     {
         this.db = db;
-        passwordEncoder = new Pbkdf2PasswordEncoder();
-    }
-
-    public CryptoLoginService(DbService db, int iterations, int desiredKeyLen )
-    {
-        this.db = db;
-        passwordEncoder = new Pbkdf2PasswordEncoder( iterations, desiredKeyLen );
     }
 
     @Override

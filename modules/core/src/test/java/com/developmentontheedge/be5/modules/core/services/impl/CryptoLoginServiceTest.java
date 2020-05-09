@@ -22,7 +22,7 @@ public class CryptoLoginServiceTest extends CoreBe5ProjectDBTest
     @Before
     public void setUp()
     {
-        loginService = new CryptoLoginService( db, 1, 8 );
+        loginService = new CryptoLoginService( db );
         if (database.getEntity("users").count(ImmutableMap.of("user_name", user_name)) == 0)
         {
             database.getEntity("users").add(ImmutableMap.of(
