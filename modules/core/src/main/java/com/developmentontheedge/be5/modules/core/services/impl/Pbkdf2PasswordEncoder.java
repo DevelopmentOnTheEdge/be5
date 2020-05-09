@@ -12,6 +12,16 @@ public class Pbkdf2PasswordEncoder
     private static final int iterations = 65536;
     private static final int desiredKeyLen = 128;
 
+    public Pbkdf2PasswordEncoder()
+    {
+    }
+
+    public Pbkdf2PasswordEncoder( int iterations, int desiredKeyLen )
+    {
+        this.iterations = iterations;
+        this.desiredKeyLen = desiredKeyLen;
+    }
+
     public String encode(char[] rawPassword) throws Exception
     {
         byte[] salt = getSalt();
