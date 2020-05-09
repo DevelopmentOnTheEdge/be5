@@ -53,7 +53,10 @@ public class Pbkdf2PasswordEncoder
 
     private static byte[] getSalt() throws NoSuchAlgorithmException
     {
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        // according to suggestion
+        // https://tersesystems.com/blog/2015/12/17/the-right-way-to-use-securerandom/ 
+        //SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        SecureRandom sr = new SecureRandom();
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
