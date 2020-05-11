@@ -108,7 +108,9 @@
     <module name="EmptyForIteratorPad"/>
     <module name="GenericWhitespace"/>
     <module name="MethodParamPad"/>
-    <module name="NoWhitespaceAfter"/>
+    <module name="NoWhitespaceAfter">
+       <property name="tokens" value=" INC, DEC, UNARY_MINUS, UNARY_PLUS, BNOT, LNOT, DOT"/>
+    </module>
     <module name="NoWhitespaceBefore"/>
     <module name="ParenPad">
        <property name="tokens" value="ANNOTATION, ANNOTATION_FIELD_DEF,
