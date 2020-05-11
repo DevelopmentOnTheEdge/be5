@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.config.CoreUtils;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -858,5 +859,33 @@ public class Utils
             }
         }
         return text.toString();
+    }
+
+    public static String getUploadDir( CoreUtils config ) throws java.io.IOException
+    {
+        String uploadDir = config.getSystemSetting( "UPLOAD_DIR" );
+        if ( uploadDir != null )
+        {
+            File dir = new File( uploadDir );
+            if ( !dir.exists() || !dir.isDirectory() )
+            {
+                uploadDir = null;
+            }
+            else
+            {
+                if( uploadDir.startsWith( "/" ) )
+                {
+                    return uploadDir;
+                }
+            }
+        }
+
+        if ( uploadDir == null )
+            uploadDir = System.getProperty( "java.io.tmpdir" );
+        if ( uploadDir == null )
+        {
+            uploadDir = System.getProperty( "catalina.home" ) + "/temp";
+        }
+        return new File( uploadDir ).getCanonicalPath();
     }
 }
