@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.util;
+package com.developmentontheedge.be5.util;
 
 import java.util.Arrays;
 import java.util.Collection;

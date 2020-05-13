@@ -24,7 +24,6 @@ import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
-import com.developmentontheedge.be5.metadata.util.StringUtils;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
@@ -414,9 +413,9 @@ public class AppSync extends ScriptSupport<AppSync>
 
                 String diffSql = dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
                         : newScheme.getDiffDdl(oldScheme, sqlExecutor);
-                if (!StringUtils.isEmpty(diffSql))
+                if( diffSql != null && diffSql.trim().length() > 0 )
                 {
-                    sb.append(diffSql);
+                    sb.append( diffSql );
                 }
             }
             else
