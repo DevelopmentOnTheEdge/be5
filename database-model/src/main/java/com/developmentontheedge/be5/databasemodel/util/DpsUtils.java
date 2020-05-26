@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DpsUtils
 {
@@ -65,6 +66,31 @@ public class DpsUtils
             }
         }
         return dps;
+    }
+
+    public static Object getTagName(DynamicProperty property, Object value)
+    {
+        return getTagName( property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR), value );
+    }
+
+    public static Object getTagName(Object tagsObject, Object value)
+    {
+        if (tagsObject == null || value == null) return null;
+
+        if (tagsObject instanceof Object[][])
+        {
+            Object[][] tags = (Object[][]) tagsObject;
+            Optional<Object[]> tag = Arrays.stream(tags)
+                    .filter(item -> item[0].toString().equals(value.toString())).findFirst();
+            return tag.isPresent() ? tag.get()[1] : null;
+        }
+        else if (tagsObject instanceof Object[])
+        {
+            Object[] tags = (Object[]) tagsObject;
+            return Arrays.stream(tags)
+                    .filter(item -> item.toString().equals(value.toString())).findFirst().get();
+        }
+        return null;
     }
 
     private static boolean isValueInTagsIfExistsTags(DynamicProperty property, Object value)
