@@ -14,8 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.GLUE_COLUMN_PREFIX;
 
@@ -26,8 +24,6 @@ class PropertiesToRowTransformer
 {
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-    private static final Logger log = Logger.getLogger(PropertiesToRowTransformer.class.getName());
 
     /**
      * Returns a row identifier or empty string if the given properties contains no identifier.
@@ -86,20 +82,8 @@ class PropertiesToRowTransformer
         Object value = property.getValue();
         if (value == null) return null;
 
-        if ("birthDate".equalsIgnoreCase(property.getName()))
-        {
-            log.log(Level.WARNING, "toGMTString=" + ((java.sql.Date) value).toGMTString());
-            log.log(Level.WARNING, "type=" + property.getType());
-            log.log(Level.WARNING, "time=" + ((java.sql.Date) value).getTime());
-            log.log(Level.WARNING, "toString=" + value);
-        }
-
         if (java.sql.Date.class.equals(property.getType()))
         {
-            if ("birthDate".equalsIgnoreCase(property.getName()))
-            {
-                log.log(Level.WARNING, "formatedValue=" + dateFormatter.format(value));
-            }
             return dateFormatter.format(value);
         }
 
