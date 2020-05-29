@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.validation;
 
+import com.developmentontheedge.be5.operation.validation.ValidationRules.DefaultRules;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import org.junit.Test;
 
@@ -58,6 +59,14 @@ public class ValidationRulesTest extends BaseTestUtils
         test = pattern("[A-Za-zА-Яа-яЁё]", "Enter only en/ru letters");
         assertEquals("{'attr':'[A-Za-zА-Яа-яЁё]','customMessage':'Enter only en/ru letters','type':'pattern'}",
                 oneQuotes(jsonb.toJson(test)));
+    }
+
+    @Test
+    public void defaultRulesTest()
+    {
+        Rule test = DefaultRules.ipPattern.getRule();
+        assertEquals("{'attr':'^([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])$'," +
+                "'customMessage':'IP mask 255.255.255.255','type':'pattern'}", oneQuotes(jsonb.toJson(test)));
     }
 
     @Test

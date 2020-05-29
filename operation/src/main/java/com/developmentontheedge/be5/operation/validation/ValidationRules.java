@@ -3,6 +3,27 @@ package com.developmentontheedge.be5.operation.validation;
 
 public class ValidationRules
 {
+    public static enum DefaultRules
+    {
+        ipPattern( pattern("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
+                "IP mask 255.255.255.255") );
+
+        private Rule rule;
+
+        DefaultRules( Rule rule )
+        {
+            this.rule = rule;
+        }
+
+        Rule getRule()
+        {
+            return rule;
+        }
+    }
+
     public static Rule range(long min, long max)
     {
         return new Rule("range", new Range(min, max));
