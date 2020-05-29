@@ -94,7 +94,7 @@ public class MenuHelper
         return out;
     }
 
-    private void collectEntityContent(Entity entity, String language, List<String> roles, boolean withIds,
+    protected void collectEntityContent(Entity entity, String language, List<String> roles, boolean withIds,
                                       boolean withInvisible, List<RootNode> out)
     {
         List<Query> queries = meta.getQueries(entity, roles);
