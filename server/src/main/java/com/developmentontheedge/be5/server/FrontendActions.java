@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server;
 
+import com.developmentontheedge.be5.server.controllers.MenuController.MenuResponse;
 import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.server.model.UserInfoModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -29,6 +30,7 @@ public interface FrontendActions
     String DOWNLOAD_OPERATION = "DOWNLOAD_OPERATION";
     String REFRESH_DOCUMENT = "REFRESH_DOCUMENT";
     String REFRESH_PARENT_DOCUMENT = "REFRESH_PARENT_DOCUMENT";
+    String REFRESH_MENU = "REFRESH_MENU";
 
     FrontendAction GO_BACK_ACTION = new FrontendAction(GO_BACK, null);
     FrontendAction CLOSE_MAIN_MODAL_ACTION = new FrontendAction(CLOSE_MAIN_MODAL, null);
@@ -89,6 +91,11 @@ public interface FrontendActions
     static FrontendAction refreshParentDocument()
     {
         return REFRESH_PARENT_DOCUMENT_ACTION;
+    }
+
+    static FrontendAction refreshMenu(MenuResponse menuResponse)
+    {
+        return new FrontendAction(REFRESH_MENU, menuResponse);
     }
 
     static FrontendAction redirect(String url)
