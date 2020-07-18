@@ -190,7 +190,7 @@ public class DbServiceImpl implements DbService
         }
         catch (SQLException e)
         {
-            throw new RuntimeSqlException("Error on run query", e);
+            throw new RuntimeSqlException("Error executing query", e);
         }
         finally
         {
