@@ -509,11 +509,11 @@ public class ModuleLoader2
                 if (Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
                 {
                     pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
-                    logger.info("Added path for hot reload -> " + entry.getKey() + ":" + entry.getValue());
+                    logger.info("dev.yaml: Added path for hot reload -> " + entry.getKey() + ":" + entry.getValue());
                 }
                 else
                 {
-                    logger.error("Error path in dev.yaml for " + entry.getKey());
+                    logger.error("dev.yaml: Path not exists for '" + entry.getKey() + "'");
                 }
             }
         }
