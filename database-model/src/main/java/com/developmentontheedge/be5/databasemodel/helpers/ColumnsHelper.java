@@ -118,7 +118,7 @@ public class ColumnsHelper
             if (!column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
                     && !values.containsKey(column.getName()))
             {
-                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("'\n");
+                errorMsg.append("DPS does not contain notNull column '").append(column.getName()).append("'\n");
             }
         }
 
@@ -126,7 +126,7 @@ public class ColumnsHelper
 
         if (!errorMsg.toString().isEmpty())
         {
-            throw Be5Exception.internal("Dps columns errors for modelElements '" + entity.getName() + "'\n" + errorMsg);
+            throw Be5Exception.internal("DPS columns errors for modelElements '" + entity.getName() + "'\n" + errorMsg);
         }
     }
 }
