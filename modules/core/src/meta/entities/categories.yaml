@@ -15,7 +15,7 @@ categories:
         type: VARCHAR(100)
         canBeNull: true
     - name:
-        type: VARCHAR(1000)
+        type: VARCHAR(255)
     - parentID:
         type: KEYTYPE
         canBeNull: true

@@ -184,7 +184,7 @@ public class TableDefTest
         createColumn(def2, "type", "ENUM(a,b,c)", false);
         def.getProject().setDatabaseSystem(Rdbms.ORACLE);
         def2.getProject().setDatabaseSystem(Rdbms.ORACLE);
-        assertEquals("ALTER TABLE TEST DROP COLUMN NAME;\n" + 
+        assertEquals("Uexpected:\n" + def2.getDiffDdl(def, null), "ALTER TABLE TEST DROP COLUMN NAME;\n" + 
                 "ALTER TABLE TEST ADD ID VARCHAR2(15 CHAR) PRIMARY KEY;\n" + 
                 "ALTER TABLE TEST ADD NAME VARCHAR2(20 CHAR);\n"
                 , def2.getDiffDdl(def, null));

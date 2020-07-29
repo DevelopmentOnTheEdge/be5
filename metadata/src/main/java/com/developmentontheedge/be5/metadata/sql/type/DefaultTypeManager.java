@@ -106,6 +106,7 @@ public class DefaultTypeManager implements DbmsTypeManager
         {
             sb.append(' ').append(getAutoIncrementClause(column));
         }
+        //System.out.println( "-------" + column.getName() + ": " + column.getDefaultValue() );
         if (column.getDefaultValue() != null)
         {
             String defaultValue = getDefaultValue(column);

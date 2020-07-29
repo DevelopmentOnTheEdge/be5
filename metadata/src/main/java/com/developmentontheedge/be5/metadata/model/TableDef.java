@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.TreeMap;
 
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BOOL;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CHAR;
@@ -30,6 +32,14 @@ import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_DEC
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_ENUM;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UNKNOWN;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_VARCHAR;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BIGINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UBIGINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_DATETIME;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_TIMESTAMP;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_INT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_SMALLINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_TEXT;
 
 public class TableDef extends BeVectorCollection<BeModelElement> implements DdlElement
 {
@@ -258,8 +268,8 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
     private String getIndicesDiff(TableDef def, Rdbms dbms, DbmsTypeManager typeManager)
     {
         StringBuilder sb = new StringBuilder();
-        Map<String, IndexDef> oldIndexNames = new HashMap<>();
-        Map<String, IndexDef> preservedIndices = new HashMap<>();
+        Map<String, IndexDef> oldIndexNames = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
+        Map<String, IndexDef> preservedIndices = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
         for (IndexDef oldIndex : def.getIndices().getAvailableElements())
         {
             if (!typeManager.isFunctionalIndexSupported() && oldIndex.isFunctional())
@@ -298,9 +308,10 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             throws ExtendedSqlException
     {
         StringBuilder sb = new StringBuilder();
-        Map<String, ColumnDef> oldColumnNames = new HashMap<>();
-        Map<String, ColumnDef> preservedColumns = new HashMap<>();
-        Map<String, ColumnDef> knownOldNames = new HashMap<>();
+        Map<String, ColumnDef> oldColumnNames = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
+        Map<String, ColumnDef> preservedColumns = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
+        Map<String, ColumnDef> knownOldNames = new TreeMap<>( String.CASE_INSENSITIVE_ORDER );
+
         boolean hasOldColumn = false;
         for (ColumnDef oldColumn : def.getColumns().getAvailableElements())
         {
@@ -369,20 +380,38 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             String columnName = typeManager.normalizeIdentifier(column.getName());
             String columnDef = typeManager.getColumnDefinitionClause(column);
             ColumnDef oldColumn = preservedColumns.get(columnName);
+
             if (oldColumn != null)
             {
-                ColumnDef oldColumnNewName = column.getName().equals(oldColumn.getName()) ? oldColumn :
+                ColumnDef oldColumnNewName = column.getName().equalsIgnoreCase(oldColumn.getName()) ? oldColumn :
                         (ColumnDef) oldColumn.clone(oldColumn.getOrigin(), column.getName());
                 String oldColumnDef = typeManager.getColumnDefinitionClause(oldColumnNewName);
+
                 String oldTriggers = typeManager.getColumnTriggerDefinition(oldColumnNewName);
                 String newTriggers = typeManager.getColumnTriggerDefinition(column);
-                if (!oldTriggers.equals(newTriggers))
+                if (!oldTriggers.equalsIgnoreCase(newTriggers))
                 {
                     sb.append(typeManager.getDropTriggerDefinition(oldColumnNewName));
                     sb.append(typeManager.getColumnTriggerDefinition(column));
                 }
-                if (oldColumnDef.equals(columnDef))
+
+                if (oldColumnDef.equalsIgnoreCase(columnDef))
+                {
                     continue;
+                }
+
+                // ignore timestamps in database while we have datetimes 
+                if( DatabaseConstants.CREATION_DATE_COLUMN_NAME.equalsIgnoreCase( column.getName() ) ||
+                    DatabaseConstants.MODIFICATION_DATE_COLUMN_NAME.equalsIgnoreCase( column.getName() ) )
+                {
+                    SqlColumnType oldType = oldColumn.getType();
+                    SqlColumnType type = column.getType();
+                    if( oldType.getTypeName().equals(TYPE_TIMESTAMP) && type.getTypeName().equals(TYPE_DATETIME) )
+                    {
+                        continue;
+                    }
+                }
+
                 if (getProject().getDebugStream() != null)
                 {
                     getProject().getDebugStream().println("Table " + getEntityName() + ": column " +
@@ -390,6 +419,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                     getProject().getDebugStream().println("- old: " + oldColumnDef);
                     getProject().getDebugStream().println("- new: " + columnDef);
                 }
+
                 if (isSafeTypeUpdate(oldColumn, column, typeManager, sql)
                         && oldColumn.isPrimaryKey() == column.isPrimaryKey()
                         && oldColumn.isAutoIncrement() == column.isAutoIncrement())
@@ -398,17 +428,29 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                         sb.append(typeManager.getAlterColumnStatements(column, oldColumnNewName));
                     continue;
                 }
+
                 addDropColumnStatements(typeManager, oldColumnNewName, sb, dangerousOnly);
             }
+
             if (column.getDefaultValue() == null && !column.isCanBeNull() && !column.isAutoIncrement())
-            {
+            {                       
                 ColumnDef columnWithDefault = (ColumnDef) column.clone(column.getOrigin(), column.getName());
-                if (column.getType().doesSupportGeneratedKey())
+                if( oldColumn != null && oldColumn.getDefaultValue() != null )
+                {
+                    columnWithDefault.setDefaultValue( oldColumn.getDefaultValue() );
+                }
+                else if (column.getType().doesSupportGeneratedKey())
+                {   
                     columnWithDefault.setDefaultValue("0");
+                }
                 else if (column.getType().isDateTime())
+                {
                     columnWithDefault.setDefaultValue("'1970/01/01 00:00:00'");
+                }
                 else
+                {
                     columnWithDefault.setDefaultValue("''");
+                }
                 sb.append(typeManager.getAddColumnStatements(columnWithDefault));
                 if (!dangerousOnly)
                 {
@@ -465,7 +507,39 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         SqlColumnType oldType = oldColumn.getType();
         SqlColumnType type = column.getType();
         if (typeManager.getTypeClause(oldType).equals(typeManager.getTypeClause(type)))
+        {
             return true;
+        }
+
+        // int to bigint is ok
+        if ( ( oldType.getTypeName().equals(TYPE_INT) || 
+               oldType.getTypeName().equals(TYPE_UINT)  || 
+               oldType.getTypeName().equals(TYPE_SMALLINT) )
+            && ( type.getTypeName().equals(TYPE_BIGINT) || type.getTypeName().equals(TYPE_UBIGINT) ) )
+        {
+            return true;
+        }
+
+
+        // BIGINT are usually IDs
+        if (oldType.getTypeName().equals(TYPE_BIGINT) && type.getTypeName().equals(TYPE_UBIGINT))
+        {
+            return true;
+        }
+        if (oldType.getTypeName().equals(TYPE_UBIGINT) && type.getTypeName().equals(TYPE_BIGINT))
+        {
+            return true;
+        }
+
+        // Assume people know what they are doing
+        if (oldType.getTypeName().equals(TYPE_DATETIME) && type.getTypeName().equals(TYPE_TIMESTAMP))
+        {
+            return true;
+        }
+        if (oldType.getTypeName().equals(TYPE_TIMESTAMP) && type.getTypeName().equals(TYPE_DATETIME))
+        {
+            return true;
+        }
 
         // Enlarging VARCHAR column
         if (oldType.getTypeName().equals(TYPE_VARCHAR) && type.getTypeName().equals(TYPE_VARCHAR))
@@ -475,6 +549,12 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return sql != null && !sql.hasResult("sql.select.longer",
                     typeManager.normalizeIdentifier(getEntityName()),
                     typeManager.normalizeIdentifier(oldColumn.getName()), type.getSize());
+        }
+
+        // Enlarging VARCHAR column
+        if (oldType.getTypeName().equals(TYPE_VARCHAR) && type.getTypeName().equals(TYPE_TEXT))
+        {
+            return true;  
         }
 
         // Enlarging DECIMAL column
