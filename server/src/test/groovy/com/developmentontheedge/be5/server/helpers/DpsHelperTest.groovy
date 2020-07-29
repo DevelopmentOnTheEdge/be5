@@ -65,7 +65,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
-        assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
+        assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'Adm Level'}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 
@@ -74,7 +74,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
-        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
+        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Adm Level'}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 
@@ -313,7 +313,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void testInt()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testInt"], [:])
-        assertEquals "{'/testInt':{'displayName':'testInt','type':'Integer','canBeNull':true,'validationRules':[" +
+        assertEquals "{'/testInt':{'displayName':'Test Int','type':'Integer','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'}," +
                 "{'attr':'1','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
@@ -323,7 +323,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void testBigInt()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testBigInt"], [:])
-        assertEquals "{'/testBigInt':{'displayName':'testBigInt','type':'Long','canBeNull':true,'validationRules':[" +
+        assertEquals "{'/testBigInt':{'displayName':'Test Big Int','type':'Long','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'9223372036854775807','min':'-9223372036854775808'},'type':'range'}," +
                 "{'attr':'1','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
@@ -333,7 +333,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void testTypesCURRENCY()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["payment"], [:])
-        assertEquals "{'/payment':{'displayName':'payment','type':'Double','validationRules':[" +
+        assertEquals "{'/payment':{'displayName':'Payment','type':'Double','validationRules':[" +
                 "{'attr':{'max':'1000000000000000000','min':'-1000000000000000000'},'type':'range'}," +
                 "{'attr':'0.01','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
@@ -343,7 +343,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void testTypesDECIMAL()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["decimal"], [:])
-        assertEquals "{'/decimal':{'displayName':'decimal','type':'Double','validationRules':[" +
+        assertEquals "{'/decimal':{'displayName':'Decimal','type':'Double','validationRules':[" +
                 "{'attr':{'max':'10000000000','min':'-10000000000'},'type':'range'}," +
                 "{'attr':'1.0E-4','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())

@@ -31,8 +31,8 @@ public class FilterOperationTest extends SqlMockOperationTest
         assertEquals("{" +
                 "'values':{'name':'','value':'','_search_presets_':'','_search_':true}," +
                 "'meta':{" +
-                "'/name':{'displayName':'name','canBeNull':true,'columnSize':'20'}," +
-                "'/value':{'displayName':'value','canBeNull':true,'columnSize':'30'}," +
+                "'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'}," +
+                "'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'}," +
                 "'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true}," +
                 "'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}}," +
                 "'order':['/name','/value','/_search_presets_','/_search_']" +
@@ -52,8 +52,8 @@ public class FilterOperationTest extends SqlMockOperationTest
         assertEquals("{" +
                 "'values':{'name':'b','value':'','_search_presets_':'name','_search_':true}," +
                 "'meta':{" +
-                "'/name':{'displayName':'name','readOnly':true,'canBeNull':true,'columnSize':'20'}," +
-                "'/value':{'displayName':'value','canBeNull':true,'columnSize':'30'}," +
+                "'/name':{'displayName':'Name','readOnly':true,'canBeNull':true,'columnSize':'20'}," +
+                "'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'}," +
                 "'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true}," +
                 "'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}}," +
                 "'order':['/name','/value','/_search_presets_','/_search_']" +

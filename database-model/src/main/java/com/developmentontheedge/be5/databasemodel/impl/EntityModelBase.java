@@ -146,7 +146,16 @@ public class  EntityModelBase<T> implements EntityModel<T>
 
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
-        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        DynamicProperty prop = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+
+        String label = DynamicPropertySetSupport.makeBetterDisplayName( prop.getName() );
+
+        if( label.length() > 0 )
+        {
+            prop.setDisplayName( label );
+        }
+         
+        return prop;   
     }
 
     private RecordModel<T> getRecordModel(DynamicPropertySet dps)

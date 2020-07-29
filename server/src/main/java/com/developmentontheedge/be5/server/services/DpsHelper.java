@@ -308,7 +308,16 @@ public class DpsHelper
 
     public DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
-        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        DynamicProperty prop = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+
+        String label = DynamicPropertySetSupport.makeBetterDisplayName( prop.getName() );
+
+        if( label.length() > 0 )
+        {
+            prop.setDisplayName( label );
+        }
+         
+        return prop;   
     }
 
     public <T extends DynamicPropertySet> T addDpBase(T dps, BeModelElement modelElements)
@@ -381,28 +390,33 @@ public class DpsHelper
 
     public DynamicProperty addMeta(DynamicProperty dp, ColumnDef columnDef, BeModelElement modelElements)
     {
+        String colName = columnDef.getName();
         if (modelElements.getClass() == Query.class)
         {
-            dp.setDisplayName(userAwareMeta.getColumnTitle(
-                    columnDef.getEntity().getName(),
-                    modelElements.getName(),
-                    columnDef.getName()
-            ));
+            String displayName = userAwareMeta.getColumnTitle(
+                    columnDef.getEntity().getName(), modelElements.getName(), colName );
+            if( displayName != null && !displayName.equals( colName ) )
+            {
+                dp.setDisplayName( displayName );
+            }
         }
         else if (modelElements.getClass() == Entity.class)
         {
-            dp.setDisplayName(userAwareMeta.getColumnTitle(
-                    columnDef.getEntity().getName(),
-                    columnDef.getName()
-            ));
+            String displayName = userAwareMeta.getColumnTitle(
+                    columnDef.getEntity().getName(), colName );
+            if( displayName != null && !displayName.equals( colName ) )
+            {
+                dp.setDisplayName( displayName );
+            }
         }
         else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
-            dp.setDisplayName(userAwareMeta.getLocalizedOperationField(
-                    columnDef.getEntity().getName(),
-                    modelElements.getName(),
-                    columnDef.getName()
-            ));
+            String displayName = userAwareMeta.getLocalizedOperationField(
+                    columnDef.getEntity().getName(), modelElements.getName(), colName );
+            if( displayName != null && !displayName.equals( colName ) )
+            {
+                dp.setDisplayName( displayName );
+            }
         }
 
         if (columnDef.getDefaultValue() != null)
