@@ -69,7 +69,8 @@ public class ConnectionUrlTest
         assertEquals("true", url.getProperty("useUnicode"));
         assertEquals("UTF-8", url.getProperty("characterEncoding"));
 
-        assertEquals("jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8;useUnicode=true;zeroDateTimeBehavior=convertToNull", url.toString());
+        // toString is url.createConnectionUrl( true ) meaning for Context - therefore &amp;
+        assertEquals("jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&amp;useUnicode=true&amp;zeroDateTimeBehavior=convertToNull", url.toString());
 
         assertEquals("jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&useUnicode=true&zeroDateTimeBehavior=convertToNull",
                 url.createConnectionUrl(false));
