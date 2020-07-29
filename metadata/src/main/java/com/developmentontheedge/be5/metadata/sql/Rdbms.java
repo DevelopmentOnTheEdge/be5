@@ -229,10 +229,18 @@ public enum Rdbms
                     {
                         if (!first)
                         {
-                            if (forContext)
+                            if (forContext && this == MYSQL )
+                            {
+                                url.append("&amp;");
+                            }  
+                            else if (forContext)
+                            {
                                 url.append(';');
+                            }  
                             else
+                            { 
                                 url.append('&');
+                            }
                         }
                         first = false;
                         url.append(entry.getKey()).append('=').append(entry.getValue());

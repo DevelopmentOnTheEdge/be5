@@ -96,7 +96,7 @@ public class DataSourceServiceImpl implements DataSourceService
         dataSource.setRemoveAbandoned(true);
         dataSource.setTestOnBorrow(true);
 
-        log.info("Connection profile - " + profile.getName() + ". " +
+        log.info("Connection profile: '" + profile.getName() + "'. " +
                 "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, username, "xxxxx"));
         return dataSource;
     }

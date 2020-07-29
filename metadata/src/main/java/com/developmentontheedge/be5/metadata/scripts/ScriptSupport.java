@@ -76,8 +76,8 @@ public abstract class ScriptSupport<T>
                     profile.getJdbcUrl().createConnectionUrl(false), profile.getUsername(),
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
-            logger.info("Connection profile - " + profile.getName());
-            logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(),
+            logger.info("Connection profile: '" + profile.getName() + "'" );
+            logger.info("Using connection: " + DatabaseUtils.formatUrl(profile.getConnectionUrl(),
                     profile.getUsername(), "xxxxx"));
         }
         else
