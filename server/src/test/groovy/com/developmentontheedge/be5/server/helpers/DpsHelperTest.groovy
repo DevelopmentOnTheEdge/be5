@@ -389,7 +389,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         dpsHelper.addParamsFromQuery(dps, meta.getEntity("testTags"),
                 meta.getQuery("testTags", "With Not entity parameter"), [:])
-        assertEquals "{'values':{},'meta':{'/queryString':{'displayName':'queryString'}},'order':['/queryString']}",
+        assertEquals "{'values':{},'meta':{'/queryString':{'displayName':'Query String'}},'order':['/queryString']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 

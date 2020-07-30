@@ -381,7 +381,16 @@ public class DpsHelper
             }
             else
             {
-                dps.add(new DynamicProperty(param, String.class));
+                DynamicProperty prop = new DynamicProperty(param, String.class);
+
+                String label = DynamicPropertySetSupport.makeBetterDisplayName( prop.getName() );
+
+                if( label.length() > 0 )
+                {
+                    prop.setDisplayName( label );
+                }
+
+                dps.add( prop );
             }
         }
 
