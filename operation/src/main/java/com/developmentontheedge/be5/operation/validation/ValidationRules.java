@@ -94,6 +94,11 @@ public class ValidationRules
         return new Rule("unique", new Unique(tableName), customMessage);
     }
 
+    public static Rule unique(String tableName, String columName, String customMessage)
+    {
+        return new Rule("unique", new Unique(tableName, columName), customMessage);
+    }
+
     public static class Rule
     {
         private String type;
