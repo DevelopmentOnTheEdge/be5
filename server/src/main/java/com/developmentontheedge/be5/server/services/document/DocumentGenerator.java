@@ -19,6 +19,8 @@ public interface DocumentGenerator
 
     JsonApiModel getNewTableRows(String entityName, String queryName, Map<String, Object> parameters);
 
+    JsonApiModel getTableRowsAsJson(String entityName, String queryName, Map<String, Object> parameters);
+
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
     void addDocumentPlugin(String name, DocumentPlugin documentPlugin);

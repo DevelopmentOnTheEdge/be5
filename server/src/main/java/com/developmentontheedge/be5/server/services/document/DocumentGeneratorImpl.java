@@ -10,12 +10,14 @@ import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.server.model.MoreRowsPresentation;
+import com.developmentontheedge.be5.server.model.RowsAsJsonPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.model.table.ColumnModel;
 import com.developmentontheedge.be5.server.services.document.rows.MoreRowsBuilder;
 import com.developmentontheedge.be5.server.services.document.rows.NamedCellsRowBuilder;
+import com.developmentontheedge.be5.server.services.document.rows.RowsAsJsonBuilder;
 import com.developmentontheedge.be5.server.services.document.rows.TableRowBuilder;
 import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.util.FilterUtil;
@@ -259,6 +261,37 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 new MoreRowsBuilder(tableRowBuilder.collectRows(query, rows)).build()
         );
     }
+
+    @Override
+    public JsonApiModel getTableRowsAsJson(String entityName, String queryName, Map<String, Object> parameters)
+    {
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        return getTableRowsAsJson(query, parameters);
+    }
+
+    @LogBe5Event
+    @Transactional
+    JsonApiModel getTableRowsAsJson(Query query, Map<String, Object> params)
+    {
+        RowsAsJsonPresentation data = getRowsAsJsonPresentation(query, params);
+        return JsonApiModel.data(new ResourceData(null, data, null), null);
+    }
+
+    private RowsAsJsonPresentation getRowsAsJsonPresentation(Query query, Map<String, Object> parameters)
+    {
+        Map<String, Object> layout = JsonUtils.getMapFromJson(query.getLayout());
+
+        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.MAX_VALUE + ""));
+        int defaultLimit = Integer.parseInt((String) layout.getOrDefault("defaultPageLimit", Integer.MAX_VALUE + ""));
+        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
+        Map<String, Object> paramsWithLimit = new HashMap<>(parameters);
+        paramsWithLimit.put(LIMIT, Math.min(limit, Math.min(defaultLimit, maxLimit)));
+        QueryExecutor queryExecutor = queryServiceFactory.get(query, paramsWithLimit);
+        List<QRec> rows = queryExecutor.execute();
+        return new RowsAsJsonPresentation(new RowsAsJsonBuilder(rows).build());
+    }
+
+
 
     @Override
     public void addDocumentPlugin(String name, DocumentPlugin documentPlugin)

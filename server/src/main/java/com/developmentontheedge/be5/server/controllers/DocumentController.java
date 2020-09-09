@@ -54,6 +54,8 @@ public class DocumentController extends JsonApiModelController
                     return documentGenerator.getDocument(entityName, queryName, parameters);
                 case "update":
                     return documentGenerator.getNewTableRows(entityName, queryName, parameters);
+                case "json":
+                    return documentGenerator.getTableRowsAsJson(entityName, queryName, parameters);
                 default:
                     return null;
             }
