@@ -65,7 +65,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
-        assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'Adm Level'}},'order':['/admlevel']}",
+        assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'Admlevel'}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 
@@ -74,7 +74,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
-        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Adm Level'}},'order':['/admlevel']}",
+        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Admlevel'}},'order':['/admlevel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
     }
 
