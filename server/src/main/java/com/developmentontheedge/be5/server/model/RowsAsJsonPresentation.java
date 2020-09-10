@@ -5,23 +5,23 @@ import java.util.Map;
 
 public class RowsAsJsonPresentation
 {
-    private final List<Map<String, Object>> rows;
+    private final List<Map<String, Object>> data;
 
-    public RowsAsJsonPresentation(List<Map<String, Object>> rows)
+    public RowsAsJsonPresentation(List<Map<String, Object>> data)
     {
-        this.rows = rows;
+        this.data = data;
     }
 
-    public List<Map<String, Object>> getRows()
+    public List<Map<String, Object>> getData()
     {
-        return rows;
+        return data;
     }
 
     @Override
     public String toString()
     {
         return "TablePresentation{" +
-                ", rows=" + rows +
+                ", rows=" + data +
                 '}';
     }
 }

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_JSON;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_MORE_ACTION;
 import static com.developmentontheedge.be5.query.QueryConstants.ALL_RECORDS;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
@@ -274,7 +275,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     JsonApiModel getTableRowsAsJson(Query query, Map<String, Object> params)
     {
         RowsAsJsonPresentation data = getRowsAsJsonPresentation(query, params);
-        return JsonApiModel.data(new ResourceData(null, data, null), null);
+        return JsonApiModel.data(new ResourceData(TABLE_JSON, data.getData(), null), null);
     }
 
     private RowsAsJsonPresentation getRowsAsJsonPresentation(Query query, Map<String, Object> parameters)

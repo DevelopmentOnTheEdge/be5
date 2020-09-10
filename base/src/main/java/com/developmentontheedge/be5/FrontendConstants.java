@@ -8,6 +8,7 @@ public interface FrontendConstants
      */
     String TABLE_ACTION = "table";
     String TABLE_MORE_ACTION = "table_more";
+    String TABLE_JSON = "json";
 
     String STATIC_ACTION = "static";
 

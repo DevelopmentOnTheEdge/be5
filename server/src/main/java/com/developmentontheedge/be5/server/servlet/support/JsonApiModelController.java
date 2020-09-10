@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.web.Response;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_JSON;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
@@ -24,17 +25,23 @@ public abstract class JsonApiModelController extends ApiControllerSupport
             {
                 jsonApiModel.setMeta(getDefaultMeta(req));
             }
-            if (jsonApiModel.getData() != null)
+            ResourceData data = jsonApiModel.getData();
+            if (data != null)
             {
-                res.sendAsJson(jsonApiModel);
-            }
-            else
+                if (TABLE_JSON.equals(data.getType()))
+                {
+                    res.sendAsJson(data.getAttributes());
+                }
+                else
+                {
+                    res.sendAsJson(jsonApiModel);
+                }
+            } else
             {
                 int status = Integer.parseInt(jsonApiModel.getErrors()[0].getStatus());
                 res.sendAsJson(jsonApiModel, status);
             }
-        }
-        else
+        } else
         {
             res.sendAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
@@ -66,4 +73,5 @@ public abstract class JsonApiModelController extends ApiControllerSupport
     {
         return Collections.singletonMap(TIMESTAMP_PARAM, request.get(TIMESTAMP_PARAM));
     }
+//                    if (TABLE_JSON.equals(data.getType()) && data.getAttributes("data"))
 }
