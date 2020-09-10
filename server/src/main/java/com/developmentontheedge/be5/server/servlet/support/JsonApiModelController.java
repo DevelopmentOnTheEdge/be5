@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
+import com.developmentontheedge.be5.server.model.RowsAsJsonPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -30,7 +31,7 @@ public abstract class JsonApiModelController extends ApiControllerSupport
             {
                 if (TABLE_JSON.equals(data.getType()))
                 {
-                    res.sendAsJson(data.getAttributes());
+                    res.sendAsJson(((RowsAsJsonPresentation) data.getAttributes()).getData());
                 }
                 else
                 {

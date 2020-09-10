@@ -61,6 +61,15 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
+    public void getTableRowsAsJson()
+    {
+        JsonApiModel table = documentGenerator.getTableRowsAsJson("testtable", "All records", emptyMap());
+
+        assertEquals("{'attributes':{'data':[{'Name':'tableModelTest','Value':'1'}]},'type':'json'}",
+                oneQuotes(jsonb.toJson(table.getData())));
+    }
+
+    @Test
     public void testTitleAllRecords()
     {
         JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), emptyMap());

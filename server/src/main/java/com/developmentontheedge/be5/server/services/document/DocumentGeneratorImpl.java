@@ -275,7 +275,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     JsonApiModel getTableRowsAsJson(Query query, Map<String, Object> params)
     {
         RowsAsJsonPresentation data = getRowsAsJsonPresentation(query, params);
-        return JsonApiModel.data(new ResourceData(TABLE_JSON, data.getData(), null), null);
+        return JsonApiModel.data(new ResourceData(TABLE_JSON, data, null), null);
     }
 
     private RowsAsJsonPresentation getRowsAsJsonPresentation(Query query, Map<String, Object> parameters)
