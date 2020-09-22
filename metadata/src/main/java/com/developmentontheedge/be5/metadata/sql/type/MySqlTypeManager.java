@@ -80,6 +80,8 @@ public class MySqlTypeManager extends DefaultTypeManager
                     return "TEXT";
                 }
                 return super.getTypeClause(type);
+            case SqlColumnType.TYPE_JSONB:
+                return "JSON";
             case SqlColumnType.TYPE_BOOL:
                 return "ENUM('no','yes')";
             default:

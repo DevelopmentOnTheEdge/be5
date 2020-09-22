@@ -96,6 +96,8 @@ public class  EntityModelBase<T> implements EntityModel<T>
         String sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
                 .where(conditions).format();
+       
+        //System.out.println( "sql = " + sql );
 
         return db.select(sql,
                 rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions));

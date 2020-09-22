@@ -32,6 +32,7 @@ public class SqlColumnType
     public static final String TYPE_BIGTEXT = "BIGTEXT";
     public static final String TYPE_MEDIUMBLOB = "MEDIUMBLOB";
     public static final String TYPE_BLOB = "BLOB";
+    public static final String TYPE_JSON = "JSON";
     public static final String TYPE_JSONB = "JSONB";
     public static final String TYPE_UNKNOWN = "UNKNOWN";
 
@@ -55,6 +56,7 @@ public class SqlColumnType
             TYPE_BIGTEXT,
             TYPE_MEDIUMBLOB,
             TYPE_BLOB,
+            TYPE_JSON,
             TYPE_JSONB,
             TYPE_UNKNOWN
     };
