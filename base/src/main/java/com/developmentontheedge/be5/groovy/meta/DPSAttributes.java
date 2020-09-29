@@ -58,6 +58,11 @@ public class DPSAttributes
         map.put("RELOAD_ON_CHANGE", value);
     }
 
+    public void setRELOAD_ON_CLICK(boolean value)
+    {
+        map.put("RELOAD_ON_CLICK", value);
+    }
+
     public void setRELOAD_ON_FOCUS_OUT(boolean value)
     {
         map.put("RELOAD_ON_FOCUS_OUT", value);

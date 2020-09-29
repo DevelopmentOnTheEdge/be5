@@ -79,6 +79,7 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
                 TYPE            : java.sql.Date.class,
                 TAG_LIST_ATTR   : ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd'],
                 RELOAD_ON_CHANGE: true,
+                RELOAD_ON_CLICK : true,
                 RAW_VALUE       : true
         ]
         DynamicProperty property = dps._testProperty
@@ -91,6 +92,7 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
         final def tags = ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd']
         assertEquals tags, property.getAttribute(TAG_LIST_ATTR)
         assertTrue((boolean) property.getAttribute(RELOAD_ON_CHANGE))
+        assertTrue((boolean) property.getAttribute(RELOAD_ON_CLICK))
         assertTrue((boolean) property.getAttribute(RAW_VALUE))
     }
 
