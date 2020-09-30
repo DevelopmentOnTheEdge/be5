@@ -80,7 +80,8 @@ public class DateUtilsTest
     {
         assertTrue(DateUtils.isActual(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.curDay()));
         assertTrue(DateUtils.isActualNotNull(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.curDay()));
-        assertTrue(DateUtils.isActual(DateUtils.curMonthBegin(), DateUtils.curMonthEnd(), DateUtils.curDay()));
+        assertTrue(
+                DateUtils.isActual(DateUtils.curMonthBegin(), DateUtils.addDays(DateUtils.curMonthEnd(), 1), DateUtils.curDay()));
 
         assertTrue(DateUtils.isIntersect(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.prevMonthBegin(), DateUtils.nextMonthBegin()));
 
