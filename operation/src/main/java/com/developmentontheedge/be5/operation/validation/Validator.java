@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,9 +77,18 @@ public class Validator
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void checkAndThrowExceptionIsError(DynamicProperty property)
     {
         throwExceptionIsError(property);
+
+        Object extraAttrs = property.getAttribute(BeanInfoConstants.EXTRA_ATTRS);
+        if (extraAttrs instanceof Map &&
+                BeanInfoConstants.BUTTON_FIELD
+                        .equalsIgnoreCase(((Map<String, String>) extraAttrs).get(BeanInfoConstants.PROPERTY_INPUT_TYPE)))
+        {
+            return;
+        }
 
         if (property.getValue() == null ||
                 (property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)

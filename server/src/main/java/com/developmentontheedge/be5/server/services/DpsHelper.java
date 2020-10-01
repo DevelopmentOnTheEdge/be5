@@ -448,7 +448,7 @@ public class DpsHelper
 
         if (TYPE_TEXT.equals(typeName))
         {
-            dp.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{{"inputType", "textArea"}});
+            dp.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{{BeanInfoConstants.PROPERTY_INPUT_TYPE, "textArea"}});
         }
 
         if (TYPE_VARCHAR.equals(typeName) || TYPE_CHAR.equals(typeName))
