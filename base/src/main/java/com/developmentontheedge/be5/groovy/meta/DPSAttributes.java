@@ -133,6 +133,11 @@ public class DPSAttributes
         map.put("GROUP_CLASSES", value);
     }
 
+    public void setGROUP_INITIALLY_CLOSED(boolean value)
+    {
+        map.put("GROUP_INITIALLY_CLOSED", value);
+    }
+
     public void setTAB_ID(Object value)
     {
         map.put("TAB_ID", value);
