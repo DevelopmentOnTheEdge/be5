@@ -28,6 +28,7 @@ import com.developmentontheedge.be5.server.services.document.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.document.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.document.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.document.DocumentOperationsPlugin;
+import com.developmentontheedge.be5.server.services.document.DocumentQuickFilterPlugin;
 import com.developmentontheedge.be5.server.services.document.FilterInfoPlugin;
 import com.developmentontheedge.be5.server.services.document.rows.TableRowBuilder;
 import com.developmentontheedge.be5.server.services.events.EventManager;
@@ -74,6 +75,7 @@ public class ServerModule extends AbstractModule
 
         bind(DocumentOperationsPlugin.class).asEagerSingleton();
         bind(DocumentFormPlugin.class).asEagerSingleton();
+        bind(DocumentQuickFilterPlugin.class).asEagerSingleton();
         bind(FilterInfoPlugin.class).asEagerSingleton();
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);

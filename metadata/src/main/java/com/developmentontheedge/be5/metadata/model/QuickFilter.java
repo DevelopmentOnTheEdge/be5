@@ -134,6 +134,7 @@ public class QuickFilter extends BeModelElementSupport
         return true;
     }
 
+    @Override
     protected void fireChanged()
     {
         final BeModelCollection<QuickFilter> quickFilters = getQuery()
