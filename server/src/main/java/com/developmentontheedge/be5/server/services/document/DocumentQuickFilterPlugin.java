@@ -33,6 +33,7 @@ public class DocumentQuickFilterPlugin implements DocumentPlugin
             for (QuickFilter quickFilter : quickFilters)
             {
                 String[][] tags = queries.getTagsFromCustomSelectionView(quickFilter.getTargetQuery(), Collections.emptyMap());
+                tags = queries.localizeTags(query.getEntity().getName(), quickFilter.getTargetQuery().getName(), tags);
                 filterData.add(new QuickFilterItem(quickFilter.getName(), quickFilter.getQueryParam(), tags));
             }
             return new ResourceData(DOCUMENT_QUICK_FILTER_PLUGIN, filterData, null);
