@@ -100,6 +100,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void testTitle()
     {
+        initUserWithRoles("SystemDeveloper");
         JsonApiModel jsonApiModel = documentGenerator.getDocument(
                 meta.getQuery("testtable", "TableWithFilter"), emptyMap());
         TablePresentation table = (TablePresentation) jsonApiModel.getData().getAttributes();

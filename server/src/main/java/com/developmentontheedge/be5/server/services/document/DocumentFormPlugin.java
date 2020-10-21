@@ -24,7 +24,7 @@ public class DocumentFormPlugin implements DocumentPlugin
     {
         this.formGenerator = formGenerator;
         this.userAwareMeta = userAwareMeta;
-        documentGenerator.addDocumentPlugin("topForm", this);
+        documentGenerator.addDocumentPlugin(TOP_FORM, this);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DocumentFormPlugin implements DocumentPlugin
             {
                 ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(),
                         query.getName(), topForm, parameters, Collections.emptyMap());
-                operationResourceData.setId("topForm");
+                operationResourceData.setId(TOP_FORM);
 
                 return operationResourceData;
             }

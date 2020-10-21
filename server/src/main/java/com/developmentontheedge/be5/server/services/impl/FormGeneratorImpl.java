@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.server.services.impl;
 import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 import static com.developmentontheedge.be5.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
@@ -99,6 +101,8 @@ public class FormGeneratorImpl implements FormGenerator
     private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
+        Query fromQuery = userAwareMeta.getQuery(operation.getInfo().getEntityName(), operation.getContext().getQueryName());
+        Map<String, Object> queryLayout = JsonUtils.getMapFromJson(fromQuery.getLayout());
         Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
         Map<String, String> links = Collections.singletonMap(SELF_LINK, getUrl(operation).toString());
 
@@ -107,7 +111,7 @@ public class FormGeneratorImpl implements FormGenerator
             FormPresentation attributes = new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
-                    getTitle(operation, layout),
+                    getTitle(operation, layout, queryLayout),
                     JsonFactory.bean(result.getFirst()),
                     layout,
                     resultForFrontend(operation.getResult()),
@@ -136,7 +140,7 @@ public class FormGeneratorImpl implements FormGenerator
     }
 */
 
-    private String getTitle(Operation operation, Map<String, Object> layout)
+    private String getTitle(Operation operation, Map<String, Object> layout, Map<String, Object> queryLayout )
     {
         String layoutTitle = (String) layout.get("title");
         if("none".equalsIgnoreCase(layoutTitle))
@@ -147,9 +151,15 @@ public class FormGeneratorImpl implements FormGenerator
         {
             return userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getEntityName(), layoutTitle);
         }
-        else
+        else if (queryLayout.get(TOP_FORM) != null)
         {
             return userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
+        }
+        else
+        {
+            String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
+            String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
+            return localizedEntityTitle + ": " + localizedOperationTitle;
         }
     }
 
