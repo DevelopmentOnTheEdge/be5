@@ -99,6 +99,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localizations.getOperationTitle(getLanguage(), entity, name);
     }
 
+    @Override
     public String getLocalizedOperationField(String entityName, String operationName, String name)
     {
         return localizations.getFieldTitle(getLanguage(), entityName, operationName, name)
@@ -189,6 +190,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localizations.get(getLanguage(), entityName, queryName, columnName).orElse(columnName);
     }
 
+    @Override
     public String getColumnTitle(String entityName, String columnName)
     {
         ImmutableList<String> defaultQueries = ImmutableList.of("All records");
@@ -208,7 +210,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
 
     private String getLanguage()
     {
-        if (userInfoProvider.isLoggedIn())
+        if (userInfoProvider != null)
         {
             return meta.getLocale(userInfoProvider.getLocale()).getLanguage();
         }
