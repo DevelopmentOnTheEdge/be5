@@ -123,6 +123,7 @@ public class FormGeneratorImpl implements FormGenerator
         }
     }
 
+/*
     private String getTitle(Operation operation, Map<String, Object> layout)
     {
         if (layout.get("title") != null)
@@ -132,6 +133,24 @@ public class FormGeneratorImpl implements FormGenerator
         String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(operation.getInfo().getEntity());
         String localizedOperationTitle = userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
         return localizedEntityTitle + ": " + localizedOperationTitle;
+    }
+*/
+
+    private String getTitle(Operation operation, Map<String, Object> layout)
+    {
+        String layoutTitle = (String) layout.get("title");
+        if("none".equalsIgnoreCase(layoutTitle))
+        {
+            return "";
+        }
+        else if (layoutTitle != null)
+        {
+            return userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getEntityName(), layoutTitle);
+        }
+        else
+        {
+            return userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel());
+        }
     }
 
     private ErrorModel getErrorModel(Operation operation)

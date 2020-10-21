@@ -79,6 +79,10 @@ ru:
       - Regional: Региональный
       - admlevel: Административный уровень
       - customParam: Кастомный параметер
+  - testtable:
+      - topics: operationName
+        entries:
+        - Title from layout: Имя из layout
   - default:
     - topics: operationName
       entries:

@@ -21,6 +21,8 @@ testtable:
       - Edit
       - Insert
       - Filter
+      - FilterNoTitle
+      - FilterTitleFromLayout
       - OldRedirectFilter
       - CustomOperation
       - FileNotFoundError
@@ -109,6 +111,14 @@ testtable:
   - Filter:
       roles: Administrator
       layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
+  - FilterNoTitle:
+      roles: Administrator
+      layout: '{"type":"modalForm","title":"none"}'
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
+  - FilterTitleFromLayout:
+      roles: Administrator
+      layout: '{"type":"modalForm","title":"Title from layout"}'
       code: com.developmentontheedge.be5.server.operations.FilterOperation
   - FilterByParamsInQueryOperation:
       roles: '@AllRoles'
