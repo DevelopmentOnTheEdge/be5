@@ -7,9 +7,16 @@ import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static com.developmentontheedge.be5.metadata.QueryType.D1;
+import static com.developmentontheedge.be5.metadata.QueryType.D1_UNKNOWN;
+import static com.developmentontheedge.be5.metadata.QueryType.GROOVY;
+import static com.developmentontheedge.be5.metadata.QueryType.JAVA;
+import static com.developmentontheedge.be5.metadata.QueryType.JAVASCRIPT;
 
 public class DocumentQuickFilterPlugin implements DocumentPlugin
 {
@@ -32,16 +39,25 @@ public class DocumentQuickFilterPlugin implements DocumentPlugin
             QuickFilterInfo filterData = new QuickFilterInfo(new ArrayList<>(quickFilters.length));
             for (QuickFilter quickFilter : quickFilters)
             {
-                String[][] tags = queries.getTagsFromCustomSelectionView(quickFilter.getTargetQuery(), Collections.emptyMap());
-                tags = queries.localizeTags(query.getEntity().getName(), quickFilter.getTargetQuery().getName(), tags);
-                filterData.add(new QuickFilterItem(quickFilter.getName(), quickFilter.getQueryParam(), tags));
+                Query quickFilterQuery = quickFilter.getTargetQuery();
+                String[][] tags = null;
+                if (Arrays.asList(D1, D1_UNKNOWN).contains(quickFilterQuery.getType()))
+                {
+                    tags = queries.getTagsFromQuery(quickFilterQuery.getFinalQuery());
+                }
+                else if (Arrays.asList(GROOVY, JAVA, JAVASCRIPT).contains(quickFilterQuery.getType()))
+                {
+                    tags = queries.getTagsFromCustomSelectionView(quickFilter.getTargetQuery(), Collections.emptyMap());
+                }
+                if(tags != null)
+                {
+                    tags = queries.localizeTags(query.getEntity().getName(), quickFilter.getTargetQuery().getName(), tags);
+                    filterData.add(new QuickFilterItem(quickFilter.getName(), quickFilter.getQueryParam(), tags));
+                }
             }
             return new ResourceData(DOCUMENT_QUICK_FILTER_PLUGIN, filterData, null);
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public static class QuickFilterItem
