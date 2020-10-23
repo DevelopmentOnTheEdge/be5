@@ -164,6 +164,22 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     }
 
     @Test
+    public void getTagsFromSQLFromFakeTable()
+    {
+        String[][] strings = {{"val1","name1"},{"val2","name2"},};
+        String[][] tags = queries.getTagsFromQuery("SELECT 'val1','name1' UNION ALL SELECT 'val2','name2'");
+        assertArrayEquals(strings, tags);
+    }
+
+    @Test
+    public void getTagsFromSQLWithOneColumn()
+    {
+        String[][] strings = {{"yes","yes"},{"no","no"},};
+        String[][] tags = queries.getTagsFromQuery("SELECT 'yes' UNION ALL SELECT 'no'");
+        assertArrayEquals(strings, tags);
+    }
+
+    @Test
     public void localizeTags()
     {
         String[][] tags = queries.localizeTags("testTags", new String[][]{{"01", "Regional"}, {"02", "Municipal"}});

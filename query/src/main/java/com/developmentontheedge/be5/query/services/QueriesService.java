@@ -143,7 +143,8 @@ public class QueriesService
     public String[][] getTagsFromQuery(String sql, Object... params)
     {
         List<String[]> tags = db.list(sql,
-                rs -> new String[]{rs.getString(1), rs.getString(2)}, params
+                rs -> new String[] {rs.getString(1), rs.getMetaData().getColumnCount() == 1 ? rs.getString(1) : rs.getString(2)},
+                params
         );
         String[][] stockArr = new String[tags.size()][2];
         return tags.toArray(stockArr);
