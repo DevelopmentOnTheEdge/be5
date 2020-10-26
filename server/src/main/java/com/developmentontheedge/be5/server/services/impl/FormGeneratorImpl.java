@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.FrontendConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.Operation;
@@ -36,6 +37,7 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 public class FormGeneratorImpl implements FormGenerator
 {
+    private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
@@ -45,6 +47,7 @@ public class FormGeneratorImpl implements FormGenerator
 
     @Inject
     public FormGeneratorImpl(
+            Meta meta,
             UserAwareMeta userAwareMeta,
             OperationService operationService,
             OperationExecutor operationExecutor,
@@ -52,6 +55,7 @@ public class FormGeneratorImpl implements FormGenerator
             ErrorModelHelper errorModelHelper,
             OperationLogging operationLogging)
     {
+        this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
@@ -101,7 +105,7 @@ public class FormGeneratorImpl implements FormGenerator
     private ResourceData getResult(Operation operation,
                                    Either<Object, OperationResult> result)
     {
-        Query fromQuery = userAwareMeta.getQuery(operation.getInfo().getEntityName(), operation.getContext().getQueryName());
+        Query fromQuery = meta.getQuery(operation.getInfo().getEntityName(), operation.getContext().getQueryName());
         Map<String, Object> queryLayout = JsonUtils.getMapFromJson(fromQuery.getLayout());
         Map<String, Object> layout = JsonUtils.getMapFromJson(operation.getInfo().getModel().getLayout());
         Map<String, String> links = Collections.singletonMap(SELF_LINK, getUrl(operation).toString());
