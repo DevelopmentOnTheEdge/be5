@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +81,7 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     public void getLimit()
     {
+        initUserWithNameAndRoles(RoleType.ROLE_TEST_USER,RoleType.ROLE_TEST_USER);
         DocumentGeneratorImpl documentGeneratorImpl = (DocumentGeneratorImpl) documentGenerator;
         Query query = meta.getQuery("testtable", "All records");
 
@@ -87,14 +89,26 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
 
         assertEquals(20, documentGeneratorImpl.getLimit(query, emptyMap(), singletonMap(LIMIT, "20")));
         verify(CoreUtilsForTest.mock).setQuerySettingForUser("testtable", "All records",
-                RoleType.ROLE_GUEST, Collections.singletonMap("recordsPerPage", 20));
+                RoleType.ROLE_TEST_USER, Collections.singletonMap("recordsPerPage", 20));
 
         when(CoreUtilsForTest.mock.getQuerySettingForUser("testtable", "All records",
-                RoleType.ROLE_GUEST)).thenReturn(Collections.singletonMap("recordsPerPage", 20));
+                RoleType.ROLE_TEST_USER)).thenReturn(Collections.singletonMap("recordsPerPage", 20));
         assertEquals(20, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
 
         CoreUtilsForTest.clearMock();
         assertEquals(10, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
+    }
+
+    @Test
+    public void getLimitForGuestUser()
+    {
+        DocumentGeneratorImpl documentGeneratorImpl = (DocumentGeneratorImpl) documentGenerator;
+        Query query = meta.getQuery("testtable", "All records");
+
+        assertEquals(10, documentGeneratorImpl.getLimit(query, emptyMap(), emptyMap()));
+        assertEquals(20, documentGeneratorImpl.getLimit(query, emptyMap(), singletonMap(LIMIT, "20")));
+        verify(CoreUtilsForTest.mock, never()).setQuerySettingForUser("testtable", "All records",
+                RoleType.ROLE_GUEST, Collections.emptyMap());
     }
 
     @Test

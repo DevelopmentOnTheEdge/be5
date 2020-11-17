@@ -4,11 +4,13 @@ import com.developmentontheedge.be5.config.CoreUtils;
 import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.security.UserInfoHolder;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.model.MoreRowsPresentation;
 import com.developmentontheedge.be5.server.model.RowsAsJsonPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
@@ -43,6 +45,7 @@ import static java.util.Collections.singletonMap;
 public class DocumentGeneratorImpl implements DocumentGenerator
 {
     private final UserAwareMeta userAwareMeta;
+    private final UserInfoProvider userInfoProvider;
     private final CoreUtils coreUtils;
     private final TableRowBuilder tableRowBuilder;
     private final QueryExecutorFactory queryServiceFactory;
@@ -50,10 +53,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final Map<String, DocumentPlugin> documentPlugins = new HashMap<>();
 
     @Inject
-    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, TableRowBuilder tableRowBuilder,
-                                 QueryExecutorFactory queryServiceFactory)
+    public DocumentGeneratorImpl(UserAwareMeta userAwareMeta, UserInfoProvider userInfoProvider, CoreUtils coreUtils,
+                                 TableRowBuilder tableRowBuilder, QueryExecutorFactory queryServiceFactory)
     {
         this.userAwareMeta = userAwareMeta;
+        this.userInfoProvider = userInfoProvider;
         this.coreUtils = coreUtils;
         this.tableRowBuilder = tableRowBuilder;
         this.queryServiceFactory = queryServiceFactory;
@@ -181,15 +185,18 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
         int defaultLimit = Integer.parseInt(layout.getOrDefault("defaultPageLimit",
                 coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
-        Map<String, Object> userQuerySettings = coreUtils.getQuerySettingForUser(
-                query.getEntity().getName(), query.getName(), UserInfoHolder.getLoggedUser().getUserName());
+        boolean isGuest = userInfoProvider.getCurrentRoles().contains(RoleType.ROLE_GUEST);
+        Map<String, Object> userQuerySettings = isGuest
+                ? Collections.emptyMap()
+                : coreUtils.getQuerySettingForUser(query.getEntity().getName(), query.getName(),
+                UserInfoHolder.getLoggedUser().getUserName());
         if (limit == Integer.MAX_VALUE)
         {
             return (int) userQuerySettings.getOrDefault("recordsPerPage", defaultLimit);
         }
         else
         {
-            if (limit != defaultLimit || (userQuerySettings.get("recordsPerPage") != null
+            if (limit != defaultLimit && !isGuest || (userQuerySettings.get("recordsPerPage") != null
                     && limit != ((int) userQuerySettings.get("recordsPerPage"))))
             {
                 coreUtils.setQuerySettingForUser(query.getEntity().getName(), query.getName(),
