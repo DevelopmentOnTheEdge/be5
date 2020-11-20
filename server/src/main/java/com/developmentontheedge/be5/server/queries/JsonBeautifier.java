@@ -18,7 +18,7 @@ public class JsonBeautifier implements SubQueryBeautifier
     public String print(List<QRec> lists)
     {
         if(lists == null || lists.size() == 0 )
-            return "";
+            return "[ ]";
 
         List<Map<String, Object>> mapList = new ArrayList<>(lists.size());
         for(int i = 0; i<lists.size(); i++)
