@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import java.util.Arrays;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+
+import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
 
 public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
 {
@@ -28,7 +31,7 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "TestMultipleColumn");
 
         assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
-                        "WHERE name IN ('test1', 'test2') LIMIT 2147483647",
+                        "WHERE name IN ('test1', 'test2')",
                 querySqlGenerator.getSql(query, singletonMap("name",
                         Arrays.asList("test1", "test2"))).format());
     }
@@ -39,7 +42,7 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "TestMultipleColumnLong");
 
         assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
-                "WHERE ID IN (1, 2) LIMIT 2147483647", querySqlGenerator.getSql(query,
+                "WHERE ID IN (1, 2)", querySqlGenerator.getSql(query,
                 singletonMap("ID", Arrays.asList("1", "2"))).format());
     }
 
@@ -49,7 +52,7 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
         Query query = meta.getQuery("testtable", "TestResolveRefColumn");
 
         assertEquals("SELECT ID AS \"___ID\", name FROM testtable " +
-                "WHERE name = 'test' LIMIT 2147483647", querySqlGenerator.getSql(query,
+                "WHERE name = 'test'", querySqlGenerator.getSql(query,
                 singletonMap("name", "test")).format());
     }
 
@@ -58,7 +61,7 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.createQueryFromSql("SELECT * FROM testtable " +
                 "ORDER BY name <parameter:order />");
-        assertEquals("SELECT * FROM testtable ORDER BY name desc LIMIT 2147483647",
+        assertEquals("SELECT * FROM testtable ORDER BY name desc",
                 querySqlGenerator.getSql(query, singletonMap("order", "desc")).format());
     }
 
@@ -67,7 +70,7 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
     {
         Query query = meta.createQueryFromSql("SELECT * FROM testtable " +
                 "ORDER BY unknownColumn <parameter:order />");
-        assertEquals("SELECT * FROM testtable ORDER BY unknownColumn desc LIMIT 2147483647",
+        assertEquals("SELECT * FROM testtable ORDER BY unknownColumn desc",
                 querySqlGenerator.getSql(query, singletonMap("order", "desc")).format());
     }
 
@@ -87,5 +90,14 @@ public class QuerySqlGeneratorTest extends QueryBe5ProjectDBTest
         expectedEx.expectMessage("Can not resolve refColumn=\"testtable.unknownColumn\"");
         Query query = meta.getQuery("testtable", "TestResolveRefColumnNPE");
         querySqlGenerator.getSql(query, emptyMap());
+    }
+
+    @Test
+    public void limit()
+    {
+        Query query = meta.createQueryFromSql("SELECT * FROM testtable " +
+                "ORDER BY name <parameter:order />");
+        assertEquals("SELECT * FROM testtable ORDER BY name desc LIMIT 10",
+                querySqlGenerator.getSql(query, ImmutableMap.of("order", "desc", LIMIT, "10")).format());
     }
 }

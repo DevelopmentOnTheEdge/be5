@@ -77,7 +77,12 @@ public class QuerySqlGenerator
         int limit = Integer.parseInt(getOrDefault(queryContext, LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
         QueryMetaHelper.applySort(ast, orderColumn, orderDir);
-        new LimitsApplier(offset, limit).transform(ast);
+        //SELECT COUNT(1) FROM (query  limit = Integer.MAX_VALUE) slower than without it
+        if(limit != Integer.MAX_VALUE)
+        {
+            new LimitsApplier(offset, limit).transform(ast);
+        }
+
     }
 
     private String getOrDefault(QueryContext queryContext, String name, String defaultValue)
