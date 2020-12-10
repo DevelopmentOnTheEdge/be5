@@ -148,4 +148,20 @@ public class UtilsTest
         String to = "  \"< & >\"";
         assertEquals( to, Utils.replaceXmlEntities( from ) );
     }
+
+    @Test
+    public void isTrueValueParam()
+    {
+        assertTrue(Utils.isTrueValueParam("yes"));
+        assertTrue(Utils.isTrueValueParam("yes"));
+        assertTrue(Utils.isTrueValueParam("on"));
+        assertTrue(Utils.isTrueValueParam("On"));
+        assertTrue(Utils.isTrueValueParam("true"));
+        assertTrue(Utils.isTrueValueParam("tRuE"));
+        assertFalse(Utils.isTrueValueParam(null));
+        assertFalse(Utils.isTrueValueParam("false"));
+        assertFalse(Utils.isTrueValueParam("no"));
+
+    }
+
 }

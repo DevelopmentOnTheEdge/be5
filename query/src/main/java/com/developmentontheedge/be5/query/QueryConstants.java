@@ -8,6 +8,7 @@ public interface QueryConstants
     String LIMIT = "_limit_";
     String ORDER_COLUMN = "_orderColumn_";
     String ORDER_DIR = "_orderDir_";
+    String WITHOUT_TOTAL_NUMBER = "_without_total_number_";
 
     String DISPLAY_TYPE = "_displayType_";
     String TITLE_LEVEL = "_titleLevel_";

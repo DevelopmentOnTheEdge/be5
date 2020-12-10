@@ -25,6 +25,7 @@ import com.developmentontheedge.be5.server.services.events.LogBe5Event;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.util.Utils;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -36,8 +37,10 @@ import java.util.Map;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_JSON;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_MORE_ACTION;
+import static com.developmentontheedge.be5.FrontendConstants.TABLE_TOTAL_NUMBER_OF_ROWS;
 import static com.developmentontheedge.be5.query.QueryConstants.ALL_RECORDS;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.WITHOUT_TOTAL_NUMBER;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static java.util.Collections.singletonMap;
 
@@ -111,8 +114,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String title = getTitle(query, layout);
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
-        Long totalNumberOfRows = getCount(queryExecutor, rows.size());
         String messageWhenEmpty = query.getMessageWhenEmpty();
+        Long totalNumberOfRows = !Utils.isTrueValueParam((String) parameters.get(WITHOUT_TOTAL_NUMBER)) ?
+                getCount(queryExecutor, rows.size()) : null;
 
         return new TablePresentation(
                 title,
@@ -283,6 +287,39 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         RowsAsJsonPresentation data = getRowsAsJsonPresentation(query, params);
         return JsonApiModel.data(new ResourceData(TABLE_JSON, data, null), null);
+    }
+
+    @Override
+    public JsonApiModel getTableTotalNumberOfRows(String entityName, String queryName, Map<String, Object> params)
+    {
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        return getTableTotalNumberOfRows(query, params);
+    }
+
+
+    @LogBe5Event
+    @Transactional
+    JsonApiModel getTableTotalNumberOfRows(Query query, Map<String, Object> params)
+    {
+        QueryExecutor queryExecutor = queryServiceFactory.get(query, params);
+        long count = queryExecutor.count();
+        return JsonApiModel
+                .data(new ResourceData(TABLE_TOTAL_NUMBER_OF_ROWS, new TableTotalRowsPresentation(count), null), null);
+    }
+
+    public static class TableTotalRowsPresentation
+    {
+        Long totalNumberOfRows;
+
+        public TableTotalRowsPresentation(Long totalNumberOfRows)
+        {
+            this.totalNumberOfRows = totalNumberOfRows;
+        }
+
+        public Long getTotalNumberOfRows()
+        {
+            return totalNumberOfRows;
+        }
     }
 
     private RowsAsJsonPresentation getRowsAsJsonPresentation(Query query, Map<String, Object> parameters)

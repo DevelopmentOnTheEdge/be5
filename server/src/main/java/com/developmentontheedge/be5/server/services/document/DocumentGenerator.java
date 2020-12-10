@@ -21,6 +21,8 @@ public interface DocumentGenerator
 
     JsonApiModel getTableRowsAsJson(String entityName, String queryName, Map<String, Object> parameters);
 
+    JsonApiModel getTableTotalNumberOfRows(String entityName, String queryName, Map<String, Object> params);
+
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
     void addDocumentPlugin(String name, DocumentPlugin documentPlugin);

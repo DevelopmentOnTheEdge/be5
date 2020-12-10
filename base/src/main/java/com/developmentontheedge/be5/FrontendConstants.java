@@ -10,6 +10,8 @@ public interface FrontendConstants
     String TABLE_MORE_ACTION = "table_more";
     String TABLE_JSON = "json";
 
+    String TABLE_TOTAL_NUMBER_OF_ROWS = "number_of_rows";
+
     String STATIC_ACTION = "static";
 
     /**

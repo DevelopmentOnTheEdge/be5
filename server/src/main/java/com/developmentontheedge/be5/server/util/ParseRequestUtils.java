@@ -10,7 +10,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,20 +26,13 @@ public class ParseRequestUtils
             JsonParser parser = Json.createParser(new StringReader(value));
             parser.next();
             JsonObject jsonObject = parser.getObject();
-            try
-            {
-                String data = getJsonStringValue(jsonObject.get("data"));
-                String base64 = ";base64,";
-                int base64Pos = data.indexOf(base64);
-                String mimeTypes = data.substring("data:".length(), base64Pos);
-                byte[] bytes = data.substring(base64Pos + base64.length(), data.length()).getBytes("UTF-8");
-                byte[] decoded = Base64.getDecoder().decode(bytes);
-                return new Base64File(getJsonStringValue(jsonObject.get("name")), decoded, mimeTypes);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw new RuntimeException(e);
-            }
+            String data = getJsonStringValue(jsonObject.get("data"));
+            String base64 = ";base64,";
+            int base64Pos = data.indexOf(base64);
+            String mimeTypes = data.substring("data:".length(), base64Pos);
+            byte[] bytes = data.substring(base64Pos + base64.length()).getBytes(StandardCharsets.UTF_8);
+            byte[] decoded = Base64.getDecoder().decode(bytes);
+            return new Base64File(getJsonStringValue(jsonObject.get("name")), decoded, mimeTypes);
         }
         else
         {
@@ -81,11 +74,7 @@ public class ParseRequestUtils
             if (param.getValue() instanceof JsonArray)
             {
                 JsonArray value = param.getValue().asJsonArray();
-                String[] arrValues = new String[value.size()];
-                for (int i = 0; i < value.size(); i++)
-                {
-                    arrValues[i] = getJsonStringValue(value.get(i));
-                }
+                String[] arrValues = value.stream().map(ParseRequestUtils::getJsonStringValue).toArray(String[]::new);
                 contextParams.put(param.getKey(), arrValues);
             }
             else

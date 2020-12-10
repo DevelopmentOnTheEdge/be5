@@ -71,6 +71,15 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
+    public void getTableTotalNumberOfRows()
+    {
+        JsonApiModel table = documentGenerator.getTableTotalNumberOfRows("testtable", "All records", emptyMap());
+
+        assertEquals("{'attributes':{'totalNumberOfRows':1},'type':'number_of_rows'}",
+                oneQuotes(jsonb.toJson(table.getData())));
+    }
+
+    @Test
     public void testTitleAllRecords()
     {
         JsonApiModel jsonApiModel = documentGenerator.getDocument(meta.getQuery("testtable", "All records"), emptyMap());
