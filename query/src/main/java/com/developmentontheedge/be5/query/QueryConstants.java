@@ -8,6 +8,7 @@ public interface QueryConstants
     String LIMIT = "_limit_";
     String ORDER_COLUMN = "_orderColumn_";
     String ORDER_DIR = "_orderDir_";
+    String TOTAL_NUMBER_OF_ROWS = "_totalNumberOfRows_";
 
     String DISPLAY_TYPE = "_displayType_";
     String TITLE_LEVEL = "_titleLevel_";

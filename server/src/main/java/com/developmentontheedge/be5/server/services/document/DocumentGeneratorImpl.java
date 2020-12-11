@@ -38,6 +38,7 @@ import static com.developmentontheedge.be5.FrontendConstants.TABLE_JSON;
 import static com.developmentontheedge.be5.FrontendConstants.TABLE_MORE_ACTION;
 import static com.developmentontheedge.be5.query.QueryConstants.ALL_RECORDS;
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.TOTAL_NUMBER_OF_ROWS;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static java.util.Collections.singletonMap;
 
@@ -111,7 +112,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String title = getTitle(query, layout);
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
-        Long totalNumberOfRows = getCount(queryExecutor, rows.size());
+        Long totalNumberOfRows = getCount(queryExecutor, rows.size(), -1);
         String messageWhenEmpty = query.getMessageWhenEmpty();
 
         return new TablePresentation(
@@ -158,11 +159,15 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         );
     }
 
-    private long getCount(QueryExecutor queryExecutor, long rowsCount)
+    private long getCount(QueryExecutor queryExecutor, long rowsCount, long totalNumberOfRows)
     {
         if (queryExecutor.getOffset() + rowsCount < queryExecutor.getLimit())
         {
             return rowsCount;
+        }
+        else if(totalNumberOfRows != -1)
+        {
+            return totalNumberOfRows;
         }
         else
         {
@@ -262,7 +267,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         Map<String, Object> paramsWithLimit = updateLimit(query, layout, params);
         QueryExecutor queryExecutor = queryServiceFactory.get(query, paramsWithLimit);
         List<QRec> rows = queryExecutor.execute();
-        long count = getCount(queryExecutor, rows.size());
+        long totalNumberOfRows = Long.parseLong((String) params.getOrDefault(TOTAL_NUMBER_OF_ROWS, "-1"));
+        long count = getCount(queryExecutor, rows.size(), totalNumberOfRows);
         return new MoreRowsPresentation(
                 count,
                 count,

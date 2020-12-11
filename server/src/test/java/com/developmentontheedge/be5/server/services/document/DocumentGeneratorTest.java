@@ -6,12 +6,14 @@ import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.model.MoreRowsPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.TestTableQueryDBTest;
 import com.developmentontheedge.be5.server.services.events.Be5EventTestLogger;
 import com.developmentontheedge.be5.test.ServerTestResponse;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
+import com.google.common.collect.ImmutableMap;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.query.QueryConstants.LIMIT;
+import static com.developmentontheedge.be5.query.QueryConstants.TOTAL_NUMBER_OF_ROWS;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
@@ -185,6 +188,19 @@ public class DocumentGeneratorTest extends TestTableQueryDBTest
                     "'links':{'self':'table/testtable/All records'}," +
                     "'type':'table_more'}",
                 oneQuotes(jsonb.toJson(jsonApiModel.getData())));
+    }
+
+    @Test
+    public void updateQueryJsonApiWithTotalNumberOfRows()
+    {
+        JsonApiModel jsonApiModel = documentGenerator.getNewTableRows("testtable", "All records",
+                ImmutableMap.of(TOTAL_NUMBER_OF_ROWS,"2",LIMIT,"1"));
+
+        //check usage TOTAL_NUMBER_OF_ROWS instead QueryExecutor.count()
+        assertEquals(((MoreRowsPresentation)jsonApiModel.getData().getAttributes()).getRecordsTotal(), 2);
+        jsonApiModel = documentGenerator.getNewTableRows("testtable", "All records",emptyMap());
+        //real totalNumberOfRows = 1
+        assertEquals(((MoreRowsPresentation)jsonApiModel.getData().getAttributes()).getRecordsTotal(), 1);
     }
 
     @Test
