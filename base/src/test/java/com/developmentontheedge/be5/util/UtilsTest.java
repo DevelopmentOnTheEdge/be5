@@ -59,6 +59,21 @@ public class UtilsTest
     }
 
     @Test
+    public void isTrueValueParam()
+    {
+        assertTrue(Utils.isTrueValueParam("yes"));
+        assertTrue(Utils.isTrueValueParam("1"));
+        assertTrue(Utils.isTrueValueParam("on"));
+        assertTrue(Utils.isTrueValueParam("TrUe"));
+
+        assertFalse(Utils.isTrueValueParam(null));
+        assertFalse(Utils.isTrueValueParam(""));
+        assertFalse(Utils.isTrueValueParam("No"));
+        assertFalse(Utils.isTrueValueParam("false"));
+
+    }
+
+    @Test
     public void requiredNotEmpty()
     {
         Utils.requireNonEmpty("1", "test message");

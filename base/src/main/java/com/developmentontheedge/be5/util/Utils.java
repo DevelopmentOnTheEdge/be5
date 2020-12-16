@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -117,6 +118,11 @@ public class Utils
         {
             throw new IllegalArgumentException(errorMessage);
         }
+    }
+
+    public static boolean isTrueValueParam(String paramValue)
+    {
+        return paramValue != null && Arrays.asList("YES", "ON", "TRUE", "1").contains(paramValue.toUpperCase());
     }
 
     @SuppressWarnings("unchecked")

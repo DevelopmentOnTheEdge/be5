@@ -6,13 +6,10 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
-import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
-import com.google.inject.internal.util.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -20,6 +17,9 @@ import static com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsI
 import static com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl.QUERY_SETTINGS_ENTITY;
 import static com.google.inject.internal.util.ImmutableMap.of;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class CoreUtilsTest extends CoreBe5ProjectDBTest
 {
@@ -61,7 +61,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     @Test
     public void getSystemSettingNotFound()
     {
-        assertEquals(null, utils.getSystemSetting("app_name"));
+        assertNull(utils.getSystemSetting("app_name"));
         assertEquals("No value", utils.getSystemSetting("app_name", "No value"));
     }
 
@@ -90,9 +90,9 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
     @Test
     public void getBooleanSystemSetting()
     {
-        assertEquals(false, utils.getBooleanSystemSetting("is_active"));
+        assertFalse(utils.getBooleanSystemSetting("is_active"));
         assertEquals(CoreUtilsImpl.MISSING_SETTING_VALUE, be5Caches.getCache("System settings").getIfPresent("system.is_active"));
-        assertEquals(true, utils.getBooleanSystemSetting("is_active", true));
+        assertTrue(utils.getBooleanSystemSetting("is_active", true));
 
         database.getEntity("systemSettings").add(of(
                 "section_name", "system",
@@ -100,16 +100,16 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
                 "setting_value", "true"));
         be5Caches.clearAll();
 
-        assertEquals(true, utils.getBooleanSystemSetting("is_active"));
+        assertTrue(utils.getBooleanSystemSetting("is_active"));
     }
 
     @Test
     public void getModuleSetting()
     {
-        assertEquals(false, utils.getBooleanModuleSetting("core", "is_active"));
-        assertEquals(true, utils.getBooleanModuleSetting("core", "is_active", true));
+        assertFalse(utils.getBooleanModuleSetting("core", "is_active"));
+        assertTrue(utils.getBooleanModuleSetting("core", "is_active", true));
 
-        assertEquals(null, utils.getModuleSetting("core", "is_active"));
+        assertNull(utils.getModuleSetting("core", "is_active"));
         assertEquals("false", utils.getModuleSetting("core", "is_active", "false"));
 
         database.getEntity("systemSettings").add(of(
@@ -118,16 +118,16 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
                 "setting_value", "true"));
         be5Caches.clearAll();
 
-        assertEquals(true, utils.getBooleanModuleSetting("core", "is_active"));
+        assertTrue(utils.getBooleanModuleSetting("core", "is_active"));
     }
 
     @Test
     public void getUserSetting()
     {
-        assertEquals(null, utils.getUserSetting("testName", "companyID"));
+        assertNull(utils.getUserSetting("testName", "companyID"));
         assertEquals(CoreUtilsImpl.MISSING_SETTING_VALUE, be5Caches.getCache("User settings").getIfPresent("testName.companyID"));
 
-        assertEquals(null, utils.getUserSetting("testName", "companyID"));
+        assertNull(utils.getUserSetting("testName", "companyID"));
 
         database.getEntity("user_prefs").add(of(
                 "user_name", "testName",
@@ -139,7 +139,7 @@ public class CoreUtilsTest extends CoreBe5ProjectDBTest
 
         utils.removeUserSetting("testName", "companyID");
 
-        assertEquals(null, utils.getUserSetting("testName", "companyID"));
+        assertNull(utils.getUserSetting("testName", "companyID"));
     }
 
     @Test

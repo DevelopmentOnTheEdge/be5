@@ -6,10 +6,10 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
+import com.developmentontheedge.be5.util.Utils;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -191,7 +191,7 @@ public class CoreUtilsImpl implements CoreUtils
         {
             return defValue;
         }
-        return Arrays.asList("TRUE", "YES", "1", "ON").contains(check.toUpperCase());
+        return Utils.isTrueValueParam(check);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class CoreUtilsImpl implements CoreUtils
         {
             return defValue;
         }
-        return Arrays.asList("TRUE", "YES", "1", "ON").contains(check.toUpperCase());
+        return Utils.isTrueValueParam(check);
     }
 
     @Override
