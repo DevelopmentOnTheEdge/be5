@@ -28,7 +28,10 @@ public class SqlUtils
             {
                 return (T) (Double) ((BigDecimal) object).doubleValue();
             }
-
+            if (Double.class.equals(clazz) && Float.class.equals(object.getClass()))
+            {
+                return (T) (Double) ((Float) object).doubleValue();
+            }
             if (Short.class.equals(clazz) && Integer.class.equals(object.getClass()))
             {
                 return (T) (Short) ((Integer) object).shortValue();
