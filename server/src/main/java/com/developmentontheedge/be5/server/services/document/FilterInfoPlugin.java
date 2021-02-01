@@ -51,6 +51,11 @@ public class FilterInfoPlugin implements DocumentPlugin
     @Override
     public ResourceData addData(Query query, Map<String, Object> parameters)
     {
+        // hack for missing ***Selection view****
+        String layout = query.getLayout();
+        if( layout != null && layout.contains("\"filterUI\":\"no\"") )
+            return null;
+
         FilterInfo filterInfo = new FilterInfo(
                 getOperationParamsInfo(query, FilterUtil.getContextParams(parameters)),
                 getOperationParamsInfo(query, FilterUtil.getFilterParams(parameters))
