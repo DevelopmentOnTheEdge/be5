@@ -50,7 +50,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     @Inject
     protected void inject(Meta meta, UserAwareMeta userAwareMeta, DbService db, DatabaseModel database,
                        DpsHelper dpsHelper, Validator validator, OperationBuilder.OperationsFactory operations,
-                       QueriesService queries, Session session, Request request, UserInfo userInfo)
+                       QueriesService queries, Session session, /*Request request,*/ UserInfo userInfo)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
@@ -61,8 +61,13 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         this.operations = operations;
         this.queries = queries;
         this.session = session;
-        this.request = request;
+        //this.request = request;
         this.userInfo = userInfo;
+    }
+
+    public void setRequest( Request request )
+    {
+        this.request = request;
     }
 
     protected Query getQuery()

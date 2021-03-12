@@ -21,6 +21,7 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.validation.Validator;
 import com.developmentontheedge.be5.util.FilterUtil;
 import com.developmentontheedge.be5.util.Utils;
+
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -59,6 +60,11 @@ public class OperationExecutorImpl implements OperationExecutor
         this.groovyOperationLoader = groovyOperationLoader;
         this.meta = meta;
         this.groovyRegister = groovyRegister;
+    }
+
+    public Injector getInjector()
+    {
+        return injector;
     }
 
     @Override
@@ -302,7 +308,7 @@ public class OperationExecutorImpl implements OperationExecutor
     public Operation create(OperationInfo operationInfo, OperationContext operationContext)
     {
         Operation operation = getOperationInstance(operationInfo);
-        injector.injectMembers(operation);
+        injector.injectMembers( operation );
         operation.initialize(operationInfo, operationContext, OperationResult.create());
         return operation;
     }
@@ -363,7 +369,7 @@ public class OperationExecutorImpl implements OperationExecutor
     private OperationExtender getOperationExtender(com.developmentontheedge.be5.metadata.model.OperationExtender model)
     {
         OperationExtender operationExtender = getOperationExtenderInstance(model);
-        injector.injectMembers(operationExtender);
+        injector.injectMembers( operationExtender );
         return operationExtender;
     }
 

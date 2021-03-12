@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
+import com.developmentontheedge.be5.operation.services.impl.OperationExecutorImpl;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
@@ -83,7 +84,16 @@ public class FormGeneratorImpl implements FormGenerator
     private Operation getOperation(String entityName, String queryName, String operationName, Map<String, Object> operationParams)
     {
         OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-        return operationExecutor.create(operationInfo, queryName, operationParams);
+        Operation operation = operationExecutor.create(operationInfo, queryName, operationParams);
+
+        if( operation instanceof com.developmentontheedge.be5.server.operations.support.OperationSupport )
+        {
+           ( ( com.developmentontheedge.be5.server.operations.support.OperationSupport )operation ).setRequest( 
+              ( ( OperationExecutorImpl )operationExecutor ).getInjector()
+                     .getInstance( com.developmentontheedge.be5.web.Request.class ) );
+        } 
+
+        return operation;  
     }
 
     @LogBe5Event

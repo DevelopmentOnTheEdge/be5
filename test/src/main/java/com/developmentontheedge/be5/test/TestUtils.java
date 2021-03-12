@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
+import com.developmentontheedge.be5.operation.services.impl.OperationExecutorImpl;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
@@ -243,6 +244,14 @@ public abstract class TestUtils extends BaseTest
                 operationInfo, queryName, operationParams);
 
         Operation operation = operationExecutor.create(operationInfo, operationContext);
+
+        if( operation instanceof com.developmentontheedge.be5.server.operations.support.OperationSupport )
+        {
+           ( ( com.developmentontheedge.be5.server.operations.support.OperationSupport )operation ).setRequest( 
+              ( ( OperationExecutorImpl )operationExecutor ).getInjector()
+                     .getInstance( com.developmentontheedge.be5.web.Request.class ) );
+        } 
+
         ShowCreatedOperations.addOperation(operation);
 
         return operation;

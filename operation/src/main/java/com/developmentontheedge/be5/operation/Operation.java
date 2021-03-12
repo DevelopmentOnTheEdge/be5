@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.operation;
 
 import java.util.Map;
 
-
 public interface Operation
 {
     ///////////////////////////////////////////////////////////////////

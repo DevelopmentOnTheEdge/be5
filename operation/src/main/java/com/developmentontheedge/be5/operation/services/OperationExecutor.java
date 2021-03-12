@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 
 import java.util.Map;
 
-
 public interface OperationExecutor
 {
     Object generate(Operation operation, Map<String, Object> presetValues);
