@@ -17,7 +17,8 @@
 
   <properties>
     <!--jetty.version>8.1.22.v20160922</jetty.version-->
-    <jetty.version>[9.4.33,)</jetty.version>
+    <!--jetty.version>[9.4.33,)</jetty.version-->
+    <jetty.version>9.4.33</jetty.version>
   </properties>
 
   <dependencies>
