@@ -129,7 +129,7 @@ public class SqlUtils
                  java.lang.reflect.Method getValue = cls.getMethod( "getValue", new Class[ 0 ] );
                  return ( String )getValue.invoke( value, new Object[ 0 ] ); 
             }
-            return (String) value;
+            return value.toString();
         }
         catch (SQLException|NoSuchMethodException|IllegalAccessException|java.lang.reflect.InvocationTargetException e)
         {
