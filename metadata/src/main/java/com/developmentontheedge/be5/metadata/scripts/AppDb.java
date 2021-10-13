@@ -102,9 +102,16 @@ public class AppDb extends ScriptSupport<AppDb>
         }
     }
 
+    private static final String profileForIntegrationTests = "profileForIntegrationTests";
+    private static final String ITest_ = "ITest_";
+
     void processDdlElements(final Module module, Class<? extends DdlElement> ddlElementType,
                                       Function<DdlElement, String> getSqlFunction)
     {
+        boolean isTest = be5Project.getConnectionProfile() != null && 
+                ( be5Project.getConnectionProfile().getName().equals(profileForIntegrationTests) ||
+                  be5Project.getConnectionProfile().getName().startsWith(ITest_));
+
         boolean started = false;
         List<Entity> entities = new ArrayList<>(module.getOrCreateEntityCollection().getAvailableElements());
         for (Entity entity : entities)
@@ -121,7 +128,20 @@ public class AppDb extends ScriptSupport<AppDb>
                     createdViews++;
                 }
 
-                if (scheme.withoutDbScheme())
+                if( isTest && !scheme.withoutDbScheme() )
+                {
+                    String schemaName = scheme.getEntityName().split( "\\." )[ 0 ];
+                    try
+                    { 
+                        sql.executeSingle( "CREATE SCHEMA IF NOT EXISTS " + schemaName );
+                    }
+                    catch( com.developmentontheedge.dbms.ExtendedSqlException ese )
+                    { 
+                        throw new RuntimeException( ese );
+                    }
+                }
+
+                if(scheme.withoutDbScheme() || isTest)
                 {
                     if (!started)
                     {
