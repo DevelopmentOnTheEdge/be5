@@ -145,6 +145,7 @@ public class SqlUtils
                 return Long.class;
             case Types.INTEGER:
                 return Integer.class;
+            case Types.TINYINT:
             case Types.SMALLINT:
                 return Short.class;
             case Types.DOUBLE:
