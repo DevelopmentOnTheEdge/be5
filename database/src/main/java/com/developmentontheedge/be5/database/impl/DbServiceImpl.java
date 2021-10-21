@@ -132,6 +132,12 @@ public class DbServiceImpl implements DbService
     }
 
     @Override
+    public <T> T insertRaw(String sql, Object... params)
+    {
+        return execute(conn -> insert(conn, sql, params));
+    }
+
+    @Override
     public String format(String sql)
     {
         return formatSqlCache.get(sql, k -> {

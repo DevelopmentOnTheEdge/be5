@@ -92,6 +92,13 @@ public class DbServiceMock implements DbService
     }
 
     @Override
+    public <T> T insertRaw(String sql, Object... params)
+    {
+        log.fine(sql + Arrays.toString(params));
+        return mock.insertRaw(sql, params);
+    }
+
+    @Override
     public <T> T execute(SqlExecutor<T> executor)
     {
         return mock.execute(executor);

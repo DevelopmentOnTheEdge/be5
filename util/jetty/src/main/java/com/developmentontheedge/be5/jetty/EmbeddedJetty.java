@@ -4,7 +4,8 @@ import com.developmentontheedge.be5.logging.LogConfigurator;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.GzipHandler;
+//import org.eclipse.jetty.server.handler.GzipHandler;
+import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -19,8 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
+//import java.util.Arrays;
+//import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,8 +102,10 @@ public class EmbeddedJetty
     private GzipHandler getGzipHandler(WebAppContext webAppContext)
     {
         GzipHandler gzipHandler = new GzipHandler();
-        gzipHandler.setMimeTypes(new HashSet<>(Arrays.asList("text/html", "text/plain", "text/xml",
-                "text/css", "application/javascript", "application/x-javascript", "text/javascript")));
+        //gzipHandler.setMimeTypes(new HashSet<>(Arrays.asList("text/html", "text/plain", "text/xml",
+        //        "text/css", "application/javascript", "application/x-javascript", "text/javascript")));
+        gzipHandler.addIncludedMimeTypes("text/html", "text/plain", "text/xml",
+                "text/css", "application/javascript", "application/x-javascript", "text/javascript");
         gzipHandler.setHandler(webAppContext);
         return gzipHandler;
     }
@@ -161,14 +164,14 @@ public class EmbeddedJetty
         ContextHandler context0 = new ContextHandler();
         context0.setContextPath("/files");
         File dir0 = Paths.get("./" + resourceFolder).toFile();
-        try
-        {
+        //try
+        //{
             context0.setBaseResource(Resource.newResource(dir0));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        //}
+        //catch (IOException e)
+        //{
+        //    e.printStackTrace();
+        //}
         ResourceHandler rh0 = new ResourceHandler();
         context0.setHandler(rh0);
         return context0;

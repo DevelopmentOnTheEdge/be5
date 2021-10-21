@@ -60,6 +60,8 @@ public interface DbService
      */
     <T> T insert(String sql, Object... params);
 
+    <T> T insertRaw(String sql, Object... params);
+
     String format(String sql);
 
     String format(AstStart astStart);
