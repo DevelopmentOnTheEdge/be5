@@ -67,6 +67,12 @@ public class ResponseImpl implements Response
         sendText("application/xml;charset=UTF-8", xml);
     }
 
+    @Override
+    public void sendYaml(String yaml)
+    {
+        sendText("application/yaml;charset=UTF-8", yaml);
+    }
+
     private void sendText(String contentType, String text)
     {
         // The MIME media type for JSON text is 'application/json'.

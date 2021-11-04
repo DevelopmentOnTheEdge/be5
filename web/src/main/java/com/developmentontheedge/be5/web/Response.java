@@ -30,6 +30,8 @@ public interface Response
 
     void sendXml(String xml);
 
+    void sendYaml(String yaml);
+
     HttpServletResponse getRawResponse();
 
     void redirect(String location);

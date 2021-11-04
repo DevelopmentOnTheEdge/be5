@@ -62,6 +62,12 @@ public class ServerTestResponse implements Response
     }
 
     @Override
+    public void sendYaml(String yaml)
+    {
+        mock.sendYaml(yaml);
+    }
+
+    @Override
     public HttpServletResponse getRawResponse()
     {
         return mock.getRawResponse();
