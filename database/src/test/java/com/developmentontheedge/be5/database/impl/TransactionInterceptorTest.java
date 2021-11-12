@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.database.impl.test.TestTransactionService;
 import com.developmentontheedge.be5.database.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ public class TransactionInterceptorTest extends DatabaseTest
         try
         {
             testTransactionService.testMethod();
-        }
+        }       	
         catch (RuntimeException ignore)
         {
         }

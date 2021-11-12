@@ -15,5 +15,15 @@ public class TransactionInterceptor implements MethodInterceptor
     public Object invoke(MethodInvocation invocation)
     {
         return connectionService.inTransaction(conn -> invocation.proceed());
+        /*
+        try
+        {
+            return invocation.proceed();
+        }
+        catch( Throwable t )
+        {
+            throw new RuntimeException( t );
+        }
+        */
     }
 }

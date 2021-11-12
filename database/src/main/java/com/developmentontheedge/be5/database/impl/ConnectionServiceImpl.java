@@ -97,6 +97,7 @@ public class ConnectionServiceImpl implements ConnectionService
     {
         try
         {
+            //log.log( Level.INFO, "beginWorkWithTxConnection", new Exception() );
             Connection conn = databaseService.getDataSource().getConnection();
             conn.setAutoCommit(false);
             TRANSACT_CONN.set(conn);
@@ -110,6 +111,7 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private void endWorkWithTxConnection()
     {
+        //log.log( Level.INFO, "endWorkWithTxConnection", new Exception() );
         returnConnection(getCurrentTxConn());
         TRANSACT_CONN.set(null);
     }
@@ -176,8 +178,8 @@ public class ConnectionServiceImpl implements ConnectionService
             {
                 if (!conn.isClosed())
                 {
-                    if (!conn.getAutoCommit())
-                        conn.setAutoCommit(true);
+                    conn.setAutoCommit(true);
+
                     if (conn.isReadOnly())
                         conn.setReadOnly(false);
 

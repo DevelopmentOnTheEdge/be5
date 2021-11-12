@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.config.CoreUtils;
-import com.developmentontheedge.be5.database.Transactional;
+//import com.developmentontheedge.be5.database.Transactional;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -71,9 +71,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return getDocument(query, parameters);
     }
 
+    /*@Transactional*/
     @Override
     @LogBe5Event
-    @Transactional
     public JsonApiModel getDocument(Query query, Map<String, Object> params)
     {
         TablePresentation data;
@@ -251,8 +251,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return getNewTableRows(query, parameters);
     }
 
+    /*@Transactional*/
     @LogBe5Event
-    @Transactional
     JsonApiModel getNewTableRows(Query query, Map<String, Object> params)
     {
         MoreRowsPresentation data = getMoreRowsPresentation(query, params);
@@ -283,8 +283,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return getTableRowsAsJson(query, parameters);
     }
 
+    /*@Transactional*/
     @LogBe5Event
-    @Transactional
     JsonApiModel getTableRowsAsJson(Query query, Map<String, Object> params)
     {
         RowsAsJsonPresentation data = getRowsAsJsonPresentation(query, params);
