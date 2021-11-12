@@ -84,6 +84,8 @@ public interface DbService
      */
     void useTransaction(TransactionExecutorVoid executor);
 
+    boolean isInTransaction();
+
     @Nullable
     default Long oneLong(String sql, Object... params)
     {

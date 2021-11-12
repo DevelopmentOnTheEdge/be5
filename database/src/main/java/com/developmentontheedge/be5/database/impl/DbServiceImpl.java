@@ -221,4 +221,10 @@ public class DbServiceImpl implements DbService
     {
         connectionService.useTransaction(executor);
     }
+
+    @Override
+    public boolean isInTransaction()
+    {
+        return connectionService.isInTransaction();
+    }
 }

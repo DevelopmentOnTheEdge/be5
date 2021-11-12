@@ -117,6 +117,12 @@ public class DbServiceMock implements DbService
     }
 
     @Override
+    public boolean isInTransaction()
+    {
+        return connectionService.isInTransaction();
+    }
+
+    @Override
     public String format(String sql)
     {
         return sql;
