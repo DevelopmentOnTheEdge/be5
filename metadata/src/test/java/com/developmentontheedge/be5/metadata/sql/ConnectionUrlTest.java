@@ -75,4 +75,24 @@ public class ConnectionUrlTest
         assertEquals("jdbc:mysql://localhost:3306/mydb?characterEncoding=UTF-8&useUnicode=true&zeroDateTimeBehavior=convertToNull",
                 url.createConnectionUrl(false));
     }
+
+    @Test
+    public void testMariaDB()
+    {
+        ConnectionUrl url = new ConnectionUrl("jdbc:mariadb://localhost:3306/mydb?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8");
+        assertEquals("localhost", url.getHost());
+        assertEquals(3306, url.getPort());
+        assertEquals("mydb", url.getDb());
+        assertEquals(Rdbms.MARIADB, url.getRdbms());
+        assertEquals("convertToNull", url.getProperty("zeroDateTimeBehavior"));
+        assertEquals("true", url.getProperty("useUnicode"));
+        assertEquals("UTF-8", url.getProperty("characterEncoding"));
+
+        // toString is url.createConnectionUrl( true ) meaning for Context - therefore &amp;
+        assertEquals("jdbc:mariadb://localhost:3306/mydb?characterEncoding=UTF-8&amp;useUnicode=true&amp;zeroDateTimeBehavior=convertToNull", url.toString());
+
+        assertEquals("jdbc:mariadb://localhost:3306/mydb?characterEncoding=UTF-8&useUnicode=true&zeroDateTimeBehavior=convertToNull",
+                url.createConnectionUrl(false));
+    }
+
 }

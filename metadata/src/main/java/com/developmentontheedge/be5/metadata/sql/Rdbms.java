@@ -44,6 +44,11 @@ public enum Rdbms
             new MySqlTypeManager(),
             new MySqlSchemaReader(),
             "", "com.mysql.jdbc.Driver", "6", "SELECT 1"),
+    MARIADB(DbmsType.MARIADB,
+            new MySqlMacroProcessorStrategy(),
+            new MySqlTypeManager(),
+            new MySqlSchemaReader(),
+            "", "org.mariadb.jdbc.Driver", "2.7.4", "SELECT 1"),
     ORACLE(DbmsType.ORACLE,
             new OracleMacroProcessorStrategy(),
             new OracleTypeManager(),
@@ -80,6 +85,10 @@ public enum Rdbms
         if (realUrl.startsWith("mysql:"))
         {
             return Rdbms.MYSQL;
+        }
+        if (realUrl.startsWith("mariadb:"))
+        {
+            return Rdbms.MARIADB;
         }
         if (realUrl.startsWith("db2:"))
         {
@@ -230,6 +239,10 @@ public enum Rdbms
                         if (!first)
                         {
                             if (forContext && this == MYSQL )
+                            {
+                                url.append("&amp;");
+                            }  
+                            else if (forContext && this == MARIADB )
                             {
                                 url.append("&amp;");
                             }  

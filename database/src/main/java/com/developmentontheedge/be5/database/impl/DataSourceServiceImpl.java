@@ -84,7 +84,7 @@ public class DataSourceServiceImpl implements DataSourceService
     BasicDataSource getBasicDataSource(BeConnectionProfile profile)
     {
         BasicDataSource dataSource = new BasicDataSource();
-        if (Rdbms.MYSQL != profile.getRdbms())
+        if( Rdbms.MYSQL != profile.getRdbms() && Rdbms.MARIADB != profile.getRdbms() )
         {
             dataSource.setDriverClassName(profile.getDriverDefinition());
         }
@@ -96,7 +96,8 @@ public class DataSourceServiceImpl implements DataSourceService
         dataSource.setRemoveAbandoned(true);
         dataSource.setTestOnBorrow(true);
 
-        log.info("Connection profile: '" + profile.getName() + "'. " +
+        log.info("Connection profile: '" + profile.getName() + "'\n" +
+                "Driver className: '" + dataSource.getDriverClassName() + "'\n" +
                 "Connection url: " + DatabaseUtils.formatUrl(connectionUrl, username, "xxxxx"));
         return dataSource;
     }

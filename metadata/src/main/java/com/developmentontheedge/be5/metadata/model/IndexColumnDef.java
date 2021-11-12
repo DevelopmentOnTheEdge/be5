@@ -70,7 +70,7 @@ public class IndexColumnDef extends BeModelElementSupport
     public String getDefinition()
     {
         Rdbms rdbms = getProject().getDatabaseSystem();
-        if (rdbms == Rdbms.MYSQL && !function.isTransformed())
+        if( ( rdbms == Rdbms.MYSQL || rdbms == Rdbms.MARIADB ) && !function.isTransformed() )
         {
             ColumnDef column = getIndexDef().getTable().getColumns().get(getName());
             if (column != null && (column.getType().getTypeName().equals(SqlColumnType.TYPE_TEXT)

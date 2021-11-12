@@ -19,6 +19,14 @@ public enum DbmsType
                 {
                     return "\'" + input.replace("\\", "\\\\").replace("\'", "\'\'") + "\'";
                 }
+            },
+    MARIADB("mariadb", 3306)
+            {
+                @Override
+                public String quoteString(String input)
+                {
+                    return "\'" + input.replace("\\", "\\\\").replace("\'", "\'\'") + "\'";
+                }
             };
 
     private DbmsType(String name, int port)

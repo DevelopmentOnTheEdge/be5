@@ -186,6 +186,10 @@ public class AppSync extends ScriptSupport<AppSync>
         {
             createViews(internalDbModule);
         }
+        else if (sqlExecutor.getConnector().getType() == DbmsType.MARIADB)
+        {
+            createViews(internalDbModule);
+        }
     }
 
     private void createEntities(Module module)

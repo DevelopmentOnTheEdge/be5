@@ -16,6 +16,10 @@ public class DatabaseUtils
         {
             return Rdbms.MYSQL;
         }
+        if (realUrl.startsWith("mariadb:"))
+        {
+            return Rdbms.MARIADB;
+        }
         if (realUrl.startsWith("db2:"))
         {
             return Rdbms.DB2;
