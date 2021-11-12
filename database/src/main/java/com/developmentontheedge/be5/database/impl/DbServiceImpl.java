@@ -182,7 +182,13 @@ public class DbServiceImpl implements DbService
     private <T> T insert(Connection conn, String sql, Object... params) throws SQLException
     {
         log.fine(sql + Arrays.toString(params));
-        return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
+        //return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
+        Object id = ( T )queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
+        if( id instanceof java.math.BigInteger )
+        {
+            return ( T )( Long )( ( java.math.BigInteger )id ).longValue();
+        }
+        return ( T )id;
     }
 
     @Override

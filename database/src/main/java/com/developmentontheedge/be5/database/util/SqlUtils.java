@@ -52,6 +52,16 @@ public class SqlUtils
                 return (T) stringFromDbObject(object);
             }
 
+            if( java.sql.Timestamp.class.equals(clazz) && java.time.LocalDateTime.class.equals( object.getClass() ) )
+            {
+                return (T) java.sql.Timestamp.valueOf( ( java.time.LocalDateTime )object );
+            }
+
+            if( java.sql.Date.class.equals(clazz) && java.time.LocalDate.class.equals( object.getClass() ) )
+            {
+                return (T) java.sql.Date.valueOf( ( java.time.LocalDate )object );
+            }
+
             return clazz.cast(object);
         }
         catch (Throwable e)
