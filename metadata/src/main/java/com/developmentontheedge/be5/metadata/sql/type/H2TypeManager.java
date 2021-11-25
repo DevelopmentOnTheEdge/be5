@@ -70,6 +70,8 @@ public class H2TypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_MEDIUMBLOB:
             case SqlColumnType.TYPE_BLOB:
                 return "BLOB";
+            case SqlColumnType.TYPE_JSON:
+                return "TEXT";
             case SqlColumnType.TYPE_JSONB:
                 return "JSONB";
             case SqlColumnType.TYPE_BOOL:
