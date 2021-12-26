@@ -62,6 +62,12 @@ public class SqlUtils
                 return (T) java.sql.Date.valueOf( ( java.time.LocalDate )object );
             }
 
+            if( byte[].class.equals(clazz) && Blob.class.isAssignableFrom( object.getClass() ) )
+            {
+                Blob blob = ( Blob )object;
+                return ( T )blob.getBytes( 0, ( int )blob.length() );
+            }
+
             return clazz.cast(object);
         }
         catch (Throwable e)
