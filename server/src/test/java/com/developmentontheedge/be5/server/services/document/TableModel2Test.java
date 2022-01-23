@@ -29,8 +29,8 @@ public class TableModel2Test extends ServerBe5ProjectDBTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("delete from testtable");
-        user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 2L);
-        user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 1L);
+        user1ID = db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user1", 2L);
+        user2ID = db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user2", 1L);
     }
 
     @Test

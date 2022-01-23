@@ -16,10 +16,10 @@ public abstract class TestTableQueryDBTest extends ServerBe5ProjectDBTest
     public void testTableQueryDBTestBefore()
     {
         db.update("delete from testtable");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)", "tableModelTest", "1");
+        db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "tableModelTest", "1");
 
         db.update("delete from testtUser");
-        db.insert("insert into testtUser (name, value) VALUES (?, ?)", "tableModelTest", "user1");
-        db.insert("insert into testtUser (name, value) VALUES (?, ?)", "tableModelTest", "user2");
+        db.insert("insert into testtUser (name, valueCol) VALUES (?, ?)", "tableModelTest", "user1");
+        db.insert("insert into testtUser (name, valueCol) VALUES (?, ?)", "tableModelTest", "user2");
     }
 }

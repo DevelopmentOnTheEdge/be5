@@ -48,7 +48,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         def id = table << [
                 name : "test",
-                value: (Short) 1
+                valueCol: (Short) 1
         ]
 
         assertEquals 1, db.oneLong("select count(*) from $tableName")
@@ -56,7 +56,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
         setStaticUserInfo(RoleType.ROLE_GUEST)
         table << [
                 name : "test2",
-                value: (Short) 2
+                valueCol: (Short) 2
         ]
     }
 
@@ -65,12 +65,12 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         def id = table << [
                 "name" : "test",
-                "value": (Short) 1]
+                "valueCol": (Short) 1]
 
         def propertyList = StreamSupport.stream(table.get(id).spliterator(), false)
                 .map({ p -> p.getName() }).collect(Collectors.toList())
 
-        assertEquals(["ID", "name", "value", "whoInserted___", "whoModified___",
+        assertEquals(["ID", "name", "valueCol", "whoInserted___", "whoModified___",
                       "creationDate___", "modificationDate___",
                       "ipInserted___", "ipModified___", "isDeleted___"], propertyList)
     }
@@ -80,7 +80,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         def id = table << [
                 "name" : "test",
-                "value": (Short) 1]
+                "valueCol": (Short) 1]
 
         assertNull table.get(id).getProperty("isDeleted___").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
     }
@@ -90,7 +90,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         def id = table << [
                 "name" : "test",
-                "value": (Short) 1]
+                "valueCol": (Short) 1]
 
         assertEquals "no", table[id].$isDeleted___
 
@@ -126,9 +126,9 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     @Test
     void testDeleteAll()
     {
-        table << ["name": "TestName", "value": (Short) 1]
-        table << ["name": "TestName", "value": (Short) 2]
-        table << ["name": "TestName2", "value": (Short) 2]
+        table << ["name": "TestName", "valueCol": (Short) 1]
+        table << ["name": "TestName", "valueCol": (Short) 2]
+        table << ["name": "TestName2", "valueCol": (Short) 2]
 
         table.removeBy(["name": "TestName"])
 
@@ -143,7 +143,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         def id = table << [
                 "name" : "test",
-                "value": (Short) 1
+                "valueCol": (Short) 1
         ]
 
         assertEquals "192.168.0.1", table[id].$ipInserted___
@@ -175,7 +175,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     {
         table << [
                 "name"  : "test",
-                "value": (Short) 1,
+                "valueCol": (Short) 1,
                 "notContainColumn": "test"
         ]
     }

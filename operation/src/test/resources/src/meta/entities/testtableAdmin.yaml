@@ -11,7 +11,7 @@ testtableAdmin:
         primaryKey: true
     - name:
         type: VARCHAR(30)
-    - value:
+    - valueCol:
         type: INT
         canBeNull: true
   queries:
@@ -35,7 +35,7 @@ testtableAdmin:
             SELECT
               t.ID AS "___ID",
               t.name AS "Name",
-              t.value AS "Value"
+              t.valueCol AS "Value"
             FROM
               testtable t
   - Query without operations:
@@ -44,7 +44,7 @@ testtableAdmin:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM
           testtable t
   - Test 1D unknown:
@@ -54,7 +54,7 @@ testtableAdmin:
             SELECT
               t.ID AS "___ID",
               t.name AS "Name",
-              t.value AS "Value"
+              t.valueCol AS "Value"
             FROM
               testtable t
   operations:

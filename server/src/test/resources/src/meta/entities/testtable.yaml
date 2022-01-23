@@ -11,7 +11,7 @@ testtable:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: VARCHAR(30)
   queries:
   - All records:
@@ -31,7 +31,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM
           testtable t
   - TestFilterByParamsInQueryOperation:
@@ -42,7 +42,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM
           testtable t
         WHERE (1=1)
@@ -68,7 +68,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM (select * from testtable) t
   - usedParam filter info:
       code: |-
@@ -87,7 +87,7 @@ testtable:
       code: |-
           SELECT
             t.name AS "Name",
-            t.value AS "Value"
+            t.valueCol AS "Value"
           FROM testtable t
   - beQuick:
       type: 1D_unknown

@@ -11,7 +11,7 @@ testRestoredRecords:
         primaryKey: true
     - name:
         type: VARCHAR(30)
-    - value:
+    - valueCol:
         type: INT
         canBeNull: true
     - isDeleted___:
@@ -35,7 +35,7 @@ testRestoredRecords:
             SELECT
               t.ID AS "___ID",
               t.name AS "Name",
-              t.value AS "Value"
+              t.valueCol AS "Value"
             FROM
               testtableAdmin t
   operations:

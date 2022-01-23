@@ -40,12 +40,12 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("delete from testtable");
-        user1ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 2L);
-        user2ID = db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 1L);
+        user1ID = db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user1", 2L);
+        user2ID = db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user2", 1L);
 
         db.update("delete from testSubQuery");
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 1L);
-        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)", "user1", 2L);
+        db.insert("insert into testSubQuery (name, valueCol) VALUES (?, ?)", "user1", 1L);
+        db.insert("insert into testSubQuery (name, valueCol) VALUES (?, ?)", "user1", 2L);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     public void safeXml()
     {
         db.update("DELETE FROM testtable");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)", "value<tag>", 2L);
+        db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "value<tag>", 2L);
 
         Query query = meta.getQuery("testtable", "safeXml");
         List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();
@@ -266,8 +266,8 @@ public class Be5SqlQueryExecutorTest extends QueryBe5ProjectDBTest
     public void subQueryTestNull()
     {
         db.update("DELETE FROM testtableAdmin");
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 11);
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", null);
+        db.insert("insert into testtableAdmin (name, valueCol) VALUES (?, ?)", "tableModelTest", 11);
+        db.insert("insert into testtableAdmin (name, valueCol) VALUES (?, ?)", "tableModelTest", null);
 
         Query query = meta.getQuery("testtableAdmin", "Test null in subQuery");
         List<QRec> list = queryExecutorFactory.get(query, emptyMap()).execute();

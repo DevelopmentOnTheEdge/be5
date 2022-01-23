@@ -11,5 +11,5 @@ testSubQuery:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: KEYTYPE

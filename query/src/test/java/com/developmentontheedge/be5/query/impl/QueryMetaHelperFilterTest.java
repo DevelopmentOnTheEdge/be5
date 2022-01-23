@@ -23,7 +23,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, Collections.emptyMap());
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft", ast.format());
     }
 
@@ -31,20 +31,20 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
     public void simpleFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, singletonMap("value", Collections.singletonList("123")));
+        queryMetaHelper.applyFilters(ast, singletonMap("valueCol", Collections.singletonList("123")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
-                "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
+                "FROM filterTestTable ft WHERE ft.valueCol = 123", ast.format());
     }
 
     @Test
     public void selectAllFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Select all").getFinalQuery());
-        queryMetaHelper.applyFilters(ast, singletonMap("value", Collections.singletonList("123")));
+        queryMetaHelper.applyFilters(ast, singletonMap("valueCol", Collections.singletonList("123")));
 
         assertEquals("SELECT *\n" +
-                "FROM filterTestTable ft WHERE ft.value = 123", ast.format());
+                "FROM filterTestTable ft WHERE ft.valueCol = 123", ast.format());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("name", Collections.singletonList("test")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft WHERE UPPER(ft.name) LIKE UPPER('%test%')", ast.format());
     }
 
@@ -83,7 +83,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("user_name", Collections.singletonList("test")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft WHERE ft.user_name ='test'", ast.format());
     }
 
@@ -93,7 +93,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("recordID", Collections.singletonList("test")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft WHERE ft.recordID ='test'", ast.format());
     }
 
@@ -103,7 +103,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("activeStatus", Collections.singletonList("yes")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft WHERE ft.activeStatus ='yes'", ast.format());
     }
 
@@ -113,7 +113,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("_test_", Collections.singletonList("test")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft", ast.format());
     }
 
@@ -149,7 +149,7 @@ public class QueryMetaHelperFilterTest extends QueryBe5ProjectDBTest
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "With Parameter").getFinalQuery());
         queryMetaHelper.applyFilters(ast, singletonMap("name", Collections.singletonList("test")));
 
-        assertEquals("SELECT ft.name, ft.value\n" +
+        assertEquals("SELECT ft.name, ft.valueCol\n" +
                 "FROM filterTestTable ft\n" +
                 "WHERE (1 = 1)\n" +
                 "<if parameter=\"name\">\n" +

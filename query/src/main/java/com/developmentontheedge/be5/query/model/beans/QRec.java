@@ -12,19 +12,18 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
 
-
 public class QRec extends DynamicPropertySetSupport
 {
     static
     {
-        GroovyRegister.registerMetaClass(DynamicPropertySetMetaClass.class, QRec.class);
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
     }
 
     public QRec()
     {
     }
 
-    public QRec(DynamicPropertySet dps)
+    public QRec( DynamicPropertySet dps )
     {
         super(dps);
     }

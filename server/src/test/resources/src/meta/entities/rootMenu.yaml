@@ -11,7 +11,7 @@ rootMenu:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: VARCHAR(30)
   queries:
   - Test1:
@@ -21,6 +21,6 @@ rootMenu:
             SELECT
               t.ID AS "___ID",
               t.name AS "Name",
-              t.value AS "Value"
+              t.valueCol AS "Value"
             FROM
               testtable t

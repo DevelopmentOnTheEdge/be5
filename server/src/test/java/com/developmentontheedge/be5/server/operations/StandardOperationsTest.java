@@ -102,7 +102,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         assertEquals(OperationStatus.GENERATE, operation.getStatus());
 
-        assertEquals("{'name':'','value':'111'}",
+        assertEquals("{'name':'','valueCol':'111'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
@@ -110,24 +110,24 @@ public class StandardOperationsTest extends SqlMockOperationTest
     public void insertOperation()
     {
         Object first = generateOperation("testtable", "All records", "Insert", "",
-                doubleQuotes("{'name':'test','value':1}")).getFirst();
+                doubleQuotes("{'name':'test','valueCol':1}")).getFirst();
         assertEquals("{" +
-                        "'values':{'name':'test','value':'1'}," +
+                        "'values':{'name':'test','valueCol':'1'}," +
                         "'meta':{" +
                         "'/name':{'displayName':'Name','columnSize':'20'}," +
-                        "'/value':{'displayName':'Value','columnSize':'30'}}," +
-                        "'order':['/name','/value']}",
+                        "'/valueCol':{'displayName':'Value Col','columnSize':'30'}}," +
+                        "'order':['/name','/valueCol']}",
                 oneQuotes(JsonFactory.bean(first)));
 
         //OperationResult execute = executeOperation(req);
 
         OperationResult result = executeOperation("testtable", "All records", "Insert", "",
-                doubleQuotes("{'name':'test','value':'1'}")).getSecond();
+                doubleQuotes("{'name':'test','valueCol':'1'}")).getSecond();
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, valueCol) " +
                 "VALUES (?, ?)", "test", "1");
     }
 
@@ -136,7 +136,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
-                "value", 1,
+                "valueCol", 1,
                 "ID", 12L
         )));
 
@@ -144,7 +144,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
 
-        assertEquals("{'name':'TestName','value':'1'}",
+        assertEquals("{'name':'TestName','valueCol':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
@@ -168,9 +168,9 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editSilentInvoke()
     {
-        OperationResult result = executeEditWithValues("{'name':'EditName','value':123}");
+        OperationResult result = executeEditWithValues("{'name':'EditName','valueCol':123}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", 123, 12L);
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
@@ -182,44 +182,44 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
-                "value", 12345,
+                "valueCol", 12345,
                 "ID", 12L
         )));
 
         Operation operation = createOperation("testtableAdmin", "All records", "EditModalForm", "12");
-        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'EditName','value':123}")).getSecond();
+        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'EditName','valueCol':123}")).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertNull(result.getDetails());
         assertEquals(0, result.getTimeout());
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", 123, 12L);
     }
 
     @Test
     public void editInvokeValueNull()
     {
-        executeEditWithValues("{'name':'EditName','value':null}");
+        executeEditWithValues("{'name':'EditName','valueCol':null}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
     @Test
     public void editInvokeEmptyStringToNull()
     {
-        executeEditWithValues("{'name':'EditName','value':''}");
+        executeEditWithValues("{'name':'EditName','valueCol':''}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
     @Test
     public void editInvokeEmptyStringToNull2Records()
     {
-        executeEditWithValues2Records("{'name':'EditName','value':''}");
+        executeEditWithValues2Records("{'name':'EditName','valueCol':''}");
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
         verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ? WHERE ID IN (?, ?)",
@@ -229,17 +229,17 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvokeEmptyStringToNullNullable2Records()
     {
-        executeEditWithValues2Records("{'name':'','value':'1'}");
+        executeEditWithValues2Records("{'name':'','valueCol':'1'}");
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET value = ? WHERE ID IN (?, ?)",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET valueCol = ? WHERE ID IN (?, ?)",
                 1, 12L, 13L);
     }
 
     @Test
     public void editInvokeEmptyAllNulls2Records()
     {
-        executeEditWithValues2Records("{'name':'','value':''}");
+        executeEditWithValues2Records("{'name':'','valueCol':''}");
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
         verifyNoMoreInteractions(DbServiceMock.mock);
@@ -249,7 +249,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         when(DbServiceMock.mock.select(any(), any(), any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
-                "value", 12345,
+                "valueCol", 12345,
                 "ID", 12L
         )));
 

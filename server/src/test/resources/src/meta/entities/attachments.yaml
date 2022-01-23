@@ -17,6 +17,6 @@ attachments:
     - data:
         type: TEXT
         canBeNull: true
-    - value:
+    - valueCol:
         type: VARCHAR(30)
         canBeNull: true

@@ -12,7 +12,7 @@ testtable:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: KEYTYPE
   queries:
   - All records:
@@ -21,7 +21,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM testtable t
   - testOrderWithHiddenColumns:
       code: |-
@@ -29,7 +29,7 @@ testtable:
           t.ID AS "___ID",
           t.ID AS "___testID",
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM testtable t
   - emptyQuery:
       type: 1D_unknown
@@ -86,7 +86,7 @@ testtable:
       code: |-
         SELECT
           123 as "___ID",
-          t.value AS "Value",
+          t.valueCol AS "Value",
           '<css class="currency"/>;<format mask="###,###,##0.00" />' AS ";Value"
         FROM testtable t
   - safeXml:
@@ -111,7 +111,7 @@ testtable:
         SELECT
           123 as "___ID",
           t.name AS "Name",
-          t.value AS "Value;<roles name='TestUser2'/>"
+          t.valueCol AS "Value;<roles name='TestUser2'/>"
         FROM testtable t
   - beRolesNot:
       type: 1D_unknown
@@ -120,7 +120,7 @@ testtable:
         SELECT
           123 as "___ID",
           t.name AS "Name",
-          t.value AS "Value;<roles name='!TestUser2'/>"
+          t.valueCol AS "Value;<roles name='!TestUser2'/>"
         FROM testtable t
   - beRowCssClass:
       type: 1D_unknown
@@ -129,7 +129,7 @@ testtable:
         SELECT
           123 as "___ID",
           'test' AS "test",
-          t.value AS "value",
+          t.valueCol AS "value",
           t.name AS "___css_class"
         FROM testtable t
   - beAggregate:
@@ -137,7 +137,7 @@ testtable:
       roles: SystemDeveloper
       code: |-
         SELECT
-          t.value AS "Value",
+          t.valueCol AS "Value",
           '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
         FROM testtable t
   - beAggregate1D:
@@ -148,7 +148,7 @@ testtable:
           123 as "___ID",
           'test' AS "Test",
           'test2' AS "Test2",
-          t.value AS "Value",
+          t.valueCol AS "Value",
           '<aggregate function="SUM" type="Number" format="###,###,##0.00" cssClass="currency"/>' AS ";Value"
         FROM testtable t
   - Sub Query:
@@ -158,10 +158,10 @@ testtable:
         SELECT
           t.name AS "___Name",
           t.name AS "Name",
-          t.value AS "Value",
-          '<sql>SELECT u.value FROM testSubQuery u
+          t.valueCol AS "Value",
+          '<sql>SELECT u.valueCol FROM testSubQuery u
                 WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues",
-          '<sql>SELECT concat(u.value,null) FROM testSubQuery u
+          '<sql>SELECT concat(u.valueCol,null) FROM testSubQuery u
                 WHERE u.name = '<var:___Name />'</sql>' AS "testSubQueryValues1"
         FROM testtable t
   - subQueryBeautifier:
@@ -169,21 +169,21 @@ testtable:
       roles: SystemDeveloper
       code: |-
         SELECT
-          '<sql beautifierName="internal_glue">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+          '<sql beautifierName="internal_glue">SELECT u.name, u.valueCol FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
   - subQueryBeautifierLine:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
         SELECT
-          '<sql beautifierName="line">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+          '<sql beautifierName="line">SELECT u.name, u.valueCol FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
   - subQueryBeautifierText:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
         SELECT
-          '<sql beautifierName="text">SELECT u.name, u.value FROM testSubQuery u</sql>' AS "test"
+          '<sql beautifierName="text">SELECT u.name, u.valueCol FROM testSubQuery u</sql>' AS "test"
         FROM testtable t
   - Sub Query default:
       type: 1D_unknown
@@ -191,7 +191,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "___Name",
-          '<sql default="defaultValue">SELECT u.value
+          '<sql default="defaultValue">SELECT u.valueCol
                 FROM testSubQuery u WHERE 1 = 2</sql>' AS "testSubQueryValues"
         FROM testtable t
   - Sub Query with prepare params:
@@ -201,18 +201,18 @@ testtable:
         SELECT
           t.name AS "___Name",
           t.name AS "Name",
-          t.value AS "Value",
-          '<sql using="___Name">SELECT u.value FROM testSubQuery u WHERE u.name = ?</sql>' AS "testtUserValues"
+          t.valueCol AS "Value",
+          '<sql using="___Name">SELECT u.valueCol FROM testSubQuery u WHERE u.name = ?</sql>' AS "testtUserValues"
         FROM testtable t
   - Sub Query with long prepare params:
       type: 1D_unknown
       roles: SystemDeveloper
       code: |-
         SELECT
-          t.value AS "___value",
+          t.valueCol AS "___value",
           t.name AS "Name",
-          t.value AS "Value",
-          '<sql using="___value">SELECT u.value FROM testSubQuery u WHERE u.value = ?</sql>' AS "testtUserValues"
+          t.valueCol AS "Value",
+          '<sql using="___value">SELECT u.valueCol FROM testSubQuery u WHERE u.valueCol = ?</sql>' AS "testtUserValues"
         FROM testtable t
   - TestMultipleColumn:
       code: |-
@@ -239,7 +239,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM (select * from testtable) t
   - testBeSqlMacros:
       type: 1D_unknown

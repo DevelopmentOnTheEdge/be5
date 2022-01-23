@@ -36,10 +36,10 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
 
         entity.add([
                 name : "Test",
-                value: 1
+                valueCol: 1
         ])
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)",
                 "Test", 1)
     }
 
@@ -52,23 +52,23 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
         def list = [
                 [
                         name : "Test",
-                        value: 1
+                        valueCol: 1
                 ],
                 [
                         name : "Test",
-                        value: 2
+                        valueCol: 2
                 ],
                 [
                         name : "Test",
-                        value: 3
+                        valueCol: 3
                 ],
         ]
 
         entity.addAll(list)
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 1)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 2)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "Test", 3)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 1)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 2)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 3)
     }
 
     @Test
@@ -79,14 +79,14 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
         String id = entity.add([
                 name : "Test",
-                value: "1"
+                valueCol: "1"
         ])
         assertEquals("1", id)
 
         when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(2L)
         id = entity.add([
                 name : "Test",
-                value: "1"
+                valueCol: "1"
         ])
         assertEquals("2", id)
     }
@@ -98,7 +98,7 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
                 Matchers.<ResultSetParser<DynamicPropertySet>> any(), eq(4444L))).thenReturn(getDpsS([
                 ID   : 4444L,
                 name : "test",
-                value: 123
+                valueCol: 123
         ]))
 
         def rec = database.getEntity("testtableAdmin").get(4444L)

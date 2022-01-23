@@ -44,7 +44,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "test1");
-        map.put("value", "2");
+        map.put("valueCol", "2");
 
         ResourceData result = formGenerator.generate("testtable", "All records", "Insert", emptyMap(), map);
 
@@ -52,7 +52,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         //result.getAttributes()
 
-        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'Name','columnSize':'20'},'/value':{'displayName':'Value','columnSize':'30'}},'order':['/name','/value']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'Testtable: Добавить'}",
+        assertEquals("{'bean':{'values':{'name':'test1','valueCol':'2'},'meta':{'/name':{'displayName':'Name','columnSize':'20'},'/valueCol':{'displayName':'Value Col','columnSize':'30'}},'order':['/name','/valueCol']}," + "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'Testtable: Добавить'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
 
         assertEquals("form/testtable/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
@@ -62,7 +62,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     public void getParametersEdit()
     {
         db.update("delete from testtableAdmin");
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 12);
+        db.insert("insert into testtableAdmin (name, valueCol) VALUES (?, ?)", "tableModelTest", 12);
 
         Long id = db.one("select id from testtableAdmin limit 1");
         assertNotNull(id);
@@ -73,7 +73,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         assertEquals(FORM_ACTION, result.getType());
 
-        assertEquals("{'bean':{'values':{'name':'tableModelTest','value':'12'},'meta':{'/name':{'displayName':'Name','columnSize':'30'},'/value':{'displayName':'Value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':" + id + "},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
+        assertEquals("{'bean':{'values':{'name':'tableModelTest','valueCol':'12'},'meta':{'/name':{'displayName':'Name','columnSize':'30'},'/valueCol':{'displayName':'Value Col','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/valueCol']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':" + id + "},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
         Map<String, Object> oparams = ((FormPresentation)result.getAttributes()).getOperationParams();
         assertEquals(1, oparams.size());
@@ -90,7 +90,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         assertEquals(FORM_ACTION, result.getType());
 
-        assertEquals("{'bean':{'values':{'name':'','value':'111'},'meta':{'/name':{'displayName':'Name','columnSize':'30'},'/value':{'displayName':'Value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{'type':'modalForm'},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Добавить'}",
+        assertEquals("{'bean':{'values':{'name':'','valueCol':'111'},'meta':{'/name':{'displayName':'Name','columnSize':'30'},'/valueCol':{'displayName':'Value Col','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/valueCol']},'entity':'testtableAdmin','layout':{'type':'modalForm'},'operation':'Insert','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Добавить'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
         assertEquals("form/testtableAdmin/All records/Insert", result.getLinks().get(RestApiConstants.SELF_LINK));
     }
@@ -99,8 +99,8 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     public void getParametersEdit2Records()
     {
         db.update("delete from testtableAdmin");
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 12);
-        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)", "tableModelTest", 13);
+        db.insert("insert into testtableAdmin (name, valueCol) VALUES (?, ?)", "tableModelTest", 12);
+        db.insert("insert into testtableAdmin (name, valueCol) VALUES (?, ?)", "tableModelTest", 13);
 
         Long[] ids = db.longArray("select id from testtableAdmin limit 2");
         assertEquals(2, ids.length);
@@ -115,7 +115,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
 
         assertEquals(FORM_ACTION, result.getType());
 
-        assertEquals("{'bean':{'values':{'name':'','value':''},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'30'},'/value':{'displayName':'Value','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/value']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':[" + id1 + "," + id2 + "]},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
+        assertEquals("{'bean':{'values':{'name':'','valueCol':''},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'30'},'/valueCol':{'displayName':'Value Col','type':'Integer','canBeNull':true,'validationRules':[{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'},{'attr':'1','type':'step'}]}},'order':['/name','/valueCol']},'entity':'testtableAdmin','layout':{},'operation':'Edit','operationParams':{'_selectedRows_':[" + id1 + "," + id2 + "]},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'testtableAdmin: Редактировать'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
         Map<String, Object> oparams = ((FormPresentation)result.getAttributes()).getOperationParams();
         assertEquals(1, oparams.size());
@@ -134,7 +134,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
     {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "test1");
-        map.put("value", "2");
+        map.put("valueCol", "2");
 
         ResourceData result = formGenerator.execute("testtable", "All records", "Insert", emptyMap(), map);
         assertEquals(OPERATION_RESULT, result.getType());
@@ -199,7 +199,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertNotNull(id);
         ResourceData result = formGenerator.generate("testtable", "All records", "FilterNoTitle", emptyMap(), emptyMap());
 
-        assertEquals("{'bean':{'values':{'name':'','value':'','_search_presets_':'','_search_':true},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'},'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'},'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/name','/value','/_search_presets_','/_search_']},'entity':'testtable','layout':{'type':'modalForm','title':'none'},'operation':'FilterNoTitle','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':''}",
+        assertEquals("{'bean':{'values':{'name':'','valueCol':'','_search_presets_':'','_search_':true},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'},'/valueCol':{'displayName':'Value Col','canBeNull':true,'columnSize':'30'},'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/name','/valueCol','/_search_presets_','/_search_']},'entity':'testtable','layout':{'type':'modalForm','title':'none'},'operation':'FilterNoTitle','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':''}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
     }
 
@@ -221,7 +221,7 @@ public class FormGeneratorTest extends TestTableQueryDBTest
         assertNotNull(id);
         ResourceData result = formGenerator.generate("testtable", "All records", "FilterTitleFromLayout", emptyMap(), emptyMap());
 
-        assertEquals("{'bean':{'values':{'name':'','value':'','_search_presets_':'','_search_':true},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'},'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'},'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/name','/value','/_search_presets_','/_search_']},'entity':'testtable','layout':{'type':'modalForm','title':'Title from layout'},'operation':'FilterTitleFromLayout','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'Имя из layout'}",
+        assertEquals("{'bean':{'values':{'name':'','valueCol':'','_search_presets_':'','_search_':true},'meta':{'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'},'/valueCol':{'displayName':'Value Col','canBeNull':true,'columnSize':'30'},'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/name','/valueCol','/_search_presets_','/_search_']},'entity':'testtable','layout':{'type':'modalForm','title':'Title from layout'},'operation':'FilterTitleFromLayout','operationParams':{},'operationResult':{'status':'GENERATE','timeout':5},'query':'All records','title':'Имя из layout'}",
                 oneQuotes(jsonb.toJson(result.getAttributes())));
     }
 }

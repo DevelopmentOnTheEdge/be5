@@ -331,7 +331,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void test()
     {
-        Long id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", "1");
+        Long id = db.insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "TestName", "1");
 
         QRec rec = queries.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id);
 
@@ -343,7 +343,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testBeSql()
     {
-        Long id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "1234567890", 1);
+        Long id = db.insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "1234567890", 1);
 
         assertEquals("10", queries.qRec("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue());
 
@@ -353,7 +353,7 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testGetters()
     {
-        Long id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 123);
+        Long id = db.insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "TestName", 123);
 
         QRec rec = queries.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id);
 
@@ -361,20 +361,20 @@ public class QueriesServiceTest extends QueryBe5ProjectDBTest
         {
             //One request to the database for several fields
             assertEquals("TestName", rec.getString("name"));
-            assertEquals(123, rec.getInt("value"));
-            assertEquals(123, rec.getLong("value"));
+            assertEquals(123, rec.getInt("valueCol"));
+            assertEquals(123, rec.getLong("valueCol"));
         }
 
 
         //use db and DpsRecordAdapter.createDps
         assertEquals("TestName", db.oneString("SELECT name FROM testtableAdmin WHERE id = ?", id));
-        assertEquals(123, (int) db.oneInteger("SELECT value FROM testtableAdmin WHERE id = ?", id));
+        assertEquals(123, (int) db.oneInteger("SELECT valueCol FROM testtableAdmin WHERE id = ?", id));
 
         QRec dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", new QRecParser(), id);
         if (dps != null)
         {
             assertEquals("TestName", dps.getValue("name"));
-            assertEquals(123, Integer.parseInt(dps.getValue("value").toString()));
+            assertEquals(123, Integer.parseInt(dps.getValue("valueCol").toString()));
         }
 
     }

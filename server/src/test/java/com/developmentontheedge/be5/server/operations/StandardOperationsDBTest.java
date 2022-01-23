@@ -27,14 +27,14 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         db.update("DELETE FROM testtableAdmin");
-        id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 1);
+        id = db.insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "TestName", 1);
     }
 
     @Test
     public void insertOperation()
     {
         InsertOperation operation = (InsertOperation)createOperation("testtable", "All records", "Insert", "");
-        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'test2','value':'2'}")).getSecond();
+        OperationResult result = executeOperation(operation, doubleQuotes("{'name':'test2','valueCol':'2'}")).getSecond();
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
@@ -42,7 +42,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
         RecordModel<Object> record = database.getEntity("testtable").get(lastInsertID);
 
         assertEquals("test2", record.getValueAsString("name"));
-        assertEquals(2L, (long)record.getValueAsLong("value"));
+        assertEquals(2L, (long)record.getValueAsLong("valueCol"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     {
         Object first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(), "{}").getFirst();
 
-        assertEquals("{'name':'TestName','value':'1'}",
+        assertEquals("{'name':'TestName','valueCol':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
@@ -60,7 +60,7 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
         Object first = generateOperation("testtableAdmin", "All records",
                 "EditWithCheckRecords", id.toString(), "{}").getFirst();
 
-        assertEquals("{'name':'TestName','value':'1'}",
+        assertEquals("{'name':'TestName','valueCol':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
@@ -68,14 +68,14 @@ public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
     public void editInvoke()
     {
         OperationResult result = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),
-                doubleQuotes("{'name':'EditName','value':123}")).getSecond();
+                doubleQuotes("{'name':'EditName','valueCol':123}")).getSecond();
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
         assertEquals(GO_BACK, ((FrontendAction[])result.getDetails())[0].getType());
         assertEquals("table/testtableAdmin/All records/_selectedRows_=" + id, ((FrontendAction[])result.getDetails())[0].getValue());
 
         assertEquals("EditName,123",
-                db.select("SELECT name, value FROM testtableAdmin WHERE id = ?", new ConcatColumnsParser(), id));
+                db.select("SELECT name, valueCol FROM testtableAdmin WHERE id = ?", new ConcatColumnsParser(), id));
     }
 
     @Test

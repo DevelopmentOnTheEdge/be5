@@ -33,8 +33,8 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     {
         setStaticUserInfo(RoleType.ROLE_GUEST);
         db.update("delete from testtable");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)", "user1", 1L);
-        db.insert("insert into testtable (name, value) VALUES (?, ?)", "user2", 2L);
+        db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user1", 1L);
+        db.insert("insert into testtable (name, valueCol) VALUES (?, ?)", "user2", 2L);
     }
 
     @Test

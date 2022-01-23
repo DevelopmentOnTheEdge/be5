@@ -29,13 +29,13 @@ public class FilterOperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> generate = generateOperation(operation, Collections.emptyMap());
 
         assertEquals("{" +
-                "'values':{'name':'','value':'','_search_presets_':'','_search_':true}," +
+                "'values':{'name':'','valueCol':'','_search_presets_':'','_search_':true}," +
                 "'meta':{" +
                 "'/name':{'displayName':'Name','canBeNull':true,'columnSize':'20'}," +
-                "'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'}," +
+                "'/valueCol':{'displayName':'Value Col','canBeNull':true,'columnSize':'30'}," +
                 "'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true}," +
                 "'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}}," +
-                "'order':['/name','/value','/_search_presets_','/_search_']" +
+                "'order':['/name','/valueCol','/_search_presets_','/_search_']" +
                 "}", oneQuotes(JsonFactory.bean(generate.getFirst())));
     }
 
@@ -50,13 +50,13 @@ public class FilterOperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> generate = generateOperation(operation, "");
 
         assertEquals("{" +
-                "'values':{'name':'b','value':'','_search_presets_':'name','_search_':true}," +
+                "'values':{'name':'b','valueCol':'','_search_presets_':'name','_search_':true}," +
                 "'meta':{" +
                 "'/name':{'displayName':'Name','readOnly':true,'canBeNull':true,'columnSize':'20'}," +
-                "'/value':{'displayName':'Value','canBeNull':true,'columnSize':'30'}," +
+                "'/valueCol':{'displayName':'Value Col','canBeNull':true,'columnSize':'30'}," +
                 "'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true}," +
                 "'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}}," +
-                "'order':['/name','/value','/_search_presets_','/_search_']" +
+                "'order':['/name','/valueCol','/_search_presets_','/_search_']" +
                 "}", oneQuotes(JsonFactory.bean(generate.getFirst())));
     }
 
@@ -70,7 +70,7 @@ public class FilterOperationTest extends SqlMockOperationTest
         Operation operation = createOperation("testtable", "All records", "Filter", map);
         Either<Object, OperationResult> generate = generateOperation(operation, Collections.emptyMap());
 
-        assertEquals("{'name':'name1','value':'','_search_presets_':'','_search_':true}",
+        assertEquals("{'name':'name1','valueCol':'','_search_presets_':'','_search_':true}",
                 oneQuotes(JsonFactory.beanValues(generate.getFirst())));
     }
 

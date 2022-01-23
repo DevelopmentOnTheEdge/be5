@@ -11,7 +11,7 @@ testtable:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: VARCHAR(30)
   queries:
   - All records:
@@ -27,7 +27,7 @@ testtable:
       code: |-
         SELECT
           t.name AS "Name",
-          t.value AS "Value"
+          t.valueCol AS "Value"
         FROM
           testtable t
   operations:

@@ -28,14 +28,24 @@ public class QueryBuilderDbTest extends ServerBe5ProjectDBTest
         assertEquals("table", list.get(0).getType());
         String res = ((RowModel) ((TablePresentation) list.get(0).getAttributes())
                 .getRows().get(0)).getCells().get(0).getContent().toString();
-        assertTrue( "Wrong result = " + res, res.startsWith(
+        assertTrue( "Wrong result = " + res, 
+          res.startsWith(
                 "SELECT\n" +
                 "    \"PUBLIC\".\"TESTTABLE\".\"ID\",\n" +
                 "    \"PUBLIC\".\"TESTTABLE\".\"NAME\",\n" +
-                "    \"PUBLIC\".\"TESTTABLE\".\"VALUE\"\n" +
+                "    \"PUBLIC\".\"TESTTABLE\".\"VALUECOL\"\n" +
                 "FROM \"PUBLIC\".\"TESTTABLE\"\n" +
                 "    /* PUBLIC.TESTTABLE.tableScan */\n" +
-                "    /* scanCount: "));
+                "    /* scanCount: ") ||
+          res.startsWith(
+                "SELECT\n" +
+                "    TESTTABLE.ID,\n" +
+                "    TESTTABLE.NAME,\n" +
+                "    TESTTABLE.VALUECOL\n" +
+                "FROM PUBLIC.TESTTABLE\n" +
+                "    /* PUBLIC.TESTTABLE.tableScan */\n" +
+                "    /* scanCount: ") 
+       );
     }
 
 }

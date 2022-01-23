@@ -228,7 +228,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     @Test
     void getColumnsWithoutSpecialTest()
     {
-        assertEquals(["ID", "name", "value"] as Set,
+        assertEquals(["ID", "name", "valueCol"] as Set,
                 dpsHelper.getColumnsWithoutSpecial(meta.getEntity("meters")).keySet())
     }
 
@@ -236,33 +236,33 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void getDpsTest()
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
-        assertNotNull dps.getProperty("value")
+        assertNotNull dps.getProperty("valueCol")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), Collections.singletonList("value"), [:])
-        assertNull dps.getProperty("value")
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), Collections.singletonList("valueCol"), [:])
+        assertNull dps.getProperty("valueCol")
     }
 
     @Test
     void addDpExcludeColumns_operationParams()
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
-        assertNotNull dps.getProperty("value")
+        assertNotNull dps.getProperty("valueCol")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["value": "1"], ["value": "2"])
-        assertEquals "1", dps.getValue("value")
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["valueCol": "1"], ["valueCol": "2"])
+        assertEquals "1", dps.getValue("valueCol")
     }
 
     @Test
     void addDpExcludeColumns_operationParams_not_affected()
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
-        assertNotNull dps.getProperty("value")
+        assertNotNull dps.getProperty("valueCol")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["CODE": "1"], ["value": "2"])
-        assertEquals "2", dps.getValue("value")
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["CODE": "1"], ["valueCol": "2"])
+        assertEquals "2", dps.getValue("valueCol")
     }
 
     @Test
@@ -431,8 +431,8 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     void addEntityPrefixTest()
     {
         db.update("DELETE FROM testRestoredRecords");
-        db.insert("INSERT INTO testRestoredRecords (name, value) VALUES (?, ?)", "TestName", 1)
-        db.insert("INSERT INTO testRestoredRecords (name, value) VALUES (?, ?)", "TestName", 2)
+        db.insert("INSERT INTO testRestoredRecords (name, valueCol) VALUES (?, ?)", "TestName", 1)
+        db.insert("INSERT INTO testRestoredRecords (name, valueCol) VALUES (?, ?)", "TestName", 2)
 
         def property = new DynamicProperty("test", String.class)
         dpsHelper.addTags(property, meta.getColumn("testCollection", "categoryID"),

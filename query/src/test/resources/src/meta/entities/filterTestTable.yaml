@@ -11,7 +11,7 @@ filterTestTable:
         primaryKey: true
     - name:
         type: VARCHAR(20)
-    - value:
+    - valueCol:
         type: INT
         canBeNull: true
     - user_name:
@@ -31,7 +31,7 @@ filterTestTable:
   - Simple:
       roles: Administrator
       code: |2-
-        SELECT ft.name, ft.value
+        SELECT ft.name, ft.valueCol
         FROM filterTestTable ft
   - Select all:
       roles: Administrator
@@ -41,13 +41,13 @@ filterTestTable:
   - With Where:
       roles: Administrator
       code: |2-
-        SELECT ft.name, ft.value
+        SELECT ft.name, ft.valueCol
         FROM filterTestTable ft
         WHERE ft.name = <session:user-personID />
   - With Parameter:
       roles: Administrator
       code: |2-
-        SELECT ft.name, ft.value
+        SELECT ft.name, ft.valueCol
         FROM filterTestTable ft
         WHERE (1=1)
         <if parameter="name">

@@ -74,7 +74,7 @@ public class MetaTest extends BaseTest
 
         assertEquals(Long.class, meta.getColumnType(testtableAdmin, "ID"));
         assertEquals(String.class, meta.getColumnType(testtableAdmin, "name"));
-        assertEquals(Integer.class, meta.getColumnType(testtableAdmin, "value"));
+        assertEquals(Integer.class, meta.getColumnType(testtableAdmin, "valueCol"));
     }
 
     @Test

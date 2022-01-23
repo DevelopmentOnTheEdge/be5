@@ -11,7 +11,7 @@ meters:
     - name:
         type: VARCHAR(50)
         defaultValue: '''Н/Д'''
-    - value:
+    - valueCol:
         type: SMALLINT
     - whoInserted___:
         type: VARCHAR(100)

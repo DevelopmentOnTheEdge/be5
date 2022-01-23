@@ -11,7 +11,7 @@ testtableAdmin:
         primaryKey: true
     - name:
         type: VARCHAR(30)
-    - value:
+    - valueCol:
         type: INT
         canBeNull: true
   queries:

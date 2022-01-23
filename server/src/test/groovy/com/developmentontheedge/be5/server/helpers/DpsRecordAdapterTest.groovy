@@ -26,13 +26,13 @@ class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
     {
         def id = database.testtableAdmin << [
                 name : "test",
-                value: 1
+                valueCol: 1
         ]
 
         def rec = database.testtableAdmin[id]
 
         assertEquals "test", rec.$name
-        assertEquals 1, rec.$value
+        assertEquals 1, rec.$valueCol
 
     }
 
@@ -41,13 +41,13 @@ class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
     {
         def id = database.testtableAdmin << [
                 name : "test",
-                value: null
+                valueCol: null
         ]
 
         def rec = database.testtableAdmin[id]
 
         assertEquals "test", rec.$name
-        assertEquals 111, rec.$value
+        assertEquals 111, rec.$valueCol
     }
 
 }
