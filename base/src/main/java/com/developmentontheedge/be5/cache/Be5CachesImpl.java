@@ -63,9 +63,22 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     }
 
     @Override
-    public Cache getCache(String name)
+    public Cache getCache( String name )
     {
-        return caches.get(name);
+        Cache c = caches.get( name );
+        if( c == null )
+        {
+            synchronized( Be5CachesImpl.class )
+            { 
+                c = caches.get( name ); 
+                if( c == null )
+                {
+                    return createCache( name );
+                }
+            }
+        }    
+
+        return c;
     }
 
     @Override
