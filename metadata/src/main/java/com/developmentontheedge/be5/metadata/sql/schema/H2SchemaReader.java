@@ -41,7 +41,8 @@ public class H2SchemaReader extends DefaultSchemaReader
                 "c.table_name, " +
                 "c.column_name, " +
                 "c.column_default, " +
-                "c.TYPE_NAME, " +
+                "c.type_name, " +
+                /*"c.data_type, " +*/
                 "c.character_maximum_length, " +
                 "c.numeric_precision, " +
                 "c.numeric_scale, " +
