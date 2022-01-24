@@ -60,6 +60,28 @@ public class DbServiceImpl implements DbService
         dbmsTransformer.setParserContext(DefaultParserContext.getInstance());
     }
 
+/*
+    @Override
+    public List<QRec> list( String sql )
+    {
+    }
+
+    @Override
+    public List<QRec> list( String sql, String cacheName )
+    {
+    }
+
+    @Override
+    public QRec record( String sql )
+    {
+    }
+
+    @Override
+    public QRec record( String sql, String cacheName )
+    {
+    }
+*/
+
     @Override
     public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params)
     {
