@@ -66,7 +66,6 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
     public Cache getCache( String name )
     {
         Cache c = caches.get( name );
-        /*
         if( c == null )
         {
             synchronized( Be5CachesImpl.class )
@@ -78,7 +77,6 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
                 }
             }
         }    
-        */
         return c;
     }
 
