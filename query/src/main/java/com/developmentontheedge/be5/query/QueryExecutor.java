@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 
 import java.util.List;
 import java.util.Map;

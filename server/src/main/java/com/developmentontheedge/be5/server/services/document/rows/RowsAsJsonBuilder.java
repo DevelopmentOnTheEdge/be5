@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services.document.rows;
 
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 
 import java.util.ArrayList;

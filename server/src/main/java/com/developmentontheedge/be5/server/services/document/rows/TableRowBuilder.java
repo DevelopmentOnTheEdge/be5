@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SqlBoolColumnType;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoProvider;

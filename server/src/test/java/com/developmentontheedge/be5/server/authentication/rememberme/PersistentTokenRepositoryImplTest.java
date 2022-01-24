@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.authentication.rememberme;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.be5.util.DateUtils;

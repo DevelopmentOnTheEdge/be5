@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.ListWrapperHandler;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;

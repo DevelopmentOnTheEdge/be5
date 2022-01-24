@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.queries.support;
 
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;

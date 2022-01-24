@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;

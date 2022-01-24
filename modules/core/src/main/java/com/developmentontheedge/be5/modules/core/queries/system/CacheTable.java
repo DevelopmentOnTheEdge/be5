@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.queries.system;
 
 import com.developmentontheedge.be5.cache.Be5Caches;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.server.queries.support.QueryExecutorSupport;
 import com.github.benmanes.caffeine.cache.Cache;
 

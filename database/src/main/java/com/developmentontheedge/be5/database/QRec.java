@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.model.beans;
+package com.developmentontheedge.be5.database;
 
 import com.developmentontheedge.be5.groovy.meta.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.groovy.meta.GroovyRegister;

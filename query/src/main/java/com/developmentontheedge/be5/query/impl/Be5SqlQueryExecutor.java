@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.util.AggregateUtils;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.queries;
 
 import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;

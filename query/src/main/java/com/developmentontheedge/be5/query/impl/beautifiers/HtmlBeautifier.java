@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl.beautifiers;
 
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import one.util.streamex.StreamEx;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.queries.system;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import org.junit.Before;
 import org.junit.Test;

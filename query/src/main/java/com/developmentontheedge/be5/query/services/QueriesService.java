@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;

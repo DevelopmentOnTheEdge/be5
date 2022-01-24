@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
-import com.developmentontheedge.be5.query.model.beans.QRec;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.services.QueryExecutorFactory;
 import com.developmentontheedge.be5.security.UserInfoHolder;
 import com.developmentontheedge.be5.security.UserInfoProvider;
