@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.util;
+package com.developmentontheedge.be5.database.util;
 
 import com.developmentontheedge.beans.DynamicProperty;
 

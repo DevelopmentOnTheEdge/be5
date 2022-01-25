@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.database.QRec;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 import com.developmentontheedge.be5.database.SqlExecutor;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.sql.model.AstStart;
 import org.apache.commons.dbutils.ResultSetHandler;
 
@@ -33,6 +34,20 @@ public class DbServiceMock implements DbService
     public static void clearMock()
     {
         mock = mock(DbService.class);
+    }
+
+    @Override
+    public QRec record( String sql )
+    {
+        log.fine(sql);
+        return mock.record(sql);
+    }
+
+    @Override
+    public QRec record( String sql, String cacheName )
+    {
+        log.fine(sql);
+        return mock.record(sql, cacheName);
     }
 
     @Override

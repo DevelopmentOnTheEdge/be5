@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
 import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.ListWrapperHandler;
 import com.developmentontheedge.be5.query.sql.QRecParser;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;

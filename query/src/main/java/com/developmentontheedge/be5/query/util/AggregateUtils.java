@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.query.util;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.query.QueryConstants;
 import com.developmentontheedge.be5.database.QRec;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 

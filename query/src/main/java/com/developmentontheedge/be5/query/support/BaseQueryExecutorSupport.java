@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.query.support;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.database.QRec;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 
 import java.util.ArrayList;

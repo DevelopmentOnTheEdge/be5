@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
 import com.developmentontheedge.be5.query.support.AbstractQueryExecutor;
 import com.developmentontheedge.be5.query.util.AggregateUtils;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.QueryUtils;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.beans.DynamicPropertySet;

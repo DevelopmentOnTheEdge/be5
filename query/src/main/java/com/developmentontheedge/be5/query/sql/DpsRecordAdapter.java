@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.query.sql;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.QRec;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import one.util.streamex.IntStreamEx;

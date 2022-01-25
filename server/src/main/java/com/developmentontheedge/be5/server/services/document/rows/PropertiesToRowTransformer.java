@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.document.rows;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.QueryUtils;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.server.model.table.RawCellModel;

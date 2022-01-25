@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.beautifiers.SubQueryBeautifier;
 import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.query.sql.QRecParser;
-import com.developmentontheedge.be5.query.util.DynamicPropertyMeta;
+import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
 import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.util.HashUrl;

@@ -18,10 +18,10 @@ public interface DbService
 /*
     List<QRec> list( String sql );
     List<QRec> list( String sql, String cacheName );
+*/
 
     QRec record( String sql );
     QRec record( String sql, String cacheName );
-*/
 
     /**
      * Execute an sql select query with replacement parameters.
@@ -94,12 +94,6 @@ public interface DbService
 
     boolean isInTransaction();
 
-    @Nullable
-    default Long oneLong(String sql, Object... params)
-    {
-        return SqlUtils.longFromDbObject(one(sql, params));
-    }
-
     default long countFrom(String sql, Object... params)
     {
         if (!(sql.startsWith("SELECT COUNT(1) FROM ") || sql.startsWith("SELECT count(1) FROM ") ||
@@ -108,6 +102,12 @@ public interface DbService
         {
             sql = "SELECT COUNT(1) FROM " + sql;
         }
+        return SqlUtils.longFromDbObject(one(sql, params));
+    }
+
+    @Nullable
+    default Long oneLong(String sql, Object... params)
+    {
         return SqlUtils.longFromDbObject(one(sql, params));
     }
 

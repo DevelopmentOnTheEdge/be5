@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.RuntimeSqlException;
 import com.developmentontheedge.be5.database.SqlExecutor;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
@@ -70,17 +71,25 @@ public class DbServiceImpl implements DbService
     public List<QRec> list( String sql, String cacheName )
     {
     }
+*/
 
     @Override
     public QRec record( String sql )
     {
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, rs ->
+            new QRec()
+        ));
     }
 
     @Override
     public QRec record( String sql, String cacheName )
     {
+        String finalSql = format(sql);
+        return execute(conn -> query(conn, finalSql, rs ->
+            new QRec()
+        ));
     }
-*/
 
     @Override
     public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params)
