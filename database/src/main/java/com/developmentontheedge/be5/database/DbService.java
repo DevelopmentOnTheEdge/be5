@@ -15,10 +15,8 @@ import java.util.List;
 
 public interface DbService
 {
-/*
     List<QRec> list( String sql );
     List<QRec> list( String sql, String cacheName );
-*/
 
     QRec record( String sql );
     QRec record( String sql, String cacheName );

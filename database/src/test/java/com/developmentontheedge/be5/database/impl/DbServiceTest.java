@@ -1,9 +1,16 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.config.ConfigurationProvider;
+import com.developmentontheedge.be5.meta.ProjectProvider;
+
+import com.developmentontheedge.be5.cache.Be5Caches;
+
 import com.developmentontheedge.be5.database.DatabaseTest;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.adapters.ConcatColumnsParser;
+
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,6 +21,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+
+import com.github.benmanes.caffeine.cache.Cache;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +37,8 @@ public class DbServiceTest extends DatabaseTest
     private static final ResultSetParser<TestPerson> parser = rs ->
             new TestPerson(rs.getLong("id"), rs.getString("name"),
                     rs.getString("password"), rs.getString("email"));
+
+    @Inject private Be5Caches be5Caches;
 
     @BeforeClass
     public static void setUpClass()
@@ -282,5 +295,35 @@ public class DbServiceTest extends DatabaseTest
     {
         String row = db.select("SELECT name, password, email FROM persons WHERE name = ?", new ConcatColumnsParser(),"user2");
         assertEquals("user2,pass2,email2@mail.ru", row);
+    }
+
+    @Test
+    public void testRecord()
+    {
+        QRec person = db.record( "SELECT * FROM persons WHERE name = 'user2'" );
+        assertNotNull( person );        
+        assertEquals("user2", person.getString( "name" ) );
+        assertEquals("pass2", person.getString( "password" ) );
+        assertEquals("email2@mail.ru", person.getString( "email" ) );
+    }
+
+    @Test
+    public void testRecordCached()
+    {
+        Cache<Object, Object> test = be5Caches.createCache("TestCache");
+
+        assertEquals( 0, test.stats().hitCount() );
+
+        QRec person = db.record( "SELECT * FROM persons WHERE name = 'user2'", "TestCache" );
+        assertNotNull( person );        
+        assertEquals("user2", person.getString( "name" ) );
+        assertEquals("pass2", person.getString( "password" ) );
+        assertEquals("email2@mail.ru", person.getString( "email" ) );
+
+        assertEquals( 0, test.stats().hitCount() );
+
+        db.record( "SELECT * FROM persons WHERE name = 'user2'", "TestCache" );
+
+        assertEquals( 1, test.stats().hitCount() );
     }
 }

@@ -8,6 +8,8 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.RuntimeSqlException;
 import com.developmentontheedge.be5.database.SqlExecutor;
 import com.developmentontheedge.be5.database.QRec;
+import com.developmentontheedge.be5.database.adapters.DpsRecordAdapter;
+import com.developmentontheedge.be5.database.adapters.QRecParser;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
@@ -61,34 +63,41 @@ public class DbServiceImpl implements DbService
         dbmsTransformer.setParserContext(DefaultParserContext.getInstance());
     }
 
-/*
     @Override
     public List<QRec> list( String sql )
     {
+        String finalSql = format( sql );
+        return execute( conn -> query( conn, finalSql, rs -> listWrapper(rs, new QRecParser() ) ) );
     }
 
     @Override
     public List<QRec> list( String sql, String cacheName )
     {
+        String finalSql = format( sql );
+        return ( List<QRec> )be5Caches.getCache( cacheName ).get( finalSql, k ->
+            execute( conn -> query( conn, finalSql, rs -> listWrapper(rs, new QRecParser() ) ) )
+        );
     }
-*/
 
     @Override
     public QRec record( String sql )
     {
-        String finalSql = format(sql);
-        return execute(conn -> query(conn, finalSql, rs ->
-            new QRec()
+        String finalSql = format( sql );
+        QRec retVal = execute(conn -> query(conn, finalSql, rs ->
+            rs.next() ? DpsRecordAdapter.addDp( new QRec(), rs ) : null
         ));
+        return retVal.isEmpty() ? null : retVal; 
     }
 
     @Override
     public QRec record( String sql, String cacheName )
     {
-        String finalSql = format(sql);
-        return execute(conn -> query(conn, finalSql, rs ->
-            new QRec()
-        ));
+        String finalSql = format( sql );
+        QRec retVal = ( QRec )be5Caches.getCache( cacheName ).get( finalSql, k ->
+            execute(conn -> query(conn, finalSql, rs ->
+                rs.next() ? DpsRecordAdapter.addDp( new QRec(), rs ) : new QRec()
+        )));        
+        return retVal.isEmpty() ? null : retVal; 
     }
 
     @Override

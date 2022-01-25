@@ -19,11 +19,11 @@ import java.util.function.Function;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX;
 
-class DpsRecordAdapter
+public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
-    static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet) throws SQLException
+    public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet) throws SQLException
     {
         DynamicProperty[] schema = DpsRecordAdapter.createSchema(resultSet.getMetaData());
 
