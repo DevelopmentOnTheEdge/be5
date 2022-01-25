@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser
+import com.developmentontheedge.be5.database.adapters.ConcatColumnsParser
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel

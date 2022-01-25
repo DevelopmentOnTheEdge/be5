@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.sql;
+package com.developmentontheedge.be5.database.adapters;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import org.apache.commons.dbutils.ResultSetHandler;

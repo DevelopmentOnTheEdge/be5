@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.database.impl;
 import com.developmentontheedge.be5.database.DatabaseTest;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
+import com.developmentontheedge.be5.database.adapters.ConcatColumnsParser;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;

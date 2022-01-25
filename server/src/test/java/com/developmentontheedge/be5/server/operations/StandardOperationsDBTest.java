@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.operations;
 
-import com.developmentontheedge.be5.database.sql.parsers.ConcatColumnsParser;
+import com.developmentontheedge.be5.database.adapters.ConcatColumnsParser;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationResult;
