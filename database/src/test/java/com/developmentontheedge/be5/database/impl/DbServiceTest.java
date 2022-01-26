@@ -310,9 +310,9 @@ public class DbServiceTest extends DatabaseTest
     @Test
     public void testRecordCached()
     {
-        Cache<Object, Object> test = be5Caches.createCache("TestCache");
+        Cache<Object, Object> test = be5Caches.getCache( "TestCache" );
 
-        assertEquals( 0, test.stats().hitCount() );
+        long hitCount = test.stats().hitCount();
 
         QRec person = db.record( "SELECT * FROM persons WHERE name = 'user2'", "TestCache" );
         assertNotNull( person );        
@@ -320,10 +320,52 @@ public class DbServiceTest extends DatabaseTest
         assertEquals("pass2", person.getString( "password" ) );
         assertEquals("email2@mail.ru", person.getString( "email" ) );
 
-        assertEquals( 0, test.stats().hitCount() );
+        assertEquals( hitCount, test.stats().hitCount() );
 
         db.record( "SELECT * FROM persons WHERE name = 'user2'", "TestCache" );
 
-        assertEquals( 1, test.stats().hitCount() );
+        assertEquals( hitCount + 1, test.stats().hitCount() );
+    }
+
+    @Test
+    public void testList()
+    {
+        List<QRec> persons = db.list( "SELECT * FROM persons ORDER BY name" );
+
+        assertEquals( 2, persons.size() );
+
+        assertEquals("user1", persons.get( 0 ).getString( "name" ) );
+        assertEquals("pass1", persons.get( 0 ).getString( "password" ) );
+        assertNull( persons.get( 0 ).getString( "email" ) );
+
+        assertEquals("user2", persons.get( 1 ).getString( "name" ) );
+        assertEquals("pass2", persons.get( 1 ).getString( "password" ) );
+        assertEquals("email2@mail.ru", persons.get( 1 ).getString( "email" ) );
+    }
+
+    @Test
+    public void testListCached()
+    {
+        Cache<Object, Object> test = be5Caches.getCache( "TestCache" );
+
+        long hitCount = test.stats().hitCount();
+
+        List<QRec> persons = db.list( "SELECT * FROM persons ORDER BY name", "TestCache" );
+
+        assertEquals( hitCount, test.stats().hitCount() );
+
+        assertEquals( 2, persons.size() );
+
+        assertEquals("user1", persons.get( 0 ).getString( "name" ) );
+        assertEquals("pass1", persons.get( 0 ).getString( "password" ) );
+        assertNull( persons.get( 0 ).getString( "email" ) );
+
+        assertEquals("user2", persons.get( 1 ).getString( "name" ) );
+        assertEquals("pass2", persons.get( 1 ).getString( "password" ) );
+        assertEquals("email2@mail.ru", persons.get( 1 ).getString( "email" ) );
+
+        db.list( "SELECT * FROM persons ORDER BY name", "TestCache" );
+
+        assertEquals( hitCount + 1, test.stats().hitCount() );
     }
 }
