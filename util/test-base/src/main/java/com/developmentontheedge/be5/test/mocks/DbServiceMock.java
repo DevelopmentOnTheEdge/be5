@@ -37,17 +37,31 @@ public class DbServiceMock implements DbService
     }
 
     @Override
+    public List<QRec> list( String sql )
+    {
+        log.fine( sql );
+        return mock.list( sql );
+    }
+
+    @Override
+    public List<QRec> list( String sql, String cacheName )
+    {
+        log.fine( sql );
+        return mock.list( sql, cacheName );
+    }
+
+    @Override
     public QRec record( String sql )
     {
-        log.fine(sql);
-        return mock.record(sql);
+        log.fine( sql );
+        return mock.record( sql );
     }
 
     @Override
     public QRec record( String sql, String cacheName )
     {
-        log.fine(sql);
-        return mock.record(sql, cacheName);
+        log.fine( sql );
+        return mock.record( sql, cacheName );
     }
 
     @Override
