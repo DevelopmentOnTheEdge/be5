@@ -5,8 +5,10 @@ import com.developmentontheedge.be5.database.sql.TransactionExecutor;
 import com.developmentontheedge.be5.database.sql.TransactionExecutorVoid;
 import com.developmentontheedge.be5.database.adapters.ScalarLongParser;
 import com.developmentontheedge.be5.database.adapters.ScalarParser;
+import com.developmentontheedge.be5.database.adapters.QRecParser;
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.sql.model.AstStart;
+
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import javax.annotation.Nullable;
@@ -18,8 +20,36 @@ public interface DbService
     List<QRec> list( String sql );
     List<QRec> list( String sql, String cacheName );
 
+    default List<QRec> listWithParams( String sql, Object... params )
+    {
+        return list( sql, new QRecParser(), params );
+    }
+
     QRec record( String sql );
     QRec record( String sql, String cacheName );
+
+    default QRec recordWithParams( String sql, Object... params )
+    {
+        return select( sql, new QRecParser(), params );
+    }
+
+    @Nullable
+    default Long getLong(String sql, Object... params)
+    {
+        return SqlUtils.longFromDbObject(one(sql, params));
+    }
+
+    @Nullable
+    default String getString(String sql, Object... params)
+    {
+        return SqlUtils.stringFromDbObject(one(sql, params));
+    }
+
+    @Nullable
+    default Integer getInteger(String sql, Object... params)
+    {
+        return one(sql, params);
+    }
 
     /**
      * Execute an sql select query with replacement parameters.
