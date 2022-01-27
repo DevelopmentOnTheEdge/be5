@@ -86,7 +86,7 @@ public class DbServiceImpl implements DbService
         QRec retVal = execute(conn -> query(conn, finalSql, rs ->
             rs.next() ? DpsRecordAdapter.addDp( new QRec(), rs ) : null
         ));
-        return retVal.isEmpty() ? null : retVal; 
+        return retVal != null && retVal.isEmpty() ? null : retVal; 
     }
 
     @Override
@@ -97,7 +97,7 @@ public class DbServiceImpl implements DbService
             execute(conn -> query(conn, finalSql, rs ->
                 rs.next() ? DpsRecordAdapter.addDp( new QRec(), rs ) : new QRec()
         )));        
-        return retVal.isEmpty() ? null : retVal; 
+        return retVal != null && retVal.isEmpty() ? null : retVal; 
     }
 
     @Override
