@@ -423,6 +423,8 @@ public class DpsHelper
             System.err.println( "colName = " + colName );  
             System.err.println( "columnDef.getEntity().getName() = " + columnDef.getEntity().getName() );  
             System.err.println( "modelElements.getName() = " + modelElements.getName() );  
+            System.err.println( "userAwareMeta.getColumnTitle( columnDef.getEntity().getName(), colName ) = " + 
+                userAwareMeta.getColumnTitle( columnDef.getEntity().getName(), colName ) );  
             String displayName = userAwareMeta.getLocalizedOperationField(
                     columnDef.getEntity().getName(), modelElements.getName(), colName );
             System.err.println( "displayName = " + displayName );  
