@@ -65,7 +65,7 @@ ru:
       - All records: Все записи
     - topics: Insert
       entries:
-      - admlevel: Уровень
+      - admlevel: Уровень1
     - topics: TestLocalizQuery
       entries:
       - admlevel: Test Уровень
