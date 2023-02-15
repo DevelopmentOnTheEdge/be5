@@ -128,6 +128,17 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     }
 
     @Test
+    void getDynamicPropertyLocalizationForOperationTest()
+    {
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getOperations().get("Alt Insert"))
+
+        assertEquals "Уровень", property.getDisplayName()
+    }
+
+    @Test
     void getDpsForValuesTest()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])

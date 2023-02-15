@@ -40,6 +40,7 @@ testTags:
       - Delete
       - Edit
       - Insert
+      - 'Alt Insert'
       - OperationWithCanBeNull
       code: |-
         SELECT *
@@ -83,6 +84,9 @@ testTags:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - 'Alt Insert':
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - OperationWithCanBeNull:
