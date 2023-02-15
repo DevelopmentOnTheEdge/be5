@@ -420,8 +420,12 @@ public class DpsHelper
         }
         else if (modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
+            System.err.println( "colName = " + colName );  
+            System.err.println( "columnDef.getEntity().getName() = " + columnDef.getEntity().getName() );  
+            System.err.println( "modelElements.getName() = " + modelElements.getName() );  
             String displayName = userAwareMeta.getLocalizedOperationField(
                     columnDef.getEntity().getName(), modelElements.getName(), colName );
+            System.err.println( "displayName = " + displayName );  
             if( displayName != null && !displayName.equals( colName ) )
             {
                 dp.setDisplayName( displayName );
