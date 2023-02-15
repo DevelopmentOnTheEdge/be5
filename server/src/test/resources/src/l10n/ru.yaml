@@ -65,6 +65,9 @@ ru:
       - All records: Все записи
     - topics: Insert
       entries:
+      - admlevel: Уровень
+    - topics: 'Alt Insert'
+      entries:
       - admlevel: Уровень1
     - topics: TestLocalizQuery
       entries:
