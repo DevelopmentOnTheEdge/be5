@@ -128,7 +128,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     }
 
     @Test
-    void getDynamicPropertyLocalizationForOperationTest()
+    void getDynamicPropertyLocalizationForOperationTestAlt()
     {
         def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
 
