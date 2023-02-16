@@ -27,16 +27,16 @@ public class AddRemoveCategory extends GOperationSupport
         if (context.getRecords().length == 0)
             return null;
 
-        DynamicProperty prop = new DynamicProperty("categoryID", "Category", Long.class);
+        DynamicProperty prop = new DynamicProperty("categoryID", localize( "Category" ), Long.class);
         prop.setAttribute(TAG_LIST_ATTR, queries.getTagsFromSelectionView(
                 "categories", Collections.singletonMap("entity", getInfo().getEntityName())));
         params.add(prop);
 
-        prop = new DynamicProperty("operationType", "Operation", String.class);
+        prop = new DynamicProperty("operationType", localize( "Operation" ), String.class);
 
         prop.setAttribute(TAG_LIST_ATTR, new String[][]{
-                {"Add", "Add to this category and parents"},
-                {"Remove", "Remove from this category and children"}});
+                {"Add", localize( "Add to this category and parents" ) },
+                {"Remove", localize( "Remove from this category and children" ) }});
         prop.setValue("Add");
         params.add(prop);
 
@@ -48,7 +48,7 @@ public class AddRemoveCategory extends GOperationSupport
     {
         if (context.getRecords().length == 0)
         {
-            setResult(OperationResult.error("No records were selected"));
+            setResult(OperationResult.error( localize( "No records were selected" ) ) );
             return;
         }
 
