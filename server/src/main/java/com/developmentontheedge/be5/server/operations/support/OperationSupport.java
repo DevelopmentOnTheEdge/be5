@@ -29,8 +29,8 @@ import javax.inject.Inject;
 import static com.developmentontheedge.be5.server.FrontendActions.redirect;
 import static com.developmentontheedge.be5.server.FrontendActions.successAlert;
 
+import java.util.ArrayList;
 import java.util.Map;
-
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
 {
@@ -63,16 +63,6 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         this.session = session;
         //this.request = request;
         this.userInfo = userInfo;
-    }
-
-    public String localize( String message )
-    {
-        String lMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), message );
-        if( lMsg != null )
-        {
-            return lMsg;
-        }
-        return message;
     }
 
     public void setRequest( Request request )
@@ -132,5 +122,74 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     {
         Map<String, Object> layout = JsonUtils.getMapFromJson(getInfo().getModel().getLayout());
         return "modalForm".equals(layout.get("type"));
+    }
+
+    public static final String LOC_MSG_PREFIX = "{{{";
+    public static final String LOC_MSG_POSTFIX = "}}}";       
+
+    public String localize( String message )
+    {
+        if( message == null )
+        {
+            return null; 
+        }
+  
+        if( message.indexOf( LOC_MSG_PREFIX ) < 0 )
+        {
+            String lMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), message );
+            if( lMsg != null )
+            {
+                return lMsg;
+            }
+            return message;
+        }
+
+        StringBuffer buffer = new StringBuffer( message );
+        StringBuffer result = new StringBuffer();
+        int ind1, ind2;
+        while( true )
+        {
+            if( ( ind1 = buffer.indexOf( LOC_MSG_PREFIX ) ) < 0 )
+            {
+                result.append( buffer.toString() );
+                break;
+            }
+
+            if( ( ind2 = buffer.indexOf( LOC_MSG_POSTFIX ) ) < 0 )
+            {
+                if( ind1 > 0 )
+                {
+                    result.append( buffer.substring( 0, ind1 ) );
+                }
+                break;
+            }
+            if( ind1 >= ind2 )
+                break;
+            String msg = buffer.substring( ind1 + LOC_MSG_PREFIX.length(), ind2 );
+            String newMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), msg );
+            if( newMsg == null )
+            {
+                newMsg = msg;  
+            }   
+            buffer.replace( ind1, ind2 + OperationSupport.LOC_MSG_POSTFIX.length(), newMsg );
+        }
+
+        return result.toString();
+    }
+
+    public String[][] localizeTags( String[][] tags )
+    {
+        if( tags.length == 0 || tags[ 0 ].length == 1 )
+        {
+            return tags; 
+        }
+
+        ArrayList<String[]> newTags = new ArrayList<>();
+        for( String[] tag : tags )
+        {
+            newTags.add( new String[] { tag[ 0 ], localize( tag[ 1 ] ) } );
+        }
+        
+        return ( String[][] )newTags.toArray( new String[ 0 ][ 0 ] );
     }
 }
