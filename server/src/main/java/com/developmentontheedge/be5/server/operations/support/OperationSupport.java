@@ -65,6 +65,16 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         this.userInfo = userInfo;
     }
 
+    public String localize( String message )
+    {
+        String lMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), message );
+        if( lMsg != null )
+        {
+            return lMsg;
+        }
+        return message;
+    }
+
     public void setRequest( Request request )
     {
         this.request = request;
