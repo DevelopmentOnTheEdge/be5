@@ -168,7 +168,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
             if( ind1 >= ind2 )
                 break;
             String msg = buffer.substring( ind1 + LOC_MSG_PREFIX.length(), ind2 );
-            String newMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), msg );
+            String newMsg = userAwareMeta.getLocalizedOperationField( entity, opName, msg );
             if( newMsg == null )
             {
                 newMsg = msg;  
