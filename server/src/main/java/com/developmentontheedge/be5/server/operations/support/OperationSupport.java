@@ -133,10 +133,12 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         {
             return null; 
         }
-  
+
+        String entity = getInfo().getEntity().getName();
+        String opName = getInfo().getName();
         if( message.indexOf( LOC_MSG_PREFIX ) < 0 )
         {
-            String lMsg = userAwareMeta.getLocalizedOperationField( getInfo().getEntity().getName(), getInfo().getName(), message );
+            String lMsg = userAwareMeta.getLocalizedOperationField( entity, opName, message );
             if( lMsg != null )
             {
                 return lMsg;
