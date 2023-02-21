@@ -113,6 +113,18 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
+    public String getMessage( String entityName, String topic, String message )
+    {
+        return getMessage( getLanguage(), entityName, topic, message );
+    }
+
+    @Override
+    public String getMessage( String language, String entityName, String topic, String message )
+    {
+        return localizations.get( language, entityName, topic, message ).orElse( message );
+    }
+
+    @Override
     public String getLocalizedValidationMessage(String message)
     {
         return localizations.get(getLanguage(), "messages.l10n", "validation", message).orElse(message);

@@ -40,6 +40,10 @@ public interface UserAwareMeta
 
     Optional<String> getLocalization(String entityName, String queryName, String message);
 
+    String getMessage( String entityName, String topic, String message );
+
+    String getMessage( String language, String entityName, String topic, String message );
+
     String getLocalizedValidationMessage(String message);
 
     String getLocalizedExceptionMessage(String message);
