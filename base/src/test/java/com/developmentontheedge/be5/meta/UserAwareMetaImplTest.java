@@ -125,6 +125,22 @@ public class UserAwareMetaImplTest extends BaseTest
     }
 
     @Test
+    public void getMessage1()
+    {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR);
+        assertEquals("Код", userAwareMeta.getMessage("testTags", "All records", "CODE"));
+        assertEquals("Код2", userAwareMeta.getMessage("testTags", "All records2", "CODE"));
+    }
+
+    @Test
+    public void getMessage2()
+    {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR);
+        assertEquals("Код", userAwareMeta.getMessage("ru","testTags", "All records", "CODE"));
+        assertEquals("Код2", userAwareMeta.getMessage("ru","testTags", "All records2", "CODE"));
+    }
+
+    @Test
     public void getLocalizedEntityTitle()
     {
         assertEquals("Testtable Admin", userAwareMeta.getLocalizedEntityTitle("testtableAdmin"));
