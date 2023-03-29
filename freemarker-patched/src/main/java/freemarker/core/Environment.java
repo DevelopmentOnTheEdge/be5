@@ -1211,7 +1211,7 @@ public final class Environment extends Configurable
             default:
             {
                 throw new _TemplateModelException(new Object[]{
-                        "Unrecognized date type: ", new Integer(dateType)});
+                        "Unrecognized date type: ",  Integer.valueOf(dateType)});
             }
         }
     }
