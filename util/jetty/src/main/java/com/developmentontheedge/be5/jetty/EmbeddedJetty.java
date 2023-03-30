@@ -9,15 +9,16 @@ import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.session.HashSessionIdManager;
-import org.eclipse.jetty.server.session.HashSessionManager;
+//import org.eclipse.jetty.server.session.HashSessionIdManager;
+//import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.DefaultSessionIdManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
-import java.io.IOException;
+//import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Paths;
 //import java.util.Arrays;
@@ -110,6 +111,7 @@ public class EmbeddedJetty
         return gzipHandler;
     }
 
+/*
     private SessionHandler getSessionHandler()
     {
         HashSessionManager sessionManager = new HashSessionManager();
@@ -129,6 +131,14 @@ public class EmbeddedJetty
         sessionManager.setDeleteUnrestorableSessions(true);
 
         return new SessionHandler(sessionManager);
+    }
+*/
+
+    private SessionHandler getSessionHandler()
+    {
+        SessionHandler sh =  new SessionHandler();
+        sh.setSessionIdManager( new DefaultSessionIdManager( jetty ) );
+        return sh;
     }
 
     private void checkDescriptor()
