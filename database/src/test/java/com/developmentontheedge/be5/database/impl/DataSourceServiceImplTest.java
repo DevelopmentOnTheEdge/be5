@@ -53,7 +53,7 @@ public class DataSourceServiceImplTest extends DatabaseTest
         DataSourceServiceImpl dataSourceService = new DataSourceServiceImpl(projectProvider);
         dataSourceService.start();
         BasicDataSource dataSource = (BasicDataSource) dataSourceService.getDataSource();
-        assertEquals("jdbc:h2:mem:DataSourceServiceImplTest;DB_CLOSE_DELAY=-1", dataSource.getUrl());
+        assertEquals("jdbc:h2:mem:DataSourceServiceImplTest;NON_KEYWORDS=VALUE,USER;DB_CLOSE_DELAY=-1", dataSource.getUrl());
         assertEquals("sa", dataSource.getUsername());
         assertEquals(Dbms.H2, dataSourceService.getDbms());
     }

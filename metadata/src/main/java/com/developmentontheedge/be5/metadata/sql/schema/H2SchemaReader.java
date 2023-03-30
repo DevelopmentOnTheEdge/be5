@@ -38,16 +38,18 @@ public class H2SchemaReader extends DefaultSchemaReader
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT " +
-                "c.table_name, " +
-                "c.column_name, " +
-                "c.column_default, " +
-                "c.type_name, " +
+                "c.TABLE_NAME, " +
+                "c.COLUMN_NAME, " +
+                "c.COLUMN_DEFAULT, " +
+                /*"c.TYPE_NAME, " +*/
+                "c.DATA_TYPE, " +
                 /*"c.data_type, " +*/
-                "c.character_maximum_length, " +
-                "c.numeric_precision, " +
-                "c.numeric_scale, " +
-                "c.is_nullable, " +
-                "c.CHECK_CONSTRAINT " +
+                "c.CHARACTER_MAXIMUM_LENGTH, " +
+                "c.NUMERIC_PRECISION, " +
+                "c.NUMERIC_SCALE, " +
+                "c.IS_NULLABLE, " +
+                //"c.CHECK_CONSTRAINT " +
+                "NULL " +
                 "FROM INFORMATION_SCHEMA.COLUMNS c " +
                 "WHERE c.TABLE_SCHEMA <> 'INFORMATION_SCHEMA'");
         try
