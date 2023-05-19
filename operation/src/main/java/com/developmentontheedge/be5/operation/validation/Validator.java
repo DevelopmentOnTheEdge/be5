@@ -139,9 +139,10 @@ public class Validator
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
             }
-            else if (property.getType() != property.getValue().getClass())
+            else if( !property.getType().isAssignableFrom( property.getValue().getClass() ) )
             {
-                String msg = "Error, value must be a " + property.getType().getName();
+                String msg = "Error, value must be a " + property.getType().getName() + 
+                        ", got = " + property.getValue().getClass().getName();
                 setError(property, msg);
                 throw new IllegalArgumentException(msg + toStringProperty(property));
             }

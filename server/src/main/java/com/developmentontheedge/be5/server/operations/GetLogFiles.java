@@ -86,7 +86,7 @@ public class GetLogFiles extends DownloadOperationSupport
     public void invokeWithResponse(Response res, Object parameters) throws Exception
     {
         DataInputStream inputStream = new DataInputStream(new FileInputStream(logFile));
-        RequestUtils.sendFile(res, true, logFile.getName(), MediaType.PLAIN_TEXT_UTF_8.type(),
+        RequestUtils.sendFile(res, true, logFile.getName(), "text/csv",
                 StandardCharsets.UTF_8.name(), inputStream);
     }
 
