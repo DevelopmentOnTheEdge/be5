@@ -218,7 +218,16 @@ public class Be5Exception extends RuntimeException
 
     public Level getLogLevel()
     {
-        if (getCode().isInternal()) return Level.SEVERE;
-        else return Level.INFO;
+        if( getCode() == Be5ErrorCode.ACCESS_DENIED_TO_QUERY )
+        {
+            return Level.FINEST;
+        }
+    
+        if( getCode().isInternal() ) 
+        {
+            return Level.SEVERE;
+        }  
+
+        return Level.INFO;
     }
 }

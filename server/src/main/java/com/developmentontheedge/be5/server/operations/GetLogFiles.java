@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.server.util.RequestUtils;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
-import com.google.common.net.MediaType;
 import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
