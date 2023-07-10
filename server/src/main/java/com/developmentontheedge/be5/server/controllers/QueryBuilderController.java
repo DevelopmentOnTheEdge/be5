@@ -169,7 +169,7 @@ public class QueryBuilderController extends JsonApiModelController
             }
             catch (Throwable e)
             {
-                log.log(Level.SEVERE, "error on getFinalSql", e);
+                //log.log(Level.SEVERE, "error on getFinalSql", e);
                 data = new Data(sql, "", history);
                 errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
