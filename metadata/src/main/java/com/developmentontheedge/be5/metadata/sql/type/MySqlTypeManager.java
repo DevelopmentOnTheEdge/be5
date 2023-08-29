@@ -65,7 +65,7 @@ public class MySqlTypeManager extends DefaultTypeManager
         switch (type.getTypeName())
         {
             case SqlColumnType.TYPE_BIGTEXT:
-                return "TEXT";
+                return "MEDIUMTEXT";
             case SqlColumnType.TYPE_BLOB:
                 return "MEDIUMBLOB";
             case SqlColumnType.TYPE_DECIMAL:
