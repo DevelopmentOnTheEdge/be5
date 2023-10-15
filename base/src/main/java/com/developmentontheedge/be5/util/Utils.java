@@ -368,7 +368,11 @@ public class Utils
             }
         }
 
-        if (val instanceof String)
+        if( val != null && "org.codehaus.groovy.runtime.GStringImpl".equals( val.getClass().getName() ) )
+        {
+            return parseType(val.toString(), valClass);
+        }  
+        else if (val instanceof String)
         {
             return parseType((String) val, valClass);
         }
