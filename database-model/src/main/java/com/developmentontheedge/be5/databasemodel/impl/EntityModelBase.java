@@ -31,7 +31,7 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED
 import static java.util.Collections.emptyMap;
 
 
-public class  EntityModelBase<T> implements EntityModel<T>
+public class EntityModelBase<T> implements EntityModel<T>
 {
     static
     {
@@ -93,14 +93,16 @@ public class  EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
 
+        Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
+
         String sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
-                .where(conditions).format();
+                .where(conditions2).format();
        
         //System.out.println( "sql = " + sql );
 
         return db.select(sql,
-                rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions));
+                rs -> DpsUtils.setValues(getDps(), rs), sqlHelper.getWithoutConstants(conditions2));
     }
 
     @Override
@@ -120,9 +122,11 @@ public class  EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(conditions);
 
-        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
+        Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
 
-        return db.list(sql, this::getRecordModel, sqlHelper.getWithoutConstants(conditions));
+        String sql = Ast.selectAll().from(entity.getName()).where(conditions2).format();
+
+        return db.list(sql, this::getRecordModel, sqlHelper.getWithoutConstants(conditions2));
     }
 
     @Override
@@ -196,9 +200,11 @@ public class  EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(conditions);
 
-        String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
+        Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
 
-        return db.countFrom(sql, sqlHelper.getWithoutConstants(conditions));
+        String sql = Ast.selectCount().from(entity.getName()).where(conditions2).format();
+
+        return db.countFrom(sql, sqlHelper.getWithoutConstants(conditions2));
     }
 
     @Override
@@ -227,6 +233,8 @@ public class  EntityModelBase<T> implements EntityModel<T>
 
         Map<String, Object> map = new LinkedHashMap<>(values);
         map.values().removeIf(Objects::isNull);
+
+        map = fixMapWithGroovyStrings( map );
 
         columnsHelper.addInsertSpecialColumns(entity, map);
         columnsHelper.checkDpsColumns(entity, map);
@@ -303,8 +311,12 @@ public class  EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(values);
         Objects.requireNonNull(conditions);
-        Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values);
-        return sqlHelper.update(entity.getName(), conditions, finalValues);
+
+        Map<String, Object> values2 = fixMapWithGroovyStrings( values );
+        Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
+
+        Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values2);
+        return sqlHelper.update(entity.getName(), conditions2, finalValues);
     }
 
     @Override
@@ -360,15 +372,17 @@ public class  EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(conditions);
 
+        Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
+
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         if (columns.containsKey(IS_DELETED_COLUMN_NAME))
         {
             Map<String, ?> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
-            return sqlHelper.update(entity.getName(), conditions, values);
+            return sqlHelper.update(entity.getName(), conditions2, values);
         }
         else
         {
-            return sqlHelper.delete(entity.getName(), conditions);
+            return sqlHelper.delete(entity.getName(), conditions2);
         }
     }
 
@@ -444,5 +458,24 @@ public class  EntityModelBase<T> implements EntityModel<T>
     public Entity getEntity()
     {
         return entity;
+    }
+
+    static Object fixGroovyString( Object value )
+    {
+        if( value != null && "org.codehaus.groovy.runtime.GStringImpl".equals( value.getClass().getName() ) )
+        {
+            return value.toString();
+        }
+        return value;
+    }
+
+    static Map<String, Object> fixMapWithGroovyStrings( Map<String, ?> values )
+    {
+        Map<String, Object> map = new LinkedHashMap<>(values);
+        for (Map.Entry<String, Object> property : map.entrySet())
+        {
+            property.setValue( fixGroovyString( property.getValue() ) );
+        }
+        return map; 
     }
 }
