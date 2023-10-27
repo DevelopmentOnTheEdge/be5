@@ -84,10 +84,14 @@ ru:
       - Filter
       entries:
       - publicID: Код категориии
+      - publicid: Код категориии
       - parentID: Владелец
       - name: Наименование
+      - Category: Категории
       - description: Описание
+      - Comment: Описание
       - entity: Класс
+      - Entity: Класс
   - be5events:
     - topics: displayName
       entries:
