@@ -70,6 +70,9 @@ ru:
       - SessionVariablesEdit: Изменить переменную сессии
       - ReloadProject: Перезагрузить проект и сбросить все кэши
   - classifications:
+    - topics: displayName
+      entries:
+      - displayName: Классификации записей
     - topics:
       - '@AllQueries'
       - Insert
@@ -78,6 +81,9 @@ ru:
       - Category: Категория
       - DocumentType: Документ
   - categories:
+    - topics: displayName
+      entries:
+      - displayName: Категории
     - topics:
       - '@AllQueries'
       - Insert
