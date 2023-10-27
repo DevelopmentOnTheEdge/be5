@@ -43,7 +43,7 @@ categories:
       code: |-
         SELECT
             c1.ID AS "Code",
-            CONCAT(c1.entity ,': ' ,
+            CONCAT('{{{', c1.entity ,'}}}: ' ,
                 COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
