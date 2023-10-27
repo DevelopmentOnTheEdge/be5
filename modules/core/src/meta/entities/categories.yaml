@@ -43,7 +43,7 @@ categories:
       code: |-
         SELECT
             c1.ID AS "Code",
-            CONCAT('{{{', c1.entity ,'}}}: ' ,
+            CONCAT(
                 COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
@@ -51,8 +51,8 @@ categories:
                 COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
                 COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
-                c1.name
-            ) AS "Category"
+                c1.name )
+              AS "Category"
         FROM categories c1
             LEFT JOIN categories c2 on c1.parentID = c2.ID
             LEFT JOIN categories c3 on c2.parentID = c3.ID

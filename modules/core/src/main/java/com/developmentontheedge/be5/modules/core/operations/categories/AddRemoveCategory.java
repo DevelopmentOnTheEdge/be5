@@ -27,15 +27,18 @@ public class AddRemoveCategory extends GOperationSupport
         if (context.getRecords().length == 0)
             return null;
 
+        String [][]categories = queries.getTagsFromSelectionView(
+                "categories", Collections.singletonMap("entity", getInfo().getEntityName()));
+
         DynamicProperty prop = new DynamicProperty("categoryID", localize( "Category" ), Long.class);
-        prop.setAttribute(TAG_LIST_ATTR, queries.getTagsFromSelectionView(
-                "categories", Collections.singletonMap("entity", getInfo().getEntityName())));
+        prop.setAttribute( TAG_LIST_ATTR, categories );
         params.add(prop);
 
         prop = new DynamicProperty("operationType", localize( "Operation" ), String.class);
 
         prop.setAttribute(TAG_LIST_ATTR, new String[][]{
-                {"Add", localize( "Add to this category and parents" ) },
+                {"Add", localize( "Add to this category" ) },
+                {"AddAll", localize( "Add to this category and parents" ) },
                 {"Remove", localize( "Remove from this category and children" ) }});
         prop.setValue("Add");
         params.add(prop);
@@ -58,6 +61,17 @@ public class AddRemoveCategory extends GOperationSupport
 
         if ("Add".equals(params.getValue("operationType")))
         {
+            List<Long> categories = Collections.singletonList(categoryID);
+            delete(entity, categories);
+            db.insert("INSERT INTO classifications (recordID, categoryID)" +
+                            "SELECT CONCAT('" + entity + ".', e." + pk + "), c.ID " +
+                            "FROM " + entity + " e, categories c " +
+                            "WHERE e." + pk + " IN " + Utils.inClause(context.getRecords().length) +
+                            "  AND c.ID     IN " + Utils.inClause(categories.size()),
+                    ObjectArrays.concat(context.getRecords(), categories.toArray(), Object.class));
+        }
+        else if ("AddAll".equals(params.getValue("operationType")))
+        {
             List<Long> categories = categoriesHelper.getParentCategories(categoryID);
             delete(entity, categories);
             db.insert("INSERT INTO classifications (recordID, categoryID)" +
@@ -67,7 +81,7 @@ public class AddRemoveCategory extends GOperationSupport
                             "  AND c.ID     IN " + Utils.inClause(categories.size()),
                     ObjectArrays.concat(context.getRecords(), categories.toArray(), Object.class));
         }
-        else
+        else 
         {
             List<Long> categories = categoriesHelper.getChildCategories(categoryID);
             delete(entity, categories);
