@@ -12,8 +12,6 @@ import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
 import one.util.streamex.StreamEx;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -29,12 +27,6 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
     private ConnectionUrl connectionUrl;
     private String username;
     private String password;
-    // Tomcat installation settings
-    private String tomcatPath;
-    private String tomcatAppName;
-    private String tomcatManagerScriptUserName;
-    private String tomcatManagerScriptPassword;
-    private String tomcatManagerReloadUrlTemplate;
     private boolean isProtected;
     private final Map<String, String> properties = new LinkedHashMap<>();
     private String[] propertiesToRequest;
@@ -42,7 +34,6 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
     public BeConnectionProfile(final String name, final BeConnectionProfiles origin)
     {
         super(name, origin);
-        tomcatPath = resolveTomcatPath();
         connectionUrl = new ConnectionUrl(getProject().getDatabaseSystem());
     }
 
@@ -53,16 +44,6 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
 
         if (connectionProfiles.get(getName()) == this)
             connectionProfiles.fireCodeChanged();
-    }
-
-    public static String resolveTomcatPath()
-    {
-        String tomcatHome = System.getenv("CATALINA_BASE");
-        if (tomcatHome == null)
-        {
-            tomcatHome = System.getenv("CATALINA_HOME");
-        }
-        return Paths.get(tomcatHome, "webapps").toString();
     }
 
     // Getters and setters
@@ -186,84 +167,6 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
     public void setPassword(final String password)
     {
         this.password = password;
-        fireChanged();
-    }
-
-    @PropertyName("Tomcat application path")
-    @PropertyDescription("Example: 'C:\\Tomcat\\webapps'")
-    public String getTomcatPath()
-    {
-        return tomcatPath;
-    }
-
-    public void setTomcatPath(String tomcatPath)
-    {
-        this.tomcatPath = tomcatPath;
-        fireChanged();
-    }
-
-    @PropertyName("Application name in Tomcat")
-    @PropertyDescription("If empty then equals to project name")
-    public String getTomcatAppName()
-    {
-        return tomcatAppName;
-    }
-
-    public void setTomcatAppName(String tomcatAppName)
-    {
-        this.tomcatAppName = tomcatAppName;
-        fireChanged();
-    }
-
-    public String getRealTomcatAppName()
-    {
-        return tomcatAppName == null || tomcatAppName.isEmpty() ? getProject().getName() : tomcatAppName;
-    }
-
-    public Path getTomcatApplicationPath()
-    {
-        String path = getTomcatPath();
-        if (path == null || path.isEmpty())
-            return null;
-        return Paths.get(path, getRealTomcatAppName());
-    }
-
-    @PropertyName("Tomcat manager-script user name")
-    @PropertyDescription("Example: 'tomcat'")
-    public String getTomcatManagerScriptUserName()
-    {
-        return tomcatManagerScriptUserName;
-    }
-
-    public void setTomcatManagerScriptUserName(String tomcatManagerScriptUserName)
-    {
-        this.tomcatManagerScriptUserName = tomcatManagerScriptUserName;
-        fireChanged();
-    }
-
-    @PropertyName("Tomcat manager-script user password")
-    @PropertyDescription("Example: 'tomcat'")
-    public String getTomcatManagerScriptPassword()
-    {
-        return tomcatManagerScriptPassword;
-    }
-
-    public void setTomcatManagerScriptPassword(String tomcatManagerScriptPassword)
-    {
-        this.tomcatManagerScriptPassword = tomcatManagerScriptPassword;
-        fireChanged();
-    }
-
-    @PropertyName("Tomcat manager reload URL template")
-    @PropertyDescription("Example: 'http://localhost:8080/manager/text/reload?path=/{projectName}'")
-    public String getTomcatManagerReloadUrlTemplate()
-    {
-        return tomcatManagerReloadUrlTemplate;
-    }
-
-    public void setTomcatManagerReloadUrlTemplate(String tomcatManagerReloadUrlTemplate)
-    {
-        this.tomcatManagerReloadUrlTemplate = tomcatManagerReloadUrlTemplate;
         fireChanged();
     }
 
@@ -393,17 +296,4 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
         fireChanged();
     }
 
-    public static String getDefaultTomcatManagerReloadUrlTemplate()
-    {
-        return "http://localhost:8080/manager/text/reload?path=/" + PROJECT_NAME_PLACEHOLDER;
-    }
-
-    public static String getTomcatManagerReloadUrlByTemplate(final String projectName,
-                                                             final String tomcatManagerReloadUrlTemplate)
-    {
-        final String tomcatManagerReloadUrl = tomcatManagerReloadUrlTemplate.
-                replace(PROJECT_NAME_PLACEHOLDER, projectName);
-
-        return tomcatManagerReloadUrl;
-    }
 }

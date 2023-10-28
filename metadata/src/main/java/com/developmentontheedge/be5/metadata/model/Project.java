@@ -91,8 +91,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
 
     public String getAppName()
     {
-        BeConnectionProfile profile = getConnectionProfile();
-        return profile == null ? getName() : profile.getRealTomcatAppName();
+        return getName();
     }
 
     /**

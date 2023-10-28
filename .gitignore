@@ -18,3 +18,5 @@ log/
 target/
 
 out/
+**/*.xml_
+**/*.java_

@@ -29,7 +29,6 @@ public class ProjectTest
         Project project = new Project("test");
         assertEquals("test", project.getAppName());
         BeConnectionProfile profile = new BeConnectionProfile("myprofile", project.getConnectionProfiles().getLocalProfiles());
-        profile.setTomcatAppName("testApp");
         profile.setConnectionUrl("jdbc:mysql://localhost:3306/db");
         DataElementUtils.save(profile);
         BeConnectionProfile profile2 = new BeConnectionProfile("myprofile2", project.getConnectionProfiles().getLocalProfiles());

@@ -138,12 +138,7 @@ public class Fields
             new Field("connectionUrl", ""),
             new Field("username"),
             new Field("password"),
-            new Field("protected", false),
-            new Field("tomcatPath"),
-            new Field("tomcatAppName"),
-            new Field("tomcatManagerScriptUserName"),
-            new Field("tomcatManagerScriptPassword"),
-            new Field("tomcatManagerReloadUrlTemplate")
+            new Field("protected", false)
     ));
     private static final List<Field> CONNECTION_PROFILE_READ = Collections.unmodifiableList(Arrays.asList(
             new Field(CONNECION_PROFILE_PROVIDER_ID),

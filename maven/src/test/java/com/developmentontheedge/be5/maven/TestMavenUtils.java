@@ -44,6 +44,9 @@ public abstract class TestMavenUtils
         tpmProjectPath = tmp.newFolder().toPath();
         project = ProjectTestUtils.getProject("mavenTestProject");
         Entity entity = ProjectTestUtils.createEntity(project, "entity", "ID");
+        entity.setDisplayName("Test entity");
+        entity.setComment("Doc - description of entity");
+        
         ProjectTestUtils.createScheme(entity);
         ProjectTestUtils.createScript(project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')");
         ProjectTestUtils.createScript(project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')");

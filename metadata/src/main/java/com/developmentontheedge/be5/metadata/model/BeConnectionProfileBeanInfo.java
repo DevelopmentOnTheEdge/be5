@@ -32,11 +32,6 @@ public class BeConnectionProfileBeanInfo extends BeanInfoEx
         add("username");
         add("password");
         add("protected");
-        add("tomcatPath");
-        add("tomcatAppName");
-        add("tomcatManagerScriptUserName");
-        add("tomcatManagerScriptPassword");
-        add("tomcatManagerReloadUrlTemplate");
         addHidden("providerId");
         addHidden("driverDefinition");
         addHidden(new PropertyDescriptor("jdbcUrl", beanClass, "getJdbcUrl", null));

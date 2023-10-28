@@ -78,8 +78,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
     {
         String text;
 
-        //InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
-        InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/tomcat-pool.xml");
+        InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8)))
         {
