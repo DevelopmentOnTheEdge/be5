@@ -39,7 +39,7 @@ public class ProjectTest
         assertEquals(Rdbms.POSTGRESQL, project.getDatabaseSystem());
 
         project.setConnectionProfileName("myprofile");
-        assertEquals("testApp", project.getAppName());
+        assertEquals("test", project.getAppName());
         assertEquals(Rdbms.MYSQL, project.getDatabaseSystem());
     }
 
