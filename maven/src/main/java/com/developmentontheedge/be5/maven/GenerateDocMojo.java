@@ -55,7 +55,7 @@ public class GenerateDocMojo extends Be5Mojo
     {
         logger.info("Generating documentation");
 
-        init();
+		//init();
         
         try
         {
@@ -131,7 +131,7 @@ public class GenerateDocMojo extends Be5Mojo
 
     protected void readConfigurationYaml() throws Exception
     {
-        File yaml = new File(docPath, YAML_FILE);
+        File yaml = new File(docPath.getParent(), YAML_FILE);
         
         if( yaml.exists() )
         {
@@ -211,6 +211,9 @@ public class GenerateDocMojo extends Be5Mojo
 			
 			if( column.getDefaultValue() != null )
 				columnType += shift +"Defult value: " + column.getDefaultValue() ;
+
+			if( column.getTableTo() != null )
+				columnType += shift +"Reference: " + column.getTableTo();
 	
 			String columnDoc = column.getComment() == null ? "" : column.getComment();  
 		
@@ -246,5 +249,7 @@ public class GenerateDocMojo extends Be5Mojo
     	
     	file.flush();
     }
+
+ //public List<TableRef> findTableReferences()
    
 }

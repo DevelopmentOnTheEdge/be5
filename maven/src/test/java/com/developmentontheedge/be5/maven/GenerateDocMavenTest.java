@@ -13,6 +13,9 @@ public class GenerateDocMavenTest
         mojo.projectPath = new File("target/test-classes/project");
     	mojo.docPath     = new File("target/test-classes/doc/source");
 
+System.out.println("Project: " + mojo.projectPath.getAbsolutePath());
+System.out.println("Doc    : " + mojo.docPath.getAbsolutePath());
+
     	mojo.execute();
     }
 }

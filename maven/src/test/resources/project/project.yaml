@@ -3,7 +3,9 @@ mavenTestProject:
   l10n: []
   projectFileStructure: {}
   modules: []
-  application: entity
+  application: 
+  - comments
+  - entities
   scripts:
   - Post-db
   - data

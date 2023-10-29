@@ -1,0 +1,9 @@
+diagrams:
+  - diagram1:
+    tables: [comments, entities]
+table_includes:
+  - entities
+  - comments
+
+
+  
