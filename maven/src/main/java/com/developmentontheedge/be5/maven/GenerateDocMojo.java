@@ -14,10 +14,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.developmentontheedge.be5.metadata.model.DdlElement;
-import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 /**
@@ -182,6 +182,46 @@ public class GenerateDocMojo extends Be5Mojo
 		String doc = table.getEntity().getComment();
 		if( doc != null && doc.length() > 0 )
     		file.println("  " + doc);
+
+    	file.println(
+".. list-table::" 			 + nl +
+"   :header-rows: 1"		 + nl +
+"   :widths: 25, 10, 10, 20" + nl + nl +
+
+"   * - Колонка"  	+ nl +
+"     - Тип" 		+ nl +
+"     - Описание" 	+ nl);
+
+		BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
+		for(ColumnDef column : columns)
+		{
+			String columnName = column.getName();
+			String columnType = column.getType().toString();
+			if( column.isPrimaryKey() )
+				columnType += " PK";
+
+			String shift = "       ";
+			if( column.isAutoIncrement() )
+				columnType += nl + shift  + "autoincrement";
+
+			if( column.isCanBeNull() )
+				columnType += nl + shift +"can be null";
+			
+			if( column.getDefaultValue() != null )
+				columnType += nl + shift +"Defult value: " + column.getDefaultValue() ;
+	
+			String columnDoc = column.getComment() == null ? "" : column.getComment();  
+		
+	    	file.println(
+"   * - " + columnName + nl +
+"     - " + columnType + nl +
+"     - " + columnDoc  + nl);
+		} 
+
+		if( table.getIndices() != null )
+	    	file.println(
+"Индексы " + nl +
+"  " + table.getIndices() ); 		
     	
     	file.flush();
     }
