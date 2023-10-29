@@ -1,9 +1,8 @@
 diagrams:
-  - diagram1:
-    tables: [comments, entities]
-table_includes:
-  - entities
-  - comments
+  - diagram_1:
+      tables: [comments, entities]
+  - diagram_2:
+      tables: [comments]
 
 
   
