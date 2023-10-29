@@ -1,0 +1,1 @@
+INSERT INTO entity (name) VALUES ('foo')

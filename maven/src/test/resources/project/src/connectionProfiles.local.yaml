@@ -1,0 +1,6 @@
+connectionProfiles:
+  profiles:
+    profileTestMavenPlugin2:
+      connectionUrl: jdbc:h2:mem:profileTestMavenPlugin2;NON_KEYWORDS=VALUE,USER;DB_CLOSE_DELAY=-1
+      username: sa
+      password: ''
