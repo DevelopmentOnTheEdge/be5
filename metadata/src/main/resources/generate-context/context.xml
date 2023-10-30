@@ -16,6 +16,8 @@
          directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
          pattern="common"/>
 
+  <!--PARAMETERS-->
+
   <Resource name="jdbc/PROJECT_NAME"
             auth="Container"
             type="javax.sql.DataSource"
@@ -25,7 +27,7 @@
             maxWait="999"
             username="USERNAME"
             password="PASSWORD"
-            driverClassName="org.postgresql.Driver"
+            driverClassName="DRIVER_CLASS"
             url="URL"
             removeAbandoned="true"
             logAbandoned="true"/>
