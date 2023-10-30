@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.maven;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Map;
@@ -164,7 +165,7 @@ public class GenerateDocMojo extends Be5Mojo
     {
         logger.info("Generate tables");
         
-        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE));
+        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), StandardCharsets.UTF_8);
     
         int n = 0;
         tocTree.println(
@@ -186,7 +187,7 @@ public class GenerateDocMojo extends Be5Mojo
     protected void generateTable(TableDef table) throws Exception
     {
         String name = table.getEntityName();
-        PrintWriter file = new PrintWriter(new File(tablesPath, name+".rst"));        
+        PrintWriter file = new PrintWriter(new File(tablesPath, name+".rst"), StandardCharsets.UTF_8);        
 
         file.println(name);
         //file.println("=".repeat(name.length()));
@@ -318,7 +319,7 @@ public class GenerateDocMojo extends Be5Mojo
             return;
         }
 
-        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"));
+        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"), StandardCharsets.UTF_8);
         
         puml.println(
 "   hide circle" + nl +
