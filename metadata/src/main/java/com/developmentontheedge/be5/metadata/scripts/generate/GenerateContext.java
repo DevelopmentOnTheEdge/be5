@@ -109,7 +109,8 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
                 replaceAll("URL", prof.getConnectionUrl()).
                 replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition()).
                 replaceAll("VALIDATION_QUERY", Rdbms.getRdbms(prof.getConnectionUrl()).getValidationQuery()).
-                replaceAll("PARAMETERS", getParameters());
+                replaceAll("DRIVER_CLASS", Rdbms.getRdbms(prof.getConnectionUrl()).getDriverDefinition()).
+                replaceAll("<!--PARAMETERS-->", getParameters());
     }
 
     private String getParameters()

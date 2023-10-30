@@ -28,9 +28,9 @@ public class GenerateContextTest extends ScriptTestUtils
         assertTrue(result.contains("username=\"sa\""));
         assertTrue(result.contains("password=\"\""));
         assertTrue(result.contains("url=\"jdbc:h2:mem:" + profileTestMavenPlugin + ";NON_KEYWORDS=VALUE,USER;DB_CLOSE_DELAY=-1\""));
-        //assertTrue("Wrong context.xml:\n" + result, result.contains("driverClassName=\"org.h2.Driver\""));
-        assertTrue("Wrong context.xml:\n" + result, result.contains("driverClassName=\"org.postgresql.Driver\""));
-        //assertTrue(result.contains("<Parameter name=\"environmentName\" value=\"test\""));
+        assertTrue("Wrong context.xml:\n" + result, result.contains("driverClassName=\"org.h2.Driver\""));
+        //assertTrue("Wrong context.xml:\n" + result, result.contains("driverClassName=\"org.postgresql.Driver\""));
+        assertTrue(result.contains("<Parameter name=\"environmentName\" value=\"test\""));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class GenerateContextTest extends ScriptTestUtils
                 .setEnvironmentName("prod")
                 .execute();
         String result = Files.readAllLines(targetPath.resolve("context.xml")).stream().collect(Collectors.joining("\n"));
-        //assertTrue(result.contains("<Parameter name=\"environmentName\" value=\"prod\""));
+        assertTrue(result.contains("<Parameter name=\"environmentName\" value=\"prod\""));
     }
 
 }
