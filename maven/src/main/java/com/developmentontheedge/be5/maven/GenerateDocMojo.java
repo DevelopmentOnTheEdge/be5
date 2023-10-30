@@ -14,10 +14,13 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import org.yaml.snakeyaml.Yaml;
 
-import com.developmentontheedge.be5.metadata.model.DdlElement;
-import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
+import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.TableRef;
+import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 /**
@@ -35,9 +38,13 @@ public class GenerateDocMojo extends Be5Mojo
     protected File tablesPath;
     protected File diagramsPath;
 
-    public static String YAML_FILE    = ".be5.yaml";
     public static String DIAGRAMS_DIR = "diagrams";
     public static String TABLES_DIR   = "tables";
+    public static String YAML_FILE    = ".be5.yaml";
+
+    public static String YAML_ERROR   = "Error on YAML file configuration: ";
+    public static String YAML_DIAGRAMS_KEY = "diagrams";
+    public static String YAML_TABLES_KEY   = "tables";
 
     public static String TABLES_TOC_FILE = "__tables.rst";
 
@@ -47,13 +54,14 @@ public class GenerateDocMojo extends Be5Mojo
     
     protected Project be5Project;
     protected List<TableDef> tables;
+    protected Map<String, TableDef> tablesMap;
     
     @Override
     public void execute()
     {
         logger.info("Generating documentation");
 
-        init();
+		//init();
         
         try
         {
@@ -63,6 +71,7 @@ public class GenerateDocMojo extends Be5Mojo
             readConfigurationYaml();
             
             generateTables();
+            generateDiagrams();
         }
         catch(Throwable t)
         {
@@ -78,7 +87,11 @@ public class GenerateDocMojo extends Be5Mojo
         
         tables = be5Project.findTableDefinitions();
         Collections.sort(tables,(TableDef t1, TableDef t2) -> 
-            t1.getEntityName().compareToIgnoreCase(t2.getEntityName() ) ); 
+            t1.getEntityName().compareToIgnoreCase(t2.getEntityName() ) );
+        
+        tablesMap = new HashMap<>();
+        for(TableDef t : tables)
+        	tablesMap.put(t.getEntityName(), t);
     }
 
     protected void validateDocPath() throws Exception
@@ -129,7 +142,7 @@ public class GenerateDocMojo extends Be5Mojo
 
     protected void readConfigurationYaml() throws Exception
     {
-        File yaml = new File(docPath, YAML_FILE);
+        File yaml = new File(docPath.getParent(), YAML_FILE);
         
         if( yaml.exists() )
         {
@@ -180,11 +193,183 @@ public class GenerateDocMojo extends Be5Mojo
         if( displayName != null && displayName.length() > 0 && !displayName.equalsIgnoreCase(name) )
             file.println(displayName);
 
-        String doc = table.getEntity().getComment();
-        if( doc != null && doc.length() > 0 )
-            file.println("  " + doc);
+		String doc = table.getEntity().getComment();
+		if( doc != null && doc.length() > 0 )
+    		file.println("  " + doc);
+
+    	file.println(nl +
+".. list-table::" 			 + nl +
+"   :header-rows: 1"		 + nl + nl +
+
+"   * - Колонка"  	+ nl +
+"     - Тип" 		+ nl +
+"     - Описание" 	+ nl);
+
+		BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
+		for(ColumnDef column : columns)
+		{
+			String columnName = column.getName();
+			String columnType = column.getType().toString();
+			if( column.isPrimaryKey() )
+				columnType += " PK";
+
+			String shift = nl + nl + "       ";
+			if( column.isAutoIncrement() )
+				columnType += shift  + "autoincrement";
+
+			if( column.isCanBeNull() )
+				columnType += shift +"can be null";
+			
+			if( column.getDefaultValue() != null )
+				columnType += shift +"Defult value: " + column.getDefaultValue() ;
+
+			if( column.getTableTo() != null )
+				columnType += shift +"Reference: " + column.getTableTo();
+	
+			String columnDoc = column.getComment() == null ? "" : column.getComment();  
+		
+	    	file.println(
+"   * - " + columnName + nl +
+"     - " + columnType + nl +
+"     - " + columnDoc  + nl);
+		} 
+
+		if( table.getIndices() != null && table.getIndices().getSize() > 0 )
+		{
+	    	file.print("**Индексы**");
+	    	
+	    	for(IndexDef index : table.getIndices())
+	    	{
+	    		file.print(nl + "   * " + index.getName() + ": ");
+	    		
+	    		if( index.isUnique() )
+	    			file.print("UNIQUE ");
+
+				int n = index.getAvailableElements().size();
+		    	for(IndexColumnDef indexColumn : index.getAvailableElements())
+		    	{
+		    		file.print(indexColumn.getAsString());
+		    		
+		    		if( n>1 )
+	    			file.print(", ");
+	    			
+	    			n--;
+    			}
+	    	} 		
+    	}
+    	
+    	file.flush();
+    }
+
+    protected void generateDiagrams()
+    {
+    	Object d = configuration.get(YAML_DIAGRAMS_KEY);
+    	if( d == null )
+    		return;
+    	
+    	if( !(d instanceof List) )
+    	{    		
+            logger.info(YAML_ERROR + YAML_DIAGRAMS_KEY + "should be an arry.");
+            return;
+    	}
+    	
+    	for(Object o : ((List)d) )
+    	{
+    		if( !(o instanceof Map) )
+    		{
+                logger.error(YAML_ERROR + YAML_DIAGRAMS_KEY + "each diagram item shoud be a map.");
+                break;
+    		}
+    		
+    		try
+    		{
+    			Map diagramItem = (Map)o;
+    			String name = (String)diagramItem.keySet().iterator().next();
+    			Map values = (Map)diagramItem.get(name);
+    			
+    			generateDiagram(name, values);
+    		}
+    		catch(Exception t)
+    		{
+                logger.error(YAML_ERROR + YAML_DIAGRAMS_KEY + "each diagram item shoud be a map.");
+                logger.error(t.getMessage());
+                break;
+    		}
+    	}
+    }
+    
+    protected void generateDiagram(String name, Map values) throws Exception
+    {
+    	List<String> tables = null;
+    	
+    	try
+    	{
+    		tables = (List<String>)values.get(YAML_TABLES_KEY);
+    		if( tables.size() == 0 )
+    			throw new Exception("Tables list is empty." );
+    	}
+    	catch(Exception e)
+    	{
+    		logger.error(YAML_ERROR + " diagram '" + name + "' should contan array list of tables.");
+            return;
+        }
+
+        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"));
         
-        file.flush();
+        puml.println(
+"   hide circle" + nl +
+"   skinparam linetype ortho" + nl);
+
+		for(String table : tables)
+		{
+			generateTablePUML(table, puml);
+		}
+
+		
+		List<TableRef> refs = be5Project.findTableReferences();
+		for(TableRef ref : refs)
+		{
+			String fromTable = ref.getTableFrom();
+			String toTable   = ref.getTableTo();
+			
+			if( tables.contains(fromTable) && tables.contains(toTable) )
+		    	puml.println(
+"   " + fromTable + " }o..|| " + toTable);
+		}
+		
+		
+        puml.flush();
+    }
+    
+    protected void generateTablePUML(String table, PrintWriter puml) throws Exception
+    {
+    	TableDef t = tablesMap.get(table);
+    	if( t == null )
+    	{
+    		logger.error(YAML_ERROR + " diagram '" + table + "' - table '" + table + "' is missing in the project.");
+            return;
+    	}
+
+    	puml.println(
+"   entity \"" + table + "\" as " + table + "{" + nl +
+"     --");
+    	
+		BeCaseInsensitiveCollection<ColumnDef> columns = t.getColumns();
+		for(ColumnDef column : columns)
+		{
+			String columnName = column.getName();
+			if( column.isPrimaryKey() )
+				columnName = "*" + columnName;
+
+			String columnType = column.getType().toString();
+
+	    	puml.println(
+"     " + columnName + " : " + columnType);
+		} 
+
+    	puml.println(
+"    }" + nl);
+		
     }
    
 }

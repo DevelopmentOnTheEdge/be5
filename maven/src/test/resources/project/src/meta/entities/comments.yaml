@@ -1,0 +1,30 @@
+comments:
+  doc: Comments for entities
+  type: table
+  displayName: Entity comments
+  primaryKey: ID
+  besql: true
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - entityID:
+        type: KEYTYPE
+        reference: entities
+    - comment:
+        type: VARCHAR(200)
+        doc: Comment for entity
+
+  queries:
+  - All records:
+      roles: ['@AllRolesExceptGuest', -User]
+      operations: op
+      code: select * from entity
+  operations:
+  - op:
+      customizations:
+        operation.form.css:
+          code: 'form {color: #f1f1f1}'
+      code: java.lang.String

@@ -1,0 +1,8 @@
+diagrams:
+  - diagram_1:
+      tables: [comments, entities]
+  - diagram_2:
+      tables: [comments]
+
+
+  
