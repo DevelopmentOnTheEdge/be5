@@ -67,7 +67,9 @@ public class GenerateDocMojo extends Be5Mojo
         {
             loadProject();
             
-            validateDocPath();
+            if( !validateDocPath() )
+            	return;
+            
             readConfigurationYaml();
             
             generateTables();
@@ -94,19 +96,19 @@ public class GenerateDocMojo extends Be5Mojo
         	tablesMap.put(t.getEntityName(), t);
     }
 
-    protected void validateDocPath() throws Exception
+    protected boolean validateDocPath() throws Exception
     {
         if( docPath == null )
         {
             logger.error("Path to documention is not specified." + nl +
                          "Please use: -DBE5_DOC_PATH=your_doc_path");
-            return; 
+            return false; 
         }
         
         if( !docPath.exists() )
         {
             logger.error("Path to documentation does not exist: " + docPath.getCanonicalPath());
-            return;
+            return false;
         }
 
         if( !docPath.getCanonicalPath().endsWith(File.pathSeparator + "be5") )
@@ -138,6 +140,8 @@ public class GenerateDocMojo extends Be5Mojo
             logger.info("Creates be5/diagrams subdirectory.");
             Files.createDirectories(diagramsPath.toPath());
         }
+        
+        return true;
     }       
 
     protected void readConfigurationYaml() throws Exception
