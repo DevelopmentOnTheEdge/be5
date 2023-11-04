@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.maven;
 
+import static org.mockito.Mockito.RETURNS_SMART_NULLS;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -45,8 +47,20 @@ public class GenerateDocMojo extends Be5Mojo
     public static String YAML_ERROR   = "Error on YAML file configuration: ";
     public static String YAML_DIAGRAMS_KEY = "diagrams";
     public static String YAML_TABLES_KEY   = "tables";
-
+    public static String YAML_NESTED_TABLES_KEY = "nested_tables";
+    
     public static String TABLES_TOC_FILE = "__tables.rst";
+    public static String TABLES_APP_FILE = "__tables_app.rst";
+    public static String TABLES_BE5_FILE = "__tables_be5.rst";
+    
+    protected Map<String, String> be5TablesMap;
+    protected String[] be5Tables = new String[]{"be5columnSettings", "be5eventParams", "be5events",
+                                    "be5operationLogParams", "be5operationLogs", "be5querySettings",
+                                    "categories", "classifications", "countries", "languages",
+                                    "mimeTypes", "persistent_logins", "provinces", "systemSettings",
+                                    "user_prefs", "user_roles", "users"};
+    protected Map<String, String> be5FieldsMap;
+    protected String[] be5Fields = new String[]{"whoInserted___", "whoModified___", "creationDate___", "modificationDate___"};
 
     public static String nl = System.lineSeparator();
     
@@ -71,6 +85,7 @@ public class GenerateDocMojo extends Be5Mojo
             readConfigurationYaml();
             
             generateTables();
+            generateNestedTables();
             generateDiagrams();
         }
         catch(Throwable t)
@@ -158,19 +173,57 @@ public class GenerateDocMojo extends Be5Mojo
 
     protected void generateTables() throws Exception
     {
-        logger.info("Generate tables");
-        
-        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE));
+    	be5TablesMap = new HashMap<>();
+    	for(String table : be5Tables)
+    		be5TablesMap.put(table, table);
+
+    	be5FieldsMap = new HashMap<>();
+    	for(String field : be5Fields)
+    		be5FieldsMap.put(field, field);
+    	
+    	PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE));
     
-        int n = 0;
         tocTree.println(
 "Схема базы данных"    + nl +
 "================="    + nl + nl +
-".. toctree::"        + nl);
+".. toctree::"         + nl + nl + 
+"      " + TABLES_APP_FILE + nl +  
+"      " + TABLES_BE5_FILE);
+
+        generateTables(TABLES_APP_FILE, true);        
+        generateTables(TABLES_BE5_FILE, false);
+        tocTree.flush();
+    }
+    
+    protected void generateTables(String file, boolean appTables) throws Exception
+    {
+        String type = appTables ? "application" : "be5";
+    	logger.info("Generate " + type + " tables");
+
+        PrintWriter tocTree = new PrintWriter(new File(tablesPath, file));
         
-        for(TableDef table : tables)
+        if( appTables )
+        	tocTree.println(
+"Таблицы приложения" + nl +
+"==================" + nl);
+        else
+        	tocTree.println(
+        	"Таблицы BE5 (служебные)" + nl +
+        	"=======================" + nl);
+        	
+    	tocTree.println(
+".. toctree::"         + nl); 
+
+        int n = 0;
+    	for(TableDef table : tables)
         {
-            tocTree.println("  " + table.getEntityName() + ".rst");
+    		if( appTables && be5TablesMap.containsKey(table.getEntityName()) )
+    			continue;
+
+    		if( !appTables && !be5TablesMap.containsKey(table.getEntityName()) )
+    			continue;
+    		
+    		tocTree.println("  " + table.getEntityName() + ".rst");
             generateTable(table);
             n++;
         }
@@ -181,12 +234,17 @@ public class GenerateDocMojo extends Be5Mojo
 
     protected void generateTable(TableDef table) throws Exception
     {
+    	generateTable(table, "rst", "=", false);
+    }
+    
+    protected void generateTable(TableDef table, String extension, String headingUnderline, boolean skipBe5Fields) throws Exception
+    {
         String name = table.getEntityName();
-        PrintWriter file = new PrintWriter(new File(tablesPath, name+".rst"));        
+        PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension));        
 
         file.println(name);
-        //file.println("=".repeat(name.length()));
-        file.println( String.format("%0" + name.length() + "d", 0).replace("0", "=") );
+        //file.println(headingUnderline.repeat(name.length()));
+        file.println( String.format("%0" + name.length() + "d", 0).replace("0", headingUnderline) );
         file.println();
 
         String displayName = table.getEntity().getDisplayName();
@@ -206,9 +264,19 @@ public class GenerateDocMojo extends Be5Mojo
 "     - Описание" 	+ nl);
 
 		BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
+		String be5Fields = null;
 		for(ColumnDef column : columns)
 		{
 			String columnName = column.getName();
+			
+			if( skipBe5Fields && be5FieldsMap.containsKey(columnName) )
+			{
+				if( be5Fields == null )
+					be5Fields = columnName;
+				else
+					be5Fields += ", " + columnName;
+			}
+			
 			String columnType = column.getType().toString();
 			if( column.isPrimaryKey() )
 				columnType += " PK";
@@ -234,6 +302,9 @@ public class GenerateDocMojo extends Be5Mojo
 "     - " + columnDoc  + nl);
 		} 
 
+		if( skipBe5Fields && be5Fields != null )
+	    	file.println("Служебные поля: " + be5Fields + nl);
+		
 		if( table.getIndices() != null && table.getIndices().getSize() > 0 )
 		{
 	    	file.print("**Индексы**");
@@ -261,6 +332,53 @@ public class GenerateDocMojo extends Be5Mojo
     	file.flush();
     }
 
+    protected void generateNestedTables()
+    {
+    	Object d = configuration.get(YAML_NESTED_TABLES_KEY);
+    	if( d == null )
+    		return;
+    	
+    	if( !(d instanceof List) )
+    	{    		
+            logger.info(YAML_ERROR + YAML_NESTED_TABLES_KEY + "should be an arry.");
+            return;
+    	}
+    	
+    	for(Object o : ((List)d) )
+    	{
+    		if( !(o instanceof String) )
+    		{
+                logger.error(YAML_ERROR + YAML_NESTED_TABLES_KEY + "each item shoud be a table name.");
+                break;
+    		}
+    		
+    		try
+    		{
+    			String tableName = (String)o;
+    			TableDef table = null;
+    			for(TableDef td : tables)
+    			{
+    				if( td.getEntityName().equals(tableName) )
+    				{
+    					table = td;
+    					break;
+    				}
+    			}
+
+    			if( table == null )
+    				throw new Exception("Table '" + tableName  + "' is missing.");
+    					 
+    			generateTable(table, "rstincl", "^", true);
+    		}
+    		catch(Exception t)
+    		{
+                logger.error(YAML_ERROR + YAML_NESTED_TABLES_KEY + "each item shoud be a valid table name.");
+                logger.error(t.getMessage());
+                break;
+    		}
+    	}
+    }
+    	
     protected void generateDiagrams()
     {
     	Object d = configuration.get(YAML_DIAGRAMS_KEY);
