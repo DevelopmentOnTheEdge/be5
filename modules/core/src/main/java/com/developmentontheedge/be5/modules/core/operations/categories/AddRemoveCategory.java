@@ -27,8 +27,11 @@ public class AddRemoveCategory extends GOperationSupport
         if (context.getRecords().length == 0)
             return null;
 
-        String [][]categories = queries.getTagsFromSelectionView(
-                "categories", Collections.singletonMap("entity", getInfo().getEntityName()));
+        //String [][]categories = queries.getTagsFromSelectionView(
+        //        "categories", Collections.singletonMap("entity", getInfo().getEntityName()));
+        String [][]categories = queries.getTagsFromCustomSelectionView(
+                "categories", "Selection view for AddRemoveCategory",
+                Collections.singletonMap("entity", getInfo().getEntityName()));
 
         DynamicProperty prop = new DynamicProperty("categoryID", localize( "Category" ), Long.class);
         prop.setAttribute( TAG_LIST_ATTR, categories );

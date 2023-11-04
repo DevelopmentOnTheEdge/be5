@@ -1,11 +1,8 @@
 <!--
-
     Context configuration file for PROJECT_NAME
 
     Tomcat 5 and up version
-
 -->
-
 
 <Context>
 
@@ -17,6 +14,7 @@
          pattern="common"/>
 
   <!--PARAMETERS-->
+  <!--SESSION_STORE-->
 
   <Resource name="jdbc/PROJECT_NAME"
             auth="Container"

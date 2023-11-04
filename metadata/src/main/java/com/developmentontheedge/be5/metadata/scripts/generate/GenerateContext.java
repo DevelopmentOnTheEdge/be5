@@ -102,6 +102,16 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
             throw new ScriptException("Connection profile is required for 'generate-context'");
         }
 
+        String sessionStore = prof.getProperty( "SESSION_STORE" );
+        if( sessionStore != null )
+        {
+            sessionStore = "<Manager pathname=\"" + sessionStore + "\"/>";
+        }
+        else
+        {
+            sessionStore = "";   
+        }  
+
         return text.
                 replaceAll("PROJECT_NAME", be5Project.getName()).
                 replaceAll("USERNAME", prof.getUsername()).
@@ -110,12 +120,13 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
                 replaceAll("DRIVER_DEFINITION", prof.getDriverDefinition()).
                 replaceAll("VALIDATION_QUERY", Rdbms.getRdbms(prof.getConnectionUrl()).getValidationQuery()).
                 replaceAll("DRIVER_CLASS", Rdbms.getRdbms(prof.getConnectionUrl()).getDriverDefinition()).
-                replaceAll("<!--PARAMETERS-->", getParameters());
+                replaceAll("<!--PARAMETERS-->", getParameters()).
+                replaceAll("<!--SESSION_STORE-->", sessionStore );
     }
 
     private String getParameters()
     {
-        return "<Parameter name=\"" + ENVIRONMENT_NAME + "\" value=\"" + environmentName + "\" override=\"false\"/>\n";
+        return "<Parameter name=\"" + ENVIRONMENT_NAME + "\" value=\"" + environmentName + "\" override=\"false\"/>";
     }
 
     public GenerateContext setGenerateContextPath(String generateContextPath)
