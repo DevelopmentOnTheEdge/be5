@@ -1,11 +1,8 @@
 <!--
-
     Context configuration file for PROJECT_NAME
 
     Tomcat 5 and up version
-
 -->
-
 
 <Context>
 
@@ -16,6 +13,9 @@
          directory="logs" prefix="PROJECT_NAME_access_log." suffix=".txt"
          pattern="common"/>
 
+  <!--PARAMETERS-->
+  <!--SESSION_STORE-->
+
   <Resource name="jdbc/PROJECT_NAME"
             auth="Container"
             type="javax.sql.DataSource"
@@ -25,7 +25,7 @@
             maxWait="999"
             username="USERNAME"
             password="PASSWORD"
-            driverClassName="org.postgresql.Driver"
+            driverClassName="DRIVER_CLASS"
             url="URL"
             removeAbandoned="true"
             logAbandoned="true"/>

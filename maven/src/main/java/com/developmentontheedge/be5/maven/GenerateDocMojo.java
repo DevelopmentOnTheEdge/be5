@@ -5,6 +5,7 @@ import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Map;
@@ -81,7 +82,9 @@ public class GenerateDocMojo extends Be5Mojo
         {
             loadProject();
             
-            validateDocPath();
+            if( !validateDocPath() )
+            	return;
+            
             readConfigurationYaml();
             
             generateTables();
@@ -109,19 +112,19 @@ public class GenerateDocMojo extends Be5Mojo
         	tablesMap.put(t.getEntityName(), t);
     }
 
-    protected void validateDocPath() throws Exception
+    protected boolean validateDocPath() throws Exception
     {
         if( docPath == null )
         {
             logger.error("Path to documention is not specified." + nl +
                          "Please use: -DBE5_DOC_PATH=your_doc_path");
-            return; 
+            return false; 
         }
         
         if( !docPath.exists() )
         {
             logger.error("Path to documentation does not exist: " + docPath.getCanonicalPath());
-            return;
+            return false;
         }
 
         if( !docPath.getCanonicalPath().endsWith(File.pathSeparator + "be5") )
@@ -153,6 +156,8 @@ public class GenerateDocMojo extends Be5Mojo
             logger.info("Creates be5/diagrams subdirectory.");
             Files.createDirectories(diagramsPath.toPath());
         }
+        
+        return true;
     }       
 
     protected void readConfigurationYaml() throws Exception
@@ -181,7 +186,8 @@ public class GenerateDocMojo extends Be5Mojo
     	for(String field : be5Fields)
     		be5FieldsMap.put(field, field);
     	
-    	PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE));
+        logger.info("Generate tables");
+        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), StandardCharsets.UTF_8);
     
         tocTree.println(
 "Схема базы данных"    + nl +
@@ -240,7 +246,7 @@ public class GenerateDocMojo extends Be5Mojo
     protected void generateTable(TableDef table, String extension, String headingUnderline, boolean skipBe5Fields) throws Exception
     {
         String name = table.getEntityName();
-        PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension));        
+        PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension), StandardCharsets.UTF_8);        
 
         file.println(name);
         //file.println(headingUnderline.repeat(name.length()));
@@ -432,7 +438,7 @@ public class GenerateDocMojo extends Be5Mojo
             return;
         }
 
-        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"));
+        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"), StandardCharsets.UTF_8);
         
         puml.println(
 "   hide circle" + nl +
