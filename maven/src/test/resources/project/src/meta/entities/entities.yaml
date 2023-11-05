@@ -13,6 +13,9 @@ entities:
     - name:
         type: VARCHAR(20)
         doc: Entity name
+    - type: 
+        type: ENUM('type1', 'type2')
+        doc: "Enumeration"
     indices:
     - IDX_1:
         columns: ID

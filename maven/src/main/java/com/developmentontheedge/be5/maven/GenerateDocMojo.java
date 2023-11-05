@@ -21,6 +21,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.TableRef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
@@ -281,6 +282,8 @@ public class GenerateDocMojo extends Be5Mojo
 					be5Fields = columnName;
 				else
 					be5Fields += ", " + columnName;
+				
+				continue;
 			}
 			
 			String columnType = column.getType().toString();
@@ -299,7 +302,16 @@ public class GenerateDocMojo extends Be5Mojo
 
 			if( column.getTableTo() != null )
 				columnType += shift +"Reference: " + column.getTableTo();
-	
+
+			if( column.getTypeString().startsWith(SqlColumnType.TYPE_ENUM) && 
+					column.getType().getEnumValues() != null )
+			{
+				columnType = "ENUM: ";
+				String prefix = nl + "        * ";
+				for(String enumValue : column.getType().getEnumValues() )
+					columnType = columnType + prefix + enumValue;
+			}
+			
 			String columnDoc = column.getComment() == null ? "" : column.getComment();  
 		
 	    	file.println(
