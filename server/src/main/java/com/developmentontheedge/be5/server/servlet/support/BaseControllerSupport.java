@@ -31,10 +31,16 @@ public abstract class BaseControllerSupport extends ControllerSupport
         respond(request, response);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+    {
+        respond(request, response);
+    }
+
     @Inject
     private Provider<Request> req;
 
-    private void respond(HttpServletRequest request, HttpServletResponse response)
+    protected void respond(HttpServletRequest request, HttpServletResponse response)
     {
         ServletUtils.addHeaders(request, response);
         Response res = new ResponseImpl(response);
