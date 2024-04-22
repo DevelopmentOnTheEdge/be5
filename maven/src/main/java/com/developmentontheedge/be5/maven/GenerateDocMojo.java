@@ -188,7 +188,7 @@ public class GenerateDocMojo extends Be5Mojo
     		be5FieldsMap.put(field, field);
     	
         logger.info("Generate tables");
-        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), StandardCharsets.UTF_8);
+        PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), "UTF-8"/*StandardCharsets.UTF_8*/);
     
         tocTree.println(
 "Схема базы данных"    + nl +
@@ -247,7 +247,7 @@ public class GenerateDocMojo extends Be5Mojo
     protected void generateTable(TableDef table, String extension, String headingUnderline, boolean skipBe5Fields) throws Exception
     {
         String name = table.getEntityName();
-        PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension), StandardCharsets.UTF_8);        
+        PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension), "UTF-8"/*StandardCharsets.UTF_8*/);
 
         file.println(name);
         //file.println(headingUnderline.repeat(name.length()));
@@ -450,7 +450,7 @@ public class GenerateDocMojo extends Be5Mojo
             return;
         }
 
-        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"), StandardCharsets.UTF_8);
+        PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"), "UTF-8"/*StandardCharsets.UTF_8*/);
         
         puml.println(
 "   hide circle" + nl +
