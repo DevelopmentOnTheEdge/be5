@@ -29,7 +29,7 @@ public class Be5EventDbLoggerTest extends CoreBe5ProjectDbMockTest
     {
         Query query = meta.getQuery("testtable", "All records");
         be5EventDbLogger.queryCompleted(query, Collections.emptyMap(), 1,2);
-        verify(DbServiceMock.mock).insert(eq("INSERT INTO be5events (user_name, IP, action, startTime, endTime, " +
+        verify(DbServiceMock.mock).insertRaw(eq("INSERT INTO be5events (user_name, IP, action, startTime, endTime, " +
                         "title, entity) VALUES (?, ?, ?, ?, ?, ?, ?)"),
                 anyVararg());
     }
@@ -39,7 +39,7 @@ public class Be5EventDbLoggerTest extends CoreBe5ProjectDbMockTest
     {
         Query query = meta.getQuery("testtable", "All records");
         be5EventDbLogger.queryError(query, Collections.emptyMap(), 1,2, "error");
-        verify(DbServiceMock.mock).insert(eq("INSERT INTO be5events (exception, user_name, IP, action, startTime, " +
+        verify(DbServiceMock.mock).insertRaw(eq("INSERT INTO be5events (exception, user_name, IP, action, startTime, " +
                         "endTime, title, entity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"),
                 anyVararg());
     }

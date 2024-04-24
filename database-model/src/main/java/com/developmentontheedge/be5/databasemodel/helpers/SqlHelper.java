@@ -27,7 +27,7 @@ public class SqlHelper
 
     public <T> T insert(String tableName, Map<String, ?> values)
     {
-        return db.insert(generateInsertSql(tableName, values), values.values().toArray());
+        return db.insertRaw(generateInsertSql(tableName, values), values.values().toArray());
     }
 
     public int update(String tableName, Map<String, ?> conditions, Map<String, ?> values)
@@ -38,7 +38,7 @@ public class SqlHelper
         Map<String, String> valuePlaceholders = values.entrySet().stream()
                 .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
 
-        return db.update(generateUpdateSql(tableName, conditionsPlaceholders, valuePlaceholders),
+        return db.updateRaw(generateUpdateSql(tableName, conditionsPlaceholders, valuePlaceholders),
                 ObjectArrays.concat(values.values().toArray(), conditions.values().toArray(), Object.class));
     }
 
@@ -47,18 +47,18 @@ public class SqlHelper
         Map<String, String> valuePlaceholders = values.entrySet().stream()
                 .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
 
-        return db.update(generateUpdateInSql(tableName, conditionColumn, conditionValues.length, valuePlaceholders),
+        return db.updateRaw(generateUpdateInSql(tableName, conditionColumn, conditionValues.length, valuePlaceholders),
                 ObjectArrays.concat(values.values().toArray(), conditionValues, Object.class));
     }
 
     public int delete(String tableName, Map<String, ?> conditions)
     {
-        return db.update(generateDeleteSql(tableName, conditions), getWithoutConstants(conditions));
+        return db.updateRaw(generateDeleteSql(tableName, conditions), getWithoutConstants(conditions));
     }
 
     public int deleteIn(String tableName, String columnName, Object[] values)
     {
-        return db.update(generateDeleteInSql(tableName, columnName, values.length), values);
+        return db.updateRaw(generateDeleteInSql(tableName, columnName, values.length), values);
     }
 
     private String generateInsertSql(String tableName, Map<String, ?> values)

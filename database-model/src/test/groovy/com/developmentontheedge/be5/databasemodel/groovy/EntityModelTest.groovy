@@ -32,14 +32,14 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
     void testAdd()
     {
         EntityModel entity = database.getEntity("testtableAdmin")
-        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
+        when(DbServiceMock.mock.insertRaw(anyString(), anyVararg())).thenReturn("1")
 
         entity.add([
                 name : "Test",
                 valueCol: 1
         ])
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)",
+        verify(DbServiceMock.mock).insertRaw("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)",
                 "Test", 1)
     }
 
@@ -66,9 +66,9 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
 
         entity.addAll(list)
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 1)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 2)
-        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 3)
+        verify(DbServiceMock.mock).insertRaw("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 1)
+        verify(DbServiceMock.mock).insertRaw("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 2)
+        verify(DbServiceMock.mock).insertRaw("INSERT INTO testtableAdmin (name, valueCol) VALUES (?, ?)", "Test", 3)
     }
 
     @Test
@@ -76,14 +76,14 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
     {
         EntityModel entity = database.getEntity("testtableAdmin")
 
-        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
+        when(DbServiceMock.mock.insertRaw(anyString(), anyVararg())).thenReturn("1")
         String id = entity.add([
                 name : "Test",
                 valueCol: "1"
         ])
         assertEquals("1", id)
 
-        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(2L)
+        when(DbServiceMock.mock.insertRaw(anyString(), anyVararg())).thenReturn(2L)
         id = entity.add([
                 name : "Test",
                 valueCol: "1"

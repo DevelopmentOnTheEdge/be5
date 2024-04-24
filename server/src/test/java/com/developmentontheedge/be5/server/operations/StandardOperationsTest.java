@@ -52,8 +52,8 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationStatus.FINISHED,
                 executeOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
-        verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
-        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testtableAdmin.1");
+        verify(DbServiceMock.mock).updateRaw("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
+        verify(DbServiceMock.mock).updateRaw("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testtableAdmin.1");
     }
 
     @Test
@@ -64,9 +64,9 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationStatus.FINISHED,
                 executeOperation("testRestoredRecords", "All records", "Delete", "1", "").getSecond().getStatus());
 
-        verify(DbServiceMock.mock).update("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "yes", 1L);
-        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testRestoredRecords.1");
-        verify(DbServiceMock.mock).update("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "yes", 1L);
+        verify(DbServiceMock.mock).updateRaw("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "yes", 1L);
+        verify(DbServiceMock.mock).updateRaw("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "yes", "testRestoredRecords.1");
+        verify(DbServiceMock.mock).updateRaw("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "yes", 1L);
     }
 
     @Test
@@ -77,9 +77,9 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationStatus.FINISHED,
                 executeOperation("testRestoredRecords", "All records", "Restore", "1", "").getSecond().getStatus());
 
-        verify(DbServiceMock.mock).update("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "no", 1L);
-        verify(DbServiceMock.mock).update("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "no", "testRestoredRecords.1");
-        verify(DbServiceMock.mock).update("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "no", 1L);
+        verify(DbServiceMock.mock).updateRaw("UPDATE testRestoredRecords SET isDeleted___ = ? WHERE ID IN (?)", "no", 1L);
+        verify(DbServiceMock.mock).updateRaw("UPDATE testGenCollection SET isDeleted___ = ? WHERE recordID IN (?)", "no", "testRestoredRecords.1");
+        verify(DbServiceMock.mock).updateRaw("UPDATE testCollection SET isDeleted___ = ? WHERE categoryID IN (?)", "no", 1L);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         executeOperation("testtableAdmin", "All records", "Delete", "1,2,3", "").getSecond();
 
-        verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
+        verify(DbServiceMock.mock).updateRaw("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals("table/testtable/All records", ((FrontendAction[])result.getDetails())[0].getValue());
 
 
-        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, valueCol) " +
+        verify(DbServiceMock.mock).insertRaw("INSERT INTO testtable (name, valueCol) " +
                 "VALUES (?, ?)", "test", "1");
     }
 
@@ -170,7 +170,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         OperationResult result = executeEditWithValues("{'name':'EditName','valueCol':123}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", 123, 12L);
 
         assertEquals(OperationStatus.FINISHED, result.getStatus());
@@ -194,7 +194,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(0, result.getTimeout());
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", 123, 12L);
     }
 
@@ -203,7 +203,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithValues("{'name':'EditName','valueCol':null}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
@@ -212,7 +212,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithValues("{'name':'EditName','valueCol':''}");
 
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET name = ?, valueCol = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
@@ -222,7 +222,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         executeEditWithValues2Records("{'name':'EditName','valueCol':''}");
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ? WHERE ID IN (?, ?)",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET name = ? WHERE ID IN (?, ?)",
                 "EditName", 12L, 13L);
     }
 
@@ -232,7 +232,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         executeEditWithValues2Records("{'name':'','valueCol':'1'}");
 
         verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"), any(), eq(12L));
-        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET valueCol = ? WHERE ID IN (?, ?)",
+        verify(DbServiceMock.mock).updateRaw("UPDATE testtableAdmin SET valueCol = ? WHERE ID IN (?, ?)",
                 1, 12L, 13L);
     }
 

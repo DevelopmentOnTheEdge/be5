@@ -29,64 +29,64 @@ public class SqlHelperTest
     @Test
     public void insert()
     {
-        when(db.insert(any(), anyVararg())).thenReturn(2L);
+        when(db.insertRaw(any(), anyVararg())).thenReturn(2L);
         long newID = sqlHelper.insert("persons", of("name", "Test", "age", 30));
 
         assertEquals(2L, newID);
-        verify(db, times(1)).insert("INSERT INTO persons (name, age) VALUES (?, ?)", "Test", 30);
+        verify(db, times(1)).insertRaw("INSERT INTO persons (name, age) VALUES (?, ?)", "Test", 30);
     }
 
     @Test
     public void update()
     {
-        when(db.update(any(), anyVararg())).thenReturn(1);
+        when(db.updateRaw(any(), anyVararg())).thenReturn(1);
         int updateCount = sqlHelper.update("persons", of("id", 2L), of("age", 30));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET age = ? WHERE id = ?", 30, 2L);
+        verify(db, times(1)).updateRaw("UPDATE persons SET age = ? WHERE id = ?", 30, 2L);
     }
 
     @Test
     public void update_many_params()
     {
-        when(db.update(any(), anyVararg())).thenReturn(1);
+        when(db.updateRaw(any(), anyVararg())).thenReturn(1);
         int updateCount = sqlHelper.update("persons", of("c1", 1L, "c2", 2L),
                 of("value1", 10, "value2", 20));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET value1 = ?, value2 = ? WHERE c1 = ? AND c2 = ?",
+        verify(db, times(1)).updateRaw("UPDATE persons SET value1 = ?, value2 = ? WHERE c1 = ? AND c2 = ?",
                 10, 20, 1L, 2L);
     }
 
     @Test
     public void updateIn()
     {
-        when(db.update(any(), anyVararg())).thenReturn(2);
+        when(db.updateRaw(any(), anyVararg())).thenReturn(2);
         int updateCount = sqlHelper.updateIn("persons", "id", new Long[]{2L, 3L},
                 of("age", 30));
 
         assertEquals(2, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET age = ? WHERE id IN (?, ?)", 30, 2L, 3L);
+        verify(db, times(1)).updateRaw("UPDATE persons SET age = ? WHERE id IN (?, ?)", 30, 2L, 3L);
     }
 
     @Test
     public void delete()
     {
-        when(db.update(any(), anyVararg())).thenReturn(1);
+        when(db.updateRaw(any(), anyVararg())).thenReturn(1);
         int updateCount = sqlHelper.delete("persons", of("id", 2));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("DELETE FROM persons WHERE id = ?", 2);
+        verify(db, times(1)).updateRaw("DELETE FROM persons WHERE id = ?", 2);
     }
 
     @Test
     public void deleteIn()
     {
-        when(db.update(any(), anyVararg())).thenReturn(2);
+        when(db.updateRaw(any(), anyVararg())).thenReturn(2);
         int updateCount = sqlHelper.deleteIn("persons", "id", new Long[]{2L, 3L});
 
         assertEquals(2, updateCount);
-        verify(db, times(1)).update("DELETE FROM persons WHERE id IN (?, ?)", 2L, 3L);
+        verify(db, times(1)).updateRaw("DELETE FROM persons WHERE id IN (?, ?)", 2L, 3L);
     }
 
 }
