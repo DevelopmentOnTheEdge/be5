@@ -34,8 +34,11 @@ public class AppData extends ScriptSupport<AppData>
         PrintStream ps = null;
         try
         {
-            ps = createPrintStream(be5Project.getName() + "_scripts_" +
-                    script.replace(';', '_').replace(':', '.') + ".sql");
+            ps = createPrintStream(be5Project.getName() + "_scripts_" + 
+                                   script.replace(';', '_')
+                                         .replace(':', '.')
+                                         .replace('/', '-')
+                                         .replace('\\', '-') + ".sql");
 
             ModuleLoader2.addModuleScripts(be5Project, logger);
 
