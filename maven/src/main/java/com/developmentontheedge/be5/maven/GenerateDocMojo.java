@@ -1,11 +1,8 @@
 package com.developmentontheedge.be5.maven;
 
-import static org.mockito.Mockito.RETURNS_SMART_NULLS;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Map;
@@ -77,17 +74,15 @@ public class GenerateDocMojo extends Be5Mojo
     {
         logger.info("Generating documentation");
 
-		//init();
-        
         try
         {
             loadProject();
-            
+
             if( !validateDocPath() )
-            	return;
-            
+                return;
+
             readConfigurationYaml();
-            
+
             generateTables();
             generateNestedTables();
             generateDiagrams();
@@ -105,12 +100,12 @@ public class GenerateDocMojo extends Be5Mojo
         be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath(), logger);
         
         tables = be5Project.findTableDefinitions();
-        Collections.sort(tables,(TableDef t1, TableDef t2) -> 
+        Collections.sort(tables, (TableDef t1, TableDef t2) ->
             t1.getEntityName().compareToIgnoreCase(t2.getEntityName() ) );
         
         tablesMap = new HashMap<>();
         for(TableDef t : tables)
-        	tablesMap.put(t.getEntityName(), t);
+            tablesMap.put(t.getEntityName(), t);
     }
 
     protected boolean validateDocPath() throws Exception
@@ -139,32 +134,32 @@ public class GenerateDocMojo extends Be5Mojo
                 logger.info("Creates be5 subdirectory.");
                 Files.createDirectories(docPath.toPath());
             }
-                
+
         }
 
         logger.info("Path to generated documentation: " + docPath.getCanonicalPath());
-        
+
         tablesPath = new File(docPath, TABLES_DIR);
-        if( ! tablesPath.exists() )
+        if( !tablesPath.exists() )
         {
             logger.info("Creates be5/tables subdirectory.");
             Files.createDirectories(tablesPath.toPath());
         }
-        
+
         diagramsPath = new File(docPath, DIAGRAMS_DIR);
-        if( ! diagramsPath.exists() )
+        if( !diagramsPath.exists() )
         {
             logger.info("Creates be5/diagrams subdirectory.");
             Files.createDirectories(diagramsPath.toPath());
         }
-        
+
         return true;
-    }       
+    }
 
     protected void readConfigurationYaml() throws Exception
     {
         File yaml = new File(docPath.getParent(), YAML_FILE);
-        
+
         if( yaml.exists() )
         {
             configuration = new Yaml().load(new FileInputStream(yaml));
@@ -179,72 +174,73 @@ public class GenerateDocMojo extends Be5Mojo
 
     protected void generateTables() throws Exception
     {
-    	be5TablesMap = new HashMap<>();
-    	for(String table : be5Tables)
-    		be5TablesMap.put(table, table);
+        be5TablesMap = new HashMap<>();
+        for(String table : be5Tables)
+            be5TablesMap.put(table, table);
 
-    	be5FieldsMap = new HashMap<>();
-    	for(String field : be5Fields)
-    		be5FieldsMap.put(field, field);
-    	
+        be5FieldsMap = new HashMap<>();
+        for(String field : be5Fields)
+            be5FieldsMap.put(field, field);
+
         logger.info("Generate tables");
         PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), "UTF-8"/*StandardCharsets.UTF_8*/);
-    
+
         tocTree.println(
 "Схема базы данных"    + nl +
 "================="    + nl + nl +
-".. toctree::"         + nl + nl + 
-"      " + TABLES_APP_FILE + nl +  
+".. toctree::"         + nl + nl +
+"      " + TABLES_APP_FILE + nl +
 "      " + TABLES_BE5_FILE);
 
-        generateTables(TABLES_APP_FILE, true);        
+        generateTables(TABLES_APP_FILE, true);
         generateTables(TABLES_BE5_FILE, false);
         tocTree.flush();
     }
-    
+
     protected void generateTables(String file, boolean appTables) throws Exception
     {
         String type = appTables ? "application" : "be5";
-    	logger.info("Generate " + type + " tables");
+        logger.info("Generate " + type + " tables");
 
         PrintWriter tocTree = new PrintWriter(new File(tablesPath, file));
-        
+
         if( appTables )
-        	tocTree.println(
+            tocTree.println(
 "Таблицы приложения" + nl +
 "==================" + nl);
         else
-        	tocTree.println(
-        	"Таблицы BE5 (служебные)" + nl +
-        	"=======================" + nl);
-        	
-    	tocTree.println(
-".. toctree::"         + nl); 
+            tocTree.println(
+            "Таблицы BE5 (служебные)" + nl +
+            "=======================" + nl);
+
+        tocTree.println(
+".. toctree::"         + nl);
 
         int n = 0;
-    	for(TableDef table : tables)
+        for(TableDef table : tables)
         {
-    		if( appTables && be5TablesMap.containsKey(table.getEntityName()) )
-    			continue;
+            if( appTables && be5TablesMap.containsKey(table.getEntityName()) )
+                continue;
 
-    		if( !appTables && !be5TablesMap.containsKey(table.getEntityName()) )
-    			continue;
-    		
-    		tocTree.println("  " + table.getEntityName() + ".rst");
+            if( !appTables && !be5TablesMap.containsKey(table.getEntityName()) )
+                continue;
+
+            tocTree.println("  " + table.getEntityName() + ".rst");
             generateTable(table);
             n++;
         }
-        
+
         tocTree.flush();
         logger.info("  " + n + " tables were generated");
     }
 
     protected void generateTable(TableDef table) throws Exception
     {
-    	generateTable(table, "rst", "=", false);
+        generateTable(table, "rst", "=", false);
     }
-    
-    protected void generateTable(TableDef table, String extension, String headingUnderline, boolean skipBe5Fields) throws Exception
+
+    protected void generateTable(TableDef table, String extension, String headingUnderline, boolean skipBe5Fields)
+        throws Exception
     {
         String name = table.getEntityName();
         PrintWriter file = new PrintWriter(new File(tablesPath, name+"."+extension), "UTF-8"/*StandardCharsets.UTF_8*/);
@@ -258,254 +254,252 @@ public class GenerateDocMojo extends Be5Mojo
         if( displayName != null && displayName.length() > 0 && !displayName.equalsIgnoreCase(name) )
             file.println(displayName);
 
-		String doc = table.getEntity().getComment();
-		if( doc != null && doc.length() > 0 )
-    		file.println("  " + doc);
+        String doc = table.getEntity().getComment();
+        if( doc != null && doc.length() > 0 )
+            file.println("  " + doc);
 
-    	file.println(nl +
-".. list-table::" 			 + nl +
-"   :header-rows: 1"		 + nl + nl +
+        file.println(nl +
+".. list-table::"              + nl +
+"   :header-rows: 1"         + nl + nl +
 
-"   * - Колонка"  	+ nl +
-"     - Тип" 		+ nl +
-"     - Описание" 	+ nl);
+"   * - Колонка"      + nl +
+"     - Тип"         + nl +
+"     - Описание"     + nl);
 
-		BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
-		String be5Fields = null;
-		for(ColumnDef column : columns)
-		{
-			String columnName = column.getName();
-			
-			if( skipBe5Fields && be5FieldsMap.containsKey(columnName) )
-			{
-				if( be5Fields == null )
-					be5Fields = columnName;
-				else
-					be5Fields += ", " + columnName;
-				
-				continue;
-			}
-			
-			String columnType = column.getType().toString();
-			if( column.isPrimaryKey() )
-				columnType += " PK";
+        BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
+        String be5Fields = null;
+        for(ColumnDef column : columns)
+        {
+            String columnName = column.getName();
 
-			String shift = nl + nl + "       ";
-			if( column.isAutoIncrement() )
-				columnType += shift  + "autoincrement";
+            if( skipBe5Fields && be5FieldsMap.containsKey(columnName) )
+            {
+                if( be5Fields == null )
+                    be5Fields = columnName;
+                else
+                    be5Fields += ", " + columnName;
 
-			if( column.isCanBeNull() )
-				columnType += shift +"can be null";
-			
-			if( column.getDefaultValue() != null )
-				columnType += shift +"Defult value: " + column.getDefaultValue() ;
+                continue;
+            }
 
-			if( column.getTableTo() != null )
-				columnType += shift +"Reference: " + column.getTableTo();
+            String columnType = column.getType().toString();
+            if( column.isPrimaryKey() )
+                columnType += " PK";
 
-			if( column.getTypeString().startsWith(SqlColumnType.TYPE_ENUM) && 
-					column.getType().getEnumValues() != null )
-			{
-				columnType = "ENUM: ";
-				String prefix = nl + "        * ";
-				for(String enumValue : column.getType().getEnumValues() )
-					columnType = columnType + prefix + enumValue;
-			}
-			
-			String columnDoc = column.getComment() == null ? "" : column.getComment();  
-		
-	    	file.println(
+            String shift = nl + nl + "       ";
+            if( column.isAutoIncrement() )
+                columnType += shift  + "autoincrement";
+
+            if( column.isCanBeNull() )
+                columnType += shift +"can be null";
+
+            if( column.getDefaultValue() != null )
+                columnType += shift +"Defult value: " + column.getDefaultValue();
+
+            if( column.getTableTo() != null )
+                columnType += shift +"Reference: " + column.getTableTo();
+
+            if( column.getTypeString().startsWith(SqlColumnType.TYPE_ENUM) &&
+                    column.getType().getEnumValues() != null )
+            {
+                columnType = "ENUM: ";
+                String prefix = nl + "        * ";
+                for(String enumValue : column.getType().getEnumValues() )
+                    columnType = columnType + prefix + enumValue;
+            }
+
+            String columnDoc = column.getComment() == null ? "" : column.getComment();
+
+            file.println(
 "   * - " + columnName + nl +
 "     - " + columnType + nl +
 "     - " + columnDoc  + nl);
-		} 
+        }
 
-		if( skipBe5Fields && be5Fields != null )
-	    	file.println("Служебные поля: " + be5Fields + nl);
-		
-		if( table.getIndices() != null && table.getIndices().getSize() > 0 )
-		{
-	    	file.print("**Индексы**");
-	    	
-	    	for(IndexDef index : table.getIndices())
-	    	{
-	    		file.print(nl + "   * " + index.getName() + ": ");
-	    		
-	    		if( index.isUnique() )
-	    			file.print("UNIQUE ");
+        if( skipBe5Fields && be5Fields != null )
+            file.println("Служебные поля: " + be5Fields + nl);
 
-				int n = index.getAvailableElements().size();
-		    	for(IndexColumnDef indexColumn : index.getAvailableElements())
-		    	{
-		    		file.print(indexColumn.getAsString());
-		    		
-		    		if( n>1 )
-	    			file.print(", ");
-	    			
-	    			n--;
-    			}
-	    	} 		
-    	}
-    	
-    	file.flush();
+        if( table.getIndices() != null && table.getIndices().getSize() > 0 )
+        {
+            file.print("**Индексы**");
+
+            for(IndexDef index : table.getIndices())
+            {
+                file.print(nl + "   * " + index.getName() + ": ");
+
+                if( index.isUnique() )
+                    file.print("UNIQUE ");
+
+                int n = index.getAvailableElements().size();
+                for(IndexColumnDef indexColumn : index.getAvailableElements())
+                {
+                    file.print(indexColumn.getAsString());
+
+                    if( n>1 )
+                    file.print(", ");
+
+                    n--;
+                }
+            }
+        }
+
+        file.flush();
     }
 
     protected void generateNestedTables()
     {
-    	Object d = configuration.get(YAML_NESTED_TABLES_KEY);
-    	if( d == null )
-    		return;
-    	
-    	if( !(d instanceof List) )
-    	{    		
+        Object d = configuration.get(YAML_NESTED_TABLES_KEY);
+        if( d == null )
+            return;
+
+        if( !(d instanceof List) )
+        {
             logger.info(YAML_ERROR + YAML_NESTED_TABLES_KEY + "should be an arry.");
             return;
-    	}
-    	
-    	for(Object o : ((List)d) )
-    	{
-    		if( !(o instanceof String) )
-    		{
+        }
+
+        for(Object o : ((List)d) )
+        {
+            if( !(o instanceof String) )
+            {
                 logger.error(YAML_ERROR + YAML_NESTED_TABLES_KEY + "each item shoud be a table name.");
                 break;
-    		}
-    		
-    		try
-    		{
-    			String tableName = (String)o;
-    			TableDef table = null;
-    			for(TableDef td : tables)
-    			{
-    				if( td.getEntityName().equals(tableName) )
-    				{
-    					table = td;
-    					break;
-    				}
-    			}
+            }
 
-    			if( table == null )
-    				throw new Exception("Table '" + tableName  + "' is missing.");
-    					 
-    			generateTable(table, "rstincl", "^", true);
-    		}
-    		catch(Exception t)
-    		{
+            try
+            {
+                String tableName = (String)o;
+                TableDef table = null;
+                for(TableDef td : tables)
+                {
+                    if( td.getEntityName().equals(tableName) )
+                    {
+                        table = td;
+                        break;
+                    }
+                }
+
+                if( table == null )
+                    throw new Exception("Table '" + tableName  + "' is missing.");
+
+                generateTable(table, "rstincl", "^", true);
+            }
+            catch(Exception t)
+            {
                 logger.error(YAML_ERROR + YAML_NESTED_TABLES_KEY + "each item shoud be a valid table name.");
                 logger.error(t.getMessage());
                 break;
-    		}
-    	}
+            }
+        }
     }
-    	
+
     protected void generateDiagrams()
     {
-    	Object d = configuration.get(YAML_DIAGRAMS_KEY);
-    	if( d == null )
-    		return;
-    	
-    	if( !(d instanceof List) )
-    	{    		
+        Object d = configuration.get(YAML_DIAGRAMS_KEY);
+        if( d == null )
+            return;
+
+        if( !(d instanceof List) )
+        {
             logger.info(YAML_ERROR + YAML_DIAGRAMS_KEY + "should be an arry.");
             return;
-    	}
-    	
-    	for(Object o : ((List)d) )
-    	{
-    		if( !(o instanceof Map) )
-    		{
+        }
+
+        for(Object o : ((List)d) )
+        {
+            if( !(o instanceof Map) )
+            {
                 logger.error(YAML_ERROR + YAML_DIAGRAMS_KEY + "each diagram item shoud be a map.");
                 break;
-    		}
-    		
-    		try
-    		{
-    			Map diagramItem = (Map)o;
-    			String name = (String)diagramItem.keySet().iterator().next();
-    			Map values = (Map)diagramItem.get(name);
-    			
-    			generateDiagram(name, values);
-    		}
-    		catch(Exception t)
-    		{
+            }
+
+            try
+            {
+                Map diagramItem = (Map)o;
+                String name = (String)diagramItem.keySet().iterator().next();
+                Map values = (Map)diagramItem.get(name);
+
+                generateDiagram(name, values);
+            }
+            catch(Exception t)
+            {
                 logger.error(YAML_ERROR + YAML_DIAGRAMS_KEY + "each diagram item shoud be a map.");
                 logger.error(t.getMessage());
                 break;
-    		}
-    	}
+            }
+        }
     }
-    
+
     protected void generateDiagram(String name, Map values) throws Exception
     {
-    	List<String> tables = null;
-    	
-    	try
-    	{
-    		tables = (List<String>)values.get(YAML_TABLES_KEY);
-    		if( tables.size() == 0 )
-    			throw new Exception("Tables list is empty." );
-    	}
-    	catch(Exception e)
-    	{
-    		logger.error(YAML_ERROR + " diagram '" + name + "' should contan array list of tables.");
+        List<String> tables = null;
+
+        try
+        {
+            tables = (List<String>)values.get(YAML_TABLES_KEY);
+            if( tables.size() == 0 )
+                throw new Exception("Tables list is empty." );
+        }
+        catch(Exception e)
+        {
+            logger.error(YAML_ERROR + " diagram '" + name + "' should contan array list of tables.");
             return;
         }
 
         PrintWriter puml = new PrintWriter(new File(diagramsPath, name+".puml"), "UTF-8"/*StandardCharsets.UTF_8*/);
-        
+
         puml.println(
 "   hide circle" + nl +
 "   skinparam linetype ortho" + nl);
 
-		for(String table : tables)
-		{
-			generateTablePUML(table, puml);
-		}
+        for(String table : tables)
+        {
+            generateTablePUML(table, puml);
+        }
 
-		
-		List<TableRef> refs = be5Project.findTableReferences();
-		for(TableRef ref : refs)
-		{
-			String fromTable = ref.getTableFrom();
-			String toTable   = ref.getTableTo();
-			
-			if( tables.contains(fromTable) && tables.contains(toTable) )
-		    	puml.println(
+
+        List<TableRef> refs = be5Project.findTableReferences();
+        for(TableRef ref : refs)
+        {
+            String fromTable = ref.getTableFrom();
+            String toTable   = ref.getTableTo();
+
+            if( tables.contains(fromTable) && tables.contains(toTable) )
+                puml.println(
 "   " + fromTable + " }o..|| " + toTable);
-		}
-		
-		
+        }
+
         puml.flush();
     }
-    
+
     protected void generateTablePUML(String table, PrintWriter puml) throws Exception
     {
-    	TableDef t = tablesMap.get(table);
-    	if( t == null )
-    	{
-    		logger.error(YAML_ERROR + " diagram '" + table + "' - table '" + table + "' is missing in the project.");
+        TableDef t = tablesMap.get(table);
+        if( t == null )
+        {
+            logger.error(YAML_ERROR + " diagram '" + table + "' - table '" + table + "' is missing in the project.");
             return;
-    	}
+        }
 
-    	puml.println(
+        puml.println(
 "   entity \"" + table + "\" as " + table + "{" + nl +
 "     --");
-    	
-		BeCaseInsensitiveCollection<ColumnDef> columns = t.getColumns();
-		for(ColumnDef column : columns)
-		{
-			String columnName = column.getName();
-			if( column.isPrimaryKey() )
-				columnName = "*" + columnName;
 
-			String columnType = column.getType().toString();
+        BeCaseInsensitiveCollection<ColumnDef> columns = t.getColumns();
+        for(ColumnDef column : columns)
+        {
+            String columnName = column.getName();
+            if( column.isPrimaryKey() )
+                columnName = "*" + columnName;
 
-	    	puml.println(
+            String columnType = column.getType().toString();
+
+            puml.println(
 "     " + columnName + " : " + columnType);
-		} 
+        }
 
-    	puml.println(
+        puml.println(
 "    }" + nl);
-		
+
     }
-   
 }

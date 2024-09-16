@@ -4,25 +4,17 @@
 
   <groupId>com.developmentontheedge.be5.modules</groupId>
   <artifactId>be5-modules-core</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.1.1</version>
 
   <name>be5 modules core</name>
   <description>Core database module for be5 applications</description>
 
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>dote</id>
-      <name>DOTE Repository</name>
-      <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>dote-snapshots</id>
-      <name>DOTE Snapshots</name>
-      <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+  <parent>
+    <groupId>com.developmentontheedge.be5</groupId>
+    <artifactId>be5-parent</artifactId>
+    <version>0.0.3</version>
+    <relativePath>../../</relativePath>
+  </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,13 +26,13 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-server</artifactId>
-      <version>0.1.2-SNAPSHOT</version>
+      <version>0.1.2</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-test</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -77,7 +69,7 @@
       <plugin>
         <groupId>com.developmentontheedge.be5</groupId>
         <artifactId>be5-maven-plugin</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
         <configuration>
           <projectPath>./</projectPath>
         </configuration>
@@ -94,7 +86,7 @@
           <dependency>
             <groupId>com.developmentontheedge.be5</groupId>
             <artifactId>be5-server</artifactId>
-            <version>0.1.2-SNAPSHOT</version>
+            <version>0.1.2</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -175,6 +167,10 @@
           </execution>
         </executions>
       </plugin>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
     </plugins>
   </build>
 

@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>be5-database</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>jar</packaging>
 
   <name>be5 database</name>
@@ -14,7 +14,7 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
 
   <properties>
@@ -28,13 +28,13 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-base</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge</groupId>
       <artifactId>be-sql</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
 
     <dependency>
@@ -65,4 +65,12 @@
     </dependency>
 
   </dependencies>
+  <build>
+    <plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
+    </plugins>
+  </build>
 </project>

@@ -6,25 +6,32 @@
 
   <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5-app</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <name>be5 app parent</name>
+  <description>be5 app parent</description>
+  <url>https://github.com/DevelopmentOnTheEdge/be5</url>
 
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>dote</id>
-      <name>DOTE Repository</name>
-      <url>https://nexus.dote.ru/nexus/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>dote-snapshots</id>
-      <name>DOTE Snapshots</name>
-      <url>https://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>Development On The Edge</organization>
+            <organizationUrl>https://github.com/DevelopmentOnTheEdge</organizationUrl>
+        </developer>
+    </developers>
+
+  <scm>
+      <connection>scm:git:git://github.com/DevelopmentOnTheEdge/be5.git</connection>
+      <developerConnection>scm:git:ssh://github.com/DevelopmentOnTheEdge/be5.git</developerConnection>
+      <url>https://github.com/DevelopmentOnTheEdge/be5</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,17 +81,17 @@
     <dependency>
       <groupId>com.developmentontheedge.be5.modules</groupId>
       <artifactId>be5-modules-core</artifactId>
-      <version>0.1.1-SNAPSHOT</version>
+      <version>0.1.1</version>
     </dependency>
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-jetty</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-test</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -117,6 +124,33 @@
     </resources>
 
     <plugins>
+
+       <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.5.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+            <autoPublish>true</autoPublish>
+          </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                <execution>
+                    <id>sign-artifacts</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>sign</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -130,7 +164,7 @@
       <plugin>
         <groupId>com.developmentontheedge.be5</groupId>
         <artifactId>be5-maven-plugin</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
         <configuration>
           <projectPath>./</projectPath>
         </configuration>
@@ -151,7 +185,7 @@
           <dependency>
             <groupId>com.developmentontheedge.be5.modules</groupId>
             <artifactId>be5-modules-core</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1</version>
           </dependency>
           <dependency>
             <groupId>com.h2database</groupId>
@@ -337,6 +371,10 @@
           </execution>
         </executions>
       </plugin-->
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
 
     </plugins>
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
-    @Parameter( defaultValue = "${project}", readonly = true )
+    @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
 //    @Parameter( defaultValue = "${plugin}", readonly = true )

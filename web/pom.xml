@@ -10,7 +10,7 @@
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
 
   <dependencies>
@@ -72,4 +72,12 @@
     </dependency>
 
   </dependencies>
+  <build>
+    <plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
+    </plugins>
+  </build>
 </project>

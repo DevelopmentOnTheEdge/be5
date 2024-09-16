@@ -7,13 +7,13 @@
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <relativePath>../../</relativePath>
   </parent>
 
   <name>be5 jetty</name>
   <artifactId>be5-jetty</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <properties>
     <!--jetty.version>9.3.30.v20211001</jetty.version-->
@@ -33,7 +33,7 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-base</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
@@ -75,6 +75,10 @@
           </execution>
         </executions>
       </plugin>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
     </plugins>
   </build>
 </project>

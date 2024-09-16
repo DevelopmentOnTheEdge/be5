@@ -7,12 +7,12 @@
   <groupId>com.developmentontheedge.be5.modules</groupId>
   <artifactId>be5-modules-bpmn</artifactId>
   <name>be5 modules bpmn</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
 
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <relativePath>../../</relativePath>
   </parent>
 
@@ -47,6 +47,10 @@
           </execution>
         </executions>
       </plugin>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
     </plugins>
   </build>
 </project>

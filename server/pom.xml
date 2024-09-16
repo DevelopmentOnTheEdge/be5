@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>be5-server</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>0.1.2</version>
   <packaging>jar</packaging>
 
   <name>be5 server</name>
@@ -12,38 +12,38 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-operation</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-web</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-database-model</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-query</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge</groupId>
       <artifactId>beans-json</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.0.1</version>
     </dependency>
 
     <dependency>
@@ -61,21 +61,21 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-test-base</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-maven-plugin</artifactId>
-      <version>0.1.1-SNAPSHOT</version>
+      <version>0.1.1</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-maven-plugin</artifactId>
-      <version>0.1.1-SNAPSHOT</version>
+      <version>0.1.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -92,7 +92,7 @@
       <plugin>
         <groupId>com.developmentontheedge.be5</groupId>
         <artifactId>be5-maven-plugin</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
         <configuration>
           <projectPath>./src/test/resources/</projectPath>
           <saveProject>true</saveProject>
@@ -138,35 +138,10 @@
           </execution>
         </executions>
       </plugin>
-      <!--plugin>
+       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <quiet>true</quiet>
-              <additionalparam>-Xdoclint:none</additionalparam>
-              <tags>
-                <tag>
-                  <name>todo</name>
-                  <placement>a</placement>
-                  <head>TODO:</head>
-                </tag>
-                <tag>
-                  <name>pending</name>
-                  <placement>a</placement>
-                  <head>PENDING:</head>
-                </tag>
-              </tags>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin-->
+       </plugin>
 
     </plugins>
   </build>
