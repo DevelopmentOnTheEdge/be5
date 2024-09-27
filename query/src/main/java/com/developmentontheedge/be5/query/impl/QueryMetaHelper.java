@@ -53,6 +53,9 @@ public class QueryMetaHelper
     void applyFilters(AstStart ast, Map<String, List<Object>> parameters)
     {
         String mainTableDefName = getMainTableDefName(ast);
+        if( mainTableDefName == null )
+            return;
+ 
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<String, String> aliasToTable = getAliasToTable(ast);
@@ -108,22 +111,29 @@ public class QueryMetaHelper
 
     void resolveTypeOfRefColumn(AstStart ast)
     {
-        String mainTableDefName = getMainTableDefName(ast);
+        String mainTableDefName = getMainTableDefName(ast); 
+
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
-            if (tag.getType() != null) return;
+            if (tag.getType() != null || mainTableDefName == null) 
+                return;
+            
             ColumnDef columnDef = getColumnDef(ast, tag, mainTableDefName);
             if (columnDef != null)
-            {
                 tag.setType(meta.getColumnType(columnDef).getName());
-            }
         });
     }
 
     public static String getMainTableDefName(AstStart ast)
     {
-        return ast.getQuery().tree()
-                .select(AstTableRef.class)
-                .findFirst().get().getTable();
+        try
+        {
+            return ast.getQuery().tree()
+                    .select(AstTableRef.class)
+                    .findFirst().get().getTable();
+        }
+        catch(Exception e) {}
+        
+        return null;
     }
 
     @Nullable
