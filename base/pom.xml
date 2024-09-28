@@ -10,20 +10,20 @@
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.0.3</version>
+    <version>0.4.0</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-metadata</artifactId>
-      <version>0.3.1</version>
+      <version>[0.3.1,)</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge</groupId>
       <artifactId>beans-json</artifactId>
-      <version>1.0.1</version>
+      <version>[1.0.1,)</version>
     </dependency>
 
     <dependency>

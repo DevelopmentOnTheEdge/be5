@@ -4,7 +4,7 @@
 
   <groupId>com.developmentontheedge.be5.modules</groupId>
   <artifactId>be5-modules-core</artifactId>
-  <version>0.1.1</version>
+  <!--version>0.1.2</version-->
 
   <name>be5 modules core</name>
   <description>Core database module for be5 applications</description>
@@ -12,7 +12,7 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.0.3</version>
+    <version>0.4.0</version>
     <relativePath>../../</relativePath>
   </parent>
 
@@ -26,13 +26,13 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-server</artifactId>
-      <version>0.1.2</version>
+      <version>[0.4.0,)</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-test</artifactId>
-      <version>0.0.3</version>
+      <version>[0.4.0,)</version>
       <scope>test</scope>
     </dependency>
 
@@ -69,7 +69,7 @@
       <plugin>
         <groupId>com.developmentontheedge.be5</groupId>
         <artifactId>be5-maven-plugin</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2</version>
         <configuration>
           <projectPath>./</projectPath>
         </configuration>
@@ -86,7 +86,7 @@
           <dependency>
             <groupId>com.developmentontheedge.be5</groupId>
             <artifactId>be5-server</artifactId>
-            <version>0.1.2</version>
+            <version>[0.4.0,)</version>
           </dependency>
         </dependencies>
       </plugin>

@@ -4,7 +4,7 @@
 
   <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5-maven-plugin</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <packaging>maven-plugin</packaging>
 
   <name>be5 maven plugin</name>
@@ -61,13 +61,13 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-dbms</artifactId>
-      <version>0.1.1</version>
+      <version>[0.1.1,)</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-metadata</artifactId>
-      <version>0.3.1</version>
+      <version>[0.3.1,)</version>
     </dependency>
 
     <dependency>

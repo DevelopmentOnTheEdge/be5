@@ -10,7 +10,7 @@
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.0.3</version>
+    <version>0.4.0</version>
     <relativePath>../../</relativePath>
   </parent>
 
@@ -18,19 +18,19 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-base</artifactId>
-      <version>0.0.3</version>
+      <version>[0.4.0,)</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-database</artifactId>
-      <version>0.1.0</version>
+      <version>[0.4.0,)</version>
     </dependency>
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-maven-plugin</artifactId>
-      <version>0.1.1</version>
+      <version>[0.1.2,)</version>
     </dependency>
 
     <dependency>
