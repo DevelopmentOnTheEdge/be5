@@ -73,7 +73,7 @@ public class H2TypeManager extends DefaultTypeManager
             case SqlColumnType.TYPE_JSON:
                 return "TEXT";
             case SqlColumnType.TYPE_JSONB:
-                return "JSONB";
+                return "JSON";
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
