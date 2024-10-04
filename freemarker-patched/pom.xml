@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>be5-freemarker-patched</artifactId>
-  <version>2.3.21</version>
+  <version>2.3.22</version>
   <packaging>jar</packaging>
 
   <name>be5 patched freemarker</name>
@@ -12,7 +12,7 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </parent>
 
   <dependencies>

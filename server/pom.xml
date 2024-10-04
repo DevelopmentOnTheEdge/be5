@@ -12,7 +12,7 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </parent>
 
   <dependencies>
@@ -56,7 +56,7 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-maven-plugin</artifactId>
-      <version>0.1.2</version>
+      <version>0.1.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -85,7 +85,7 @@
       <plugin>
         <groupId>com.developmentontheedge.be5</groupId>
         <artifactId>be5-maven-plugin</artifactId>
-        <version>[0.4.0,)</version>
+        <version>0.1.3</version>
         <configuration>
           <projectPath>./src/test/resources/</projectPath>
           <saveProject>true</saveProject>

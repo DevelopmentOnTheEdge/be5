@@ -5,8 +5,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>be5-database</artifactId>
-  <!--version>0.1.1</version-->
-  <version>0.4.0</version>
   <packaging>jar</packaging>
 
   <name>be5 database</name>
@@ -15,7 +13,7 @@
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5-parent</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </parent>
 
   <properties>
