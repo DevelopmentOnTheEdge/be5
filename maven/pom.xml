@@ -67,7 +67,7 @@
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-metadata</artifactId>
-      <version>[0.3.1,)</version>
+      <version>[0.4.0,)</version>
     </dependency>
 
     <dependency>
