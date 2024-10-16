@@ -28,7 +28,7 @@ jobs:
       run: |
         git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git \
         && cd beanexplorer \
-        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
+        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V \
         && cd ../
 
     - name: Pre-install xmltest
@@ -42,7 +42,7 @@ jobs:
       run: |
         git clone https://github.com/DevelopmentOnTheEdge/be-sql.git \
         && cd be-sql \
-        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
+        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip -B -V \
         && cd ../
 
     - name: Run tests
