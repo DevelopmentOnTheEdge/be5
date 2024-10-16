@@ -4,7 +4,7 @@ name: Tests using Java 8
 on:
   push:
     branches:
-      - main
+      - master
 
 # Define the jobs that run in this workflow
 jobs:
@@ -24,5 +24,26 @@ jobs:
         distribution: 'adopt'
         java-version: '8'
 
+    - name: Pre-install beanexplorer
+      run: |
+        git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git \
+        && cd beanexplorer \
+        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
+        && cd ../
+
+    - name: Pre-install xmltest
+      run: |
+        git clone https://github.com/DevelopmentOnTheEdge/xmltest.git \
+        && cd xmltest \
+        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
+        && cd ../
+
+    - name: Pre-install be-sql
+      run: |
+        git clone https://github.com/DevelopmentOnTheEdge/be-sql.git \
+        && cd be-sql \
+        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
+        && cd ../
+
     - name: Run tests
-      run: mvn -B clean test
+      run: mvn -B test
