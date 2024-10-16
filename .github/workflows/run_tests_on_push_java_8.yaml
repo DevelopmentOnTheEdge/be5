@@ -24,26 +24,5 @@ jobs:
         distribution: 'adopt'
         java-version: '8'
 
-    - name: Pre-install beanexplorer
-      run: |
-        git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git \
-        && cd beanexplorer \
-        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V \
-        && cd ../
-
-    - name: Pre-install xmltest
-      run: |
-        git clone https://github.com/DevelopmentOnTheEdge/xmltest.git \
-        && cd xmltest \
-        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V \
-        && cd ../
-
-    - name: Pre-install be-sql
-      run: |
-        git clone https://github.com/DevelopmentOnTheEdge/be-sql.git \
-        && cd be-sql \
-        && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true -B -V \
-        && cd ../
-
     - name: Run tests
       run: mvn -B test
