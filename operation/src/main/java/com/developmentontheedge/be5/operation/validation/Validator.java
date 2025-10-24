@@ -346,6 +346,8 @@ public class Validator
     private String toStringProperty(DynamicProperty property)
     {
         return "";
+        //return " (" + property.getDisplayName() + ")";
+
 //        if(!UserInfoHolder.isSystemDeveloper())return "";
 //        String value;
 //        if(property.getValue() != null)
