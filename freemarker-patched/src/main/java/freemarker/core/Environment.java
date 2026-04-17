@@ -1453,7 +1453,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a variable that is visible globally.
-     * This is correspondent to FTL <code><#global <i>name</i>=<i>model</i>></code>.
+     * This is correspondent to FTL <code><#global <i>name</i>=<i>model</i></code>.
      * This can be considered a convenient shorthand for:
      * getGlobalNamespace().put(name, model)
      */
@@ -1464,7 +1464,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a variable in the current namespace.
-     * This is correspondent to FTL <code><#assign <i>name</i>=<i>model</i>></code>.
+     * This is correspondent to FTL <code><#assign <i>name</i>=<i>model</i></code>.
      * This can be considered a convenient shorthand for:
      * getCurrentNamespace().put(name, model)
      */
