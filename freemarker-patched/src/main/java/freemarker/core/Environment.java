@@ -1781,7 +1781,7 @@ public final class Environment extends Configurable
      * Returns the read-only hash of globally visible variables.
      * This is the correspondent of FTL <code>.globals</code> hash.
      * That is, you see the variables created with
-     * <code>&lt;#global ...></code>, and the variables of the data-model.
+     * <code>&lt;#global ...&gt;</code>, and the variables of the data-model.
      * To create new global variables, use {@link #setGlobalVariable setGlobalVariable}.
      */
     public TemplateHashModel getGlobalVariables()
