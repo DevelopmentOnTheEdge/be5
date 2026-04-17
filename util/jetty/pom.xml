@@ -7,13 +7,13 @@
   <parent>
     <artifactId>be5-parent</artifactId>
     <groupId>com.developmentontheedge.be5</groupId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <relativePath>../../</relativePath>
   </parent>
 
   <name>be5 jetty</name>
   <artifactId>be5-jetty</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 
   <properties>
     <jetty.version>9.4.53.v20231009</jetty.version>
