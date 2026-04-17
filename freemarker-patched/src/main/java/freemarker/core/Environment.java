@@ -1453,7 +1453,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a variable that is visible globally.
-     * This is correspondent to FTL <code><#global <i>name</i>=<i>model</i></code>.
+     * This is correspondent to FTL <code>&lt;#global <i>name</i>=<i>model</i>&gt;</code>.
      * This can be considered a convenient shorthand for:
      * getGlobalNamespace().put(name, model)
      */
@@ -1464,7 +1464,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a variable in the current namespace.
-     * This is correspondent to FTL <code><#assign <i>name</i>=<i>model</i></code>.
+     * This is correspondent to FTL <code>&lt;#assign <i>name</i>=<i>model</i>&gt;</code>.
      * This can be considered a convenient shorthand for:
      * getCurrentNamespace().put(name, model)
      */
@@ -1475,7 +1475,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a local variable (one effective only during a macro invocation).
-     * This is correspondent to FTL <code><#local <i>name</i>=<i>model</i></code>.
+     * This is correspondent to FTL <code>&lt;#local <i>name</i>=<i>model</i>&gt;</code>.
      *
      * @param name  the identifier of the variable
      * @param model the value of the variable.
