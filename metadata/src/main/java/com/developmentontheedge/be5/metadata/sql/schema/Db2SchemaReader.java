@@ -183,7 +183,7 @@ public class Db2SchemaReader extends DefaultSchemaReader
     }
 
     /**
-     * @TODO implement
+     * TODO implement
      */
     public static List<String> readAsListOfStrings(DbmsConnector connector, String sql) throws SQLException
     {

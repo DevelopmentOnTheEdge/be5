@@ -183,7 +183,7 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     }
 
     /**
-     * @return array of Strings containing path components ("data/Example/element" -> {"data", "Example", "element"})
+     * @return array of Strings containing path components ("data/Example/element" -&gt; {"data", "Example", "element"})
      */
     public String[] getPathComponents()
     {
