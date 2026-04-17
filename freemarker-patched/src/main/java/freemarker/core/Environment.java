@@ -1013,7 +1013,7 @@ public final class Environment extends Configurable
     }
 
     /**
-     * Compares two {@link TemplateModel}-s according the rules of the FTL "<" operator.
+     * Compares two {@link TemplateModel}-s according the rules of the FTL "&lt;" operator.
      *
      * @since 2.3.20
      */
@@ -1024,7 +1024,7 @@ public final class Environment extends Configurable
     }
 
     /**
-     * Compares two {@link TemplateModel}-s according the rules of the FTL ">" operator.
+     * Compares two {@link TemplateModel}-s according the rules of the FTL "&gt;" operator.
      *
      * @since 2.3.20
      */
@@ -1035,7 +1035,7 @@ public final class Environment extends Configurable
     }
 
     /**
-     * Compares two {@link TemplateModel}-s according the rules of the FTL ">=" operator.
+     * Compares two {@link TemplateModel}-s according the rules of the FTL "&gt;=" operator.
      *
      * @since 2.3.20
      */
