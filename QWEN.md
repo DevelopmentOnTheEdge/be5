@@ -76,6 +76,9 @@ mvn javadoc:javadoc
 
 # Generate coverage report
 mvn clean test jacoco:report coveralls:report
+
+# Deploy whole project to Maven Central
+mvn -DskipTests source:jar javadoc:jar deploy
 ```
 
 ### CI/CD

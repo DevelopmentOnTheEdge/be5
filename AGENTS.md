@@ -6,6 +6,7 @@
 - **Single module**: `mvn -B test -pl <module>` (e.g., `-pl database`)
 - **Single test**: `mvn -B test -Dtest=TestClassName`
 - **Optional static analysis**: `mvn -B spotbugs:spotbugs`
+- **Deploy whole project to Maven Central**: `mvn -DskipTests source:jar javadoc:jar deploy`
 
 ## Code Quality
 - **Checkstyle**: Runs during `mvn validate`, config at `checkstyle.xml`

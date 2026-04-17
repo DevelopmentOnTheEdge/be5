@@ -12,3 +12,9 @@ http://wiki.dote.ru
 
 ### Frontend on React
 https://github.com/DevelopmentOnTheEdge/be5-react
+
+
+```sh
+# Deploy whole project to Maven Central
+mvn -DskipTests source:jar javadoc:jar deploy
+```
