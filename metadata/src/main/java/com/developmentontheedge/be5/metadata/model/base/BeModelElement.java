@@ -61,8 +61,6 @@ public interface BeModelElement extends Cloneable
 
     /**
      * Changes the documentation of this element.
-     *
-     * @return
      */
     public void setComment(String comment);
 

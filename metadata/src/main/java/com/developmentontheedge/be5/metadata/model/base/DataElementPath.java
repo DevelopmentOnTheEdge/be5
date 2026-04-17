@@ -160,7 +160,7 @@ public class DataElementPath implements Comparable<DataElementPath>, Serializabl
     /**
      * Creates path for child item to current path
      *
-     * @param name - name of child item (may not exist). Null name is considered as empty name
+     * @param names - name of child item (may not exist). Null name is considered as empty name
      * @return created DataElementPath
      */
     public DataElementPath getChildPath(String... names)

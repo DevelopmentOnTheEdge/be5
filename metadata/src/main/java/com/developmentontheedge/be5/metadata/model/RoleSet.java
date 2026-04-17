@@ -40,7 +40,7 @@ public class RoleSet extends InheritableStringSet
 
     /**
      * @return roles and role groups
-     * @see RoleSet#setRoles(Collection)
+     * @see RoleSet#setRolesArray(String[] roles)
      * @see RoleSetBeanInfo
      */
     @PropertyName("Roles")
@@ -104,8 +104,8 @@ public class RoleSet extends InheritableStringSet
 
     /**
      * @param roleOrRoleGroup role or role group (starts with '@')
-     * @see {@link RoleGroup#ALL_ROLES_GROUP}
-     * @see {@link RoleGroup#ALL_ROLES_EXCEPT_GUEST_GROUP}
+     * @see SpecialRoleGroup#ALL_ROLES_GROUP
+     * @see SpecialRoleGroup#ALL_ROLES_EXCEPT_GUEST_GROUP
      */
     @Override
     public boolean add(String roleOrRoleGroup)

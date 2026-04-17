@@ -35,8 +35,8 @@ public class MetadataUtils
 
     /**
      * Surround specified collection values ( "(", ",", ")" ) for putting them into IN clause.
-     * <br/>Example: SELECT * FROM some_table WHERE some_column IN (values[0], values[1], ...)
-     * <br/><br/><b>Attention!!!</b> Values (except numeric values) in the collection must be already formatted for SQL syntax.
+     * <br>Example: SELECT * FROM some_table WHERE some_column IN (values[0], values[1], ...)
+     * <br><br><b>Attention!!!</b> Values (except numeric values) in the collection must be already formatted for SQL syntax.
      * If collection contains numeric data, you must set isNumeric parameter to true.
      *
      * @param isNumeric specifies, that values in collection has numeric data type

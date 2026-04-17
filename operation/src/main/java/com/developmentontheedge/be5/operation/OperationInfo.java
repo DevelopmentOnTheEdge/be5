@@ -22,7 +22,7 @@ public class OperationInfo
     //
 
     /**
-     * @PENDING
+     * PENDING
      */
 
     //public String getWellKnownName()                { return operationModel.getWellKnownName();   }

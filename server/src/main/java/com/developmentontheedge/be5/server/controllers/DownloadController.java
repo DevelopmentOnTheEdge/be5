@@ -20,8 +20,8 @@ import java.util.Map;
 
 /**
  * Example url
- * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name
- *          &_dataColumn_=data&_download_=yes&ID=7326
+ * api/download?_t_=attachments&amp;_typeColumn_=mimeType&amp;_charsetColumn_=mimeCharset&amp;_filenameColumn_=name
+ *          &amp;_dataColumn_=data&amp;_download_=yes&amp;ID=7326
  */
 @Singleton
 public class DownloadController extends ApiControllerSupport implements Controller

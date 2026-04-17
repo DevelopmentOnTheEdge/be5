@@ -74,7 +74,7 @@ public class ThrottlingRememberMeService extends PersistentRememberMeServices
     /**
      * Solution for preventing "remember-me" bug. Some browsers sends preloading requests to server to speed-up
      * page loading. It may cause error when response of preload request not returned to client and second request
-     * from client was send. This method implementation stores token in cache for <link>CACHED_TOKEN_VALIDITY_TIME</link>
+     * from client was send. This method implementation stores token in cache for <b>CACHED_TOKEN_VALIDITY_TIME</b>
      * milliseconds and check token presence in cache before process authentication. If there is no equivalent token in
      * cache authentication performs normally. If equivalent present in cache we should not update token in database.
      * This approach can provide acceptable security level and prevent errors.

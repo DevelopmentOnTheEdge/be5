@@ -93,7 +93,7 @@ public class QueriesService
      * table definition for this table must be defined. A "selection view" query
      * of the entity must be defined too. Roles and visibility of the query are
      * ignored.
-     * </p>
+     * <p>
      * A "selection view" query is a query with name "*** Selection view ***"
      * that selects rows with two fields: an identifier and a displayed text.
      * Names of columns are ignored, only the order matters.

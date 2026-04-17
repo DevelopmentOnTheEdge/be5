@@ -62,7 +62,7 @@ public class CoreUtilsImpl implements CoreUtils
     /**
      * Retrieving system settings parameter value for specified section and parameter. If there isn't such parameter, or
      * executing query throws any exception, then method will return defValue.
-     * <br/>Results of method call are cached.
+     * <br>Results of method call are cached.
      *
      * @param section  system settings section name
      * @param param    parameter name

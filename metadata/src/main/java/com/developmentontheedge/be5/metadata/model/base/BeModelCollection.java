@@ -73,8 +73,6 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
      * Removes the specified data element from the collection, if present.
      * Does nothing if null is supplied
      * Notifies all listeners if the data element was removed.
-     *
-     * @throws java.util.UnsupportedOperationException if the data collection is unmutable.
      */
     void remove(String name);
 

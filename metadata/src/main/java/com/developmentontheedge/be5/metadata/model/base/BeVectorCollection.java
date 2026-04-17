@@ -362,7 +362,6 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
     /**
      * @param source
      * @param dataElementName
-     * @throws Exception
      */
     protected void fireElementAdded(Object source, String dataElementName)
     {
@@ -374,8 +373,6 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param owner
      * @param dataElementName
      * @param oldElement
-     * @param primaryEvent
-     * @throws Exception
      */
     protected void fireElementChanged(Object source, BeModelCollection<?> owner, String dataElementName,
                                       BeModelElement oldElement)
@@ -387,7 +384,6 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
      * @param source
      * @param dataElementName
      * @param oldElement
-     * @throws Exception
      */
     protected void fireElementRemoved(Object source, String dataElementName, BeModelElement oldElement)
     {

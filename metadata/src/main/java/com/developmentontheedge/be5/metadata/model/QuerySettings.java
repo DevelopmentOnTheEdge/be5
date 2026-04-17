@@ -69,7 +69,7 @@ public class QuerySettings extends BeModelElementSupport
     /**
      * If possible merge two QuerySettings objects into one (updating roles list)
      *
-     * @param settings to add to current object
+     * @param other settings to add to current object
      * @return true if merge was successful
      */
     public boolean merge(QuerySettings other)

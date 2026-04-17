@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 /**
  * <p>Implement it if you want make your component, initializer or service configurable.</p>
  * <p>Configuration is placed in the <code>config.yaml</code> in the <code>project</code>.</p>
- * <p><code>config.yaml</code> content example:
+ * <p><code>config.yaml</code> content example:</p>
  * <pre>
  *   config:
  *     components:
@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
  *         url: 'http://cn01:4243/'
  *         vncHost: 'cn01'
  * </pre>
- * </p>
+ *
  * <p>Any way your class implements <code>{@code Configurable<MyConfiguration>}</code>,
  * and the <code>MyConfiguration</code> will be created and filled automatically,
  * then the <code>void configure(MyConfiguration config)</code> will be called.

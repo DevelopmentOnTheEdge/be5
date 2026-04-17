@@ -158,7 +158,6 @@ public interface EntityModel<T>
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set(T, Map)}
      *
      * @param id           identify number of record
      * @param propertyName column name
@@ -171,7 +170,6 @@ public interface EntityModel<T>
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set(T, DynamicPropertySet)}
      *
      * @param id     identify number of record
      * @param values column names and values
@@ -220,7 +218,6 @@ public interface EntityModel<T>
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #remove(T[])}
      *
      * @param id first identify number of record
      * @return number of affected rows

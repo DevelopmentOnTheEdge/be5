@@ -41,9 +41,9 @@ public abstract class BeModelElementSupport implements BeModelElement
 
     /**
      * Return name of the data element.
+     * TODO final specifier needed.
      *
      * @return Name of the data element.
-     * @todo final specifier needed.
      */
     @Override
     @PropertyName("Name")

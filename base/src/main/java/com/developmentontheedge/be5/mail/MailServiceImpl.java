@@ -36,7 +36,7 @@ public class MailServiceImpl implements MailService
 
     /**
      * Send email with parameter type="text/plain".
-     * <br/><br/>Same as,
+     * <br><br>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
      */
@@ -56,7 +56,7 @@ public class MailServiceImpl implements MailService
 
     /**
      * Send email with parameter type="text/html".
-     * <br/><br/>Same as,
+     * <br><br>Same as,
      * {@link #sendEmail(InternetAddress, InternetAddress[], String, String, String)}
      * only parameter "from" - "MAIL_FROM_ADDRESS" or "MAIL_FROM_NAME", parameter "to" as string.
      */

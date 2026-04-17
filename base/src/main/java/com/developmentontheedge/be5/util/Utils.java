@@ -80,7 +80,7 @@ public class Utils
 
     /**
      * Check given object for an empty value.
-     * <br/>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols,
+     * <br>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols,
      * except spaces.
      *
      * @param value value
@@ -820,10 +820,10 @@ public class Utils
     /**
      * Replaces in the string one expressions to another:
      * "&quot;" is replacement for "\""
-     * "&lt;" is replacement for "<"
-     * "&gt;" is replacement for ">"
+     * "lt" is replacement for "&lt;"
+     * "gt" is replacement for "&gt;"
      * "&nbsp;" is replacement for " "
-     * "&amp;" is replacement for "&"
+     * "&amp;" is replacement for "amp"
      *
      * @param xml text for replacing
      * @return prepared string
@@ -836,9 +836,9 @@ public class Utils
     /**
      * Replaces in the string one expressions to another:
      * "\"" is replacement for "&quot;"
-     * "<" is replacement for "&lt;"
-     * ">" is replacement for "&gt;"
-     * "&" is replacement for "&amp;"
+     * "&lt;" is replacement for "lt"
+     * "&gt;" is replacement for "gt"
+     * "amp" is replacement for "&amp;"
      *
      * @param inText text for replacing
      * @return prepared string
