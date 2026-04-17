@@ -12,7 +12,7 @@ package com.developmentontheedge.be5.operation.validation;
  * <li>field name and field value as a key-value pair</li>
  * </ol>
  *
- * @author Andrey Anisimov <andrey@developmentontheedge.com>
+ * @author Andrey Anisimov &lt;andrey@developmentontheedge.com&gt;
  * @see <a href="http://docs.jquery.com/Plugins/Validation/Methods/remote#options">AJAX validation method</a>
  */
 public class CheckUniqueServlet

@@ -5,7 +5,7 @@ import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.SqlExecutor;
 
 /**
- * @author Andrey Anisimov <andrey@developmentontheedge.com>
+ * @author Andrey Anisimov &lt;andrey@developmentontheedge.com&gt;
  */
 public class DatabaseUtils
 {
