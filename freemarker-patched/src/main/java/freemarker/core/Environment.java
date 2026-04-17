@@ -1475,7 +1475,7 @@ public final class Environment extends Configurable
 
     /**
      * Sets a local variable (one effective only during a macro invocation).
-     * This is correspondent to FTL <code><#local <i>name</i>=<i>model</i>></code>.
+     * This is correspondent to FTL <code><#local <i>name</i>=<i>model</i></code>.
      *
      * @param name  the identifier of the variable
      * @param model the value of the variable.
