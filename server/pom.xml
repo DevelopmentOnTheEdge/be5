@@ -24,6 +24,12 @@
 
     <dependency>
       <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-mcp-server</artifactId>
+      <version>[0.4.0,)</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
       <artifactId>be5-web</artifactId>
       <version>[0.4.0,)</version>
     </dependency>
@@ -131,10 +137,10 @@
           </execution>
         </executions>
       </plugin>
-       <plugin>
+<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-       </plugin>
+      </plugin>
 
     </plugins>
   </build>

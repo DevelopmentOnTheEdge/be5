@@ -1,0 +1,122 @@
+package com.developmentontheedge.be5.mcpserver;
+
+import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+@Singleton
+public class McpController
+{
+    private final McpService mcpService;
+
+    @Inject
+    public McpController(McpService mcpService)
+    {
+        this.mcpService = mcpService;
+    }
+
+    public void handle(Request req, Response res) throws IOException
+    {
+        String accept = req.get("Accept");
+        boolean isSse = accept != null && accept.contains("text/event-stream");
+
+        if (isSse)
+        {
+            handleSse(req, res);
+        }
+        else
+        {
+            handleJsonRpc(req, res);
+        }
+    }
+
+    private void handleJsonRpc(Request req, Response res) throws IOException
+    {
+        String body = req.getBody();
+        if (body == null || body.isEmpty())
+        {
+            Map<String, Object> error = new HashMap<>();
+            error.put("jsonrpc", "2.0");
+            Map<String, Object> err = new HashMap<>();
+            err.put("code", -32600);
+            err.put("message", "Invalid Request");
+            error.put("error", err);
+            res.sendAsJson(error, 400);
+            return;
+        }
+
+        try
+        {
+            Map<String, Object> request = parseJson(body);
+            Map<String, Object> response = mcpService.handleRequest(request);
+            res.sendAsJson(response);
+        }
+        catch (Exception e)
+        {
+            Map<String, Object> error = new HashMap<>();
+            error.put("jsonrpc", "2.0");
+            Map<String, Object> err = new HashMap<>();
+            err.put("code", -32603);
+            err.put("message", e.getMessage());
+            error.put("error", err);
+            res.sendAsJson(error, 500);
+        }
+    }
+
+    private void handleSse(Request req, Response res) throws IOException
+    {
+        HttpServletResponse raw = res.getRawResponse();
+        raw.setContentType("text/event-stream");
+        raw.setCharacterEncoding("UTF-8");
+        raw.setStatus(200);
+
+        String body = req.getBody();
+        if (body == null || body.isEmpty())
+        {
+            raw.getWriter().write(
+                    "data: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32600,\"message\":\"Invalid Request\"}}\n\n");
+            raw.flushBuffer();
+            return;
+        }
+
+        try
+        {
+            Map<String, Object> request = parseJson(body);
+            Map<String, Object> response = mcpService.handleRequest(request);
+            String jsonResponse = toJson(response);
+            raw.getWriter().write("data: " + jsonResponse + "\n\n");
+            raw.flushBuffer();
+        }
+        catch (Exception e)
+        {
+            String escaped = escapeJson(e.getMessage());
+            raw.getWriter().write(
+                    "data: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32603,\"message\":\"" + escaped + "\"}}\n\n");
+            raw.flushBuffer();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseJson(String json)
+    {
+        return JsonUtils.getMapFromJson(json);
+    }
+
+    private String toJson(Object obj)
+    {
+        return com.developmentontheedge.beans.json.JsonFactory.bean(obj).toString();
+    }
+
+    private String escapeJson(String s)
+    {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+    }
+}
