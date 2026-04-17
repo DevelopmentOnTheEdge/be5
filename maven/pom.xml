@@ -4,7 +4,7 @@
 
   <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5-maven-plugin</artifactId>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
   <packaging>maven-plugin</packaging>
 
   <name>be5 maven plugin</name>
@@ -149,6 +149,12 @@
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
       </plugin>
+
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
+
     </plugins>
   </build>
 
