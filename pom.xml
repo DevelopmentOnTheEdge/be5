@@ -49,7 +49,6 @@
     <module>modules/bpmn</module>
     <module>modules/core</module>
     <module>modules/monitoring</module>
-    <module>modules/mcp-server</module>
     <module>test</module>
     <module>util/app</module>
     <module>util/jetty</module>

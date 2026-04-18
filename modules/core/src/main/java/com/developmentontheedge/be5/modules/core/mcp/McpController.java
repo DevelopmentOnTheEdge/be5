@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.mcpserver;
+package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.be5.web.Request;
@@ -17,17 +17,32 @@ import java.util.Map;
 public class McpController
 {
     private final McpService mcpService;
+    private final McpAuthenticationService authService;
 
     @Inject
-    public McpController(McpService mcpService)
+    public McpController(McpService mcpService, McpAuthenticationService authService)
     {
         this.mcpService = mcpService;
+        this.authService = authService;
     }
 
     private static final Jsonb JSONB = JsonbBuilder.create();
 
     public void handle(Request req, Response res) throws IOException
     {
+        String method = extractMethod(req);
+        if (McpMethod.requiresAuthentication(method))
+        {
+            String authHeader = req.getRawRequest().getHeader("Authorization");
+            if (!authService.authenticate(authHeader))
+            {
+                res.getRawResponse().setHeader("WWW-Authenticate", "Basic realm=\"MCP Server\"");
+                Map<String, Object> error = createErrorResponse(-32603, "Authentication required");
+                res.sendAsJson(error, 401);
+                return;
+            }
+        }
+
         String accept = req.getRawRequest().getHeader("Accept");
         boolean isSse = accept != null && accept.contains("text/event-stream");
 
@@ -41,17 +56,29 @@ public class McpController
         }
     }
 
+    private String extractMethod(Request req)
+    {
+        try
+        {
+            String body = req.getBody();
+            if (body != null && !body.isEmpty())
+            {
+                Map<String, Object> request = parseJson(body);
+                return (String) request.get("method");
+            }
+        }
+        catch (Exception ignored)
+        {
+        }
+        return null;
+    }
+
     private void handleJsonRpc(Request req, Response res) throws IOException
     {
         String body = req.getBody();
         if (body == null || body.isEmpty())
         {
-            Map<String, Object> error = new HashMap<>();
-            error.put("jsonrpc", "2.0");
-            Map<String, Object> err = new HashMap<>();
-            err.put("code", -32600);
-            err.put("message", "Invalid Request");
-            error.put("error", err);
+            Map<String, Object> error = createErrorResponse(-32600, "Invalid Request");
             res.sendAsJson(error, 400);
             return;
         }
@@ -69,12 +96,7 @@ public class McpController
         }
         catch (Exception e)
         {
-            Map<String, Object> error = new HashMap<>();
-            error.put("jsonrpc", "2.0");
-            Map<String, Object> err = new HashMap<>();
-            err.put("code", -32603);
-            err.put("message", e.getMessage());
-            error.put("error", err);
+            Map<String, Object> error = createErrorResponse(-32603, e.getMessage());
             res.sendAsJson(error, 500);
         }
     }
@@ -129,5 +151,16 @@ public class McpController
     {
         if (s == null) return "";
         return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+    }
+
+    private Map<String, Object> createErrorResponse(int code, String message)
+    {
+        Map<String, Object> error = new HashMap<>();
+        error.put("jsonrpc", "2.0");
+        Map<String, Object> err = new HashMap<>();
+        err.put("code", code);
+        err.put("message", message);
+        error.put("error", err);
+        return error;
     }
 }

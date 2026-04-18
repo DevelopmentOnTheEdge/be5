@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.mcpserver;
+package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
 

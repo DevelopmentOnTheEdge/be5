@@ -1,6 +1,10 @@
 package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.modules.core.mcp.McpAuthenticationService;
+import com.developmentontheedge.be5.modules.core.mcp.McpController;
+import com.developmentontheedge.be5.modules.core.mcp.McpService;
+import com.developmentontheedge.be5.modules.core.mcp.SchemaService;
 import com.developmentontheedge.be5.modules.core.services.CategoriesService;
 import com.developmentontheedge.be5.modules.core.services.DocumentCategoriesPlugin;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
@@ -34,5 +38,10 @@ public class CoreModule extends AbstractModule
         bind(Be5EventDbLogger.class).asEagerSingleton();
 
         bind(OperationLogging.class).to(OperationLoggingImpl.class).in(Scopes.SINGLETON);
+
+        bind(SchemaService.class).in(Scopes.SINGLETON);
+        bind(McpService.class).in(Scopes.SINGLETON);
+        bind(McpController.class).in(Scopes.SINGLETON);
+        bind(McpAuthenticationService.class).in(Scopes.SINGLETON);
     }
 }

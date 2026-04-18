@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
 import com.developmentontheedge.be5.modules.core.controllers.SaveQuickColumnSetting;
+import com.developmentontheedge.be5.modules.core.mcp.McpServlet;
 import com.developmentontheedge.be5.server.ServerServletModule;
 import com.google.inject.servlet.ServletModule;
 
@@ -14,5 +15,6 @@ public class CoreServletModule extends ServletModule
         install(new ServerServletModule());
         serve("/api/categories*").with(CategoriesController.class);
         serve("/api/quick*").with(SaveQuickColumnSetting.class);
+        serve("/api/mcp*").with(McpServlet.class);
     }
 }

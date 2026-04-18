@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server;
 
-import com.developmentontheedge.be5.mcpserver.McpServlet;
 import com.developmentontheedge.be5.server.controllers.DocumentController;
 import com.developmentontheedge.be5.server.controllers.DownloadController;
 import com.developmentontheedge.be5.server.controllers.DownloadOperationController;
@@ -29,6 +28,5 @@ public class ServerServletModule extends ServletModule
         serve("/api/download").with(DownloadController.class);
         serve("/api/downloadOperation").with(DownloadOperationController.class);
         serve("/api/reloadProject").with(ReloadProjectController.class);
-        serve("/api/mcp*").with(McpServlet.class);
     }
 }
