@@ -15,6 +15,11 @@ https://github.com/DevelopmentOnTheEdge/be5-react
 
 
 ```sh
+# Deploy whole project to local Nexus
+mvn deploy
+```
+
+```sh
 # Deploy whole project to Maven Central
 mvn -DskipTests source:jar javadoc:jar deploy
 ```

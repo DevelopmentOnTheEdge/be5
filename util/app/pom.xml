@@ -6,7 +6,7 @@
 
   <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5-app</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.6</version>
   <packaging>pom</packaging>
 
   <name>be5 app parent</name>
