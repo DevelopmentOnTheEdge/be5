@@ -46,7 +46,9 @@ public class McpServiceUnitTest
 
         assertNotNull(response.get("result"));
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> tools = (List<Map<String, Object>>) response.get("result");
+        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> tools = (List<Map<String, Object>>) result.get("tools");
         assertTrue(tools.size() >= 5);
     }
 

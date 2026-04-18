@@ -31,6 +31,21 @@
       <url>https://github.com/DevelopmentOnTheEdge/be5</url>
   </scm>
 
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>dote</id>
+      <name>DOTE Repository</name>
+      <url>https://nexus.dote.ru/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>dote-snapshots</id>
+      <name>DOTE Snapshots</name>
+      <url>https://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -96,7 +111,7 @@
   <build>
     <plugins>
 
-       <plugin>
+       <!--plugin>
           <groupId>org.sonatype.central</groupId>
           <artifactId>central-publishing-maven-plugin</artifactId>
           <version>0.5.0</version>
@@ -105,7 +120,7 @@
             <publishingServerId>central</publishingServerId>
             <autoPublish>true</autoPublish>
           </configuration>
-        </plugin>
+        </plugin-->
 
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -157,5 +172,25 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>central-publish</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.5.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

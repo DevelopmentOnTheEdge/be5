@@ -6,6 +6,8 @@ import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,9 +24,11 @@ public class McpController
         this.mcpService = mcpService;
     }
 
+    private static final Jsonb JSONB = JsonbBuilder.create();
+
     public void handle(Request req, Response res) throws IOException
     {
-        String accept = req.get("Accept");
+        String accept = req.getRawRequest().getHeader("Accept");
         boolean isSse = accept != null && accept.contains("text/event-stream");
 
         if (isSse)
@@ -56,6 +60,11 @@ public class McpController
         {
             Map<String, Object> request = parseJson(body);
             Map<String, Object> response = mcpService.handleRequest(request);
+            if (response == null)
+            {
+                res.setStatus(202);
+                return;
+            }
             res.sendAsJson(response);
         }
         catch (Exception e)
@@ -90,9 +99,11 @@ public class McpController
         {
             Map<String, Object> request = parseJson(body);
             Map<String, Object> response = mcpService.handleRequest(request);
-            String jsonResponse = toJson(response);
-            raw.getWriter().write("data: " + jsonResponse + "\n\n");
-            raw.flushBuffer();
+            if (response != null)
+            {
+                raw.getWriter().write("data: " + toJson(response) + "\n\n");
+                raw.flushBuffer();
+            }
         }
         catch (Exception e)
         {
@@ -111,7 +122,7 @@ public class McpController
 
     private String toJson(Object obj)
     {
-        return com.developmentontheedge.beans.json.JsonFactory.bean(obj).toString();
+        return JSONB.toJson(obj);
     }
 
     private String escapeJson(String s)

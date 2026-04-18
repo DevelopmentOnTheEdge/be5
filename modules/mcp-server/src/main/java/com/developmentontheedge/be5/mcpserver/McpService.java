@@ -1,10 +1,11 @@
 package com.developmentontheedge.be5.mcpserver;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +16,8 @@ import java.util.Map;
 @Singleton
 public class McpService
 {
+    private static final Jsonb JSONB = JsonbBuilder.create();
+
     private final SchemaService schemaService;
     private final DbService dbService;
 
@@ -36,6 +39,11 @@ public class McpService
         if (id != null)
         {
             response.put("id", id);
+        }
+
+        if (id == null)
+        {
+            return null;
         }
 
         try
@@ -91,7 +99,7 @@ public class McpService
         return result;
     }
 
-    private List<Map<String, Object>> handleToolsList()
+    private Map<String, Object> handleToolsList()
     {
         List<Map<String, Object>> tools = new ArrayList<>();
 
@@ -142,7 +150,9 @@ public class McpService
         executeSqlTool.put("inputSchema", createInputSchema(sqlProps, Arrays.asList("sql")));
         tools.add(executeSqlTool);
 
-        return tools;
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("tools", tools);
+        return result;
     }
 
     private Map<String, Object> createInputSchema(Map<String, Object> properties, List<String> required)
@@ -174,37 +184,37 @@ public class McpService
 
     private Map<String, Object> handleToolCall(String toolName, Map<String, Object> arguments)
     {
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("tool", toolName);
-
+        Object data;
         switch (toolName)
         {
             case "list_entities":
-                result.put("content", schemaService.getEntities());
+                data = schemaService.getEntities();
                 break;
             case "get_entity_schema":
-                String entityName = (String) arguments.get("entityName");
-                result.put("content", schemaService.getEntitySchemaWithReferences(entityName));
+                data = schemaService.getEntitySchemaWithReferences((String) arguments.get("entityName"));
                 break;
             case "get_entity_references":
-                String refEntityName = (String) arguments.get("entityName");
-                result.put("content", schemaService.getEntityReferences(refEntityName));
+                data = schemaService.getEntityReferences((String) arguments.get("entityName"));
                 break;
             case "list_db_columns":
-                result.put("content", schemaService.getDatabaseColumns());
+                data = schemaService.getDatabaseColumns();
                 break;
             case "get_table_info":
-                String tableName = (String) arguments.get("tableName");
-                result.put("content", schemaService.getTableInfo(tableName));
+                data = schemaService.getTableInfo((String) arguments.get("tableName"));
                 break;
             case "execute_sql":
-                String sql = (String) arguments.get("sql");
-                result.put("content", executeQuery(sql));
+                data = executeQuery((String) arguments.get("sql"));
                 break;
             default:
                 throw new RuntimeException("Unknown tool: " + toolName);
         }
 
+        Map<String, Object> textContent = new LinkedHashMap<>();
+        textContent.put("type", "text");
+        textContent.put("text", JSONB.toJson(data));
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("content", Collections.singletonList(textContent));
         return result;
     }
 
@@ -244,7 +254,7 @@ public class McpService
         return results;
     }
 
-    private List<Map<String, Object>> handleResourcesList()
+    private Map<String, Object> handleResourcesList()
     {
         List<Map<String, Object>> resources = new ArrayList<>();
 
@@ -255,7 +265,9 @@ public class McpService
         schemaResource.put("mimeType", "application/json");
         resources.add(schemaResource);
 
-        return resources;
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("resources", resources);
+        return result;
     }
 
     private Map<String, Object> handleResourceRead(String uri)
@@ -263,7 +275,7 @@ public class McpService
         Map<String, Object> content = new LinkedHashMap<>();
         if ("schema://entities".equals(uri))
         {
-            content.put("text", JsonFactory.bean(schemaService.getEntities()).toString());
+            content.put("text", JSONB.toJson(schemaService.getEntities()));
         }
         else
         {

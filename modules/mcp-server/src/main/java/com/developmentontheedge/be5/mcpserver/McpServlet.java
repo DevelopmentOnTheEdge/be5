@@ -77,7 +77,14 @@ public class McpServlet extends HttpServlet
         {
             try
             {
-                return req.getReader().readLine();
+                StringBuilder sb = new StringBuilder();
+                java.io.BufferedReader reader = req.getReader();
+                String line;
+                while ((line = reader.readLine()) != null)
+                {
+                    sb.append(line);
+                }
+                return sb.toString();
             }
             catch (IOException e)
             {
@@ -181,6 +188,7 @@ public class McpServlet extends HttpServlet
 
     private static class McpResponse implements Response
     {
+        private static final javax.json.bind.Jsonb JSONB = javax.json.bind.JsonbBuilder.create();
         private final HttpServletResponse resp;
 
         McpResponse(HttpServletResponse resp)
@@ -195,8 +203,7 @@ public class McpServlet extends HttpServlet
             {
                 resp.setContentType("application/json");
                 resp.setCharacterEncoding("UTF-8");
-                String json = com.developmentontheedge.beans.json.JsonFactory.bean(value).toString();
-                resp.getWriter().write(json);
+                resp.getWriter().write(JSONB.toJson(value));
             }
             catch (IOException e)
             {
