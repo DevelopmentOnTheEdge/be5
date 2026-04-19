@@ -30,19 +30,6 @@ public class McpController
 
     public void handle(Request req, Response res) throws IOException
     {
-        String method = extractMethod(req);
-        if (McpMethod.requiresAuthentication(method))
-        {
-            String authHeader = req.getRawRequest().getHeader("Authorization");
-            if (!authService.authenticate(authHeader))
-            {
-                res.getRawResponse().setHeader("WWW-Authenticate", "Basic realm=\"MCP Server\"");
-                Map<String, Object> error = createErrorResponse(-32603, "Authentication required");
-                res.sendAsJson(error, 401);
-                return;
-            }
-        }
-
         String accept = req.getRawRequest().getHeader("Accept");
         boolean isSse = accept != null && accept.contains("text/event-stream");
 
@@ -86,6 +73,18 @@ public class McpController
         try
         {
             Map<String, Object> request = parseJson(body);
+            String method = (String) request.get("method");
+            if (McpMethod.requiresAuthentication(method))
+            {
+                String authHeader = req.getRawRequest().getHeader("Authorization");
+                if (!authService.authenticate(authHeader))
+                {
+                    Map<String, Object> error = createErrorResponse(-32603, "Authentication required");
+                    res.sendAsJson(error, 401);
+                    return;
+                }
+            }
+
             Map<String, Object> response = mcpService.handleRequest(request);
             if (response == null)
             {
@@ -120,6 +119,20 @@ public class McpController
         try
         {
             Map<String, Object> request = parseJson(body);
+            String method = (String) request.get("method");
+            if (McpMethod.requiresAuthentication(method))
+            {
+                String authHeader = req.getRawRequest().getHeader("Authorization");
+                if (!authService.authenticate(authHeader))
+                {
+                    String escaped = escapeJson("Authentication required");
+                    raw.getWriter().write(
+                            "data: {\"jsonrpc\":\"2.0\",\"error\":{\"code\":-32603,\"message\":\"" + escaped + "\"}}\n\n");
+                    raw.flushBuffer();
+                    return;
+                }
+            }
+
             Map<String, Object> response = mcpService.handleRequest(request);
             if (response != null)
             {
