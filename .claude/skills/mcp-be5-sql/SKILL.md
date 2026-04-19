@@ -17,8 +17,80 @@ A skill for writing accurate SQL queries by consulting a database schema exposed
 ## Core Principle
 
 **Always consult the MCP schema before writing any SQL.** Never guess table or column names.
-Fetch the schema first, then write queries using only names that exist in the schema response. 
-Always use `get_entity_references` tool to find correct references between tables.
+Fetch the schema first, then write queries using only names that exist in the schema response.
+
+**Always use the `get_entity_references` tool to find correct references between tables before writing any JOIN.** Never assume foreign key names or relationship directions — let the tool confirm them.
+
+---
+
+## MCP Server Setup & Authentication
+
+This skill works with any remote MCP server that exposes a database schema. Configure it once per project using your server's URL and auth method.
+
+### Claude Code — no auth
+
+```bash
+claude mcp add-json <server-name> '{
+  "type": "http",
+  "url": "https://your-mcp-server/api/mcp"
+}'
+```
+
+### Claude Code — Basic auth
+
+```bash
+# Generate the base64 credential first
+MY_BASIC=$(echo -n "username:password" | base64)
+
+claude mcp add-json <server-name> "{
+  \"type\": \"http\",
+  \"url\": \"https://your-mcp-server/api/mcp\",
+  \"headers\": {\"Authorization\": \"Basic $MY_BASIC\"}
+}"
+```
+
+### Claude Code — Bearer token
+
+```bash
+claude mcp add-json <server-name> '{
+  "type": "http",
+  "url": "https://your-mcp-server/api/mcp",
+  "headers": {
+    "Authorization": "Bearer YOUR_TOKEN"
+  }
+}'
+```
+
+Add `-s user` to any command above to make the server available across all projects, not just the current one.
+
+### opencode — `opencode.json`
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "<server-name>": {
+      "type": "remote",
+      "url": "https://your-mcp-server/api/mcp",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Basic <base64(username:password)>"
+      }
+    }
+  }
+}
+```
+
+### Auth type reference
+
+| Auth type | Header value format |
+|---|---|
+| Basic auth | `Basic <base64(user:pass)>` |
+| Bearer token | `Bearer <token>` |
+| API key header | Depends on server (e.g. `X-API-Key: <key>`) |
+| No auth | Omit `headers` entirely |
+
+> **Security tip:** Avoid hardcoding credentials in version-controlled files. Use environment variables and inject at registration time, as shown in the Basic auth example above.
 
 ---
 
@@ -35,7 +107,7 @@ At the start of any SQL session, verify the MCP is connected and explore the sch
 Then ask the MCP for schema information. Try these prompts to the MCP tools:
 - List all available tables
 - Describe columns and types for relevant tables
-- Check for foreign key relationships if joins are needed
+- Call `get_entity_references` on any table you plan to JOIN to confirm foreign key names and directions
 
 Summarize what you found before writing any SQL:
 > "I found the following tables: `users`, `orders`, `products`. Here are the relevant columns for your query: ..."
@@ -79,7 +151,7 @@ Always include:
 After writing the query, cross-reference every identifier:
 - ✅ Each table name exists in the MCP schema response
 - ✅ Each column belongs to the correct table
-- ✅ JOIN keys match the foreign key relationships
+- ✅ JOIN keys confirmed via `get_entity_references` (not assumed)
 - ✅ Syntax matches the target database engine
 
 If anything is uncertain, call the MCP again to verify.
