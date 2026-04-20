@@ -4,7 +4,7 @@
 
   <groupId>com.developmentontheedge.be5.modules</groupId>
   <artifactId>be5-modules-core</artifactId>
-  <version>0.4.5</version>
+  <version>0.4.6</version>
 
   <name>be5 modules core</name>
   <description>Core database module for be5 applications</description>
