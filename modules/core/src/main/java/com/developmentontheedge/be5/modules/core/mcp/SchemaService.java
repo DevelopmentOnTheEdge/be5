@@ -3,9 +3,8 @@ package com.developmentontheedge.be5.modules.core.mcp;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
-import com.developmentontheedge.be5.metadata.model.TableRef;
+import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -77,14 +76,15 @@ public class SchemaService
         Entity entity = meta.getEntity(entityName);
         if (entity == null) return references;
 
-        BeModelCollection<TableRef> tableRefs = entity.getTableReferences();
+        List<TableReference> tableRefs = entity.getAllReferences();
         if (tableRefs != null)
         {
-            for (TableRef ref : tableRefs.getAvailableElements())
+            for( TableReference ref : tableRefs )
             {
                 Map<String, Object> reference = new LinkedHashMap<>();
                 reference.put("fromColumn", ref.getColumnsFrom());
                 reference.put("toEntity", ref.getTableTo());
+                reference.put("toEntityPermitted", ref.getPermittedTables());
                 reference.put("toColumn", ref.getColumnsTo());
                 reference.put("view", ref.getViewName());
                 references.add(reference);
