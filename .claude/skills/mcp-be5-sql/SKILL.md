@@ -40,7 +40,7 @@ claude mcp add-json <server-name> '{
 
 ```bash
 # Generate the base64 credential first
-MY_BASIC=$(echo -n "username:password" | base64)
+MY_BASIC=$(echo -n "username:password" | base64 | tr -d '\n')
 
 claude mcp add-json <server-name> "{
   \"type\": \"http\",
