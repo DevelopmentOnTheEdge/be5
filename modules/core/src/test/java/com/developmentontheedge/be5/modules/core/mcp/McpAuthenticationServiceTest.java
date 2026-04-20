@@ -43,6 +43,20 @@ public class McpAuthenticationServiceTest extends CoreBe5ProjectDBTest
     }
 
     @Test
+    public void testAuthenticateValidCredentialsAlt()
+    {
+        String authHeader = "Basic YW5uYUBkZXZlbG9wbWVudG9udGhlZWRnZS5jb206OnRva2VuOjMyNWE5YWQ3LTI1YTYtNDYxOC1hNzAyLWI2MWM4MDIyMDJjNw==";
+        if (database.getEntity("users").count(ImmutableMap.of("user_name", "anna@developmentontheedge.com")) == 0)
+        {
+            database.getEntity("users").add(ImmutableMap.of(
+                    "user_name", "anna@developmentontheedge.com",
+                    "user_pass", ":token:325a9ad7-25a6-4618-a702-b61c802202c7"
+            ));
+        }
+        assertTrue(authService.authenticate(authHeader));
+    }
+
+    @Test
     public void testAuthenticateInvalidPassword()
     {
         String authHeader = createBasicAuthHeader(userName, "wrong_password");
