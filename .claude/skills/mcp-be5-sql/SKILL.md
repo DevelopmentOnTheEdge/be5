@@ -1,34 +1,73 @@
 ---
 name: mcp-be5-sql
 description: >
-  Use this skill whenever the user wants to write, generate, or analyze SQL queries using a database
-  schema exposed via an MCP server. Triggers when the user mentions writing SQL, querying a database,
-  generating queries from schema, working with tables/columns from an MCP, or asks Claude Code to
-  produce SQL based on their database structure. Also trigger when the user asks Claude Code to
-  "use the MCP to write a query", "look up the schema and generate SQL", or similar. This skill
-  ensures Claude Code always consults the MCP schema before writing any SQL, uses correct table/column
-  names, and iterates based on schema feedback.
+  Use this skill whenever the user wants to write, generate, fix, or analyze SQL queries against a
+  database schema exposed via an MCP server. Trigger when the user mentions: writing SQL, querying
+  a database, generating queries from a schema, working with tables or columns from an MCP, or asks
+  to "use the MCP to write a query" or "look up the schema and generate SQL". Also trigger when the
+  user asks about joins, filters, aggregations, or any other SQL operation that requires knowing the
+  database structure. ALWAYS use this skill before writing any SQL — do not guess schema, ever.
 ---
 
 # MCP SQL Query Generation
 
-A skill for writing accurate SQL queries by consulting a database schema exposed via an MCP server.
-
-## Core Principle
-
-**Always consult the MCP schema before writing any SQL.** Never guess table or column names.
-Fetch the schema first, then write queries using only names that exist in the schema response.
-
-**Always use the `get_entity_references` tool to find correct references between tables before writing any JOIN.** Never assume foreign key names or relationship directions — let the tool confirm them.
+Write accurate SQL by consulting the MCP schema before touching any query. This skill defines the
+exact tool-call order, entity filtering rules, and query conventions to follow.
 
 ---
 
-## MCP Server Setup & Authentication
+## Decision Rules (read these first)
 
-This skill works with any remote MCP server that exposes a database schema. Configure it once per project using your server's URL and auth method.
+These rules are absolute. Follow them in order before writing any SQL.
 
-### Claude Code — no auth
+### Rule 1 — Schema before SQL
+Never write a table name, column name, or JOIN without first confirming it exists in the MCP
+response. If you have not called a schema tool yet, call one now.
 
+### Rule 2 — Entity-level before database-level
+Always call `get_entity_schema` first. Fall back to `get_table_info` only if the entity is not
+found in the application-level schema.
+
+### Rule 3 — Confirm every JOIN key
+Before writing any JOIN, call `get_entity_references` on the relevant table. Never assume a
+foreign key name or relationship direction.
+
+### Rule 4 — Skip dummy entities
+Ignore any entity where:
+- The primary key is named `_dummy_` or `dummy`
+- The entity name is surrounded by underscores (e.g., `_some_entity_`)
+
+These entities have no corresponding database tables.
+
+### Rule 5 — Learn from existing queries
+Before writing new SQL, scan `*.yaml` files in any `src/meta` folder in the project. These files
+contain developer-authored queries. Use them as reference for naming conventions, patterns, and
+business logic.
+
+---
+
+## Tool Call Order
+
+Execute in this exact sequence for every SQL generation task:
+
+```
+1. /mcp                         → verify MCP is connected
+2. get_entity_schema(table)     → get application-level schema
+   └─ if not found:
+      get_table_info(table)     → fall back to database-level schema
+3. get_entity_references(table) → confirm foreign key names and directions for every JOIN
+4. (optional) scan src/meta/**/*.yaml → read developer-authored queries for context
+5. write SQL using only confirmed names
+6. validate each identifier against schema before finalising
+```
+
+---
+
+## MCP Server Setup
+
+Configure once per project. Choose the auth method that matches your server.
+
+### No auth
 ```bash
 claude mcp add-json <server-name> '{
   "type": "http",
@@ -36,12 +75,9 @@ claude mcp add-json <server-name> '{
 }'
 ```
 
-### Claude Code — Basic auth
-
+### Basic auth
 ```bash
-# Generate the base64 credential first
 MY_BASIC=$(echo -n "username:password" | base64 | tr -d '\n')
-
 claude mcp add-json <server-name> "{
   \"type\": \"http\",
   \"url\": \"https://your-mcp-server/api/mcp\",
@@ -49,22 +85,18 @@ claude mcp add-json <server-name> "{
 }"
 ```
 
-### Claude Code — Bearer token
-
+### Bearer token
 ```bash
 claude mcp add-json <server-name> '{
   "type": "http",
   "url": "https://your-mcp-server/api/mcp",
-  "headers": {
-    "Authorization": "Bearer YOUR_TOKEN"
-  }
+  "headers": {"Authorization": "Bearer YOUR_TOKEN"}
 }'
 ```
 
-Add `-s user` to any command above to make the server available across all projects, not just the current one.
+Add `-s user` to any command to make the server available across all projects.
 
 ### opencode — `opencode.json`
-
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
@@ -73,132 +105,95 @@ Add `-s user` to any command above to make the server available across all proje
       "type": "remote",
       "url": "https://your-mcp-server/api/mcp",
       "enabled": true,
-      "headers": {
-        "Authorization": "Basic <base64(username:password)>"
-      }
+      "headers": {"Authorization": "Basic <base64(username:password)>"}
     }
   }
 }
 ```
 
-### Auth type reference
+### Auth header reference
+| Auth type    | Header value                  |
+|--------------|-------------------------------|
+| Basic auth   | `Basic <base64(user:pass)>`   |
+| Bearer token | `Bearer <token>`              |
+| API key      | Server-specific (e.g. `X-API-Key: <key>`) |
+| No auth      | Omit `headers` entirely       |
 
-| Auth type | Header value format |
-|---|---|
-| Basic auth | `Basic <base64(user:pass)>` |
-| Bearer token | `Bearer <token>` |
-| API key header | Depends on server (e.g. `X-API-Key: <key>`) |
-| No auth | Omit `headers` entirely |
-
-> **Security tip:** Avoid hardcoding credentials in version-controlled files. Use environment variables and inject at registration time, as shown in the Basic auth example above.
+> **Security:** Do not hardcode credentials in version-controlled files. Inject via environment
+> variables at registration time (see Basic auth example above).
 
 ---
 
 ## Workflow
 
-### Step 1: Connect and Explore the Schema
-
-At the start of any SQL session, verify the MCP is connected and explore the schema:
-
+### Step 1 — Connect and explore
 ```
 /mcp
 ```
+Confirm the server is listed and connected. Then call schema tools to map the relevant tables.
+Summarise findings before writing SQL:
+> "I found tables: `users`, `orders`, `products`. Relevant columns for your query: ..."
 
-Then ask the MCP for schema information. Try these prompts to the MCP tools:
-- List all available tables
-- Describe columns and types for relevant tables
-- Call `get_entity_references` on any table you plan to JOIN to confirm foreign key names and directions
+### Step 2 — Clarify intent
+Confirm these before writing any SQL. Ask if ambiguous:
 
-Summarize what you found before writing any SQL:
-> "I found the following tables: `users`, `orders`, `products`. Here are the relevant columns for your query: ..."
+| Question | Why it matters |
+|---|---|
+| What columns to return? | Determines SELECT list |
+| Filters / date ranges / status values? | Determines WHERE clause |
+| Aggregations needed? | Determines GROUP BY / aggregate functions |
+| Database engine? | Affects syntax (e.g. `INTERVAL`, `ILIKE`, `DATE_TRUNC`) |
+| Performance constraints? | Affects LIMIT, index hints, pagination strategy |
 
-### Step 2: Clarify the Query Goal
-
-Before writing SQL, confirm:
-1. **What data is needed** — what columns to return
-2. **Filters** — WHERE conditions, date ranges, status values
-3. **Aggregations** — COUNT, SUM, GROUP BY, etc.
-4. **Database engine** — PostgreSQL, MySQL, SQLite, etc. (affects syntax)
-5. **Performance constraints** — does this need to be optimized, indexed, paginated?
-
-If any of these are ambiguous, ask before proceeding.
-
-### Step 3: Write the Query
-
-Use **only** table and column names confirmed from the MCP schema. Structure the SQL clearly:
+### Step 3 — Write the query
+Use only names confirmed from MCP. Follow this structure:
 
 ```sql
--- Purpose: [brief description of what this query does]
+-- Purpose: [what this query does]
 SELECT
     u.id,
     u.email,
     COUNT(o.id) AS order_count
 FROM users u
-LEFT JOIN orders o ON o.user_id = u.id
+LEFT JOIN orders o ON o.user_id = u.id   -- key confirmed via get_entity_references
 WHERE u.created_at >= NOW() - INTERVAL '30 days'
 GROUP BY u.id, u.email
 ORDER BY order_count DESC
 LIMIT 100;
 ```
 
-Always include:
-- A comment describing the query's purpose
-- A `LIMIT` on exploratory or potentially large queries
-- Proper aliasing for readability
+Required in every query:
+- A `-- Purpose:` comment at the top
+- A `LIMIT` on any exploratory or potentially large query
+- Aliases for readability
 
-### Step 4: Validate Against Schema
+### Step 4 — Validate
+Before delivering the query, check every identifier:
 
-After writing the query, cross-reference every identifier:
-- ✅ Each table name exists in the MCP schema response
-- ✅ Each column belongs to the correct table
-- ✅ JOIN keys confirmed via `get_entity_references` (not assumed)
-- ✅ Syntax matches the target database engine
+- [ ] Each table name exists in the MCP schema response
+- [ ] Each column belongs to the correct table
+- [ ] Every JOIN key was confirmed via `get_entity_references`
+- [ ] Syntax matches the target database engine
 
-If anything is uncertain, call the MCP again to verify.
+If anything is uncertain, re-call the MCP tool.
 
-### Step 5: Save the Query (if requested)
-
-Save finished queries to a logical path:
-
+### Step 5 — Save (if requested)
 ```bash
-# Example
 cat > queries/monthly_active_users.sql << 'EOF'
 -- Purpose: Monthly active users with order count
 SELECT ...
 EOF
 ```
 
----
-
-## CLAUDE.md Template
-
-If the user wants persistent context across sessions, create a `CLAUDE.md` in the project root:
-
-```markdown
-# Project Database Context
-
-## MCP Server
-- Schema MCP server: `<server-name>` (configured in Claude Code)
-- Always consult this MCP before writing any SQL
-
-## Database
-- Engine: [PostgreSQL / MySQL / SQLite]
-- Primary schema: [schema name if applicable]
-
-## SQL Conventions
-- Use snake_case for aliases
-- Always LIMIT exploratory queries
-- Prefer CTEs over deeply nested subqueries
-- Use -- comments to describe query intent
-```
+Use descriptive filenames: `active_users_last_30d.sql`, not `query1.sql`.
 
 ---
 
-## Common Patterns
+## Common Query Patterns
 
 ### Simple SELECT with filter
 ```sql
--- Get active users created in last 30 days
+-- Purpose: Active users created in the last 30 days
 SELECT id, email, created_at
 FROM users
 WHERE status = 'active'
@@ -209,13 +204,13 @@ LIMIT 100;
 
 ### Aggregation with GROUP BY
 ```sql
--- Revenue by product category this month
+-- Purpose: Revenue by product category this month
 SELECT
     p.category,
     COUNT(o.id)        AS order_count,
     SUM(o.total_cents) AS revenue_cents
 FROM orders o
-JOIN products p ON p.id = o.product_id
+JOIN products p ON p.id = o.product_id   -- key confirmed via get_entity_references
 WHERE o.created_at >= DATE_TRUNC('month', NOW())
 GROUP BY p.category
 ORDER BY revenue_cents DESC;
@@ -223,7 +218,7 @@ ORDER BY revenue_cents DESC;
 
 ### CTE for readability
 ```sql
--- Top customers by lifetime value
+-- Purpose: Top customers by lifetime value
 WITH customer_totals AS (
     SELECT
         customer_id,
@@ -236,7 +231,7 @@ SELECT
     c.email,
     ct.lifetime_value
 FROM customer_totals ct
-JOIN customers c ON c.id = ct.customer_id
+JOIN customers c ON c.id = ct.customer_id   -- key confirmed via get_entity_references
 ORDER BY ct.lifetime_value DESC
 LIMIT 20;
 ```
@@ -245,19 +240,35 @@ LIMIT 20;
 
 ## Troubleshooting
 
-| Problem | Action |
+| Symptom | Action |
 |---|---|
-| MCP not responding | Run `/mcp` to check connection status |
-| Unsure if column exists | Call MCP to describe the specific table |
-| Query returns wrong results | Re-fetch schema, verify JOIN keys and column names |
-| Syntax error | Confirm target DB engine, adjust dialect |
-| Query is slow | Ask user if indexes exist; add hints or EXPLAIN |
+| MCP not responding | Run `/mcp`, check connection status |
+| Unsure if column exists | Call `get_entity_schema` or `get_table_info` for the specific table |
+| Wrong query results | Re-fetch schema; verify JOIN keys and column names |
+| Syntax error | Confirm target DB engine; adjust dialect |
+| Slow query | Ask if indexes exist; add `EXPLAIN` or query hints |
+| Entity has no table | Check if primary key is `_dummy_` / entity name has surrounding `_` — if so, skip it |
 
 ---
 
-## Tips
+## Persistent Context (CLAUDE.md)
 
-- **Re-fetch schema when in doubt** — it's cheap and prevents wrong queries
-- **Name queries descriptively** — files like `active_users_last_30d.sql` are self-documenting
-- **Ask about DB engine early** — `INTERVAL`, `DATE_TRUNC`, `ILIKE`, etc. differ between engines
-- **Explain your reasoning** — tell the user which tables/columns you're using and why
+For multi-session projects, create `CLAUDE.md` in the project root:
+
+```markdown
+# Project Database Context
+
+## MCP Server
+- Server name: `<server-name>` (configured in Claude Code)
+- Rule: Always call get_entity_schema → get_entity_references before writing any SQL
+
+## Database
+- Engine: [PostgreSQL / MySQL / SQLite]
+- Primary schema: [schema name if applicable]
+
+## SQL Conventions
+- snake_case for aliases
+- LIMIT on all exploratory queries
+- Prefer CTEs over deeply nested subqueries
+- Always include a `-- Purpose:` comment
+```
