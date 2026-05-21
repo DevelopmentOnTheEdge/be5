@@ -50,6 +50,19 @@ public abstract class FilterSupport implements Filter
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             res.sendHtml(e.getMessage() != null ? e.getMessage() : "");
         }
+        catch (com.google.inject.ProvisionException pe) 
+        {
+            Throwable cause = pe.getCause();
+            if (cause instanceof IllegalArgumentException &&
+                    cause.getMessage().contains("Cannot parse underlying request")) 
+            {
+                HttpServletResponse httpResp = (HttpServletResponse) response;
+                httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                    "Invalid or incomplete multipart request.");
+                return;
+            }
+            throw pe; // re-throw anything else
+        }
         catch (Throwable e)
         {
             log.log(Level.SEVERE, "Error in filter", e);
