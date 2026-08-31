@@ -37,24 +37,7 @@ public class PostgresSchemaReader extends DefaultSchemaReader
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT " +
-                "c.table_name, " +
-                "c.column_name, " +
-                "c.column_default, " +
-                "c.udt_name, " +
-                "c.character_maximum_length, " +
-                "c.numeric_precision, " +
-                "c.numeric_scale, " +
-                "c.is_nullable, " +
-                "ch.check_clause " +
-                "FROM information_schema.columns c " +
-                "LEFT JOIN information_schema.constraint_column_usage cc ON (cc.table_name=c.table_name " +
-                    "AND cc.table_schema=c.table_schema AND cc.column_name=c.column_name) " +
-                "LEFT JOIN information_schema.table_constraints tc ON (cc.constraint_name = tc.constraint_name) " +
-                "LEFT JOIN information_schema.check_constraints ch ON (cc.constraint_name = ch.constraint_name) " +
-                "WHERE (ch.check_clause IS NULL OR tc.constraint_type = 'CHECK') " +
-                        (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
-                "ORDER BY c.table_name,c.ordinal_position");
+        ResultSet rs = connector.executeQuery(getColumnsQuery(defSchema));
         try
         {
             while (rs.next())
@@ -110,6 +93,34 @@ public class PostgresSchemaReader extends DefaultSchemaReader
             connector.close(rs);
         }
         return result;
+    }
+
+    static String getColumnsQuery(String defSchema)
+    {
+        // PostgreSQL 18 exposes NOT NULL constraints as CHECK constraints in information_schema.
+        // Read only real CHECK constraints and bind them to their relation and column.
+        return "SELECT " +
+                "c.table_name, " +
+                "c.column_name, " +
+                "c.column_default, " +
+                "c.udt_name, " +
+                "c.character_maximum_length, " +
+                "c.numeric_precision, " +
+                "c.numeric_scale, " +
+                "c.is_nullable, " +
+                "(SELECT pg_catalog.pg_get_expr(pc.conbin, pc.conrelid) " +
+                    "FROM pg_catalog.pg_constraint pc " +
+                    "JOIN pg_catalog.pg_class pt ON pt.oid = pc.conrelid " +
+                    "JOIN pg_catalog.pg_namespace pn ON pn.oid = pt.relnamespace " +
+                    "WHERE pc.contype = 'c' " +
+                        "AND pt.relname = c.table_name " +
+                        "AND pn.nspname = c.table_schema " +
+                        "AND c.ordinal_position = ANY(pc.conkey) " +
+                    "ORDER BY pc.oid LIMIT 1) AS check_clause " +
+                "FROM information_schema.columns c " +
+                "WHERE 1=1 " +
+                        (defSchema == null ? "" : "AND c.table_schema='" + defSchema + "' ") +
+                "ORDER BY c.table_name,c.ordinal_position";
     }
 
     @Override
