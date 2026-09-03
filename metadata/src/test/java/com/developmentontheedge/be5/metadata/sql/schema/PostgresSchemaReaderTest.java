@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
  *    which correctly excludes NOT NULL constraints on all supported versions
  *    (PG13-17: absent from pg_constraint; PG18+: contype = 'n').
  *
- * Integration tests against a real PostgreSQL 13 and 18 instance should be
- * added when such infrastructure is available (e.g., Testcontainers).
+ * Real-database integration tests are in Postgres13SchemaReaderIntegrationTest
+ * and Postgres18SchemaReaderIntegrationTest.
  */
 public class PostgresSchemaReaderTest
 {
