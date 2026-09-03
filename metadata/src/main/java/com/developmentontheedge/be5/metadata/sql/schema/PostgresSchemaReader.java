@@ -31,18 +31,20 @@ public class PostgresSchemaReader extends DefaultSchemaReader
 
     private static final Pattern ENUM_VALUES_PATTERN = Pattern.compile("\'(.+?)\'::(character varying|text)");
 
-    @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
-            throws SQLException, ProcessInterruptedException
+    /**
+     * Builds the SQL query that reads column metadata including CHECK constraint expressions.
+     *
+     * The check_clause subquery queries pg_constraint directly (not information_schema.check_constraints)
+     * so that the behaviour is stable across PostgreSQL versions:
+     *   - PG13-17: NOT NULL is stored in pg_attribute.attnotnull, absent from pg_constraint.
+     *   - PG18+:   NOT NULL gets contype = 'n' in pg_constraint, excluded by the contype = 'c' filter.
+     *
+     * conkey holds pg_attribute.attnum values, not information_schema.columns.ordinal_position.
+     * These diverge after ALTER TABLE ... DROP COLUMN, so the join must go through pg_attribute.
+     */
+    static String buildReadColumnsQuery(String defSchema)
     {
-        DbmsConnector connector = sql.getConnector();
-        Map<String, List<SqlColumnInfo>> result = new HashMap<>();
-        // contype = 'c' selects only real CHECK constraints.
-        // On PG13-17, NOT NULL is stored in pg_attribute.attnotnull and is absent from pg_constraint.
-        // On PG18+, NOT NULL moved to pg_constraint with contype = 'n', so it is automatically excluded.
-        // conkey holds pg_attribute.attnum values; we map through pg_attribute to join correctly,
-        // which is safe even after column drops (where ordinal_position and attnum diverge).
-        ResultSet rs = connector.executeQuery("SELECT " +
+        return "SELECT " +
                 "c.table_name, " +
                 "c.column_name, " +
                 "c.column_default, " +
@@ -58,16 +60,25 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 "   AND pa.attnum = ANY(pc.conkey) " +
                 "   AND pa.attname = c.column_name " +
                 "   AND NOT pa.attisdropped " +
-                "  JOIN pg_catalog.pg_class pt ON pt.oid = pc.conrelid " +
-                "  JOIN pg_catalog.pg_namespace pn ON pn.oid = pt.relnamespace " +
                 "  WHERE pc.contype = 'c' " +
-                "    AND pt.relname = c.table_name " +
-                "    AND pn.nspname = c.table_schema " +
+                "    AND pc.conrelid = " +
+                "      (SELECT t.oid FROM pg_catalog.pg_class t " +
+                "       JOIN pg_catalog.pg_namespace n ON n.oid = t.relnamespace " +
+                "       WHERE t.relname = c.table_name AND n.nspname = c.table_schema) " +
                 "  ORDER BY pc.oid " +
                 "  LIMIT 1) AS check_clause " +
                 "FROM information_schema.columns c " +
                 (defSchema == null ? "" : "WHERE c.table_schema='" + defSchema + "' ") +
-                "ORDER BY c.table_name,c.ordinal_position");
+                "ORDER BY c.table_name,c.ordinal_position";
+    }
+
+    @Override
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
+            throws SQLException, ProcessInterruptedException
+    {
+        DbmsConnector connector = sql.getConnector();
+        Map<String, List<SqlColumnInfo>> result = new HashMap<>();
+        ResultSet rs = connector.executeQuery(buildReadColumnsQuery(defSchema));
         try
         {
             while (rs.next())
