@@ -34,6 +34,7 @@ public class SqlColumnType
     public static final String TYPE_BLOB = "BLOB";
     public static final String TYPE_JSON = "JSON";
     public static final String TYPE_JSONB = "JSONB";
+    public static final String TYPE_VECTOR = "VECTOR"; // +dimensions, pgvector extension
     public static final String TYPE_UNKNOWN = "UNKNOWN";
 
     public static final String[] TYPES = new String[]{
@@ -58,6 +59,7 @@ public class SqlColumnType
             TYPE_BLOB,
             TYPE_JSON,
             TYPE_JSONB,
+            TYPE_VECTOR,
             TYPE_UNKNOWN
     };
 
@@ -126,6 +128,8 @@ public class SqlColumnType
         else
         {
             typeName = type;
+            if (TYPE_VECTOR.equalsIgnoreCase(type))
+                size = 0; // vector without fixed dimensions
         }
         typeName = typeName.toUpperCase();
     }
@@ -172,6 +176,7 @@ public class SqlColumnType
             case TYPE_CHAR:
             case TYPE_VARCHAR:
             case TYPE_DECIMAL:
+            case TYPE_VECTOR:
                 return true;
             default:
                 return false;
@@ -241,6 +246,8 @@ public class SqlColumnType
                 return typeName + "(" + size + ")";
             case TYPE_DECIMAL:
                 return typeName + "(" + size + "," + precision + ")";
+            case TYPE_VECTOR:
+                return size > 0 ? typeName + "(" + size + ")" : typeName;
             case TYPE_ENUM:
                 StringBuilder sb = new StringBuilder(typeName);
                 sb.append('(');
@@ -290,6 +297,11 @@ public class SqlColumnType
             default:
                 return false;
         }
+    }
+
+    public boolean isVector()
+    {
+        return typeName.equals(TYPE_VECTOR);
     }
 
     public boolean isIntegral()

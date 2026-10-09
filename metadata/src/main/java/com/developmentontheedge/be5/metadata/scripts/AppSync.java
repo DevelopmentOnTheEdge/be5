@@ -246,6 +246,9 @@ public class AppSync extends ScriptSupport<AppSync>
 
                     IndexDef index = new IndexDef(info.getName(), tableDef.getIndices());
                     index.setUnique(info.isUnique());
+                    index.setMethod(info.getMethod());
+                    index.setOperatorClass(info.getOperatorClass());
+                    index.setOptions(info.getOptions());
 
                     for (String indexCol : info.getColumns())
                     {

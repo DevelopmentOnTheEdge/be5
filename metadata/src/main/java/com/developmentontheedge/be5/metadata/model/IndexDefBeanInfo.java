@@ -15,6 +15,9 @@ public class IndexDefBeanInfo extends BeanInfoEx
     {
         add(new PropertyDescriptorEx("name", beanClass, "getName", null));
         add("unique");
+        add("method");
+        add("operatorClass");
+        add("options");
         add(new PropertyDescriptorEx("definition", beanClass, "getCreateDdl", null));
         add("usedInExtras");
         add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));

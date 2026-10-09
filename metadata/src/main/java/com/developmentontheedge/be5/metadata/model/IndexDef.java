@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollect
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithOriginModule;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.dbms.SqlExecutor;
 
@@ -15,6 +16,9 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
                                                                                      BeElementWithOriginModule
 {
     private boolean unique;
+    private String method = "";
+    private String operatorClass = "";
+    private String options = "";
     private String originModuleName;
 
     public IndexDef(String name, BeModelCollection<IndexDef> origin)
@@ -39,6 +43,77 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     {
         this.unique = unique;
         fireCodeChanged();
+    }
+
+    /**
+     * Index access method, e.g. hnsw, ivfflat, gin, gist (PostgreSQL only).
+     * Empty string means the default method (btree).
+     */
+    @PropertyName("Method")
+    public String getMethod()
+    {
+        return method;
+    }
+
+    public void setMethod(String method)
+    {
+        String value = Strings2.nullToEmpty(method).trim().toLowerCase();
+        this.method = value.equals("btree") ? "" : value;
+        fireCodeChanged();
+    }
+
+    /**
+     * Operator class applied to every non-functional index column,
+     * e.g. vector_cosine_ops for pgvector hnsw/ivfflat index (PostgreSQL only).
+     */
+    @PropertyName("Operator class")
+    public String getOperatorClass()
+    {
+        return operatorClass;
+    }
+
+    public void setOperatorClass(String operatorClass)
+    {
+        this.operatorClass = Strings2.nullToEmpty(operatorClass).trim().toLowerCase();
+        fireCodeChanged();
+    }
+
+    /**
+     * Index storage parameters, e.g. "m=16, ef_construction=64" for hnsw index (PostgreSQL only).
+     */
+    @PropertyName("Options")
+    public String getOptions()
+    {
+        return options;
+    }
+
+    public void setOptions(String options)
+    {
+        this.options = normalizeOptions(options);
+        fireCodeChanged();
+    }
+
+    private static String normalizeOptions(String options)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (String option : Strings2.nullToEmpty(options).split(","))
+        {
+            String[] parts = option.split("=", 2);
+            String name = parts[0].trim().toLowerCase();
+            if (name.isEmpty())
+                continue;
+            if (sb.length() > 0)
+                sb.append(", ");
+            sb.append(name);
+            if (parts.length > 1)
+            {
+                String value = parts[1].trim();
+                if (value.length() > 1 && value.startsWith("'") && value.endsWith("'"))
+                    value = value.substring(1, value.length() - 1);
+                sb.append('=').append(value);
+            }
+        }
+        return sb.toString();
     }
 
     public boolean isFunctional()

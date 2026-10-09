@@ -186,6 +186,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         Project project = getProject();
         Rdbms dbms = project.getDatabaseSystem();
         DbmsTypeManager typeManager = dbms.getTypeManager();
+        sb.append(typeManager.getCreateTablePrerequisites(this));
         sb.append(typeManager.getCreateTableClause(getEntityName()) + " (\n");
         StringBuilder triggers = new StringBuilder();
         for (ColumnDef column : getColumns().getAvailableElements())
@@ -432,7 +433,9 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                 addDropColumnStatements(typeManager, oldColumnNewName, sb, dangerousOnly);
             }
 
-            if (column.getDefaultValue() == null && !column.isCanBeNull() && !column.isAutoIncrement())
+            // there is no reasonable default for a vector: NOT NULL vector column can be added to an empty table only
+            if (column.getDefaultValue() == null && !column.isCanBeNull() && !column.isAutoIncrement()
+                    && !column.getType().isVector())
             {                       
                 ColumnDef columnWithDefault = (ColumnDef) column.clone(column.getOrigin(), column.getName());
                 if( oldColumn != null && oldColumn.getDefaultValue() != null )
@@ -541,6 +544,11 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return true;
         }
 
+        // Changing vector dimensions: ALTER fails if stored vectors have other dimensions, but never loses them
+        if (oldType.isVector() && type.isVector())
+        {
+            return true;
+        }
         // Enlarging VARCHAR column
         if (oldType.getTypeName().equals(TYPE_VARCHAR) && type.getTypeName().equals(TYPE_VARCHAR))
         {

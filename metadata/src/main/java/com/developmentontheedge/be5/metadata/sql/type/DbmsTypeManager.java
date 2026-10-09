@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.metadata.sql.type;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+import com.developmentontheedge.be5.metadata.model.TableDef;
 
 public interface DbmsTypeManager
 {
@@ -13,6 +14,12 @@ public interface DbmsTypeManager
     String getTypeClause(SqlColumnType type);
 
     String getCreateTableClause(String name);
+
+    /**
+     * Statements which must be executed before the table can be created,
+     * e.g. CREATE EXTENSION for columns of extension types. Empty string if nothing is required.
+     */
+    String getCreateTablePrerequisites(TableDef table);
 
     String getConstraintClause(ColumnDef column);
 

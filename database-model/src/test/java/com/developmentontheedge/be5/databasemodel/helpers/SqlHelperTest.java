@@ -37,6 +37,31 @@ public class SqlHelperTest
     }
 
     @Test
+    public void insertWithParameterCasts()
+    {
+        when(db.insertRaw(any(), anyVararg())).thenReturn(2L);
+        long newID = sqlHelper.insert("chunks", of("doc_id", "doc1", "embedding", "[1,2,3]"),
+                of("embedding", "vector"));
+
+        assertEquals(2L, newID);
+        verify(db, times(1)).insertRaw("INSERT INTO chunks (doc_id, embedding) VALUES (?, CAST(? AS vector))",
+                "doc1", "[1,2,3]");
+    }
+
+    @Test
+    public void updateWithParameterCasts()
+    {
+        when(db.updateRaw(any(), anyVararg())).thenReturn(1);
+        sqlHelper.update("chunks", of("id", 2L), of("embedding", "[1,2,3]"), of("embedding", "vector"));
+        verify(db, times(1)).updateRaw("UPDATE chunks SET embedding = CAST(? AS vector) WHERE id = ?",
+                "[1,2,3]", 2L);
+
+        sqlHelper.updateIn("chunks", "id", new Long[]{2L, 3L}, of("embedding", "[1,2,3]"), of("embedding", "vector"));
+        verify(db, times(1)).updateRaw("UPDATE chunks SET embedding = CAST(? AS vector) WHERE id IN (?, ?)",
+                "[1,2,3]", 2L, 3L);
+    }
+
+    @Test
     public void update()
     {
         when(db.updateRaw(any(), anyVararg())).thenReturn(1);

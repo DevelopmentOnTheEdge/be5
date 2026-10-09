@@ -7,6 +7,9 @@ public class IndexInfo
 {
     private String name;
     private boolean unique;
+    private String method;
+    private String operatorClass;
+    private String options;
     private final List<String> columns = new ArrayList<>();
 
     public String getName()
@@ -27,6 +30,36 @@ public class IndexInfo
     public void setUnique(boolean unique)
     {
         this.unique = unique;
+    }
+
+    public String getMethod()
+    {
+        return method;
+    }
+
+    public void setMethod(String method)
+    {
+        this.method = method;
+    }
+
+    public String getOperatorClass()
+    {
+        return operatorClass;
+    }
+
+    public void setOperatorClass(String operatorClass)
+    {
+        this.operatorClass = operatorClass;
+    }
+
+    public String getOptions()
+    {
+        return options;
+    }
+
+    public void setOptions(String options)
+    {
+        this.options = options;
     }
 
     public void addColumn(String col)

@@ -31,6 +31,13 @@ public class PostgresSchemaReader extends DefaultSchemaReader
 
     private static final Pattern ENUM_VALUES_PATTERN = Pattern.compile("\'(.+?)\'::(character varying|text)");
 
+    /** pgvector types: atttypmod holds the number of dimensions (-1 if not specified) */
+    private static final String[] VECTOR_TYPES = {"vector", "halfvec", "sparsevec"};
+
+    private static final String TABLE_OID_SUBQUERY = "(SELECT t.oid FROM pg_catalog.pg_class t " +
+            "JOIN pg_catalog.pg_namespace n ON n.oid = t.relnamespace " +
+            "WHERE t.relname = c.table_name AND n.nspname = c.table_schema)";
+
     /**
      * Builds the SQL query that reads column metadata including CHECK constraint expressions.
      *
@@ -41,6 +48,9 @@ public class PostgresSchemaReader extends DefaultSchemaReader
      *
      * conkey holds pg_attribute.attnum values, not information_schema.columns.ordinal_position.
      * These diverge after ALTER TABLE ... DROP COLUMN, so the join must go through pg_attribute.
+     *
+     * atttypmod is read for the pgvector types: it holds the vector dimensions, which are not
+     * available in information_schema.columns.
      */
     static String buildReadColumnsQuery(String defSchema)
     {
@@ -61,12 +71,13 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                 "   AND pa.attname = c.column_name " +
                 "   AND NOT pa.attisdropped " +
                 "  WHERE pc.contype = 'c' " +
-                "    AND pc.conrelid = " +
-                "      (SELECT t.oid FROM pg_catalog.pg_class t " +
-                "       JOIN pg_catalog.pg_namespace n ON n.oid = t.relnamespace " +
-                "       WHERE t.relname = c.table_name AND n.nspname = c.table_schema) " +
+                "    AND pc.conrelid = " + TABLE_OID_SUBQUERY + " " +
                 "  ORDER BY pc.oid " +
-                "  LIMIT 1) AS check_clause " +
+                "  LIMIT 1) AS check_clause, " +
+                "(SELECT pa.atttypmod FROM pg_catalog.pg_attribute pa " +
+                "  WHERE pa.attrelid = " + TABLE_OID_SUBQUERY + " " +
+                "    AND pa.attname = c.column_name " +
+                "    AND NOT pa.attisdropped) AS atttypmod " +
                 "FROM information_schema.columns c " +
                 (defSchema == null ? "" : "WHERE c.table_schema='" + defSchema + "' ") +
                 "ORDER BY c.table_name,c.ordinal_position";
@@ -114,6 +125,10 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                     info.setSize(rs.getInt(6 /*"numeric_precision"*/));
                 }
                 info.setPrecision(rs.getInt(7 /* "numeric_precision" */));
+                if (isVectorType(info.getType()))
+                {
+                    info.setSize(Math.max(rs.getInt(10 /* "atttypmod" */), 0));
+                }
                 info.setAutoIncrement(defaultValue != null && defaultValue.startsWith("nextval"));
 
                 String check = rs.getString(9 /* "check_clause" */);
@@ -134,6 +149,16 @@ public class PostgresSchemaReader extends DefaultSchemaReader
             connector.close(rs);
         }
         return result;
+    }
+
+    private static boolean isVectorType(String udtName)
+    {
+        for (String type : VECTOR_TYPES)
+        {
+            if (type.equals(udtName))
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -193,25 +218,42 @@ public class PostgresSchemaReader extends DefaultSchemaReader
         return result;
     }
 
+    /**
+     * Builds the SQL query that reads index columns, one row per index column.
+     *
+     * Besides the column definition it reads the index access method (pg_am.amname, e.g. btree, gin, hnsw),
+     * the operator class of the column if it is not the default one for the column type and access method
+     * (e.g. vector_cosine_ops for pgvector), and the index storage parameters (e.g. m=16, ef_construction=64).
+     * indclass is an oidvector, its subscripts start from 0 while (keys).n starts from 1.
+     */
+    static String buildReadIndicesQuery(String defSchema)
+    {
+        return "SELECT ct.relname AS TABLE_NAME, i.indisunique AS IS_UNIQUE, ci.relname AS INDEX_NAME, " +
+                "pg_catalog.pg_get_indexdef(ci.oid, (i.keys).n, false) AS COLUMN_NAME, (i.keys).n AS ORDINAL, " +
+                "am.amname AS METHOD, " +
+                "(SELECT opc.opcname FROM pg_catalog.pg_opclass opc " +
+                "  WHERE opc.oid = i.indclass[(i.keys).n - 1] AND NOT opc.opcdefault) AS OPERATOR_CLASS, " +
+                "array_to_string(ci.reloptions, ', ') AS OPTIONS " +
+                "FROM pg_catalog.pg_class ct " +
+                "JOIN pg_catalog.pg_namespace n " +
+                "ON (ct.relnamespace = n.oid)" +
+                "JOIN (" +
+                "SELECT i.indexrelid, i.indrelid, i.indisunique, i.indclass, " +
+                "information_schema._pg_expandarray(i.indkey) AS keys FROM pg_catalog.pg_index i " +
+                ") i " +
+                "ON (ct.oid = i.indrelid) " +
+                "JOIN pg_catalog.pg_class ci ON (ci.oid = i.indexrelid) " +
+                "LEFT JOIN pg_catalog.pg_am am ON (am.oid = ci.relam) " +
+                (defSchema == null ? "" : "AND n.nspname = '" + defSchema + "' ") + " ORDER BY 1,3,5";
+    }
+
     @Override
     public Map<String, List<IndexInfo>> readIndices(SqlExecutor sql, String defSchema, ProcessController controller)
             throws SQLException, ProcessInterruptedException
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery(
-                "SELECT ct.relname AS TABLE_NAME, i.indisunique AS IS_UNIQUE, ci.relname AS INDEX_NAME, " +
-                "pg_catalog.pg_get_indexdef(ci.oid, (i.keys).n, false) AS COLUMN_NAME, (i.keys).n AS ORDINAL " +
-                "FROM pg_catalog.pg_class ct " +
-                "JOIN pg_catalog.pg_namespace n " +
-                "ON (ct.relnamespace = n.oid)" +
-                "JOIN (" +
-                "SELECT i.indexrelid, i.indrelid, i.indisunique, " +
-                "information_schema._pg_expandarray(i.indkey) AS keys FROM pg_catalog.pg_index i " +
-                ") i " +
-                "ON (ct.oid = i.indrelid) " +
-                "JOIN pg_catalog.pg_class ci ON (ci.oid = i.indexrelid) " +
-                (defSchema == null ? "" : "AND n.nspname = '" + defSchema + "' ") + " ORDER BY 1,3,5");
+        ResultSet rs = connector.executeQuery(buildReadIndicesQuery(defSchema));
         try
         {
             IndexInfo curIndex = null;
@@ -235,6 +277,13 @@ public class PostgresSchemaReader extends DefaultSchemaReader
                     list.add(curIndex);
                     curIndex.setName(indexName);
                     curIndex.setUnique(rs.getBoolean(2 /*"IS_UNIQUE"*/));
+                    curIndex.setMethod(rs.getString(6 /*"METHOD"*/));
+                    curIndex.setOptions(rs.getString(8 /*"OPTIONS"*/));
+                }
+                String operatorClass = rs.getString(7 /*"OPERATOR_CLASS"*/);
+                if (operatorClass != null && curIndex.getOperatorClass() == null)
+                {
+                    curIndex.setOperatorClass(operatorClass);
                 }
                 String column = rs.getString(4 /*"COLUMN_NAME"*/);
                 column = GENERIC_REF_INDEX_PATTERN.matcher(column).replaceFirst("generic($2)");
