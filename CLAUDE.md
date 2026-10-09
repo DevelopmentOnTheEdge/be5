@@ -71,3 +71,10 @@ contextDestroyed()  → Bootstrap.shutdown() → LifecycleService.stop()
 - Frontend: https://github.com/DevelopmentOnTheEdge/be5-react (React)
 - Wiki (be5): https://github.com/DevelopmentOnTheEdge/be5/wiki
 - Wiki (BE-SQL, metadata, Freemarker): http://wiki.dote.ru
+
+## Usage with Claude
+
+In order to have up-to-date skill from this project available for all user projects execute
+```sh
+ln -s `pwd`/.claude/skills/be5-dev ~/.claude/skills
+```

@@ -9,7 +9,7 @@ Multi-module Maven project:
 
 ## Entity Definition (YAML)
 
-Entities live in `src/meta/entities/` and are registered in `project.yaml`.
+Entities live in `src/meta/entities/` and are registered in `project.yaml`. This mandatory for entities and their queries+operations to be accessible by be5 engine.
 
 ### Regular Entity (collection)
 
