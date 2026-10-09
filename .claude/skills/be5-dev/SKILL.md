@@ -87,6 +87,55 @@ _chatbot_:
       file: operations.chatbot.chat_session_list.groovy
 ```
 
+### Vector column (pgvector, PostgreSQL)
+
+`VECTOR(n)` is a regular be5 column type, so `be5:sync` understands it and never
+drops the column or the HNSW/IVFFlat index. `CREATE EXTENSION IF NOT EXISTS vector`
+is generated automatically before the table / column is created.
+
+```yaml
+chunks:
+  type: table
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - doc_id:
+        type: VARCHAR(100)
+    - content:
+        type: TEXT
+    - embedding:
+        type: VECTOR(768)   # number of dimensions; VECTOR without size is also allowed
+        canBeNull: true     # NOT NULL vector can be added to an empty table only
+    indices:
+    - chunks_doc_id_idx:
+        columns: doc_id
+    - chunks_embedding_idx:
+        method: hnsw                      # also ivfflat, gin, gist, brin, hash; default btree
+        operatorClass: vector_cosine_ops  # vector_l2_ops, vector_ip_ops, vector_l1_ops, ...
+        options: m=16, ef_construction=64 # index storage parameters (WITH (...))
+        columns: embedding
+```
+
+- `method`, `operatorClass`, `options` are PostgreSQL only; other DBMS (H2 in tests)
+  get a plain index and store the vector as `TEXT` (e.g. `'[0.1,0.2,0.3]'`).
+- Entity DSL writes (`database.chunks << [embedding: '[0.1,0.2,0.3]']`, `set`, `setBy`) pass
+  vector values as strings and cast them automatically (`CAST(? AS vector)`) on PostgreSQL.
+- Changing dimensions generates `ALTER COLUMN ... SET DATA TYPE VECTOR(n)`
+  (fails if stored vectors have other dimensions, data is never dropped).
+- Distance operators `<->` (L2), `<#>` (negative inner product), `<=>` (cosine),
+  `<+>` (L1), `<~>`, `<%>` and casts `?::vector` are supported by be-sql in queries:
+
+```groovy
+def rows = db.listWithParams(
+    "SELECT ID, content, embedding <=> ?::vector AS distance FROM chunks ORDER BY embedding <=> ?::vector LIMIT 5",
+    queryVector, queryVector   // queryVector is a String like '[0.1,0.2,...]'
+).collect { [id: it.$ID, content: it.$content, distance: it.$distance] }
+```
+
 ### Register in project.yaml
 
 ```yaml

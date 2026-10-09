@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnFunction;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 
 import java.util.Arrays;
@@ -41,6 +42,9 @@ public class DefaultTypeManager implements DbmsTypeManager
             return getKeyType();
         if (type.getTypeName().equals(SqlColumnType.TYPE_JSONB))
             return SqlColumnType.TYPE_TEXT;
+        // pgvector is PostgreSQL only: other DBMS store vector in text form like '[0.1,0.2,0.3]'
+        if (type.isVector())
+            return getTypeClause(new SqlColumnType(SqlColumnType.TYPE_TEXT));
         return type.toString();
     }
 
@@ -275,6 +279,12 @@ public class DefaultTypeManager implements DbmsTypeManager
     public String getCreateTableClause(String name)
     {
         return "CREATE TABLE " + normalizeIdentifier(name);
+    }
+
+    @Override
+    public String getCreateTablePrerequisites(TableDef table)
+    {
+        return "";
     }
 
     @Override

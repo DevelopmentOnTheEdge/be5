@@ -61,4 +61,22 @@ public class SqlColumnTypeTest
 
         assertTrue(new SqlColumnType("INT").doesSupportGeneratedKey());
     }
+
+    @Test
+    public void testVector()
+    {
+        SqlColumnType vector = new SqlColumnType("vector(768)");
+        assertEquals(SqlColumnType.TYPE_VECTOR, vector.getTypeName());
+        assertEquals(768, vector.getSize());
+        assertTrue(vector.isVector());
+        assertTrue(vector.isValid());
+        assertTrue(vector.doesSupportSize());
+        assertFalse(vector.doesSupportGeneratedKey());
+        assertEquals("VECTOR(768)", vector.toString());
+
+        SqlColumnType noDimensions = new SqlColumnType("VECTOR");
+        assertEquals(0, noDimensions.getSize());
+        assertTrue(noDimensions.isValid());
+        assertEquals("VECTOR", noDimensions.toString());
+    }
 }

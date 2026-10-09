@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+import com.developmentontheedge.be5.metadata.model.TableDef;
 import one.util.streamex.MoreCollectors;
 
 import java.util.Arrays;
@@ -76,6 +77,8 @@ public class PostgresTypeManager extends DefaultTypeManager
                 return "BYTEA";
             case SqlColumnType.TYPE_JSONB:
                 return "JSONB";
+            case SqlColumnType.TYPE_VECTOR:
+                return type.toString();
             case SqlColumnType.TYPE_BOOL:
             case SqlColumnType.TYPE_ENUM:
                 int maxLen = 0;
@@ -86,6 +89,19 @@ public class PostgresTypeManager extends DefaultTypeManager
                 return "VARCHAR(" + (maxLen) + ")";
         }
         return super.getTypeClause(type);
+    }
+
+    private static final String CREATE_VECTOR_EXTENSION = "CREATE EXTENSION IF NOT EXISTS vector;\n";
+
+    @Override
+    public String getCreateTablePrerequisites(TableDef table)
+    {
+        for (ColumnDef column : table.getColumns().getAvailableElements())
+        {
+            if (column.getType().isVector())
+                return CREATE_VECTOR_EXTENSION;
+        }
+        return "";
     }
 
     @Override
@@ -157,33 +173,53 @@ public class PostgresTypeManager extends DefaultTypeManager
                     " ADD COLUMN " + normalizeIdentifier(column.getName()) +
                     " BIGINT DEFAULT nextval('" + seq + "'::regclass) PRIMARY KEY;\n";
         }
+        if (column.getType().isVector())
+            return CREATE_VECTOR_EXTENSION + super.getAddColumnStatements(column);
         return super.getAddColumnStatements(column);
     }
 
-    @Override
-    public String getCreateIndexClause(IndexDef indexDef)
+    /**
+     * Index method: explicitly specified one or GIN for single JSONB column index.
+     */
+    private String getIndexMethod(IndexDef indexDef)
     {
+        if (!indexDef.getMethod().isEmpty())
+            return indexDef.getMethod();
         Optional<IndexColumnDef> col = indexDef.stream().collect(MoreCollectors.onlyOne())
                 .filter(c -> !c.isFunctional());
         if (col.isPresent())
         {
             ColumnDef columnDef = indexDef.getTable().getColumns().get(col.get().getName());
             if (columnDef != null && columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_JSONB))
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.append("CREATE ");
-                if (indexDef.isUnique())
-                    sb.append("UNIQUE ");
-                sb.append("INDEX ");
-                sb.append(normalizeIdentifier(indexDef.getName()));
-                sb.append(" ON ");
-                sb.append(normalizeIdentifier(indexDef.getTable().getEntityName()));
-                sb.append(" USING GIN (");
-                sb.append(columnDef.getName());
-                sb.append(");");
-                return sb.toString();
-            }
+                return "gin";
         }
-        return super.getCreateIndexClause(indexDef);
+        return "";
+    }
+
+    @Override
+    public String getCreateIndexClause(IndexDef indexDef)
+    {
+        String method = getIndexMethod(indexDef);
+        if (method.isEmpty() && indexDef.getOperatorClass().isEmpty() && indexDef.getOptions().isEmpty())
+            return super.getCreateIndexClause(indexDef);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE ");
+        if (indexDef.isUnique())
+            sb.append("UNIQUE ");
+        sb.append("INDEX ");
+        sb.append(normalizeIdentifier(indexDef.getName()));
+        sb.append(" ON ");
+        sb.append(normalizeIdentifier(indexDef.getTable().getEntityName()));
+        if (!method.isEmpty())
+            sb.append(" USING ").append(method.toUpperCase());
+        sb.append(" (");
+        sb.append(indexDef.stream().map(c -> c.isFunctional() || indexDef.getOperatorClass().isEmpty()
+                ? c.getDefinition() : c.getDefinition() + " " + indexDef.getOperatorClass()).joining(", "));
+        sb.append(")");
+        if (!indexDef.getOptions().isEmpty())
+            sb.append(" WITH (").append(indexDef.getOptions()).append(")");
+        sb.append(";");
+        return sb.toString();
     }
 }

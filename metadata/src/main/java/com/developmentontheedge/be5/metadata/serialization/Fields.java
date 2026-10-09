@@ -90,7 +90,10 @@ public class Fields
     ));
     private static final List<Field> INDEX_DEF = Collections.unmodifiableList(Arrays.asList(
             new Field("name"),
-            new Field("unique", false)
+            new Field("unique", false),
+            new Field("method", ""),
+            new Field("operatorClass", ""),
+            new Field("options", "")
     ));
     private static final List<Field> FILE_STRUCTURE = Collections.unmodifiableList(Arrays.asList(
             new Field("htmlDir", "src/html"),

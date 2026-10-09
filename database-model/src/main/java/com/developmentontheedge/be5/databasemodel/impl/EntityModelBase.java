@@ -12,6 +12,8 @@ import com.developmentontheedge.be5.groovy.meta.GroovyRegister;
 import com.developmentontheedge.be5.meta.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -22,6 +24,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,7 +242,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         columnsHelper.addInsertSpecialColumns(entity, map);
         columnsHelper.checkDpsColumns(entity, map);
 
-        return sqlHelper.insert(entity.getName(), map);
+        return sqlHelper.insert(entity.getName(), map, getParameterCasts());
     }
 
     @Override
@@ -285,7 +288,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(ids);
         Objects.requireNonNull(values);
         Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values);
-        return sqlHelper.updateIn(entity.getName(), getPrimaryKeyName(), ids, finalValues);
+        return sqlHelper.updateIn(entity.getName(), getPrimaryKeyName(), ids, finalValues, getParameterCasts());
     }
 
     @Override
@@ -316,7 +319,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         Map<String, Object> conditions2 = fixMapWithGroovyStrings( conditions );
 
         Map<String, Object> finalValues = columnsHelper.withUpdateSpecialColumns(entity, values2);
-        return sqlHelper.update(entity.getName(), conditions2, finalValues);
+        return sqlHelper.update(entity.getName(), conditions2, finalValues, getParameterCasts());
     }
 
     @Override
@@ -477,5 +480,24 @@ public class EntityModelBase<T> implements EntityModel<T>
             property.setValue( fixGroovyString( property.getValue() ) );
         }
         return map; 
+    }
+
+    /**
+     * pgvector columns accept values in text form like '[0.1,0.2,0.3]' only with explicit cast
+     */
+    private Map<String, String> getParameterCasts()
+    {
+        if (meta.getProject().getDatabaseSystem() != Rdbms.POSTGRESQL)
+            return Collections.emptyMap();
+        TableDef tableDef = entity.findTableDefinition();
+        if (tableDef == null)
+            return Collections.emptyMap();
+        Map<String, String> casts = new HashMap<>();
+        for (ColumnDef column : tableDef.getColumns().getAvailableElements())
+        {
+            if (column.getType().isVector())
+                casts.put(column.getName(), "vector");
+        }
+        return casts;
     }
 }

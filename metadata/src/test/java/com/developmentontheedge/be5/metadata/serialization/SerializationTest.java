@@ -12,6 +12,8 @@ import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
+import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
 import com.developmentontheedge.be5.metadata.model.Localizations;
 import com.developmentontheedge.be5.metadata.model.MassChange;
@@ -41,6 +43,8 @@ import org.junit.rules.TemporaryFolder;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -208,6 +212,46 @@ public class SerializationTest
         final BeModelCollection<TableRef> tableReferences2 = project2.getEntity("testTable").getOrCreateTableReferences();
         assertEquals(tableReferences.getSize(), tableReferences2.getSize());
         assertEquals(tableReferences.iterator().next().getColumnsFrom(), tableReferences2.iterator().next().getColumnsFrom());
+    }
+
+    @Test
+    public void testWriteReadVectorColumnAndIndex() throws Exception
+    {
+        final Project project = new Project("TestProject");
+        project.setDatabaseSystem(Rdbms.POSTGRESQL);
+        final Entity entity = new Entity("chunks", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final TableDef scheme = new TableDef(entity);
+        DataElementUtils.saveQuiet(scheme);
+        final ColumnDef embedding = new ColumnDef("embedding", scheme.getColumns());
+        embedding.setTypeString("vector(768)");
+        embedding.setCanBeNull(true);
+        DataElementUtils.saveQuiet(embedding);
+        final IndexDef index = new IndexDef("chunks_embedding_idx", scheme.getIndices());
+        index.setMethod("hnsw");
+        index.setOperatorClass("vector_cosine_ops");
+        index.setOptions("m = 16, ef_construction = 64");
+        DataElementUtils.saveQuiet(index);
+        DataElementUtils.saveQuiet(new IndexColumnDef("embedding", index));
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save(project, tempFolder);
+        final String yaml = new String(Files.readAllBytes(tempFolder.resolve("src/meta/entities/chunks.yaml")),
+                StandardCharsets.UTF_8);
+        assertTrue(yaml, yaml.contains("type: VECTOR(768)"));
+        assertTrue(yaml, yaml.contains("method: hnsw"));
+        assertTrue(yaml, yaml.contains("operatorClass: vector_cosine_ops"));
+        assertTrue(yaml, yaml.contains("options: m=16, ef_construction=64"));
+
+        final Project project2 = Serialization.load(tempFolder);
+        final TableDef scheme2 = project2.getEntity("chunks").findTableDefinition();
+        assertEquals("VECTOR(768)", scheme2.getColumns().get("embedding").getTypeString());
+        final IndexDef index2 = scheme2.getIndices().get("chunks_embedding_idx");
+        assertEquals("hnsw", index2.getMethod());
+        assertEquals("vector_cosine_ops", index2.getOperatorClass());
+        assertEquals("m=16, ef_construction=64", index2.getOptions());
+        project2.setDatabaseSystem(Rdbms.POSTGRESQL);
+        assertEquals(scheme.getDdl(), scheme2.getDdl());
     }
 
     /**

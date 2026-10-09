@@ -106,4 +106,22 @@ public class PostgresSchemaReaderTest
                 "(name-based matching is fragile)",
                 query.contains("information_schema.table_constraints"));
     }
+
+    @Test
+    public void columnsQueryReadsVectorDimensions()
+    {
+        String query = PostgresSchemaReader.buildReadColumnsQuery("public");
+        // pgvector dimensions are stored in pg_attribute.atttypmod only
+        assertTrue("Query must read atttypmod", query.contains("pa.atttypmod"));
+    }
+
+    @Test
+    public void indicesQueryReadsMethodOperatorClassAndOptions()
+    {
+        String query = PostgresSchemaReader.buildReadIndicesQuery("public");
+        assertTrue("Query must read index access method", query.contains("am.amname AS METHOD"));
+        assertTrue("Query must read non-default operator class of the column",
+                query.contains("opc.oid = i.indclass[(i.keys).n - 1] AND NOT opc.opcdefault"));
+        assertTrue("Query must read index storage parameters", query.contains("ci.reloptions"));
+    }
 }
