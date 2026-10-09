@@ -23,3 +23,10 @@ mvn deploy
 # Deploy whole project to Maven Central
 mvn -DskipTests source:jar javadoc:jar deploy
 ```
+
+## Usage with Claude
+
+In order to have up-to-date skill from this project available for all user projects execute
+```sh
+ln -s `pwd`/.claude/skills/be5-dev ~/.claude/skills
+```
