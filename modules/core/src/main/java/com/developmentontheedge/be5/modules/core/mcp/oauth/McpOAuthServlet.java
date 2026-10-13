@@ -85,6 +85,8 @@ public class McpOAuthServlet extends HttpServlet
 
     private void route(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
+        // a form does not name its encoding, and the container would read a password as ISO-8859-1
+        if (req.getCharacterEncoding() == null) req.setCharacterEncoding("UTF-8");
         String path = req.getRequestURI();
         boolean post = "POST".equals(req.getMethod());
         try
@@ -188,7 +190,6 @@ public class McpOAuthServlet extends HttpServlet
         }
         if (authService.login(userName, password, req.getRemoteAddr()) == null)
         {
-            log.warning("MCP OAuth login failed user=" + userName + " remote=" + req.getRemoteAddr());
             sendHtml(resp, HttpServletResponse.SC_OK, loginPage(auth, "Login failed, or this account may not use MCP."));
             return;
         }

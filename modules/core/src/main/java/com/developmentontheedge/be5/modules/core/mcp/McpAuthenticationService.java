@@ -14,10 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Singleton
 public class McpAuthenticationService
 {
+    private static final Logger log = Logger.getLogger(McpAuthenticationService.class.getName());
+
     private static final String BASIC = "Basic ";
     private static final String BEARER = "Bearer ";
 
@@ -64,7 +67,12 @@ public class McpAuthenticationService
     public UserInfo login(String userName, String password, String remoteAddr)
     {
         if (Strings.isNullOrEmpty(userName) || password == null) return null;
-        if (!loginService.loginCheck(userName, password.toCharArray())) return null;
+        if (!loginService.loginCheck(userName, password.toCharArray()))
+        {
+            log.warning("MCP login refused user=" + userName + ": name or password not accepted by "
+                    + loginService.getClass().getName());
+            return null;
+        }
         return createUserInfo(userName, remoteAddr);
     }
 
@@ -74,13 +82,23 @@ public class McpAuthenticationService
     public UserInfo createUserInfo(String userName, String remoteAddr)
     {
         List<String> availableRoles = roleService.getAvailableRoles(userName);
-        if (availableRoles == null || availableRoles.isEmpty()) return null;
+        if (availableRoles == null || availableRoles.isEmpty())
+        {
+            log.warning("MCP access refused user=" + userName + ": no roles from " + roleService.getClass().getName());
+            return null;
+        }
         List<String> currentRoles = roleService.getCurrentRoles(userName);
         if (currentRoles == null || currentRoles.isEmpty()) currentRoles = availableRoles;
 
         UserInfo user = new UserInfo(userName, availableRoles, currentRoles);
         user.setRemoteAddr(remoteAddr);
-        return isPermitted(user) ? user : null;
+        if (!isPermitted(user))
+        {
+            log.warning("MCP access refused user=" + userName + ": roles " + availableRoles + " are not among "
+                    + McpOAuthConfig.ROLES_PROPERTY + "=" + McpOAuthConfig.allowedRoles());
+            return null;
+        }
+        return user;
     }
 
     /**
