@@ -1,314 +1,165 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.modules.core.mcp.oauth.McpOAuthConfig;
+import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.security.UserInfoHolder;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Logger;
 
+/**
+ * The MCP endpoint: streamable HTTP transport with plain JSON responses (no SSE stream, no server sessions).
+ * Every request must carry an OAuth bearer token (see {@link com.developmentontheedge.be5.modules.core.mcp.oauth})
+ * or Basic credentials; otherwise the answer is a 401 challenge from which a client discovers the OAuth flow.
+ */
 @Singleton
 public class McpServlet extends HttpServlet
 {
-    private final McpController mcpController;
+    private static final Logger log = Logger.getLogger(McpServlet.class.getName());
+    private static final Jsonb JSONB = JsonbBuilder.create();
+
+    private final McpService mcpService;
+    private final McpAuthenticationService authService;
 
     @Inject
-    public McpServlet(McpController mcpController)
+    public McpServlet(McpService mcpService, McpAuthenticationService authService)
     {
-        this.mcpController = mcpController;
+        this.mcpService = mcpService;
+        this.authService = authService;
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
+        addCorsHeaders(req, resp);
+        UserInfo user = authService.authenticateUser(req.getHeader("Authorization"), req.getRemoteAddr());
+        if (user == null)
+        {
+            sendUnauthorized(req, resp);
+            return;
+        }
+
+        Map<String, Object> request;
         try
         {
-            McpRequest request = new McpRequest(req);
-            McpResponse response = new McpResponse(resp);
-            mcpController.handle(request, response);
+            request = JsonUtils.getMapFromJson(readBody(req));
         }
-        catch (IOException e)
+        catch (RuntimeException e)
         {
-            throw new RuntimeException(e);
+            sendJson(resp, HttpServletResponse.SC_BAD_REQUEST,
+                    "{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32700,\"message\":\"Parse error\"}}");
+            return;
+        }
+
+        long start = System.currentTimeMillis();
+        Map<String, Object> response;
+        UserInfo previousUser = UserInfoHolder.getLoggedUser();
+        UserInfoHolder.setLoggedUser(user);
+        try
+        {
+            response = mcpService.handleRequest(request);
+        }
+        finally
+        {
+            UserInfoHolder.setLoggedUser(previousUser);
+        }
+        log.fine(() -> "MCP " + request.get("method") + " user=" + user.getUserName() + " "
+                + (System.currentTimeMillis() - start) + "ms");
+
+        if (response == null)
+        {
+            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+            return;
+        }
+        sendJson(resp, HttpServletResponse.SC_OK, JSONB.toJson(response));
+    }
+
+    /**
+     * There is no server-to-client stream, which the protocol lets a server say with 405.
+     */
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        addCorsHeaders(req, resp);
+        if (authService.authenticateUser(req.getHeader("Authorization"), req.getRemoteAddr()) == null)
+        {
+            sendUnauthorized(req, resp);
+            return;
+        }
+        resp.setHeader("Allow", "POST, OPTIONS");
+        resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+    {
+        resp.setHeader("Allow", "POST, OPTIONS");
+        resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+    {
+        addCorsHeaders(req, resp);
+        resp.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers",
+                "Content-Type, Accept, Authorization, MCP-Protocol-Version, Mcp-Session-Id");
+        resp.setHeader("Access-Control-Max-Age", "86400");
+        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    /**
+     * Browser based clients read the endpoint cross-origin. Cookies are never used for authentication here,
+     * so any origin may be allowed.
+     */
+    private static void addCorsHeaders(HttpServletRequest req, HttpServletResponse resp)
+    {
+        if (req.getHeader("Origin") != null)
+        {
+            resp.setHeader("Access-Control-Allow-Origin", "*");
+            resp.setHeader("Access-Control-Expose-Headers", "WWW-Authenticate");
         }
     }
 
-    private static class McpRequest implements Request
+    private static void sendUnauthorized(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
-        private final HttpServletRequest req;
-
-        McpRequest(HttpServletRequest req)
+        String issuer = McpOAuthConfig.issuer(req);
+        if (issuer != null)
         {
-            this.req = req;
+            resp.setHeader("WWW-Authenticate",
+                    "Bearer resource_metadata=\"" + McpOAuthConfig.protectedResourceMetadataUrl(issuer) + "\"");
         }
-
-        @Override
-        public java.util.Map<String, String[]> getParameters()
-        {
-            return req.getParameterMap();
-        }
-
-        @Override
-        public java.util.List<String> getList(String parameter)
-        {
-            String[] values = getParameterValues(parameter);
-            if (values == null) return new java.util.ArrayList<>();
-            return java.util.Arrays.asList(values);
-        }
-
-        @Override
-        public String[] getParameterValues(String name)
-        {
-            return req.getParameterValues(name);
-        }
-
-        @Override
-        public String get(String parameter)
-        {
-            String[] values = req.getParameterValues(parameter);
-            return values != null && values.length > 0 ? values[0] : null;
-        }
-
-        @Override
-        public String getBody()
-        {
-            try
-            {
-                StringBuilder sb = new StringBuilder();
-                java.io.BufferedReader reader = req.getReader();
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    sb.append(line);
-                }
-                return sb.toString();
-            }
-            catch (IOException e)
-            {
-                return null;
-            }
-        }
-
-        @Override
-        public String getSessionId()
-        {
-            return req.getSession() != null ? req.getSession().getId() : null;
-        }
-
-        @Override
-        public Object getAttribute(String name)
-        {
-            return req.getSession() != null ? req.getSession().getAttribute(name) : null;
-        }
-
-        @Override
-        public void setAttribute(String name, Object value)
-        {
-            if (req.getSession() != null)
-            {
-                req.getSession().setAttribute(name, value);
-            }
-        }
-
-        @Override
-        public com.developmentontheedge.be5.web.Session getSession()
-        {
-            return null;
-        }
-
-        @Override
-        public com.developmentontheedge.be5.web.Session getSession(boolean create)
-        {
-            return null;
-        }
-
-        @Override
-        public String getRequestUri()
-        {
-            return req.getRequestURI();
-        }
-
-        @Override
-        public String getRemoteAddr()
-        {
-            return req.getRemoteAddr();
-        }
-
-        @Override
-        public HttpServletRequest getRawRequest()
-        {
-            return req;
-        }
-
-        @Override
-        public javax.servlet.http.HttpSession getRawSession()
-        {
-            return req.getSession();
-        }
-
-        @Override
-        public String getServerUrl()
-        {
-            return req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
-        }
-
-        @Override
-        public String getServerUrlWithContext()
-        {
-            return getServerUrl() + req.getContextPath();
-        }
-
-        @Override
-        public String getContextPath()
-        {
-            return req.getContextPath();
-        }
-
-        @Override
-        public java.util.Locale getLocale()
-        {
-            return req.getLocale();
-        }
-
-        @Override
-        public javax.servlet.ServletInputStream getInputStream() throws IOException
-        {
-            return req.getInputStream();
-        }
-
-        @Override
-        public javax.servlet.http.Cookie[] getCookies()
-        {
-            return req.getCookies();
-        }
+        sendJson(resp, HttpServletResponse.SC_UNAUTHORIZED,
+                "{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32001,\"message\":\"Authentication required\"}}");
     }
 
-    private static class McpResponse implements Response
+    private static void sendJson(HttpServletResponse resp, int status, String json) throws IOException
     {
-        private static final javax.json.bind.Jsonb JSONB = javax.json.bind.JsonbBuilder.create();
-        private final HttpServletResponse resp;
+        resp.setStatus(status);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(json);
+    }
 
-        McpResponse(HttpServletResponse resp)
+    private static String readBody(HttpServletRequest req) throws IOException
+    {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = req.getReader();
+        char[] buf = new char[4096];
+        for (int n = reader.read(buf); n >= 0; n = reader.read(buf))
         {
-            this.resp = resp;
+            sb.append(buf, 0, n);
         }
-
-        @Override
-        public void sendAsJson(Object value)
-        {
-            try
-            {
-                resp.setContentType("application/json");
-                resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().write(JSONB.toJson(value));
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void sendAsJson(Object value, int status)
-        {
-            resp.setStatus(status);
-            sendAsJson(value);
-        }
-
-        @Override
-        public void setStatus(int status)
-        {
-            resp.setStatus(status);
-        }
-
-        @Override
-        public void sendJson(String json)
-        {
-            try
-            {
-                resp.setContentType("application/json");
-                resp.getWriter().write(json);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void sendHtml(String html)
-        {
-            try
-            {
-                resp.setContentType("text/html");
-                resp.getWriter().write(html);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void sendXml(String xml)
-        {
-            try
-            {
-                resp.setContentType("application/xml");
-                resp.getWriter().write(xml);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void sendYaml(String yaml)
-        {
-            try
-            {
-                resp.setContentType("application/yaml");
-                resp.getWriter().write(yaml);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public HttpServletResponse getRawResponse()
-        {
-            return resp;
-        }
-
-        @Override
-        public void redirect(String location)
-        {
-            try
-            {
-                resp.sendRedirect(location);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void addCookie(javax.servlet.http.Cookie cookie)
-        {
-            resp.addCookie(cookie);
-        }
-
-        @Override
-        public java.io.OutputStream getOutputStream() throws IOException
-        {
-            return resp.getOutputStream();
-        }
+        return sb.toString();
     }
 }

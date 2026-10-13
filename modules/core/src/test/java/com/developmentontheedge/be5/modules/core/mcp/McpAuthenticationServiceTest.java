@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
-import com.developmentontheedge.be5.modules.core.services.LoginService;
+import com.developmentontheedge.be5.security.UserInfo;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +14,6 @@ import static org.junit.Assert.*;
 public class McpAuthenticationServiceTest extends CoreBe5ProjectDBTest
 {
     @Inject
-    private LoginService loginService;
-
     private McpAuthenticationService authService;
 
     private final String userName = "McpAuthTestUser";
@@ -24,8 +22,6 @@ public class McpAuthenticationServiceTest extends CoreBe5ProjectDBTest
     @Before
     public void init()
     {
-        authService = new McpAuthenticationService(loginService);
-
         if (database.getEntity("users").count(ImmutableMap.of("user_name", userName)) == 0)
         {
             database.getEntity("users").add(ImmutableMap.of(
@@ -100,6 +96,22 @@ public class McpAuthenticationServiceTest extends CoreBe5ProjectDBTest
     {
         String encoded = Base64.getEncoder().encodeToString((userName + password).getBytes());
         assertFalse(authService.authenticate("Basic " + encoded));
+    }
+
+    @Test
+    public void testAuthenticateUserNeedsRole()
+    {
+        String authHeader = createBasicAuthHeader(userName, password);
+        database.getEntity("user_roles").removeBy(ImmutableMap.of("user_name", userName));
+        assertNull(authService.authenticateUser(authHeader, "127.0.0.1"));
+
+        database.getEntity("user_roles").add(ImmutableMap.of("user_name", userName, "role_name", "Administrator"));
+        UserInfo user = authService.authenticateUser(authHeader, "127.0.0.1");
+        assertEquals(userName, user.getUserName());
+        assertEquals("127.0.0.1", user.getRemoteAddr());
+
+        assertNull(authService.authenticateUser(createBasicAuthHeader(userName, "wrong_password"), "127.0.0.1"));
+        assertNull(authService.authenticateUser("Bearer mcp_at_unknown", "127.0.0.1"));
     }
 
     private String createBasicAuthHeader(String username, String password)

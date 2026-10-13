@@ -33,7 +33,7 @@ freemarker-patched → metadata → base → database-model → query
                                      ↘ operation
                                      ↘ web → server (integration hub)
 database + dbms ──────────────────────↗
-modules/{core,bpmn,monitoring,mcp-server}
+modules/{core,bpmn,monitoring}
 ```
 
 | Module | Role |
@@ -45,7 +45,7 @@ modules/{core,bpmn,monitoring,mcp-server}
 | `operation` | Operations framework |
 | `web` | Servlet layer, JSON handling |
 | `server` | Core server, `Be5ServletListener` entry point |
-| `modules/mcp-server` | MCP (Model Context Protocol) server for AI/LLM integration |
+| `modules/core` | Core application module; includes the MCP (Model Context Protocol) server (`mcp` package: `/api/mcp`, OAuth at `/api/oauth`) |
 | `freemarker-patched` | Bundled patched Freemarker for SQL/template generation |
 | `maven` | `be5-maven-plugin` for project validation |
 | `util/test-base` | Shared test utilities; H2 in-memory DB for tests |

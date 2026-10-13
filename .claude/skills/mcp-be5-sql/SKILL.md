@@ -67,13 +67,12 @@ Execute in this exact sequence for every SQL generation task:
 
 Configure once per project. Choose the auth method that matches your server.
 
-### No auth
+### OAuth (sign in with the be5 account)
 ```bash
-claude mcp add-json <server-name> '{
-  "type": "http",
-  "url": "https://your-mcp-server/api/mcp"
-}'
+claude mcp add --transport http <server-name> https://your-mcp-server/api/mcp
 ```
+Then run `/mcp` and authenticate in the browser. Claude Web / Desktop: *Connectors → Add custom connector*
+with the same URL.
 
 ### Basic auth
 ```bash
@@ -83,15 +82,6 @@ claude mcp add-json <server-name> "{
   \"url\": \"https://your-mcp-server/api/mcp\",
   \"headers\": {\"Authorization\": \"Basic $MY_BASIC\"}
 }"
-```
-
-### Bearer token
-```bash
-claude mcp add-json <server-name> '{
-  "type": "http",
-  "url": "https://your-mcp-server/api/mcp",
-  "headers": {"Authorization": "Bearer YOUR_TOKEN"}
-}'
 ```
 
 Add `-s user` to any command to make the server available across all projects.

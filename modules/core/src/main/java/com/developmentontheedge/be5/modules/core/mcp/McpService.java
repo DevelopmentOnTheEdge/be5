@@ -12,88 +12,164 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 public class McpService
 {
+    private static final Logger log = Logger.getLogger(McpService.class.getName());
     private static final Jsonb JSONB = JsonbBuilder.create();
+
+    /** Supported protocol versions, the latest first. */
+    static final List<String> PROTOCOL_VERSIONS = Collections.unmodifiableList(Arrays.asList(
+            "2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"));
+
+    private static final int METHOD_NOT_FOUND = -32601;
+    private static final int INVALID_PARAMS = -32602;
+    private static final int INTERNAL_ERROR = -32603;
+    private static final int RESOURCE_NOT_FOUND = -32002;
+
+    private static final String ENTITIES_URI = "schema://entities";
 
     private final SchemaService schemaService;
     private final DbService dbService;
+    private final Map<String, Tool> tools = new LinkedHashMap<>();
+
+    /** A tool with at most one (string, required) argument. */
+    private static final class Tool
+    {
+        final String name;
+        final String description;
+        final String argument;
+        final String argumentDescription;
+        final Function<String, Object> handler;
+
+        Tool(String name, String description, String argument, String argumentDescription,
+             Function<String, Object> handler)
+        {
+            this.name = name;
+            this.description = description;
+            this.argument = argument;
+            this.argumentDescription = argumentDescription;
+            this.handler = handler;
+        }
+    }
 
     @Inject
     public McpService(SchemaService schemaService, DbService dbService)
     {
         this.schemaService = schemaService;
         this.dbService = dbService;
+
+        addTool("list_entities", "List all entities (tables) in the database",
+                null, null, arg -> schemaService.getEntities());
+        addTool("get_entity_schema", "Get detailed schema for a specific entity, including column references",
+                "entityName", "Entity name", schemaService::getEntitySchemaWithReferences);
+        addTool("get_entity_references", "Get all references (foreign keys) for a specific entity",
+                "entityName", "Entity name", schemaService::getEntityReferences);
+        addTool("list_db_columns", "List all columns from database metadata",
+                null, null, arg -> schemaService.getDatabaseColumns());
+        addTool("get_table_info", "Get detailed information about a specific table",
+                "tableName", "Table name", schemaService::getTableInfo);
+        addTool("execute_sql", "Execute a SELECT SQL query and return results",
+                "sql", "SQL query to execute", this::executeQuery);
     }
 
+    private void addTool(String name, String description, String argument, String argumentDescription,
+                         Function<String, Object> handler)
+    {
+        tools.put(name, new Tool(name, description, argument, argumentDescription, handler));
+    }
+
+    /**
+     * Handles one JSON-RPC message; null when nothing is to be answered (a notification or a response).
+     */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> handleRequest(Map<String, Object> request)
     {
-        String method = (String) request.get("method");
-        Map<String, Object> params = (Map<String, Object>) request.get("params");
-        String id = request.get("id") != null ? String.valueOf(request.get("id")) : null;
-
-        Map<String, Object> response = new LinkedHashMap<>();
-        response.put("jsonrpc", "2.0");
-        if (id != null)
-        {
-            response.put("id", id);
-        }
-
-        if (id == null)
+        Object id = request.get("id");
+        Object method = request.get("method");
+        if (id == null || method == null)
         {
             return null;
         }
 
+        Map<String, Object> params = request.get("params") instanceof Map
+                ? (Map<String, Object>) request.get("params") : Collections.<String, Object>emptyMap();
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("jsonrpc", "2.0");
+        response.put("id", id);
+
         try
         {
-            Object result = null;
-            switch (method)
+            switch (method.toString())
             {
                 case "initialize":
-                    result = handleInitialize();
+                    response.put("result", handleInitialize(params));
+                    break;
+                case "ping":
+                    response.put("result", new LinkedHashMap<>());
                     break;
                 case "tools/list":
-                    result = handleToolsList();
+                    response.put("result", handleToolsList());
                     break;
                 case "tools/call":
-                    result = handleToolCall(
-                            (String) params.get("name"),
-                            (Map<String, Object>) params.get("arguments"));
+                    Tool tool = tools.get(String.valueOf(params.get("name")));
+                    if (tool == null)
+                    {
+                        response.put("error", createError(INVALID_PARAMS, "Unknown tool: " + params.get("name")));
+                        break;
+                    }
+                    response.put("result", handleToolCall(tool, params.get("arguments") instanceof Map
+                            ? (Map<String, Object>) params.get("arguments") : Collections.<String, Object>emptyMap()));
                     break;
                 case "resources/list":
-                    result = handleResourcesList();
+                    response.put("result", handleResourcesList());
+                    break;
+                case "resources/templates/list":
+                    response.put("result", Collections.singletonMap("resourceTemplates", new ArrayList<>()));
                     break;
                 case "resources/read":
-                    result = handleResourceRead((String) params.get("uri"));
+                    if (!ENTITIES_URI.equals(params.get("uri")))
+                    {
+                        response.put("error", createError(RESOURCE_NOT_FOUND, "Unknown resource: " + params.get("uri")));
+                        break;
+                    }
+                    response.put("result", handleResourceRead());
                     break;
                 default:
-                    response.put("error", createError(-32601, "Method not found"));
-                    return response;
+                    response.put("error", createError(METHOD_NOT_FOUND, "Method not found"));
             }
-            response.put("result", result);
         }
         catch (Exception e)
         {
-            response.put("error", createError(-32603, e.getMessage()));
+            log.log(Level.SEVERE, "Error in MCP method " + method, e);
+            response.put("error", createError(INTERNAL_ERROR, String.valueOf(e.getMessage())));
         }
 
         return response;
     }
 
-    private Map<String, Object> handleInitialize()
+    /**
+     * Answers with the protocol version the client asked for when it is supported, otherwise with the latest one.
+     */
+    private Map<String, Object> handleInitialize(Map<String, Object> params)
     {
+        Object requested = params.get("protocolVersion");
+
         Map<String, Object> capabilities = new LinkedHashMap<>();
-        capabilities.put("tools", new LinkedHashMap<>());
+        capabilities.put("tools", Collections.singletonMap("listChanged", false));
         capabilities.put("resources", new LinkedHashMap<>());
 
         Map<String, Object> serverInfo = new LinkedHashMap<>();
         serverInfo.put("name", "be5-mcp-server");
-        serverInfo.put("version", "1.0.0");
+        serverInfo.put("version", "1.1.0");
 
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("protocolVersion", "2024-11-05");
+        result.put("protocolVersion", PROTOCOL_VERSIONS.contains(requested) ? requested : PROTOCOL_VERSIONS.get(0));
         result.put("capabilities", capabilities);
         result.put("serverInfo", serverInfo);
         return result;
@@ -101,120 +177,64 @@ public class McpService
 
     private Map<String, Object> handleToolsList()
     {
-        List<Map<String, Object>> tools = new ArrayList<>();
-
-        Map<String, Object> listEntitiesTool = new LinkedHashMap<>();
-        listEntitiesTool.put("name", "list_entities");
-        listEntitiesTool.put("description", "List all entities (tables) in the database");
-        listEntitiesTool.put("inputSchema", createInputSchema(emptyMap(), emptyList()));
-        tools.add(listEntitiesTool);
-
-        Map<String, Object> getSchemaTool = new LinkedHashMap<>();
-        getSchemaTool.put("name", "get_entity_schema");
-        getSchemaTool.put("description", "Get detailed schema for a specific entity, including column references");
-        Map<String, Object> schemaProps = new LinkedHashMap<>();
-        schemaProps.put("entityName", createStringProperty("Entity name"));
-        getSchemaTool.put("inputSchema", createInputSchema(schemaProps,
-                Arrays.asList("entityName")));
-        tools.add(getSchemaTool);
-
-        Map<String, Object> getReferencesTool = new LinkedHashMap<>();
-        getReferencesTool.put("name", "get_entity_references");
-        getReferencesTool.put("description", "Get all references (foreign keys) for a specific entity");
-        Map<String, Object> refProps = new LinkedHashMap<>();
-        refProps.put("entityName", createStringProperty("Entity name"));
-        getReferencesTool.put("inputSchema", createInputSchema(refProps,
-                Arrays.asList("entityName")));
-        tools.add(getReferencesTool);
-
-        Map<String, Object> listDbColumnsTool = new LinkedHashMap<>();
-        listDbColumnsTool.put("name", "list_db_columns");
-        listDbColumnsTool.put("description", "List all columns from database metadata");
-        listDbColumnsTool.put("inputSchema", createInputSchema(emptyMap(), emptyList()));
-        tools.add(listDbColumnsTool);
-
-        Map<String, Object> getTableInfoTool = new LinkedHashMap<>();
-        getTableInfoTool.put("name", "get_table_info");
-        getTableInfoTool.put("description", "Get detailed information about a specific table");
-        Map<String, Object> tableProps = new LinkedHashMap<>();
-        tableProps.put("tableName", createStringProperty("Table name"));
-        getTableInfoTool.put("inputSchema", createInputSchema(tableProps,
-                Arrays.asList("tableName")));
-        tools.add(getTableInfoTool);
-
-        Map<String, Object> executeSqlTool = new LinkedHashMap<>();
-        executeSqlTool.put("name", "execute_sql");
-        executeSqlTool.put("description", "Execute a SELECT SQL query and return results");
-        Map<String, Object> sqlProps = new LinkedHashMap<>();
-        sqlProps.put("sql", createStringProperty("SQL query to execute"));
-        executeSqlTool.put("inputSchema", createInputSchema(sqlProps, Arrays.asList("sql")));
-        tools.add(executeSqlTool);
-
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("tools", tools);
-        return result;
-    }
-
-    private Map<String, Object> createInputSchema(Map<String, Object> properties, List<String> required)
-    {
-        Map<String, Object> schema = new LinkedHashMap<>();
-        schema.put("type", "object");
-        schema.put("properties", properties);
-        schema.put("required", required);
-        return schema;
-    }
-
-    private Map<String, Object> createStringProperty(String description)
-    {
-        Map<String, Object> prop = new LinkedHashMap<>();
-        prop.put("type", "string");
-        prop.put("description", description);
-        return prop;
-    }
-
-    private Map<String, Object> emptyMap()
-    {
-        return new LinkedHashMap<>();
-    }
-
-    private List<String> emptyList()
-    {
-        return new ArrayList<>();
-    }
-
-    private Map<String, Object> handleToolCall(String toolName, Map<String, Object> arguments)
-    {
-        Object data;
-        switch (toolName)
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Tool tool : tools.values())
         {
-            case "list_entities":
-                data = schemaService.getEntities();
-                break;
-            case "get_entity_schema":
-                data = schemaService.getEntitySchemaWithReferences((String) arguments.get("entityName"));
-                break;
-            case "get_entity_references":
-                data = schemaService.getEntityReferences((String) arguments.get("entityName"));
-                break;
-            case "list_db_columns":
-                data = schemaService.getDatabaseColumns();
-                break;
-            case "get_table_info":
-                data = schemaService.getTableInfo((String) arguments.get("tableName"));
-                break;
-            case "execute_sql":
-                data = executeQuery((String) arguments.get("sql"));
-                break;
-            default:
-                throw new RuntimeException("Unknown tool: " + toolName);
+            Map<String, Object> schema = new LinkedHashMap<>();
+            schema.put("type", "object");
+            Map<String, Object> properties = new LinkedHashMap<>();
+            if (tool.argument != null)
+            {
+                Map<String, Object> property = new LinkedHashMap<>();
+                property.put("type", "string");
+                property.put("description", tool.argumentDescription);
+                properties.put(tool.argument, property);
+                schema.put("required", Collections.singletonList(tool.argument));
+            }
+            schema.put("properties", properties);
+
+            Map<String, Object> description = new LinkedHashMap<>();
+            description.put("name", tool.name);
+            description.put("description", tool.description);
+            description.put("inputSchema", schema);
+            // all tools only read
+            description.put("annotations", Collections.singletonMap("readOnlyHint", true));
+            list.add(description);
+        }
+        return Collections.<String, Object>singletonMap("tools", list);
+    }
+
+    /**
+     * A failure of the tool itself is a result with isError, so that the model sees it and can correct the call.
+     */
+    private Map<String, Object> handleToolCall(Tool tool, Map<String, Object> arguments)
+    {
+        String text;
+        boolean isError = false;
+        try
+        {
+            Object argument = tool.argument == null ? null : arguments.get(tool.argument);
+            if (tool.argument != null && argument == null)
+            {
+                throw new IllegalArgumentException("Missing argument: " + tool.argument);
+            }
+            text = JSONB.toJson(tool.handler.apply(argument == null ? null : argument.toString()));
+        }
+        catch (Exception e)
+        {
+            Throwable cause = e;
+            while (cause.getCause() != null && cause.getMessage() == null) cause = cause.getCause();
+            text = cause.getMessage() != null ? cause.getMessage() : cause.toString();
+            isError = true;
         }
 
         Map<String, Object> textContent = new LinkedHashMap<>();
         textContent.put("type", "text");
-        textContent.put("text", JSONB.toJson(data));
+        textContent.put("text", text);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("content", Collections.singletonList(textContent));
+        result.put("isError", isError);
         return result;
     }
 
@@ -256,35 +276,23 @@ public class McpService
 
     private Map<String, Object> handleResourcesList()
     {
-        List<Map<String, Object>> resources = new ArrayList<>();
-
         Map<String, Object> schemaResource = new LinkedHashMap<>();
-        schemaResource.put("uri", "schema://entities");
+        schemaResource.put("uri", ENTITIES_URI);
         schemaResource.put("name", "All Entities");
         schemaResource.put("description", "List of all entities in the database");
         schemaResource.put("mimeType", "application/json");
-        resources.add(schemaResource);
 
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("resources", resources);
-        return result;
+        return Collections.<String, Object>singletonMap("resources", Collections.singletonList(schemaResource));
     }
 
-    private Map<String, Object> handleResourceRead(String uri)
+    private Map<String, Object> handleResourceRead()
     {
         Map<String, Object> content = new LinkedHashMap<>();
-        if ("schema://entities".equals(uri))
-        {
-            content.put("text", JSONB.toJson(schemaService.getEntities()));
-        }
-        else
-        {
-            throw new RuntimeException("Unknown resource: " + uri);
-        }
+        content.put("uri", ENTITIES_URI);
+        content.put("mimeType", "application/json");
+        content.put("text", JSONB.toJson(schemaService.getEntities()));
 
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("contents", Collections.singletonList(content));
-        return result;
+        return Collections.<String, Object>singletonMap("contents", Collections.singletonList(content));
     }
 
     private Map<String, Object> createError(int code, String message)

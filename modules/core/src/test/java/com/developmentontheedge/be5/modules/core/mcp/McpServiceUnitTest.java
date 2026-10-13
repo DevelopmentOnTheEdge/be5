@@ -35,7 +35,132 @@ public class McpServiceUnitTest
         assertNotNull(response.get("result"));
         @SuppressWarnings("unchecked")
         Map<String, Object> result = (Map<String, Object>) response.get("result");
-        assertEquals("2024-11-05", result.get("protocolVersion"));
+        assertEquals("2025-11-25", result.get("protocolVersion"));
+    }
+
+    @Test
+    public void testInitializeNegotiatesVersion()
+    {
+        assertEquals("2025-06-18", initializeWith("2025-06-18"));
+        assertEquals("2024-11-05", initializeWith("2024-11-05"));
+        assertEquals("2025-11-25", initializeWith("1999-01-01"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object initializeWith(String protocolVersion)
+    {
+        Map<String, Object> params = new HashMap<>();
+        params.put("protocolVersion", protocolVersion);
+        Map<String, Object> response = mcpService.handleRequest(createJsonRpcRequest("initialize", params));
+        return ((Map<String, Object>) response.get("result")).get("protocolVersion");
+    }
+
+    @Test
+    public void testNotificationIsNotAnswered()
+    {
+        Map<String, Object> request = new HashMap<>();
+        request.put("jsonrpc", "2.0");
+        request.put("method", "notifications/initialized");
+
+        assertNull(mcpService.handleRequest(request));
+    }
+
+    @Test
+    public void testPing()
+    {
+        Map<String, Object> response = mcpService.handleRequest(createJsonRpcRequest("ping", null));
+
+        assertEquals(new HashMap<>(), response.get("result"));
+    }
+
+    @Test
+    public void testNumericIdIsKept()
+    {
+        Map<String, Object> request = createJsonRpcRequest("ping", null);
+        request.put("id", new java.math.BigDecimal(7));
+
+        assertEquals(new java.math.BigDecimal(7), mcpService.handleRequest(request).get("id"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testToolFailureIsErrorResult()
+    {
+        when(schemaService.getTableInfo(any())).thenThrow(new RuntimeException("no such table"));
+
+        Map<String, Object> result = (Map<String, Object>) callTool("get_table_info", "tableName", "x").get("result");
+
+        assertEquals(true, result.get("isError"));
+        List<Map<String, Object>> content = (List<Map<String, Object>>) result.get("content");
+        assertEquals("no such table", content.get(0).get("text"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testMissingToolArgumentIsErrorResult()
+    {
+        Map<String, Object> result = (Map<String, Object>) callTool("get_table_info", "other", "x").get("result");
+
+        assertEquals(true, result.get("isError"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testOnlySelectIsExecuted()
+    {
+        Map<String, Object> result = (Map<String, Object>) callTool("execute_sql", "sql", "DELETE FROM users")
+                .get("result");
+
+        assertEquals(true, result.get("isError"));
+        verify(dbService, never()).execute(any());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testResourceRead()
+    {
+        when(schemaService.getEntities()).thenReturn(new ArrayList<>());
+        Map<String, Object> params = new HashMap<>();
+        params.put("uri", "schema://entities");
+
+        Map<String, Object> response = mcpService.handleRequest(createJsonRpcRequest("resources/read", params));
+
+        Map<String, Object> result = (Map<String, Object>) response.get("result");
+        List<Map<String, Object>> contents = (List<Map<String, Object>>) result.get("contents");
+        assertEquals("schema://entities", contents.get(0).get("uri"));
+        assertEquals("[]", contents.get(0).get("text"));
+
+        params.put("uri", "schema://unknown");
+        assertNotNull(mcpService.handleRequest(createJsonRpcRequest("resources/read", params)).get("error"));
+    }
+
+    @Test
+    public void testResponsesAreSerializable()
+    {
+        javax.json.bind.Jsonb jsonb = javax.json.bind.JsonbBuilder.create();
+        Map<String, Object> request = createJsonRpcRequest("initialize", null);
+        request.put("id", new java.math.BigDecimal(7));
+
+        String initialize = jsonb.toJson(mcpService.handleRequest(request));
+        assertTrue(initialize, initialize.contains("\"id\":7"));
+        assertTrue(initialize, initialize.contains("\"tools\":{\"listChanged\":false}"));
+
+        String toolsList = jsonb.toJson(mcpService.handleRequest(createJsonRpcRequest("tools/list", null)));
+        assertTrue(toolsList, toolsList.contains("\"annotations\":{\"readOnlyHint\":true}"));
+        assertTrue(toolsList, toolsList.contains("\"required\":[\"sql\"]"));
+
+        String templates = jsonb.toJson(mcpService.handleRequest(createJsonRpcRequest("resources/templates/list", null)));
+        assertTrue(templates, templates.contains("\"resourceTemplates\":[]"));
+    }
+
+    private Map<String, Object> callTool(String name, String argument, String value)
+    {
+        Map<String, Object> args = new HashMap<>();
+        args.put(argument, value);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        params.put("arguments", args);
+        return mcpService.handleRequest(createJsonRpcRequest("tools/call", params));
     }
 
     @Test
