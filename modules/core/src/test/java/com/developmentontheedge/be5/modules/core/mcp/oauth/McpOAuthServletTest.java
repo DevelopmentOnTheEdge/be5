@@ -42,12 +42,14 @@ public class McpOAuthServletTest
     private McpOAuthServlet servlet;
     private McpServlet mcpServlet;
     private RoleService roleService;
+    private LoginService loginService;
 
     @Before
     public void setUp()
     {
-        LoginService loginService = mock(LoginService.class);
+        loginService = mock(LoginService.class);
         when(loginService.loginCheck(eq("anna"), eq("secret".toCharArray()))).thenReturn(true);
+        when(loginService.getUserName(any())).thenAnswer(inv -> inv.getArguments()[0]);
         roleService = mock(RoleService.class);
         when(roleService.getAvailableRoles("anna")).thenReturn(Collections.singletonList("Administrator"));
         when(roleService.getCurrentRoles("anna")).thenReturn(Collections.singletonList("Administrator"));
@@ -229,6 +231,25 @@ public class McpOAuthServletTest
 
         assertTrue(page.body().contains("name=\"password\""));
         assertFalse(page.body().contains("consent_token"));
+    }
+
+    @Test
+    public void signInWithAnotherIdentifierUsesTheUserName() throws Exception
+    {
+        // e.g. an application whose loginCheck also accepts the e-mail address, while roles are stored by user name
+        when(loginService.loginCheck(eq("anna@example.org"), eq("secret".toCharArray()))).thenReturn(true);
+        when(loginService.getUserName("anna@example.org")).thenReturn("anna");
+
+        String clientId = register();
+        HttpMock http = authorize("POST", clientId).param("username", "anna@example.org").param("password", "secret");
+        servlet.service(http.request, http.response);
+        assertEquals(302, http.status);
+        String location = http.headers.get("Location");
+        String code = URLDecoder.decode(location.substring(location.indexOf("code=") + 5, location.indexOf("&state")),
+                "UTF-8");
+
+        Map<String, Object> tokens = json(token(clientId, code, VERIFIER));
+        assertEquals(200, callMcp((String) tokens.get("access_token")).status);
     }
 
     @Test

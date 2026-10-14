@@ -188,12 +188,13 @@ public class McpOAuthServlet extends HttpServlet
             sendHtml(resp, HttpServletResponse.SC_OK, loginPage(auth, null));
             return;
         }
-        if (authService.login(userName, password, req.getRemoteAddr()) == null)
+        UserInfo user = authService.login(userName, password, req.getRemoteAddr());
+        if (user == null)
         {
             sendHtml(resp, HttpServletResponse.SC_OK, loginPage(auth, "Login failed, or this account may not use MCP."));
             return;
         }
-        issueCode(resp, auth, userName);
+        issueCode(resp, auth, user.getUserName());
     }
 
     private String validate(AuthorizeRequest auth)

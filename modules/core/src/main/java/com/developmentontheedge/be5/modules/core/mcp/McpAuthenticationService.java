@@ -62,7 +62,8 @@ public class McpAuthenticationService
     }
 
     /**
-     * The user for a name and password, or null when they are wrong or the user may not use MCP.
+     * The user for a login (as {@link LoginService#loginCheck} accepts it) and password,
+     * or null when they are wrong or the user may not use MCP.
      */
     public UserInfo login(String userName, String password, String remoteAddr)
     {
@@ -73,7 +74,13 @@ public class McpAuthenticationService
                     + loginService.getClass().getName());
             return null;
         }
-        return createUserInfo(userName, remoteAddr);
+        String realUserName = loginService.getUserName(userName);
+        if (Strings.isNullOrEmpty(realUserName))
+        {
+            log.warning("MCP login refused user=" + userName + ": no user name from " + loginService.getClass().getName());
+            return null;
+        }
+        return createUserInfo(realUserName, remoteAddr);
     }
 
     /**
