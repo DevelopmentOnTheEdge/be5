@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.meta.Meta;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.query.impl.QuerySqlGenerator;
@@ -13,7 +12,6 @@ import com.developmentontheedge.be5.database.QRec;
 import com.developmentontheedge.be5.database.adapters.ListWrapperHandler;
 import com.developmentontheedge.be5.database.adapters.QRecParser;
 import com.developmentontheedge.be5.database.util.DynamicPropertyMeta;
-import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
@@ -21,6 +19,7 @@ import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.ErrorModelHelper;
+import com.developmentontheedge.be5.server.services.QueryBuilderAccess;
 import com.developmentontheedge.be5.server.services.document.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -61,20 +60,20 @@ public class QueryBuilderController extends JsonApiModelController
     private final DocumentGenerator documentGenerator;
     private final Meta meta;
     private final ErrorModelHelper errorModelHelper;
-    private final UserInfoProvider userInfoProvider;
+    private final QueryBuilderAccess queryBuilderAccess;
     private final QuerySqlGenerator querySqlGenerator;
     private final DataSourceService dataSourceService;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, Meta meta,
-                                  ErrorModelHelper errorModelHelper, UserInfoProvider userInfoProvider,
+                                  ErrorModelHelper errorModelHelper, QueryBuilderAccess queryBuilderAccess,
                                   QuerySqlGenerator querySqlGenerator, DataSourceService dataSourceService)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
         this.meta = meta;
         this.errorModelHelper = errorModelHelper;
-        this.userInfoProvider = userInfoProvider;
+        this.queryBuilderAccess = queryBuilderAccess;
         this.querySqlGenerator = querySqlGenerator;
         this.dataSourceService = dataSourceService;
     }
@@ -109,7 +108,7 @@ public class QueryBuilderController extends JsonApiModelController
         List<ResourceData> includedData = new ArrayList<>();
         List<ErrorModel> errorModelList = new ArrayList<>();
 
-        if (userInfoProvider.isSystemDeveloper())
+        if (queryBuilderAccess.isAllowed())
         {
             String sql = req.get("sql");
             boolean execute = sql != null;
@@ -190,7 +189,8 @@ public class QueryBuilderController extends JsonApiModelController
         else
         {
             return error(errorModelHelper.getErrorModel(
-                    Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
+                    Be5Exception.accessDenied("Access to the Query Builder (" + QueryBuilderAccess.ENTITY_NAME + ": "
+                            + QueryBuilderAccess.QUERY_NAME + ") required."),
                     singletonMap(SELF_LINK, "queryBuilder"))
             );
         }

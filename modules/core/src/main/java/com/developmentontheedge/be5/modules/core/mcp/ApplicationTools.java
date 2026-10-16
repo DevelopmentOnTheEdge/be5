@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * and operations the user may open and run, and run them as the user does in the UI (with the access checks and the
  * operation and event logs). The tools are the ones of the MCP endpoint: the schema tools show the structure of the
  * database to every user, while execute_sql, which reads any data, is only for a user who may use the Query Builder
- * (a system developer).
+ * (see {@link com.developmentontheedge.be5.server.services.QueryBuilderAccess}).
  * <p>
  * {@link #list()} gives the definitions as MCP does: name, description, inputSchema (a JSON schema, which is the
  * {@code input_schema} of a Claude tool or the {@code parameters} of an OpenAI function) and annotations. A call
@@ -43,7 +43,7 @@ public class ApplicationTools
     }
 
     /**
-     * The definitions of the tools the logged in user may use: execute_sql only for a system developer.
+     * The definitions of the tools the logged in user may use: execute_sql only with access to the Query Builder.
      *
      * @throws IllegalStateException when there is no logged in user, see {@link #call(String, Map)}
      */

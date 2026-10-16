@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.security.UserInfo;
-import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.server.services.QueryBuilderAccess;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class McpServiceUnitTest
     private SchemaService schemaService;
     private DbService dbService;
     private QueryOperationService queryOperationService;
-    private UserInfoProvider userInfoProvider;
+    private QueryBuilderAccess queryBuilderAccess;
 
     @Before
     public void setUp()
@@ -28,18 +27,17 @@ public class McpServiceUnitTest
         schemaService = mock(SchemaService.class);
         dbService = mock(DbService.class);
         queryOperationService = mock(QueryOperationService.class);
-        userInfoProvider = mock(UserInfoProvider.class);
-        // a system developer, who may use the Query Builder and so the tools of the database
-        when(userInfoProvider.getLoggedUser()).thenReturn(mock(UserInfo.class));
-        when(userInfoProvider.isSystemDeveloper()).thenReturn(true);
-        mcpService = new McpService(schemaService, dbService, queryOperationService, userInfoProvider);
+        queryBuilderAccess = mock(QueryBuilderAccess.class);
+        // a user who may use the Query Builder and so execute_sql
+        when(queryBuilderAccess.isAllowed()).thenReturn(true);
+        mcpService = new McpService(schemaService, dbService, queryOperationService, queryBuilderAccess);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testSqlOnlyWithQueryBuilderAccess()
     {
-        when(userInfoProvider.isSystemDeveloper()).thenReturn(false);
+        when(queryBuilderAccess.isAllowed()).thenReturn(false);
 
         List<Map<String, Object>> tools = (List<Map<String, Object>>) ((Map<String, Object>) mcpService
                 .handleRequest(createJsonRpcRequest("tools/list", null)).get("result")).get("tools");
@@ -67,11 +65,6 @@ public class McpServiceUnitTest
                 .handleRequest(createJsonRpcRequest("initialize", null)).get("result");
         assertEquals(McpService.SCHEMA_INSTRUCTIONS, initialize.get("instructions"));
         assertFalse(McpService.SCHEMA_INSTRUCTIONS.contains("execute_sql"));
-
-        when(userInfoProvider.getLoggedUser()).thenReturn(null);
-        when(userInfoProvider.isSystemDeveloper()).thenThrow(new NullPointerException("no user"));
-        assertEquals(true, ((Map<String, Object>) callTool("execute_sql", "sql", "SELECT 1").get("result"))
-                .get("isError"));
     }
 
     @Test

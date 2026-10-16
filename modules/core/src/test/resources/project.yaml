@@ -6,7 +6,9 @@ be5CoreTestProject:
   projectFileStructure: {}
   modules:
   - core:
-      entities: []
+      entities:
+      # the role User may use the Query Builder (and execute_sql of MCP)
+      - _system_
   application:
   - testtable
   scripts:

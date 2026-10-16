@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
+import com.developmentontheedge.be5.server.services.QueryBuilderAccess;
 import org.junit.After;
 import org.junit.Test;
 
@@ -29,6 +30,8 @@ public class ApplicationToolsTest extends CoreBe5ProjectDBTest
 {
     @Inject
     private ApplicationTools tools;
+    @Inject
+    private QueryBuilderAccess queryBuilderAccess;
 
     @After
     public void tearDown()
@@ -63,6 +66,24 @@ public class ApplicationToolsTest extends CoreBe5ProjectDBTest
         ApplicationTools.Result count = tools.call("execute_sql", args("sql", "SELECT COUNT(*) AS \"n\" FROM users"));
         assertFalse(count.getText(), count.isError());
         assertTrue(count.getText(), count.getText().startsWith("[{\"n\":"));
+    }
+
+    @Test
+    public void aRoleGivenTheQueryBuilderGetsSql()
+    {
+        // the test project gives the role User the menu item of the Query Builder (src/meta/modules/core/_system_.yaml)
+        assertTrue(meta.getQuery("_system_", "Query Builder").getRoles().getFinalRoles().contains("User"));
+        assertTrue("the rest of _system_ stays", meta.getQuery("_system_", "System") != null);
+
+        initUserWithRoles("User");
+        assertTrue(queryBuilderAccess.isAllowed());
+        assertTrue(names(tools.list()).contains("execute_sql"));
+        ApplicationTools.Result count = tools.call("execute_sql", args("sql", "SELECT COUNT(*) AS \"n\" FROM users"));
+        assertFalse(count.getText(), count.isError());
+
+        initUserWithRoles("TestUser2");
+        assertFalse(queryBuilderAccess.isAllowed());
+        assertFalse(names(tools.list()).contains("execute_sql"));
     }
 
     @Test

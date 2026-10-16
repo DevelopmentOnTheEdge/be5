@@ -29,11 +29,40 @@ mvn -DskipTests source:jar javadoc:jar deploy
 Every be5 application that installs `CoreServletModule` exposes its queries and operations, its
 database schema and read-only SQL to AI clients at `/api/mcp` (Model Context Protocol, streamable HTTP).
 
-`execute_sql` is only for a user who may use the Query Builder: one whose current roles include
-`SystemDeveloper`. Other users do not see it and get an error when they call it, so they get only the
-data that queries and operations show them. The schema tools (`list_entities`, `get_entity_schema`,
-`get_entity_references`, `list_db_columns`, `get_table_info` and the `schema://entities` resource) show
-the structure of the database, not its rows, and are open to every user.
+`execute_sql` is only for a user who may use the Query Builder: one with a role (current role) of the
+query `Query Builder` of the entity `_system_` - its menu item, for `SystemDeveloper` by default. Other
+users do not see it and get an error when they call it, so they get only the data that queries and
+operations show them. The schema tools (`list_entities`, `get_entity_schema`, `get_entity_references`,
+`list_db_columns`, `get_table_info` and the `schema://entities` resource) show the structure of the
+database, not its rows, and are open to every user.
+
+To give a role the Query Builder, and with it `execute_sql`, add the role to that query in the
+application. For a role `GroupAdmin` (a role of the project), list the entity of the core module in
+`project.yaml`:
+
+```yaml
+  modules:
+  - core:
+      entities:
+      - _system_
+```
+
+and redefine the query in `src/meta/modules/core/_system_.yaml` (the other items of `_system_` stay):
+
+```yaml
+_system_:
+  type: table
+  displayName: System
+  order: '91'
+  primaryKey: _dummy_
+  queries:
+  - Query Builder:
+      type: static
+      roles: [SystemDeveloper, GroupAdmin]
+      value: queryBuilder
+```
+
+The Query Builder itself (`/api/queryBuilder`) lets in the same users (`QueryBuilderAccess`).
 
 An agent works with the application as its user does in the UI, with the user's roles:
 
@@ -95,7 +124,7 @@ ApplicationTools.Result result = tools.call(name, input); // input: a Map, or th
 ```
 
 - The tools are the ones of `/api/mcp`: queries, operations, files and the schema tools for every user,
-  `execute_sql` only for a user who may use the Query Builder (`SystemDeveloper`). `tools.list()` gives
+  `execute_sql` only for a user who may use the Query Builder (see above). `tools.list()` gives
   the tools of the current user (`tools.list(user)` in a thread of the chatbot's own);
   `ApplicationTools.INSTRUCTIONS` describes the tools of queries and operations.
 - A call works with the user's current roles: `list_queries` and `describe_query` show only the

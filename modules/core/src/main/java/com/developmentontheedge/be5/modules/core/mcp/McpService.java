@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.security.UserInfoProvider;
+import com.developmentontheedge.be5.server.services.QueryBuilderAccess;
 import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
@@ -63,7 +62,7 @@ public class McpService
 
     private final SchemaService schemaService;
     private final DbService dbService;
-    private final UserInfoProvider userInfoProvider;
+    private final QueryBuilderAccess queryBuilderAccess;
     private final Map<String, Tool> tools = new LinkedHashMap<>();
 
     private static final class Tool
@@ -125,11 +124,11 @@ public class McpService
 
     @Inject
     public McpService(SchemaService schemaService, DbService dbService, QueryOperationService queryOperationService,
-                      UserInfoProvider userInfoProvider)
+                      QueryBuilderAccess queryBuilderAccess)
     {
         this.schemaService = schemaService;
         this.dbService = dbService;
-        this.userInfoProvider = userInfoProvider;
+        this.queryBuilderAccess = queryBuilderAccess;
 
         addTool("list_entities", "List all entities (tables) in the database",
                 null, null, arg -> schemaService.getEntities());
@@ -361,19 +360,20 @@ public class McpService
         if (tool == null) return null;
         if (tool.queryBuilderOnly && !queryBuilderAccess())
         {
-            return toolResult("Tool " + name + " is for the users who may use the Query Builder (role "
-                    + RoleType.ROLE_SYSTEM_DEVELOPER + "): queries and operations show the data to the others", true);
+            return toolResult("Tool " + name + " is for the users who may use the Query Builder (a role of "
+                    + QueryBuilderAccess.ENTITY_NAME + ": " + QueryBuilderAccess.QUERY_NAME
+                    + "): queries and operations show the data to the others", true);
         }
         return handleToolCall(tool, arguments);
     }
 
     /**
-     * Whether the logged in user may read any data of the database with execute_sql: as in the Query Builder,
-     * a system developer (by the current roles).
+     * Whether the logged in user may read any data of the database with execute_sql: the user may use the
+     * Query Builder.
      */
     boolean queryBuilderAccess()
     {
-        return userInfoProvider.getLoggedUser() != null && userInfoProvider.isSystemDeveloper();
+        return queryBuilderAccess.isAllowed();
     }
 
     /**

@@ -1,0 +1,10 @@
+_system_:
+  type: table
+  displayName: System
+  order: '91'
+  primaryKey: _dummy_
+  queries:
+  - Query Builder:
+      type: static
+      roles: [SystemDeveloper, User]
+      value: queryBuilder

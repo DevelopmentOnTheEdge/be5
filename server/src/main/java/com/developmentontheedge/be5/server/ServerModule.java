@@ -24,6 +24,7 @@ import com.developmentontheedge.be5.server.services.ErrorModelHelper;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.HtmlMetaTags;
 import com.developmentontheedge.be5.server.services.MenuHelper;
+import com.developmentontheedge.be5.server.services.QueryBuilderAccess;
 import com.developmentontheedge.be5.server.services.document.DocumentFormPlugin;
 import com.developmentontheedge.be5.server.services.document.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.document.DocumentGeneratorImpl;
@@ -66,6 +67,7 @@ public class ServerModule extends AbstractModule
 
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
         bind(DpsHelper.class).in(Scopes.SINGLETON);
+        bind(QueryBuilderAccess.class).in(Scopes.SINGLETON);
         bind(UserService.class).in(Scopes.SINGLETON);
         bind(SqlHelper.class).in(Scopes.SINGLETON);
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
