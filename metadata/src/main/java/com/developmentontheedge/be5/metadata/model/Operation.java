@@ -81,6 +81,7 @@ public class Operation extends EntityItem
                     "logging",
                     "secure",
                     "confirm",
+                    "shortDescription",
                     "contextID",
                     "categoryID",
                     "wellKnownName",
@@ -136,6 +137,7 @@ public class Operation extends EntityItem
     private int executionPriority = 999999;
     private String logging = getDefaultLoggingOption();
     private boolean confirm = false;
+    private String shortDescription;
 
     protected Operation(String name, String type, Entity entity)
     {
@@ -267,6 +269,20 @@ public class Operation extends EntityItem
         fireChanged();
     }
 
+    @PropertyName("Short description")
+    @PropertyDescription("What the operation does, for users and AI agents")
+    public String getShortDescription()
+    {
+        return getValue("shortDescription", shortDescription,
+                () -> ((Operation) prototype).getShortDescription());
+    }
+
+    public void setShortDescription(String shortDescription)
+    {
+        this.shortDescription = customizeProperty("shortDescription", this.shortDescription, shortDescription);
+        fireChanged();
+    }
+
     public BeModelCollection<OperationExtender> getOrCreateExtenders()
     {
         return getOrCreateCollection(EXTENDERS_COLLECTION, OperationExtender.class);
@@ -300,6 +316,13 @@ public class Operation extends EntityItem
             return debugEquals("logging");
         if (getRecords() != other.getRecords())
             return debugEquals("records");
+        if (getShortDescription() == null)
+        {
+            if (other.getShortDescription() != null)
+                return debugEquals("shortDescription");
+        }
+        else if (!getShortDescription().equals(other.getShortDescription()))
+            return debugEquals("shortDescription");
         if (type == null)
         {
             if (other.type != null)

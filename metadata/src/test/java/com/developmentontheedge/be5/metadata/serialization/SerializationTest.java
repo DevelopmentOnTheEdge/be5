@@ -215,6 +215,38 @@ public class SerializationTest
     }
 
     @Test
+    public void testWriteReadShortDescription() throws Exception
+    {
+        final Project project = new Project("TestProject");
+        final Entity entity = new Entity("orders", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final Operation op = Operation.createOperation("Cancel", Operation.OPERATION_TYPE_JAVA, entity);
+        op.setShortDescription("Cancels the selected orders and notifies the customers");
+        DataElementUtils.saveQuiet(op);
+        final Operation plainOp = Operation.createOperation("Insert", Operation.OPERATION_TYPE_JAVA, entity);
+        DataElementUtils.saveQuiet(plainOp);
+        final Query query = new Query("Open orders", entity);
+        query.setShortDescription("Orders that are not shipped yet");
+        DataElementUtils.saveQuiet(query);
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save(project, tempFolder);
+        final String yaml = new String(Files.readAllBytes(tempFolder.resolve("src/meta/entities/orders.yaml")),
+                StandardCharsets.UTF_8);
+        assertTrue(yaml, yaml.contains("shortDescription: Cancels the selected orders and notifies the customers"));
+
+        final Entity entity2 = Serialization.load(tempFolder).getEntity("orders");
+        assertEquals("Cancels the selected orders and notifies the customers",
+                entity2.getOperations().get("Cancel").getShortDescription());
+        assertNull(entity2.getOperations().get("Insert").getShortDescription());
+        assertEquals("Orders that are not shipped yet", entity2.getQueries().get("Open orders").getShortDescription());
+        final Operation op2 = entity2.getOperations().get("Cancel");
+        assertEquals(op, op2);
+        op2.setShortDescription("Something else");
+        assertFalse(op.equals(op2));
+    }
+
+    @Test
     public void testWriteReadVectorColumnAndIndex() throws Exception
     {
         final Project project = new Project("TestProject");
