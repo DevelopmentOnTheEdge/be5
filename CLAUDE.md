@@ -45,7 +45,7 @@ modules/{core,bpmn,monitoring}
 | `operation` | Operations framework |
 | `web` | Servlet layer, JSON handling |
 | `server` | Core server, `Be5ServletListener` entry point |
-| `modules/core` | Core application module; includes the MCP (Model Context Protocol) server (`mcp` package: `/api/mcp`, OAuth at `/api/oauth`; query/operation tools in `QueryOperationService`) |
+| `modules/core` | Core application module; includes the MCP (Model Context Protocol) server (`mcp` package: `/api/mcp`, OAuth at `/api/oauth`; query/operation tools in `QueryOperationService`, in-process for an in-app chatbot via `ApplicationTools`) |
 | `freemarker-patched` | Bundled patched Freemarker for SQL/template generation |
 | `maven` | `be5-maven-plugin` for project validation |
 | `util/test-base` | Shared test utilities; H2 in-memory DB for tests |

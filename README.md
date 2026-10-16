@@ -72,7 +72,40 @@ gives the file. Files are logged by their names. The largest file accepted is se
 `be5.mcp.files.maxSize` (bytes, 20 MB by default); a proxy in front of the application must accept such a
 request body (nginx: `client_max_body_size`) for `/api/mcp`.
 
-A request is authenticated by
+### A chatbot inside the application
+
+An assistant built into the application - a chatbot driven by an external LLM that asks for tool calls -
+runs them in-process with `ApplicationTools` (Guice-injected), as the user it talks to:
+
+```java
+@Inject ApplicationTools tools;
+
+List<Map<String, Object>> definitions = tools.list();   // name, description, inputSchema, annotations
+String system = ApplicationTools.INSTRUCTIONS;           // how the tools work together
+
+// for each tool call of the LLM, in the request of the user:
+ApplicationTools.Result result = tools.call(name, input); // input: a Map, or the JSON string
+// back to the LLM: result.getText() as the tool result, result.isError() as its error flag
+```
+
+- The tools are the ones of queries, operations and files; the schema tools and `execute_sql` are left
+  out, as they show the whole database whatever the rights of the user.
+- A call works with the user's current roles: `list_queries` and `describe_query` show only the
+  queries and operations the user may open and run, the others are refused, and an operation is run
+  only from a query the user may open. What the agent does is in the operation and event logs as the
+  user's actions.
+- A call runs as the logged-in user of the request. A chatbot answering in a thread of its own takes
+  the user in the request (`UserInfoHolder.getLoggedUser()`) and calls `tools.call(user, name, input)`;
+  there, files of the type `File` cannot be given and `upload_file` links are relative to the application.
+- `tools.changesData(name)` is true for `execute_operation`: ask the user before running it, unless
+  the user asked for this very action. The rows the tools return go to the LLM, and text in them can
+  try to steer it - the rights of the user bound what it can do, the confirmation keeps writes the user's.
+- `inputSchema` is a JSON schema: the `input_schema` of a Claude tool, the `parameters` of an OpenAI
+  function.
+
+### Authentication
+
+A request to `/api/mcp` is authenticated by
 
 - **OAuth 2.1** - for Claude Web / Desktop (*Connectors → Add custom connector* → `https://<host>/api/mcp`),
   Claude Code (`claude mcp add --transport http <name> https://<host>/api/mcp`, then `/mcp`) and other

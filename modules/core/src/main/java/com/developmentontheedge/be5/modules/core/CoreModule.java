@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.config.CoreUtils;
+import com.developmentontheedge.be5.modules.core.mcp.ApplicationTools;
 import com.developmentontheedge.be5.modules.core.mcp.McpAuthenticationService;
 import com.developmentontheedge.be5.modules.core.mcp.McpFileStore;
 import com.developmentontheedge.be5.modules.core.mcp.McpService;
@@ -44,6 +45,7 @@ public class CoreModule extends AbstractModule
         bind(SchemaService.class).in(Scopes.SINGLETON);
         bind(QueryOperationService.class).in(Scopes.SINGLETON);
         bind(McpFileStore.class).in(Scopes.SINGLETON);
+        bind(ApplicationTools.class).in(Scopes.SINGLETON);
         bind(McpService.class).in(Scopes.SINGLETON);
         bind(OAuthTokenStore.class).in(Scopes.SINGLETON);
         bind(McpAuthenticationService.class).in(Scopes.SINGLETON);

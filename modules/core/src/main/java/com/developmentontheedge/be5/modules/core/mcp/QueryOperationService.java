@@ -36,6 +36,7 @@ import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.base.Strings;
+import com.google.inject.OutOfScopeException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
@@ -347,7 +348,9 @@ public class QueryOperationService
     public Map<String, Object> createUpload(String purpose)
     {
         McpFileStore.Entry entry = fileStore.create(userInfoProvider.getUserName(), purpose);
-        HttpServletRequest raw = requestProvider.get().getRawRequest();
+        Request request = currentRequest();
+        HttpServletRequest raw = request == null ? null : request.getRawRequest();
+        // without a request (a chatbot thread) the link is relative to the application
         String issuer = raw == null ? null : McpOAuthConfig.issuer(raw);
         String url = (issuer == null ? "/api/mcp" : McpOAuthConfig.resourceUrl(issuer)) + "/upload/" + entry.token;
 
@@ -503,7 +506,12 @@ public class QueryOperationService
      */
     private <T> T withFiles(Submission submission, Supplier<T> call)
     {
-        Request request = submission.multipartFiles == null ? null : requestProvider.get();
+        Request request = submission.multipartFiles == null ? null : currentRequest();
+        if (submission.multipartFiles != null && request == null)
+        {
+            throw new IllegalStateException("Files for " + submission.multipartFiles.keySet()
+                    + " can be given only within a request of the user");
+        }
         if (request != null)
         {
             request.setAttribute(FileUploadWrapper.ATTRIBUTE,
@@ -642,6 +650,8 @@ public class QueryOperationService
     private Operation createOperation(String entityName, String queryName, String operationName,
                                       Map<String, Object> params, List<String> selectedRows)
     {
+        // as in the UI, an operation is run from a query the user may open
+        userAwareMeta.getQuery(entityName, queryName);
         OperationInfo info = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
         if (OPERATION_TYPE_JAVASCRIPT.equals(info.getType()))
         {
@@ -664,11 +674,31 @@ public class QueryOperationService
             operationParams.put(SELECTED_ROWS, selectedRows.toArray(new String[0]));
         }
         Operation operation = operationExecutor.create(info, queryName, operationParams);
-        if (operation instanceof OperationSupport)
+        Request request = currentRequest();
+        if (operation instanceof OperationSupport && request != null)
         {
-            ((OperationSupport) operation).setRequest(requestProvider.get());
+            ((OperationSupport) operation).setRequest(request);
         }
         return operation;
+    }
+
+    /**
+     * The request of the user, or null outside of a request (in a thread of a chatbot, say).
+     */
+    private Request currentRequest()
+    {
+        try
+        {
+            return requestProvider.get();
+        }
+        catch (RuntimeException e)
+        {
+            for (Throwable cause = e; cause != null; cause = cause.getCause())
+            {
+                if (cause instanceof OutOfScopeException) return null;
+            }
+            throw e;
+        }
     }
 
     private Map<String, Object> queryHeader(Query query, boolean withEntity)

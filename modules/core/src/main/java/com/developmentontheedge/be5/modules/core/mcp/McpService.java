@@ -34,8 +34,9 @@ public class McpService
 
     private static final String ENTITIES_URI = "schema://entities";
 
-    /** Told to the client on initialize: how the tools for queries and operations are used together. */
-    static final String INSTRUCTIONS = "This is a BeanExplorer (be5) application: its UI is generated from metadata. "
+    /** How the tools for queries and operations are used together. */
+    static final String APPLICATION_INSTRUCTIONS = "This is a BeanExplorer (be5) application: its UI is generated "
+            + "from metadata. "
             + "Queries show tables of records, operations perform business actions, usually on records selected "
             + "in a query. Work as a user of the UI does: "
             + "1) list_queries finds the queries (the descriptions tell what they show), describe_query shows "
@@ -48,8 +49,11 @@ public class McpService
             + "A field of type file takes {\"fileId\": ...} of a file uploaded by the link from upload_file, "
             + "or for a small file its content: {\"name\": ..., \"mimeType\": ..., \"base64\": ...}. "
             + "Operations change data: unless the user asked for this very action, confirm with the user first, "
-            + "always when requiresConfirmation is set. "
-            + "The schema tools and execute_sql show the database below the application.";
+            + "always when requiresConfirmation is set.";
+
+    /** Told to the client on initialize. */
+    static final String INSTRUCTIONS = APPLICATION_INSTRUCTIONS
+            + " The schema tools and execute_sql show the database below the application.";
 
     private final SchemaService schemaService;
     private final DbService dbService;
@@ -62,16 +66,19 @@ public class McpService
         final Arguments arguments;
         final boolean readOnly;
         final boolean destructive;
+        /** A tool of the application (queries, operations), not of the database below it (schema, SQL). */
+        final boolean application;
         final Function<Map<String, Object>, Object> handler;
 
         Tool(String name, String description, Arguments arguments, boolean readOnly, boolean destructive,
-             Function<Map<String, Object>, Object> handler)
+             boolean application, Function<Map<String, Object>, Object> handler)
         {
             this.name = name;
             this.description = description;
             this.arguments = arguments;
             this.readOnly = readOnly;
             this.destructive = destructive;
+            this.application = application;
             this.handler = handler;
         }
     }
@@ -127,45 +134,45 @@ public class McpService
 
         addTool("list_queries", "List the queries (views of records, as in the menu of the UI) the user may open, "
                         + "grouped by entity, with a description of what each one shows",
-                new Arguments().add("entityName", "string", "Only the queries of this entity", false), true,
+                new Arguments().add("entityName", "string", "Only the queries of this entity", false), true, false,
                 args -> queryOperationService.listQueries(string(args, "entityName")));
         addTool("describe_query", "Describe a query: its parameters, the entity whose columns filter it, "
                         + "and the operations that can be run from it - with their descriptions, how many selected "
                         + "rows each needs and whether it asks for confirmation",
                 new Arguments()
                         .add("entityName", "string", "Entity name", true)
-                        .add("queryName", "string", "Query name", true), true,
+                        .add("queryName", "string", "Query name", true), true, false,
                 args -> queryOperationService.describeQuery(string(args, "entityName"), string(args, "queryName")));
         addTool("execute_query", "Read one page of the rows of a query, as the UI shows them. Every row has an id "
                         + "that an operation takes in selectedRows",
                 queryArguments()
                         .add("offset", "integer", "Index of the first row, 0 by default", false)
                         .add("limit", "integer", "Number of rows, " + QueryOperationService.DEFAULT_LIMIT
-                                + " by default, at most " + QueryOperationService.MAX_LIMIT, false), true,
+                                + " by default, at most " + QueryOperationService.MAX_LIMIT, false), true, false,
                 args -> queryOperationService.executeQuery(string(args, "entityName"), string(args, "queryName"),
                         object(args, "params"), integer(args, "offset", 0),
                         integer(args, "limit", QueryOperationService.DEFAULT_LIMIT)));
         addTool("get_operation_parameters", "Show the form of an operation: the fields the user fills in, with "
                         + "their types, current values, options and messages. Nothing is executed. Call it again "
                         + "with values after changing a field marked reloadOnChange",
-                operationArguments(), true,
+                operationArguments(), true, false,
                 args -> queryOperationService.getOperationParameters(string(args, "entityName"),
                         string(args, "queryName"), string(args, "operationName"), object(args, "params"),
                         strings(args, "selectedRows"), object(args, "values")));
         addTool("execute_operation", "Execute an operation with the values of its form, as the user submitting it "
                         + "in the UI. This changes data. When the values are not accepted the form comes back "
                         + "(executed: false) with messages on the fields",
-                operationArguments(), false,
+                operationArguments(), false, true,
                 args -> queryOperationService.executeOperation(string(args, "entityName"),
                         string(args, "queryName"), string(args, "operationName"), object(args, "params"),
                         strings(args, "selectedRows"), object(args, "values")));
-        tools.put("upload_file", new Tool("upload_file", "Get a one-time link to upload a file for a file field "
-                + "of an operation: the user opens it in a browser and chooses the file, or the agent sends it with "
-                + "curl -F file=@<path> '<link>'. Then the file is the value {\"fileId\": ...} of the field. "
-                + "Small files can instead be given inline as {\"name\", \"mimeType\", \"base64\"}",
+        addTool("upload_file", "Get a one-time link to upload a file for a file field of an operation: the user "
+                        + "opens it in a browser and chooses the file, or the agent sends it with "
+                        + "curl -F file=@<path> '<link>'. Then the file is the value {\"fileId\": ...} of the field. "
+                        + "Small files can instead be given inline as {\"name\", \"mimeType\", \"base64\"}",
                 new Arguments().add("purpose", "string", "What the file is for, shown to the user on the upload "
                         + "page, e.g. \"Signed contract for order 1042 (PDF)\"", false), false, false,
-                args -> queryOperationService.createUpload(string(args, "purpose"))));
+                args -> queryOperationService.createUpload(string(args, "purpose")));
     }
 
     private static Arguments queryArguments()
@@ -192,13 +199,17 @@ public class McpService
     {
         Arguments arguments = new Arguments();
         if (argument != null) arguments.add(argument, "string", argumentDescription, true);
-        addTool(name, description, arguments, true, args -> handler.apply(string(args, argument)));
+        tools.put(name, new Tool(name, description, arguments, true, false, false,
+                args -> handler.apply(string(args, argument))));
     }
 
+    /**
+     * A tool of the application.
+     */
     private void addTool(String name, String description, Arguments arguments, boolean readOnly,
-                         Function<Map<String, Object>, Object> handler)
+                         boolean destructive, Function<Map<String, Object>, Object> handler)
     {
-        tools.put(name, new Tool(name, description, arguments, readOnly, !readOnly, handler));
+        tools.put(name, new Tool(name, description, arguments, readOnly, destructive, true, handler));
     }
 
     /**
@@ -232,17 +243,18 @@ public class McpService
                     response.put("result", new LinkedHashMap<>());
                     break;
                 case "tools/list":
-                    response.put("result", handleToolsList());
+                    response.put("result", Collections.singletonMap("tools", describeTools(false)));
                     break;
                 case "tools/call":
-                    Tool tool = tools.get(String.valueOf(params.get("name")));
-                    if (tool == null)
+                    Map<String, Object> result = callTool(String.valueOf(params.get("name")),
+                            params.get("arguments") instanceof Map ? (Map<String, Object>) params.get("arguments")
+                                    : Collections.<String, Object>emptyMap(), false);
+                    if (result == null)
                     {
                         response.put("error", createError(INVALID_PARAMS, "Unknown tool: " + params.get("name")));
                         break;
                     }
-                    response.put("result", handleToolCall(tool, params.get("arguments") instanceof Map
-                            ? (Map<String, Object>) params.get("arguments") : Collections.<String, Object>emptyMap()));
+                    response.put("result", result);
                     break;
                 case "resources/list":
                     response.put("result", handleResourcesList());
@@ -294,11 +306,17 @@ public class McpService
         return result;
     }
 
-    private Map<String, Object> handleToolsList()
+    /**
+     * The definitions of the tools, as tools/list gives them.
+     *
+     * @param applicationOnly only the tools of the application, without the ones of the database below it
+     */
+    List<Map<String, Object>> describeTools(boolean applicationOnly)
     {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Tool tool : tools.values())
         {
+            if (applicationOnly && !tool.application) continue;
             Map<String, Object> description = new LinkedHashMap<>();
             description.put("name", tool.name);
             description.put("description", tool.description);
@@ -313,7 +331,26 @@ public class McpService
             description.put("annotations", annotations);
             list.add(description);
         }
-        return Collections.<String, Object>singletonMap("tools", list);
+        return list;
+    }
+
+    /**
+     * Calls a tool as tools/call does; null when there is no such tool (among the tools of the application).
+     */
+    Map<String, Object> callTool(String name, Map<String, Object> arguments, boolean applicationOnly)
+    {
+        Tool tool = tools.get(name);
+        if (tool == null || (applicationOnly && !tool.application)) return null;
+        return handleToolCall(tool, arguments);
+    }
+
+    /**
+     * Whether the tool changes data, like a submit of an operation.
+     */
+    boolean isDestructive(String name)
+    {
+        Tool tool = tools.get(name);
+        return tool != null && tool.destructive;
     }
 
     /**
