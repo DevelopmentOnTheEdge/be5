@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.security.UserInfo;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +20,7 @@ public class McpServiceUnitTest
     private SchemaService schemaService;
     private DbService dbService;
     private QueryOperationService queryOperationService;
+    private UserInfoProvider userInfoProvider;
 
     @Before
     public void setUp()
@@ -25,7 +28,50 @@ public class McpServiceUnitTest
         schemaService = mock(SchemaService.class);
         dbService = mock(DbService.class);
         queryOperationService = mock(QueryOperationService.class);
-        mcpService = new McpService(schemaService, dbService, queryOperationService);
+        userInfoProvider = mock(UserInfoProvider.class);
+        // a system developer, who may use the Query Builder and so the tools of the database
+        when(userInfoProvider.getLoggedUser()).thenReturn(mock(UserInfo.class));
+        when(userInfoProvider.isSystemDeveloper()).thenReturn(true);
+        mcpService = new McpService(schemaService, dbService, queryOperationService, userInfoProvider);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSqlOnlyWithQueryBuilderAccess()
+    {
+        when(userInfoProvider.isSystemDeveloper()).thenReturn(false);
+
+        List<Map<String, Object>> tools = (List<Map<String, Object>>) ((Map<String, Object>) mcpService
+                .handleRequest(createJsonRpcRequest("tools/list", null)).get("result")).get("tools");
+        List<Object> names = new ArrayList<>();
+        for (Map<String, Object> tool : tools) names.add(tool.get("name"));
+        assertFalse(names.toString(), names.contains("execute_sql"));
+        assertTrue(names.toString(), names.containsAll(java.util.Arrays.asList("list_entities", "get_entity_schema",
+                "get_entity_references", "list_db_columns", "get_table_info", "list_queries", "execute_operation")));
+
+        Map<String, Object> result = (Map<String, Object>) callTool("execute_sql", "sql", "SELECT * FROM users")
+                .get("result");
+        assertEquals(true, result.get("isError"));
+        String text = (String) ((List<Map<String, Object>>) result.get("content")).get(0).get("text");
+        assertTrue(text, text.contains("Query Builder"));
+        verify(dbService, never()).execute(any());
+
+        when(schemaService.getEntities()).thenReturn(new ArrayList<>());
+        assertEquals("the schema tools are for everyone", false,
+                ((Map<String, Object>) callTool("list_entities", new HashMap<>()).get("result")).get("isError"));
+        Map<String, Object> params = new HashMap<>();
+        params.put("uri", "schema://entities");
+        assertNotNull(mcpService.handleRequest(createJsonRpcRequest("resources/read", params)).get("result"));
+
+        Map<String, Object> initialize = (Map<String, Object>) mcpService
+                .handleRequest(createJsonRpcRequest("initialize", null)).get("result");
+        assertEquals(McpService.SCHEMA_INSTRUCTIONS, initialize.get("instructions"));
+        assertFalse(McpService.SCHEMA_INSTRUCTIONS.contains("execute_sql"));
+
+        when(userInfoProvider.getLoggedUser()).thenReturn(null);
+        when(userInfoProvider.isSystemDeveloper()).thenThrow(new NullPointerException("no user"));
+        assertEquals(true, ((Map<String, Object>) callTool("execute_sql", "sql", "SELECT 1").get("result"))
+                .get("isError"));
     }
 
     @Test

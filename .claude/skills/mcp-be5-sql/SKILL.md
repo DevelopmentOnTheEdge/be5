@@ -16,6 +16,14 @@ exact tool-call order, entity filtering rules, and query conventions to follow.
 
 ---
 
+`execute_sql` is offered only to a user who may use the be5 Query Builder (current roles include
+`SystemDeveloper`); the schema tools are open to every user. If `execute_sql` is missing from the tool
+list, or a call answers that it is for the users of the Query Builder, the signed-in account lacks that
+role: the schema tools still let you write the SQL, but you cannot run it - say so, and use the query
+tools (`list_queries`, `execute_query`) for data.
+
+---
+
 ## Decision Rules (read these first)
 
 These rules are absolute. Follow them in order before writing any SQL.

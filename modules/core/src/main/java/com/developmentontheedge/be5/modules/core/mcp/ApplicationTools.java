@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * The MCP tools of queries and operations for an assistant built into the application: a chatbot that an external
@@ -16,8 +17,9 @@ import java.util.Map;
  * <p>
  * The tools work as the user the chatbot talks to, with the current roles of the user: they show only the queries
  * and operations the user may open and run, and run them as the user does in the UI (with the access checks and the
- * operation and event logs). The schema tools and execute_sql of the MCP endpoint are left out - they show the whole
- * database, whatever the rights of the user.
+ * operation and event logs). The tools are the ones of the MCP endpoint: the schema tools show the structure of the
+ * database to every user, while execute_sql, which reads any data, is only for a user who may use the Query Builder
+ * (a system developer).
  * <p>
  * {@link #list()} gives the definitions as MCP does: name, description, inputSchema (a JSON schema, which is the
  * {@code input_schema} of a Claude tool or the {@code parameters} of an OpenAI function) and annotations. A call
@@ -28,7 +30,7 @@ import java.util.Map;
 public class ApplicationTools
 {
     /**
-     * How the tools are used together, for the system prompt of the assistant.
+     * How the tools of queries and operations are used together, for the system prompt of the assistant.
      */
     public static final String INSTRUCTIONS = McpService.APPLICATION_INSTRUCTIONS;
 
@@ -41,11 +43,22 @@ public class ApplicationTools
     }
 
     /**
-     * The definitions of the tools, the same for every user (what they show depends on the user).
+     * The definitions of the tools the logged in user may use: execute_sql only for a system developer.
+     *
+     * @throws IllegalStateException when there is no logged in user, see {@link #call(String, Map)}
      */
     public List<Map<String, Object>> list()
     {
-        return mcpService.describeTools(true);
+        requireUser();
+        return mcpService.describeTools();
+    }
+
+    /**
+     * The definitions of the tools the user may use.
+     */
+    public List<Map<String, Object>> list(UserInfo user)
+    {
+        return asUser(user, mcpService::describeTools);
     }
 
     /**
@@ -65,11 +78,7 @@ public class ApplicationTools
      */
     public Result call(String name, Map<String, Object> arguments)
     {
-        if (UserInfoHolder.getLoggedUser() == null)
-        {
-            throw new IllegalStateException("No logged in user: call the tool in a request of the user, "
-                    + "or pass the user taken there (UserInfoHolder.getLoggedUser())");
-        }
+        requireUser();
         return run(name, arguments);
     }
 
@@ -96,12 +105,17 @@ public class ApplicationTools
      */
     public Result call(UserInfo user, String name, Map<String, Object> arguments)
     {
+        return asUser(user, () -> run(name, arguments));
+    }
+
+    private static <T> T asUser(UserInfo user, Supplier<T> call)
+    {
         if (user == null) throw new IllegalArgumentException("No user");
         UserInfo previousUser = UserInfoHolder.getLoggedUser();
         UserInfoHolder.setLoggedUser(user);
         try
         {
-            return run(name, arguments);
+            return call.get();
         }
         finally
         {
@@ -109,11 +123,20 @@ public class ApplicationTools
         }
     }
 
+    private static void requireUser()
+    {
+        if (UserInfoHolder.getLoggedUser() == null)
+        {
+            throw new IllegalStateException("No logged in user: call the tool in a request of the user, "
+                    + "or pass the user taken there (UserInfoHolder.getLoggedUser())");
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private Result run(String name, Map<String, Object> arguments)
     {
         Map<String, Object> result = mcpService.callTool(name,
-                arguments == null ? Collections.<String, Object>emptyMap() : arguments, true);
+                arguments == null ? Collections.<String, Object>emptyMap() : arguments);
         if (result == null) return new Result("Unknown tool: " + name, true);
         List<Map<String, Object>> content = (List<Map<String, Object>>) result.get("content");
         return new Result((String) content.get(0).get("text"), Boolean.TRUE.equals(result.get("isError")));

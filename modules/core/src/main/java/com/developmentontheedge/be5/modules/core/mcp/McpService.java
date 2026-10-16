@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.security.UserInfoProvider;
 import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
@@ -51,12 +53,17 @@ public class McpService
             + "Operations change data: unless the user asked for this very action, confirm with the user first, "
             + "always when requiresConfirmation is set.";
 
-    /** Told to the client on initialize. */
+    /** Told on initialize to a client of a user who may use the Query Builder, and so execute_sql. */
     static final String INSTRUCTIONS = APPLICATION_INSTRUCTIONS
             + " The schema tools and execute_sql show the database below the application.";
 
+    /** Told on initialize to a client of any other user. */
+    static final String SCHEMA_INSTRUCTIONS = APPLICATION_INSTRUCTIONS
+            + " The schema tools show the structure of the database below the application.";
+
     private final SchemaService schemaService;
     private final DbService dbService;
+    private final UserInfoProvider userInfoProvider;
     private final Map<String, Tool> tools = new LinkedHashMap<>();
 
     private static final class Tool
@@ -66,19 +73,22 @@ public class McpService
         final Arguments arguments;
         final boolean readOnly;
         final boolean destructive;
-        /** A tool of the application (queries, operations), not of the database below it (schema, SQL). */
-        final boolean application;
+        /**
+         * A tool that reads any data of the database (execute_sql), which only a user with access to the Query
+         * Builder may use: the others get only the data that queries and operations show.
+         */
+        final boolean queryBuilderOnly;
         final Function<Map<String, Object>, Object> handler;
 
         Tool(String name, String description, Arguments arguments, boolean readOnly, boolean destructive,
-             boolean application, Function<Map<String, Object>, Object> handler)
+             boolean queryBuilderOnly, Function<Map<String, Object>, Object> handler)
         {
             this.name = name;
             this.description = description;
             this.arguments = arguments;
             this.readOnly = readOnly;
             this.destructive = destructive;
-            this.application = application;
+            this.queryBuilderOnly = queryBuilderOnly;
             this.handler = handler;
         }
     }
@@ -114,10 +124,12 @@ public class McpService
     }
 
     @Inject
-    public McpService(SchemaService schemaService, DbService dbService, QueryOperationService queryOperationService)
+    public McpService(SchemaService schemaService, DbService dbService, QueryOperationService queryOperationService,
+                      UserInfoProvider userInfoProvider)
     {
         this.schemaService = schemaService;
         this.dbService = dbService;
+        this.userInfoProvider = userInfoProvider;
 
         addTool("list_entities", "List all entities (tables) in the database",
                 null, null, arg -> schemaService.getEntities());
@@ -129,8 +141,9 @@ public class McpService
                 null, null, arg -> schemaService.getDatabaseColumns());
         addTool("get_table_info", "Get detailed information about a specific table",
                 "tableName", "Table name", schemaService::getTableInfo);
+        // any data of the database: only for the users of the Query Builder
         addTool("execute_sql", "Execute a SELECT SQL query and return results",
-                "sql", "SQL query to execute", this::executeQuery);
+                "sql", "SQL query to execute", true, this::executeQuery);
 
         addTool("list_queries", "List the queries (views of records, as in the menu of the UI) the user may open, "
                         + "grouped by entity, with a description of what each one shows",
@@ -197,19 +210,25 @@ public class McpService
     private void addTool(String name, String description, String argument, String argumentDescription,
                          Function<String, Object> handler)
     {
-        Arguments arguments = new Arguments();
-        if (argument != null) arguments.add(argument, "string", argumentDescription, true);
-        tools.put(name, new Tool(name, description, arguments, true, false, false,
-                args -> handler.apply(string(args, argument))));
+        addTool(name, description, argument, argumentDescription, false, handler);
     }
 
     /**
-     * A tool of the application.
+     * A read-only tool with at most one (string, required) argument.
      */
+    private void addTool(String name, String description, String argument, String argumentDescription,
+                         boolean queryBuilderOnly, Function<String, Object> handler)
+    {
+        Arguments arguments = new Arguments();
+        if (argument != null) arguments.add(argument, "string", argumentDescription, true);
+        tools.put(name, new Tool(name, description, arguments, true, false, queryBuilderOnly,
+                args -> handler.apply(string(args, argument))));
+    }
+
     private void addTool(String name, String description, Arguments arguments, boolean readOnly,
                          boolean destructive, Function<Map<String, Object>, Object> handler)
     {
-        tools.put(name, new Tool(name, description, arguments, readOnly, destructive, true, handler));
+        tools.put(name, new Tool(name, description, arguments, readOnly, destructive, false, handler));
     }
 
     /**
@@ -243,12 +262,12 @@ public class McpService
                     response.put("result", new LinkedHashMap<>());
                     break;
                 case "tools/list":
-                    response.put("result", Collections.singletonMap("tools", describeTools(false)));
+                    response.put("result", Collections.singletonMap("tools", describeTools()));
                     break;
                 case "tools/call":
                     Map<String, Object> result = callTool(String.valueOf(params.get("name")),
                             params.get("arguments") instanceof Map ? (Map<String, Object>) params.get("arguments")
-                                    : Collections.<String, Object>emptyMap(), false);
+                                    : Collections.<String, Object>emptyMap());
                     if (result == null)
                     {
                         response.put("error", createError(INVALID_PARAMS, "Unknown tool: " + params.get("name")));
@@ -302,21 +321,20 @@ public class McpService
         result.put("protocolVersion", PROTOCOL_VERSIONS.contains(requested) ? requested : PROTOCOL_VERSIONS.get(0));
         result.put("capabilities", capabilities);
         result.put("serverInfo", serverInfo);
-        result.put("instructions", INSTRUCTIONS);
+        result.put("instructions", queryBuilderAccess() ? INSTRUCTIONS : SCHEMA_INSTRUCTIONS);
         return result;
     }
 
     /**
-     * The definitions of the tools, as tools/list gives them.
-     *
-     * @param applicationOnly only the tools of the application, without the ones of the database below it
+     * The definitions of the tools the logged in user may use, as tools/list gives them.
      */
-    List<Map<String, Object>> describeTools(boolean applicationOnly)
+    List<Map<String, Object>> describeTools()
     {
+        boolean queryBuilderAccess = queryBuilderAccess();
         List<Map<String, Object>> list = new ArrayList<>();
         for (Tool tool : tools.values())
         {
-            if (applicationOnly && !tool.application) continue;
+            if (tool.queryBuilderOnly && !queryBuilderAccess) continue;
             Map<String, Object> description = new LinkedHashMap<>();
             description.put("name", tool.name);
             description.put("description", tool.description);
@@ -335,13 +353,27 @@ public class McpService
     }
 
     /**
-     * Calls a tool as tools/call does; null when there is no such tool (among the tools of the application).
+     * Calls a tool as the logged in user, as tools/call does; null when there is no such tool.
      */
-    Map<String, Object> callTool(String name, Map<String, Object> arguments, boolean applicationOnly)
+    Map<String, Object> callTool(String name, Map<String, Object> arguments)
     {
         Tool tool = tools.get(name);
-        if (tool == null || (applicationOnly && !tool.application)) return null;
+        if (tool == null) return null;
+        if (tool.queryBuilderOnly && !queryBuilderAccess())
+        {
+            return toolResult("Tool " + name + " is for the users who may use the Query Builder (role "
+                    + RoleType.ROLE_SYSTEM_DEVELOPER + "): queries and operations show the data to the others", true);
+        }
         return handleToolCall(tool, arguments);
+    }
+
+    /**
+     * Whether the logged in user may read any data of the database with execute_sql: as in the Query Builder,
+     * a system developer (by the current roles).
+     */
+    boolean queryBuilderAccess()
+    {
+        return userInfoProvider.getLoggedUser() != null && userInfoProvider.isSystemDeveloper();
     }
 
     /**
@@ -379,6 +411,11 @@ public class McpService
             isError = true;
         }
 
+        return toolResult(text, isError);
+    }
+
+    private static Map<String, Object> toolResult(String text, boolean isError)
+    {
         Map<String, Object> textContent = new LinkedHashMap<>();
         textContent.put("type", "text");
         textContent.put("text", text);

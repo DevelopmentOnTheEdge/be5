@@ -37,21 +37,53 @@ public class ApplicationToolsTest extends CoreBe5ProjectDBTest
     }
 
     @Test
-    public void onlyTheToolsOfTheApplication()
+    public void sqlOnlyWithQueryBuilderAccess()
     {
-        List<String> names = tools.list().stream().map(tool -> (String) tool.get("name")).collect(Collectors.toList());
-        assertEquals(Arrays.asList("list_queries", "describe_query", "execute_query", "get_operation_parameters",
-                "execute_operation", "upload_file"), names);
         assertFalse(ApplicationTools.INSTRUCTIONS.contains("execute_sql"));
         assertTrue(tools.changesData("execute_operation"));
         assertFalse(tools.changesData("execute_query"));
         assertFalse(tools.changesData("upload_file"));
+        assertFalse(tools.changesData("execute_sql"));
 
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        // an administrator may not use the Query Builder, so neither execute_sql
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
+        assertEquals(Arrays.asList("list_entities", "get_entity_schema", "get_entity_references", "list_db_columns",
+                "get_table_info", "list_queries", "describe_query", "execute_query", "get_operation_parameters",
+                "execute_operation", "upload_file"), names(tools.list()));
         ApplicationTools.Result sql = tools.call("execute_sql", args("sql", "SELECT user_pass FROM users"));
         assertTrue(sql.isError());
-        assertEquals("Unknown tool: execute_sql", sql.getText());
-        assertTrue(tools.call("list_entities", args()).isError());
+        assertTrue(sql.getText(), sql.getText().contains("Query Builder"));
+        ApplicationTools.Result schema = tools.call("get_entity_schema", args("entityName", "users"));
+        assertFalse(schema.getText(), schema.isError());
+        assertTrue(schema.getText(), schema.getText().contains("user_pass"));
+        assertTrue(tools.call("no_such_tool", args()).getText().startsWith("Unknown tool"));
+
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
+        assertTrue(names(tools.list()).contains("execute_sql"));
+        ApplicationTools.Result count = tools.call("execute_sql", args("sql", "SELECT COUNT(*) AS \"n\" FROM users"));
+        assertFalse(count.getText(), count.isError());
+        assertTrue(count.getText(), count.getText().startsWith("[{\"n\":"));
+    }
+
+    @Test
+    public void listForAGivenUser() throws Exception
+    {
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
+        UserInfo developer = UserInfoHolder.getLoggedUser();
+        initGuest();
+        AtomicReference<List<String>> names = new AtomicReference<>();
+
+        Thread thread = new Thread(() -> names.set(names(tools.list(developer))));
+        thread.start();
+        thread.join();
+
+        assertTrue(names.get().toString(), names.get().contains("execute_sql"));
+        assertFalse(names(tools.list()).contains("execute_sql"));
+    }
+
+    private static List<String> names(List<Map<String, Object>> definitions)
+    {
+        return definitions.stream().map(tool -> (String) tool.get("name")).collect(Collectors.toList());
     }
 
     @Test
