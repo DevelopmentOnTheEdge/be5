@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.util.JsonUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,32 +34,80 @@ public class McpService
 
     private static final String ENTITIES_URI = "schema://entities";
 
+    /** Told to the client on initialize: how the tools for queries and operations are used together. */
+    static final String INSTRUCTIONS = "This is a BeanExplorer (be5) application: its UI is generated from metadata. "
+            + "Queries show tables of records, operations perform business actions, usually on records selected "
+            + "in a query. Work as a user of the UI does: "
+            + "1) list_queries finds the queries (the descriptions tell what they show), describe_query shows "
+            + "the parameters of a query and the operations that can be run from it; "
+            + "2) execute_query reads its rows, the id of a row is what an operation gets in selectedRows; "
+            + "3) get_operation_parameters shows the form the user fills in for an operation, without running it. "
+            + "A field with reloadOnChange changes the form: call it again with the values chosen so far; "
+            + "4) execute_operation submits the values. When they are not accepted the form comes back with "
+            + "messages on the fields: correct them and submit again. "
+            + "A field of type file takes {\"fileId\": ...} of a file uploaded by the link from upload_file, "
+            + "or for a small file its content: {\"name\": ..., \"mimeType\": ..., \"base64\": ...}. "
+            + "Operations change data: unless the user asked for this very action, confirm with the user first, "
+            + "always when requiresConfirmation is set. "
+            + "The schema tools and execute_sql show the database below the application.";
+
     private final SchemaService schemaService;
     private final DbService dbService;
     private final Map<String, Tool> tools = new LinkedHashMap<>();
 
-    /** A tool with at most one (string, required) argument. */
     private static final class Tool
     {
         final String name;
         final String description;
-        final String argument;
-        final String argumentDescription;
-        final Function<String, Object> handler;
+        final Arguments arguments;
+        final boolean readOnly;
+        final boolean destructive;
+        final Function<Map<String, Object>, Object> handler;
 
-        Tool(String name, String description, String argument, String argumentDescription,
-             Function<String, Object> handler)
+        Tool(String name, String description, Arguments arguments, boolean readOnly, boolean destructive,
+             Function<Map<String, Object>, Object> handler)
         {
             this.name = name;
             this.description = description;
-            this.argument = argument;
-            this.argumentDescription = argumentDescription;
+            this.arguments = arguments;
+            this.readOnly = readOnly;
+            this.destructive = destructive;
             this.handler = handler;
         }
     }
 
+    /** The arguments of a tool, as its input JSON schema shows them. */
+    private static final class Arguments
+    {
+        final Map<String, Object> properties = new LinkedHashMap<>();
+        final List<String> required = new ArrayList<>();
+
+        Arguments add(String name, String type, String description, boolean isRequired)
+        {
+            Map<String, Object> property = new LinkedHashMap<>();
+            property.put("type", type);
+            property.put("description", description);
+            if ("array".equals(type))
+            {
+                property.put("items", Collections.singletonMap("type", "string"));
+            }
+            properties.put(name, property);
+            if (isRequired) required.add(name);
+            return this;
+        }
+
+        Map<String, Object> schema()
+        {
+            Map<String, Object> schema = new LinkedHashMap<>();
+            schema.put("type", "object");
+            if (!required.isEmpty()) schema.put("required", required);
+            schema.put("properties", properties);
+            return schema;
+        }
+    }
+
     @Inject
-    public McpService(SchemaService schemaService, DbService dbService)
+    public McpService(SchemaService schemaService, DbService dbService, QueryOperationService queryOperationService)
     {
         this.schemaService = schemaService;
         this.dbService = dbService;
@@ -75,12 +124,81 @@ public class McpService
                 "tableName", "Table name", schemaService::getTableInfo);
         addTool("execute_sql", "Execute a SELECT SQL query and return results",
                 "sql", "SQL query to execute", this::executeQuery);
+
+        addTool("list_queries", "List the queries (views of records, as in the menu of the UI) the user may open, "
+                        + "grouped by entity, with a description of what each one shows",
+                new Arguments().add("entityName", "string", "Only the queries of this entity", false), true,
+                args -> queryOperationService.listQueries(string(args, "entityName")));
+        addTool("describe_query", "Describe a query: its parameters, the entity whose columns filter it, "
+                        + "and the operations that can be run from it - with their descriptions, how many selected "
+                        + "rows each needs and whether it asks for confirmation",
+                new Arguments()
+                        .add("entityName", "string", "Entity name", true)
+                        .add("queryName", "string", "Query name", true), true,
+                args -> queryOperationService.describeQuery(string(args, "entityName"), string(args, "queryName")));
+        addTool("execute_query", "Read one page of the rows of a query, as the UI shows them. Every row has an id "
+                        + "that an operation takes in selectedRows",
+                queryArguments()
+                        .add("offset", "integer", "Index of the first row, 0 by default", false)
+                        .add("limit", "integer", "Number of rows, " + QueryOperationService.DEFAULT_LIMIT
+                                + " by default, at most " + QueryOperationService.MAX_LIMIT, false), true,
+                args -> queryOperationService.executeQuery(string(args, "entityName"), string(args, "queryName"),
+                        object(args, "params"), integer(args, "offset", 0),
+                        integer(args, "limit", QueryOperationService.DEFAULT_LIMIT)));
+        addTool("get_operation_parameters", "Show the form of an operation: the fields the user fills in, with "
+                        + "their types, current values, options and messages. Nothing is executed. Call it again "
+                        + "with values after changing a field marked reloadOnChange",
+                operationArguments(), true,
+                args -> queryOperationService.getOperationParameters(string(args, "entityName"),
+                        string(args, "queryName"), string(args, "operationName"), object(args, "params"),
+                        strings(args, "selectedRows"), object(args, "values")));
+        addTool("execute_operation", "Execute an operation with the values of its form, as the user submitting it "
+                        + "in the UI. This changes data. When the values are not accepted the form comes back "
+                        + "(executed: false) with messages on the fields",
+                operationArguments(), false,
+                args -> queryOperationService.executeOperation(string(args, "entityName"),
+                        string(args, "queryName"), string(args, "operationName"), object(args, "params"),
+                        strings(args, "selectedRows"), object(args, "values")));
+        tools.put("upload_file", new Tool("upload_file", "Get a one-time link to upload a file for a file field "
+                + "of an operation: the user opens it in a browser and chooses the file, or the agent sends it with "
+                + "curl -F file=@<path> '<link>'. Then the file is the value {\"fileId\": ...} of the field. "
+                + "Small files can instead be given inline as {\"name\", \"mimeType\", \"base64\"}",
+                new Arguments().add("purpose", "string", "What the file is for, shown to the user on the upload "
+                        + "page, e.g. \"Signed contract for order 1042 (PDF)\"", false), false, false,
+                args -> queryOperationService.createUpload(string(args, "purpose"))));
+    }
+
+    private static Arguments queryArguments()
+    {
+        return new Arguments()
+                .add("entityName", "string", "Entity name", true)
+                .add("queryName", "string", "Query name", true)
+                .add("params", "object", "Query parameters by name (see describe_query) and filters by a column "
+                        + "of the filter entity, e.g. {\"status\": \"open\"}; a list for several values", false);
+    }
+
+    private static Arguments operationArguments()
+    {
+        return queryArguments()
+                .add("operationName", "string", "Operation name, one of the operations of the query", true)
+                .add("selectedRows", "array", "Ids of the rows the operation works on, from execute_query", false)
+                .add("values", "object", "Values of the form fields by field name; the fields left out keep the "
+                        + "values the form gives them. A file field takes {\"fileId\": ...} from upload_file "
+                        + "or {\"name\": ..., \"mimeType\": ..., \"base64\": ...}, a list for several files", false);
     }
 
     private void addTool(String name, String description, String argument, String argumentDescription,
                          Function<String, Object> handler)
     {
-        tools.put(name, new Tool(name, description, argument, argumentDescription, handler));
+        Arguments arguments = new Arguments();
+        if (argument != null) arguments.add(argument, "string", argumentDescription, true);
+        addTool(name, description, arguments, true, args -> handler.apply(string(args, argument)));
+    }
+
+    private void addTool(String name, String description, Arguments arguments, boolean readOnly,
+                         Function<Map<String, Object>, Object> handler)
+    {
+        tools.put(name, new Tool(name, description, arguments, readOnly, !readOnly, handler));
     }
 
     /**
@@ -166,12 +284,13 @@ public class McpService
 
         Map<String, Object> serverInfo = new LinkedHashMap<>();
         serverInfo.put("name", "be5-mcp-server");
-        serverInfo.put("version", "1.1.0");
+        serverInfo.put("version", "1.2.0");
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("protocolVersion", PROTOCOL_VERSIONS.contains(requested) ? requested : PROTOCOL_VERSIONS.get(0));
         result.put("capabilities", capabilities);
         result.put("serverInfo", serverInfo);
+        result.put("instructions", INSTRUCTIONS);
         return result;
     }
 
@@ -180,25 +299,18 @@ public class McpService
         List<Map<String, Object>> list = new ArrayList<>();
         for (Tool tool : tools.values())
         {
-            Map<String, Object> schema = new LinkedHashMap<>();
-            schema.put("type", "object");
-            Map<String, Object> properties = new LinkedHashMap<>();
-            if (tool.argument != null)
-            {
-                Map<String, Object> property = new LinkedHashMap<>();
-                property.put("type", "string");
-                property.put("description", tool.argumentDescription);
-                properties.put(tool.argument, property);
-                schema.put("required", Collections.singletonList(tool.argument));
-            }
-            schema.put("properties", properties);
-
             Map<String, Object> description = new LinkedHashMap<>();
             description.put("name", tool.name);
             description.put("description", tool.description);
-            description.put("inputSchema", schema);
-            // all tools only read
-            description.put("annotations", Collections.singletonMap("readOnlyHint", true));
+            description.put("inputSchema", tool.arguments.schema());
+            Map<String, Object> annotations = new LinkedHashMap<>();
+            annotations.put("readOnlyHint", tool.readOnly);
+            if (!tool.readOnly)
+            {
+                annotations.put("destructiveHint", tool.destructive);
+                annotations.put("openWorldHint", false);
+            }
+            description.put("annotations", annotations);
             list.add(description);
         }
         return Collections.<String, Object>singletonMap("tools", list);
@@ -213,12 +325,14 @@ public class McpService
         boolean isError = false;
         try
         {
-            Object argument = tool.argument == null ? null : arguments.get(tool.argument);
-            if (tool.argument != null && argument == null)
+            for (String required : tool.arguments.required)
             {
-                throw new IllegalArgumentException("Missing argument: " + tool.argument);
+                if (arguments.get(required) == null)
+                {
+                    throw new IllegalArgumentException("Missing argument: " + required);
+                }
             }
-            text = JSONB.toJson(tool.handler.apply(argument == null ? null : argument.toString()));
+            text = JSONB.toJson(tool.handler.apply(arguments));
         }
         catch (Exception e)
         {
@@ -235,6 +349,68 @@ public class McpService
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("content", Collections.singletonList(textContent));
         result.put("isError", isError);
+        return result;
+    }
+
+    private static String string(Map<String, Object> arguments, String name)
+    {
+        Object value = name == null ? null : arguments.get(name);
+        return value == null ? null : value.toString();
+    }
+
+    private static int integer(Map<String, Object> arguments, String name, int defaultValue)
+    {
+        Object value = arguments.get(name);
+        if (value == null) return defaultValue;
+        if (value instanceof Number) return ((Number) value).intValue();
+        try
+        {
+            return Integer.parseInt(value.toString().trim());
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException("Argument " + name + " must be an integer: " + value);
+        }
+    }
+
+    /**
+     * An object argument; some clients send it as a JSON string.
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> object(Map<String, Object> arguments, String name)
+    {
+        Object value = arguments.get(name);
+        if (value == null) return Collections.emptyMap();
+        if (value instanceof Map) return (Map<String, Object>) value;
+        if (value instanceof String && ((String) value).trim().startsWith("{"))
+        {
+            return JsonUtils.getMapFromJson((String) value);
+        }
+        if (value instanceof String && ((String) value).trim().isEmpty()) return Collections.emptyMap();
+        throw new IllegalArgumentException("Argument " + name + " must be an object: " + value);
+    }
+
+    /**
+     * A list of strings; a single value stands for a list of it.
+     */
+    private static List<String> strings(Map<String, Object> arguments, String name)
+    {
+        Object value = arguments.get(name);
+        if (value == null) return Collections.emptyList();
+        List<String> result = new ArrayList<>();
+        if (value instanceof List)
+        {
+            for (Object item : (List<?>) value)
+            {
+                if (item != null) result.add(item instanceof java.math.BigDecimal
+                        ? ((java.math.BigDecimal) item).toPlainString() : item.toString());
+            }
+        }
+        else if (!value.toString().trim().isEmpty())
+        {
+            result.add(value instanceof java.math.BigDecimal
+                    ? ((java.math.BigDecimal) value).toPlainString() : value.toString());
+        }
         return result;
     }
 

@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public class FileUploadWrapper extends HttpServletRequestWrapper
 {
+    /**
+     * The request attribute with a wrapper of files given to the request other than by its body (by the MCP
+     * server, say): {@link RequestImpl#getRawRequest()} returns it, as the wrapper of an uploaded request.
+     */
+    public static final String ATTRIBUTE = FileUploadWrapper.class.getName();
+
     FileUploadWrapper(HttpServletRequest aRequest)
     {
         super(aRequest);
@@ -33,6 +39,28 @@ public class FileUploadWrapper extends HttpServletRequestWrapper
         catch (FileUploadException ex)
         {
             throw new IllegalArgumentException("Cannot parse underlying request: " + ex.toString());
+        }
+    }
+
+    /**
+     * A request with files given by other means than a multipart body, e.g. uploaded to the MCP server:
+     * as after parsing, each field has the names of its files as values and a file is found by its name.
+     *
+     * @param files the files of each field
+     */
+    public FileUploadWrapper(HttpServletRequest aRequest, Map<String, List<FileItem>> files)
+    {
+        super(aRequest);
+        for (Map.Entry<String, List<FileItem>> field : files.entrySet())
+        {
+            String[] names = new String[field.getValue().size()];
+            for (int i = 0; i < names.length; i++)
+            {
+                FileItem item = field.getValue().get(i);
+                fFileParams.put(item.getName(), item);
+                names[i] = item.getName();
+            }
+            fRegularParams.put(field.getKey(), names);
         }
     }
 

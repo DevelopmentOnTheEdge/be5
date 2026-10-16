@@ -17,13 +17,15 @@ public class McpServiceUnitTest
     private McpService mcpService;
     private SchemaService schemaService;
     private DbService dbService;
+    private QueryOperationService queryOperationService;
 
     @Before
     public void setUp()
     {
         schemaService = mock(SchemaService.class);
         dbService = mock(DbService.class);
-        mcpService = new McpService(schemaService, dbService);
+        queryOperationService = mock(QueryOperationService.class);
+        mcpService = new McpService(schemaService, dbService, queryOperationService);
     }
 
     @Test
@@ -36,6 +38,7 @@ public class McpServiceUnitTest
         @SuppressWarnings("unchecked")
         Map<String, Object> result = (Map<String, Object>) response.get("result");
         assertEquals("2025-11-25", result.get("protocolVersion"));
+        assertEquals(McpService.INSTRUCTIONS, result.get("instructions"));
     }
 
     @Test
@@ -153,10 +156,118 @@ public class McpServiceUnitTest
         assertTrue(templates, templates.contains("\"resourceTemplates\":[]"));
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testQueryAndOperationTools()
+    {
+        Map<String, Object> response = mcpService.handleRequest(createJsonRpcRequest("tools/list", null));
+        Map<String, Map<String, Object>> tools = new HashMap<>();
+        for (Map<String, Object> tool : (List<Map<String, Object>>) ((Map<String, Object>) response.get("result"))
+                .get("tools"))
+        {
+            tools.put((String) tool.get("name"), tool);
+        }
+
+        for (String name : new String[]{"list_queries", "describe_query", "execute_query", "get_operation_parameters"})
+        {
+            assertEquals(name, true, ((Map<String, Object>) tools.get(name).get("annotations")).get("readOnlyHint"));
+        }
+        Map<String, Object> annotations = (Map<String, Object>) tools.get("execute_operation").get("annotations");
+        assertEquals(false, annotations.get("readOnlyHint"));
+        assertEquals(true, annotations.get("destructiveHint"));
+        Map<String, Object> uploadAnnotations = (Map<String, Object>) tools.get("upload_file").get("annotations");
+        assertEquals(false, uploadAnnotations.get("readOnlyHint"));
+        assertEquals(false, uploadAnnotations.get("destructiveHint"));
+
+        Map<String, Object> schema = (Map<String, Object>) tools.get("execute_operation").get("inputSchema");
+        assertEquals(java.util.Arrays.asList("entityName", "queryName", "operationName"), schema.get("required"));
+        Map<String, Object> selectedRows = (Map<String, Object>) ((Map<String, Object>) schema.get("properties"))
+                .get("selectedRows");
+        assertEquals("array", selectedRows.get("type"));
+        assertNull(((Map<String, Object>) tools.get("list_queries").get("inputSchema")).get("required"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExecuteQueryArguments()
+    {
+        Map<String, Object> rows = new HashMap<>();
+        rows.put("rows", new ArrayList<>());
+        when(queryOperationService.executeQuery(any(), any(), any(), anyInt(), anyInt())).thenReturn(rows);
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("status", "open");
+        Map<String, Object> args = new HashMap<>();
+        args.put("entityName", "orders");
+        args.put("queryName", "All records");
+        args.put("params", filter);
+        args.put("offset", new java.math.BigDecimal(40));
+        args.put("limit", "10");
+
+        Map<String, Object> result = (Map<String, Object>) callTool("execute_query", args).get("result");
+
+        assertEquals(false, result.get("isError"));
+        verify(queryOperationService).executeQuery("orders", "All records", filter, 40, 10);
+        assertEquals("{\"rows\":[]}",
+                ((List<Map<String, Object>>) result.get("content")).get(0).get("text"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExecuteOperationArguments()
+    {
+        Map<String, Object> args = new HashMap<>();
+        args.put("entityName", "orders");
+        args.put("queryName", "All records");
+        args.put("operationName", "Cancel");
+        args.put("selectedRows", java.util.Arrays.asList(new java.math.BigDecimal(12), "13"));
+        args.put("values", "{\"reason\": \"duplicate\"}");
+
+        callTool("execute_operation", args);
+
+        Map<String, Object> values = new HashMap<>();
+        values.put("reason", "duplicate");
+        verify(queryOperationService).executeOperation("orders", "All records", "Cancel",
+                java.util.Collections.emptyMap(), java.util.Arrays.asList("12", "13"), values);
+
+        args.remove("operationName");
+        Map<String, Object> result = (Map<String, Object>) callTool("execute_operation", args).get("result");
+        assertEquals(true, result.get("isError"));
+        assertEquals("Missing argument: operationName",
+                ((List<Map<String, Object>>) result.get("content")).get(0).get("text"));
+    }
+
+    @Test
+    public void testUploadFile()
+    {
+        Map<String, Object> args = new HashMap<>();
+        args.put("purpose", "Contract");
+
+        callTool("upload_file", args);
+
+        verify(queryOperationService).createUpload("Contract");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testListQueriesWithoutEntity()
+    {
+        when(queryOperationService.listQueries(null)).thenReturn(new ArrayList<>());
+
+        Map<String, Object> result = (Map<String, Object>) callTool("list_queries", new HashMap<>()).get("result");
+
+        assertEquals(false, result.get("isError"));
+        verify(queryOperationService).listQueries(null);
+    }
+
     private Map<String, Object> callTool(String name, String argument, String value)
     {
         Map<String, Object> args = new HashMap<>();
         args.put(argument, value);
+        return callTool(name, args);
+    }
+
+    private Map<String, Object> callTool(String name, Map<String, Object> args)
+    {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("arguments", args);

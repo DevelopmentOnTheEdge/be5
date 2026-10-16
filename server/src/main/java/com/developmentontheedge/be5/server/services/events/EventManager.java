@@ -35,11 +35,12 @@ public class EventManager implements MethodInterceptor
         Object[] arguments = invocation.getArguments();
         String className = invocation.getMethod().getDeclaringClass().getSimpleName();
 
-        if (className.equals("DocumentGeneratorImpl"))
+        // a method of a query or an operation with its parameters, wherever it is: the UI, MCP tools
+        if (arguments.length == 2 && arguments[0] instanceof Query && arguments[1] instanceof Map)
         {
             return logQuery(invocation, startTime, arguments);
         }
-        if (className.equals("FormGeneratorImpl"))
+        if (arguments.length == 2 && arguments[0] instanceof Operation && arguments[1] instanceof Map)
         {
             return logOperation(invocation, startTime, arguments);
         }

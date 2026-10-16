@@ -34,6 +34,7 @@ public class OperationBeanInfo extends BeanInfoEx
         add("logging", OperationLoggingSelector.class);
         add("secure");
         add("confirm");
+        add("shortDescription");
         add("wellKnownName");
         add("originModuleName", ModuleSelector.class);
         add("roles");

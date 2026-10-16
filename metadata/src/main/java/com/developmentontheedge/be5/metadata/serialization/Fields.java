@@ -29,6 +29,7 @@ public class Fields
             new Field("logging", Operation.getDefaultLoggingOption()),
             new Field("secure", false),
             new Field("confirm", false),
+            new Field("shortDescription"),
             new Field("contextID"),
             new Field("categoryID"),
             new Field("wellKnownName", ""),
