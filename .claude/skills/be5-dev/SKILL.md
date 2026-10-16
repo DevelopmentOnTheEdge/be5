@@ -51,14 +51,21 @@ my_entity:
       type: 1D_unknown
       roles: '@AdminRoles'
       invisible: true
+      shortDescription: All the records of my_entity with their status
       code: |
           SELECT ID, name, status FROM my_entity ORDER BY ID
   operations:
   - Delete:
       records: 2
       roles: '@AdminRoles'
+      shortDescription: Deletes the selected records
       code: ru.biosoft.biostore.operations.BiostoreDeleteOperation
 ```
+
+`shortDescription` of queries and operations is what AI agents read through the MCP server
+(`list_queries`, `describe_query`) to decide which query shows what they need and which operation
+does what they are asked: write one sentence about the business meaning for every query and
+operation a user can open.
 
 ### Pseudo-Entity (custom API)
 

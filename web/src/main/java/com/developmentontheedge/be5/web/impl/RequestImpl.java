@@ -150,10 +150,15 @@ public class RequestImpl implements Request
         return raw.getInputStream();
     }
 
+    /**
+     * The request, or the files given to it other than by a multipart body (see
+     * {@link FileUploadWrapper#ATTRIBUTE}) - so that they are found as the uploaded ones.
+     */
     @Override
     public HttpServletRequest getRawRequest()
     {
-        return raw;
+        Object files = raw.getAttribute(FileUploadWrapper.ATTRIBUTE);
+        return files instanceof FileUploadWrapper ? (FileUploadWrapper) files : raw;
     }
 
     @Override

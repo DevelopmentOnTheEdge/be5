@@ -20,6 +20,8 @@ testtable:
       operations:
       - Edit
       - Insert
+      - UploadFile
+      - UploadBase64File
       code: |-
         SELECT
           t.name AS "Name",
@@ -34,3 +36,9 @@ testtable:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - UploadFile:
+      roles: Administrator
+      code: com.developmentontheedge.be5.modules.core.mcp.TestUploadFileOperation
+  - UploadBase64File:
+      roles: Administrator
+      code: com.developmentontheedge.be5.modules.core.mcp.TestUploadBase64FileOperation
