@@ -22,10 +22,22 @@ testtable:
       - Insert
       - UploadFile
       - UploadBase64File
+      - Not for AI
       code: |-
         SELECT
           t.name AS "Name",
           t.value AS "Value"
+        FROM
+          testtable t
+  - Not for AI:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      aiAccessible: false
+      operations:
+      - Insert
+      code: |-
+        SELECT
+          t.name AS "Name"
         FROM
           testtable t
   operations:
@@ -42,3 +54,7 @@ testtable:
   - UploadBase64File:
       roles: Administrator
       code: com.developmentontheedge.be5.modules.core.mcp.TestUploadBase64FileOperation
+  - Not for AI:
+      roles: Administrator
+      aiAccessible: false
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation

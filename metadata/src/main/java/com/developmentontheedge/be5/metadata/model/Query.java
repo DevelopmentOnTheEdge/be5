@@ -37,7 +37,7 @@ public class Query extends EntityItem implements TemplateElement
             Arrays.asList("menuName", "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure",
                     "slow", "cacheable", "replicated", "defaultView", "contextID", "categoryID", "templateQueryName",
                     "shortDescription", "messageWhenEmpty", "parametrizingOperationName", "wellKnownName",
-                    "operationNames", "query", "roles", "icon", "querySettings", "layout")));
+                    "aiAccessible", "operationNames", "query", "roles", "icon", "querySettings", "layout")));
 
     public static String[] getQueryTypes()
     {

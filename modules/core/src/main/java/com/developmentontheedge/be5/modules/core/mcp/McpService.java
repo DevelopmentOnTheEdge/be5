@@ -369,11 +369,11 @@ public class McpService
 
     /**
      * Whether the logged in user may read any data of the database with execute_sql: the user may use the
-     * Query Builder.
+     * Query Builder, and its query is accessible to AI agents.
      */
     boolean queryBuilderAccess()
     {
-        return queryBuilderAccess.isAllowed();
+        return queryBuilderAccess.isAllowedForAi();
     }
 
     /**

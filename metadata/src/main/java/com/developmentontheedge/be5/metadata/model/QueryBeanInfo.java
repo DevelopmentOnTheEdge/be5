@@ -39,6 +39,7 @@ public class QueryBeanInfo extends BeanInfoEx
         add("shortDescription");
         add("messageWhenEmpty");
         add("wellKnownName");
+        add("aiAccessible");
         add("invisible");
         add("secure");
         add("slow");

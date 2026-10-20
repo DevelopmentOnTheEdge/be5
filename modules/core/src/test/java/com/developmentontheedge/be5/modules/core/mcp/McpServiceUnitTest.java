@@ -29,7 +29,7 @@ public class McpServiceUnitTest
         queryOperationService = mock(QueryOperationService.class);
         queryBuilderAccess = mock(QueryBuilderAccess.class);
         // a user who may use the Query Builder and so execute_sql
-        when(queryBuilderAccess.isAllowed()).thenReturn(true);
+        when(queryBuilderAccess.isAllowedForAi()).thenReturn(true);
         mcpService = new McpService(schemaService, dbService, queryOperationService, queryBuilderAccess);
     }
 
@@ -37,7 +37,7 @@ public class McpServiceUnitTest
     @SuppressWarnings("unchecked")
     public void testSqlOnlyWithQueryBuilderAccess()
     {
-        when(queryBuilderAccess.isAllowed()).thenReturn(false);
+        when(queryBuilderAccess.isAllowedForAi()).thenReturn(false);
 
         List<Map<String, Object>> tools = (List<Map<String, Object>>) ((Map<String, Object>) mcpService
                 .handleRequest(createJsonRpcRequest("tools/list", null)).get("result")).get("tools");

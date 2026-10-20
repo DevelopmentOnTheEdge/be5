@@ -36,6 +36,7 @@ public class OperationBeanInfo extends BeanInfoEx
         add("confirm");
         add("shortDescription");
         add("wellKnownName");
+        add("aiAccessible");
         add("originModuleName", ModuleSelector.class);
         add("roles");
         add("usedInExtras");

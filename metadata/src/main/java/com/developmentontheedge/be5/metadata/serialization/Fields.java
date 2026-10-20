@@ -33,6 +33,7 @@ public class Fields
             new Field("contextID"),
             new Field("categoryID"),
             new Field("wellKnownName", ""),
+            new Field("aiAccessible", true),
             new Field("layout", "")
     ));
     private static final List<Field> EXTENDER = Collections.unmodifiableList(Arrays.asList(
@@ -71,6 +72,7 @@ public class Fields
             new Field("messageWhenEmpty"),
             new Field("parametrizingOperationName", ""),
             new Field("wellKnownName", ""),
+            new Field("aiAccessible", true),
             new Field("layout", "")
     ));
     private static final List<Field> TABLE_DEF = Collections.unmodifiableList(Arrays.asList(

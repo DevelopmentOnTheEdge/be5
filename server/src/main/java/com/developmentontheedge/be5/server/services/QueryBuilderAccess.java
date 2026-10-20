@@ -38,8 +38,23 @@ public class QueryBuilderAccess
     {
         if (userInfoProvider.getLoggedUser() == null) return false;
         List<String> roles = userInfoProvider.getCurrentRoles();
-        Query query = meta.hasEntity(ENTITY_NAME) ? meta.getEntity(ENTITY_NAME).getQueries().get(QUERY_NAME) : null;
+        Query query = getQuery();
         if (query == null) return roles.contains(RoleType.ROLE_SYSTEM_DEVELOPER);
         return query.isAvailable() && meta.isAvailableFor(query, roles);
+    }
+
+    /**
+     * Whether an AI agent of the logged in user may run any SQL (execute_sql of the MCP server): the user may use
+     * the Query Builder, and its query is accessible to AI agents (aiAccessible).
+     */
+    public boolean isAllowedForAi()
+    {
+        Query query = getQuery();
+        return isAllowed() && (query == null || query.isAiAccessible());
+    }
+
+    private Query getQuery()
+    {
+        return meta.hasEntity(ENTITY_NAME) ? meta.getEntity(ENTITY_NAME).getQueries().get(QUERY_NAME) : null;
     }
 }

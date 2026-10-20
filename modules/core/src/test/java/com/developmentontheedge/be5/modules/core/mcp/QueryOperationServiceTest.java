@@ -165,6 +165,34 @@ public class QueryOperationServiceTest extends CoreBe5ProjectDBTest
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void notAiAccessible()
+    {
+        List<Map<String, Object>> entities = (List<Map<String, Object>>) call("list_queries",
+                args("entityName", "testtable"));
+        List<Map<String, Object>> queries = (List<Map<String, Object>>) entities.get(0).get("queries");
+        assertTrue(find(queries, "queryName", "All records") != null);
+        assertNull(find(queries, "queryName", "Not for AI"));
+
+        Map<String, Object> query = (Map<String, Object>) call("describe_query",
+                args("entityName", "testtable", "queryName", "All records"));
+        List<Map<String, Object>> operations = (List<Map<String, Object>>) query.get("operations");
+        assertTrue(find(operations, "operationName", "Insert") != null);
+        assertNull(find(operations, "operationName", "Not for AI"));
+
+        String error = callError("describe_query", args("entityName", "testtable", "queryName", "Not for AI"));
+        assertTrue(error, error.contains("not accessible to AI agents"));
+        error = callError("execute_query", args("entityName", "testtable", "queryName", "Not for AI"));
+        assertTrue(error, error.contains("not accessible to AI agents"));
+        error = callError("get_operation_parameters", args("entityName", "testtable", "queryName", "Not for AI",
+                "operationName", "Insert"));
+        assertTrue(error, error.contains("not accessible to AI agents"));
+        error = callError("execute_operation", args("entityName", "testtable", "queryName", "All records",
+                "operationName", "Not for AI"));
+        assertTrue(error, error.contains("not accessible to AI agents"));
+    }
+
+    @Test
     public void describeField()
     {
         DynamicProperty property = new DynamicProperty("status", "Status", String.class, "open");

@@ -126,7 +126,8 @@ public class QueryOperationService
             for (Query query : entity.getQueries())
             {
                 // selection views only fill drop-down lists
-                if (query.isAvailable() && meta.isAvailableFor(query, roles) && !query.getName().startsWith("***"))
+                if (query.isAvailable() && query.isAiAccessible() && meta.isAvailableFor(query, roles)
+                        && !query.getName().startsWith("***"))
                 {
                     queries.add(queryHeader(query, false));
                 }
@@ -148,7 +149,7 @@ public class QueryOperationService
      */
     public Map<String, Object> describeQuery(String entityName, String queryName)
     {
-        Query query = userAwareMeta.getQuery(entityName, queryName);
+        Query query = getQuery(entityName, queryName);
         Map<String, Object> result = queryHeader(query, true);
         result.put("primaryKey", query.getEntity().getPrimaryKey());
         addQueryParameters(result, query);
@@ -158,7 +159,12 @@ public class QueryOperationService
         {
             filterOperation = (String) JsonUtils.getMapFromJson(query.getLayout()).get("topForm");
         }
-        putIfNotEmpty(result, "filterOperation", filterOperation);
+        com.developmentontheedge.be5.metadata.model.Operation filter = filterOperation == null ? null
+                : query.getEntity().getOperations().get(filterOperation);
+        if (filter == null || filter.isAiAccessible())
+        {
+            putIfNotEmpty(result, "filterOperation", filterOperation);
+        }
 
         List<String> roles = userInfoProvider.getCurrentRoles();
         List<Map<String, Object>> operations = new ArrayList<>();
@@ -167,7 +173,8 @@ public class QueryOperationService
             com.developmentontheedge.be5.metadata.model.Operation operation =
                     query.getEntity().getOperations().get(operationName);
             // client side (JavaScript) operations run in the browser only
-            if (operation != null && operation.isAvailable() && meta.isAvailableFor(operation, roles)
+            if (operation != null && operation.isAvailable() && operation.isAiAccessible()
+                    && meta.isAvailableFor(operation, roles)
                     && !OPERATION_TYPE_JAVASCRIPT.equals(operation.getType()))
             {
                 operations.add(operationHeader(new OperationInfo(operation)));
@@ -183,7 +190,7 @@ public class QueryOperationService
     public Map<String, Object> executeQuery(String entityName, String queryName, Map<String, Object> params,
                                             int offset, int limit)
     {
-        Query query = userAwareMeta.getQuery(entityName, queryName);
+        Query query = getQuery(entityName, queryName);
         if (!isRunnable(query))
         {
             throw new IllegalArgumentException("Query '" + queryName + "' of type " + query.getType().getName()
@@ -651,8 +658,12 @@ public class QueryOperationService
                                       Map<String, Object> params, List<String> selectedRows)
     {
         // as in the UI, an operation is run from a query the user may open
-        userAwareMeta.getQuery(entityName, queryName);
+        getQuery(entityName, queryName);
         OperationInfo info = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
+        if (!info.getModel().isAiAccessible())
+        {
+            throw new IllegalArgumentException("Operation '" + operationName + "' is not accessible to AI agents");
+        }
         if (OPERATION_TYPE_JAVASCRIPT.equals(info.getType()))
         {
             throw new IllegalArgumentException("Operation '" + operationName + "' runs in the browser only");
@@ -680,6 +691,19 @@ public class QueryOperationService
             ((OperationSupport) operation).setRequest(request);
         }
         return operation;
+    }
+
+    /**
+     * A query the user may open (by the roles) that is accessible to AI agents (aiAccessible of the query).
+     */
+    private Query getQuery(String entityName, String queryName)
+    {
+        Query query = userAwareMeta.getQuery(entityName, queryName);
+        if (!query.isAiAccessible())
+        {
+            throw new IllegalArgumentException("Query '" + queryName + "' is not accessible to AI agents");
+        }
+        return query;
     }
 
     /**

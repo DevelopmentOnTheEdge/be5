@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.mcp;
 
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest;
 import com.developmentontheedge.be5.security.UserInfo;
 import com.developmentontheedge.be5.security.UserInfoHolder;
@@ -84,6 +85,25 @@ public class ApplicationToolsTest extends CoreBe5ProjectDBTest
         initUserWithRoles("TestUser2");
         assertFalse(queryBuilderAccess.isAllowed());
         assertFalse(names(tools.list()).contains("execute_sql"));
+    }
+
+    @Test
+    public void noSqlWhenTheQueryBuilderIsNotAiAccessible()
+    {
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
+        Query queryBuilder = meta.getQuery(QueryBuilderAccess.ENTITY_NAME, QueryBuilderAccess.QUERY_NAME);
+        queryBuilder.setAiAccessible(false);
+        try
+        {
+            assertTrue("the Query Builder itself stays", queryBuilderAccess.isAllowed());
+            assertFalse(names(tools.list()).contains("execute_sql"));
+            assertTrue(tools.call("execute_sql", args("sql", "SELECT COUNT(*) FROM users")).isError());
+        }
+        finally
+        {
+            queryBuilder.setAiAccessible(true);
+        }
+        assertTrue(names(tools.list()).contains("execute_sql"));
     }
 
     @Test

@@ -85,6 +85,7 @@ public class Operation extends EntityItem
                     "contextID",
                     "categoryID",
                     "wellKnownName",
+                    "aiAccessible",
                     "records",
                     "code",
                     "icon",

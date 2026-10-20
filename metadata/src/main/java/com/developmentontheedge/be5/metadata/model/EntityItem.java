@@ -22,6 +22,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     private Long contextID;
     private Long categoryID;
     private boolean secure = false;
+    private boolean aiAccessible = true;
     private String layout = "";
 
     public EntityItem(String name, BeModelCollection<?> origin)
@@ -114,6 +115,21 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         fireChanged();
     }
 
+    /**
+     * Whether an AI agent sees it with the MCP tools (still only when the roles of the user allow it).
+     */
+    @PropertyName("AI accessible")
+    public boolean isAiAccessible()
+    {
+        return getValue("aiAccessible", aiAccessible, true, () -> ((EntityItem) prototype).isAiAccessible());
+    }
+
+    public void setAiAccessible(boolean aiAccessible)
+    {
+        this.aiAccessible = customizeProperty("aiAccessible", this.aiAccessible, aiAccessible);
+        fireChanged();
+    }
+
     @PropertyName("Context ID")
     public Long getContextID()
     {
@@ -190,6 +206,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
             return debugEquals("contextID");
         if (isSecure() != other.isSecure())
             return debugEquals("isSecure");
+        if (isAiAccessible() != other.isAiAccessible())
+            return debugEquals("isAiAccessible");
         if (!getIcon().equals(other.getIcon()))
             return debugEquals("icon");
         if (!getRoles().equals(other.getRoles()))

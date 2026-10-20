@@ -87,6 +87,22 @@ What a query or an operation is for is told to the agent by `shortDescription`, 
       shortDescription: Cancels the selected orders and e-mails the customers
 ```
 
+A query or an operation that agents must not use, even when the roles of the user allow it, is hidden from
+them with `aiAccessible: false` (`true` by default): `list_queries` and `describe_query` leave it out, and the
+other tools refuse it. The operations of such a query are refused too, as they are run from the query.
+`aiAccessible: false` on the query `Query Builder` turns `execute_sql` off, but the Query Builder itself stays.
+
+```yaml
+  queries:
+  - Salaries:
+      roles: [Accountant]
+      aiAccessible: false
+  operations:
+  - Pay:
+      roles: [Accountant]
+      aiAccessible: false
+```
+
 Operations run by an agent are written to the operation and event logs like any other.
 
 ### Files
