@@ -223,6 +223,13 @@ public class MailServiceImpl implements MailService
                 props.put("mail.smtp.port", "587");
                 props.put("mail.smtp.starttls.enable", "true");
             }
+
+            putProperty(props, "mail.smtp.starttls.enable", "SMTP_STARTTLS_ENABLE");
+            putProperty(props, "mail.smtp.ssl.trust",       "SMTP_SSL_TRUST");
+            putProperty(props, "mail.smtp.ssl.protocols",   "SMTP_SSL_PROTOCOLS");
+            putProperty(props, "mail.smtp.port",            "SMTP_PORT");
+            putProperty(props, "mail.smtp.localhost",       "SMTP_LOCAL_HOST");
+
             SmtpAuthenticator auth = new SmtpAuthenticator(login, password);
             Session session = Session.getInstance(props, auth);
             if (Boolean.parseBoolean(coreUtils.getSystemSetting("SMTP_DEBUG", "false")))
@@ -232,9 +239,18 @@ public class MailServiceImpl implements MailService
             }
             return session;
         }
+
         return Session.getInstance(props);
     }
 
+    private void putProperty(Properties props, String propertyName, String settingName)
+    {
+        String value = coreUtils.getSystemSetting(settingName);
+
+        if( !Utils.isEmpty(value) )
+        	props.put(propertyName,  value);
+    }
+    
     /**
      * Use {@link #createMimeMessage(String, InputStream) createMimeMessage(DatabaseConnector, String, InputStream)},
      * with host=null and stream=null
