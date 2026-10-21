@@ -247,10 +247,12 @@ public class MailServiceImpl implements MailService
     {
         String value = coreUtils.getSystemSetting(settingName);
 
-        if( !Utils.isEmpty(value) )
-        	props.put(propertyName,  value);
+        if ( !Utils.isEmpty(value) )
+        {
+            props.put(propertyName, value);
+        }
     }
-    
+
     /**
      * Use {@link #createMimeMessage(String, InputStream) createMimeMessage(DatabaseConnector, String, InputStream)},
      * with host=null and stream=null
