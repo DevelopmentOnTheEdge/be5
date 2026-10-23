@@ -6,6 +6,7 @@
 
   <name>be5 base</name>
   <artifactId>be5-base</artifactId>
+  <version>0.4.4.1</version>
 
   <parent>
     <artifactId>be5-parent</artifactId>
