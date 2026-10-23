@@ -27,8 +27,9 @@ public class MySqlSchemaReader extends DefaultSchemaReader
     {
         DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
-        ResultSet rs = connector.executeQuery("SELECT table_name,column_name,column_type,column_default," +
-                "is_nullable,numeric_precision,numeric_scale,character_maximum_length,extra "
+        ResultSet rs = connector.executeQuery("SELECT table_name,column_name,column_type,"
+                + "CASE column_default WHEN 'NULL' THEN NULL ELSE NULL END,"
+                + "is_nullable,numeric_precision,numeric_scale,character_maximum_length,extra "
                 + "FROM information_schema.columns "
                 + "WHERE table_schema='" + defSchema + "' ORDER BY table_name, ordinal_position");
         try
@@ -68,7 +69,7 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                     }
                 }
                 info.setDefaultValue(defaultValue);
-                info.setSize(rs.getInt(8 /*"character_maximum_length"*/));
+                info.setSize(rs.getLong(8 /*"character_maximum_length"*/));
                 if (rs.wasNull())
                 {
                     info.setSize(rs.getInt(6 /*"numeric_precision"*/));
