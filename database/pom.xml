@@ -72,6 +72,15 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- MariaDB driver for the opt-in unsigned-int integration test;
+         skipped unless TEST_MYSQL_URL points at a MariaDB server. -->
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>3.1.4</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>
