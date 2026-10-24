@@ -53,7 +53,10 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                     if (type.startsWith("text") || type.startsWith("enum") || type.startsWith("varchar")
                             || type.startsWith("char"))
                     {
-                        defaultValue = "'" + defaultValue + "'";
+                        if (!defaultValue.startsWith("'"))
+                        {
+                            defaultValue = "'" + defaultValue + "'";
+                        }
                     }
                     else if (type.startsWith("date") || type.startsWith("time"))
                     {
@@ -61,7 +64,7 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                         {
                             defaultValue = "NOW()";
                         }
-                        else
+                        else if (!defaultValue.startsWith("'"))
                         {
                             defaultValue = "'" + defaultValue + "'";
                         }
