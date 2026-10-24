@@ -21,6 +21,41 @@ public class MySqlSchemaReader extends DefaultSchemaReader
 {
     private static final Pattern UNNECESSARY_TYPE_LENGTH_PATTERN = Pattern.compile("^(\\w+)\\([\\d,]+\\)");
 
+    /**
+     * MySQL 5.7 returns string and date defaults from information_schema.columns
+     * without quotes (e.g. system, 2026-01-01), while MySQL 8 and MariaDB return
+     * them quoted (e.g. 'system', '2026-01-01'). The value is normalized to the
+     * quoted form expected by the DDL generation; CURRENT_TIMESTAMP is mapped to NOW().
+     * A literal NULL (a SQL NULL default, returned as the string NULL) means "no
+     * default" and must not be turned into the string literal 'NULL', otherwise
+     * be5:sync reports a false DDL difference on every run.
+     */
+    static String normalizeDefaultValue(String defaultValue, String type)
+    {
+        if (defaultValue == null)
+        {
+            return null;
+        }
+        if ("NULL".equalsIgnoreCase(defaultValue))
+        {
+            return null;
+        }
+        if (type.startsWith("text") || type.startsWith("enum") || type.startsWith("varchar")
+                || type.startsWith("char"))
+        {
+            return defaultValue.startsWith("'") ? defaultValue : "'" + defaultValue + "'";
+        }
+        if (type.startsWith("date") || type.startsWith("time"))
+        {
+            if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP"))
+            {
+                return "NOW()";
+            }
+            return defaultValue.startsWith("'") ? defaultValue : "'" + defaultValue + "'";
+        }
+        return defaultValue;
+    }
+
     @Override
     public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller)
             throws SQLException, ProcessInterruptedException
@@ -47,30 +82,7 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                 info.setName(rs.getString(2 /*"column_name"*/));
                 String type = rs.getString(3 /*"column_type"*/);
                 info.setCanBeNull("YES".equals(rs.getString(5 /* "is_nullable" */)));
-                String defaultValue = rs.getString(4 /*"column_default"*/);
-                if (defaultValue != null)
-                {
-                    if (type.startsWith("text") || type.startsWith("enum") || type.startsWith("varchar")
-                            || type.startsWith("char"))
-                    {
-                        if (!defaultValue.startsWith("'"))
-                        {
-                            defaultValue = "'" + defaultValue + "'";
-                        }
-                    }
-                    else if (type.startsWith("date") || type.startsWith("time"))
-                    {
-                        if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP"))
-                        {
-                            defaultValue = "NOW()";
-                        }
-                        else if (!defaultValue.startsWith("'"))
-                        {
-                            defaultValue = "'" + defaultValue + "'";
-                        }
-                    }
-                }
-                info.setDefaultValue(defaultValue);
+                info.setDefaultValue(normalizeDefaultValue(rs.getString(4 /*"column_default"*/), type));
                 info.setSize((int) rs.getLong(8 /*"character_maximum_length"*/));
                 if (rs.wasNull())
                 {
