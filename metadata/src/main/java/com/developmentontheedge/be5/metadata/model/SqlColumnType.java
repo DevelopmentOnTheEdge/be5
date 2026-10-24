@@ -64,7 +64,7 @@ public class SqlColumnType
     };
 
     private String typeName = TYPE_VARCHAR;
-    private long size = 255;
+    private int size = 255;
     private int precision;
     private String[] enumValues;
 
@@ -154,12 +154,12 @@ public class SqlColumnType
     }
 
     @PropertyName("Size")
-    public long getSize()
+    public int getSize()
     {
         return getTypeName().equals(TYPE_CURRENCY) ? 18 : size;
     }
 
-    public void setSize(long size)
+    public void setSize(int size)
     {
         this.size = size;
     }

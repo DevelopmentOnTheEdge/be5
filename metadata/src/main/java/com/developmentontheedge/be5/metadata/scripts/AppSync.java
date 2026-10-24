@@ -342,7 +342,7 @@ public class AppSync extends ScriptSupport<AppSync>
         else
         {
             type.setTypeName(info.getType());
-            type.setSize(info.getSize());
+            type.setSize((int) info.getSize());
             type.setPrecision(info.getPrecision());
         }
         return type;

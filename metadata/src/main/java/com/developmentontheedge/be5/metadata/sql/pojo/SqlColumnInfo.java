@@ -13,7 +13,7 @@ public class SqlColumnInfo
     private boolean autoIncrement;
     private String type;
     private String[] enumValues;
-    private long size;
+    private int size;
     private int precision;
 
     public String getName()
@@ -76,12 +76,12 @@ public class SqlColumnInfo
         this.type = type;
     }
 
-    public long getSize()
+    public int getSize()
     {
         return size;
     }
 
-    public void setSize(long size)
+    public void setSize(int size)
     {
         this.size = size;
     }
