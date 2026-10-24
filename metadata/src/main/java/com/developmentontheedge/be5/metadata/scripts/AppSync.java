@@ -271,7 +271,8 @@ public class AppSync extends ScriptSupport<AppSync>
                         IndexColumnDef indexColumnDef = index.iterator().next();
                         if (!indexColumnDef.isFunctional())
                         {
-                            if (index.getName().equalsIgnoreCase(table + "_pkey"))
+                            if (index.getName().equalsIgnoreCase(table + "_pkey")
+                                    || "PRIMARY".equalsIgnoreCase(index.getName()))
                             {
                                 entity.setPrimaryKey(indexColumnDef.getName());
                                 continue;
