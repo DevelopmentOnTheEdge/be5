@@ -63,6 +63,15 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- MySQL driver for the opt-in unsigned-int integration test
+         (SqlUtilsUnsignedIntegrationTest); skipped unless TEST_MYSQL_URL is set. -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.49</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>

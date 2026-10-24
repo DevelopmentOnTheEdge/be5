@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Function;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX;
 
@@ -60,11 +59,6 @@ public class DpsRecordAdapter
 
     private static DynamicProperty[] createSchema(ResultSetMetaData metaData)
     {
-        return createSchema(metaData, SqlUtils::getTypeClass);
-    }
-
-    private static DynamicProperty[] createSchema(ResultSetMetaData metaData, Function<Integer, Class<?>> getTypeClassFun)
-    {
         try
         {
             int count = metaData.getColumnCount();
@@ -85,7 +79,7 @@ public class DpsRecordAdapter
                 }
                 String[] parts = columnLabel.split(EXTRA_HEADER_COLUMN_PREFIX, 2);
                 String name = getUniqueName(names, parts[0]);
-                Class<?> clazz = getTypeClassFun.apply(metaData.getColumnType(i));
+                Class<?> clazz = SqlUtils.getTypeClass(metaData, i);
                 DynamicProperty dp = new DynamicProperty(name, clazz);
                 Map<String, Map<String, String>> tags = new TreeMap<>();
                 if (parts.length == 2)
