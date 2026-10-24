@@ -68,7 +68,7 @@ public class MySqlSchemaReader extends DefaultSchemaReader
                     }
                 }
                 info.setDefaultValue(defaultValue);
-                info.setSize(rs.getInt(8 /*"character_maximum_length"*/));
+                info.setSize((int) rs.getLong(8 /*"character_maximum_length"*/));
                 if (rs.wasNull())
                 {
                     info.setSize(rs.getInt(6 /*"numeric_precision"*/));
