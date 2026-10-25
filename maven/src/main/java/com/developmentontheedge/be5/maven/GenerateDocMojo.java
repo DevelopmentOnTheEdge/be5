@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -35,6 +37,12 @@ public class GenerateDocMojo extends Be5Mojo
 {
     @Parameter(property = "BE5_DOC_PATH")
     protected File docPath;
+
+    @Parameter(property = "BE5_LOCALE")
+    protected String locale = "ru";
+
+    @Parameter(property = "BE5_SERVICE_TABLES")
+    protected boolean serviceTables = true;
 
     protected File tablesPath;
     protected File diagramsPath;
@@ -68,6 +76,12 @@ public class GenerateDocMojo extends Be5Mojo
     protected Project be5Project;
     protected List<TableDef> tables;
     protected Map<String, TableDef> tablesMap;
+
+    protected ResourceBundle messages;
+    protected String msg(String key)
+    {
+    	return messages.getString(key);
+    }
     
     @Override
     public void execute()
@@ -76,6 +90,7 @@ public class GenerateDocMojo extends Be5Mojo
 
         try
         {
+        	messages = ResourceBundle.getBundle("com.developmentontheedge.be5.maven.messages", new Locale(locale));
             loadProject();
 
             if( !validateDocPath() )
@@ -186,14 +201,19 @@ public class GenerateDocMojo extends Be5Mojo
         PrintWriter tocTree = new PrintWriter(new File(tablesPath, TABLES_TOC_FILE), "UTF-8"/*StandardCharsets.UTF_8*/);
 
         tocTree.println(
-"Схема базы данных"    + nl +
-"================="    + nl + nl +
+msg("DATABASE_SCHEME") + nl +
 ".. toctree::"         + nl + nl +
-"      " + TABLES_APP_FILE + nl +
+"      " + TABLES_APP_FILE + nl);
+
+        if( serviceTables )
+            tocTree.println(
 "      " + TABLES_BE5_FILE);
 
         generateTables(TABLES_APP_FILE, true);
-        generateTables(TABLES_BE5_FILE, false);
+
+        if( serviceTables )
+            generateTables(TABLES_BE5_FILE, false);
+
         tocTree.flush();
     }
 
@@ -205,13 +225,9 @@ public class GenerateDocMojo extends Be5Mojo
         PrintWriter tocTree = new PrintWriter(new File(tablesPath, file));
 
         if( appTables )
-            tocTree.println(
-"Таблицы приложения" + nl +
-"==================" + nl);
+            tocTree.println( msg("APPLICATION_TABLES") + nl );
         else
-            tocTree.println(
-            "Таблицы BE5 (служебные)" + nl +
-            "=======================" + nl);
+            tocTree.println( msg("SERVICE_TABLES") + nl );
 
         tocTree.println(
 ".. toctree::"         + nl);
@@ -262,9 +278,9 @@ public class GenerateDocMojo extends Be5Mojo
 ".. list-table::"              + nl +
 "   :header-rows: 1"         + nl + nl +
 
-"   * - Колонка"      + nl +
-"     - Тип"         + nl +
-"     - Описание"     + nl);
+"   * - " + msg("COLUMN")      + nl +
+"     - " + msg("TYPE")        + nl +
+"     - " + msg("DESCRIPTION") + nl);
 
         BeCaseInsensitiveCollection<ColumnDef> columns = table.getColumns();
         String be5Fields = null;
@@ -317,11 +333,11 @@ public class GenerateDocMojo extends Be5Mojo
         }
 
         if( skipBe5Fields && be5Fields != null )
-            file.println("Служебные поля: " + be5Fields + nl);
+            file.println(msg("SERVICE_FIELDS") + ": " + be5Fields + nl);
 
         if( table.getIndices() != null && table.getIndices().getSize() > 0 )
         {
-            file.print("**Индексы**");
+            file.print("**" + msg("INDICES") + "**");
 
             for(IndexDef index : table.getIndices())
             {
