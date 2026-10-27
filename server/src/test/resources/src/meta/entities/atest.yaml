@@ -22,6 +22,7 @@ atest:
       code: SELECT * FROM testtable t
   - Test1:
       type: 1D_unknown
+      order: '20'
       roles: TestUser2
       code: |2-
             SELECT
@@ -32,6 +33,7 @@ atest:
               testtable t
   - Test2:
       type: 1D_unknown
+      order: '10'
       roles: TestUser2
       code: |2-
             SELECT

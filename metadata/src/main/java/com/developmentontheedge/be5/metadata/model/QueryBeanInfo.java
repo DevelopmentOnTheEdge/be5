@@ -32,6 +32,7 @@ public class QueryBeanInfo extends BeanInfoEx
         findPropertyDescriptor("queryCompiled").setHidden(true);
         add("menuName");
         add("titleName");
+        add("order");
         addHidden("fileName", "isFileNameHidden");
         add("parametrizingOperationName", OperationSelector.class);
         add("operationNames");

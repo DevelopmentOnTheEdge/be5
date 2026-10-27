@@ -34,7 +34,8 @@ public class Query extends EntityItem implements TemplateElement
     public static final String SPECIAL_TABLE_DEFINITION = "Table definition";
 
     private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<>(
-            Arrays.asList("menuName", "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure",
+            Arrays.asList("menuName", "titleName", "order", "type", "notSupported", "newDataCheckQuery",
+                    "invisible", "secure",
                     "slow", "cacheable", "replicated", "defaultView", "contextID", "categoryID", "templateQueryName",
                     "shortDescription", "messageWhenEmpty", "parametrizingOperationName", "wellKnownName",
                     "aiAccessible", "operationNames", "query", "roles", "icon", "querySettings", "layout")));
@@ -46,6 +47,7 @@ public class Query extends EntityItem implements TemplateElement
 
     private String menuName = "";
     private String titleName;
+    private String order = "";
     private QueryType type;
     private String query = " ";
     private String newDataCheckQuery;
@@ -119,6 +121,18 @@ public class Query extends EntityItem implements TemplateElement
     public void setTitleName(String titleName)
     {
         this.titleName = customizeProperty("titleName", this.titleName, titleName);
+        fireChanged();
+    }
+
+    @PropertyName("Order")
+    public String getOrder()
+    {
+        return getValue("order", order, "", () -> ((Query) prototype).getOrder());
+    }
+
+    public void setOrder(final String order)
+    {
+        this.order = customizeProperty("order", this.order, Strings2.nullToEmpty(order));
         fireChanged();
     }
 
@@ -436,6 +450,8 @@ public class Query extends EntityItem implements TemplateElement
             return debugEquals("cacheable");
         if (isInvisible() != other.isInvisible())
             return debugEquals("invisible");
+        if (!getOrder().equals(other.getOrder()))
+            return debugEquals("order");
         if (!getMenuName().equals(other.getMenuName()))
             return debugEquals("menuName");
         if (!getTemplateQueryName().equals(other.getTemplateQueryName()))

@@ -403,6 +403,7 @@ public class MenuHelper
     {
 
         final Query query;
+        final int order;
         final String title;
 
         public OrderedQuery(Query query, String title)
@@ -410,6 +411,7 @@ public class MenuHelper
             Objects.requireNonNull(query);
             Objects.requireNonNull(title);
             this.query = query;
+            this.order = softParseOrder(query.getOrder());
             this.title = title;
         }
 
@@ -417,7 +419,27 @@ public class MenuHelper
         public int compareTo(OrderedQuery other)
         {
             Objects.requireNonNull(other);
+            final int orderCompare = Integer.compare(order, other.order);
+            if (orderCompare != 0)
+                return orderCompare;
+
             return title.compareTo(other.title);
+        }
+
+        private static int softParseOrder(String order)
+        {
+            if (order == null)
+            {
+                return Integer.MAX_VALUE;
+            }
+            try
+            {
+                return Integer.parseInt(order.trim());
+            }
+            catch (NumberFormatException e)
+            {
+                return Integer.MAX_VALUE;
+            }
         }
 
         public Query getQuery()

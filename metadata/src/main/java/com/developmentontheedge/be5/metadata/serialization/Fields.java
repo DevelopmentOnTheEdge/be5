@@ -56,6 +56,7 @@ public class Fields
             new Field("name"),
             new Field("menuName", ""),
             new Field("titleName"),
+            new Field("order", ""),
             new Field("type", QueryType.D1),
             new Field("notSupported"),
             new Field("newDataCheckQuery"),

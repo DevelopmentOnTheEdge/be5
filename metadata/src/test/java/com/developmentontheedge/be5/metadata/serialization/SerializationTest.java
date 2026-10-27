@@ -247,6 +247,26 @@ public class SerializationTest
     }
 
     @Test
+    public void testWriteReadQueryOrder() throws Exception
+    {
+        final Project project = new Project("TestProject");
+        final Entity entity = new Entity("orders", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final Query query = new Query("Open orders", entity);
+        query.setOrder("10");
+        DataElementUtils.saveQuiet(query);
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save(project, tempFolder);
+        final String yaml = new String(Files.readAllBytes(tempFolder.resolve("src/meta/entities/orders.yaml")),
+                StandardCharsets.UTF_8);
+        assertTrue(yaml, yaml.contains("order: '10'"));
+
+        final Entity entity2 = Serialization.load(tempFolder).getEntity("orders");
+        assertEquals("10", entity2.getQueries().get("Open orders").getOrder());
+    }
+
+    @Test
     public void testWriteReadVectorColumnAndIndex() throws Exception
     {
         final Project project = new Project("TestProject");

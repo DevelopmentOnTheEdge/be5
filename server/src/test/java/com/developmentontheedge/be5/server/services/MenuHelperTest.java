@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 
@@ -55,6 +56,29 @@ public class MenuHelperTest extends ServerBe5ProjectTest
         assertEquals(new Action("call", "table/rootMenu/Test1"),
                 nodes.get(1).getAction());
         assertEquals(null, nodes.get(1).getChildren());
+
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Test
+    public void testQueryOrderInSubMenu()
+    {
+        initUserWithRoles("TestUser2");
+
+        List<MenuHelper.RootNode> nodes = menuHelper.collectEntities(false, EntityType.TABLE);
+
+        MenuHelper.RootNode atest = null;
+        for (MenuHelper.RootNode node : nodes)
+        {
+            if (node.getTitle().equals("atest"))
+                atest = node;
+        }
+        assertNotNull(atest);
+        assertNotNull(atest.getChildren());
+        assertEquals(2, atest.getChildren().size());
+        // Test2 has order 10, Test1 has order 20
+        assertEquals("Test2", atest.getChildren().get(0).getTitle());
+        assertEquals("Test1", atest.getChildren().get(1).getTitle());
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
