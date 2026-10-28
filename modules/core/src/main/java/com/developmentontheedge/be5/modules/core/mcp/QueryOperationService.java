@@ -207,6 +207,35 @@ public class QueryOperationService
     }
 
     /**
+     * The number of the rows of a query with the parameters (filters), without reading them: SELECT COUNT(*) over
+     * the query as the user opens it, so only the records the query shows the user are counted.
+     */
+    public Map<String, Object> countRecords(String entityName, String queryName, Map<String, Object> params)
+    {
+        Query query = getQuery(entityName, queryName);
+        if (!isRunnable(query))
+        {
+            throw new IllegalArgumentException("Query '" + queryName + "' of type " + query.getType().getName()
+                    + " has no rows to count");
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("entityName", query.getEntity().getName());
+        result.put("queryName", query.getName());
+        result.put("count", countRows(query, toContextParams(params)));
+        return result;
+    }
+
+    @LogBe5Event
+    long countRows(Query query, Map<String, Object> queryParams)
+    {
+        QueryExecutor queryExecutor = queryExecutorFactory.get(query, queryParams);
+        // a Java or Groovy query counts its rows by reading them: count() of these is the size of a page
+        return query.getType() == QueryType.D1 || query.getType() == QueryType.D1_UNKNOWN
+                ? queryExecutor.count() : queryExecutor.execute().size();
+    }
+
+    /**
      * The rows of the query, the page of which (offset and limit) is in the parameters.
      */
     @LogBe5Event

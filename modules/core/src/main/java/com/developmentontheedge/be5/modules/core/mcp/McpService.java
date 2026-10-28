@@ -43,6 +43,7 @@ public class McpService
             + "1) list_queries finds the queries (the descriptions tell what they show), describe_query shows "
             + "the parameters of a query and the operations that can be run from it; "
             + "2) execute_query reads its rows, the id of a row is what an operation gets in selectedRows; "
+            + "count_query_records counts the rows with the same parameters and filters, without reading them; "
             + "3) get_operation_parameters shows the form the user fills in for an operation, without running it. "
             + "A field with reloadOnChange changes the form: call it again with the values chosen so far; "
             + "4) execute_operation submits the values. When they are not accepted the form comes back with "
@@ -164,6 +165,12 @@ public class McpService
                 args -> queryOperationService.executeQuery(string(args, "entityName"), string(args, "queryName"),
                         object(args, "params"), integer(args, "offset", 0),
                         integer(args, "limit", QueryOperationService.DEFAULT_LIMIT)));
+        addTool("count_query_records", "Count the rows of a query with the parameters and filters, without reading "
+                        + "them: answers \"how many records ...\" with a SELECT COUNT(*) over the query, so only "
+                        + "the records the query shows the user are counted",
+                queryArguments(), true, false,
+                args -> queryOperationService.countRecords(string(args, "entityName"), string(args, "queryName"),
+                        object(args, "params")));
         addTool("get_operation_parameters", "Show the form of an operation: the fields the user fills in, with "
                         + "their types, current values, options and messages. Nothing is executed. Call it again "
                         + "with values after changing a field marked reloadOnChange",
