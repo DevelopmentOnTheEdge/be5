@@ -98,6 +98,7 @@ import static com.developmentontheedge.be5.metadata.serialization.SerializationC
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_OPERATION_TYPE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_CODE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_OPERATIONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_OPERATIONS_ORDER;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ROLES;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_APPLICATION;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_BUGTRACKERS;
@@ -963,6 +964,11 @@ public class YamlSerializer
                     OperationSet s = query.getOperationNames();
                     content.put(ATTR_QUERY_OPERATIONS, list(s.printValues()));
                 }
+            }
+
+            if (customizedProperties.contains("operationsOrder") && !query.getOperationsOrder().isEmpty())
+            {
+                content.put(ATTR_QUERY_OPERATIONS_ORDER, list(query.getOperationsOrder()));
             }
 
             final Map<String, Object> serializedFilters = serializeQuickFilters(query.getQuickFilters());

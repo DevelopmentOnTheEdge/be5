@@ -58,6 +58,7 @@ public interface SerializationConstants
     // Query
     String ATTR_QUERY_CODE = "value";
     String ATTR_QUERY_OPERATIONS = "operations";
+    String ATTR_QUERY_OPERATIONS_ORDER = "operationsOrder";
 
     // Operation
     String ATTR_OPERATION_TYPE = "type";

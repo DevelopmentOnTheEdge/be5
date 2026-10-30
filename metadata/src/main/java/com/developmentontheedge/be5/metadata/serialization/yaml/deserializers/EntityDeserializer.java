@@ -36,6 +36,7 @@ import static com.developmentontheedge.be5.metadata.serialization.SerializationC
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_OPERATION_TYPE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_CODE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_OPERATIONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_OPERATIONS_ORDER;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ROLES;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_CODE;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_COMMENT;
@@ -429,9 +430,14 @@ class EntityDeserializer extends FileDeserializer
                     readList(queryElement, ATTR_QUERY_OPERATIONS)));
             query.customizeProperty("operationNames");
         }
+        if (queryElement.containsKey(ATTR_QUERY_OPERATIONS_ORDER))
+        {
+            query.setOperationsOrder(yamlDeserializer.stringCache(
+                    readList(queryElement, ATTR_QUERY_OPERATIONS_ORDER)));
+        }
         checkChildren(query, queryElement, Fields.query(), TAG_EXTRAS, TAG_COMMENT, TAG_CUSTOMIZATIONS,
                 ATTR_ICON, ATTR_QUERY_CODE, TAG_CODE,
-                ATTR_QUERY_OPERATIONS, "quickFilters", ATTR_ROLES, TAG_SETTINGS, "file");
+                ATTR_QUERY_OPERATIONS, ATTR_QUERY_OPERATIONS_ORDER, "quickFilters", ATTR_ROLES, TAG_SETTINGS, "file");
         return query;
     }
 

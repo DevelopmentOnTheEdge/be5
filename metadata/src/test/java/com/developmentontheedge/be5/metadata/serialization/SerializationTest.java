@@ -267,6 +267,32 @@ public class SerializationTest
     }
 
     @Test
+    public void testWriteReadQueryOperationsOrder() throws Exception
+    {
+        final Project project = new Project("TestProject");
+        final Entity entity = new Entity("orders", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final Query query = new Query("Open orders", entity);
+        query.setOperationsOrder(Arrays.asList("Edit", "Delete", "Insert"));
+        DataElementUtils.saveQuiet(query);
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save(project, tempFolder);
+        final String yaml = new String(Files.readAllBytes(tempFolder.resolve("src/meta/entities/orders.yaml")),
+                StandardCharsets.UTF_8);
+        assertTrue(yaml, yaml.contains("operationsOrder:"));
+        int editIdx = yaml.indexOf("- Edit");
+        int deleteIdx = yaml.indexOf("- Delete");
+        int insertIdx = yaml.indexOf("- Insert");
+        assertTrue("Edit should come before Delete in YAML", editIdx < deleteIdx);
+        assertTrue("Delete should come before Insert in YAML", deleteIdx < insertIdx);
+
+        final Entity entity2 = Serialization.load(tempFolder).getEntity("orders");
+        assertEquals(Arrays.asList("Edit", "Delete", "Insert"),
+                entity2.getQueries().get("Open orders").getOperationsOrder());
+    }
+
+    @Test
     public void testWriteReadVectorColumnAndIndex() throws Exception
     {
         final Project project = new Project("TestProject");

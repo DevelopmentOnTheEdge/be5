@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.server.services.document;
 
 import com.developmentontheedge.be5.meta.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.util.Collections3;
 import com.developmentontheedge.be5.security.UserInfoProvider;
@@ -55,17 +54,18 @@ public class DocumentOperationsPlugin implements DocumentPlugin
             }
         }
 
-        operations.sort(Comparator.comparing(TableOperationPresentation::getTitle));
+        if (query.getOperationsOrder().isEmpty())
+        {
+            operations.sort(Comparator.comparing(TableOperationPresentation::getTitle));
+        }
 
         return operations;
     }
-
     private List<Operation> getQueryOperations(Query query)
     {
         List<Operation> queryOperations = new ArrayList<>();
-        OperationSet operationNames = query.getOperationNames();
 
-        for (String operationName : operationNames.getFinalValues())
+        for (String operationName : query.getEffectiveOperations())
         {
             Operation op = query.getEntity().getOperations().get(operationName);
             if (op != null)

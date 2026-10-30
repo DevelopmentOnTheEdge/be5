@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -81,5 +82,33 @@ public class QueryTest
         DataElementUtils.save(query);
         Query query2 = (Query) query.clone(query.getOrigin(), query.getName());
         TestHelpers.checkEquality(query, query2);
+    }
+
+    @Test
+    public void testOperationsOrder()
+    {
+        Project prj = new Project("test");
+        Entity e = new Entity("e", prj.getApplication(), EntityType.TABLE);
+        DataElementUtils.save(e);
+        Query query = new Query("query", e);
+        DataElementUtils.save(query);
+
+        // Initially empty
+        assertTrue(query.getOperationsOrder().isEmpty());
+        assertTrue(query.getEffectiveOperations().isEmpty());
+
+        // Set operationsOrder
+        query.setOperationsOrder(Arrays.asList("Insert", "Delete", "Edit"));
+        assertEquals(Arrays.asList("Insert", "Delete", "Edit"), query.getOperationsOrder());
+        assertEquals(Arrays.asList("Insert", "Delete", "Edit"), query.getEffectiveOperations());
+
+        // When operationsOrder is set, it replaces operations
+        query.getOperationNames().setValuesArray(new String[]{"Delete", "Update"});
+        assertEquals(Arrays.asList("Insert", "Delete", "Edit"), query.getEffectiveOperations());
+
+        // Clear operationsOrder → falls back to operations (alphabetical)
+        query.setOperationsOrder(Collections.emptyList());
+        assertTrue(query.getOperationsOrder().isEmpty());
+        assertEquals(Arrays.asList("Delete", "Update"), query.getEffectiveOperations());
     }
 }

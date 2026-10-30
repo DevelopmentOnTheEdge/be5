@@ -36,6 +36,7 @@ public class QueryBeanInfo extends BeanInfoEx
         addHidden("fileName", "isFileNameHidden");
         add("parametrizingOperationName", OperationSelector.class);
         add("operationNames");
+        add("operationsOrder");
         add("templateQueryName"); // TODO: create editor for this field
         add("shortDescription");
         add("messageWhenEmpty");

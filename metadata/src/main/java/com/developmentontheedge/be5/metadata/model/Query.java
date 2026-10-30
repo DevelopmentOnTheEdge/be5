@@ -38,7 +38,7 @@ public class Query extends EntityItem implements TemplateElement
                     "invisible", "secure",
                     "slow", "cacheable", "replicated", "defaultView", "contextID", "categoryID", "templateQueryName",
                     "shortDescription", "messageWhenEmpty", "parametrizingOperationName", "wellKnownName",
-                    "aiAccessible", "operationNames", "query", "roles", "icon", "querySettings", "layout")));
+                    "aiAccessible", "operationNames", "operationsOrder", "query", "roles", "icon", "querySettings", "layout")));
 
     public static String[] getQueryTypes()
     {
@@ -60,6 +60,7 @@ public class Query extends EntityItem implements TemplateElement
     private String shortDescription;
     private String messageWhenEmpty;
     private OperationSet operations = new OperationSet(this);
+    private List<String> operationsOrder = new ArrayList<>();
     private Set<QuerySettings> querySettings = null;
     private String parametrizingOperationName = "";
     private String fileName = "";
@@ -350,6 +351,29 @@ public class Query extends EntityItem implements TemplateElement
         this.operations.remove(operationName);
     }
 
+    @PropertyName("Operations Order")
+    @PropertyDescription("Ordered list of operation names; when set, replaces operations and defines button order")
+    public List<String> getOperationsOrder()
+    {
+        if (prototype == null || (customizedProperties != null && customizedProperties.contains("operationsOrder")))
+            return Collections.unmodifiableList(operationsOrder);
+        return Collections.unmodifiableList(((Query) prototype).operationsOrder);
+    }
+
+    public void setOperationsOrder(List<String> names)
+    {
+        this.operationsOrder = customizeProperty("operationsOrder", this.operationsOrder,
+                names != null ? new ArrayList<>(names) : new ArrayList<String>());
+        fireChanged();
+    }
+
+    public List<String> getEffectiveOperations()
+    {
+        if (!getOperationsOrder().isEmpty())
+            return getOperationsOrder();
+        return new ArrayList<>(getOperationNames().getFinalValues());
+    }
+
     public QuickFilter[] getQuickFilters()
     {
         BeModelCollection<QuickFilter> filterCollection =
@@ -501,6 +525,8 @@ public class Query extends EntityItem implements TemplateElement
             return debugEquals("type");
         if (!getOperationNames().equals(other.getOperationNames()))
             return debugEquals("operationNames");
+        if (!getOperationsOrder().equals(other.getOperationsOrder()))
+            return debugEquals("operationsOrder");
         if (!DataElementUtils.equals(getCollection(QuickFilter.QUICK_FILTERS_COLLECTION, QuickFilter.class),
                 other.getCollection(QuickFilter.QUICK_FILTERS_COLLECTION, QuickFilter.class)))
             return debugEquals("quickFilters");
@@ -548,6 +574,15 @@ public class Query extends EntityItem implements TemplateElement
             }
         }
 
+        for (String operationName : this.getOperationsOrder())
+        {
+            if (!this.getEntity().getOperations().contains(operationName))
+            {
+                result.add(new ProjectElementException(getCompletePath(), "operationsOrder",
+                        "Operation '" + operationName + "' not found"));
+            }
+        }
+
         String pOperationName = this.getParametrizingOperationName();
         if (pOperationName.length() > 0 &&
                 !this.getEntity().getOperations().contains(pOperationName))
@@ -580,11 +615,13 @@ public class Query extends EntityItem implements TemplateElement
         if (clone.prototype == null)
         {
             clone.operations = new OperationSet(clone, operations);
+            clone.operationsOrder = new ArrayList<>(operationsOrder);
         }
         else
         {
             clone.operations = new OperationSet(clone);
             clone.operations.setPrototype(true, ((Query) clone.prototype).operations);
+            clone.operationsOrder = new ArrayList<>();
         }
         if (querySettings != null)
         {
