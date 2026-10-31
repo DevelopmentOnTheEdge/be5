@@ -115,7 +115,8 @@ public class MenuHelperTest extends ServerBe5ProjectTest
     {
         initUserWithRoles("TestUser2");
 
-        assertEquals(new Action("call", "table/atest/Test1"),
+        // first query in menu order: Test2 has order 10, Test1 has order 20
+        assertEquals(new Action("call", "table/atest/Test2"),
                 menuHelper.getDefaultAction());
     }
 

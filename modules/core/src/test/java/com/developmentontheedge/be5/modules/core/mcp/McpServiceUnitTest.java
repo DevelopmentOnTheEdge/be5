@@ -207,7 +207,8 @@ public class McpServiceUnitTest
             tools.put((String) tool.get("name"), tool);
         }
 
-        for (String name : new String[]{"list_queries", "describe_query", "execute_query", "get_operation_parameters"})
+        for (String name : new String[]{"list_queries", "describe_query", "execute_query",
+                "count_query_records", "get_operation_parameters"})
         {
             assertEquals(name, true, ((Map<String, Object>) tools.get(name).get("annotations")).get("readOnlyHint"));
         }

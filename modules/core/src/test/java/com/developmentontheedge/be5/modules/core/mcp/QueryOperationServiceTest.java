@@ -141,6 +141,33 @@ public class QueryOperationServiceTest extends CoreBe5ProjectDBTest
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void countQueryRecords()
+    {
+        long all = db.oneLong("SELECT COUNT(*) FROM users");
+        Map<String, Object> result = (Map<String, Object>) call("count_query_records",
+                args("entityName", "users", "queryName", "All records"));
+        assertEquals("users", result.get("entityName"));
+        assertEquals("All records", result.get("queryName"));
+        assertEquals(all, ((Number) result.get("count")).longValue());
+
+        Map<String, Object> filtered = (Map<String, Object>) call("count_query_records",
+                args("entityName", "users", "queryName", "All records", "params", args("user_name", USER)));
+        assertEquals(0L, ((Number) filtered.get("count")).longValue());
+
+        db.insert("INSERT INTO users (user_name, user_pass) VALUES (?, ?)", USER, "secret");
+        filtered = (Map<String, Object>) call("count_query_records",
+                args("entityName", "users", "queryName", "All records", "params", args("user_name", USER)));
+        assertEquals(1L, ((Number) filtered.get("count")).longValue());
+
+        String error = callError("count_query_records", args("entityName", "testtable", "queryName", "Not for AI"));
+        assertTrue(error, error.contains("not accessible to AI agents"));
+        initGuest();
+        error = callError("count_query_records", args("entityName", "users", "queryName", "All records"));
+        assertFalse(error, error.isEmpty());
+    }
+
+    @Test
     public void selectedRowsAreChecked()
     {
         String error = callError("execute_operation", args("entityName", "users", "queryName", "All records",

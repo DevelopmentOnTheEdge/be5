@@ -52,8 +52,8 @@ public class ApplicationToolsTest extends CoreBe5ProjectDBTest
         // an administrator may not use the Query Builder, so neither execute_sql
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
         assertEquals(Arrays.asList("list_entities", "get_entity_schema", "get_entity_references", "list_db_columns",
-                "get_table_info", "list_queries", "describe_query", "execute_query", "get_operation_parameters",
-                "execute_operation", "upload_file"), names(tools.list()));
+                "get_table_info", "list_queries", "describe_query", "execute_query", "count_query_records",
+                "get_operation_parameters", "execute_operation", "upload_file"), names(tools.list()));
         ApplicationTools.Result sql = tools.call("execute_sql", args("sql", "SELECT user_pass FROM users"));
         assertTrue(sql.isError());
         assertTrue(sql.getText(), sql.getText().contains("Query Builder"));
