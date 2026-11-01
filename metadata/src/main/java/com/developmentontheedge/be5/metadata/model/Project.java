@@ -994,7 +994,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             return null;
         }
 
-        if (!query.getOperationNames().getFinalValues().contains(opearationName))
+        if (!query.getEffectiveOperations().contains(opearationName))
         {
             return null;
         }

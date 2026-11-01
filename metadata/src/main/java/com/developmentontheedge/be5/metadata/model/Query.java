@@ -565,7 +565,7 @@ public class Query extends EntityItem implements TemplateElement
             result.add(new ProjectElementException(getCompletePath(), "roles", "Unknown role(s): " + missingEntries));
         }
 
-        for (String operationName : this.getOperationNames().getFinalValues())
+        for (String operationName : this.getEffectiveOperations())
         {
             if (!this.getEntity().getOperations().contains(operationName))
             {

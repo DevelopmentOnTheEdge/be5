@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -110,5 +111,29 @@ public class QueryTest
         query.setOperationsOrder(Collections.emptyList());
         assertTrue(query.getOperationsOrder().isEmpty());
         assertEquals(Arrays.asList("Delete", "Update"), query.getEffectiveOperations());
+    }
+
+    @Test
+    public void testOperationsOrderValidation()
+    {
+        Project prj = new Project("test");
+        Entity e = new Entity("e", prj.getApplication(), EntityType.TABLE);
+        DataElementUtils.save(e);
+        Operation op = Operation.createOperation("Edit", Operation.OPERATION_TYPE_JAVA, e);
+        DataElementUtils.save(op);
+        Query query = new Query("query", e);
+        DataElementUtils.save(query);
+
+        // An unknown operation in operationsOrder is reported as an error (the view would
+        // otherwise render without any operation buttons)
+        query.setOperationsOrder(Arrays.asList("Edit", "MissingOp"));
+        List<ProjectElementException> errors = query.getErrors().stream()
+                .filter(error -> "operationsOrder".equals(error.getProperty()))
+                .collect(java.util.stream.Collectors.toList());
+        assertEquals(1, errors.size());
+        assertTrue(errors.get(0).getBaseMessage().contains("MissingOp"));
+
+        query.setOperationsOrder(Arrays.asList("Edit"));
+        assertTrue(query.getErrors().isEmpty());
     }
 }

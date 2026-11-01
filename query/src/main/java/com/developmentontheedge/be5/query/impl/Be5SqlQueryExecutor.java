@@ -74,7 +74,7 @@ public class Be5SqlQueryExecutor extends AbstractQueryExecutor implements QueryE
         queryContext = new Be5QueryContext(query, parameters, querySession, userInfoProvider.getLoggedUser(), meta);
         contextApplier = new ContextApplier(queryContext);
 
-        selectable = query.getType() == QueryType.D1 && query.getOperationNames().getFinalValues().stream()
+        selectable = query.getType() == QueryType.D1 && query.getEffectiveOperations().stream()
                 .map(name -> meta.getOperation(query.getEntity().getName(), name))
                 .filter(o -> meta.hasAccess(o.getRoles(), userInfoProvider.getCurrentRoles()))
                 .map(Operation::getRecords).anyMatch(r -> r == 1 || r == 2);

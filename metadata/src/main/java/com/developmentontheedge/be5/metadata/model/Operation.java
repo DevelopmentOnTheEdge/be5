@@ -384,7 +384,7 @@ public class Operation extends EntityItem
         final BeModelCollection<Query> queries = entity.getQueries();
 
         for (final Query query : queries)
-            if (Arrays.asList(query.getOperationNames()).contains(getName()))
+            if (query.getEffectiveOperations().contains(getName()))
                 queriesWithLinks.add(query);
 
         return queriesWithLinks;

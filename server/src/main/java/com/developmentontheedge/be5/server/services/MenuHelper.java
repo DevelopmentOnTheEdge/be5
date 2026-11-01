@@ -177,7 +177,7 @@ public class MenuHelper
         Query allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW);
         String insertOperationName = INSERT_OPERATION;
 
-        if (allRecords != null && allRecords.getOperationNames().getFinalValues().contains(insertOperationName))
+        if (allRecords != null && allRecords.getEffectiveOperations().contains(insertOperationName))
         {
             Operation insertOperation = entity.getOperations().get(insertOperationName);
             if (insertOperation != null && meta.isAvailableFor(insertOperation, roles))

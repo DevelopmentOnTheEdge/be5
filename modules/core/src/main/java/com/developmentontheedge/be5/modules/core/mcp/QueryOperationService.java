@@ -168,7 +168,7 @@ public class QueryOperationService
 
         List<String> roles = userInfoProvider.getCurrentRoles();
         List<Map<String, Object>> operations = new ArrayList<>();
-        for (String operationName : query.getOperationNames().getFinalValues())
+        for (String operationName : query.getEffectiveOperations())
         {
             com.developmentontheedge.be5.metadata.model.Operation operation =
                     query.getEntity().getOperations().get(operationName);

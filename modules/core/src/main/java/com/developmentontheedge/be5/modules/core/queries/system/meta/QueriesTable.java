@@ -41,7 +41,7 @@ public class QueriesTable extends QueryExecutorSupport
                             .link(ActionUtils.toAction(query).getArg()),
                     query.getType(),
                     query.getRoles().getFinalRoles().toString(),
-                    query.getOperationNames().getFinalValues().size()
+                    query.getEffectiveOperations().size()
             ));
         }
     }

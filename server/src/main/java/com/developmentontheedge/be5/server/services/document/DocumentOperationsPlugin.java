@@ -54,7 +54,7 @@ public class DocumentOperationsPlugin implements DocumentPlugin
             }
         }
 
-        if (query.getOperationsOrder().isEmpty())
+        if (query.getOperationsOrder().isEmpty() && !query.getOperationNames().getFinalValues().isEmpty())
         {
             operations.sort(Comparator.comparing(TableOperationPresentation::getTitle));
         }
