@@ -59,7 +59,7 @@ public class ErrorModelHelper
         {
             message = userAwareMeta.getLocalizedBe5ErrorMessage(e);
         }
-        catch (Be5Exception ignore)
+        catch (Exception ignore)
         {
             message = ErrorTitles.formatTitle(ErrorTitles.getTitle(e.getCode()), e.getParameters());
         }

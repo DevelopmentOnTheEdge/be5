@@ -370,8 +370,145 @@ public class Query extends EntityItem implements TemplateElement
     public List<String> getEffectiveOperations()
     {
         if (!getOperationsOrder().isEmpty())
-            return getOperationsOrder();
+            return resolveOperationsOrder(getOperationsOrder());
         return new ArrayList<>(getOperationNames().getFinalValues());
+    }
+
+    /**
+     * Maps each entry of the operations order to an operation name defined on the entity.
+     * If the entry is a valid operation name it is kept as is; otherwise an attempt is made
+     * to resolve the entry as a localized title of an operation and the corresponding name
+     * is substituted. If neither works, the entry is left unchanged to let validation report it.
+     */
+    private List<String> resolveOperationsOrder(List<String> names)
+    {
+        List<String> result = new ArrayList<>(names.size());
+        for (String name : names)
+        {
+            if (getEntity().getOperations().contains(name))
+            {
+                result.add(name);
+            }
+            else
+            {
+                Operation byTitle = findOperationByTitle(name);
+                result.add(byTitle != null ? byTitle.getName() : name);
+            }
+        }
+        return result;
+    }
+
+    private Operation findOperationByTitle(String title)
+    {
+        for (Operation operation : getEntity().getOperations())
+        {
+            if (title.equals(operation.getName()))
+                return operation;
+        }
+        // Localized titles are resolved the same way as in the UI: through the project
+        // localizations with the user's language. The language is taken from the first
+        // localization that contains the entity's operation titles, falling back to
+        // "default" and then to English.
+        Project project = getProject();
+        if (project == null)
+        {
+            return null;
+        }
+        List<String> languages = new ArrayList<>(Arrays.asList("default", "en"));
+        String[] projectLanguages = project.getLanguages();
+        if (projectLanguages != null)
+        {
+            for (String lang : projectLanguages)
+            {
+                if (!languages.contains(lang))
+                    languages.add(0, lang);
+            }
+        }
+        for (String language : languages)
+        {
+            for (Operation operation : getEntity().getOperations())
+            {
+                String localized = resolveOperationTitle(project, language, getEntity().getName(), operation.getName());
+                if (title.equals(localized))
+                {
+                    return operation;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String resolveOperationTitle(Project project, String language, String entityName, String operationName)
+    {
+        // Same resolution order as CompiledLocalizations.getOperationTitle:
+        // look up the operation title by topic "operationName" and key = operation name,
+        // falling back to the "default" language.
+        String value = findOperationTitleInModule(project.getApplication(), language, entityName, operationName);
+        if (value != null)
+        {
+            return value;
+        }
+        for (Module module : project.getModules())
+        {
+            value = findOperationTitleInModule(module, language, entityName, operationName);
+            if (value != null)
+            {
+                return value;
+            }
+        }
+        if (!"default".equals(language))
+        {
+            value = findOperationTitleInModule(project.getApplication(), "default", entityName, operationName);
+            if (value != null)
+            {
+                return value;
+            }
+            for (Module module : project.getModules())
+            {
+                value = findOperationTitleInModule(module, "default", entityName, operationName);
+                if (value != null)
+                {
+                    return value;
+                }
+            }
+        }
+        return operationName;
+    }
+
+    private static String findOperationTitleInModule(Module module, String language, String entityName, String operationName)
+    {
+        if (module == null)
+        {
+            return null;
+        }
+        Localizations localizations = module.getLocalizations();
+        if (localizations == null)
+        {
+            return null;
+        }
+        return findOperationTitleInLanguage(localizations.get(language), entityName, operationName);
+    }
+
+    private static String findOperationTitleInLanguage(LanguageLocalizations language, String entityName, String operationName)
+    {
+        if (language == null)
+        {
+            return null;
+        }
+        EntityLocalizations entityLocalizations = language.get(entityName);
+        if (entityLocalizations == null)
+        {
+            return null;
+        }
+        for (EntityLocalizations.LocalizationRow row : entityLocalizations.getRows())
+        {
+            if (DatabaseConstants.L10N_TOPIC_OPERATION_NAME.equals(row.getTopic())
+                    && operationName.equals(row.getKey()))
+            {
+                return row.getValue();
+            }
+        }
+        return null;
     }
 
     public QuickFilter[] getQuickFilters()
