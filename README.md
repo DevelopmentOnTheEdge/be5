@@ -184,3 +184,11 @@ In order to have up-to-date skill from this project available for all user proje
 ```sh
 ln -s `pwd`/.claude/skills/be5-dev ~/.claude/skills
 ```
+
+## Usage with Codex
+
+In order to have up-to-date skill from this project available for all user projects execute
+```sh
+mkdir -p ~/.agents/skills
+ln -s `pwd`/.claude/skills/be5-dev ~/.agents/skills
+```

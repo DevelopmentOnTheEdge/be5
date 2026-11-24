@@ -1,3 +1,8 @@
+---
+name: be5-dev
+description: Develop Be5 applications using entity YAML, SQL queries, Groovy operations, and the Be5 metadata model.
+---
+
 # BE5 Application Development Skill
 
 ## Project Structure
